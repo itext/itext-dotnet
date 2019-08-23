@@ -41,21 +41,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using Common.Logging;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
-    public class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
-        /// <summary>Subtypes</summary>
+    public abstract class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
+        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.Polygon instead.")]
         public static readonly PdfName Polygon = PdfName.Polygon;
 
+        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.PolyLine instead.")]
         public static readonly PdfName PolyLine = PdfName.PolyLine;
 
-        private PdfPolyGeomAnnotation(Rectangle rect, PdfName subtype, float[] vertices)
+        internal PdfPolyGeomAnnotation(Rectangle rect, float[] vertices)
             : base(rect) {
-            SetSubtype(subtype);
             SetVertices(vertices);
         }
 
@@ -68,16 +69,12 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public static iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle rect, float[] vertices) {
-            return new iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, Polygon, vertices);
+            return new PdfPolygonAnnotation(rect, vertices);
         }
 
         public static iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolyLine(Rectangle rect, float[] vertices
             ) {
-            return new iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices);
-        }
-
-        public override PdfName GetSubtype() {
-            return GetPdfObject().GetAsName(PdfName.Subtype);
+            return new PdfPolylineAnnotation(rect, vertices);
         }
 
         public virtual PdfArray GetVertices() {
@@ -157,10 +154,6 @@ namespace iText.Kernel.Pdf.Annot {
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Path, path);
-        }
-
-        private void SetSubtype(PdfName subtype) {
-            Put(PdfName.Subtype, subtype);
         }
 
         /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.

@@ -395,19 +395,24 @@ namespace iText.Kernel.Pdf.Annot {
                                                                                         annotation = new PdfLineAnnotation((PdfDictionary)pdfObject);
                                                                                     }
                                                                                     else {
-                                                                                        if (PdfName.Polygon.Equals(subtype) || PdfName.PolyLine.Equals(subtype)) {
-                                                                                            annotation = new PdfPolyGeomAnnotation((PdfDictionary)pdfObject);
+                                                                                        if (PdfName.Polygon.Equals(subtype)) {
+                                                                                            annotation = new PdfPolygonAnnotation((PdfDictionary)pdfObject);
                                                                                         }
                                                                                         else {
-                                                                                            if (PdfName.Redact.Equals(subtype)) {
-                                                                                                annotation = new PdfRedactAnnotation((PdfDictionary)pdfObject);
+                                                                                            if (PdfName.PolyLine.Equals(subtype)) {
+                                                                                                annotation = new PdfPolylineAnnotation((PdfDictionary)pdfObject);
                                                                                             }
                                                                                             else {
-                                                                                                if (PdfName.Watermark.Equals(subtype)) {
-                                                                                                    annotation = new PdfWatermarkAnnotation((PdfDictionary)pdfObject);
+                                                                                                if (PdfName.Redact.Equals(subtype)) {
+                                                                                                    annotation = new PdfRedactAnnotation((PdfDictionary)pdfObject);
                                                                                                 }
                                                                                                 else {
-                                                                                                    annotation = new PdfAnnotation.PdfUnknownAnnotation((PdfDictionary)pdfObject);
+                                                                                                    if (PdfName.Watermark.Equals(subtype)) {
+                                                                                                        annotation = new PdfWatermarkAnnotation((PdfDictionary)pdfObject);
+                                                                                                    }
+                                                                                                    else {
+                                                                                                        annotation = new PdfAnnotation.PdfUnknownAnnotation((PdfDictionary)pdfObject);
+                                                                                                    }
                                                                                                 }
                                                                                             }
                                                                                         }
