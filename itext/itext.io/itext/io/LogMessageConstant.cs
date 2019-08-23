@@ -318,6 +318,8 @@ namespace iText.IO {
 
         public const String WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS = "Wrong media box size: {0}. The arguments beyond the 4th will be ignored";
 
+        public const String XFDF_OUTPUT_STREAM_CORRUPTED = "Xfdf output stream is corrupted.";
+
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }
 }

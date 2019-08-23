@@ -1,0 +1,1030 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2019 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.IO;
+using iText.Forms.Xfdf;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
+
+namespace iText.Forms {
+    public class XfdfReaderTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/XfdfReaderTest/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/forms/XfdfReaderTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            ITextTest.CreateDestinationFolder(destinationFolder);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfNoFields() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFields.pdf", 
+                FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFields.pdf", 
+                FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfNoFields.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfNoFields.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfNoFields.pdf", sourceFolder
+                 + "cmp_xfdfNoFields.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfNoFieldsNoFAttributes() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoFAttributes.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfNoFieldsNoFAttributes.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfNoFieldsNoFAttributes.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf"
+                , sourceFolder + "cmp_xfdfNoFieldsNoFAttributes.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfNoFieldsNoIdsAttributes() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfNoFieldsNoIdsAttributes.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
+                , sourceFolder + "cmp_xfdfNoFieldsNoIdsAttributes.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfWithFieldsWithValue() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValue.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValue.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfWithFieldsWithValue.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfWithFieldsWithValue.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfWithFieldsWithValue.pdf"
+                , sourceFolder + "cmp_xfdfWithFieldsWithValue.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        //TODO Rich text functionality not implemented yet
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfValueRichText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfValueRichText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfValueRichText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfValueRichText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfValueRichText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfValueRichText.pdf"
+                , sourceFolder + "cmp_xfdfValueRichText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfHierarchyFieldsTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "hierarchy_fields.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "hierarchy_fields.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "hierarchy_fields.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "hierarchy_fields.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "hierarchy_fields.pdf"
+                , sourceFolder + "cmp_hierarchy_fields.pdf", destinationFolder, "diff_"));
+        }
+
+        ////
+        //    @Test
+        //    public void xfdfMultipleChoiceFieldsTest() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+        //        //TODO add to the test radio buttons, check boxes, lists.
+        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "multiple_choice_fields.pdf")),
+        //                new PdfWriter(new FileOutputStream(destinationFolder + "multiple-choice_fields.pdf")));
+        //        String xfdfFilename = sourceFolder + "multiple_choice_fields.xfdf";
+        //        XfdfObjectFactory factory = new XfdfObjectFactory();
+        //        XfdfObject xfdfObject = factory.createXfdfObject(new FileInputStream(xfdfFilename));
+        //        XfdfReader reader = new XfdfReader();
+        //        reader.mergeXfdfIntoPdf(xfdfObject, pdfDocument,sourceFolder + "multiple_choice.pdf" );
+        //        pdfDocument.close();
+        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "multiple_choice_fields.pdf",
+        //                sourceFolder + "cmp_multiple_choice_fields.pdf", destinationFolder, "diff_"));
+        //    }
+        //    //TODO add Button test
+        //    @Test
+        //    public void xfdfWithButtonTest() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "pdf_with_buttons.pdf")),
+        //                new PdfWriter(new FileOutputStream(destinationFolder + "pdf_with_buttons.pdf")));
+        //        String xfdfFilename = sourceFolder + "xfdf_with_button.xfdf";
+        //        XfdfObjectFactory factory = new XfdfObjectFactory();
+        //        XfdfObject xfdfObject = factory.createXfdfObject(new FileInputStream(xfdfFilename));
+        //        XfdfReader reader = new XfdfReader();
+        //        reader.mergeXfdfIntoPdf(xfdfObject, pdfDocument,sourceFolder + "pdf_with_button.pdf" );
+        //        pdfDocument.close();
+        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "pdf_with_button.pdf",
+        //                sourceFolder + "cmp_pdf_with_button.pdf", destinationFolder, "diff_"
+        //        ));
+        //    }
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void Book9Test() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "submit_me_form_book_9.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "submit_me_form_book_9_filled.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "submit_me_form_book_9.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "submit_me_form_book_9.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "submit_me_form_book_9_filled.pdf"
+                , sourceFolder + "cmp_submit_me_form_book_9.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfWithFieldsWithValueParentAndChild() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfWithFieldsWithValueParentAndChild.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
+                , sourceFolder + "cmp_xfdfWithFieldsWithValueParentAndChild.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationHighlightedText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationHighlightedText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, "xfdfAnnotationHighlightedText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationHighlightedText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationUnderlineText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlineText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationUnderlineText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationUnderlineText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationUnderlineText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationUnderlineTextRectWithTwoCoords() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationUnderlinePopupAllFlags() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationUnderlinePopupAllFlags.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationStrikeout() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStrikeout.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStrikeout.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationStrikeout.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationStrikeout.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationStrikeout.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationStrikeout.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationSquigglyText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquigglyText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquigglyText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationSquigglyText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationSquigglyText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationSquigglyText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationSquigglyText.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationLine() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLine.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLine.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationLine.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationLine.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationLine.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationLine.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationCircle() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCircle.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCircle.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationCircle.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationCircle.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationCircle.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationCircle.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationSquare() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquare.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquare.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationSquare.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationSquare.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationSquare.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationSquare.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationCaret() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCaret.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCaret.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationCaret.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationCaret.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationCaret.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationCaret.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationPolygon() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolygon.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolygon.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationPolygon.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationPolygon.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationPolygon.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationPolygon.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationPolyline() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolyline.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolyline.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationPolyline.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationPolyline.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationPolyline.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationPolyline.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationStamp() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStamp.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStamp.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationStamp.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationStamp.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationStamp.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationStamp.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationInk() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationInk.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationInk.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationInk.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationInk.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationInk.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationInk.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationFreeText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFreeText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationFreeText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationFreeText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationFreeText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationFreeText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationFreeText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationFileAttachment() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFileAttachment.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationFileAttachment.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationFileAttachment.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationFileAttachment.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationFileAttachment.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationFileAttachment.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationSound() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSound.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSound.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationSound.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationSound.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationSound.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationSound.pdf", destinationFolder, "diff_"));
+        }
+
+        //    @Test
+        //    //TODO can't generate proper xfdf until link annotation export will be fixed
+        //    public void xfdfAnnotationLink() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfAnnotationLink.pdf")),
+        //                new PdfWriter(new FileOutputStream(destinationFolder + "xfdfAnnotationLink.pdf")));
+        //        String xfdfFilename = sourceFolder + "xfdfAnnotationLink.xfdf";
+        //        XfdfReader reader = new XfdfReader(xfdfFilename);
+        //        reader.mergeXfdfIntoPdf(pdfDocument, sourceFolder + "xfdfAnnotationLink.pdf");
+        //        pdfDocument.close();
+        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "xfdfAnnotationLink.pdf",
+        //                sourceFolder + "cmp_xfdfAnnotationLink.pdf", destinationFolder, "diff_"));
+        //    }
+        // @Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationRedact() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationRedact.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationRedact.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationRedact.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationRedact.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationRedact.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationRedact.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationProjection() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationProjection.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationProjection.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationProjection.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationProjection.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationProjection.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationProjection.pdf", destinationFolder, "diff_"));
+        }
+
+        //    @Test
+        //    //TODO can't generate proper xfdf until link annotation export will be fixed
+        //    public void xfdfAnnotationLinkAllParams() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfAnnotationLinkAllParams.pdf")),
+        //                new PdfWriter(new FileOutputStream(destinationFolder + "xfdfAnnotationLinkAllParams.pdf")));
+        //        String xfdfFilename = sourceFolder + "xfdfAnnotationLinkAllParams.xfdf";
+        //        XfdfReader reader = new XfdfReader(xfdfFilename);
+        //        reader.mergeXfdfIntoPdf(pdfDocument, sourceFolder + "xfdfAnnotationLinkAllParams.pdf");
+        //        pdfDocument.close();
+        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "xfdfAnnotationLinkAllParams.pdf",
+        //                sourceFolder + "cmp_xfdfAnnotationLinkAllParams.pdf", destinationFolder, "diff_"));
+        //    }
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationReplaceText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationReplaceText.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationReplaceText.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationReplaceText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationReplaceText.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationReplaceText.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationReplaceText.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationArrow() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationArrow.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationArrow.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationArrow.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationArrow.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationArrow.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationArrow.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationCallout() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCallout.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCallout.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationCallout.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationCallout.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationCallout.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationCallout.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationCloud() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloud.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCloud.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationCloud.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationCloud.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationCloud.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationCloud.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationCloudNested() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloudNested.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCloudNested.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationCloudNested.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationCloudNested.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationCloudNested.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationCloudNested.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationTextBoxAllParams() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationTextBoxAllParams.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationTextBoxAllParams.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationTextBoxAllParams.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationTextBoxAllParams.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationTextBoxAllParams.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationTextBoxAllParams.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfJavaScriptForms() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfJavaScriptForms.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfJavaScriptForms.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfJavaScriptForms.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfJavaScriptForms.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfJavaScriptForms.pdf"
+                , sourceFolder + "cmp_xfdfJavaScriptForms.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfFormsFieldParams() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFormsFieldParams.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfFormsFieldParams.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfFormsFieldParams.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfFormsFieldParams.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfFormsFieldParams.pdf"
+                , sourceFolder + "cmp_xfdfFormsFieldParams.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationAttrColor() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrColor.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrColor.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationAttrColor.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationAttrColor.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationAttrColor.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationAttrColor.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfAnnotationAttrFlagsOpacity() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationAttrFlagsOpacity.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationAttrFlagsOpacity.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfAnnotationAttrTitle() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrTitle.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrTitle.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationAttrTitle.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationAttrTitle.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationAttrTitle.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationAttrTitle.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DMeasurement() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DMeasurement.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfReferenceFor3DMeasurement.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfReferenceFor3DMeasurement.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfReferenceFor3DMeasurement.pdf"
+                , sourceFolder + "cmp_xfdfReferenceFor3DMeasurement.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DAngular() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DAngular.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfReferenceFor3DAngular.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfReferenceFor3DAngular.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfReferenceFor3DAngular.pdf"
+                , sourceFolder + "cmp_xfdfReferenceFor3DAngular.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DRadial() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DRadial.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfReferenceFor3DRadial.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfReferenceFor3DRadial.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfReferenceFor3DRadial.pdf"
+                , sourceFolder + "cmp_xfdfReferenceFor3DRadial.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfSubelementContents() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementContents.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfSubelementContents.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfSubelementContents.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfSubelementContents.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfSubelementContents.pdf"
+                , sourceFolder + "cmp_xfdfSubelementContents.pdf", destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfSubelementOverlayAppearance() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfSubelementOverlayAppearance.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfSubelementOverlayAppearance.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfSubelementOverlayAppearance.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfSubelementOverlayAppearance.pdf"
+                , sourceFolder + "cmp_xfdfSubelementOverlayAppearance.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfButton() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfButton.pdf", FileMode.Open
+                , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfButton.pdf", FileMode.Create
+                )));
+            String xfdfFilename = sourceFolder + "xfdfButton.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfButton.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfButton.pdf", sourceFolder
+                 + "cmp_xfdfButton.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfCheckBox() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCheckBox.pdf", 
+                FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfCheckBox.pdf", 
+                FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfCheckBox.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfCheckBox.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfCheckBox.pdf", sourceFolder
+                 + "cmp_xfdfCheckBox.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfList() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
+                , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfList.pdf", FileMode.Create)
+                ));
+            String xfdfFilename = sourceFolder + "xfdfList.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfList.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfList.pdf", sourceFolder
+                 + "cmp_xfdfList.pdf", destinationFolder, "diff_"));
+        }
+
+        //@Test
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        public virtual void XfdfDropDown() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfDropDown.pdf", 
+                FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfDropDown.pdf", 
+                FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfDropDown.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfDropDown.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfDropDown.pdf", sourceFolder
+                 + "cmp_xfdfDropDown.pdf", destinationFolder, "diff_"));
+        }
+    }
+}

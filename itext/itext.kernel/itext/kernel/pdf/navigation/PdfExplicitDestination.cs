@@ -145,12 +145,12 @@ namespace iText.Kernel.Pdf.Navigation {
         }
 
         public static iText.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV(PdfPage page, float left) {
-            return Create(page, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float.NaN);
+            return Create(page, PdfName.FitBV, left, float.NaN, float.NaN, float.NaN, float.NaN);
         }
 
         [System.ObsoleteAttribute(@"Use PdfExplicitRemoteGoToDestination.CreateFitBV(int, float) instead.")]
         public static iText.Kernel.Pdf.Navigation.PdfExplicitDestination CreateFitBV(int pageNum, float left) {
-            return Create(pageNum, PdfName.FitBH, left, float.NaN, float.NaN, float.NaN, float.NaN);
+            return Create(pageNum, PdfName.FitBV, left, float.NaN, float.NaN, float.NaN, float.NaN);
         }
 
         public static iText.Kernel.Pdf.Navigation.PdfExplicitDestination Create(PdfPage page, PdfName type, float 
