@@ -62,14 +62,15 @@ namespace iText.IO.Source
 		/// 	</summary>
 		private bool forceRead = false;
 
-		/// <summary>
-		/// Whether
-		/// <see cref="System.IO.FileStream"/>
-		/// should be used instead of a
-		/// <see cref="java.nio.channels.FileChannel"/>
-		/// , where applicable
-		/// </summary>
-		private bool usePlainRandomAccess = false;
+        /// <summary>
+        /// Whether
+        /// <see cref="System.IO.FileStream"/>
+        /// should be used instead of a
+        /// <see cref="java.nio.channels.FileChannel"/>
+        /// , where applicable
+        /// </summary>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. The field makes sense only in Java.")]
+        private bool usePlainRandomAccess = false;
 
 		/// <summary>Whether the underlying file should have a RW lock on it or just an R lock
 		/// 	</summary>
@@ -92,18 +93,19 @@ namespace iText.IO.Source
 			return this;
 		}
 
-		/// <summary>
-		/// Determines whether
-		/// <see cref="System.IO.FileStream"/>
-		/// should be used as the primary data access mechanism
-		/// </summary>
-		/// <param name="usePlainRandomAccess">
-		/// whether
-		/// <see cref="System.IO.FileStream"/>
-		/// should be used as the primary data access mechanism
-		/// </param>
-		/// <returns>this object (this allows chaining of method calls)</returns>
-		public RandomAccessSourceFactory SetUsePlainRandomAccess(bool
+        /// <summary>
+        /// Determines whether
+        /// <see cref="System.IO.FileStream"/>
+        /// should be used as the primary data access mechanism
+        /// </summary>
+        /// <param name="usePlainRandomAccess">
+        /// whether
+        /// <see cref="System.IO.FileStream"/>
+        /// should be used as the primary data access mechanism
+        /// </param>
+        /// <returns>this object (this allows chaining of method calls)</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. The method makes sense only in Java.")]
+        public RandomAccessSourceFactory SetUsePlainRandomAccess(bool
 			 usePlainRandomAccess)
 		{
 			this.usePlainRandomAccess = usePlainRandomAccess;
