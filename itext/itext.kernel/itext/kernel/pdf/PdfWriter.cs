@@ -126,7 +126,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="Java.Util.Zip.Deflater"/>
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
         /// .
         /// </remarks>
         /// <returns>compression level.</returns>
@@ -138,7 +138,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="Java.Util.Zip.Deflater"/>
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
         /// .
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
@@ -315,11 +315,11 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
         /// <param name="forbiddenToFlush">
-        /// 
+        /// a
         /// <see cref="Java.Util.Set{E}"/>
-        /// &lt;
-        /// <see cref="PdfIndirectReference"/>
-        /// &gt; of references that are forbidden to be flushed automatically.
+        /// of
+        /// <see cref="PdfIndirectReference">references</see>
+        /// that are forbidden to be flushed automatically.
         /// </param>
         protected internal virtual void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
             PdfXrefTable xref = document.GetXref();
@@ -347,11 +347,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
         /// <param name="forbiddenToFlush">
-        /// 
+        /// a
         /// <see cref="Java.Util.Set{E}"/>
-        /// &lt;
-        /// <see cref="PdfIndirectReference"/>
-        /// &gt; of references that are forbidden to be flushed automatically.
+        /// of
+        /// <see cref="PdfIndirectReference">references</see>
+        /// that are forbidden to be flushed automatically.
         /// </param>
         protected internal virtual void FlushModifiedWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush
             ) {

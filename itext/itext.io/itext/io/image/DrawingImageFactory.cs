@@ -48,8 +48,8 @@ using System.IO;
 
 namespace iText.IO.Image {
     internal class DrawingImageFactory {
-        /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
-        /// <param name="image">the java.awt.Image to convert</param>
+        /// <summary>Gets an instance of an Image from <see cref="System.Drawing.Image"/></summary>
+        /// <param name="image">the <see cref="System.Drawing.Image"/> to convert</param>
         /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
         /// 	</param>
         /// <returns>RawImage</returns>
@@ -59,9 +59,9 @@ namespace iText.IO.Image {
         }
 
         /// <summary>
-        /// Gets an instance of an Image from a System.Drwaing.Image.
+        /// Gets an instance of an Image from a <see cref="System.Drawing.Image"/>.
         /// </summary>
-        /// <param name="image">the System.Drawing.Image to convert</param>
+        /// <param name="image">the <see cref="System.Drawing.Image"/> to convert</param>
         /// <param name="color">
         /// if different from null the transparency
         /// pixels are replaced by this color

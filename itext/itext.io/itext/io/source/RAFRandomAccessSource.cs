@@ -57,7 +57,9 @@ namespace iText.IO.Source {
         /// <summary>The length of the underling RAF.</summary>
         /// <remarks>
         /// The length of the underling RAF.  Note that the length is cached at construction time to avoid the possibility
-        /// of java.io.IOExceptions when reading the length.
+        /// of
+        /// <see cref="System.IO.IOException"/>
+        /// s when reading the length.
         /// </remarks>
         private readonly long length;
 
