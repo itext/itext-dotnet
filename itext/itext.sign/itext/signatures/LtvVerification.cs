@@ -77,15 +77,21 @@ namespace iText.Signatures {
 
         /// <summary>What type of verification to include.</summary>
         public enum Level {
+            /// <summary>Include only OCSP.</summary>
             OCSP,
+            /// <summary>Include only CRL.</summary>
             CRL,
+            /// <summary>Include both OCSP and CRL.</summary>
             OCSP_CRL,
+            /// <summary>Include CRL only if OCSP can't be read.</summary>
             OCSP_OPTIONAL_CRL
         }
 
         /// <summary>Options for how many certificates to include.</summary>
         public enum CertificateOption {
+            /// <summary>Include verification just for the signing certificate.</summary>
             SIGNING_CERTIFICATE,
+            /// <summary>Include verification for the whole chain of certificates.</summary>
             WHOLE_CHAIN
         }
 
@@ -94,7 +100,9 @@ namespace iText.Signatures {
         /// keys.
         /// </summary>
         public enum CertificateInclusion {
+            /// <summary>Include certificates in the DSS and VRI dictionaries.</summary>
             YES,
+            /// <summary>Do not include certificates in the DSS and VRI dictionaries.</summary>
             NO
         }
 

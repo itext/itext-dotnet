@@ -760,9 +760,13 @@ namespace iText.Signatures {
 
         /// <summary>Signature rendering modes.</summary>
         public enum RenderingMode {
+            /// <summary>The rendering mode is just the description.</summary>
             DESCRIPTION,
+            /// <summary>The rendering mode is the name of the signer and the description.</summary>
             NAME_AND_DESCRIPTION,
+            /// <summary>The rendering mode is an image and the description.</summary>
             GRAPHIC_AND_DESCRIPTION,
+            /// <summary>The rendering mode is just an image.</summary>
             GRAPHIC
         }
     }

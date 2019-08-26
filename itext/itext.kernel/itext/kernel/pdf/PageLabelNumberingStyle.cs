@@ -43,10 +43,15 @@ address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
     public enum PageLabelNumberingStyle {
+        /// <summary>1, 2, 3, 4...</summary>
         DECIMAL_ARABIC_NUMERALS,
+        /// <summary>I, II, III, IV...</summary>
         UPPERCASE_ROMAN_NUMERALS,
+        /// <summary>i, ii, iii, iv...</summary>
         LOWERCASE_ROMAN_NUMERALS,
+        /// <summary>A, B, C, D...</summary>
         UPPERCASE_LETTERS,
+        /// <summary>a, b, c, d...</summary>
         LOWERCASE_LETTERS
     }
 }

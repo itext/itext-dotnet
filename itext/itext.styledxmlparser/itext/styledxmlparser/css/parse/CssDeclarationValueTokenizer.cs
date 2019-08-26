@@ -276,9 +276,13 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>Enumeration of the different token types.</summary>
         public enum TokenType {
+            /// <summary>The string type.</summary>
             STRING,
+            /// <summary>The function type.</summary>
             FUNCTION,
+            /// <summary>The comma type.</summary>
             COMMA,
+            /// <summary>Unknown type.</summary>
             UNKNOWN
         }
     }

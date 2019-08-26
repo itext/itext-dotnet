@@ -65,7 +65,9 @@ namespace iText.Signatures {
         /// <summary>Enum containing the Cryptographic Standards.</summary>
         /// <remarks>Enum containing the Cryptographic Standards. Possible values are "CMS" and "CADES".</remarks>
         public enum CryptoStandard {
+            /// <summary>Cryptographic Message Syntax.</summary>
             CMS,
+            /// <summary>CMS Advanced Electronic Signatures.</summary>
             CADES
         }
 

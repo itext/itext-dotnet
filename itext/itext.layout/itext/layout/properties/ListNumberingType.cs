@@ -51,9 +51,13 @@ namespace iText.Layout.Properties {
         ENGLISH_UPPER,
         GREEK_LOWER,
         GREEK_UPPER,
+        /// <summary>Zapfdingbats font characters in range [172; 181]</summary>
         ZAPF_DINGBATS_1,
+        /// <summary>Zapfdingbats font characters in range [182; 191]</summary>
         ZAPF_DINGBATS_2,
+        /// <summary>Zapfdingbats font characters in range [192; 201]</summary>
         ZAPF_DINGBATS_3,
+        /// <summary>Zapfdingbats font characters in range [202; 221]</summary>
         ZAPF_DINGBATS_4
     }
 }
