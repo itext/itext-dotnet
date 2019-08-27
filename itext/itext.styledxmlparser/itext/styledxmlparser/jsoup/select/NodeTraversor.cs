@@ -44,7 +44,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Depth-first node traversor.</summary>
     /// <remarks>
     /// Depth-first node traversor. Use to iterate through all nodes under and including the specified root node.
-    /// <p>
+    /// <para />
     /// This implementation does not use recursion, so a deep DOM does not risk blowing the stack.
     /// </remarks>
     public class NodeTraversor {

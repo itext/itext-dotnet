@@ -463,7 +463,7 @@ namespace iText.Signatures {
         /// <summary>Constructs appearance (top-level) for a signature.</summary>
         /// <remarks>
         /// Constructs appearance (top-level) for a signature.
-        /// <p>
+        /// <para />
         /// Consult <A HREF="http://partners.adobe.com/asn/developer/pdfs/tn/PPKAppearances.pdf">PPKAppearances.pdf</A>
         /// for further details.
         /// </remarks>

@@ -51,7 +51,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <c>XmlTreeBuilder</c>
     /// when you want to parse XML without any of the HTML DOM rules being applied to the
     /// document.
-    /// <p>
+    /// <para />
     /// Usage example:
     /// <c>Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());</c>
     /// </summary>

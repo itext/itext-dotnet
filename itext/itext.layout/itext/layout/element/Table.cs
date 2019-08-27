@@ -60,7 +60,7 @@ namespace iText.Layout.Element {
     /// grid. It is filled with
     /// <see cref="Cell">cells</see>
     /// , ordered in rows and columns.
-    /// <p>
+    /// <para />
     /// It is an implementation of
     /// <see cref="ILargeElement"/>
     /// , which means it can be flushed
@@ -290,11 +290,11 @@ namespace iText.Layout.Element {
         /// <br />
         /// Since 7.0.2 table layout was introduced. Auto layout is default, except large tables.
         /// For large table fixed layout set implicitly.
-        /// <p>
+        /// <para />
         /// Since 7.1 table will have undefined column widths, that will be determined during layout.
         /// In oder to set equal percent width as column width, use
         /// <see cref="iText.Layout.Properties.UnitValue.CreatePercentArray(int)"/>
-        /// <p>
+        /// <para />
         /// Note, the eventual columns width depends on selected layout, table width,
         /// cell's width, cell's min-widths, and cell's max-widths.
         /// Table layout algorithm has the same behaviour as expected for CSS table-layout property,
@@ -320,7 +320,7 @@ namespace iText.Layout.Element {
         /// <c>table-layout:fixed</c>
         /// CSS property.
         /// Note, the table must have width property, otherwise auto layout will be used.
-        /// <p>
+        /// <para />
         /// Algorithm description
         /// <br />
         /// 1. Scan columns for width property and set it. All the rest columns get undefined value.
@@ -359,7 +359,7 @@ namespace iText.Layout.Element {
         /// <c>table-layout:auto</c>
         /// CSS property. <br />
         /// Note, large table does not support auto layout.
-        /// <p>
+        /// <para />
         /// Algorithm principles.
         /// <br />
         /// 1. Column width cannot be less, than min-width of any cell in the column (calculated by layout).

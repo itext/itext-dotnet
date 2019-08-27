@@ -47,7 +47,7 @@ namespace iText.IO.Util {
     /// <summary>A hash map that uses primitive ints for the key rather than objects.</summary>
     /// <remarks>
     /// A hash map that uses primitive ints for the key rather than objects.
-    /// <p>
+    /// <para />
     /// Note that this class is for internal optimization purposes only, and may
     /// not be supported in future releases of Jakarta Commons Lang.  Utilities of
     /// this sort may be included in future releases of Jakarta Commons Collections.
@@ -150,7 +150,7 @@ namespace iText.IO.Util {
         /// Tests if some key maps into the specified value in this hashtable.
         /// This operation is more expensive than the <code>containsKey</code>
         /// method.
-        /// <p>
+        /// <para />
         /// Note that this method is identical in functionality to containsValue,
         /// (which is part of the Map interface in the collections framework).
         /// </remarks>
@@ -184,7 +184,7 @@ namespace iText.IO.Util {
         /// <remarks>
         /// Returns <code>true</code> if this HashMap maps one or more keys
         /// to this value.
-        /// <p>
+        /// <para />
         /// Note that this method is identical in functionality to contains
         /// (which predates the Map interface).
         /// </remarks>
@@ -242,7 +242,7 @@ namespace iText.IO.Util {
         /// Increases the capacity of and internally reorganizes this
         /// hashtable, in order to accommodate and access its entries more
         /// efficiently.
-        /// <p>
+        /// <para />
         /// This method is called automatically when the number of keys
         /// in the hashtable exceeds this hashtable's capacity and load
         /// factor.
@@ -273,7 +273,7 @@ namespace iText.IO.Util {
         /// Maps the specified <code>key</code> to the specified
         /// <code>value</code> in this hashtable. The key cannot be
         /// <code>null</code>.
-        /// <p>
+        /// <para />
         /// The value can be retrieved by calling the <code>get</code> method
         /// with a key that is equal to the original key.
         /// </remarks>
@@ -317,7 +317,7 @@ namespace iText.IO.Util {
         /// <remarks>
         /// Removes the key (and its corresponding value) from this
         /// hashtable.
-        /// <p>
+        /// <para />
         /// This method does nothing if the key is not present in the
         /// hashtable.
         /// </remarks>

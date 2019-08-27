@@ -52,7 +52,7 @@ namespace iText.Kernel.Font {
     /// <summary>
     /// This class provides helpful methods for creating fonts ready to be used in a
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-    /// <p>
+    /// <para />
     /// Note, just created
     /// <see cref="PdfFont"/>
     /// is almost empty until it will be flushed,
@@ -90,7 +90,7 @@ namespace iText.Kernel.Font {
         /// Creates a
         /// <see cref="PdfFont"/>
         /// by already existing font dictionary.
-        /// <p>
+        /// <para />
         /// Note, the font won't be added to any document,
         /// until you add it to
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
@@ -100,7 +100,7 @@ namespace iText.Kernel.Font {
         /// , or to
         /// <see cref="iText.Kernel.Pdf.PdfResources"/>
         /// the font will be made indirect implicitly.
-        /// <p>
+        /// <para />
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetFont(iText.Kernel.Pdf.PdfDictionary)"/>
         /// method is strongly recommended if you want to get PdfFont by both
         /// existing font dictionary, or just created and hasn't flushed yet.

@@ -112,7 +112,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets direct object and try to resolve indirects chain.</summary>
         /// <remarks>
         /// Gets direct object and try to resolve indirects chain.
-        /// <p>
+        /// <para />
         /// Note: If chain of references has length of more than 32,
         /// this method return 31st reference in chain.
         /// </remarks>
@@ -199,10 +199,10 @@ namespace iText.Kernel.Pdf {
         /// it only ensures that corresponding xref entry is free and indirect object referred by this reference is no longer
         /// linked to it. Actual object still might be written to the resultant document (and would get a new corresponding
         /// indirect reference in this case) if it is still contained in some other object.
-        /// <p>
+        /// <para />
         /// This method will not give any result if the corresponding indirect object or another object
         /// that contains a reference to this object is already flushed.
-        /// <p>
+        /// <para />
         /// Note: in some cases, removing a link of indirect object to it's indirect reference while
         /// leaving the actual object in the document structure might lead to errors, because some objects are expected
         /// to always have such explicit link (e.g. Catalog object, page objects, etc).

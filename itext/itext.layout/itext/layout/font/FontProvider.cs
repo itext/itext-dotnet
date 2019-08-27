@@ -73,7 +73,7 @@ namespace iText.Layout.Font {
     /// FontProvider the only end point for creating
     /// <see cref="iText.Kernel.Font.PdfFont"/>
     /// .
-    /// <p>
+    /// <para />
     /// It is allowed to use only one
     /// <see cref="FontProvider"/>
     /// per document. If temporary fonts per element needed,
@@ -87,7 +87,7 @@ namespace iText.Layout.Font {
     /// <see cref="GetStrategy(System.String, System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
     ///     >
     /// .
-    /// <p>
+    /// <para />
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
     /// s, because of possible conflicts with

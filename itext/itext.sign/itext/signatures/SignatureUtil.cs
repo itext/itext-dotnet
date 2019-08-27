@@ -100,12 +100,12 @@ namespace iText.Signatures {
         /// instance for the given signature.
         /// This method handles signature parsing and might throw an exception if
         /// signature is malformed.
-        /// <p>
+        /// <para />
         /// The returned
         /// <see cref="PdfPKCS7"/>
         /// can be used to fetch additional info about the signature
         /// and also to perform integrity check of data signed by the given signature field.
-        /// <p>
+        /// <para />
         /// In order to check that given signature covers the current PdfDocument revision please
         /// use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
@@ -131,12 +131,12 @@ namespace iText.Signatures {
         /// instance for the given signature.
         /// This method handles signature parsing and might throw an exception if
         /// signature is malformed.
-        /// <p>
+        /// <para />
         /// The returned
         /// <see cref="PdfPKCS7"/>
         /// can be used to fetch additional info about the signature
         /// and also to perform integrity check of data signed by the given signature field.
-        /// <p>
+        /// <para />
         /// Prepared
         /// <see cref="PdfPKCS7"/>
         /// instance calculates digest based on signature's /ByteRange entry.
@@ -320,7 +320,7 @@ namespace iText.Signatures {
         ///     </summary>
         /// <remarks>
         /// Checks if the signature covers the entire document (except for signature's Contents) or just a part of it.
-        /// <p>
+        /// <para />
         /// If this method does not return
         /// <see langword="true"/>
         /// it means that signature in question does not cover the entire
@@ -328,7 +328,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . Such signatures cannot be considered as verifying the PDF document,
         /// because content that is not covered by signature might have been modified since the signature creation.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="name">the signature field name</param>
         /// <returns>true if the signature covers the entire document, false if it doesn't</returns>

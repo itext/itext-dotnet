@@ -53,7 +53,7 @@ namespace iText.Kernel.Counter {
     /// <remarks>
     /// Class that can be extended if you want to count iText events, for example the number of documents
     /// that are being processed by iText.
-    /// <p>
+    /// <para />
     /// Implementers may use this method to record actual system usage for licensing purposes
     /// (e.g. count the number of documents or the volume in bytes in the context of a SaaS license).
     /// </remarks>

@@ -30,7 +30,7 @@ namespace iText.Layout.Hyphenation {
     /// This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup. It provides the provides the method to
     /// hyphenate a word.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class HyphenationTree : TernaryTree, IPatternConsumer {
@@ -206,14 +206,14 @@ namespace iText.Layout.Hyphenation {
         /// Search for all possible partial matches of word starting
         /// at index an update interletter values. In other words, it
         /// does something like:
-        /// <p>
+        /// <para />
         /// <code>
         /// for(i=0; i&lt;patterns.length; i++) {
         /// if ( word.substring(index).startsWidth(patterns[i]) )
         /// update_interletter_values(patterns[i]);
         /// }
         /// </code>
-        /// <p>
+        /// <para />
         /// But it is done in an efficient way since the patterns are
         /// stored in a ternary tree. In fact, this is the whole purpose
         /// of having the tree: doing this search without having to test

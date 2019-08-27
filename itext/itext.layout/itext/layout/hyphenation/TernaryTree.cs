@@ -21,15 +21,10 @@ using System;
 using System.Collections;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary>
-    /// <h2>Ternary Search Tree.</h2>
-    /// <p>
-    /// A ternary search tree is a hybrid between a binary tree and
-    /// a digital search tree (trie).
-    /// </summary>
+    /// <summary><h2>Ternary Search Tree.</h2></summary>
     /// <remarks>
     /// <h2>Ternary Search Tree.</h2>
-    /// <p>
+    /// <para />
     /// A ternary search tree is a hybrid between a binary tree and
     /// a digital search tree (trie). Keys are limited to strings.
     /// A data value of type char is stored in each leaf node.
@@ -45,7 +40,7 @@ namespace iText.Layout.Hyphenation {
     /// a binary tree but a lot less than a trie. Performance is
     /// comparable with a hash table, sometimes it outperforms a hash
     /// function (most of the time can determine a miss faster than a hash).
-    /// <p>
+    /// <para />
     /// The main purpose of this java port is to serve as a base for
     /// implementing TeX's hyphenation algorithm (see The TeXBook,
     /// appendix H). Each language requires from 5000 to 15000 hyphenation
@@ -59,13 +54,13 @@ namespace iText.Layout.Hyphenation {
     /// room for about 65000 nodes. In my tests the english patterns
     /// took 7694 nodes and the german patterns 10055 nodes,
     /// so I think we are safe.
-    /// <p>
+    /// <para />
     /// All said, this is a map with strings as keys and char as value.
     /// Pretty limited!. It can be extended to a general map by
     /// using the string representation of an object and using the
     /// char value as an index to an array that contains the object
     /// values.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class TernaryTree {

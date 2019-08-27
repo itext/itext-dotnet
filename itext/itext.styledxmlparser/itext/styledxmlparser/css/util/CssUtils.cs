@@ -293,7 +293,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Parses the absolute font size.</summary>
         /// <remarks>
         /// Parses the absolute font size.
-        /// <p>
+        /// <para />
         /// A numeric value (without px, pt, etc in the given length string) is considered to be in the default metric that
         /// was given.
         /// </remarks>
@@ -328,7 +328,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Parses the absolute font size.</summary>
         /// <remarks>
         /// Parses the absolute font size.
-        /// <p>
+        /// <para />
         /// A numeric value (without px, pt, etc in the given length string) is considered to be in the px.
         /// </remarks>
         /// <param name="fontSizeValue">

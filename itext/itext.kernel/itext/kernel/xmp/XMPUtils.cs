@@ -134,7 +134,7 @@ namespace iText.Kernel.XMP {
         /// <summary>Append properties from one XMP object to another.</summary>
         /// <remarks>
         /// Append properties from one XMP object to another.
-        /// <p>XMPUtils#appendProperties was created to support the File Info dialog's Append button, and
+        /// <para />XMPUtils#appendProperties was created to support the File Info dialog's Append button, and
         /// has been been generalized somewhat from those specific needs. It appends information from one
         /// XMP object (source) to another (dest). The default operation is to append only external
         /// properties that do not already exist in the destination. The flag
@@ -158,7 +158,7 @@ namespace iText.Kernel.XMP {
         /// values the same as non-empty values. An empty value is any of a simple empty string, an array
         /// with no items, or a struct with no fields. Qualifiers are ignored.
         /// </ul>
-        /// <p>The detailed behavior is defined by the following pseudo-code:
+        /// <para />The detailed behavior is defined by the following pseudo-code:
         /// <blockquote>
         /// <pre>
         /// appendProperties ( sourceXMP, destXMP, doAllProperties,
@@ -188,11 +188,11 @@ namespace iText.Kernel.XMP {
         /// copy new items by value into the destination, ignoring order and duplicates
         /// </pre>
         /// </blockquote>
-        /// <p><em>Note:</em> appendProperties can be expensive if replaceOldValues is not passed and
+        /// <para /><em>Note:</em> appendProperties can be expensive if replaceOldValues is not passed and
         /// the XMP contains large arrays. The array item checking described above is n-squared.
         /// Each source item is checked to see if it already exists in the destination,
         /// without regard to order or duplicates.
-        /// <p>Simple items are compared by value and "xml:lang" qualifier, other qualifiers are ignored.
+        /// <para />Simple items are compared by value and "xml:lang" qualifier, other qualifiers are ignored.
         /// Structs are recursively compared by field names, without regard to field order. Arrays are
         /// compared by recursively comparing all items.
         /// </remarks>

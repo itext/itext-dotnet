@@ -94,7 +94,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Get a Tag by name.</summary>
         /// <remarks>
         /// Get a Tag by name. If not previously defined (unknown), returns a new generic tag, that can do anything.
-        /// <p>
+        /// <para />
         /// Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not registered and will only .equals().
         /// </remarks>
         /// <param name="tagName">Name of tag, e.g. "p". Case insensitive.</param>

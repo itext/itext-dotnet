@@ -56,7 +56,7 @@ namespace iText.IO.Util {
     /// .
     /// If you need order independent hash code just summate, multiply or XOR all
     /// elements.
-    /// <p>
+    /// <para />
     /// Suppose we have class:
     /// <pre><code>
     /// class Thing {
@@ -66,7 +66,7 @@ namespace iText.IO.Util {
     /// }
     /// </code></pre>
     /// The hash code calculation can be expressed in 2 forms.
-    /// <p>
+    /// <para />
     /// For maximum performance:
     /// <pre><code>
     /// public int hashCode() {
@@ -77,7 +77,7 @@ namespace iText.IO.Util {
     /// return hashCode;
     /// }
     /// </code></pre>
-    /// <p>
+    /// <para />
     /// For convenience:
     /// <pre><code>
     /// public int hashCode() {

@@ -213,7 +213,7 @@ namespace iText.Kernel.Utils {
         /// This option makes sense only for
         /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
         /// method.
-        /// <p>
+        /// <para />
         /// By default, pages are treated as special objects and if they are met in the process of comparison, then they are
         /// not checked as objects, but rather simply checked that they has same page numbers in both documents.
         /// This behaviour is intended for the
@@ -221,7 +221,7 @@ namespace iText.Kernel.Utils {
         /// set of methods, because in them documents are compared in page by page basis. Thus, we don't need to check if pages
         /// are of the same content when they are met in comparison process, we are sure that we will compare their content or
         /// we have already compared them.
-        /// <p>
+        /// <para />
         /// However, if you would use
         /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
         /// with default behaviour
@@ -291,7 +291,7 @@ namespace iText.Kernel.Utils {
         /// Documents for comparison are opened in reader mode. This method is intended to alter
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// which are used to open output document. This is particularly useful for comparison of encrypted documents.
-        /// <p>
+        /// <para />
         /// For more explanations about what is outDoc and cmpDoc see last paragraph of the
         /// <see cref="CompareTool"/>
         /// class description.
@@ -315,7 +315,7 @@ namespace iText.Kernel.Utils {
         /// Documents for comparison are opened in reader mode. This method is intended to alter
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// which are used to open cmp document. This is particularly useful for comparison of encrypted documents.
-        /// <p>
+        /// <para />
         /// For more explanations about what is outDoc and cmpDoc see last paragraph of the
         /// <see cref="CompareTool"/>
         /// class description.
@@ -404,7 +404,7 @@ namespace iText.Kernel.Utils {
         /// Compares two PDF documents by content starting from page dictionaries and then recursively comparing
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
-        /// <p>
+        /// <para />
         /// Unlike
         /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
         /// this method performs content comparison page by page
@@ -415,7 +415,7 @@ namespace iText.Kernel.Utils {
         /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>
         /// .
         /// For this overload, differenceImagePrefix value is generated using diff_%outPdfFileName%_ format.
-        /// <p>
+        /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
         /// class description.
@@ -659,16 +659,16 @@ namespace iText.Kernel.Utils {
         /// <remarks>
         /// Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents. You can roughly
         /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
-        /// <p>
+        /// <para />
         /// Both out and cmp
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// shall have indirect references.
-        /// <p>
+        /// <para />
         /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
         /// simply comparing their page numbers. This behavior can be disabled by calling
         /// <see cref="DisableCachedPagesComparison()"/>
         /// .
-        /// <p>
+        /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
         /// class description.
@@ -701,16 +701,16 @@ namespace iText.Kernel.Utils {
         /// <remarks>
         /// Recursively compares structures of two corresponding dictionaries from out and cmp PDF documents. You can roughly
         /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
-        /// <p>
+        /// <para />
         /// Both out and cmp
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// shall have indirect references.
-        /// <p>
+        /// <para />
         /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
         /// simply comparing their page numbers. This behavior can be disabled by calling
         /// <see cref="DisableCachedPagesComparison()"/>
         /// .
-        /// <p>
+        /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
         /// class description.
@@ -2247,7 +2247,7 @@ namespace iText.Kernel.Utils {
         /// <remarks>
         /// Class that helps to find two corresponding objects in the comparing documents and also keeps track of the
         /// already met in comparing process parent indirect objects.
-        /// <p>
+        /// <para />
         /// You could say that ObjectPath instance consists of two parts: direct path and indirect path. Direct path defines
         /// path to the currently comparing objects in relation to base objects. It could be empty, which would mean that
         /// currently comparing objects are base objects themselves. Base objects are the two indirect objects from the comparing

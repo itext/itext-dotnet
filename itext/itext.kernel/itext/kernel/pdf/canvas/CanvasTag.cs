@@ -49,7 +49,7 @@ namespace iText.Kernel.Pdf.Canvas {
     /// <summary>This class represents a single tag on a single piece of marked content.</summary>
     /// <remarks>
     /// This class represents a single tag on a single piece of marked content.
-    /// <p>
+    /// <para />
     /// In Tagged PDF, a tag is the basic structure unit for marking content. The tag
     /// structure and hierarchy is largely comparable to HTML. As in HTML, every tag
     /// type has a name, defined here in the <code>role</code> attribute. The tagging

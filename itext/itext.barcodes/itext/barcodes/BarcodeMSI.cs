@@ -156,7 +156,7 @@ namespace iText.Barcodes {
         /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.
-        /// <p>
+        /// <para />
         /// The bars and text are written in the following colors:
         /// <TABLE BORDER="1" summary="">
         /// <TR>

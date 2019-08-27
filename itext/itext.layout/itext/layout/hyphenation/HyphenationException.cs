@@ -20,7 +20,7 @@ namespace iText.Layout.Hyphenation {
     /// <summary>A hyphenation exception.</summary>
     /// <remarks>
     /// A hyphenation exception.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class HyphenationException : Exception {

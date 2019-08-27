@@ -161,7 +161,7 @@ namespace iText.Layout.Element {
         /// Explicitly sets the page number this element should be put on. The location
         /// on the page will be the same as if it were added at the end of the document,
         /// but it will be located on the specified page.
-        /// <p>
+        /// <para />
         /// This method should be used very carefully in client code.
         /// </remarks>
         /// <param name="pageNumber">the page number of the page this element should be placed on</param>

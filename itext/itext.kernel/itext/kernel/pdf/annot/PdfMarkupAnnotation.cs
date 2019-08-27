@@ -438,7 +438,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Intents allow conforming readers to distinguish between different uses and behaviors
         /// of a single markup annotation type. If this entry is not present or its value is the same as the annotation type,
         /// the annotation shall have no explicit intent and should behave in a generic manner in a conforming reader.
-        /// <p>
+        /// <para />
         /// See ISO-320001, free text annotations (Table 174), line annotations (Table 175), polygon annotations (Table 178),
         /// and polyline annotations (Table 178) for the specific intent values for those types.
         /// </remarks>

@@ -202,11 +202,11 @@ namespace iText.Kernel.Geom {
         /// <summary>Method returns type of affine transformation.</summary>
         /// <remarks>
         /// Method returns type of affine transformation.
-        /// <p>
+        /// <para />
         /// Transform matrix is
         /// m00 m01 m02
         /// m10 m11 m12
-        /// <p>
+        /// <para />
         /// According analytic geometry new basis vectors are (m00, m01) and (m10, m11),
         /// translation vector is (m02, m12). Original basis vectors are (1, 0) and (0, 1).
         /// Type transformations classification:

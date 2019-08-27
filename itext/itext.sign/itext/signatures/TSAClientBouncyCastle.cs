@@ -61,7 +61,7 @@ namespace iText.Signatures {
     /// <remarks>
     /// Time Stamp Authority Client interface implementation using Bouncy Castle
     /// org.bouncycastle.tsp package.
-    /// <p>
+    /// <para />
     /// Created by Aiken Sam, 2006-11-15, refactored by Martin Brunecky, 07/15/2007
     /// for ease of subclassing.
     /// </remarks>

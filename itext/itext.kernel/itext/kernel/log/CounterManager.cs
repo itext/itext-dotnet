@@ -53,7 +53,7 @@ namespace iText.Kernel.Log {
     /// for each registered
     /// <see cref="ICounterFactory"/>
     /// and send corresponding events on document read and write.
-    /// <p>
+    /// <para />
     /// You can implement your own
     /// <see cref="ICounterFactory"/>
     /// and register them with
@@ -68,7 +68,7 @@ namespace iText.Kernel.Log {
     /// is just an example of a
     /// <see cref="ICounter"/>
     /// implementation.
-    /// <p>
+    /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
     [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounterHandler instead."

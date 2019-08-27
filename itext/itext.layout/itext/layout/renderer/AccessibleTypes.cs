@@ -52,14 +52,14 @@ namespace iText.Layout.Renderer {
     /// <remarks>
     /// This class is used to identify standard structure role type based only on it's name for the sake of applying
     /// standard structure attributes.
-    /// <p>
+    /// <para />
     /// These types mostly resemble structure type levels in the pdf 1.7 specification, however they are not exact.
     /// In pdf 2.0 some of these types are not even present and moreover, specific roles with the same name might belong
     /// to different type levels depending on context (which consists of kids, parents and their types).
-    /// <p>
+    /// <para />
     /// So, these types are mostly useful for the internal itext usage and are not backed by any spec. They are designed for
     /// the most part to return the value the most suitable and handy for the purposes of accessibility properties applying.
-    /// <p>
+    /// <para />
     /// Here are the main reasons to leave these types as is for now, even after introducing of PDF 2.0:
     /// <ul>
     /// <li>Standard structure types for pdf 1.7 and 2.0 are very alike. There are some differences, like new/removed roles

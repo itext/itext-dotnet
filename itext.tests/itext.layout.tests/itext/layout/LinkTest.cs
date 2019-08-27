@@ -146,15 +146,12 @@ namespace iText.Layout {
         /// <a href="http://stackoverflow.com/questions/34408764/create-local-link-in-rotated-pdfpcell-in-itextsharp">
         /// Stack overflow: Create local link in rotated PdfPCell in iTextSharp
         /// </a>
-        /// <p>
-        /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
-        /// in the question.
         /// </summary>
         /// <remarks>
         /// <a href="http://stackoverflow.com/questions/34408764/create-local-link-in-rotated-pdfpcell-in-itextsharp">
         /// Stack overflow: Create local link in rotated PdfPCell in iTextSharp
         /// </a>
-        /// <p>
+        /// <para />
         /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
         /// in the question.
         /// </p>

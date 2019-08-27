@@ -50,7 +50,7 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// root namespace prefix to the first property component. The schema URI is
         /// put in the first (0th) slot in the expanded XMPPath. Check if the top
         /// level component is an alias, but don't resolve it.
-        /// <p>
+        /// <para />
         /// In the most verbose case steps are separated by '/', and each step can be
         /// of these forms:
         /// <dl>
@@ -71,16 +71,16 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// <dt>?qualName
         /// <dd> A general qualifier.
         /// </dl>
-        /// <p>
+        /// <para />
         /// The logic is complicated though by shorthand for arrays, the separating
         /// '/' and leading '*' are optional. These are all equivalent: array/*[2]
         /// array/[2] array*[2] array[2] All of these are broken into the 2 steps
         /// "array" and "[2]".
-        /// <p>
+        /// <para />
         /// The value portion in the array selector forms is a string quoted by '''
         /// or '"'. The value may contain any character including a doubled quoting
         /// character. The value may be empty.
-        /// <p>
+        /// <para />
         /// The syntax isn't checked, but an XML name begins with a letter or '_',
         /// and contains letters, digits, '.', '-', '_', and a bunch of special
         /// non-ASCII Unicode characters. An XML qualified name is a pair of names

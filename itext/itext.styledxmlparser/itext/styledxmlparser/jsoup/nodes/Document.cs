@@ -287,14 +287,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="OutputSettings.Charset(System.Text.Encoding)">OutputSettings.charset(Charset)</see>
         /// but in addition it updates the
         /// charset / encoding element within the document.
-        /// <p>
+        /// <para />
         /// This enables
         /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>
         /// .
-        /// <p>
+        /// <para />
         /// If there's no element with charset / encoding information yet it will
         /// be created. Obsolete charset / encoding definitions are removed!
-        /// <p>
+        /// <para />
         /// <b>Elements used:</b>
         /// <ul>
         /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
@@ -328,7 +328,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// updated on changes through
         /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
         /// or not.
-        /// <p>
+        /// <para />
         /// If set to <tt>false</tt> <i>(default)</i> there are no elements
         /// modified.
         /// </summary>
@@ -490,7 +490,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
         /// entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
         /// which uses the complete set of HTML named entities.
-        /// <p>
+        /// <para />
         /// The default escape mode is <code>base</code>.
         /// </remarks>
         /// <returns>the document's current escape mode</returns>
@@ -516,7 +516,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get the document's current output charset, which is used to control which characters are escaped when
         /// generating HTML (via the <code>html()</code> methods), and which are kept intact.
-        /// <p>
+        /// <para />
         /// Where possible (when parsing from a URL or File), the document's output charset is automatically set to the
         /// input charset. Otherwise, it defaults to UTF-8.
         /// </remarks>

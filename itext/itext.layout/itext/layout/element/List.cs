@@ -219,7 +219,7 @@ namespace iText.Layout.Element {
         /// means that the items will be aligned as follows:
         /// 9.  Item 9
         /// 10. Item 10
-        /// <p>
+        /// <para />
         /// Whereas
         /// <see cref="iText.Layout.Properties.ListSymbolAlignment.RIGHT"/>
         /// means the items will be aligned as follows:

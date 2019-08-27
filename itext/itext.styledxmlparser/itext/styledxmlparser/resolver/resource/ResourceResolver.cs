@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// is a string that represents an absolute URI with any schema
         /// except "file" - resources url values will be resolved exactly as "new URL(baseUrl, uriString)". Otherwise base URI
         /// will be handled as path in local file system.
-        /// <p>
+        /// <para />
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
         /// </summary>
@@ -163,7 +163,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <remarks>
         /// Deprecated: use retrieveBytesFromResource instead
         /// Replaced by retrieveBytesFromResource for the sake of method name clarity.
-        /// <p>
+        /// <para />
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
         /// <see cref="System.String"/>

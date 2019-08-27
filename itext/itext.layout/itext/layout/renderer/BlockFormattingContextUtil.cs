@@ -54,7 +54,7 @@ namespace iText.Layout.Renderer {
     /// This class helps to identify whether we are dealing with a renderer that creates
     /// a new "Block formatting context" in terms of CSS. Such renderers adhere to
     /// specific rules of floating elements and margins collapse handling.
-    /// <p>
+    /// <para />
     /// See
     /// <a href="https://www.w3.org/TR/CSS21/visuren.html#block-formatting">https://www.w3.org/TR/CSS21/visuren.html#block-formatting</a>
     /// and
@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Defines whether a renderer creates a new "Block formatting context" in terms of CSS.</summary>
         /// <remarks>
         /// Defines whether a renderer creates a new "Block formatting context" in terms of CSS.
-        /// <p>
+        /// <para />
         /// See
         /// <see cref="BlockFormattingContextUtil"/>
         /// class description for more info.

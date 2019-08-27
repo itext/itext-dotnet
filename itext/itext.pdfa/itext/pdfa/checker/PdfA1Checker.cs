@@ -60,7 +60,7 @@ namespace iText.Pdfa.Checker {
     /// method implementations from the abstract
     /// <see cref="PdfAChecker"/>
     /// class.
-    /// <p>
+    /// <para />
     /// The specification implemented by this class is ISO 19005-1
     /// </summary>
     public class PdfA1Checker : PdfAChecker {

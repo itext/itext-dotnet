@@ -1347,7 +1347,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the Flatness.</summary>
         /// <remarks>
         /// Changes the Flatness.
-        /// <p>
+        /// <para />
         /// Flatness sets the maximum permitted distance in device pixels between the
         /// mathematically correct path and an approximation constructed from straight line segments.
         /// </remarks>
@@ -1573,7 +1573,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Begins a graphic block whose visibility is controlled by the <CODE>layer</CODE>.
         /// Blocks can be nested. Each block must be terminated by an
         /// <see cref="EndLayer()"/>
-        /// .<p>
+        /// .<para />
         /// Note that nested layers with
         /// <see cref="iText.Kernel.Pdf.Layer.PdfLayer.AddChild(iText.Kernel.Pdf.Layer.PdfLayer)"/>
         /// only require a single

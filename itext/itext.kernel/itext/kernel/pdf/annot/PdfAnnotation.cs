@@ -1151,7 +1151,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// vertical corner radius, and border width, all in default user space units.
         /// If the corner radii are 0, the border has square (not rounded) corners; if
         /// the border width is 0, no border is drawn.
-        /// <p>
+        /// <para />
         /// The array may have a fourth element, an optional dash array (see ISO-320001 8.4.3.6, "Line Dash Pattern").
         /// </remarks>
         /// <returns>
@@ -1532,16 +1532,16 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF annotation and identifies the relationship between them.
         /// </summary>
         /// <remarks>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF annotation and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the annotation dictionary.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>

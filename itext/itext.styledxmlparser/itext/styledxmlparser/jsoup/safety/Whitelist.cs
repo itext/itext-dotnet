@@ -49,7 +49,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <summary>Whitelists define what HTML (elements and attributes) to allow through the cleaner.</summary>
     /// <remarks>
     /// Whitelists define what HTML (elements and attributes) to allow through the cleaner. Everything else is removed.
-    /// <p>
+    /// <para />
     /// Start with one of the defaults:
     /// <ul>
     /// <li>
@@ -89,7 +89,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// supplied HTML into a templated page), and not to clean a full HTML document. If the latter is the case, either wrap the
     /// document HTML around the cleaned body HTML, or create a whitelist that allows <code>html</code> and <code>head</code>
     /// elements as appropriate.
-    /// <p>
+    /// <para />
     /// If you are going to extend a whitelist, please be very careful. Make sure you understand what attributes may lead to
     /// XSS attack vectors. URL attributes are particularly vulnerable and require careful validation. See
     /// http://ha.ckers.org/xss.html for some XSS attack examples.
@@ -139,10 +139,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <remarks>
         /// This whitelist allows a fuller range of text nodes: <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
         /// ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and appropriate attributes.
-        /// <p>
+        /// <para />
         /// Links (<code>a</code> elements) can point to <code>http, https, ftp, mailto</code>, and have an enforced
         /// <code>rel=nofollow</code> attribute.
-        /// <p>
+        /// <para />
         /// Does not allow images.
         /// </remarks>
         /// <returns>whitelist</returns>
@@ -171,9 +171,14 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// This whitelist allows a full range of text and structural body HTML: <code>a, b, blockquote, br, caption, cite,
         /// code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
         /// sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
-        /// <p>
-        /// Links do not have an enforced <code>rel=nofollow</code> attribute, but you can add that if desired.
         /// </summary>
+        /// <remarks>
+        /// This whitelist allows a full range of text and structural body HTML: <code>a, b, blockquote, br, caption, cite,
+        /// code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
+        /// sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
+        /// <para />
+        /// Links do not have an enforced <code>rel=nofollow</code> attribute, but you can add that if desired.
+        /// </remarks>
         /// <returns>whitelist</returns>
         public static iText.StyledXmlParser.Jsoup.Safety.Whitelist Relaxed() {
             return new iText.StyledXmlParser.Jsoup.Safety.Whitelist().AddTags("a", "b", "blockquote", "br", "caption", 
@@ -243,10 +248,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <summary>Add a list of allowed attributes to a tag.</summary>
         /// <remarks>
         /// Add a list of allowed attributes to a tag. (If an attribute is not allowed on an element, it will be removed.)
-        /// <p>
+        /// <para />
         /// E.g.: <code>addAttributes("a", "href", "class")</code> allows <code>href</code> and <code>class</code> attributes
         /// on <code>a</code> tags.
-        /// <p>
+        /// <para />
         /// To make an attribute valid for <b>all tags</b>, use the pseudo tag <code>:all</code>, e.g.
         /// <code>addAttributes(":all", "class")</code>.
         /// </remarks>
@@ -281,10 +286,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <summary>Remove a list of allowed attributes from a tag.</summary>
         /// <remarks>
         /// Remove a list of allowed attributes from a tag. (If an attribute is not allowed on an element, it will be removed.)
-        /// <p>
+        /// <para />
         /// E.g.: <code>removeAttributes("a", "href", "class")</code> disallows <code>href</code> and <code>class</code>
         /// attributes on <code>a</code> tags.
-        /// <p>
+        /// <para />
         /// To make an attribute invalid for <b>all tags</b>, use the pseudo tag <code>:all</code>, e.g.
         /// <code>removeAttributes(":all", "class")</code>.
         /// </remarks>
@@ -329,7 +334,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <remarks>
         /// Add an enforced attribute to a tag. An enforced attribute will always be added to the element. If the element
         /// already has the attribute set, it will be overridden.
-        /// <p>
+        /// <para />
         /// E.g.: <code>addEnforcedAttribute("a", "rel", "nofollow")</code> will make all <code>a</code> tags output as
         /// <code>&lt;a href="..." rel="nofollow"&gt;</code>
         /// </remarks>
@@ -392,7 +397,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// e.g.
         /// <c>http://</c>
         /// .
-        /// <p>
+        /// <para />
         /// Note that when handling relative links, the input document must have an appropriate
         /// <c>base URI</c>
         /// set when
@@ -422,9 +427,9 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <remarks>
         /// Add allowed URL protocols for an element's URL attribute. This restricts the possible values of the attribute to
         /// URLs with the defined protocol.
-        /// <p>
+        /// <para />
         /// E.g.: <code>addProtocols("a", "href", "ftp", "http", "https")</code>
-        /// <p>
+        /// <para />
         /// To allow a link to an in-page URL anchor (i.e. <code>&lt;a href="#anchor"&gt;</code>, add a <code>#</code>:<br />
         /// E.g.: <code>addProtocols("a", "href", "#")</code>
         /// </remarks>
@@ -466,7 +471,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// <summary>Remove allowed URL protocols for an element's URL attribute.</summary>
         /// <remarks>
         /// Remove allowed URL protocols for an element's URL attribute.
-        /// <p>
+        /// <para />
         /// E.g.: <code>removeProtocols("a", "href", "ftp")</code>
         /// </remarks>
         /// <param name="tag">Tag the URL protocol is for</param>

@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Tagging {
     /// <summary>A wrapper for structure element dictionaries (ISO-32000 14.7.2 "Structure Hierarchy").</summary>
     /// <remarks>
     /// A wrapper for structure element dictionaries (ISO-32000 14.7.2 "Structure Hierarchy").
-    /// <p>
+    /// <para />
     /// The logical structure of a document shall be described by a hierarchy of objects called
     /// the structure hierarchy or structure tree. At the root of the hierarchy shall be a dictionary object
     /// called the structure tree root (see
@@ -319,7 +319,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
         /// identifies the structure element to which the item of content, contained
         /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
-        /// <p>
+        /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="ref">
@@ -360,7 +360,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").</summary>
         /// <remarks>
         /// A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").
-        /// <p>
+        /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </remarks>
         /// <param name="namespace">
@@ -385,7 +385,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <remarks>
         /// Attribute for a structure element that may be used as pronunciation hint. It is an exact replacement for content
         /// enclosed by the structure element and its children.
-        /// <p>
+        /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </remarks>
         /// <param name="elementPhoneme">
@@ -420,7 +420,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
         /// attribute.
         /// Applies to the structure element and its children, except where overridden by a child structure element.
-        /// <p>
+        /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="phoneticAlphabet">
@@ -476,11 +476,11 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>Adds file associated with structure element and identifies the relationship between them.</summary>
         /// <remarks>
         /// Adds file associated with structure element and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure element dictionary.
         /// If description is provided, it also will add file description to catalog Names tree.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="description">the file description</param>
@@ -502,16 +502,16 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with structure element and identifies the relationship between them.
         /// </summary>
         /// <remarks>
-        /// <p>
+        /// <para />
         /// Adds file associated with structure element and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure element dictionary.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>

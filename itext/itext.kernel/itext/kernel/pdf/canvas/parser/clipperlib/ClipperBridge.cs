@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <remarks>
     /// This class contains variety of methods allowing to convert iText
     /// abstractions into the abstractions of the Clipper library and vise versa.
-    /// <p>
+    /// <para />
     /// For example:
     /// <ul>
     /// <li>
@@ -278,7 +278,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="Clipper"/>
         /// instance, treating the path as
         /// a closed polygon.
-        /// <p>
+        /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
         /// <ul>
         /// <li>it has less than 3 vertices;
@@ -321,7 +321,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// instance, treating the path as
         /// a polyline (an open path in terms of clipper library). This path is added to the subject of future clipping.
         /// Polylines cannot be part of clipping polygon.
-        /// <p>
+        /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
         /// <ul>
         /// <li>it has less than 2 vertices;

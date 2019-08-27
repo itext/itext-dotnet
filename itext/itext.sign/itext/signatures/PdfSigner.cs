@@ -250,7 +250,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// Provides access to a signature appearance object. Use it to
         /// customize the appearance of the signature.
-        /// <p>
+        /// <para />
         /// Be aware:
         /// <ul>
         /// <li>If you create new signature field (either use
@@ -265,7 +265,7 @@ namespace iText.Signatures {
         /// <see cref="SetFieldName(System.String)"/>
         /// call you'll have to do it again</strong>)</li>
         /// </ul>
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <returns>
         /// 
@@ -409,7 +409,7 @@ namespace iText.Signatures {
         /// <summary>Setter for the field lock dictionary.</summary>
         /// <remarks>
         /// Setter for the field lock dictionary.
-        /// <p>
+        /// <para />
         /// <strong>Be aware:</strong> if a signature is created on an existing signature field,
         /// then its /Lock dictionary takes the precedence (if it exists).
         /// </remarks>
@@ -756,7 +756,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// This is the first method to be called when using external signatures. The general sequence is:
         /// preClose(), getDocumentBytes() and close().
-        /// <p>
+        /// <para />
         /// <CODE>exclusionSizes</CODE> must contain at least
         /// the <CODE>PdfName.CONTENTS</CODE> key with the size that it will take in the
         /// document. Note that due to the hex string coding this size should be byte_size*2+2.
@@ -945,7 +945,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// This is the last method to be called when using external signatures. The general sequence is:
         /// preClose(), getDocumentBytes() and close().
-        /// <p>
+        /// <para />
         /// update is a PdfDictionary that must have exactly the
         /// same keys as the ones provided in
         /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>

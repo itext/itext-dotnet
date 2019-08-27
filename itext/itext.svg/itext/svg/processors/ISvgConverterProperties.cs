@@ -73,7 +73,7 @@ namespace iText.Svg.Processors {
         /// <c>UTF-8</c>
         /// will
         /// be used (by JSoup).
-        /// <p>
+        /// <para />
         /// Please be aware that this method is NOT used when handling a
         /// <c>String</c>
         /// variable in the

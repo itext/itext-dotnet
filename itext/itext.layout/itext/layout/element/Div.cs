@@ -54,7 +54,7 @@ namespace iText.Layout.Element {
     /// which will have some shared layout properties. Like all
     /// <see cref="BlockElement{T}"/>
     /// types, it will try to take up as much horizontal space as possible.
-    /// <p>
+    /// <para />
     /// The concept is very similar to that of the div tag in HTML.
     /// </summary>
     public class Div : BlockElement<Div> {

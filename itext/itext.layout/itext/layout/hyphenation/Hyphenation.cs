@@ -21,7 +21,7 @@ namespace iText.Layout.Hyphenation {
     /// <summary>This class represents a hyphenated word.</summary>
     /// <remarks>
     /// This class represents a hyphenated word.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class Hyphenation {

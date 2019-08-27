@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Layer {
     /// <remarks>
     /// This class represents /OCProperties entry if pdf catalog and manages
     /// the layers of the pdf document.
-    /// <p>
+    /// <para />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the

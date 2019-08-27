@@ -359,11 +359,11 @@ namespace iText.Barcodes.Qrcode {
         /// x^14 + x^13 + x^12 + x^11 + x^10 + x^7 + x^4 + x^2
         /// --------------------------------------------------
         /// x^11 + x^10 + x^7 + x^4 + x^2
-        /// <p>
+        /// <para />
         /// The remainder is x^11 + x^10 + x^7 + x^4 + x^2
         /// Encode it in binary: 110010010100
         /// The return value is 0xc94 (1100 1001 0100)
-        /// <p>
+        /// <para />
         /// Since all coefficients in the polynomials are 1 or 0, we can do the calculation by bit
         /// operations. We don't care if cofficients are positive or negative.
         /// </remarks>

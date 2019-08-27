@@ -61,7 +61,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// methods. For the current tag you can add new tags,
     /// modify it's role and properties, etc. Also, using instance of this class, you can change tag position in the tag structure,
     /// you can flush current tag or remove it.
-    /// <p>
+    /// <para />
     /// There could be any number of the instances of this class, simultaneously pointing to different (or the same) parts of
     /// the tag structure. Because of this, you can for example remove the tag at which another instance is currently pointing.
     /// In this case, this another instance becomes invalid, and invocation of any method on it will result in exception. To make
@@ -90,7 +90,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// instance. After creation
         /// <c>TagTreePointer</c>
         /// points at the root tag.
-        /// <p>
+        /// <para />
         /// The
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// for the new tags, which don't explicitly define namespace by the means of
@@ -242,9 +242,9 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// if this tag doesn't explicitly define namespace by the means of
         /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         /// .
-        /// <p>
+        /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// <p>
+        /// <para />
         /// It's highly recommended to acquire
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// class instances via
@@ -781,7 +781,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
-        /// <p>
+        /// <para />
         /// If some of the descendant tags of the current tag have waiting state (see
         /// <see cref="WaitingTagsManager"/>
         /// ),

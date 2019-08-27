@@ -78,10 +78,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <returns>
@@ -102,10 +102,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <param name="cached">whether to to cache this font program after it has been loaded</param>
@@ -127,10 +127,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the byte contents of the font program</param>
         /// <returns>
@@ -151,10 +151,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the byte contents of the font program</param>
         /// <param name="cached">whether to to cache this font program</param>

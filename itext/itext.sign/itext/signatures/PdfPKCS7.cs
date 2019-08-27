@@ -849,9 +849,9 @@ namespace iText.Signatures {
         /// exactly the same as in
         /// <see cref="GetEncodedPKCS7(byte[])"/>
         /// .
-        /// <p>
+        /// <para />
         /// A simple example:
-        /// <p>
+        /// <para />
         /// <pre>
         /// Calendar cal = Calendar.getInstance();
         /// PdfPKCS7 pk7 = new PdfPKCS7(key, chain, null, "SHA1", null, false);
@@ -892,9 +892,9 @@ namespace iText.Signatures {
         /// exactly the same as in
         /// <see cref="GetEncodedPKCS7(byte[])"/>
         /// .
-        /// <p>
+        /// <para />
         /// A simple example:
-        /// <p>
+        /// <para />
         /// <pre>
         /// Calendar cal = Calendar.getInstance();
         /// PdfPKCS7 pk7 = new PdfPKCS7(key, chain, null, "SHA1", null, false);
@@ -1057,7 +1057,7 @@ namespace iText.Signatures {
         /// Verifies that signature integrity is intact (or in other words that signed data wasn't modified)
         /// by checking that embedded data digest corresponds to the calculated one. Also ensures that signature
         /// is genuine and is created by the owner of private key that corresponds to the declared public certificate.
-        /// <p>
+        /// <para />
         /// Even though signature can be authentic and signed data integrity can be intact,
         /// one shall also always check that signed data is not only a part of PDF contents but is actually a complete PDF file.
         /// In order to check that given signature covers the current

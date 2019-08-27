@@ -1198,7 +1198,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flush all copied objects and remove them from copied cache.</summary>
         /// <remarks>
         /// Flush all copied objects and remove them from copied cache.
-        /// <p>
+        /// <para />
         /// Note, if you will copy objects from the same document, duplicated objects will be created.
         /// That's why usually this method is meant to be used when all copying from source document is finished.
         /// For other cases one can also consider other flushing mechanisms, e.g. pages-based flushing.
@@ -1459,13 +1459,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds file associated with PDF document as a whole and identifies the relationship between them.</summary>
         /// <remarks>
         /// Adds file associated with PDF document as a whole and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method is very similar to
         /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
         /// .
         /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document catalog.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="description">the file description</param>
@@ -1677,7 +1677,7 @@ namespace iText.Kernel.Pdf {
         /// Create a new instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// or load already created one.
-        /// <p>
+        /// <para />
         /// Note, PdfFont which created with
         /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
         /// won't be cached

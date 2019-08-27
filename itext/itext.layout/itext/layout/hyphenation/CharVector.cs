@@ -24,7 +24,7 @@ namespace iText.Layout.Hyphenation {
     /// <remarks>
     /// This class implements a simple char vector with access to the
     /// underlying array.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class CharVector {

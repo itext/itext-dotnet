@@ -25,7 +25,7 @@ namespace iText.Layout.Hyphenation {
     /// <remarks>
     /// This interface is used to connect the XML pattern file parser to
     /// the hyphenation tree.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public interface IPatternConsumer {

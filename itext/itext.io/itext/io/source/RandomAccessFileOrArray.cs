@@ -314,7 +314,7 @@ namespace iText.IO.Source {
         /// <blockquote><pre>
         /// (short)((b2 &lt;&lt; 8) | b1)
         /// </pre></blockquote>
-        /// <p>
+        /// <para />
         /// This method blocks until the two bytes are read, the end of the
         /// stream is detected, or an exception is thrown.
         /// </remarks>
@@ -363,7 +363,7 @@ namespace iText.IO.Source {
         /// <blockquote><pre>
         /// (b2 &lt;&lt; 8) | b1
         /// </pre></blockquote>
-        /// <p>
+        /// <para />
         /// This method blocks until the two bytes are read, the end of the
         /// stream is detected, or an exception is thrown.
         /// </remarks>
@@ -412,7 +412,7 @@ namespace iText.IO.Source {
         /// <blockquote><pre>
         /// (char)((b2 &lt;&lt; 8) | b1)
         /// </pre></blockquote>
-        /// <p>
+        /// <para />
         /// This method blocks until the two bytes are read, the end of the
         /// stream is detected, or an exception is thrown.
         /// </remarks>
@@ -464,7 +464,7 @@ namespace iText.IO.Source {
         /// <blockquote><pre>
         /// (b4 &lt;&lt; 24) | (b3 &lt;&lt; 16) + (b2 &lt;&lt; 8) + b1
         /// </pre></blockquote>
-        /// <p>
+        /// <para />
         /// This method blocks until the four bytes are read, the end of the
         /// stream is detected, or an exception is thrown.
         /// </remarks>
@@ -508,7 +508,7 @@ namespace iText.IO.Source {
         /// <blockquote><pre>
         /// (b1 &lt;&lt; 24) | (b2 &lt;&lt; 16) + (b3 &lt;&lt; 8) + b4
         /// </pre></blockquote>
-        /// <p>
+        /// <para />
         /// This method blocks until the four bytes are read, the end of the
         /// stream is detected, or an exception is thrown.
         /// </remarks>

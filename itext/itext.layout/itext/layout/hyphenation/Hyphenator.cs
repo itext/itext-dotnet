@@ -25,7 +25,7 @@ namespace iText.Layout.Hyphenation {
     /// <remarks>
     /// This class is the main entry point to the hyphenation package.
     /// You can use only the static methods or create an instance.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public sealed class Hyphenator {

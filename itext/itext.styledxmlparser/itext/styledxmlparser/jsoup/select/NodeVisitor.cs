@@ -46,7 +46,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// Node visitor interface. Provide an implementing class to
     /// <see cref="NodeTraversor"/>
     /// to iterate through nodes.
-    /// <p>
+    /// <para />
     /// This interface provides two methods,
     /// <c>head</c>
     /// and

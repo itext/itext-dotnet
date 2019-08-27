@@ -52,9 +52,9 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// Any tag in the structure tree could be marked as "waiting". This state indicates that
     /// tag is not yet finished and therefore should not be flushed or removed if page tags are
     /// flushed or removed or if parent tags are flushed.
-    /// <p>
+    /// <para />
     /// Waiting state of tags is defined by the association with arbitrary objects instances.
-    /// <p>
+    /// <para />
     /// Waiting state could also be perceived as a temporal association of the object to some particular tag.
     /// </remarks>
     public class WaitingTagsManager {
@@ -164,7 +164,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Removes waiting state of the tag which is associated with the given object.</summary>
         /// <remarks>
         /// Removes waiting state of the tag which is associated with the given object.
-        /// <p>
+        /// <para />
         /// NOTE: if parent of the waiting tag is already flushed, the tag and it's children
         /// (unless they are waiting tags on their own) will be also immediately flushed right after
         /// the waiting state removal.
@@ -183,7 +183,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Removes waiting state of all waiting tags by removing association with objects.</summary>
         /// <remarks>
         /// Removes waiting state of all waiting tags by removing association with objects.
-        /// <p>
+        /// <para />
         /// NOTE: if parent of the waiting tag is already flushed, the tag and it's children
         /// will be also immediately flushed right after the waiting state removal.
         /// </remarks>

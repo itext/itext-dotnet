@@ -44,7 +44,7 @@ namespace iText.IO.Font.Constants {
     /// <summary>Represents Open Type head.macStyle bits.</summary>
     /// <remarks>
     /// Represents Open Type head.macStyle bits.
-    /// <p>
+    /// <para />
     /// https://www.microsoft.com/typography/otspec/head.htm
     /// </remarks>
     public sealed class FontMacStyleFlags {

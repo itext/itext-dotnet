@@ -59,7 +59,7 @@ namespace iText.Kernel.Counter {
     /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Kernel.Counter.Event.IMetaInfo, System.Type{T})
     ///     "/>
     /// method.
-    /// <p>
+    /// <para />
     /// You can implement your own
     /// <see cref="IEventCounterFactory"/>
     /// and register them with
@@ -74,7 +74,7 @@ namespace iText.Kernel.Counter {
     /// is just an example of a
     /// <see cref="EventCounter"/>
     /// implementation.
-    /// <p>
+    /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
     public class EventCounterHandler {

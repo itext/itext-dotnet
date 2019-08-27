@@ -293,7 +293,7 @@ namespace iText.Layout.Renderer {
         /// which was the cause of
         /// <see cref="iText.Layout.Layout.LayoutResult.NOTHING"/>
         /// , including this child.
-        /// <p>
+        /// <para />
         /// Notice that we do not expect
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// to be applied

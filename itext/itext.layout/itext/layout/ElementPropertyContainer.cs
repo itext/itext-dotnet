@@ -244,7 +244,7 @@ namespace iText.Layout {
         /// <summary>Sets the font of this Element.</summary>
         /// <remarks>
         /// Sets the font of this Element.
-        /// <p>
+        /// <para />
         /// This property overrides the value set by
         /// <see cref="ElementPropertyContainer{T}.SetFontFamily(System.String[])"/>
         /// . Font is set either via exact
@@ -271,7 +271,7 @@ namespace iText.Layout {
         /// shall be set as well.
         /// See
         /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
-        /// <p>
+        /// <para />
         /// This property overrides the value set by
         /// <see cref="ElementPropertyContainer{T}.SetFont(iText.Kernel.Font.PdfFont)"/>
         /// . Font is set either via exact
@@ -279,7 +279,7 @@ namespace iText.Layout {
         /// instance or via font-family name that should correspond to the font in
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// , but not both.
-        /// <p>
+        /// <para />
         /// All
         /// <see cref="System.String"/>
         /// that are passed as argument are directly handled as a collection of font family names,
@@ -305,7 +305,7 @@ namespace iText.Layout {
         /// shall be set as well.
         /// See
         /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
-        /// <p>
+        /// <para />
         /// This property overrides the value set by
         /// <see cref="ElementPropertyContainer{T}.SetFont(iText.Kernel.Font.PdfFont)"/>
         /// . Font is set either via exact
@@ -313,7 +313,7 @@ namespace iText.Layout {
         /// instance or via font-family name that should correspond to the font in
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// , but not both.
-        /// <p>
+        /// <para />
         /// All
         /// <see cref="System.String"/>
         /// that are passed as argument are directly handled as a collection of font family names,
@@ -750,7 +750,7 @@ namespace iText.Layout {
         /// Sets an horizontal line that can be an underline or a strikethrough.
         /// Actually, the line can be anywhere vertically due to position parameter.
         /// Multiple call to this method will produce multiple lines.
-        /// <p>
+        /// <para />
         /// The thickness of the line will be
         /// <c>thickness + thicknessMul * fontSize</c>
         /// .
@@ -781,7 +781,7 @@ namespace iText.Layout {
         /// Sets an horizontal line that can be an underline or a strikethrough.
         /// Actually, the line can be anywhere vertically due to position parameter.
         /// Multiple call to this method will produce multiple lines.
-        /// <p>
+        /// <para />
         /// The thickness of the line will be
         /// <c>thickness + thicknessMul * fontSize</c>
         /// .

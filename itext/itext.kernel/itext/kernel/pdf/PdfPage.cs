@@ -593,7 +593,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
         /// Flushes page dictionary, its content streams, annotations and thumb image.
-        /// <p>
+        /// <para />
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
         /// to the page is the following: if all the marked content references (dictionary or number references), that are the
@@ -610,13 +610,13 @@ namespace iText.Kernel.Pdf {
         /// Flushes page dictionary, its content streams, annotations and thumb image. If <code>flushResourcesContentStreams</code> is true,
         /// all content streams that are rendered on this page (like FormXObjects, annotation appearance streams, patterns)
         /// and also all images associated with this page will also be flushed.
-        /// <p>
+        /// <para />
         /// For notes about tag structure flushing see
         /// <see cref="Flush()">PdfPage#flush() method</see>
         /// .
-        /// <p>
+        /// <para />
         /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushResourcesContentStreams</code> is true.
-        /// <p>
+        /// <para />
         /// Be careful with handling document in which some of the pages are flushed. Keep in mind that flushed objects are
         /// finalized and are completely written to the output stream. This frees their memory but makes
         /// it impossible to modify or read data from them. Whenever there is an attempt to modify or to fetch
@@ -1093,7 +1093,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <p>
+        /// the added annotation will be autotagged. <para />
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )
@@ -1484,11 +1484,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds file associated with PDF page and identifies the relationship between them.</summary>
         /// <remarks>
         /// Adds file associated with PDF page and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the page dictionary.
         /// If description is provided, it also will add file description to catalog Names tree.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="description">the file description</param>
@@ -1510,16 +1510,16 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF page and identifies the relationship between them.
         /// </summary>
         /// <remarks>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF page and identifies the relationship between them.
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the page dictionary.
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>
