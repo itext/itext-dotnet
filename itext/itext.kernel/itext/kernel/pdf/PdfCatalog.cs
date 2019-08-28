@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Common.Logging;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
@@ -68,6 +69,14 @@ namespace iText.Kernel.Pdf {
             >>();
 
         private bool outlineMode;
+
+        private static readonly ICollection<PdfName> PAGE_MODES = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
+            .UseNone, PdfName.UseOutlines, PdfName.UseThumbs, PdfName.FullScreen, PdfName.UseOC, PdfName.UseAttachments
+            ));
+
+        private static readonly ICollection<PdfName> PAGE_LAYOUTS = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
+            .SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.TwoColumnRight, PdfName.TwoPageLeft, PdfName
+            .TwoPageRight));
 
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -173,9 +182,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageMode">page mode.</param>
         /// <returns>current instance of PdfCatalog</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetPageMode(PdfName pageMode) {
-            if (pageMode.Equals(PdfName.UseNone) || pageMode.Equals(PdfName.UseOutlines) || pageMode.Equals(PdfName.UseThumbs
-                ) || pageMode.Equals(PdfName.FullScreen) || pageMode.Equals(PdfName.UseOC) || pageMode.Equals(PdfName.
-                UseAttachments)) {
+            if (PAGE_MODES.Contains(pageMode)) {
                 return Put(PdfName.PageMode, pageMode);
             }
             return this;
@@ -188,9 +195,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets a page layout of the document</summary>
         /// <param name="pageLayout"/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
-            if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn) || pageLayout.Equals(PdfName
-                .TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight) || pageLayout.Equals(PdfName.TwoPageLeft)
-                 || pageLayout.Equals(PdfName.TwoPageRight)) {
+            if (PAGE_LAYOUTS.Contains(pageLayout)) {
                 return Put(PdfName.PageLayout, pageLayout);
             }
             return this;
