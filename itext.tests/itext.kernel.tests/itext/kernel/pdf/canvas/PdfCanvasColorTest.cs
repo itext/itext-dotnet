@@ -1,6 +1,49 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2019 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -273,6 +316,202 @@ namespace iText.Kernel.Pdf.Canvas {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
                 ));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorColoredAxialPatternTest() {
+            String name = "patternColorColoredAxialPatternTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfShading axial = new PdfShading.Axial(new PdfDeviceCs.Rgb(), 36, 716, new float[] { 1, .784f, 0 }, 396, 
+                788, new float[] { 0, 0, 1 }, new bool[] { true, true });
+            canvas.SetFillColor(new PatternColor(new PdfPattern.Shading(axial)));
+            canvas.Rectangle(30, 300, 400, 400).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorColoredRadialPatternTest() {
+            String name = "patternColorColoredRadialPatternTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfShading radial = new PdfShading.Radial(new PdfDeviceCs.Rgb(), 200, 700, 50, new float[] { 1, 0.968f, 0.58f
+                 }, 300, 700, 100, new float[] { 0.968f, 0.541f, 0.42f });
+            canvas.SetFillColor(new PatternColor(new PdfPattern.Shading(radial)));
+            canvas.Rectangle(30, 300, 400, 400).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorUncoloredCircleRgbTest() {
+            String name = "patternColorUncoloredCircleRgbTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+            new PdfPatternCanvas(circle, document).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+            PdfSpecialCs.UncoloredTilingPattern uncoloredRgbCs = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Rgb
+                ());
+            float[] green = new float[] { 0, 1, 0 };
+            canvas.SetFillColor(new PatternColor(circle, uncoloredRgbCs, green));
+            canvas.Rectangle(30, 300, 400, 400).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorUncoloredLineGrayTest() {
+            String name = "patternColorUncoloredLineGrayTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfPattern.Tiling line = new PdfPattern.Tiling(5, 10, false);
+            new PdfPatternCanvas(line, document).SetLineWidth(1).MoveTo(3, -1).LineTo(3, 11).Stroke().Release();
+            canvas.SetFillColor(new PatternColor(line, new DeviceGray()));
+            canvas.Rectangle(30, 300, 400, 400).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorColoredSetTwiceTest() {
+            String name = "patternColorColoredSetTwiceTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfPattern.Tiling square = new PdfPattern.Tiling(15, 15);
+            new PdfPatternCanvas(square, document).SetFillColor(new DeviceRgb(0xFF, 0xFF, 0x00)).SetStrokeColor(new DeviceRgb
+                (0xFF, 0x00, 0x00)).Rectangle(5, 5, 5, 5).FillStroke().Release();
+            PdfPattern.Tiling ellipse = new PdfPattern.Tiling(15, 10, 20, 25);
+            new PdfPatternCanvas(ellipse, document).SetFillColor(new DeviceRgb(0xFF, 0xFF, 0x00)).SetStrokeColor(new DeviceRgb
+                (0xFF, 0x00, 0x00)).Ellipse(2, 2, 13, 8).FillStroke().Release();
+            canvas.SetFillColor(new PatternColor(square));
+            canvas.Rectangle(36, 696, 126, 126).Fill();
+            canvas.SetFillColor(new PatternColor(square));
+            canvas.Rectangle(180, 696, 126, 126).Fill();
+            canvas.SetFillColor(new PatternColor(ellipse));
+            canvas.Rectangle(360, 696, 126, 126).Fill();
+            byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
+            canvas.Release();
+            document.Close();
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
+                );
+            int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
+            int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
+            NUnit.Framework.Assert.AreEqual(1, p1Count);
+            NUnit.Framework.Assert.AreEqual(1, p2Count);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PatternColorUncoloredSetTwiceTest() {
+            String name = "patternColorUncoloredSetTwiceTest.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+            new PdfPatternCanvas(circle, document).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+            PdfPattern.Tiling line = new PdfPattern.Tiling(5, 10, false);
+            new PdfPatternCanvas(line, document).SetLineWidth(1).MoveTo(3, -1).LineTo(3, 11).Stroke().Release();
+            PatternColor patternColorCircle = new PatternColor(circle, ColorConstants.RED);
+            float[] cyan = new float[] { 1, 0, 0, 0 };
+            float[] magenta = new float[] { 0, 1, 0, 0 };
+            PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCmykCs = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Cmyk
+                ());
+            PatternColor patternColorLine = new PatternColor(line, uncoloredTilingCmykCs, magenta);
+            canvas.SetFillColor(patternColorCircle);
+            canvas.Rectangle(36, 696, 126, 126).Fill();
+            canvas.SetFillColor(patternColorCircle);
+            canvas.Rectangle(180, 696, 126, 126).Fill();
+            canvas.SetFillColor(patternColorLine);
+            canvas.Rectangle(36, 576, 126, 126).Fill();
+            patternColorLine.SetColorValue(cyan);
+            canvas.SetFillColor(patternColorLine);
+            canvas.Rectangle(180, 576, 126, 126).Fill();
+            // this case will be removed when deprecated method is removed
+            patternColorLine.SetPattern(circle);
+            canvas.SetFillColor(patternColorLine);
+            canvas.Rectangle(360, 696, 126, 126).Fill();
+            byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
+            canvas.Release();
+            document.Close();
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
+                );
+            int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
+            int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
+            NUnit.Framework.Assert.AreEqual(3, p1Count);
+            NUnit.Framework.Assert.AreEqual(2, p2Count);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternColorUncoloredPatternCsUnitTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+                PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+                new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+                new PatternColor(circle, new PdfSpecialCs.Pattern(), new float[0]);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternColorUncoloredPatternColorUnitTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+                PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+                new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+                PatternColor redCirclePattern = new PatternColor(circle, ColorConstants.RED);
+                new PatternColor(circle, redCirclePattern);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
+;
+        }
+
+        private static int CountSubstringOccurrences(String str, String findStr) {
+            int lastIndex = 0;
+            int count = 0;
+            while (lastIndex != -1) {
+                lastIndex = str.IndexOf(findStr, lastIndex);
+                if (lastIndex != -1) {
+                    ++count;
+                    lastIndex += findStr.Length;
+                }
+            }
+            return count;
         }
     }
 }
