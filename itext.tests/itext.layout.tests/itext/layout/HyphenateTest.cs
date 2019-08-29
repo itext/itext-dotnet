@@ -113,7 +113,6 @@ namespace iText.Layout {
         //సుస్వాగతం
         //здравствуй
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-2036")]
         public virtual void RunTest() {
             foreach (HyphenateTest.TestParams param in @params) {
                 TryHyphenate(param.lang, param.testWorld, param.shouldPass);

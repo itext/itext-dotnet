@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary><p>This is a cache for HyphenationTree instances.</p></summary>
+    /// <summary>This is a cache for HyphenationTree instances.</summary>
     public class HyphenationTreeCache {
         /// <summary>Contains the cached hyphenation trees</summary>
         private IDictionary<String, HyphenationTree> hyphenTrees = new Dictionary<String, HyphenationTree>();

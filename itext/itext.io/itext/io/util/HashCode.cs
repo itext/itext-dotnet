@@ -52,10 +52,11 @@ namespace iText.IO.Util {
     /// This class is a convenience method to sequentially calculate hash code of the
     /// object based on the field values. The result depends on the order of elements
     /// appended. The exact formula is the same as for
-    /// <code>java.util.List.hashCode</code>.
+    /// <see cref="System.Collections.IList{E}.GetHashCode()"/>
+    /// .
     /// If you need order independent hash code just summate, multiply or XOR all
     /// elements.
-    /// <p>
+    /// <para />
     /// Suppose we have class:
     /// <pre><code>
     /// class Thing {
@@ -65,7 +66,7 @@ namespace iText.IO.Util {
     /// }
     /// </code></pre>
     /// The hash code calculation can be expressed in 2 forms.
-    /// <p>
+    /// <para />
     /// For maximum performance:
     /// <pre><code>
     /// public int hashCode() {
@@ -76,7 +77,7 @@ namespace iText.IO.Util {
     /// return hashCode;
     /// }
     /// </code></pre>
-    /// <p>
+    /// <para />
     /// For convenience:
     /// <pre><code>
     /// public int hashCode() {

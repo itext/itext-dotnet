@@ -48,9 +48,11 @@ using iText.Svg.Dummy.Factories;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Factories;
+using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
-    public class DefaultSvgNodeRendererFactoryTest {
+    public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
         private ISvgNodeRendererFactory fact;
 
         [NUnit.Framework.SetUp]
@@ -59,6 +61,7 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void NonExistingTagTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element nonExistingElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
                 (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("notAnExistingTag"), "");

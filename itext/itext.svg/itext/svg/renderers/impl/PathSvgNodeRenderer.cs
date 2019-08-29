@@ -62,19 +62,23 @@ namespace iText.Svg.Renderers.Impl {
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
         private const String SPACE_CHAR = " ";
 
-        /// <summary>
+        /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        ///     </summary>
+        /// <remarks>
         /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
-        /// <p>
+        /// <para />
         /// Find any occurrence of a letter that is not an operator
-        /// </summary>
+        /// </remarks>
         private const String INVALID_OPERATOR_REGEX = "(?:(?![mzlhvcsqtae])\\p{L})";
 
         private static Regex invalidRegexPattern = iText.IO.Util.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX, System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
-        /// <summary>
+        /// <summary>The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        ///     </summary>
+        /// <remarks>
         /// The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
-        /// <p>
+        /// <para />
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>
         /// is called before the use of this expression in
@@ -87,7 +91,7 @@ namespace iText.Svg.Renderers.Impl {
         /// Quadratic Bezier Curve: Q, q, T, t
         /// Elliptical Arc Curve: A, a
         /// ClosePath: Z, z
-        /// </summary>
+        /// </remarks>
         private static readonly Regex SPLIT_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(?=[mlhvcsqtaz])", System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
@@ -281,7 +285,7 @@ namespace iText.Svg.Renderers.Impl {
         /// into one or more
         /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
         /// objects to be drawn on the canvas.
-        /// <p>
+        /// <para />
         /// Each individual operator is passed to
         /// <see cref="ProcessPathOperator(System.String[], iText.Svg.Renderers.Path.IPathShape)"/>
         /// to be processed individually.

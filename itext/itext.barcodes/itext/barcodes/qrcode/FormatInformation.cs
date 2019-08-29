@@ -45,8 +45,8 @@ using System;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>
-    /// <p>Encapsulates a QR Code's format information, including the data mask used and
-    /// error correction level.</p>
+    /// Encapsulates a QR Code's format information, including the data mask used and
+    /// error correction level.
     /// </summary>
     /// <author>Sean Owen</author>
     /// <seealso cref="ErrorCorrectionLevel"/>

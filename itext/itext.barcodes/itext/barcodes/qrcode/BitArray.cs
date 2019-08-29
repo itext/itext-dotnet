@@ -45,7 +45,7 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary><p>A simple, fast array of bits, represented compactly by an array of ints internally.</p></summary>
+    /// <summary>A simple, fast array of bits, represented compactly by an array of ints internally.</summary>
     /// <author>Sean Owen</author>
     internal sealed class BitArray {
         private int[] bits;

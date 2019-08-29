@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary><p>See ISO 18004:2006, 6.5.1.</summary>
+    /// <summary>See ISO 18004:2006, 6.5.1.</summary>
     /// <remarks>
-    /// <p>See ISO 18004:2006, 6.5.1. This enum encapsulates the four error correction levels
-    /// defined by the QR code standard.</p>
+    /// See ISO 18004:2006, 6.5.1. This enum encapsulates the four error correction levels
+    /// defined by the QR code standard.
     /// </remarks>
     /// <author>Sean Owen</author>
     public sealed class ErrorCorrectionLevel {

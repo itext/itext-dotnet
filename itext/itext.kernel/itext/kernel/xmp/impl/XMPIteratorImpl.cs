@@ -273,7 +273,7 @@ namespace iText.Kernel.XMP.Impl
 			/// <summary>
 			/// Prepares the next node to return if not already done. 
 			/// </summary>
-			/// <seealso cref= Iterator#hasNext() </seealso>
+			/// <seealso cref="IEnumerator.MoveNext"/>
 			public virtual bool MoveNext() {
 				// find next node
 				if (state == ITERATE_NODE) {
@@ -457,7 +457,7 @@ namespace iText.Kernel.XMP.Impl
 			/// <summary>
 			/// Prepares the next node to return if not already done. 
 			/// </summary>
-			/// <seealso cref= Iterator#hasNext() </seealso>
+			/// <seealso cref="IEnumerator.MoveNext"/>
 			public override bool MoveNext() {
 				if (outerInstance.skipSiblings) {
 					return false;

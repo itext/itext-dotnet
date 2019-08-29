@@ -193,15 +193,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 while (curr < cris.Count && cris[curr].SameLine(cris[prev])) {
                     curr++;
                 }
-                float x = cris[prev].GetBoundingBox().GetX();
-                float y = cris[prev].GetBoundingBox().GetY();
-                float w = cris[curr - 1].GetBoundingBox().GetX() - cris[prev].GetBoundingBox().GetX() + cris[curr - 1].GetBoundingBox
-                    ().GetWidth();
-                float h = 0f;
+                Rectangle resultRectangle = null;
                 foreach (CharacterRenderInfo cri in cris.SubList(prev, curr)) {
-                    h = Math.Max(h, cri.GetBoundingBox().GetHeight());
+                    // in case letters are rotated (imagine text being written with an angle of 90 degrees)
+                    resultRectangle = Rectangle.GetCommonRectangle(resultRectangle, cri.GetBoundingBox());
                 }
-                retval.Add(new Rectangle(x, y, w, h));
+                retval.Add(resultRectangle);
+
                 prev = curr;
             }
             // return

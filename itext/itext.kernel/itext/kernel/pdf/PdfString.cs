@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf {
     /// JAVA-
     /// <c>String</c>
     /// -object.
-    /// <p>
+    /// <para />
     /// A string is a sequence of characters delimited by parenthesis.
     /// If a string is too long to be conveniently placed on a single line, it may
     /// be split across multiple lines by using the backslash character (\) at the
@@ -66,9 +66,8 @@ namespace iText.Kernel.Pdf {
     /// way to represent characters outside the printable ASCII character set.<br />
     /// This object is described in the 'Portable Document Format Reference Manual
     /// version 1.7' section 3.2.3 (page 53-56).
-    /// <p>
-    /// <see cref="PdfObject"/>
     /// </summary>
+    /// <seealso cref="PdfObject"/>
     public class PdfString : PdfPrimitiveObject {
         protected internal String value;
 
@@ -228,18 +227,16 @@ namespace iText.Kernel.Pdf {
         /// <summary>Marks this string object as not encrypted in the encrypted document.</summary>
         /// <remarks>
         /// Marks this string object as not encrypted in the encrypted document.
-        /// <p>
+        /// <para />
         /// If it's marked so, it will be considered as already in plaintext and decryption will not be performed for it.
         /// In order to have effect, this method shall be called before
         /// <see cref="GetValue()"/>
         /// and
         /// <see cref="GetValueBytes()"/>
         /// methods.
-        /// </p>
-        /// <p>
+        /// <para />
         /// NOTE: this method is only needed in a very specific cases of encrypted documents. E.g. digital signature dictionary
         /// /Contents entry shall not be encrypted. Also this method isn't meaningful in non-encrypted documents.
-        /// </p>
         /// </remarks>
         public virtual void MarkAsUnencryptedObject() {
             SetState(PdfObject.UNENCRYPTED);

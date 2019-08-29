@@ -63,7 +63,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontSize01Test() {
             String name = "fontSizeTest01";
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -72,7 +72,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void FontSize02Test() {
             String name = "fontSizeTest02";
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -80,7 +80,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontSize03Test() {
             String name = "fontSizeTest03";
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -88,7 +88,7 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontAbsoluteKeywords() {
             String name = "fontAbsoluteKeywords";
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -96,7 +96,16 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontRelativeKeywords() {
             String name = "fontRelativeKeywords";
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void Diff_units_of_measure() {
+            //TODO: update cmp-file after DEVSIX-2785
+            String name = "diff_units_of_measure";
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }
     }
 }

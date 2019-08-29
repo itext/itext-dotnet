@@ -86,7 +86,7 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Element.Link"/>
         /// elements on it
         /// (using any other constructor would result in inability to add PDF annotations, based on which, for example, links work).
-        /// <p>
+        /// <para />
         /// If the
         /// <see cref="iText.Kernel.Pdf.PdfDocument.IsTagged()"/>
         /// is true, using this constructor would automatically enable

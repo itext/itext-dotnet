@@ -280,8 +280,7 @@ namespace iText.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAlias(System.String)"/
-		/// 	>
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAlias(System.String)" />
 		public XMPAliasInfo FindAlias(String qname)
 		{
 			lock (this)
@@ -290,8 +289,7 @@ namespace iText.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAliases(System.String)
-		/// 	"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAliases(System.String)"/>
 		public XMPAliasInfo[] FindAliases(String aliasNS)
 		{
 			lock (this)
@@ -316,7 +314,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Associates an alias name with an actual name.</summary>
 		/// <remarks>
 		/// Associates an alias name with an actual name.
-		/// <p>
+		/// <para>
 		/// Define a alias mapping from one namespace/property to another. Both
 		/// property names must be simple names. An alias can be a direct mapping,
 		/// where the alias and actual have the same data type. It is also possible
@@ -327,6 +325,7 @@ namespace iText.Kernel.XMP.Impl
 		/// Note: This method is not locking because only called by registerStandardAliases
 		/// which is only called by the constructor.
 		/// Note2: The method is only package-private so that it can be tested with unittests
+		/// </para>
 		/// </remarks>
 		/// <param name="aliasNS">
 		/// The namespace URI for the alias. Must not be null or the empty
@@ -530,6 +529,7 @@ namespace iText.Kernel.XMP.Impl
 		/// Return a read only wrapper to an existing dictionary.
 		/// Any change to the underlying dictionary will be 
 		/// propagated to the read-only wrapper.
+		/// </summary>
 		public static ReadOnlyDictionary ReadOnly(IDictionary dictionary) {
 			return new ReadOnlyDictionary(dictionary);
 		}

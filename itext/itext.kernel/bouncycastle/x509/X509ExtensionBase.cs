@@ -6,6 +6,7 @@ using Org.BouncyCastle.Utilities.Collections;
 
 namespace Org.BouncyCastle.X509
 {
+	[System.ObsoleteAttribute(@"Will be removed in iText 7.2. Use the same class from BouncyCastle.Crypto dependency.")]
 	public abstract class X509ExtensionBase
 		: IX509Extension
 	{

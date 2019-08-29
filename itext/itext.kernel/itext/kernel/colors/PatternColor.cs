@@ -61,12 +61,8 @@ namespace iText.Kernel.Colors {
         }
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
-            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue) {
-            if (underlyingCS is PdfSpecialCs.Pattern) {
-                throw new ArgumentException("underlyingCS");
-            }
-            this.pattern = uncoloredPattern;
-            this.underlyingColor = MakeColor(underlyingCS, colorValue);
+            : this(uncoloredPattern, new PdfSpecialCs.UncoloredTilingPattern(EnsureNotPatternCs(underlyingCS)), colorValue
+                ) {
         }
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
@@ -80,6 +76,24 @@ namespace iText.Kernel.Colors {
             return pattern;
         }
 
+        public override void SetColorValue(float[] value) {
+            base.SetColorValue(value);
+            underlyingColor.SetColorValue(value);
+        }
+
+        /// <summary>
+        /// Changes pattern for
+        /// <see cref="PatternColor"/>
+        /// . Be sure to only set uncolored patterns for uncolored
+        /// <see cref="PatternColor"/>
+        /// ,
+        /// and vice versa, only set colored patterns for colored
+        /// <see cref="PatternColor"/>
+        /// .
+        /// </summary>
+        /// <param name="pattern">a pattern to be set for this instance.</param>
+        [System.ObsoleteAttribute(@"To be removed in iText 7.2. In order to change pattern one shall create a new PatternColor ."
+            )]
         public virtual void SetPattern(PdfPattern pattern) {
             this.pattern = pattern;
         }
@@ -91,6 +105,13 @@ namespace iText.Kernel.Colors {
             iText.Kernel.Colors.PatternColor color = (iText.Kernel.Colors.PatternColor)o;
             return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor.Equals(color.underlyingColor
                 ) : color.underlyingColor == null);
+        }
+
+        private static PdfColorSpace EnsureNotPatternCs(PdfColorSpace underlyingCS) {
+            if (underlyingCS is PdfSpecialCs.Pattern) {
+                throw new ArgumentException("underlyingCS");
+            }
+            return underlyingCS;
         }
     }
 }

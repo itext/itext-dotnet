@@ -50,15 +50,17 @@ namespace iText.Kernel.Pdf {
     /// <summary>
     /// <c>PdfDate</c>
     /// is the PDF date object.
-    /// <P>
+    /// <para/>
     /// PDF defines a standard date format. The PDF date format closely follows the format
     /// defined by the international standard ASN.1 (Abstract Syntax Notation One, defined
     /// in CCITT X.208 or ISO/IEC 8824). A date is a
     /// <c>PdfString</c>
     /// of the form:
-    /// <P><BLOCKQUOTE>
+    /// <para/>
+    /// <c>
     /// (D:YYYYMMDDHHmmSSOHH'mm')
-    /// </BLOCKQUOTE><P>
+    /// </c>
+    /// <para/>
     /// See also ISO-320001 7.9.4, "Dates".
     /// </summary>
     /// <seealso cref="PdfString"/>

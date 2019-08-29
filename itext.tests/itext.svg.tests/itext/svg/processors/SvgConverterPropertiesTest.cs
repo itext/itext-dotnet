@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.Svg.Processors.Impl;
+using iText.Test;
 
 namespace iText.Svg.Processors {
-    public class SvgConverterPropertiesTest {
+    public class SvgConverterPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetCharsetNameRegressionTest() {
             String expected = Encoding.UTF8.Name();

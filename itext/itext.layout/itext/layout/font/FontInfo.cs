@@ -60,7 +60,6 @@ namespace iText.Layout.Font {
     /// </summary>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo)"/>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)">
-    /// <p>
     /// Note,
     /// <see cref="GetAlias()"/>
     /// and

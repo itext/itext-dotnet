@@ -44,9 +44,10 @@ using System;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Processors {
-    public class ProcessorStateTest {
+    public class ProcessorStateTest : ExtendedITextTest {
         /// <summary>Push test</summary>
         [NUnit.Framework.Test]
         public virtual void ProcessorStateTestPush() {

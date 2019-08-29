@@ -593,14 +593,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
         /// Flushes page dictionary, its content streams, annotations and thumb image.
-        /// <p>
+        /// <para />
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
         /// to the page is the following: if all the marked content references (dictionary or number references), that are the
         /// descendants of the given structure element, belong to the current page - the tag is considered
         /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
-        /// </p>
         /// </remarks>
         public override void Flush() {
             Flush(false);
@@ -611,21 +610,18 @@ namespace iText.Kernel.Pdf {
         /// Flushes page dictionary, its content streams, annotations and thumb image. If <code>flushResourcesContentStreams</code> is true,
         /// all content streams that are rendered on this page (like FormXObjects, annotation appearance streams, patterns)
         /// and also all images associated with this page will also be flushed.
-        /// <p>
+        /// <para />
         /// For notes about tag structure flushing see
         /// <see cref="Flush()">PdfPage#flush() method</see>
         /// .
-        /// </p>
-        /// <p>
+        /// <para />
         /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushResourcesContentStreams</code> is true.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Be careful with handling document in which some of the pages are flushed. Keep in mind that flushed objects are
         /// finalized and are completely written to the output stream. This frees their memory but makes
         /// it impossible to modify or read data from them. Whenever there is an attempt to modify or to fetch
         /// flushed object inner contents an exception will be thrown. Flushing is only possible for objects in the writing
         /// and stamping modes, also its possible to flush modified objects in append mode.
-        /// </p>
         /// </remarks>
         /// <param name="flushResourcesContentStreams">
         /// if true all content streams that are rendered on this page (like form xObjects,
@@ -1097,7 +1093,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="tagAnnotation">
         /// if
         /// <see langword="true"/>
-        /// the added annotation will be autotagged. <p>
+        /// the added annotation will be autotagged. <para />
         /// (see
         /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
         /// )
@@ -1485,22 +1481,15 @@ namespace iText.Kernel.Pdf {
             pageRotationInverseMatrixWritten = true;
         }
 
-        /// <summary>
-        /// <p>
-        /// Adds file associated with PDF page and identifies the relationship between them.
-        /// </summary>
+        /// <summary>Adds file associated with PDF page and identifies the relationship between them.</summary>
         /// <remarks>
-        /// <p>
         /// Adds file associated with PDF page and identifies the relationship between them.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the page dictionary.
         /// If description is provided, it also will add file description to catalog Names tree.
-        /// </p>
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="description">the file description</param>
         /// <param name="fs">file specification dictionary of associated file</param>
@@ -1521,20 +1510,17 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF page and identifies the relationship between them.
         /// </summary>
         /// <remarks>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF page and identifies the relationship between them.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the page dictionary.
-        /// </p>
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {

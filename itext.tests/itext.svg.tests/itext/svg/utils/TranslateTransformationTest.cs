@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class TranslateTransformationTest {
+    public class TranslateTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalTranslateTest() {
             AffineTransform expected = new AffineTransform(1d, 0d, 0d, 1d, 15d, 37.5d);

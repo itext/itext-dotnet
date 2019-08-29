@@ -58,18 +58,18 @@ namespace iText.IO.Codec {
     /// stream.  The TIFF file format is described in more detail in the
     /// comments for the TIFFDescriptor class.
     /// <br />
-    /// <p> A TIFF IFD consists of a set of TIFFField tags.  Methods are
+    /// <para /> A TIFF IFD consists of a set of TIFFField tags.  Methods are
     /// provided to query the set of tags and to obtain the raw field
     /// array.  In addition, convenience methods are provided for acquiring
     /// the values of tags that contain a single value that fits into a
     /// byte, int, long, float, or double.
     /// <br />
-    /// <p> Every TIFF file is made up of one or more public IFDs that are
+    /// <para /> Every TIFF file is made up of one or more public IFDs that are
     /// joined in a linked list, rooted in the file header.  A file may
     /// also contain so-called private IFDs that are referenced from
     /// tag data and do not appear in the main list.
     /// <br />
-    /// <p><b> This class is not a committed part of the JAI API.  It may
+    /// <para /><b> This class is not a committed part of the JAI API.  It may
     /// be removed or changed in future releases of JAI.</b>
     /// </remarks>
     /// <seealso cref="TIFFField"/>

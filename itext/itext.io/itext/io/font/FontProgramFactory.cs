@@ -65,7 +65,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// object with Helvetica font description
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont() {
             return CreateFont(StandardFonts.HELVETICA);
         }
@@ -77,10 +78,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <returns>
@@ -88,7 +89,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(String fontProgram) {
             return CreateFont(fontProgram, null, DEFAULT_CACHED);
         }
@@ -100,10 +102,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <param name="cached">whether to to cache this font program after it has been loaded</param>
@@ -112,7 +114,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(String fontProgram, bool cached) {
             return CreateFont(fontProgram, null, cached);
         }
@@ -124,10 +127,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the byte contents of the font program</param>
         /// <returns>
@@ -135,7 +138,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(byte[] fontProgram) {
             return CreateFont(null, fontProgram, DEFAULT_CACHED);
         }
@@ -147,10 +151,10 @@ namespace iText.IO.Font {
         /// a CJK font from the Adobe Asian Font Pack.
         /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p>
+        /// <para />
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
-        /// <p>
+        /// <para />
         /// </remarks>
         /// <param name="fontProgram">the byte contents of the font program</param>
         /// <param name="cached">whether to to cache this font program</param>
@@ -159,7 +163,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(byte[] fontProgram, bool cached) {
             return CreateFont(null, fontProgram, cached);
         }
@@ -288,7 +293,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb) {
             return CreateType1Font(afm, pfb, DEFAULT_CACHED);
         }
@@ -306,7 +312,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb, bool cached) {
             return CreateType1Font(null, null, afm, pfb, cached);
         }
@@ -319,7 +326,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath) {
             return CreateType1Font(metricsPath, binaryPath, DEFAULT_CACHED);
         }
@@ -337,7 +345,8 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached) {
             return CreateType1Font(metricsPath, binaryPath, null, null, cached);
         }
@@ -355,7 +364,8 @@ namespace iText.IO.Font {
         /// instance. This font may come from the cache but only if cached
         /// is true, otherwise it will always be created new
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(String ttc, int ttcIndex, bool cached) {
             FontCacheKey fontCacheKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
@@ -381,7 +391,8 @@ namespace iText.IO.Font {
         /// instance. This font may come from the cache but only if cached
         /// is true, otherwise it will always be created new
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateFont(byte[] ttc, int ttcIndex, bool cached) {
             FontCacheKey fontKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
@@ -419,7 +430,8 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached) {
             return fontRegisterProvider.GetFont(fontName, style, cached);
         }
@@ -448,7 +460,8 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
+        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName, int style) {
             return fontRegisterProvider.GetFont(fontName, style);
         }
@@ -462,7 +475,8 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file2
+        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName) {
             return fontRegisterProvider.GetFont(fontName, FontStyles.UNDEFINED);
         }
@@ -560,6 +574,7 @@ namespace iText.IO.Font {
             fontRegisterProvider.ClearRegisteredFonts();
         }
 
+        /// <summary>Clears registered font cache</summary>
         public static void ClearRegisteredFontFamilies() {
             fontRegisterProvider.ClearRegisteredFontFamilies();
         }

@@ -126,19 +126,19 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li>
         /// <see cref="PdfAnnotation.HIGHLIGHT_NONE"/>
-        /// - No highlighting.</li>
+        /// - No highlighting.
         /// <li>
         /// <see cref="PdfAnnotation.HIGHLIGHT_INVERT"/>
-        /// - Invert the contents of the annotation rectangle.</li>
+        /// - Invert the contents of the annotation rectangle.
         /// <li>
         /// <see cref="PdfAnnotation.HIGHLIGHT_OUTLINE"/>
-        /// - Invert the annotation's border.</li>
+        /// - Invert the annotation's border.
         /// <li>
         /// <see cref="PdfAnnotation.HIGHLIGHT_PUSH"/>
-        /// - Display the annotation?s down appearance, if any.</li>
+        /// - Display the annotation?s down appearance, if any.
         /// <li>
         /// <see cref="PdfAnnotation.HIGHLIGHT_TOGGLE"/>
-        /// - Same as P.</li>
+        /// - Same as P.
         /// </ul>
         /// </remarks>
         /// <param name="mode">The new value for the annotation's highlighting mode.</param>
@@ -365,19 +365,19 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
-        /// - A solid rectangle surrounding the annotation.</li>
+        /// - A solid rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
-        /// - A dashed rectangle surrounding the annotation.</li>
+        /// - A dashed rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
-        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
-        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
-        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// - A single line along the bottom of the annotation rectangle.
         /// </ul>
         /// See also ISO-320001, Table 166.
         /// </remarks>

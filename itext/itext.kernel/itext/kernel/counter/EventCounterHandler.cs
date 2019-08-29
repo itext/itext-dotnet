@@ -59,7 +59,7 @@ namespace iText.Kernel.Counter {
     /// <see cref="OnEvent(iText.Kernel.Counter.Event.IEvent, iText.Kernel.Counter.Event.IMetaInfo, System.Type{T})
     ///     "/>
     /// method.
-    /// <p>
+    /// <para />
     /// You can implement your own
     /// <see cref="IEventCounterFactory"/>
     /// and register them with
@@ -74,7 +74,7 @@ namespace iText.Kernel.Counter {
     /// is just an example of a
     /// <see cref="EventCounter"/>
     /// implementation.
-    /// <p>
+    /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
     /// </summary>
     public class EventCounterHandler {
@@ -90,7 +90,7 @@ namespace iText.Kernel.Counter {
             Register(new SimpleEventCounterFactory(new DefaultEventCounter()));
         }
 
-        /// <summary>Returns the singleton instance of the factory.</summary>
+        /// <returns>the singleton instance of the factory.</returns>
         public static iText.Kernel.Counter.EventCounterHandler GetInstance() {
             return instance;
         }
@@ -103,9 +103,17 @@ namespace iText.Kernel.Counter {
         /// instance
         /// and count the event.
         /// </summary>
-        /// <param name="event"/>
-        /// <param name="metaInfo"/>
-        /// <param name="caller"/>
+        /// <param name="event">
+        /// 
+        /// <see cref="iText.Kernel.Counter.Event.IEvent"/>
+        /// to be counted
+        /// </param>
+        /// <param name="metaInfo">
+        /// 
+        /// <see cref="iText.Kernel.Counter.Event.IMetaInfo"/>
+        /// object that can holds information about instance that throws the event
+        /// </param>
+        /// <param name="caller">the class that throws the event</param>
         public virtual void OnEvent(IEvent @event, IMetaInfo metaInfo, Type caller) {
             IContext context = null;
             bool contextInitialized = false;

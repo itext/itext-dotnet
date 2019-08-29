@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Layer {
     /// <remarks>
     /// This class represents /OCProperties entry if pdf catalog and manages
     /// the layers of the pdf document.
-    /// <br /><br />
+    /// <para />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
@@ -62,34 +62,9 @@ namespace iText.Kernel.Pdf.Layer {
     /// must be indirect.
     /// </remarks>
     public class PdfOCProperties : PdfObjectWrapper<PdfDictionary> {
-        private IList<PdfLayer> layers = new List<PdfLayer>();
+        internal const String OC_CONFIG_NAME_PATTERN = "OCConfigName";
 
-        /// <summary>
-        /// Gets the order of the layers in which they will be displayed in the layer view panel,
-        /// including nesting.
-        /// </summary>
-        private static void GetOCGOrder(PdfArray order, PdfLayer layer) {
-            if (!layer.IsOnPanel()) {
-                return;
-            }
-            if (layer.GetTitle() == null) {
-                order.Add(layer.GetPdfObject().GetIndirectReference());
-            }
-            IList<PdfLayer> children = layer.GetChildren();
-            if (children == null) {
-                return;
-            }
-            PdfArray kids = new PdfArray();
-            if (layer.GetTitle() != null) {
-                kids.Add(new PdfString(layer.GetTitle(), PdfEncodings.UNICODE_BIG));
-            }
-            foreach (PdfLayer child in children) {
-                GetOCGOrder(kids, child);
-            }
-            if (kids.Size() > 0) {
-                order.Add(kids);
-            }
-        }
+        private IList<PdfLayer> layers = new List<PdfLayer>();
 
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
@@ -221,24 +196,6 @@ namespace iText.Kernel.Pdf.Layer {
             return GetPdfObject();
         }
 
-        private String CreateUniqueName() {
-            int uniqueID = 0;
-            ICollection<String> usedNames = new HashSet<String>();
-            PdfArray configs = GetPdfObject().GetAsArray(PdfName.Configs);
-            if (null != configs) {
-                for (int i = 0; i < configs.Size(); i++) {
-                    PdfDictionary alternateDictionary = configs.GetAsDictionary(i);
-                    if (null != alternateDictionary && alternateDictionary.ContainsKey(PdfName.Name)) {
-                        usedNames.Add(alternateDictionary.GetAsString(PdfName.Name).ToUnicodeString());
-                    }
-                }
-            }
-            while (usedNames.Contains("OCConfigName" + uniqueID)) {
-                uniqueID++;
-            }
-            return "OCConfigName" + uniqueID;
-        }
-
         public override void Flush() {
             FillDictionary();
             base.Flush();
@@ -268,6 +225,33 @@ namespace iText.Kernel.Pdf.Layer {
 
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
+        }
+
+        /// <summary>
+        /// Gets the order of the layers in which they will be displayed in the layer view panel,
+        /// including nesting.
+        /// </summary>
+        private static void GetOCGOrder(PdfArray order, PdfLayer layer) {
+            if (!layer.IsOnPanel()) {
+                return;
+            }
+            if (layer.GetTitle() == null) {
+                order.Add(layer.GetPdfObject().GetIndirectReference());
+            }
+            IList<PdfLayer> children = layer.GetChildren();
+            if (children == null) {
+                return;
+            }
+            PdfArray kids = new PdfArray();
+            if (layer.GetTitle() != null) {
+                kids.Add(new PdfString(layer.GetTitle(), PdfEncodings.UNICODE_BIG));
+            }
+            foreach (PdfLayer child in children) {
+                GetOCGOrder(kids, child);
+            }
+            if (kids.Size() > 0) {
+                order.Add(kids);
+            }
         }
 
         /// <summary>Populates the /AS entry in the /D dictionary.</summary>
@@ -383,6 +367,24 @@ namespace iText.Kernel.Pdf.Layer {
                     }
                 }
             }
+        }
+
+        private String CreateUniqueName() {
+            int uniqueID = 0;
+            ICollection<String> usedNames = new HashSet<String>();
+            PdfArray configs = GetPdfObject().GetAsArray(PdfName.Configs);
+            if (null != configs) {
+                for (int i = 0; i < configs.Size(); i++) {
+                    PdfDictionary alternateDictionary = configs.GetAsDictionary(i);
+                    if (null != alternateDictionary && alternateDictionary.ContainsKey(PdfName.Name)) {
+                        usedNames.Add(alternateDictionary.GetAsString(PdfName.Name).ToUnicodeString());
+                    }
+                }
+            }
+            while (usedNames.Contains(OC_CONFIG_NAME_PATTERN + uniqueID)) {
+                uniqueID++;
+            }
+            return OC_CONFIG_NAME_PATTERN + uniqueID;
         }
     }
 }

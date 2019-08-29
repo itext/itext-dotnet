@@ -320,19 +320,17 @@ namespace iText.Kernel.Pdf {
         ///     </summary>
         /// <remarks>
         /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
-        /// <p>
+        /// <para />
         /// This flag is meaningful only if the
         /// <see cref="PdfDocument"/>
         /// is opened in append mode
         /// (see
         /// <see cref="StampingProperties.UseAppendMode()"/>
         /// ).
-        /// </p>
-        /// <p>
+        /// <para />
         /// In append mode the whole document is preserved as is, and only changes to the document are
         /// appended to the end of the document file. Because of this, only modified objects need to be flushed and are
         /// allowed to be flushed (i.e. to be written).
-        /// </p>
         /// </remarks>
         /// <returns>
         /// this
@@ -516,13 +514,26 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Processes two cases of object copying:
         /// <ol>
-        /// <li>copying to the other document</li>
-        /// <li>cloning inside of the current document</li>
+        /// <li>copying to the other document
+        /// <li>cloning inside of the current document
         /// </ol>
-        /// <p>
-        /// This two cases are distinguished by the state of <code>document</code> parameter:
-        /// the second case is processed if <code>document</code> is <code>null</code>.
         /// </summary>
+        /// <remarks>
+        /// Processes two cases of object copying:
+        /// <ol>
+        /// <li>copying to the other document
+        /// <li>cloning inside of the current document
+        /// </ol>
+        /// <para />
+        /// This two cases are distinguished by the state of
+        /// <c>document</c>
+        /// parameter:
+        /// the second case is processed if
+        /// <c>document</c>
+        /// is
+        /// <see langword="null"/>
+        /// .
+        /// </remarks>
         /// <param name="documentTo">if not null: document to copy object to; otherwise indicates that object is to be cloned.
         ///     </param>
         /// <param name="allowDuplicating">

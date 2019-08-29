@@ -2626,5 +2626,32 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff_overflowNewContent02_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void FloatTableTest01() {
+            String cmpFileName = sourceFolder + "cmp_floatTableTest01.pdf";
+            String outFile = destinationFolder + "floatTableTest01.pdf";
+            PdfWriter writer = new PdfWriter(outFile);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            Div div = new Div();
+            div.SetWidth(38);
+            Div floatDiv = new Div();
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Table table = new Table(2);
+            for (int i = 0; i < 26; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("abba a")));
+                table.AddCell(new Cell().Add(new Paragraph("ab ab ab")));
+            }
+            floatDiv.Add(table);
+            div.Add(floatDiv);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff03_"));
+        }
     }
 }

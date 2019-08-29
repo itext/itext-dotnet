@@ -107,8 +107,6 @@ namespace iText.Svg.Renderers.Factories {
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
             }
             catch (MissingMethodException ex) {
-                LogManager.GetLogger(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory)).Error(typeof(iText.Svg.Renderers.Factories.DefaultSvgNodeRendererFactory
-                    ).FullName, ex);
                 throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
                     ));
             }

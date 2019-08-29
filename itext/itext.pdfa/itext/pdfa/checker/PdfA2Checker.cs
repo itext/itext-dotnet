@@ -64,7 +64,7 @@ namespace iText.Pdfa.Checker {
     /// number of methods that override the implementations of its superclass
     /// <see cref="PdfA1Checker"/>
     /// .
-    /// <p>
+    /// <para />
     /// The specification implemented by this class is ISO 19005-2
     /// </summary>
     public class PdfA2Checker : PdfA1Checker {

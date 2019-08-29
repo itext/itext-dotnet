@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    public class EllipseArcTest {
+    public class EllipseArcTest : ExtendedITextTest {
         private const double DELTA = 0.00001;
 
         private void AssertPointEqual(Point expected, Point actual) {

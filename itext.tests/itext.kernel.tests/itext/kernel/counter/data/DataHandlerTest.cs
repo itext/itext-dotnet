@@ -61,17 +61,17 @@ namespace iText.Kernel.Counter.Data {
         public virtual void RunTest() {
             DataHandlerTest.TestDataHandler dataHandler = new DataHandlerTest.TestDataHandler();
             dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.Register(new DataHandlerTest.TestEvent("type2"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.Register(new DataHandlerTest.TestEvent("type1"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.Register(new DataHandlerTest.TestEvent("type2"), null);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             dataHandler.TryProcessRest();
         }
 

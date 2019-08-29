@@ -81,10 +81,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// is a string that represents an absolute URI with any schema
         /// except "file" - resources url values will be resolved exactly as "new URL(baseUrl, uriString)". Otherwise base URI
         /// will be handled as path in local file system.
-        /// <p>
+        /// <para />
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
-        /// </p>
         /// </summary>
         /// <param name="baseUri">base URI against which all relative resource URIs will be resolved.</param>
         public ResourceResolver(String baseUri) {
@@ -164,7 +163,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <remarks>
         /// Deprecated: use retrieveBytesFromResource instead
         /// Replaced by retrieveBytesFromResource for the sake of method name clarity.
-        /// <p>
+        /// <para />
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
         /// <see cref="System.String"/>
@@ -322,7 +321,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         /// <summary>Checks if source is under data URI scheme.</summary>
-        /// <remarks>Checks if source is under data URI scheme. (eg data:[<media type>][;base64],<data>)</remarks>
+        /// <remarks>Checks if source is under data URI scheme. (eg data:[&lt;media type&gt;][;base64],&lt;data&gt;)</remarks>
         /// <param name="src">String to test</param>
         /// <returns/>
         public virtual bool IsDataSrc(String src) {

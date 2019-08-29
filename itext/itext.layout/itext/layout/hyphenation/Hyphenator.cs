@@ -21,11 +21,12 @@ using Common.Logging;
 using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary><p>This class is the main entry point to the hyphenation package.</summary>
+    /// <summary>This class is the main entry point to the hyphenation package.</summary>
     /// <remarks>
-    /// <p>This class is the main entry point to the hyphenation package.
-    /// You can use only the static methods or create an instance.</p>
-    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// This class is the main entry point to the hyphenation package.
+    /// You can use only the static methods or create an instance.
+    /// <para />
+    /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public sealed class Hyphenator {
         private const char SOFT_HYPHEN = '\u00ad';

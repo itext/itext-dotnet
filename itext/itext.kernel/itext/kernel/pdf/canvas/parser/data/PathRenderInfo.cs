@@ -127,7 +127,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
-        /// <p>
+        /// <para />
         /// See
         /// <see cref="PathRenderInfo(System.Collections.Generic.Stack{E}, iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Geom.Path, int, int, bool, int)
         ///     "/>

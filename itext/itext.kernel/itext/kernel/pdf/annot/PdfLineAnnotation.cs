@@ -154,19 +154,19 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
-        /// - A solid rectangle surrounding the annotation.</li>
+        /// - A solid rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
-        /// - A dashed rectangle surrounding the annotation.</li>
+        /// - A dashed rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
-        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
-        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
-        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// - A single line along the bottom of the annotation rectangle.
         /// </ul>
         /// See also ISO-320001, Table 166.
         /// </remarks>
@@ -237,41 +237,41 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Square"/>
-        /// - A square filled with the annotation's interior color, if any; </li>
+        /// - A square filled with the annotation's interior color, if any;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Circle"/>
-        /// - A circle filled with the annotation's interior color, if any; </li>
+        /// - A circle filled with the annotation's interior color, if any;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Diamond"/>
-        /// - A diamond shape filled with the annotation's interior color, if any; </li>
+        /// - A diamond shape filled with the annotation's interior color, if any;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.OpenArrow"/>
-        /// - Two short lines meeting in an acute angle to form an open arrowhead; </li>
+        /// - Two short lines meeting in an acute angle to form an open arrowhead;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.ClosedArrow"/>
         /// - Two short lines meeting in an acute angle as in the
         /// <see cref="iText.Kernel.Pdf.PdfName.OpenArrow"/>
         /// style and
-        /// connected by a third line to form a triangular closed arrowhead filled with the annotation's interior color, if any; </li>
+        /// connected by a third line to form a triangular closed arrowhead filled with the annotation's interior color, if any;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.None"/>
-        /// - No line ending; </li>
+        /// - No line ending;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Butt"/>
-        /// - A short line at the endpoint perpendicular to the line itself; </li>
+        /// - A short line at the endpoint perpendicular to the line itself;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.ROpenArrow"/>
         /// - Two short lines in the reverse direction from
         /// <see cref="iText.Kernel.Pdf.PdfName.OpenArrow"/>
-        /// ; </li>
+        /// ;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.RClosedArrow"/>
         /// - A triangular closed arrowhead in the reverse direction from
         /// <see cref="iText.Kernel.Pdf.PdfName.ClosedArrow"/>
-        /// ; </li>
+        /// ;
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Slash"/>
-        /// - A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself; </li>
+        /// - A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself;
         /// </ul>
         /// see also ISO-320001, Table 176 "Line ending styles".
         /// </remarks>

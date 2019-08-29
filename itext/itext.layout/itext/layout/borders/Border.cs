@@ -152,26 +152,21 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction.
         /// </summary>
         /// <remarks>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Given points specify the line which lies on the border of the content area,
         /// therefore the border itself should be drawn to the left from the drawing direction.
-        /// </p>
-        /// <p>
+        /// <para />
         /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
         /// define the widths of the borders that are before and after the current border, e.g. for
         /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
         /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
         /// of border joins.
-        /// </p>
         /// </remarks>
         /// <param name="canvas">PdfCanvas to be written to</param>
         /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
@@ -189,29 +184,23 @@ namespace iText.Layout.Borders {
             , float borderWidthBefore, float borderWidthAfter);
 
         /// <summary>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction.
         /// </summary>
         /// <remarks>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Given points specify the line which lies on the border of the content area,
         /// therefore the border itself should be drawn to the left from the drawing direction.
-        /// </p>
-        /// <p>
+        /// <para />
         /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
         /// define the widths of the borders that are before and after the current border, e.g. for
         /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
         /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
         /// of border joins.
-        /// </p>
-        /// <p>
+        /// <para />
         /// <code>borderRadius</code> is used to draw rounded borders.
-        /// </p>
         /// </remarks>
         /// <param name="canvas">PdfCanvas to be written to</param>
         /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
@@ -233,30 +222,24 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction.
         /// </summary>
         /// <remarks>
-        /// <p>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
         /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Given points specify the line which lies on the border of the content area,
         /// therefore the border itself should be drawn to the left from the drawing direction.
-        /// </p>
-        /// <p>
+        /// <para />
         /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
         /// define the widths of the borders that are before and after the current border, e.g. for
         /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
         /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
         /// of border joins.
-        /// </p>
-        /// <p>
+        /// <para />
         /// <code>horizontalRadius1</code>, <code>verticalRadius1</code>, <code>horizontalRadius2</code>
         /// and <code>verticalRadius2</code> are used to draw rounded borders.
-        /// </p>
         /// </remarks>
         /// <param name="canvas">PdfCanvas to be written to</param>
         /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>

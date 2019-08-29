@@ -54,8 +54,8 @@ using iText.Kernel.Font;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    internal sealed class TypographyUtils {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(TypographyUtils));
+    public sealed class TypographyUtils {
+        private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TypographyUtils));
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
 
@@ -126,6 +126,15 @@ namespace iText.Layout.Renderer {
             }
             TYPOGRAPHY_MODULE_INITIALIZED = moduleFound;
             SUPPORTED_SCRIPTS = supportedScripts;
+        }
+
+        private TypographyUtils() {
+        }
+
+        /// <summary>Checks if layout module can access pdfCalligraph</summary>
+        /// <returns><code>true</code> if layout can access pdfCalligraph and <code>false</code> otherwise</returns>
+        public static bool IsPdfCalligraphAvailable() {
+            return TYPOGRAPHY_MODULE_INITIALIZED;
         }
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
@@ -263,10 +272,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal static bool IsTypographyModuleInitialized() {
-            return TYPOGRAPHY_MODULE_INITIALIZED;
-        }
-
         private static Object CallMethod(String className, String methodName, Type[] parameterTypes, params Object
             [] args) {
             return CallMethod(className, methodName, (Object)null, parameterTypes, args);
@@ -289,6 +294,15 @@ namespace iText.Layout.Renderer {
                     , e.Message));
             }
             catch (Exception e) {
+                // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
+                //
+                // If typography utils throws an exception at this point, we consider it as unrecoverable situation for
+                // its callers (layouting methods). Presence of typography module in class path is checked before.
+                // It's might be more suitable to wrap checked exceptions at a bit higher level, but we do it here for
+                // the sake of convenience.
+                //
+                // The RuntimeException exception is used instead of, for example, PdfException, because failure here is
+                // unexpected and is not connected to PDF documents processing.
                 throw new Exception(e.ToString(), e);
             }
             return null;
@@ -306,6 +320,15 @@ namespace iText.Layout.Renderer {
                 logger.Warn(MessageFormatUtil.Format("Cannot find class {0}", className));
             }
             catch (Exception exc) {
+                // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
+                //
+                // If typography utils throws an exception at this point, we consider it as unrecoverable situation for
+                // its callers (layouting methods). Presence of typography module in class path is checked before.
+                // It's might be more suitable to wrap checked exceptions at a bit higher level, but we do it here for
+                // the sake of convenience.
+                //
+                // The RuntimeException exception is used instead of, for example, PdfException, because failure here is
+                // unexpected and is not connected to PDF documents processing.
                 throw new Exception(exc.ToString(), exc);
             }
             return null;

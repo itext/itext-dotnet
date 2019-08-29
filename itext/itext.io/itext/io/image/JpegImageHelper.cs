@@ -378,7 +378,7 @@ namespace iText.IO.Image {
 
         /// <summary>Returns a type of marker.</summary>
         /// <param name="marker">an int</param>
-        /// <returns>a type: <VAR>VALID_MARKER</CODE>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR></returns>
+        /// <returns>a type: <VAR>VALID_MARKER</VAR>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR></returns>
         private static int Marker(int marker) {
             for (int i = 0; i < VALID_MARKERS.Length; i++) {
                 if (marker == VALID_MARKERS[i]) {

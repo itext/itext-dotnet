@@ -46,9 +46,10 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class SvgTagSvgNodeRendererUnitTest {
+    public class SvgTagSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CalculateNestedViewportSameAsParentTest() {
             Rectangle expected = new Rectangle(0, 0, 600, 600);

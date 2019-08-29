@@ -64,7 +64,7 @@ namespace iText.Svg.Renderers {
             IList<Exception> assertionErrorsThrown = new List<Exception>();
             for (int i = 1; i < 6; i++) {
                 try {
-                    ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "test_00" + i);
+                    ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_00" + i);
                 }
                 catch (Exception ae) {
                     if (ae.Message.Contains("expected null, but was")) {
@@ -81,14 +81,14 @@ namespace iText.Svg.Renderers {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewboxTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "test_viewbox");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_viewbox");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleGTest() {
-            ConvertAndCompareVisually(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleG");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleG");
         }
     }
 }

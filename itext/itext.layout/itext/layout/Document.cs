@@ -56,7 +56,7 @@ namespace iText.Layout {
     /// mainly operates high-level operations e.g. setting page size and rotation,
     /// adding elements, and writing text at specific coordinates. It has no
     /// knowledge of the actual PDF concepts and syntax.
-    /// <p>
+    /// <para />
     /// A
     /// <see cref="Document"/>
     /// 's rendering behavior can be modified by extending
@@ -206,7 +206,7 @@ namespace iText.Layout {
         /// Performs an entire recalculation of the document flow, taking into
         /// account all its current child elements. May become very
         /// resource-intensive for large documents.
-        /// <p>
+        /// <para />
         /// Do not use when you have set
         /// <see cref="RootElement{T}.immediateFlush"/>
         /// to <code>true</code>.

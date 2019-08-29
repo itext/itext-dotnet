@@ -48,9 +48,10 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class SvgDrawContextTest {
+    public class SvgDrawContextTest : ExtendedITextTest {
         private PdfDocument tokenDoc;
 
         private PdfCanvas page1;

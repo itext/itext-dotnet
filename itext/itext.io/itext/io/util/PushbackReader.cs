@@ -29,7 +29,7 @@ namespace iText.IO.Util {
 		/// </summary>
 		/// <param name="in">   The reader from which characters will be read </param>
 		/// <param name="size"> The size of the pushback buffer </param>
-		/// <exception cref="IllegalArgumentException"> if size is <= 0 </exception>
+		/// <exception cref="IllegalArgumentException"> if size is ≤ 0 </exception>
 		public PushbackReader(TextReader inp, int size)
 			: base(inp) {
 			if (size <= 0) {

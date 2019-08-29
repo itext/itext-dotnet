@@ -694,7 +694,7 @@ namespace iText.Svg.Converter {
         /// public static void createPdf(InputStream svgStream,ISvgConverterProperties props, OutputStream pdfDest) throws IOException {
         /// createPdf(svgStream,props,pdfDest,null);
         /// }
-        /// <p>
+        /// <para />
         /// /
         /// Create a single page pdf containing the SVG on its page using the default processing and drawing logic
         /// </exception>
@@ -743,12 +743,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -786,12 +786,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -837,12 +837,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -907,12 +907,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -955,12 +955,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -999,12 +999,12 @@ namespace iText.Svg.Converter {
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// in any way.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -1065,12 +1065,12 @@ namespace iText.Svg.Converter {
         /// <remarks>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
         /// passed document.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
@@ -1112,12 +1112,12 @@ namespace iText.Svg.Converter {
         /// <remarks>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
         /// passed document.
-        /// <p>
+        /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// .
-        /// <p>
+        /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,

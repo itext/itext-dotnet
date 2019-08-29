@@ -101,12 +101,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get an attribute's value by its key.</summary>
         /// <remarks>
         /// Get an attribute's value by its key.
-        /// <p>
+        /// <para />
         /// To get an absolute URL from an attribute that may be a relative URL, prefix the key with <code><b>abs</b></code>,
         /// which is a shortcut to the
         /// <see cref="AbsUrl(System.String)"/>
         /// method.
-        /// </p>
+        /// <para />
         /// E.g.:
         /// <blockquote><code>String url = a.attr("abs:href");</code></blockquote>
         /// </remarks>
@@ -201,23 +201,20 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get an absolute URL from a URL attribute that may be relative (i.e. an <code>&lt;a href&gt;</code> or
         /// <code>&lt;img src&gt;</code>).
-        /// <p>
+        /// <para />
         /// E.g.: <code>String absUrl = linkEl.absUrl("href");</code>
-        /// </p>
-        /// <p>
+        /// <para />
         /// If the attribute value is already absolute (i.e. it starts with a protocol, like
         /// <code>http://</code> or <code>https://</code> etc), and it successfully parses as a URL, the attribute is
         /// returned directly. Otherwise, it is treated as a URL relative to the element's
         /// <see cref="baseUri"/>
         /// , and made
         /// absolute using that.
-        /// </p>
-        /// <p>
+        /// <para />
         /// As an alternate, you can use the
         /// <see cref="Attr(System.String)"/>
         /// method with the <code>abs:</code> prefix, e.g.:
         /// <code>String absUrl = linkEl.attr("abs:href");</code>
-        /// </p>
         /// </remarks>
         /// <param name="attributeKey">The attribute key</param>
         /// <returns>
@@ -411,20 +408,19 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Removes this node from the DOM, and moves its children up into the node's parent. This has the effect of dropping
         /// the node but keeping its children.
-        /// <p>
+        /// <para />
         /// For example, with the input html:
-        /// </p>
-        /// <p>
+        /// <para />
         /// <c>&lt;div&gt;One &lt;span&gt;Two &lt;b&gt;Three&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;</c>
-        /// </p>
+        /// <para />
         /// Calling
         /// <c>element.unwrap()</c>
         /// on the
         /// <c>span</c>
         /// element will result in the html:
-        /// <p>
+        /// <para />
         /// <c>&lt;div&gt;One Two &lt;b&gt;Three&lt;/b&gt;&lt;/div&gt;</c>
-        /// </p>
+        /// <para />
         /// and the
         /// <c>"Two "</c>
         /// 
@@ -698,7 +694,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// Create a stand-alone, deep copy of this node, and all of its children. The cloned node will have no siblings or
         /// parent node. As a stand-alone object, any changes made to the clone or any of its children will not impact the
         /// original node.
-        /// <p>
+        /// <para />
         /// The cloned node may be adopted into another Document or node structure using
         /// <see cref="Element.AppendChild(Node)"/>
         /// .

@@ -33,7 +33,7 @@ namespace iText.Kernel.XMP {
     /// <summary>XMP Toolkit Version Information.</summary>
     /// <remarks>
     /// XMP Toolkit Version Information.
-    /// <p>
+    /// <para />
     /// Version information for the XMP toolkit is stored in the jar-library and available through a
     /// runtime call,
     /// <see cref="XMPMetaFactory.GetVersionInfo()"/>

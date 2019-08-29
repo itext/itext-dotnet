@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
 
 namespace iText.Svg.Css.Impl {
-    public class SvgNodeRendererInheritanceResolverUnitTest {
+    public class SvgNodeRendererInheritanceResolverUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ApplyInheritanceToSubTreeFillTest() {
             String expectedFillAttribute = "blue";

@@ -82,7 +82,7 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>
 		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(byte[], int, int) </seealso>
+		/// <seealso cref="Stream.Write" />
 		public override void Write(byte[] buf, int off, int len) {
 			output.Write(buf, off, len);
 			bytesWritten += len;
@@ -91,7 +91,7 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>
 		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(byte[]) </seealso>
+		/// <seealso cref="Stream.Write" />
 		public void Write(byte[] buf) {
 			Write(buf, 0, buf.Length);
 		}
@@ -99,7 +99,7 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>
 		/// Counts the written bytes. </summary>
-		/// <seealso cref= java.io.OutputStream#write(int) </seealso>
+		/// <seealso cref="Stream.Write" />
 		public void Write(int b) {
 			output.WriteByte((byte) b);
 			bytesWritten++;

@@ -178,16 +178,16 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get this element's HTML5 custom data attributes. Each attribute in the element that has a key
         /// starting with "data-" is included the dataset.
-        /// <p>
+        /// <para />
         /// E.g., the element
         /// <c>&lt;div data-package="jsoup" data-language="Java" class="group"&gt;...</c>
         /// has the dataset
         /// <c>package=jsoup, language=java</c>
         /// .
-        /// <p>
+        /// <para />
         /// This map is a filtered view of the element's attribute map. Changes to one map (add, remove, update) are reflected
         /// in the other map.
-        /// <p>
+        /// <para />
         /// You can find elements that have data attributes using the
         /// <c>[^data-]</c>
         /// attribute key prefix selector.
@@ -224,10 +224,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get a child element of this element, by its 0-based index number.</summary>
         /// <remarks>
         /// Get a child element of this element, by its 0-based index number.
-        /// <p>
+        /// <para />
         /// Note that an element can have both mixed Nodes and Elements as children. This method inspects
         /// a filtered list of children that are elements, and the index is based on that filtered list.
-        /// </p>
         /// </remarks>
         /// <param name="index">the index number of the element to retrieve</param>
         /// <returns>
@@ -242,11 +241,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get this element's child elements.</summary>
         /// <remarks>
         /// Get this element's child elements.
-        /// <p>
+        /// <para />
         /// This is effectively a filter on
         /// <see cref="Node.ChildNodes()"/>
         /// to get Element nodes.
-        /// </p>
         /// </remarks>
         /// <returns>
         /// child elements. If this element has no children, returns an
@@ -268,7 +266,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get this element's child text nodes.</summary>
         /// <remarks>
         /// Get this element's child text nodes. The list is unmodifiable but the text nodes may be manipulated.
-        /// <p>
+        /// <para />
         /// This is effectively a filter on
         /// <see cref="Node.ChildNodes()"/>
         /// to get Text nodes.
@@ -276,7 +274,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <returns>
         /// child text nodes. If this element has no text nodes, returns an
         /// empty list.
-        /// </p>
+        /// <para />
         /// For example, with the input HTML:
         /// <c>&lt;p&gt;One &lt;span&gt;Two&lt;/span&gt; Three &lt;br&gt; Four&lt;/p&gt;</c>
         /// with the
@@ -323,11 +321,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get this element's child data nodes.</summary>
         /// <remarks>
         /// Get this element's child data nodes. The list is unmodifiable but the data nodes may be manipulated.
-        /// <p>
+        /// <para />
         /// This is effectively a filter on
         /// <see cref="Node.ChildNodes()"/>
         /// to get Data nodes.
-        /// </p>
         /// </remarks>
         /// <returns>
         /// child data nodes. If this element has no data nodes, returns an
@@ -349,12 +346,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// CSS query, with this element as the starting context. Matched elements
         /// may include this element, or any of its children.
-        /// <p>
+        /// <para />
         /// This method is generally more powerful to use than the DOM-type
         /// <c>getElementBy*</c>
         /// methods, because
         /// multiple filters can be combined, e.g.:
-        /// </p>
         /// <ul>
         /// <li>
         /// <c>el.select("a[href]")</c>
@@ -367,11 +363,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>el.select("a[href*=example.com]")</c>
         /// - finds links pointing to example.com (loosely)
         /// </ul>
-        /// <p>
         /// See the query syntax documentation in
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// .
-        /// </p>
         /// </summary>
         /// <param name="cssQuery">
         /// a
@@ -602,13 +596,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Get a CSS selector that will uniquely select this element.</summary>
         /// <remarks>
         /// Get a CSS selector that will uniquely select this element.
-        /// <p>
+        /// <para />
         /// If the element has an ID, returns #id;
         /// otherwise returns the parent (if any) CSS selector, followed by
         /// <literal>'&gt;'</literal>
         /// ,
         /// followed by a unique selector for the element (tag.class.class:nth-child(n)).
-        /// </p>
         /// </remarks>
         /// <returns>the CSS Path that can be used to retrieve the element in a selector.</returns>
         public virtual String CssSelector() {
@@ -668,11 +661,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// is the second
         /// <c>p</c>
         /// .
-        /// <p>
+        /// <para />
         /// This is similar to
         /// <see cref="Node.NextSibling()"/>
         /// , but specifically finds only Elements
-        /// </p>
         /// </remarks>
         /// <returns>the next element, or null if there is no next element</returns>
         /// <seealso cref="PreviousElementSibling()"/>
@@ -769,7 +761,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Find an element by ID, including or under this element.</summary>
         /// <remarks>
         /// Find an element by ID, including or under this element.
-        /// <p>
+        /// <para />
         /// Note that this finds the first matching ID, starting with this element. If you search down from a different
         /// starting point, it is possible to find a different element by ID. For unique element by ID within a Document,
         /// use
@@ -791,7 +783,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Find elements that have this class, including or under this element.</summary>
         /// <remarks>
         /// Find elements that have this class, including or under this element. Case insensitive.
-        /// <p>
+        /// <para />
         /// Elements can have multiple classes (e.g.
         /// <c>&lt;div class="header round first"&gt;</c>
         /// . This method
@@ -1011,7 +1003,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Gets the combined text of this element and all its children.</summary>
         /// <remarks>
         /// Gets the combined text of this element and all its children. Whitespace is normalized and trimmed.
-        /// <p>
+        /// <para />
         /// For example, given HTML
         /// <c>&lt;p&gt;Hello  &lt;b&gt;there&lt;/b&gt; now! &lt;/p&gt;</c>
         /// ,
@@ -1024,12 +1016,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_952(accum)).Traverse(this);
+            new NodeTraversor(new _NodeVisitor_949(accum)).Traverse(this);
             return accum.ToString().Trim();
         }
 
-        private sealed class _NodeVisitor_952 : NodeVisitor {
-            public _NodeVisitor_952(StringBuilder accum) {
+        private sealed class _NodeVisitor_949 : NodeVisitor {
+            public _NodeVisitor_949(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -1058,7 +1050,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Gets the text owned by this element only; does not get the combined text of all children.</summary>
         /// <remarks>
         /// Gets the text owned by this element only; does not get the combined text of all children.
-        /// <p>
+        /// <para />
         /// For example, given HTML
         /// <c>&lt;p&gt;Hello &lt;b&gt;there&lt;/b&gt; now!&lt;/p&gt;</c>
         /// ,

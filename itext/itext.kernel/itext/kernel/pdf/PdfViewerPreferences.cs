@@ -47,25 +47,139 @@ using iText.Kernel;
 namespace iText.Kernel.Pdf {
     public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary> {
         public enum PdfViewerPreferencesConstants {
+            /// <summary>
+            /// PageMode constant for
+            /// <see cref="PdfName.NonFullScreenPageMode"/>
+            /// .
+            /// </summary>
             USE_NONE,
+            /// <summary>
+            /// PageMode constant for
+            /// <see cref="PdfName.NonFullScreenPageMode"/>
+            /// .
+            /// </summary>
             USE_OUTLINES,
+            /// <summary>
+            /// PageMode constant for
+            /// <see cref="PdfName.NonFullScreenPageMode"/>
+            /// .
+            /// </summary>
             USE_THUMBS,
+            /// <summary>
+            /// PageMode constant for
+            /// <see cref="PdfName.NonFullScreenPageMode"/>
+            /// .
+            /// </summary>
             USE_OC,
+            /// <summary>
+            /// Direction constant for
+            /// <see cref="PdfName.Direction"/>
+            /// .
+            /// </summary>
             LEFT_TO_RIGHT,
+            /// <summary>
+            /// Direction constant for
+            /// <see cref="PdfName.Direction"/>
+            /// .
+            /// </summary>
             RIGHT_TO_LEFT,
+            /// <summary>
+            /// PageBoundary constant for
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_CLIP"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_CLIP"/>
+            /// .
+            /// </summary>
             MEDIA_BOX,
+            /// <summary>
+            /// PageBoundary constant for
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_CLIP"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_CLIP"/>
+            /// .
+            /// </summary>
             CROP_BOX,
+            /// <summary>
+            /// PageBoundary constant for
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_CLIP"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_CLIP"/>
+            /// .
+            /// </summary>
             BLEED_BOX,
+            /// <summary>
+            /// PageBoundary constant for
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_CLIP"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_CLIP"/>
+            /// .
+            /// </summary>
             TRIM_BOX,
+            /// <summary>
+            /// PageBoundary constant for
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.VIEW_CLIP"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_AREA"/>
+            /// ,
+            /// <see cref="PdfViewerPreferencesConstants.PRINT_CLIP"/>
+            /// .
+            /// </summary>
             ART_BOX,
+            /// <summary>ViewArea constant.</summary>
             VIEW_AREA,
+            /// <summary>ViewClip constant.</summary>
             VIEW_CLIP,
+            /// <summary>PrintArea constant.</summary>
             PRINT_AREA,
+            /// <summary>PrintClip constant.</summary>
             PRINT_CLIP,
+            /// <summary>
+            /// Page scaling option constant for
+            /// <see cref="PdfName.PrintScaling"/>
+            /// .
+            /// </summary>
             NONE,
+            /// <summary>
+            /// Page scaling option constant for
+            /// <see cref="PdfName.PrintScaling"/>
+            /// .
+            /// </summary>
             APP_DEFAULT,
+            /// <summary>
+            /// The paper handling option constant for
+            /// <see cref="PdfName.Duplex"/>
+            /// .
+            /// </summary>
             SIMPLEX,
+            /// <summary>
+            /// The paper handling option constant for
+            /// <see cref="PdfName.Duplex"/>
+            /// .
+            /// </summary>
             DUPLEX_FLIP_SHORT_EDGE,
+            /// <summary>
+            /// The paper handling option constant for
+            /// <see cref="PdfName.Duplex"/>
+            /// .
+            /// </summary>
             DUPLEX_FLIP_LONG_EDGE
         }
 
@@ -375,17 +489,17 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.ViewClip;
                     break;
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.PrintArea;
                     break;
                 }
 
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP: {
-                    type = PdfName.ViewArea;
+                    type = PdfName.PrintClip;
                     break;
                 }
 

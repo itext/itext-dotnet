@@ -30,39 +30,50 @@
 using System.Collections;
 
 namespace iText.Kernel.XMP {
-    /// <summary>Interface for the <code>XMPMeta</code> iteration services.</summary>
-    /// <remarks>
-    /// Interface for the <code>XMPMeta</code> iteration services.
-    /// <code>XMPIterator</code> provides a uniform means to iterate over the
+    /// <summary>
+    /// Interface for the
+    /// <c>XMPMeta</c>
+    /// iteration services.
+    /// <c>XMPIterator</c>
+    /// provides a uniform means to iterate over the
     /// schema and properties within an XMP object.
-    /// <p>
+    /// <para />
     /// The iteration over the schema and properties within an XMP object is very
     /// complex. It is helpful to have a thorough understanding of the XMP data tree.
     /// One way to learn this is to create some complex XMP and examine the output of
-    /// <code>XMPMeta#toString</code>. This is also described in the XMP
+    /// <c>XMPMeta#toString</c>
+    /// . This is also described in the XMP
     /// Specification, in the XMP Data Model chapter.
-    /// <p>
+    /// <para />
     /// The top of the XMP data tree is a single root node. This does not explicitly
     /// appear in the dump and is never visited by an iterator (that is, it is never
-    /// returned from <code>XMPIterator#next()</code>). Beneath the root are
+    /// returned from
+    /// <c>XMPIterator#next()</c>
+    /// ). Beneath the root are
     /// schema nodes. These are just collectors for top level properties in the same
     /// namespace. They are created and destroyed implicitly. Beneath the schema
     /// nodes are the property nodes. The nodes below a property node depend on its
     /// type (simple, struct, or array) and whether it has qualifiers.
-    /// <p>
-    /// An <code>XMPIterator</code> is created by XMPMeta#interator() constructor
+    /// <para />
+    /// An
+    /// <c>XMPIterator</c>
+    /// is created by
+    /// <c>XMPMeta#interator()</c>
+    /// constructor
     /// defines a starting point for the iteration and options that control how it
     /// proceeds. By default the iteration starts at the root and visits all nodes
     /// beneath it in a depth first manner. The root node is not visited, the first
     /// visited node is a schema node. You can provide a schema name or property path
     /// to select a different starting node. By default this visits the named root
     /// node first then all nodes beneath it in a depth first manner.
-    /// <p>
-    /// The <code>XMPIterator#next()</code> method delivers the schema URI, path,
+    /// <para />
+    /// The
+    /// <c>XMPIterator#next()</c>
+    /// method delivers the schema URI, path,
     /// and option flags for the node being visited. If the node is simple it also
     /// delivers the value. Qualifiers for this node are visited next. The fields of
     /// a struct or items of an array are visited after the qualifiers of the parent.
-    /// <p>
+    /// <para />
     /// The options to control the iteration are:
     /// <ul>
     /// <li>JUST_CHILDREN - Visit just the immediate children of the root. Skip
@@ -77,11 +88,16 @@ namespace iText.Kernel.XMP {
     /// <li>INCLUDE_ALIASES - Adds known alias properties to the properties in the iteration.
     /// <em>Note:</em> Not supported in Java XMPCore!
     /// </ul>
-    /// <p>
-    /// <code>next()</code> returns <code>XMPPropertyInfo</code>-objects and throws
-    /// a <code>NoSuchElementException</code> if there are no more properties to
+    /// <para />
+    /// <c>next()</c>
+    /// returns
+    /// <c>XMPPropertyInfo</c>
+    /// -objects and throws
+    /// a
+    /// <c>NoSuchElementException</c>
+    /// if there are no more properties to
     /// return.
-    /// </remarks>
+    /// </summary>
     /// <since>25.01.2006</since>
     public interface XMPIterator : IEnumerator {
         /// <summary>

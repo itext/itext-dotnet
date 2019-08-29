@@ -90,7 +90,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
             }
             else {
                 ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode));
-                logger.Error("Error adding child node");
+                logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE);
             }
         }
 

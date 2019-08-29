@@ -36,7 +36,7 @@ namespace iText.Kernel.XMP {
     /// <remarks>
     /// Utility services for the metadata object. It has only public static functions, you cannot create
     /// an object. These are all functions that layer cleanly on top of the kernel XMP toolkit.
-    /// <p>
+    /// <para />
     /// These functions provide support for composing path expressions to deeply nested properties. The
     /// functions <code>XMPMeta</code> such as <code>getProperty()</code>,
     /// <code>getArrayItem()</code> and <code>getStructField()</code> provide easy access to top
@@ -45,11 +45,11 @@ namespace iText.Kernel.XMP {
     /// struct, or fields within an array of structs, or items of an array that is a field of a struct.
     /// These functions can also be used to compose paths to top level array items or struct fields so
     /// that you can use the binary accessors like <code>getPropertyAsInteger()</code>.
-    /// <p>
+    /// <para />
     /// You can use these functions is to compose a complete path expression, or all but the last
     /// component. Suppose you have a property that is an array of integers within a struct. You can
     /// access one of the array items like this:
-    /// <p>
+    /// <para />
     /// <blockquote>
     /// <pre>
     /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &quot;Struct&quot;, fieldNS,
@@ -65,7 +65,7 @@ namespace iText.Kernel.XMP {
     /// PropertyText xmpObj.getArrayItem (schemaNS, path, index);
     /// </pre>
     /// </blockquote>
-    /// <p>
+    /// <para />
     /// <em>Note:</em> It might look confusing that the schemaNS is passed in all of the calls above.
     /// This is because the XMP toolkit keeps the top level &quot;schema&quot; namespace separate from
     /// the rest of the path expression.
@@ -203,7 +203,7 @@ namespace iText.Kernel.XMP {
         /// that has two fields, the name of a city and the URI of an FTP site in that city. Use this to
         /// create an array of download alternatives. You can show the user a popup built from the values
         /// of the city fields. You can then get the corresponding URI as follows:
-        /// <p>
+        /// <para />
         /// <blockquote>
         /// <pre>
         /// String path = composeFieldSelector ( schemaNS, &quot;Downloads&quot;, fieldNS,

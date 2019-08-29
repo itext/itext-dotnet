@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
 
 namespace iText.Svg.Utils {
-    public class SvgTextUtilTest {
+    public class SvgTextUtilTest : ExtendedITextTest {
         public static float EPS = 0.0001f;
 
         //Trim leading tests

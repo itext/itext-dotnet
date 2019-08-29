@@ -55,11 +55,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// The attributes of an Element.
     /// <p>
     /// Attributes are treated as a map: there can be only one value associated with an attribute key.
-    /// </p>
     /// <p>
     /// Attribute key and value comparisons are done case insensitively, and keys are normalised to
     /// lower-case.
-    /// </p>
     /// </remarks>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Attributes : IEnumerable<iText.StyledXmlParser.Jsoup.Nodes.Attribute> {

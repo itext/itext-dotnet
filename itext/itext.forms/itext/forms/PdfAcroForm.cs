@@ -672,15 +672,15 @@ namespace iText.Forms {
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s
         /// that don't have one.
-        /// <p>
+        /// <para />
         /// Not generating appearances will speed up form flattening but the results
         /// can be unexpected in Acrobat. Don't use it unless your environment is
         /// well controlled. The default is <CODE>true</CODE>.
-        /// <p>
+        /// <para />
         /// If generateAppearance is set to <code>true</code>, then
         /// <code>NeedAppearances</code> is set to <code>false</code>. This does not
         /// apply vice versa.
-        /// <p>
+        /// <para />
         /// Note, this method does not change default behaviour of
         /// <see cref="iText.Forms.Fields.PdfFormField.SetValue(System.String)"/>
         /// method.

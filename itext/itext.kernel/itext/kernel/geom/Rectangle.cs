@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -119,6 +120,75 @@ namespace iText.Kernel.Geom {
                 }
             }
             return new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
+        }
+
+        /// <summary>
+        /// Gets the rectangle as it looks on the rotated page
+        /// and returns the rectangle in coordinates relevant to the true page origin.
+        /// </summary>
+        /// <remarks>
+        /// Gets the rectangle as it looks on the rotated page
+        /// and returns the rectangle in coordinates relevant to the true page origin.
+        /// This rectangle can be used to add annotations, fields, and other objects
+        /// to the rotated page.
+        /// </remarks>
+        /// <param name="rect">the rectangle as it looks on the rotated page.</param>
+        /// <param name="page">the page on which one want to process the rectangle.</param>
+        /// <returns>the newly created rectangle with translated coordinates.</returns>
+        public static iText.Kernel.Geom.Rectangle GetRectangleOnRotatedPage(iText.Kernel.Geom.Rectangle rect, PdfPage
+             page) {
+            iText.Kernel.Geom.Rectangle resultRect = rect;
+            int rotation = page.GetRotation();
+            if (0 != rotation) {
+                iText.Kernel.Geom.Rectangle pageSize = page.GetPageSize();
+                switch ((rotation / 90) % 4) {
+                    case 1: {
+                        // 90 degrees
+                        resultRect = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - resultRect.GetTop(), resultRect.GetLeft
+                            (), resultRect.GetHeight(), resultRect.GetWidth());
+                        break;
+                    }
+
+                    case 2: {
+                        // 180 degrees
+                        resultRect = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - resultRect.GetRight(), pageSize.GetHeight
+                            () - resultRect.GetTop(), resultRect.GetWidth(), resultRect.GetHeight());
+                        break;
+                    }
+
+                    case 3: {
+                        // 270 degrees
+                        resultRect = new iText.Kernel.Geom.Rectangle(resultRect.GetLeft(), pageSize.GetHeight() - resultRect.GetRight
+                            (), resultRect.GetHeight(), resultRect.GetWidth());
+                        break;
+                    }
+
+                    case 4:
+                    default: {
+                        // 0 degrees
+                        break;
+                    }
+                }
+            }
+            return resultRect;
+        }
+
+        /// <summary>Calculates the bounding box of passed points.</summary>
+        /// <param name="points">the points which appear inside the area</param>
+        /// <returns>the bounding box of passed points.</returns>
+        public static iText.Kernel.Geom.Rectangle CalculateBBox(IList<Point> points) {
+            IList<double> xs = new List<double>();
+            IList<double> ys = new List<double>();
+            foreach (Point point in points) {
+                xs.Add(point.GetX());
+                ys.Add(point.GetY());
+            }
+            double left = Enumerable.Min(xs);
+            double bottom = Enumerable.Min(ys);
+            double right = Enumerable.Max(xs);
+            double top = Enumerable.Max(ys);
+            return new iText.Kernel.Geom.Rectangle((float)left, (float)bottom, (float)(right - left), (float)(top - bottom
+                ));
         }
 
         /// <summary>Get the rectangle representation of the intersection between this rectangle and the passed rectangle

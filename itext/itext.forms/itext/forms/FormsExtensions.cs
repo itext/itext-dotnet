@@ -139,5 +139,14 @@ namespace iText.Forms {
         {
             builder.Remove(index, 1);
         }
+
+        public static bool EqualsIgnoreCase(this String str, String anotherString)
+        {
+            return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsEmpty<T>(this ICollection<T> c) {
+            return c.Count == 0;
+        }
     }
 }

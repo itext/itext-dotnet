@@ -51,7 +51,8 @@ namespace iText.Kernel.Pdf.Tagging {
     /// <remarks>
     /// A wrapper for namespace dictionaries (ISO 32000-2 section 14.7.4).
     /// A namespace dictionary defines a namespace within the structure tree.
-    /// <p>This pdf entity is meaningful only for the PDF documents of version <b>2.0 and higher</b>.</p>
+    /// <para />
+    /// This pdf entity is meaningful only for the PDF documents of version <b>2.0 and higher</b>.
     /// </remarks>
     public class PdfNamespace : PdfObjectWrapper<PdfDictionary> {
         /// <summary>

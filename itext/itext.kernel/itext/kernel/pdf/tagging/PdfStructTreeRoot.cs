@@ -207,7 +207,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Adds a
         /// <see cref="PdfNamespace"/>
         /// to the list of the namespaces used within the document.
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <para />
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="namespace">
         /// a
@@ -252,7 +253,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// These pronunciation lexicons may be used as pronunciation hints when the document’s content is presented via
         /// text-to-speech. Where two or more pronunciation lexicons apply to the same text, the first match – as defined by
         /// the order of entries in the array and the order of entries inside the pronunciation lexicon file – should be used.
-        /// <p>
+        /// <para />
         /// See ISO 32000-2 14.9.6, "Pronunciation hints".
         /// </summary>
         /// <returns>
@@ -283,7 +284,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// For more info see
         /// <see cref="GetPronunciationLexiconsList()"/>
         /// .
-        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// <para />
+        /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
         /// <param name="pronunciationLexiconFileSpec">
         /// a
@@ -393,7 +395,7 @@ namespace iText.Kernel.Pdf.Tagging {
         ///     </summary>
         /// <remarks>
         /// Moves structure associated with specified page and insert it in a specified position in the document.
-        /// <p>
+        /// <para />
         /// NOTE: Works only for document with not flushed pages.
         /// </remarks>
         /// <param name="fromPage">page which tag structure will be moved</param>
@@ -420,22 +422,15 @@ namespace iText.Kernel.Pdf.Tagging {
             return document;
         }
 
-        /// <summary>
-        /// <p>
-        /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </summary>
+        /// <summary>Adds file associated with structure tree root and identifies the relationship between them.</summary>
         /// <remarks>
-        /// <p>
         /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure tree root dictionary.
         /// If description is provided, it also will add file description to catalog Names tree.
-        /// </p>
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="description">the file description</param>
         /// <param name="fs">file specification dictionary of associated file</param>
@@ -456,20 +451,17 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with structure tree root and identifies the relationship between them.
         /// </summary>
         /// <remarks>
-        /// <p>
+        /// <para />
         /// Adds file associated with structure tree root and identifies the relationship between them.
-        /// </p>
-        /// <p>
+        /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method adds file to array value of the AF key in the structure tree root dictionary.
-        /// </p>
-        /// <p>
+        /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
-        /// </p>
         /// </remarks>
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {

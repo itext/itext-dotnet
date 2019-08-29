@@ -46,9 +46,10 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class UseUnitTest {
+    public class UseUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ReferenceNotFoundTest() {
             DummySvgNodeRenderer renderer = new DummySvgNodeRenderer();

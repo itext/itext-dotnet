@@ -45,16 +45,18 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary><p>Represents a 2D matrix of bits.</summary>
+    /// <summary>Represents a 2D matrix of bits.</summary>
     /// <remarks>
-    /// <p>Represents a 2D matrix of bits. In function arguments below, and throughout the common
+    /// Represents a 2D matrix of bits. In function arguments below, and throughout the common
     /// module, x is the column position, and y is the row position. The ordering is always x, y.
-    /// The origin is at the top-left.</p>
-    /// <p>Internally the bits are represented in a 1-D array of 32-bit ints. However, each row begins
+    /// The origin is at the top-left.
+    /// <para />
+    /// Internally the bits are represented in a 1-D array of 32-bit ints. However, each row begins
     /// with a new int. This is done intentionally so that we can copy out a row into a BitArray very
-    /// efficiently.</p>
-    /// <p>The ordering of bits is row-major. Within each int, the least significant bits are used first,
-    /// meaning they represent lower x values. This is compatible with BitArray's implementation.</p>
+    /// efficiently.
+    /// <para />
+    /// The ordering of bits is row-major. Within each int, the least significant bits are used first,
+    /// meaning they represent lower x values. This is compatible with BitArray's implementation.
     /// </remarks>
     /// <author>Sean Owen</author>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
@@ -86,7 +88,7 @@ namespace iText.Barcodes.Qrcode {
             bits = new int[rowSize * height];
         }
 
-        /// <summary><p>Gets the requested bit, where true means black.</p></summary>
+        /// <summary>Gets the requested bit, where true means black.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
         /// <returns>value of given bit in matrix</returns>
@@ -95,7 +97,7 @@ namespace iText.Barcodes.Qrcode {
             return (((int)(((uint)bits[offset]) >> (x & 0x1f))) & 1) != 0;
         }
 
-        /// <summary><p>Sets the given bit to true.</p></summary>
+        /// <summary>Sets the given bit to true.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
         public void Set(int x, int y) {
@@ -103,7 +105,7 @@ namespace iText.Barcodes.Qrcode {
             bits[offset] |= 1 << (x & 0x1f);
         }
 
-        /// <summary><p>Flips the given bit.</p></summary>
+        /// <summary>Flips the given bit.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
         public void Flip(int x, int y) {
@@ -119,7 +121,7 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <summary><p>Sets a square region of the bit matrix to true.</p></summary>
+        /// <summary>Sets a square region of the bit matrix to true.</summary>
         /// <param name="left">The horizontal position to begin at (inclusive)</param>
         /// <param name="top">The vertical position to begin at (inclusive)</param>
         /// <param name="width">The width of the region</param>

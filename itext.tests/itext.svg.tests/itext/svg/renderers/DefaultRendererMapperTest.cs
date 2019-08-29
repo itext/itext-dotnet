@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Svg.Renderers.Factories;
+using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class DefaultRendererMapperTest {
+    public class DefaultRendererMapperTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MapperNotEmptyTest() {
             DefaultSvgNodeRendererMapper mapper = new DefaultSvgNodeRendererMapper();

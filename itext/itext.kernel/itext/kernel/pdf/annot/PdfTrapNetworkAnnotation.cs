@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Annot {
     /// of a PDF document. Trapping is the process of adding marks to a page along colour boundaries
     /// to avoid unwanted visual artifacts resulting from misregistration of colorants when the page is printed.
     /// TrapNet annotations are deprecated in PDF 2.0.
-    /// <p>
+    /// <para />
     /// See ISO-320001 14.11.6 "Trapping Support" and 14.11.6.2 "Trap Network Annotations" in particular.
     /// </summary>
     public class PdfTrapNetworkAnnotation : PdfAnnotation {
@@ -119,7 +119,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>The date and time when the trap network was most recently modified.</summary>
         /// <remarks>
         /// The date and time when the trap network was most recently modified.
-        /// <p>
+        /// <para />
         /// This entry is required if /Version (
         /// <see cref="GetVersion()"/>
         /// ) and /AnnotStates (
@@ -162,8 +162,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// An unordered array of all objects present in the page description at the time the trap networks
         /// were generated and that, if changed, could affect the appearance of the page.
-        /// <p>
-        /// <p>
+        /// <para />
+        /// <para />
         /// This entry is required if /AnnotStates (
         /// <see cref="GetAnnotStates()"/>
         /// ) is present;
@@ -177,10 +177,10 @@ namespace iText.Kernel.Pdf.Annot {
         /// of all objects present in the page description at the time the trap networks
         /// were generated. If present, the array shall include the following objects:
         /// <ul>
-        /// <li>all page content streams;</li>
-        /// <li>all page resource objects (other than procedure sets);</li>
-        /// <li>all resource objects (other than procedure sets) of any form XObjects on the page;</li>
-        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")</li>
+        /// <li>all page content streams;
+        /// <li>all page resource objects (other than procedure sets);
+        /// <li>all resource objects (other than procedure sets) of any form XObjects on the page;
+        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")
         /// </ul>
         /// </param>
         /// <returns>
@@ -216,8 +216,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfNull"/>
         /// .
         /// No appearance state shall be included for the trap network annotation itself.
-        /// <p>
-        /// <p>
+        /// <para />
+        /// <para />
         /// Required if /Version (
         /// <see cref="GetVersion()"/>
         /// ) is present; shall be absent if /LastModified

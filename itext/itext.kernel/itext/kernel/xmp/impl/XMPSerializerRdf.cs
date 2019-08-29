@@ -867,7 +867,7 @@ namespace iText.Kernel.XMP.Impl
 			WriteNewline();
 		}
 
-		/// <summary>Write the </rdf:Description> end tag.</summary>
+		/// <summary>Write the &lt;/rdf:Description&gt; end tag.</summary>
 		/// <exception cref="System.IO.IOException"/>
 		private void EndOuterRDFDescription(int level)
 		{
@@ -1217,10 +1217,10 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>
 		/// A node can be serialized as RDF-Attribute, if it meets the following conditions:
 		/// <ul>
-		/// <li>is not array item
-		/// <li>don't has qualifier
-		/// <li>is no URI
-		/// <li>is no composite property
+		/// <li>is not array item</li>
+		/// <li>don't has qualifier</li>
+		/// <li>is no URI</li>
+		/// <li>is no composite property</li>
 		/// </ul>
 		/// </summary>
 		/// <param name="node">an XMPNode</param>

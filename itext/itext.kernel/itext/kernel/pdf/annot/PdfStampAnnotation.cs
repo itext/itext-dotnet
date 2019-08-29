@@ -92,20 +92,20 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are:
         /// <ul>
-        /// <li>Approved</li>
-        /// <li>Experimental</li>
-        /// <li>NotApproved</li>
-        /// <li>AsIs</li>
-        /// <li>Expired</li>
-        /// <li>NotForPublicRelease</li>
-        /// <li>Confidential</li>
-        /// <li>Final</li>
-        /// <li>Sold</li>
-        /// <li>Departmental</li>
-        /// <li>ForComment</li>
-        /// <li>TopSecret</li>
-        /// <li>Draft</li>
-        /// <li>ForPublicRelease.</li>
+        /// <li>Approved
+        /// <li>Experimental
+        /// <li>NotApproved
+        /// <li>AsIs
+        /// <li>Expired
+        /// <li>NotForPublicRelease
+        /// <li>Confidential
+        /// <li>Final
+        /// <li>Sold
+        /// <li>Departmental
+        /// <li>ForComment
+        /// <li>TopSecret
+        /// <li>Draft
+        /// <li>ForPublicRelease.
         /// </ul>
         /// </param>
         /// <returns>

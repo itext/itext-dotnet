@@ -220,21 +220,30 @@ namespace iText.Kernel.Pdf.Layer {
         /// <summary>Gets a collection of current intents specified for this layer.</summary>
         /// <remarks>
         /// Gets a collection of current intents specified for this layer.
-        /// The default value is PdfName.View, so it will be the only element of the
-        /// resultant colletion if no intents are currently specified.
+        /// The default value is
+        /// <see cref="iText.Kernel.Pdf.PdfName.View"/>
+        /// , so it will be the only element of the
+        /// resultant collection if no intents are currently specified.
         /// </remarks>
         /// <returns>the collection of intents.</returns>
         public virtual ICollection<PdfName> GetIntents() {
             PdfObject intent = GetPdfObject().Get(PdfName.Intent);
             if (intent is PdfName) {
-                return JavaUtil.ArraysAsList((PdfName)intent);
+                return JavaCollectionsUtil.SingletonList((PdfName)intent);
             }
             else {
                 if (intent is PdfArray) {
-                    return (ICollection<PdfName>)intent;
+                    PdfArray intentArr = (PdfArray)intent;
+                    ICollection<PdfName> intentsCollection = new List<PdfName>(intentArr.Size());
+                    foreach (PdfObject i in intentArr) {
+                        if (i is PdfName) {
+                            intentsCollection.Add((PdfName)i);
+                        }
+                    }
+                    return intentsCollection;
                 }
             }
-            return JavaUtil.ArraysAsList(PdfName.View);
+            return JavaCollectionsUtil.SingletonList(PdfName.View);
         }
 
         /// <summary>Sets the intents of the layer.</summary>
@@ -248,13 +257,12 @@ namespace iText.Kernel.Pdf.Layer {
                     GetPdfObject().Put(PdfName.Intent, intents[0]);
                 }
                 else {
-                    if (intents.Count > 1) {
-                        PdfArray array = new PdfArray();
-                        foreach (PdfName intent in intents) {
-                            array.Add(intent);
-                        }
-                        GetPdfObject().Put(PdfName.Intent, array);
+                    // intents.size() > 1
+                    PdfArray array = new PdfArray();
+                    foreach (PdfName intent in intents) {
+                        array.Add(intent);
                     }
+                    GetPdfObject().Put(PdfName.Intent, array);
                 }
             }
             GetPdfObject().SetModified();

@@ -61,29 +61,28 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithNoChildrenTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "onlyDefsWithNoChildren");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithNoChildren");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "onlyDefsWithOneChild");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithOneChild");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithMultipleChildrenTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "onlyDefsWithMultipleChildren");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithMultipleChildren");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildAndNonDefsBeingDrawnTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "defsWithOneChildAndNonDefsBeingDrawn"
-                );
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "defsWithOneChildAndNonDefsBeingDrawn");
         }
     }
 }

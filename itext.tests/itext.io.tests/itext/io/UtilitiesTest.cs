@@ -51,5 +51,10 @@ namespace iText.IO {
             byte[] test = ArrayUtil.ShortenArray(src, 5);
             NUnit.Framework.Assert.AreEqual(dest, test);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidResource() {
+            NUnit.Framework.Assert.IsNull(ResourceUtil.GetResourceStream("some-random-resource.zzz"));
+        }
     }
 }

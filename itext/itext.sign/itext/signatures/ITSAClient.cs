@@ -47,7 +47,7 @@ namespace iText.Signatures {
     /// <summary>Time Stamp Authority client (caller) interface.</summary>
     /// <remarks>
     /// Time Stamp Authority client (caller) interface.
-    /// <p>
+    /// <para />
     /// Interface used by the PdfPKCS7 digital signature builder to call
     /// Time Stamp Authority providing RFC 3161 compliant time stamp token.
     /// </remarks>

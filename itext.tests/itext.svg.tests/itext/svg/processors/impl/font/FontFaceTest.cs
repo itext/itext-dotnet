@@ -70,49 +70,49 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DroidSerifWebFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "droidSerifWebFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifWebFontTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DroidSerifLocalFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "droidSerifLocalFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalFontTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DroidSerifLocalLocalFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "droidSerifLocalLocalFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalLocalFontTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DroidSerifLocalWithMediaFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "droidSerifLocalWithMediaFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalWithMediaFontTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DroidSerifLocalWithMediaRuleFontTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "droidSerifLocalWithMediaRuleFontTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalWithMediaRuleFontTest");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontSelectorTest01() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontSelectorTest01");
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorTest01");
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontFaceGrammarTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "fontFaceGrammarTest");
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontFaceGrammarTest");
         }
 
         /// <exception cref="System.IO.IOException"/>

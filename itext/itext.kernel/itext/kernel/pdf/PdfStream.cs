@@ -190,7 +190,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="Java.Util.Zip.Deflater"/>
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
         /// .
         /// </remarks>
         /// <returns>compression level.</returns>
@@ -202,7 +202,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="Java.Util.Zip.Deflater"/>
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
         /// .
         /// </remarks>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)

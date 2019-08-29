@@ -14,18 +14,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+/*
+* PLEASE NOTE that implementation of "insert" function was refactored to consume less stack memory
+*/
 using System;
 using System.Collections;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary>
-    /// <h2>Ternary Search Tree.</h2>
-    /// <p>A ternary search tree is a hibrid between a binary tree and
-    /// a digital search tree (trie).
-    /// </summary>
+    /// <summary><h2>Ternary Search Tree.</h2></summary>
     /// <remarks>
     /// <h2>Ternary Search Tree.</h2>
-    /// <p>A ternary search tree is a hibrid between a binary tree and
+    /// <para />
+    /// A ternary search tree is a hybrid between a binary tree and
     /// a digital search tree (trie). Keys are limited to strings.
     /// A data value of type char is stored in each leaf node.
     /// It can be used as an index (or pointer) to the data.
@@ -39,8 +39,9 @@ namespace iText.Layout.Hyphenation {
     /// from the target, etc. The storage requirements are higher than
     /// a binary tree but a lot less than a trie. Performance is
     /// comparable with a hash table, sometimes it outperforms a hash
-    /// function (most of the time can determine a miss faster than a hash).</p>
-    /// <p>The main purpose of this java port is to serve as a base for
+    /// function (most of the time can determine a miss faster than a hash).
+    /// <para />
+    /// The main purpose of this java port is to serve as a base for
     /// implementing TeX's hyphenation algorithm (see The TeXBook,
     /// appendix H). Each language requires from 5000 to 15000 hyphenation
     /// patterns which will be keys in this tree. The strings patterns
@@ -52,13 +53,15 @@ namespace iText.Layout.Hyphenation {
     /// to be just 8 bytes (3 pointers and the data char). This gives
     /// room for about 65000 nodes. In my tests the english patterns
     /// took 7694 nodes and the german patterns 10055 nodes,
-    /// so I think we are safe.</p>
-    /// <p>All said, this is a map with strings as keys and char as value.
+    /// so I think we are safe.
+    /// <para />
+    /// All said, this is a map with strings as keys and char as value.
     /// Pretty limited!. It can be extended to a general map by
     /// using the string representation of an object and using the
     /// char value as an index to an array that contains the object
-    /// values.</p>
-    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// values.
+    /// <para />
+    /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class TernaryTree {
         /// <summary>
@@ -73,15 +76,17 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Pointer to equal branch and to data when this node is a string terminator.</summary>
         protected internal char[] eq;
 
-        /// <summary><P>The character stored in this node: splitchar.</summary>
+        /// <summary>The character stored in this node: splitchar.</summary>
         /// <remarks>
-        /// <P>The character stored in this node: splitchar.
-        /// Two special values are reserved:</P>
-        /// <ul><li>0x0000 as string terminator</li>
+        /// The character stored in this node: splitchar.
+        /// Two special values are reserved:
+        /// <ul>
+        /// <li>0x0000 as string terminator
         /// <li>0xFFFF to indicate that the branch starting at
-        /// this node is compressed</li></ul>
-        /// <p>This shouldn't be a problem if we give the usual semantics to
-        /// strings since 0xFFFF is garanteed not to be an Unicode character.</p>
+        /// this node is compressed
+        /// </ul>
+        /// This shouldn't be a problem if we give the usual semantics to
+        /// strings since 0xFFFF is garanteed not to be an Unicode character.
         /// </remarks>
         protected internal char[] sc;
 
@@ -153,7 +158,7 @@ namespace iText.Layout.Hyphenation {
             char[] strkey = new char[len--];
             key.JGetChars(0, len, strkey, 0);
             strkey[len] = (char)0;
-            root = Insert(root, strkey, 0, val);
+            root = Insert(new TernaryTree.TreeInsertionParams(root, strkey, 0, val));
         }
 
         /// <summary>Insert key.</summary>
@@ -165,11 +170,17 @@ namespace iText.Layout.Hyphenation {
             if (freenode + len > eq.Length) {
                 RedimNodeArrays(eq.Length + BLOCK_SIZE);
             }
-            root = Insert(root, key, start, val);
+            root = Insert(new TernaryTree.TreeInsertionParams(root, key, start, val));
         }
 
-        /// <summary>The actual insertion function, recursive version.</summary>
-        private char Insert(char p, char[] key, int start, char val) {
+        // PLEASE NOTE that this function is a result of refactoring "insert" method which
+        // is a modification of the original work
+        // Returns null if insertion is not needed and the id of the new node if insertion was performed
+        private char? InsertNewBranchIfNeeded(TernaryTree.TreeInsertionParams @params) {
+            char p = @params.p;
+            char[] key = @params.key;
+            int start = @params.start;
+            char val = @params.val;
             int len = Strlen(key, start);
             if (p == 0) {
                 // this means there is no branch, this node will start a new branch.
@@ -193,61 +204,118 @@ namespace iText.Layout.Hyphenation {
                 }
                 return p;
             }
-            if (sc[p] == 0xFFFF) {
-                // branch is compressed: need to decompress
-                // this will generate garbage in the external key array
-                // but we can do some garbage collection later
-                char pp = freenode++;
-                lo[pp] = lo[p];
-                // previous pointer to key
-                eq[pp] = eq[p];
-                // previous pointer to data
-                lo[p] = (char)0;
-                if (len > 0) {
-                    sc[p] = kv.Get(lo[pp]);
-                    eq[p] = pp;
-                    lo[pp]++;
-                    if (kv.Get(lo[pp]) == 0) {
-                        // key completly decompressed leaving garbage in key array
-                        lo[pp] = (char)0;
-                        sc[pp] = (char)0;
-                        hi[pp] = (char)0;
+            else {
+                return null;
+            }
+        }
+
+        // PLEASE NOTE that this function is a result of refactoring "insert" method which
+        // is a modification of the original work
+        private char InsertIntoExistingBranch(TernaryTree.TreeInsertionParams @params) {
+            char initialP = @params.p;
+            TernaryTree.TreeInsertionParams paramsToInsertNext = @params;
+            while (paramsToInsertNext != null) {
+                char p = paramsToInsertNext.p;
+                // We are inserting into an existing branch hence the id must be non-zero
+                System.Diagnostics.Debug.Assert(p != 0);
+                char[] key = paramsToInsertNext.key;
+                int start = paramsToInsertNext.start;
+                char val = paramsToInsertNext.val;
+                int len = Strlen(key, start);
+                paramsToInsertNext = null;
+                if (sc[p] == 0xFFFF) {
+                    // branch is compressed: need to decompress
+                    // this will generate garbage in the external key array
+                    // but we can do some garbage collection later
+                    char pp = freenode++;
+                    lo[pp] = lo[p];
+                    // previous pointer to key
+                    eq[pp] = eq[p];
+                    // previous pointer to data
+                    lo[p] = (char)0;
+                    if (len > 0) {
+                        sc[p] = kv.Get(lo[pp]);
+                        eq[p] = pp;
+                        lo[pp]++;
+                        if (kv.Get(lo[pp]) == 0) {
+                            // key completly decompressed leaving garbage in key array
+                            lo[pp] = (char)0;
+                            sc[pp] = (char)0;
+                            hi[pp] = (char)0;
+                        }
+                        else {
+                            // we only got first char of key, rest is still there
+                            sc[pp] = (char)0xFFFF;
+                        }
                     }
                     else {
-                        // we only got first char of key, rest is still there
+                        // In this case we can save a node by swapping the new node
+                        // with the compressed node
                         sc[pp] = (char)0xFFFF;
+                        hi[p] = pp;
+                        sc[p] = (char)0;
+                        eq[p] = val;
+                        length++;
+                        break;
+                    }
+                }
+                char s = key[start];
+                if (s < sc[p]) {
+                    TernaryTree.TreeInsertionParams branchParams = new TernaryTree.TreeInsertionParams(lo[p], key, start, val);
+                    char? insertNew = InsertNewBranchIfNeeded(branchParams);
+                    if (insertNew == null) {
+                        paramsToInsertNext = branchParams;
+                    }
+                    else {
+                        lo[p] = (char)insertNew;
                     }
                 }
                 else {
-                    // In this case we can save a node by swapping the new node
-                    // with the compressed node
-                    sc[pp] = (char)0xFFFF;
-                    hi[p] = pp;
-                    sc[p] = (char)0;
-                    eq[p] = val;
-                    length++;
-                    return p;
+                    if (s == sc[p]) {
+                        if (s != 0) {
+                            TernaryTree.TreeInsertionParams branchParams = new TernaryTree.TreeInsertionParams(eq[p], key, start + 1, 
+                                val);
+                            char? insertNew = InsertNewBranchIfNeeded(branchParams);
+                            if (insertNew == null) {
+                                paramsToInsertNext = branchParams;
+                            }
+                            else {
+                                eq[p] = (char)insertNew;
+                            }
+                        }
+                        else {
+                            // key already in tree, overwrite data
+                            eq[p] = val;
+                        }
+                    }
+                    else {
+                        TernaryTree.TreeInsertionParams branchParams = new TernaryTree.TreeInsertionParams(hi[p], key, start, val);
+                        char? insertNew = InsertNewBranchIfNeeded(branchParams);
+                        if (insertNew == null) {
+                            paramsToInsertNext = branchParams;
+                        }
+                        else {
+                            hi[p] = (char)insertNew;
+                        }
+                    }
                 }
             }
-            char s = key[start];
-            if (s < sc[p]) {
-                lo[p] = Insert(lo[p], key, start, val);
+            return initialP;
+        }
+
+        /// <summary>The actual insertion function, recursive version.</summary>
+        /// <remarks>
+        /// The actual insertion function, recursive version.
+        /// PLEASE NOTE that the implementation has been adapted to consume less stack memory
+        /// </remarks>
+        private char Insert(TernaryTree.TreeInsertionParams @params) {
+            char? newBranch = InsertNewBranchIfNeeded(@params);
+            if (newBranch == null) {
+                return InsertIntoExistingBranch(@params);
             }
             else {
-                if (s == sc[p]) {
-                    if (s != 0) {
-                        eq[p] = Insert(eq[p], key, start + 1, val);
-                    }
-                    else {
-                        // key already in tree, overwrite data
-                        eq[p] = val;
-                    }
-                }
-                else {
-                    hi[p] = Insert(hi[p], key, start, val);
-                }
+                return (char)newBranch;
             }
-            return p;
         }
 
         /// <summary>Compares 2 null terminated char arrays</summary>
@@ -495,6 +563,25 @@ namespace iText.Layout.Hyphenation {
         /// <returns>the keys</returns>
         public virtual IEnumerator Keys() {
             return new TernaryTreeIterator(this);
+        }
+
+        private class TreeInsertionParams {
+            internal char p;
+
+            internal char[] key;
+
+            internal int start;
+
+            internal char val;
+
+            public TreeInsertionParams(char p, char[] key, int start, char val) {
+                // PLEASE NOTE that this is a helper class that was added as a result of the file modification
+                // and is not a part of the original file
+                this.p = p;
+                this.key = key;
+                this.start = start;
+                this.val = val;
+            }
         }
     }
 }

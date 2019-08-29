@@ -733,12 +733,6 @@ namespace iText.Kernel.XMP.Impl
 		/// attributes == set (
 		/// idAttr?, ( resourceAttr | nodeIdAttr )?, propertyAttr* ) )
 		/// end-element()
-		/// <ns:Prop1/>  <!-- a simple property with an empty value -->
-		/// <ns:Prop2 rdf:resource="http: *www.adobe.com/"/> <!-- a URI value -->
-		/// <ns:Prop3 rdf:value="..." ns:Qual="..."/> <!-- a simple qualified property -->
-		/// <ns:Prop4 ns:Field1="..." ns:Field2="..."/> <!-- a struct with simple fields -->
-		/// An emptyPropertyElt is an element with no contained content, just a possibly empty set of
-		/// attributes.
 		/// </summary>
 		/// <remarks>
 		/// 7.2.21 emptyPropertyElt
@@ -746,33 +740,38 @@ namespace iText.Kernel.XMP.Impl
 		/// attributes == set (
 		/// idAttr?, ( resourceAttr | nodeIdAttr )?, propertyAttr* ) )
 		/// end-element()
-		/// <ns:Prop1/>  <!-- a simple property with an empty value -->
-		/// <ns:Prop2 rdf:resource="http: *www.adobe.com/"/> <!-- a URI value -->
-		/// <ns:Prop3 rdf:value="..." ns:Qual="..."/> <!-- a simple qualified property -->
-		/// <ns:Prop4 ns:Field1="..." ns:Field2="..."/> <!-- a struct with simple fields -->
+		/// <br/>
+		/// &lt;ns:Prop1/&gt;  &lt;!-- a simple property with an empty value --&gt;<br/>
+		/// &lt;ns:Prop2 rdf:resource="http: *www.adobe.com/"/&gt; &lt;!-- a URI value --&gt;<br/>
+		/// &lt;ns:Prop3 rdf:value="..." ns:Qual="..."/&gt; &lt;!-- a simple qualified property --&gt;<br/>
+		/// &lt;ns:Prop4 ns:Field1="..." ns:Field2="..."/&gt; &lt;!-- a struct with simple fields --&gt;<br/>
+		/// An emptyPropertyElt is an element with no contained content, just a possibly empty set of
+		/// attributes. 
 		/// An emptyPropertyElt is an element with no contained content, just a possibly empty set of
 		/// attributes. An emptyPropertyElt can represent three special cases of simple XMP properties: a
 		/// simple property with an empty value (ns:Prop1), a simple property whose value is a URI
 		/// (ns:Prop2), or a simple property with simple qualifiers (ns:Prop3).
 		/// An emptyPropertyElt can also represent an XMP struct whose fields are all simple and
 		/// unqualified (ns:Prop4).
+		/// <para/>
 		/// It is an error to use both rdf:value and rdf:resource - that can lead to invalid  RDF in the
 		/// verbose form written using a literalPropertyElt.
+		/// <para/>
 		/// The XMP mapping for an emptyPropertyElt is a bit different from generic RDF, partly for
 		/// design reasons and partly for historical reasons. The XMP mapping rules are:
-		/// <ol>
-		/// <li> If there is an rdf:value attribute then this is a simple property
+		/// <list type="number">
+		/// <item><description> If there is an rdf:value attribute then this is a simple property 
 		/// with a text value.
-		/// All other attributes are qualifiers.
-		/// <li> If there is an rdf:resource attribute then this is a simple property
+		/// All other attributes are qualifiers.</description></item>
+		/// <item><description> If there is an rdf:resource attribute then this is a simple property
 		/// with a URI value.
-		/// All other attributes are qualifiers.
-		/// <li> If there are no attributes other than xml:lang, rdf:ID, or rdf:nodeID
+		/// All other attributes are qualifiers.</description></item>
+		/// <item><description> If there are no attributes other than xml:lang, rdf:ID, or rdf:nodeID
 		/// then this is a simple
-		/// property with an empty value.
-		/// <li> Otherwise this is a struct, the attributes other than xml:lang, rdf:ID,
-		/// or rdf:nodeID are fields.
-		/// </ol>
+		/// property with an empty value.</description></item>
+		/// <item><description> Otherwise this is a struct, the attributes other than xml:lang, rdf:ID,
+		/// or rdf:nodeID are fields.</description></item>
+		/// </list>
 		/// </remarks>
 		/// <param name="xmp">the xmp metadata object that is generated</param>
 		/// <param name="xmpParent">the parent xmp node</param>

@@ -86,7 +86,7 @@ namespace iText.IO.Font.Constants {
         /// <summary>Convert from Open Type font width class notation.</summary>
         /// <remarks>
         /// Convert from Open Type font width class notation.
-        /// <p>
+        /// <para />
         /// https://www.microsoft.com/typography/otspec/os2.htm#wdc
         /// </remarks>
         /// <param name="fontWidth">Open Type font width.</param>

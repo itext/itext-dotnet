@@ -73,7 +73,7 @@ namespace iText.Layout.Font {
     /// FontProvider the only end point for creating
     /// <see cref="iText.Kernel.Font.PdfFont"/>
     /// .
-    /// <p>
+    /// <para />
     /// It is allowed to use only one
     /// <see cref="FontProvider"/>
     /// per document. If temporary fonts per element needed,
@@ -87,7 +87,7 @@ namespace iText.Layout.Font {
     /// <see cref="GetStrategy(System.String, System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
     ///     >
     /// .
-    /// <p>
+    /// <para />
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
     /// s, because of possible conflicts with
@@ -412,6 +412,15 @@ namespace iText.Layout.Font {
                     pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
                 }
                 catch (System.IO.IOException e) {
+                    // Converting checked exceptions to unchecked RuntimeException (java-specific comment).
+                    //
+                    // FontProvider is usually used in highlevel API, which requests fonts in deep underlying logic.
+                    // IOException would mean that font is chosen and it is supposed to exist, however it cannot be read.
+                    // Using fallbacks in such situations would make FontProvider less intuitive.
+                    //
+                    // Even though softening of checked exceptions can be handled at higher levels in order to let
+                    // the caller of this method know that font creation failed, we prefer to avoid bloating highlevel API
+                    // and avoid making higher level code depend on low-level code because of the exceptions handling.
                     throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
                 }
                 pdfFonts.Put(fontInfo, pdfFont);

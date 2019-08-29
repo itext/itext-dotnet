@@ -73,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <param name="bytes">the image bytes</param>
         public WmfImageData(byte[] bytes)
             : base(bytes, ImageType.WMF) {
-            byte[] imageType = ReadImageType(url);
+            byte[] imageType = ReadImageType(bytes);
             if (!ImageTypeIs(imageType, wmf)) {
                 throw new PdfException(PdfException.NotAWmfImage);
             }
@@ -108,6 +108,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                     }
                 }
             }
+        }
+
+        private static byte[] ReadImageType(byte[] bytes) {
+            return JavaUtil.ArraysCopyOfRange(bytes, 0, 8);
         }
     }
 }

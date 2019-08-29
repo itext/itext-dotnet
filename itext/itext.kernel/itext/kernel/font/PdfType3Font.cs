@@ -54,11 +54,11 @@ namespace iText.Kernel.Font {
     /// <summary>Low-level API class for Type 3 fonts.</summary>
     /// <remarks>
     /// Low-level API class for Type 3 fonts.
-    /// <p>
+    /// <para />
     /// In Type 3 fonts, glyphs are defined by streams of PDF graphics operators.
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.
-    /// <p>
+    /// <para />
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -184,7 +184,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets the PostScript italic angle.</summary>
         /// <remarks>
         /// Sets the PostScript italic angle.
-        /// <p>
+        /// <para />
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>

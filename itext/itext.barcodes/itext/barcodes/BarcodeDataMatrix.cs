@@ -341,7 +341,7 @@ namespace iText.Barcodes {
         /// <remarks>
         /// Sets the height of the barcode. If the height is zero it will be calculated.
         /// This height doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (width, height):<p>
+        /// The allowed dimensions are (width, height):<para />
         /// 10, 10<br />
         /// 12, 12<br />
         /// 18, 8<br />
@@ -392,7 +392,7 @@ namespace iText.Barcodes {
         /// <remarks>
         /// Sets the width of the barcode. If the width is zero it will be calculated.
         /// This width doesn't include the whitespace border, if any.
-        /// The allowed dimensions are (width, height):<p>
+        /// The allowed dimensions are (width, height):<para />
         /// 10, 10<br />
         /// 12, 12<br />
         /// 18, 8<br />
@@ -449,7 +449,7 @@ namespace iText.Barcodes {
 
         /// <summary>Sets the options for the barcode generation.</summary>
         /// <remarks>
-        /// Sets the options for the barcode generation. The options can be:<p>
+        /// Sets the options for the barcode generation. The options can be:<para />
         /// One of:<br />
         /// <CODE>DM_AUTO</CODE> - the best encodation will be used<br />
         /// <CODE>DM_ASCII</CODE> - ASCII encodation<br />
@@ -461,16 +461,16 @@ namespace iText.Barcodes {
         /// <CODE>DM_RAW</CODE> - no encodation. The bytes provided are already encoded and will be added directly to the barcode, using padding if needed. It assumes that the encodation state is left at ASCII after the last byte.<br />
         /// <br />
         /// One of:<br />
-        /// <CODE>DM_EXTENSION</CODE> - allows extensions to be embedded at the start of the text:<p>
+        /// <CODE>DM_EXTENSION</CODE> - allows extensions to be embedded at the start of the text:<para />
         /// exxxxxx - ECI number xxxxxx<br />
         /// m5 - macro 5<br />
         /// m6 - macro 6<br />
         /// f - FNC1<br />
         /// saabbccccc - Structured Append, aa symbol position (1-16), bb total number of symbols (2-16), ccccc file identification (0-64515)<br />
         /// p - Reader programming<br />
-        /// . - extension terminator<p>
-        /// Example for a structured append, symbol 2 of 6, with FNC1 and ECI 000005. The actual text is "Hello".<p>
-        /// s020600075fe000005.Hello<p>
+        /// . - extension terminator<para />
+        /// Example for a structured append, symbol 2 of 6, with FNC1 and ECI 000005. The actual text is "Hello".<para />
+        /// s020600075fe000005.Hello<para />
         /// One of:<br />
         /// <CODE>DM_TEST</CODE> - doesn't generate the image but returns all the other information.
         /// </remarks>

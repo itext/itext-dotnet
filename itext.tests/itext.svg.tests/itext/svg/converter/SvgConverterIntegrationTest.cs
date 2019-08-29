@@ -107,7 +107,7 @@ namespace iText.Svg.Converter {
             PdfFormXObject form = SvgConverter.ConvertToXObject("<svg width='100pt' height='100pt' />", doc);
             new PdfCanvas(doc.GetPage(1)).AddXObject(form, new Rectangle(100, 100, 100, 100));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
@@ -119,6 +119,25 @@ namespace iText.Svg.Converter {
             doc.AddNewPage();
             SvgConverter.ConvertToXObject(contents, doc);
             doc.Close();
+        }
+
+        /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
+        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 32)]
+        public virtual void ConvertFileWithAllIgnoredTags() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "ignored_tags");
+        }
+
+        /// <summary>Convert a SVG file of a chart which contains some currently ignored tags.</summary>
+        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConvertChartWithSomeIgnoredTags() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "chart_snippet");
         }
 
         [NUnit.Framework.Test]
@@ -136,8 +155,65 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void PdfFromSvgString() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgString.pdf");
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.AddNewPage();
+            String svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
+                 + "        \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" + "<svg width=\"500\" height=\"400\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n"
+                 + "    <rect width=\"500\" height=\"400\" fill=\"none\" stroke=\"black\"/>\n" + "    <line x1=\"0\" y1=\"0\" x2=\"20\" y2=\"135\" stroke=\"black\"/>\n"
+                 + "    <circle cx=\"20\" cy=\"135\" r=\"5\" fill=\"none\" stroke=\"black\"/>\n" + "    <text x=\"20\" y=\"135\" font-family=\"Verdana\" font-size=\"35\">\n"
+                 + "        Hello world\n" + "    </text>\n" + "</svg>";
+            int pagenr = 1;
+            SvgConverter.DrawOnDocument(svg, pdfDoc, pagenr);
+            String output = destinationFolder + "pdfFromSvgString.pdf";
+            String cmp_file = sourceFolder + "cmp_pdfFromSvgString.pdf";
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FromFile() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgFile.pdf");
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.AddNewPage();
+            String svg = "eclipse.svg";
+            String output = destinationFolder + "pdfFromSvgFile.pdf";
+            String cmp_file = sourceFolder + "cmp_pdfFromSvgFile.pdf";
+            int pagenr = 1;
+            FileStream fis = new FileStream(sourceFolder + svg, FileMode.Open, FileAccess.Read);
+            SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AddToExistingDoc() {
+            PdfReader reader = new PdfReader(sourceFolder + "cmp_eclipse.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "addToExistingDoc.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            pdfDoc.AddNewPage();
+            String output = destinationFolder + "addToExistingDoc.pdf";
+            String cmp_file = sourceFolder + "cmp_addToExistingDoc.pdf";
+            int pagenr = 1;
+            FileStream fis = new FileStream(sourceFolder + "minimal.svg", FileMode.Open, FileAccess.Read);
+            SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SinglePageHelloWorldTest() {
-            ConvertAndCompareSinglePageVisually(sourceFolder, destinationFolder, "hello_world");
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "hello_world");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -148,7 +224,7 @@ namespace iText.Svg.Converter {
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             FileStream fos = new FileStream(destinationFolder + name + ".pdf", FileMode.Create);
             SvgConverter.CreatePdf(fis, fos);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + name + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name + ".pdf", sourceFolder
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -162,7 +238,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -176,7 +252,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -190,7 +266,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -204,7 +280,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -218,7 +294,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -232,7 +308,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -246,7 +322,7 @@ namespace iText.Svg.Converter {
             String destName = name + "_" + x + "_" + y;
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -263,7 +339,7 @@ namespace iText.Svg.Converter {
             PdfCanvas canv = new PdfCanvas(page);
             canv.AddXObject(xObj, 0, 0);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -281,7 +357,7 @@ namespace iText.Svg.Converter {
             PdfCanvas canv = new PdfCanvas(page);
             canv.AddXObject(xObj, 0, 0);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -299,7 +375,7 @@ namespace iText.Svg.Converter {
             Document doc = new Document(pdfDocument);
             doc.Add(image);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -318,7 +394,7 @@ namespace iText.Svg.Converter {
             Document doc = new Document(pdfDocument);
             doc.Add(image);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -332,7 +408,7 @@ namespace iText.Svg.Converter {
             PdfPage page = doc.AddNewPage();
             SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -347,7 +423,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -362,7 +438,7 @@ namespace iText.Svg.Converter {
             PdfPage page = doc.AddNewPage();
             SvgConverter.DrawOnPage(fis, page);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -378,7 +454,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(fis, page, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -392,7 +468,7 @@ namespace iText.Svg.Converter {
             doc.AddNewPage();
             SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -408,7 +484,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(fis, doc, 1, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -423,7 +499,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -437,7 +513,7 @@ namespace iText.Svg.Converter {
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -452,7 +528,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -467,7 +543,7 @@ namespace iText.Svg.Converter {
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             SvgConverter.DrawOnCanvas(fis, canvas);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
@@ -483,7 +559,7 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(fis, canvas, props);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + destName + ".pdf", sourceFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 

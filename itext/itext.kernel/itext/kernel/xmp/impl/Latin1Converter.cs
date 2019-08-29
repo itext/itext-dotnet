@@ -46,23 +46,23 @@ namespace iText.Kernel.XMP.Impl {
         /// A converter that processes a byte buffer containing a mix of UTF8 and Latin-1/Cp1252 chars.
         /// The result is a buffer where those chars have been converted to UTF-8;
         /// that means it contains only valid UTF-8 chars.
-        /// <p>
+        /// <para />
         /// <em>Explanation of the processing:</em> First the encoding of the buffer is detected looking
         /// at the first four bytes (that works only if the buffer starts with an ASCII-char,
         /// like xmls '&lt;'). UTF-16/32 flavours do not require further processing.
-        /// <p>
+        /// <para />
         /// In the case, UTF-8 is detected, it assumes wrong UTF8 chars to be a sequence of
         /// Latin-1/Cp1252 encoded bytes and converts the chars to their corresponding UTF-8 byte
         /// sequence.
-        /// <p>
+        /// <para />
         /// The 0x80..0x9F range is undefined in Latin-1, but is defined in Windows code
         /// page 1252. The bytes 0x81, 0x8D, 0x8F, 0x90, and 0x9D are formally undefined
         /// by Windows 1252. These are in XML's RestrictedChar set, so we map them to a
         /// space.
-        /// <p>
+        /// <para />
         /// The official Latin-1 characters in the range 0xA0..0xFF are converted into
         /// the Unicode Latin Supplement range U+00A0 - U+00FF.
-        /// <p>
+        /// <para />
         /// <em>Example:</em> If an Euro-symbol (€) appears in the byte buffer (0xE2, 0x82, 0xAC),
         /// it will be left as is. But if only the first two bytes are appearing,
         /// followed by an ASCII char a (0xE2 - 0x82 - 0x41), it will be converted to

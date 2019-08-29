@@ -382,6 +382,50 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.IsFalse(resolver.IsLocalBaseUri());
         }
         
+        [NUnit.Framework.Test]
+        public void SingleQuoteRelativePath() {
+            String expectedUrl = "https://he.wikipedia.org/wiki/%D7%90%D7%91%D7%92'%D7%93";
+            String baseUri = "https://he.wikipedia.org/wiki/";
+            String relativePath = "%D7%90%D7%91%D7%92'%D7%93";
+            UriResolver resolver = new UriResolver(baseUri);
+
+            NUnit.Framework.Assert.AreEqual(expectedUrl, resolver.ResolveAgainstBaseUri(relativePath).ToExternalForm());
+    }
+        
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2880: single quote character isn't encoded in Java and .NET 4.0, but it's encoded in .NETCoreApp 1.0" +
+        " from single quote to %27")]
+        public void quoteInPercentsRelativePath() {
+            String expectedUrl = "https://he.wikipedia.org/wiki/%D7%90%D7%91%D7%92%27%D7%93";
+            String baseUri = "https://he.wikipedia.org/wiki/";
+            String relativePath = "%D7%90%D7%91%D7%92%27%D7%93";
+            UriResolver resolver = new UriResolver(baseUri);
+
+            NUnit.Framework.Assert.AreEqual(expectedUrl, resolver.ResolveAgainstBaseUri(relativePath).ToExternalForm());
+    }
+        
+        [NUnit.Framework.Test]
+        public void singleQuoteBasePath() {
+            String expectedUrl = "https://he.wikipedia.org/wiki'/%D7%90%D7%91%D7%92%D7%93";
+            String baseUri = "https://he.wikipedia.org/wiki'/";
+            String relativePath = "%D7%90%D7%91%D7%92%D7%93";
+            UriResolver resolver = new UriResolver(baseUri);
+
+            NUnit.Framework.Assert.AreEqual(expectedUrl, resolver.ResolveAgainstBaseUri(relativePath).ToExternalForm());
+    }
+        
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-2880: single quote character isn't encoded in Java and .NET 4.0, but it's encoded in .NETCoreApp 1.0" +
+                                " from single quote to %27")]
+        public void quoteInPercentsBasePath() {
+            String expectedUrl = "https://he.wikipedia.org/wiki%27/%D7%90%D7%91%D7%92%D7%93";
+            String baseUri = "https://he.wikipedia.org/wiki%27/";
+            String relativePath = "%D7%90%D7%91%D7%92%D7%93";
+            UriResolver resolver = new UriResolver(baseUri);
+
+            NUnit.Framework.Assert.AreEqual(expectedUrl, resolver.ResolveAgainstBaseUri(relativePath).ToExternalForm());
+    }
+        
         private void TestPaths(String absolutePathRoot, UriResolver resolver)
         {
             NUnit.Framework.Assert.AreEqual(absolutePathRoot + "test/folder/index.html", resolver.GetBaseUri());

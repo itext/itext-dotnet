@@ -83,7 +83,7 @@ namespace iText.Kernel.Crypto {
         /// <c>b[off+len-1]</c>
         /// is the last byte written
         /// by this operation.
-        /// <p>
+        /// <para />
         /// The
         /// <c>write</c>
         /// method of
@@ -92,7 +92,7 @@ namespace iText.Kernel.Crypto {
         /// the write method of one argument on each of the bytes to be
         /// written out. Subclasses are encouraged to override this method and
         /// provide a more efficient implementation.
-        /// <p>
+        /// <para />
         /// If
         /// <paramref name="b"/>
         /// is
@@ -100,7 +100,7 @@ namespace iText.Kernel.Crypto {
         /// , a
         /// <c>NullPointerException</c>
         /// is thrown.
-        /// <p>
+        /// <para />
         /// If
         /// <paramref name="off"/>
         /// is negative, or

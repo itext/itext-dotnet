@@ -43,7 +43,6 @@
 
 using System;
 using System.Collections.Generic;
-using iText.Test.Attributes;
 
 namespace iText.Test {
     public class RunnerSearchConfig {
@@ -54,7 +53,6 @@ namespace iText.Test {
 
         /// <summary>
         /// Add namespace to search path which is checked for wrapped sample classes. 
-        /// Tests run only if they have <see cref="WrapToTestAttribute"/> attribute.
         /// </summary>
         /// <param name="fullName">full name of namespace to be checked.</param>
         /// <returns>this RunnerSearchConfig</returns>
@@ -65,7 +63,7 @@ namespace iText.Test {
         }
 
         /// <summary>
-        /// Add class to runner if it has <see cref="WrapToTestAttribute"/> attribute. 
+        /// Add class to runner. 
         /// </summary>
         /// <param name="fullName">full name of class to be checked.</param>
         /// <returns>this RunnerSearchConfig</returns>
@@ -85,20 +83,9 @@ namespace iText.Test {
             ignoredPaths.Add(name);
             return this;
         }
-
-        /// <summary>
-        /// If a class was found in search path, and it has DEST field and main method, but it doesn't have 
-        /// WrapToTest attribute, this test will be marked as ignored with corresponding message in case this option is used.
-        /// </summary>
-        /// <returns>this RunnerSearchConfig</returns>
-        public virtual RunnerSearchConfig MarkTestsWithoutAnnotationAsIgnored() {
-            isToMarkTestsWithoutAnnotationAsIgnored = true;
-            return this;
-        }
-
+        
         public virtual IList<String> GetSearchPackages() { return searchPackages; }
         public virtual IList<String> GetSearchClasses() { return searchClasses; }
         public virtual IList<String> GetIgnoredPaths() { return ignoredPaths; }
-        public virtual bool IsToMarkTestsWithoutAnnotationAsIgnored() { return isToMarkTestsWithoutAnnotationAsIgnored; }
     }
 }

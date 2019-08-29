@@ -376,10 +376,10 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName.R"/>
         /// - The annotation shall be considered a reply to the annotation specified by IRT.
         /// Conforming readers shall not display replies to an annotation individually but together in the form of
-        /// threaded comments.</li>
+        /// threaded comments.
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Group"/>
-        /// - The annotation shall be grouped with the annotation specified by IRT.</li>
+        /// - The annotation shall be grouped with the annotation specified by IRT.
         /// </ul>
         /// </summary>
         /// <returns>
@@ -438,10 +438,9 @@ namespace iText.Kernel.Pdf.Annot {
         /// Intents allow conforming readers to distinguish between different uses and behaviors
         /// of a single markup annotation type. If this entry is not present or its value is the same as the annotation type,
         /// the annotation shall have no explicit intent and should behave in a generic manner in a conforming reader.
-        /// <p>
+        /// <para />
         /// See ISO-320001, free text annotations (Table 174), line annotations (Table 175), polygon annotations (Table 178),
         /// and polyline annotations (Table 178) for the specific intent values for those types.
-        /// </p>
         /// </remarks>
         /// <param name="intent">
         /// a
@@ -466,7 +465,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
         /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
-        /// .</li>
+        /// .
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
         /// - (required) a name specifying the type of data that the markup annotation
@@ -475,7 +474,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// . Table 298 (ISO-320001)
         /// lists the values that correspond to a subtype of Markup3D (See also
         /// <see cref="Pdf3DAnnotation"/>
-        /// ).</li>
+        /// ).
         /// </ul>
         /// </remarks>
         /// <returns>
@@ -496,7 +495,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
         /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
-        /// .</li>
+        /// .
         /// <li>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
         /// - (required) a name specifying the type of data that the markup annotation
@@ -505,7 +504,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// . Table 298 (ISO-320001)
         /// lists the values that correspond to a subtype of Markup3D (See also
         /// <see cref="Pdf3DAnnotation"/>
-        /// ).</li>
+        /// ).
         /// </ul>
         /// </remarks>
         /// <returns>

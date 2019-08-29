@@ -45,8 +45,8 @@ using System;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>
-    /// <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when
-    /// there are too many errors to correct.</p>
+    /// Thrown when an exception occurs during Reed-Solomon decoding, such as when
+    /// there are too many errors to correct.
     /// </summary>
     /// <author>Sean Owen</author>
     internal sealed class ReedSolomonException : Exception {

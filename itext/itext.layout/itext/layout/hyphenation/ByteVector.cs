@@ -18,10 +18,15 @@ using System;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
-    /// <p>This class implements a simple byte vector with access to the
-    /// underlying array.</p>
-    /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
+    /// This class implements a simple byte vector with access to the
+    /// underlying array.
     /// </summary>
+    /// <remarks>
+    /// This class implements a simple byte vector with access to the
+    /// underlying array.
+    /// <para />
+    /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
+    /// </remarks>
     public class ByteVector {
         /// <summary>Capacity increment size</summary>
         private const int DEFAULT_BLOCK_SIZE = 2048;

@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Svg.Exceptions;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class NoDrawOperationSvgNodeRendererUnitTest {
+    public class NoDrawOperationSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DontDrawTest() {
             NUnit.Framework.Assert.That(() =>  {

@@ -62,7 +62,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircleTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "basicCircle");
+            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircle");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -70,7 +70,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxCyAbsentTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleCxCyAbsent");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxCyAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxAbsentTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleCxAbsent");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -86,7 +86,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxNegativeTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleCxNegative");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -94,7 +94,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCyAbsentTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleCyAbsent");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleCyAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -102,7 +102,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCyNegativeTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleCyNegative");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleCyNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -110,7 +110,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRAbsentTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleRAbsent");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleRAbsent");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -118,7 +118,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRNegativeTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleRNegative");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleRNegative");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -126,7 +126,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleTranslatedTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleTranslated");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleTranslated");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -134,7 +134,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRotatedTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleRotated");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleRotated");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -142,7 +142,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledUpTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleScaledUp");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledUp");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -150,7 +150,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledDownTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleScaledDown");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledDown");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -158,7 +158,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledXYTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleScaledXY");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledXY");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -166,7 +166,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleSkewXTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleSkewX");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewX");
         }
 
         /// <exception cref="iText.IO.IOException"/>
@@ -174,7 +174,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleSkewYTest() {
-            ConvertAndCompareVisually(sourceFolder, destinationFolder, "circleSkewY");
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewY");
         }
     }
 }

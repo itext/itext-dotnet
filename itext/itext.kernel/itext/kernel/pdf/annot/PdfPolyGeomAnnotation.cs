@@ -41,21 +41,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using Common.Logging;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
-    public class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
-        /// <summary>Subtypes</summary>
+    public abstract class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
+        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.Polygon instead.")]
         public static readonly PdfName Polygon = PdfName.Polygon;
 
+        [System.ObsoleteAttribute(@", use iText.Kernel.Pdf.PdfName.PolyLine instead.")]
         public static readonly PdfName PolyLine = PdfName.PolyLine;
 
-        private PdfPolyGeomAnnotation(Rectangle rect, PdfName subtype, float[] vertices)
+        internal PdfPolyGeomAnnotation(Rectangle rect, float[] vertices)
             : base(rect) {
-            SetSubtype(subtype);
             SetVertices(vertices);
         }
 
@@ -68,16 +69,12 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public static iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolygon(Rectangle rect, float[] vertices) {
-            return new iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, Polygon, vertices);
+            return new PdfPolygonAnnotation(rect, vertices);
         }
 
         public static iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation CreatePolyLine(Rectangle rect, float[] vertices
             ) {
-            return new iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation(rect, PolyLine, vertices);
-        }
-
-        public override PdfName GetSubtype() {
-            return GetPdfObject().GetAsName(PdfName.Subtype);
+            return new PdfPolylineAnnotation(rect, vertices);
         }
 
         public virtual PdfArray GetVertices() {
@@ -159,10 +156,6 @@ namespace iText.Kernel.Pdf.Annot {
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Path, path);
         }
 
-        private void SetSubtype(PdfName subtype) {
-            Put(PdfName.Subtype, subtype);
-        }
-
         /// <summary>The dictionaries for some annotation types (such as free text and polygon annotations) can include the BS entry.
         ///     </summary>
         /// <remarks>
@@ -212,19 +205,19 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
-        /// - A solid rectangle surrounding the annotation.</li>
+        /// - A solid rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
-        /// - A dashed rectangle surrounding the annotation.</li>
+        /// - A dashed rectangle surrounding the annotation.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
-        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.</li>
+        /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
-        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.</li>
+        /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
         /// <li>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
-        /// - A single line along the bottom of the annotation rectangle.</li>
+        /// - A single line along the bottom of the annotation rectangle.
         /// </ul>
         /// See also ISO-320001, Table 166.
         /// </remarks>

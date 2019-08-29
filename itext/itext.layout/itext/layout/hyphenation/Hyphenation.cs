@@ -18,14 +18,10 @@ using System;
 using System.Text;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary>
-    /// <p>
-    /// This class represents a hyphenated word.
-    /// </summary>
+    /// <summary>This class represents a hyphenated word.</summary>
     /// <remarks>
-    /// <p>
     /// This class represents a hyphenated word.
-    /// <p>
+    /// <para />
     /// This work was authored by Carlos Villegas (cav@uniscope.co.jp).
     /// </remarks>
     public class Hyphenation {
