@@ -150,6 +150,22 @@ namespace iText.IO.Font {
             return ParseCmap(cmap, cidByte);
         }
 
+        /// <summary>
+        /// Clears the cache by removing fonts that were added via
+        /// <see cref="SaveFont(FontProgram, System.String)"/>
+        /// .
+        /// <para />
+        /// Be aware that in multithreading environment this method call will affect the result of
+        /// <see cref="GetFont(System.String)"/>
+        /// .
+        /// This in its turn affects creation of fonts via factories when
+        /// <c>cached</c>
+        /// argument is set to true (which is by default).
+        /// </summary>
+        public static void ClearSavedFonts() {
+            fontCache.Clear();
+        }
+
         public static FontProgram GetFont(String fontName) {
             return fontCache.Get(FontCacheKey.Create(fontName));
         }
