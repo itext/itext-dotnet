@@ -52,10 +52,10 @@ namespace iText.Layout.Hyphenation {
             stoplist = new Dictionary<String, IList>(23);
             classmap = new TernaryTree();
             vspace = new ByteVector();
+            // this reserves index 0, which we don't use
             vspace.Alloc(1);
         }
 
-        // this reserves index 0, which we don't use
         /// <summary>
         /// Packs the values by storing them in 4 bits, two values into a byte
         /// Values range is from 0 to 9.
@@ -86,12 +86,12 @@ namespace iText.Layout.Hyphenation {
                     va[j + offset] = (byte)(va[j + offset] | v);
                 }
                 else {
+                    // big endian
                     va[j + offset] = (byte)(v << 4);
                 }
             }
-            // big endian
-            va[m - 1 + offset] = 0;
             // terminator
+            va[m - 1 + offset] = 0;
             return offset;
         }
 
@@ -238,8 +238,8 @@ namespace iText.Layout.Hyphenation {
             while (p > 0 && p < sc.Length) {
                 if (sc[p] == 0xFFFF) {
                     if (Hstrcmp(word, i, kv.GetArray(), lo[p]) == 0) {
-                        values = GetValues(eq[p]);
                         // data pointer is in eq[]
+                        values = GetValues(eq[p]);
                         int j = index;
                         for (int k = 0; k < values.Length; k++) {
                             if (j < il.Length && values[k] > il[j]) {
@@ -261,8 +261,8 @@ namespace iText.Layout.Hyphenation {
                     // look for a pattern ending at this position by searching for
                     // the null char ( splitchar == 0 )
                     while (q > 0 && q < sc.Length) {
+                        // stop at compressed branch
                         if (sc[q] == 0xFFFF) {
-                            // stop at compressed branch
                             break;
                         }
                         if (sc[q] == 0) {
@@ -442,8 +442,8 @@ namespace iText.Layout.Hyphenation {
             for (i = 1; i <= len; i++) {
                 c[0] = w[offset + i - 1];
                 int nc = classmap.Find(c, 0);
+                // found a non-letter character ...
                 if (nc < 0) {
-                    // found a non-letter character ...
                     if (i == (1 + iIgnoreAtBeginning)) {
                         // ... before any letter character
                         iIgnoreAtBeginning++;
@@ -490,14 +490,14 @@ namespace iText.Layout.Hyphenation {
             }
             else {
                 // use algorithm to get hyphenation points
-                word[0] = '.';
                 // word start marker
-                word[len + 1] = '.';
+                word[0] = '.';
                 // word end marker
-                word[len + 2] = (char)0;
+                word[len + 1] = '.';
                 // null terminated
-                byte[] il = new byte[len + 3];
+                word[len + 2] = (char)0;
                 // initialized to zero
+                byte[] il = new byte[len + 3];
                 for (i = 0; i < len + 1; i++) {
                     SearchPatterns(word, i, il);
                 }

@@ -256,8 +256,8 @@ namespace iText.Layout {
             parent = new Div();
             parent.SetHeight(parentHeight);
             parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
-            d.DeleteOwnProperty(Property.MIN_HEIGHT);
             //Min-height trumps max-height, so we have to remove it when re-using the div
+            d.DeleteOwnProperty(Property.MIN_HEIGHT);
             d.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
             parent.Add(d);
             doc.Add(parent);
@@ -341,8 +341,8 @@ namespace iText.Layout {
             parent = new Div();
             parent.SetHeight(parentHeight);
             parent.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
-            p.DeleteOwnProperty(Property.MIN_HEIGHT);
             //Min-height trumps max, so we have to remove it when re-using the paragraph
+            p.DeleteOwnProperty(Property.MIN_HEIGHT);
             p.SetProperty(Property.MAX_HEIGHT, UnitValue.CreatePercentValue(30f));
             parent.Add(p);
             doc.Add(parent);

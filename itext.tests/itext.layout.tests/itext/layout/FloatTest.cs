@@ -677,10 +677,10 @@ namespace iText.Layout {
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Float with clear shall be drawn under the previous float on second page.
-            containerDiv.Add(new Paragraph(text));
+            containerDiv.Add(divClear);
             // text shall start on the first page.
+            containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Add(new Paragraph(text));
             // TODO DEVSIX-1270: text around green cleared float is trying to wrap to the left of it (there are 2px of space)
@@ -734,15 +734,15 @@ namespace iText.Layout {
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Float with clear shall be drawn under the previous float on second page.
+            containerDiv.Add(divClear);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
             div2.Add(new Paragraph("Last float."));
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(div2);
             // This float top shall not appear higher than floats tops added before this one.
-            containerDiv.Add(new Paragraph(text + text));
+            containerDiv.Add(div2);
             // text shall start on the first page.
+            containerDiv.Add(new Paragraph(text + text));
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -761,13 +761,13 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit and is to be forced placed.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -786,13 +786,13 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -811,14 +811,14 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text + text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -839,13 +839,13 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit and is to be forced placed.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
@@ -867,13 +867,13 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
@@ -895,14 +895,14 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text + text));
             document.Add(containerDiv);
             document.Close();
@@ -922,13 +922,13 @@ namespace iText.Layout {
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it is split.
+            document.Add(div);
             Div divClear = new Div();
             divClear.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding empty element with clearance - it shall be placed after the overflow part of the float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Add(new Paragraph(text));
             document.Close();
@@ -1057,13 +1057,13 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float that doesn't fit on first page.
+            document.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div2);
             // Adding float that shall be after the previous float.
+            document.Add(div2);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff21_"));
@@ -1078,16 +1078,16 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            div.SetHeight(600);
             // Setting fixed height for the div, that will be split between pages.
+            div.SetHeight(600);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(280);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that will not fit on the first page.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
-            document.Add(div);
             // div height shall be correct on the second page.
+            document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_01_"));
@@ -1102,16 +1102,16 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            div.SetHeight(600);
             // Setting fixed height for the div, that will be split between pages.
+            div.SetHeight(600);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(250);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that WILL fit on the first page.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
-            document.Add(div);
             // div height shall be correct on the second page.
+            document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_02"));
@@ -1133,11 +1133,11 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that will not fit on the first page and will have FORCED_PLACEMENT on the second.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
-            document.Add(div);
             // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
+            document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_03"));
@@ -1158,10 +1158,10 @@ namespace iText.Layout {
                 )).SetHeight(200);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that WILL fit on the first page.
-            containerDiv.Add(img);
+            containerDiv.Add(div);
             // Adding img that shall be overflowed to the next page. containerDiv occupied area shall not have zero height on first page.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1181,12 +1181,12 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(310).SetWidth(310);
-            div.Add(img);
             // Adding image that will not fit on first page in floating div.
+            div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1207,12 +1207,12 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
-            div.Add(img);
             // Adding image that will not fit on first page in floating div.
+            div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page and requires forced placement.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             // TODO DEVSIX-1001: currently forced placement is applied on containerDiv, which results in all it's content
@@ -1236,10 +1236,10 @@ namespace iText.Layout {
             containerDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(750).SetWidth(600);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page and requires forced placement.
-            containerDiv.Add(new Paragraph(text));
+            containerDiv.Add(img);
             // Adding more text that is naturally expected to be correctly shown.
+            containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
             // TODO DEVSIX-1001: text in the container div gets lost. And floating property doesn't actually affect this.
@@ -1260,12 +1260,12 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph(text).SetWidth(250));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that will be split.
+            containerDiv.Add(div);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(250);
-            containerDiv.Add(img);
             // Adding image that will not fit on first page. containerDiv shall return PARTIAL status
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1311,13 +1311,13 @@ namespace iText.Layout {
                 )).SetHeight(400);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that will not fit.
+            containerDiv.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div2);
             // Adding float that shall be after the previous float. And shall overflow to the third page.
+            containerDiv.Add(div2);
             document.Add(containerDiv);
             document.Close();
             // TODO DEVSIX-1001: Forced placement is applied to the parent element, forcing it to return FULL even though part of the child element overflowed.
@@ -1336,8 +1336,8 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetMinHeight(300).Add(img);
             // Div shall have height of 300pt.
+            div.SetMinHeight(300).Add(img);
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1355,8 +1355,8 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetHeight(500).Add(img);
             // Div shall have height of 500pt.
+            div.SetHeight(500).Add(img);
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1399,13 +1399,13 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            mainDiv.Add(div);
             // Adding float that doesn't fit on first page.
+            mainDiv.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            mainDiv.Add(div2);
             // Adding float that shall be after the previous float.
+            mainDiv.Add(div2);
             document.Add(mainDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1426,13 +1426,13 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            p.Add(div);
             // Adding float that doesn't fit on first page.
+            p.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            p.Add(div2);
             // Adding float that shall be after the previous float.
+            p.Add(div2);
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -1885,8 +1885,8 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
-            div.SetFillAvailableAreaOnSplit(true);
             // specifying fill available area option
+            div.SetFillAvailableAreaOnSplit(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -1907,8 +1907,8 @@ namespace iText.Layout {
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
-            div.SetFillAvailableAreaOnSplit(true);
             // specifying fill available area option
+            div.SetFillAvailableAreaOnSplit(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -2364,10 +2364,10 @@ namespace iText.Layout {
             // first addition
             document.Add(new Paragraph(text));
             document.Add(mainDiv);
-            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // TODO DEVSIX-1819: floats break area-break logic if min_height doesn't overflow to the next page on first addition: SMALL TICKET
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // adding two page breaks two work around the issue
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // second addition
             mainDiv.SetMinHeight(50);
             document.Add(new Paragraph(text));

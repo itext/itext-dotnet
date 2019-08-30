@@ -55,6 +55,7 @@ namespace iText.Layout.Hyphenation {
         /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         private PatternParser() {
             token = new StringBuilder();
+            // default
             hyphenChar = '-';
         }
 
@@ -64,7 +65,6 @@ namespace iText.Layout.Hyphenation {
         /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public PatternParser(IPatternConsumer consumer)
             : this() {
-            // default
             this.consumer = consumer;
         }
 
@@ -221,8 +221,8 @@ namespace iText.Layout.Hyphenation {
 
         private static String GetInterletterValues(String pat) {
             StringBuilder il = new StringBuilder();
-            String word = pat + "a";
             // add dummy letter to serve as sentinel
+            String word = pat + "a";
             int len = word.Length;
             for (int i = 0; i < len; i++) {
                 char c = word[i];

@@ -172,9 +172,9 @@ namespace iText.Layout.Hyphenation {
                         res = tt.hi[i.parent];
                         ns.Push(new TernaryTreeIterator.Item(this, i));
                         if (ks.Length > 0) {
+                            // pop
                             ks.Length = ks.Length - 1;
                         }
-                        // pop
                         climb = false;
                         break;
                     }

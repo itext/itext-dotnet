@@ -2561,8 +2561,8 @@ namespace iText.Layout {
             for (int rows = 0; rows < 11; rows++) {
                 table.AddCell(new Cell(numRows, 1).Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", 0"
                     )));
-                int numFillerCells = (numRows - 1) * numRows;
                 //Number of cells to complete the table rows filling up to the cell of colSpan
+                int numFillerCells = (numRows - 1) * numRows;
                 for (int cells = 0; cells < numFillerCells; cells++) {
                     table.AddCell(new Cell().Add(new Paragraph("Filled Cell: " + JavaUtil.IntegerToString(rows) + ", " + JavaUtil.IntegerToString
                         (cells))));

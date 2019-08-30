@@ -355,12 +355,12 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SearchFontAliasWithUnicodeChars() {
-            String cyrillicAlias = "\u0444\u043E\u043D\u04421";
             // фонт1
-            String greekAlias = "\u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC2";
+            String cyrillicAlias = "\u0444\u043E\u043D\u04421";
             // γραμματοσειρά2
-            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
+            String greekAlias = "\u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC2";
             // フォント3
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             IDictionary<String, String> aliasToFontName = new LinkedDictionary<String, String>();
             aliasToFontName.Put(cyrillicAlias, "NotoSans-Regular.ttf");
             aliasToFontName.Put(greekAlias, "FreeSans.ttf");
@@ -391,8 +391,8 @@ namespace iText.Layout {
             String fileName = "writeTextInFontWhichAliasWithUnicodeChars";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
-            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             // フォント3
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             FontProvider provider = new FontProvider();
             provider.AddFont(fontsFolder + "NotoSans-Regular.ttf");
             provider.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, japaneseAlias);

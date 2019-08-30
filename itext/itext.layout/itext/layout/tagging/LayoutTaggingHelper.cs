@@ -344,8 +344,8 @@ namespace iText.Layout.Tagging {
 
         public virtual void FinishTaggingHint(IPropertyContainer hintOwner) {
             TaggingHintKey rendererKey = GetHintKey(hintOwner);
+            // artifact is always finished
             if (rendererKey == null || rendererKey.IsFinished()) {
-                // artifact is always finished
                 return;
             }
             if (rendererKey.IsElementBasedFinishingOnly() && !(hintOwner is IElement)) {

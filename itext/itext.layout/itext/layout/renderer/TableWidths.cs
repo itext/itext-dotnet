@@ -237,8 +237,8 @@ namespace iText.Layout.Renderer {
                                 flexibleCols++;
                             }
                         }
+                        // flexibleCols > 0 too
                         if (remainWidth > 0) {
-                            // flexibleCols > 0 too
                             for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
                                 if (widths[i].IsFlexible()) {
                                     widths[i].AddPoints(remainWidth / flexibleCols);
@@ -520,8 +520,8 @@ namespace iText.Layout.Renderer {
                 columnWidthIfPercent[i] = -1;
             }
             float sumOfPercents = 0;
-            if (firtsRow != null && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count) {
-                // only for not large tables
+            // only for not large tables
+            if (firtsRow != null && GetTable().IsComplete() && GetTable().GetLastRowBottomBorder().IsEmpty()) {
                 for (int i = 0; i < numberOfColumns; i++) {
                     if (columnWidths[i] == -1) {
                         CellRenderer cell = firtsRow[i];

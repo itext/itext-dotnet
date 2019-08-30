@@ -125,8 +125,8 @@ namespace iText.Layout {
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();
-            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
             // TODO DEVSIX-2119 Update if necessary
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
             fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA);
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
@@ -149,13 +149,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();
             // bold font. shouldn't be selected
-            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "times");
             // TODO DEVSIX-2119 Update if necessary
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "times");
             // monospace font. shouldn't be selected
             fontProvider.GetFontSet().AddFont(StandardFonts.COURIER);
             fontProvider.GetFontSet().AddFont(sourceFolder + "../fonts/FreeSans.ttf", PdfEncodings.IDENTITY_H);
-            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
             // TODO DEVSIX-2119 Update if necessary
+            fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(fontProvider);

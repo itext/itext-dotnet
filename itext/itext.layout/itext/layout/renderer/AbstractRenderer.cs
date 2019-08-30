@@ -1779,8 +1779,8 @@ namespace iText.Layout.Renderer {
                 return;
             }
             // Update height related properties on split or overflow
-            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             // For relative heights, we need the parent's resolved height declaration
+            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
             if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {

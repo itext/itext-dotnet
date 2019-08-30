@@ -1368,9 +1368,9 @@ namespace iText.Layout.Renderer {
         private void SaveWordBreakIfNotYetSaved(Glyph wordBreak) {
             if (savedWordBreakAtLineEnding == null) {
                 if (iText.IO.Util.TextUtil.IsNewLine(wordBreak)) {
+                    // we don't want to print '\n' in content stream
                     wordBreak = font.GetGlyph('\u0020');
                 }
-                // we don't want to print '\n' in content stream
                 // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }

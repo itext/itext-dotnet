@@ -320,8 +320,8 @@ namespace iText.Layout.Renderer {
                     }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox), wasParentsHeightClipped));
+                    // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
                     if (childResult is MinMaxWidthLayoutResult && null != childBlockMinMaxWidth) {
-                        // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
                         MinMaxWidth childResultMinMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
                         childResultMinMaxWidth.SetChildrenMaxWidth(childResultMinMaxWidth.GetChildrenMaxWidth() + MIN_MAX_WIDTH_CORRECTION_EPS
                             );
@@ -776,8 +776,8 @@ namespace iText.Layout.Renderer {
             int numberOfSpaces = GetNumberOfSpaces();
             int baseCharsCount = BaseCharactersCount();
             float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
+            //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
             if (float.IsInfinity(baseFactor)) {
-                //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
                 baseFactor = 0;
             }
             float wordSpacing = ratio * baseFactor;
@@ -1020,8 +1020,8 @@ namespace iText.Layout.Renderer {
                 ()) {
                 return;
             }
-            bool ltr = true;
             // TODO handle it
+            bool ltr = true;
             float floatWidth = justPlacedFloatBox.GetWidth();
             if (kidFloatPropertyVal.Equals(FloatPropertyValue.LEFT)) {
                 layoutBox.SetWidth(layoutBox.GetWidth() - floatWidth).MoveRight(floatWidth);

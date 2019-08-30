@@ -461,8 +461,8 @@ namespace iText.Layout {
             pdfDoc.SetDefaultPageSize(PageSize.A4);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
-            int divHeight = 1000;
             // specifying height definitely bigger than page height
+            int divHeight = 1000;
             // test keep-together processing on height-only overflow for blocks
             Div div = new Div().SetHeight(divHeight).SetBorder(new SolidBorder(3));
             div.SetKeepTogether(true);

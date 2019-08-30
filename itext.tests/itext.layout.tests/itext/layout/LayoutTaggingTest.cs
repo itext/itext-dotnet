@@ -439,8 +439,8 @@ namespace iText.Layout {
             String discSymbol = "\u2022";
             String squareSymbol = "\u25AA";
             String circleSymbol = "\u25E6";
-            List list = new List(ListNumberingType.ROMAN_UPPER);
             // setting numbering type for now
+            List list = new List(ListNumberingType.ROMAN_UPPER);
             list.Add("item 1");
             ListItem listItem = new ListItem("item 2");
  {
@@ -464,12 +464,12 @@ namespace iText.Layout {
             list.Add("item 3");
             doc.Add(list);
             doc.Add(new LineSeparator(new SolidLine()));
-            doc.Add(list.SetListSymbol(circleSymbol));
             // setting circle symbol, not setting attributes
+            doc.Add(list.SetListSymbol(circleSymbol));
             doc.Add(new LineSeparator(new SolidLine()));
             list.GetAccessibilityProperties().AddAttributes(attributesCircle);
-            doc.Add(list);
             // circle symbol set, setting attributes
+            doc.Add(list);
             doc.Close();
             CompareResult("listTest02.pdf", "cmp_listTest02.pdf");
         }

@@ -429,8 +429,8 @@ namespace iText.Layout.Renderer {
                         footerRenderer.bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
                     }
                 }
-                topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
                 // first row own top border. We will use it while header processing
+                topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     ), wasHeightClipped || wasParentsHeightClipped));
                 if (result.GetStatus() != LayoutResult.FULL) {
@@ -841,9 +841,9 @@ namespace iText.Layout.Renderer {
                                 if (1 == minRowspan) {
                                     // Here we use the same cell, but create a new renderer which doesn't have any children,
                                     // therefore it won't have any content.
+                                    // we will change properties
                                     CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
                                         ();
-                                    // we will change properties
                                     overflowCell.SetParent(this);
                                     overflowCell.DeleteProperty(Property.HEIGHT);
                                     overflowCell.DeleteProperty(Property.MIN_HEIGHT);
@@ -1048,7 +1048,6 @@ namespace iText.Layout.Renderer {
                     ApplySingleSpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
                 }
             }
-            //
             float bottomTableBorderWidth = bordersHandler.GetMaxBottomWidth();
             // Apply bottom and top border
             if (tableModel.IsComplete()) {
@@ -1596,8 +1595,8 @@ namespace iText.Layout.Renderer {
             // correct last height
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
-            Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
             // TODO Correct for collapsed borders only
+            Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
             bordersHandler.SetFinishRow(finish);
             if (skip) {
                 // Update bordersHandler
@@ -1772,8 +1771,8 @@ namespace iText.Layout.Renderer {
             if (taggingHelper != null) {
                 taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(renderer));
                 LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+                // whether footer is not the last and requires marking as artifact is defined later during table renderer layout
                 if (!footer && !firstHeader) {
-                    // whether footer is not the last and requires marking as artifact is defined later during table renderer layout
                     taggingHelper.MarkArtifactHint(renderer);
                 }
             }

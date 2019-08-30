@@ -159,8 +159,8 @@ namespace iText.Layout.Renderer {
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
             bool floatOverflowedToNextPageWithNothing = false;
-            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
             // rectangles are compared by instances
+            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -257,9 +257,9 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+                // could be false if e.g. line contains only floats
                 bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
                     () > 0;
-                // could be false if e.g. line contains only floats
                 bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
                 if (!doesNotFit) {
@@ -405,11 +405,11 @@ namespace iText.Layout.Renderer {
                     previousDescent = processedRenderer.GetMaxDescent();
                     if (!inlineFloatsOverflowedToNextPage.IsEmpty() && result.GetOverflowRenderer() == null) {
                         onlyOverflowedFloatsLeft = true;
+                        // dummy renderer to trick paragraph renderer to continue kids loop
                         currentRenderer = new LineRenderer();
                     }
                 }
             }
-            // dummy renderer to trick paragraph renderer to continue kids loop
             float moveDown = lastLineBottomLeadingIndent;
             if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
                 moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();

@@ -156,8 +156,8 @@ namespace iText.Layout.Renderer {
             UnitValue[] margins = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.MARGIN_TOP), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_BOTTOM), renderer.GetPropertyAsUnitValue(Property.MARGIN_LEFT), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_RIGHT) };
-            int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             //TODO set depending on writing direction
+            int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             UnitValue spaceBefore = margins[marginsOrder[0]];
             if (spaceBefore != null) {
                 if (!spaceBefore.IsPointValue()) {
@@ -334,8 +334,8 @@ namespace iText.Layout.Renderer {
             }
             else {
                 PdfArray paddingArray = new PdfArray();
-                int[] paddingsOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
+                int[] paddingsOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in paddingsOrder) {
                     paddingArray.Add(new PdfNumber(paddings[i]));
                 }
@@ -386,8 +386,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
+                int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in borderOrder) {
                     if (borders[i] != null) {
                         if (borders[i].GetColor() is DeviceRgb) {

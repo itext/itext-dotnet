@@ -181,8 +181,8 @@ namespace iText.Layout.Renderer {
                         int col = 0;
                         int row = index - 1;
                         while (col < numberOfColumns) {
+                            // TODO
                             if (null != rows[row - largeTableIndexOffset][col]) {
-                                // TODO
                                 CellRenderer cell = rows[row - largeTableIndexOffset][col];
                                 Border cellModelBottomBorder = TableBorderUtil.GetCellSideBorder(((Cell)cell.GetModelElement()), Property.
                                     BORDER_BOTTOM);

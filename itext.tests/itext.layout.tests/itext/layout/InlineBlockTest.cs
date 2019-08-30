@@ -119,8 +119,8 @@ namespace iText.Layout {
             }
             long start = SystemUtil.GetRelativeTimeMillis();
             doc.Add(p);
-            System.Console.Out.WriteLine(SystemUtil.GetRelativeTimeMillis() - start);
             // 606 on local machine (including jvm warming up)
+            System.Console.Out.WriteLine(SystemUtil.GetRelativeTimeMillis() - start);
             p = new Paragraph("hello world");
             for (int i = 0; i < n; ++i) {
                 Paragraph currP = new Paragraph();
@@ -129,8 +129,8 @@ namespace iText.Layout {
             }
             start = SystemUtil.GetRelativeTimeMillis();
             doc.Add(p);
-            System.Console.Out.WriteLine(SystemUtil.GetRelativeTimeMillis() - start);
             // 4656 on local machine
+            System.Console.Out.WriteLine(SystemUtil.GetRelativeTimeMillis() - start);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

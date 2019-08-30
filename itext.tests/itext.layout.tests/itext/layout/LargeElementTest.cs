@@ -543,8 +543,8 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A1.Rotate());
             float[] colWidths = new float[] { 300, 150, 50, 100 };
-            int numOfColumns = colWidths.Length - 1;
             // the second column has colspan value as 2
+            int numOfColumns = colWidths.Length - 1;
             int numOfRowsInARowGroup = 4;
             int[] widthsArray = new int[] { 10, 50, 1, 100 };
             // please also look at tableWithLayoutResultNothingTest01

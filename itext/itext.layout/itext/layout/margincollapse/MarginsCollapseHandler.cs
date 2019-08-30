@@ -298,9 +298,9 @@ namespace iText.Layout.Margincollapse {
                 if (childIndex > firstNotEmptyKidIndex) {
                     if (LastChildMarginAdjoinedToParent(renderer)) {
                         // restore layout box after inline element
+                        // used space shall be always less or equal to collapsedMarginAfter size
                         float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize() - collapseInfo.GetUsedBufferSpaceOnBottom
                             ();
-                        // used space shall be always less or equal to collapsedMarginAfter size
                         collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() + collapseInfo.GetUsedBufferSpaceOnBottom
                             ());
                         collapseInfo.SetUsedBufferSpaceOnBottom(0);
@@ -314,8 +314,8 @@ namespace iText.Layout.Margincollapse {
                     float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
                     ApplyTopMargin(layoutBox, topIndent);
                 }
+                // if not adjoined - bottom margin have been already applied on startMarginsCollapse
                 if (LastChildMarginAdjoinedToParent(renderer)) {
-                    // if not adjoined - bottom margin have been already applied on startMarginsCollapse
                     float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
                     ApplyBottomMargin(layoutBox, bottomIndent);
                 }

@@ -82,10 +82,10 @@ namespace iText.Layout.Font {
         /// </remarks>
         /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
+            // fonts is sorted best to worst, get(0) returns the best matched FontInfo
             return fonts[0];
         }
 
-        // fonts is sorted best to worst, get(0) returns the best matched FontInfo
         /// <summary>Sorted set of fonts.</summary>
         /// <returns>sorted set of fonts</returns>
         public IEnumerable<FontInfo> GetFonts() {
