@@ -91,9 +91,9 @@ namespace iText.Kernel.Pdf {
 
         public static iText.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(String part, String conformance) {
             String lowLetter = conformance.ToUpperInvariant();
-            bool aLevel = lowLetter.Equals("A");
-            bool bLevel = lowLetter.Equals("B");
-            bool uLevel = lowLetter.Equals("U");
+            bool aLevel = "A".Equals(lowLetter);
+            bool bLevel = "B".Equals(lowLetter);
+            bool uLevel = "U".Equals(lowLetter);
             switch (part) {
                 case "1": {
                     if (aLevel) {

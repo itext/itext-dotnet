@@ -351,7 +351,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             stream = new PdfStream(image.GetData());
             String filter = image.GetFilter();
-            if (filter != null && filter.Equals("JPXDecode") && image.GetColorSpace() <= 0) {
+            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorSpace() <= 0) {
                 stream.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
                 image.SetBpc(0);
             }

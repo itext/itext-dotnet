@@ -125,7 +125,7 @@ namespace iText.Kernel.Font {
                 for (int i = 0; i < 256; i++) {
                     int unicode = fontEncoding.GetUnicode(i);
                     PdfName glyphName = new PdfName(fontEncoding.GetDifference(i));
-                    if (unicode != -1 && !glyphName.GetValue().Equals(FontEncoding.NOTDEF) && charProcsDic.ContainsKey(glyphName
+                    if (unicode != -1 && !FontEncoding.NOTDEF.Equals(glyphName.GetValue()) && charProcsDic.ContainsKey(glyphName
                         )) {
                         ((Type3Font)GetFontProgram()).AddGlyph(i, unicode, widths[i], null, new Type3Glyph(charProcsDic.GetAsStream
                             (glyphName), GetDocument()));

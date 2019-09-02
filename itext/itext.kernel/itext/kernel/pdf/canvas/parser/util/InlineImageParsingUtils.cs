@@ -296,11 +296,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 bytes[i] = (byte)ch;
             }
             PdfObject ei = ps.ReadObject();
-            if (!ei.ToString().Equals("EI")) {
+            if (!"EI".Equals(ei.ToString())) {
                 // Some PDF producers seem to add another non-whitespace character after the image data.
                 // Let's try to handle that case here.
                 PdfObject ei2 = ps.ReadObject();
-                if (!ei2.ToString().Equals("EI")) {
+                if (!"EI".Equals(ei2.ToString())) {
                     throw new InlineImageParsingUtils.InlineImageParseException(PdfException.OperatorEINotFoundAfterEndOfImageData
                         );
                 }

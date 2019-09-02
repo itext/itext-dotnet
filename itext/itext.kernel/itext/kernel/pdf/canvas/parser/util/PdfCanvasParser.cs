@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             while ((ob = ReadObject()) != null) {
                 ls.Add(ob);
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Other) {
-                    if (ob.ToString().Equals("BI")) {
+                    if ("BI".Equals(ob.ToString())) {
                         PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, currentResources.GetResource(PdfName.ColorSpace
                             ));
                         ls.Clear();

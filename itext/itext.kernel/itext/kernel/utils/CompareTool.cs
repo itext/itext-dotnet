@@ -1964,7 +1964,7 @@ namespace iText.Kernel.Utils {
             byte[] bytes;
             String value = pdfString.GetValue();
             String encoding = pdfString.GetEncoding();
-            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings.IsPdfDocEncoding(value)) {
+            if (encoding != null && PdfEncodings.UNICODE_BIG.Equals(encoding) && PdfEncodings.IsPdfDocEncoding(value)) {
                 bytes = PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
             }
             else {

@@ -180,7 +180,7 @@ namespace iText.Kernel.Pdf {
             if (value == null) {
                 GenerateValue();
             }
-            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings.IsPdfDocEncoding(value)) {
+            if (encoding != null && PdfEncodings.UNICODE_BIG.Equals(encoding) && PdfEncodings.IsPdfDocEncoding(value)) {
                 return PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
             }
             else {

@@ -77,7 +77,7 @@ namespace iText.Kernel.Font {
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
-            if (!cmap.Equals(PdfEncodings.IDENTITY_H) && !cmap.Equals(PdfEncodings.IDENTITY_V)) {
+            if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
                 throw new PdfException(PdfException.OnlyIdentityCMapsSupportsWithTrueType);
             }
             if (!ttf.GetFontNames().AllowEmbedding()) {

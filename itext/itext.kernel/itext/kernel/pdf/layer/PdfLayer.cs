@@ -399,7 +399,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// the name(s) of the individual, position or organization
         /// </param>
         public virtual void SetUser(String type, params String[] names) {
-            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org")) {
+            if (type == null || !"Ind".Equals(type) && !"Ttl".Equals(type) && !"Org".Equals(type)) {
                 throw new ArgumentException("Illegal type argument");
             }
             if (names == null || names.Length == 0) {

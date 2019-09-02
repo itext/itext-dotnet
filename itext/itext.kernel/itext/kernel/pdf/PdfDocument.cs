@@ -2293,7 +2293,7 @@ namespace iText.Kernel.Pdf {
             PdfOutline parent = outline.GetParent();
             //note there's no need to continue recursion if the current outline parent is root (first condition) or
             // if it is already in the Set of outlines to be copied (second condition)
-            if (parent.GetTitle().Equals("Outlines") || outlinesToCopy.Contains(parent)) {
+            if ("Outlines".Equals(parent.GetTitle()) || outlinesToCopy.Contains(parent)) {
                 return;
             }
             outlinesToCopy.Add(parent);

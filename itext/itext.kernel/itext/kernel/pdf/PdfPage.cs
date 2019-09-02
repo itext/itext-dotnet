@@ -1165,8 +1165,8 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 TagTreePointer tagPointer = GetDocument().GetTagStructureContext().RemoveAnnotationTag(annotation);
                 if (tagPointer != null) {
-                    bool standardAnnotTagRole = tagPointer.GetRole().Equals(StandardRoles.ANNOT) || tagPointer.GetRole().Equals
-                        (StandardRoles.FORM);
+                    bool standardAnnotTagRole = StandardRoles.ANNOT.Equals(tagPointer.GetRole()) || StandardRoles.FORM.Equals(
+                        tagPointer.GetRole());
                     if (tagPointer.GetKidsRoles().Count == 0 && standardAnnotTagRole) {
                         tagPointer.RemoveTag();
                     }
