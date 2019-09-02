@@ -283,8 +283,8 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[] substGlyphIds) {
-            int substCode = substGlyphIds[0];
             //sequence length shall be at least 1
+            int substCode = substGlyphIds[0];
             Glyph glyph = tableReader.GetGlyph(substCode);
             glyphs[idx] = glyph;
             if (substGlyphIds.Length > 1) {

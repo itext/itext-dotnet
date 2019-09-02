@@ -1258,33 +1258,31 @@ namespace iText.IO.Font {
         protected internal virtual void BuildIndexHeader(int Count, int Offsize, int First) {
             // Add the count field
             OutputList.AddLast(new CFFFont.UInt16Item((char)Count));
-            // count
             // Add the offsize field
             OutputList.AddLast(new CFFFont.UInt8Item((char)Offsize));
             switch (Offsize) {
                 case 1: {
-                    // offSize
                     // Add the first offset according to the offsize
-                    OutputList.AddLast(new CFFFont.UInt8Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt8Item((char)First));
                     break;
                 }
 
                 case 2: {
-                    OutputList.AddLast(new CFFFont.UInt16Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt16Item((char)First));
                     break;
                 }
 
                 case 3: {
-                    OutputList.AddLast(new CFFFont.UInt24Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt24Item((char)First));
                     break;
                 }
 
                 case 4: {
-                    OutputList.AddLast(new CFFFont.UInt32Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt32Item((char)First));
                     break;
                 }
 
@@ -1347,15 +1345,15 @@ namespace iText.IO.Font {
                     }
                 }
             }
-            OutputList.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
             // count
-            OutputList.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
             // offSize
+            OutputList.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
             foreach (int stringOffset in stringOffsets) {
                 OutputList.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, stringOffset - stringsBaseOffset));
             }
             int currentStringsOffset = stringOffsets[stringOffsets.Length - 1] - stringsBaseOffset;
-            //l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
+            // l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
             currentStringsOffset += "Adobe".Length;
             OutputList.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, currentStringsOffset));
             currentStringsOffset += "Identity".Length;
@@ -1375,18 +1373,18 @@ namespace iText.IO.Font {
         /// <param name="nglyphs">the number of glyphs in the font</param>
         protected internal virtual void CreateFDSelect(CFFFont.OffsetItem fdselectRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(fdselectRef));
-            OutputList.AddLast(new CFFFont.UInt8Item((char)3));
             // format identifier
-            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            OutputList.AddLast(new CFFFont.UInt8Item((char)3));
             // nRanges
-            OutputList.AddLast(new CFFFont.UInt16Item((char)0));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
             // Range[0].firstGlyph
-            OutputList.AddLast(new CFFFont.UInt8Item((char)0));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)0));
             // Range[0].fd
+            OutputList.AddLast(new CFFFont.UInt8Item((char)0));
+            // sentinel
             OutputList.AddLast(new CFFFont.UInt16Item((char)nglyphs));
         }
 
-        // sentinel
         /// <summary>Function creates new CharSet for non-CID fonts.</summary>
         /// <remarks>
         /// Function creates new CharSet for non-CID fonts.
@@ -1396,14 +1394,14 @@ namespace iText.IO.Font {
         /// <param name="nglyphs">the number of glyphs in the font</param>
         protected internal virtual void CreateCharset(CFFFont.OffsetItem charsetRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(charsetRef));
-            OutputList.AddLast(new CFFFont.UInt8Item((char)2));
             // format identifier
-            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            OutputList.AddLast(new CFFFont.UInt8Item((char)2));
             // first glyph in range (ignore .notdef)
+            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            // nLeft
             OutputList.AddLast(new CFFFont.UInt16Item((char)(nglyphs - 1)));
         }
 
-        // nLeft
         /// <summary>Function creates new FDArray for non-CID fonts.</summary>
         /// <remarks>
         /// Function creates new FDArray for non-CID fonts.
@@ -1435,8 +1433,8 @@ namespace iText.IO.Font {
             }
             OutputList.AddLast(new CFFFont.DictNumberItem(NewSize));
             OutputList.AddLast(privateRef);
-            OutputList.AddLast(new CFFFont.UInt8Item((char)18));
             // Private
+            OutputList.AddLast(new CFFFont.UInt8Item((char)18));
             OutputList.AddLast(new CFFFont.IndexMarkerItem(privateIndex1Ref, privateBase));
         }
 
@@ -1497,8 +1495,8 @@ namespace iText.IO.Font {
                         OutputList.AddLast(new CFFFont.DictNumberItem(NewSize));
                         fdPrivate[k] = new CFFFont.DictOffsetItem();
                         OutputList.AddLast(fdPrivate[k]);
-                        OutputList.AddLast(new CFFFont.UInt8Item((char)18));
                         // Private
+                        OutputList.AddLast(new CFFFont.UInt8Item((char)18));
                         // Go back to place
                         Seek(p2);
                     }
@@ -1542,10 +1540,10 @@ namespace iText.IO.Font {
                     if ("Subrs".Equals(key)) {
                         fdSubrs[i] = new CFFFont.DictOffsetItem();
                         OutputList.AddLast(fdSubrs[i]);
+                        // Subrs
                         OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                     }
                     else {
-                        // Subrs
                         // Else copy the entire range
                         OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                     }
@@ -1643,10 +1641,10 @@ namespace iText.IO.Font {
                 // use marker for offset and write operator number
                 if ("Subrs".Equals(key)) {
                     OutputList.AddLast(Subr);
+                    // Subrs
                     OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                 }
                 else {
-                    // Subrs
                     // Else copy the entire range
                     OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                 }

@@ -308,8 +308,8 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void FillNamedEncoding() {
-            PdfEncodings.ConvertToBytes(" ", baseEncoding);
             // check if the encoding exists
+            PdfEncodings.ConvertToBytes(" ", baseEncoding);
             bool stdEncoding = PdfEncodings.WINANSI.Equals(baseEncoding) || PdfEncodings.MACROMAN.Equals(baseEncoding);
             if (!stdEncoding && differences == null) {
                 differences = new String[256];

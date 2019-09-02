@@ -151,10 +151,10 @@ namespace iText.Forms.Xfdf {
             flagMap.Put(XfdfConstants.TOGGLE_NO_VIEW, PdfAnnotation.TOGGLE_NO_VIEW);
             foreach (String flag in flagsList) {
                 if (flagMap.ContainsKey(flag)) {
+                    //implicit cast  for autoporting
                     result += (int)flagMap.Get(flag);
                 }
             }
-            //implicit cast  for autoporting
             return result;
         }
 

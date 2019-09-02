@@ -59,8 +59,8 @@ namespace iText.Barcodes {
         /// <param name="supp">the supplemental barcode</param>
         public BarcodeEANSUPP(Barcode1D ean, Barcode1D supp)
             : base(ean.document) {
-            n = 8;
             // horizontal distance between the two barcodes
+            n = 8;
             this.ean = ean;
             this.supp = supp;
         }

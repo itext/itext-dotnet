@@ -2954,11 +2954,11 @@ namespace iText.Forms.Fields {
         }
 
         private String GetRadioButtonValue(String value) {
-            System.Diagnostics.Debug.Assert(value != null);
             //Otherwise something wrong with getValueAsString().
+            System.Diagnostics.Debug.Assert(value != null);
             if ("".Equals(value)) {
-                value = "Yes";
                 //let it as default value
+                value = "Yes";
                 foreach (String state in GetAppearanceStates()) {
                     if (!"Off".Equals(state)) {
                         value = state;
@@ -4124,8 +4124,8 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
-            sb.DeleteCharAt(sb.Length - 1);
             // last '\n'
+            sb.DeleteCharAt(sb.Length - 1);
             return sb.ToString();
         }
 

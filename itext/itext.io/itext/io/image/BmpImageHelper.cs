@@ -646,10 +646,10 @@ namespace iText.IO.Image {
 
         /// <exception cref="System.IO.IOException"/>
         private static bool GetImage(BmpImageHelper.BmpParameters bmp) {
+            // buffer for byte data
             byte[] bdata;
             switch (bmp.imageType) {
                 case VERSION_2_1_BIT: {
-                    // buffer for byte data
                     //	if (sampleModel.getDataType() == DataBuffer.TYPE_BYTE)
                     //	    bdata = (byte[])((DataBufferByte)tile.getDataBuffer()).getData();
                     //	else if (sampleModel.getDataType() == DataBuffer.TYPE_USHORT)

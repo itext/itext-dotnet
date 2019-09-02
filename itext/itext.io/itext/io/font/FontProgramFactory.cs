@@ -259,10 +259,10 @@ namespace iText.IO.Font {
                                 int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
                                 if (ttcSplit > 0) {
                                     try {
-                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                         // count(.ttc) = 4
-                                        int ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                         // count(.ttc,) = 5)
+                                        int ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                                         fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                     }
                                     catch (FormatException nfe) {

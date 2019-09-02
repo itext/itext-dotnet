@@ -199,15 +199,15 @@ namespace iText.IO.Image {
             gif.image.SetLogicalHeight(ReadShort(gif));
             // packed fields
             int packed = gif.input.Read();
-            gif.gctFlag = (packed & 0x80) != 0;
             // 1   : global color table flag
+            gif.gctFlag = (packed & 0x80) != 0;
             gif.m_gbpc = (packed & 7) + 1;
-            gif.bgIndex = gif.input.Read();
             // background color index
+            gif.bgIndex = gif.input.Read();
+            // pixel aspect ratio
             gif.pixelAspect = gif.input.Read();
         }
 
-        // pixel aspect ratio
         /// <summary>Reads next 16-bit value, LSB first</summary>
         /// <exception cref="System.IO.IOException"/>
         private static int ReadShort(GifImageHelper.GifParameters gif) {
@@ -287,8 +287,8 @@ namespace iText.IO.Image {
                             case 0xff: {
                                 // application extension
                                 ReadBlock(gif);
-                                Skip(gif);
                                 // don't care
+                                Skip(gif);
                                 break;
                             }
 
@@ -312,24 +312,24 @@ namespace iText.IO.Image {
         /// <summary>Reads next frame image</summary>
         /// <exception cref="System.IO.IOException"/>
         private static void ReadFrame(GifImageHelper.GifParameters gif) {
-            gif.ix = ReadShort(gif);
             // (sub)image position & size
+            gif.ix = ReadShort(gif);
             gif.iy = ReadShort(gif);
             gif.iw = ReadShort(gif);
             gif.ih = ReadShort(gif);
             int packed = gif.input.Read();
-            gif.lctFlag = (packed & 0x80) != 0;
             // 1 - local color table flag
-            gif.interlace = (packed & 0x40) != 0;
+            gif.lctFlag = (packed & 0x80) != 0;
             // 2 - interlace flag
+            gif.interlace = (packed & 0x40) != 0;
             // 3 - sort flag
             // 4-5 - reserved
-            gif.lctSize = 2 << (packed & 7);
             // 6-8 - local color table size
+            gif.lctSize = 2 << (packed & 7);
             gif.m_bpc = NewBpc(gif.m_gbpc);
             if (gif.lctFlag) {
-                gif.m_curr_table = ReadColorTable((packed & 7) + 1, gif);
                 // read table
+                gif.m_curr_table = ReadColorTable((packed & 7) + 1, gif);
                 gif.m_bpc = NewBpc((packed & 7) + 1);
             }
             else {
@@ -338,15 +338,15 @@ namespace iText.IO.Image {
             if (gif.transparency && gif.transIndex >= gif.m_curr_table.Length / 3) {
                 gif.transparency = false;
             }
+            // Acrobat 5.05 doesn't like this combination
             if (gif.transparency && gif.m_bpc == 1) {
-                // Acrobat 5.05 doesn't like this combination
                 byte[] tp = new byte[12];
                 Array.Copy(gif.m_curr_table, 0, tp, 0, 6);
                 gif.m_curr_table = tp;
                 gif.m_bpc = 2;
             }
-            bool skipZero = DecodeImageData(gif);
             // decode pixel data
+            bool skipZero = DecodeImageData(gif);
             if (!skipZero) {
                 Skip(gif);
             }
@@ -528,8 +528,8 @@ namespace iText.IO.Image {
                             while (line >= gif.ih);
                         }
                         else {
-                            line = gif.ih - 1;
                             // this shouldn't happen
+                            line = gif.ih - 1;
                             inc = 0;
                         }
                     }
@@ -553,25 +553,25 @@ namespace iText.IO.Image {
         /// <summary>Reads Graphics Control Extension values</summary>
         /// <exception cref="System.IO.IOException"/>
         private static void ReadGraphicControlExt(GifImageHelper.GifParameters gif) {
-            gif.input.Read();
             // block size
-            int packed = gif.input.Read();
+            gif.input.Read();
             // packed fields
-            gif.dispose = (packed & 0x1c) >> 2;
+            int packed = gif.input.Read();
             // disposal method
+            gif.dispose = (packed & 0x1c) >> 2;
             if (gif.dispose == 0) {
+                // elect to keep old image if discretionary
                 gif.dispose = 1;
             }
-            // elect to keep old image if discretionary
             gif.transparency = (packed & 1) != 0;
-            gif.delay = ReadShort(gif) * 10;
             // delay in milliseconds
-            gif.transIndex = gif.input.Read();
+            gif.delay = ReadShort(gif) * 10;
             // transparent color index
+            gif.transIndex = gif.input.Read();
+            // block terminator
             gif.input.Read();
         }
 
-        // block terminator
         /// <summary>
         /// Skips variable length blocks up to and including
         /// next zero length block.

@@ -61,18 +61,18 @@ namespace iText.Barcodes {
 
         public BarcodePostnet(PdfDocument document)
             : base(document) {
-            n = 72f / 22f;
             // distance between bars
-            x = 0.02f * 72f;
+            n = 72f / 22f;
             // bar width
-            barHeight = 0.125f * 72f;
+            x = 0.02f * 72f;
             // height of the tall bars
-            size = 0.05f * 72f;
+            barHeight = 0.125f * 72f;
             // height of the short bars
+            size = 0.05f * 72f;
+            // type of code
             codeType = TYPE_POSTNET;
         }
 
-        // type of code
         /// <summary>Creates the bars for Postnet.</summary>
         /// <param name="text">the code to be created without checksum</param>
         /// <returns>the bars</returns>

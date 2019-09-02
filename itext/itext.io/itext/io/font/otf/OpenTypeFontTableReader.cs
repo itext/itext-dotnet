@@ -240,8 +240,8 @@ namespace iText.IO.Font.Otf {
             try {
                 rf.Seek(tableLocation);
                 /*int version =*/
+                // version not used
                 rf.ReadInt();
-                //version not used
                 int scriptListOffset = rf.ReadUnsignedShort();
                 int featureListOffset = rf.ReadUnsignedShort();
                 int lookupListOffset = rf.ReadUnsignedShort();

@@ -68,13 +68,13 @@ namespace iText.IO.Font.Otf {
         public virtual void ReadTable() {
             if (tableLocation > 0) {
                 rf.Seek(tableLocation);
+                // version, we only support 0x00010000
                 rf.ReadUnsignedInt();
-                //version, we only support 0x00010000
                 int glyphClassDefOffset = rf.ReadUnsignedShort();
+                // skip Attachment Point List Table
                 rf.ReadUnsignedShort();
-                //skip Attachment Point List Table
+                // skip Ligature Caret List Table
                 rf.ReadUnsignedShort();
-                //skip Ligature Caret List Table
                 int markAttachClassDefOffset = rf.ReadUnsignedShort();
                 if (glyphClassDefOffset > 0) {
                     glyphClass = OtfClass.Create(rf, glyphClassDefOffset + tableLocation);

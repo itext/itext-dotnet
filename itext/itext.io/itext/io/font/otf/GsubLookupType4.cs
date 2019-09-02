@@ -99,8 +99,8 @@ namespace iText.IO.Font.Otf {
         /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
+            // subformat - always 1
             openReader.rf.ReadShort();
-            //subformat - always 1
             int coverage = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int ligSetCount = openReader.rf.ReadUnsignedShort();
             int[] ligatureSet = new int[ligSetCount];

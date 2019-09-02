@@ -387,7 +387,6 @@ namespace iText.IO.Image {
                         float ZC = YC * ((1 - png.xB) / png.yB - 1);
                         float XW = XA + XB + XC;
                         float YW = 1;
-                        //YA+YB+YC;
                         float ZW = ZA + ZB + ZC;
                         float[] wpa = new float[3];
                         wpa[0] = XW;
@@ -820,9 +819,9 @@ namespace iText.IO.Image {
                             v[0] = png.trans[idx];
                         }
                         else {
+                            // Patrick Valsecchi
                             v[0] = 255;
                         }
-                        // Patrick Valsecchi
                         SetPixel(png.smask, v, 0, 1, dstX, y, 8, yStride);
                         dstX += step;
                     }

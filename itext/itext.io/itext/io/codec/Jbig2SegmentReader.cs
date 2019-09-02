@@ -154,7 +154,7 @@ namespace iText.IO.Codec {
             public Jbig2Segment(int segment_number) {
                 //see 7.4.2.
                 //see 7.4.3.
-                //see 7.4.3.
+                //see 7.4.3.//see 7.4.3.
                 //see 7.4.3.
                 //see 7.4.4.
                 //see 7.4.5.
@@ -380,11 +380,11 @@ namespace iText.IO.Codec {
                         referred_to_segment_numbers[i] = ra.ReadUnsignedShort();
                     }
                     else {
+                        // TODO wtf ack
                         referred_to_segment_numbers[i] = (int)ra.ReadUnsignedInt();
                     }
                 }
             }
-            // TODO wtf ack
             s.referredToSegmentNumbers = referred_to_segment_numbers;
             // 7.2.6
             int segment_page_association;

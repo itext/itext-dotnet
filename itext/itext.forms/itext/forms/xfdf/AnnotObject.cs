@@ -152,8 +152,6 @@ namespace iText.Forms.Xfdf {
         private PdfIndirectReference @ref;
 
         public AnnotObject() {
-            //basically text string
-            //should be Base64String
             this.attributes = new List<AttributeObject>();
         }
 

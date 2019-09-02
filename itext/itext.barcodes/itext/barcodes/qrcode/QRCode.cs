@@ -175,8 +175,8 @@ namespace iText.Barcodes.Qrcode {
         // First check if all version are not uninitialized.
         // Then check them in other ways..
         // ByteMatrix stuff.
-        // See 7.3.1 of JISX0510:2004 (p.5).
         // Must be square.
+        // See 7.3.1 of JISX0510:2004 (p.5).
         /// <summary>Prints all parameters</summary>
         /// <returns>string containing all parameters</returns>
         public override String ToString() {

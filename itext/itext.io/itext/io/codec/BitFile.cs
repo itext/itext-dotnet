@@ -90,9 +90,9 @@ namespace iText.IO.Codec {
         /// <exception cref="System.IO.IOException"/>
         public virtual void WriteBits(int bits, int numbits) {
             int bitsWritten = 0;
+            // gif block count
             int numBytes = 255;
             do {
-                // gif block count
                 // This handles the GIF block count stuff
                 if ((index == 254 && bitsLeft == 0) || index > 254) {
                     if (blocks) {
@@ -103,10 +103,10 @@ namespace iText.IO.Codec {
                     index = 0;
                     bitsLeft = 8;
                 }
+                // bits contents fit in current index byte
                 if (numbits <= bitsLeft) {
-                    // bits contents fit in current index byte
+                    // GIF
                     if (blocks) {
-                        // GIF
                         buffer[index] |= (byte)((bits & ((1 << numbits) - 1)) << (8 - bitsLeft));
                         bitsWritten += numbits;
                         bitsLeft -= numbits;
@@ -121,8 +121,8 @@ namespace iText.IO.Codec {
                 }
                 else {
                     // bits overflow from current byte to next.
+                    // GIF
                     if (blocks) {
-                        // GIF
                         // if bits  > space left in current byte then the lowest order bits
                         // of code are taken and put in current byte and rest put in next.
                         buffer[index] |= (byte)((bits & ((1 << bitsLeft) - 1)) << (8 - bitsLeft));
@@ -138,11 +138,11 @@ namespace iText.IO.Codec {
                         // at highest order bit location !!
                         int topbits = ((int)(((uint)bits) >> (numbits - bitsLeft))) & ((1 << bitsLeft) - 1);
                         buffer[index] |= (byte)topbits;
-                        numbits -= bitsLeft;
                         // ok this many bits gone off the top
+                        numbits -= bitsLeft;
                         bitsWritten += bitsLeft;
-                        buffer[++index] = 0;
                         // next index
+                        buffer[++index] = 0;
                         bitsLeft = 8;
                     }
                 }

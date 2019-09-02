@@ -119,8 +119,8 @@ namespace iText.IO.Font.Otf {
         /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
+            // skip format, always 1
             openReader.rf.ReadUnsignedShort();
-            //skip format, always 1
             int markCoverageLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int ligatureCoverageLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int classCount = openReader.rf.ReadUnsignedShort();

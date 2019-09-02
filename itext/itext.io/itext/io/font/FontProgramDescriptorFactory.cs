@@ -150,12 +150,12 @@ namespace iText.IO.Font {
                 String ttcName;
                 int ttcIndex;
                 try {
-                    ttcName = baseName.JSubstring(0, ttcSplit + 4);
                     // count(.ttc) = 4
+                    ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                    // count(.ttc,) = 5)
                     ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                 }
                 catch (FormatException nfe) {
-                    // count(.ttc,) = 5)
                     throw new iText.IO.IOException(nfe.Message, nfe);
                 }
                 OpenTypeParser parser = new OpenTypeParser(ttcName, ttcIndex);

@@ -274,9 +274,9 @@ namespace iText.IO.Source {
                 if (idx >= 0) {
                     return pos + idx;
                 }
+                // 9 = "startxref".length()
                 pos = pos - arrLength + 9;
             }
-            // 9 = "startxref".length()
             throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
         }
 

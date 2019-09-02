@@ -238,24 +238,24 @@ namespace iText.Forms.Xfdf {
             for (int temp = 0; temp < children.Count; temp++) {
                 XmlNode node = children.Item(temp);
                 if (node.NodeType == System.Xml.XmlNodeType.Text) {
+                    // getTextContent?
                     annotObject.SetContents(new PdfString(node.Value));
                 }
             }
         }
 
-        //getTextContent?
         private void VisitContentsRichTextSubelement(XmlNode parentNode, AnnotObject annotObject) {
-            //no attributes, inside a text string or rich text string
+            // no attributes, inside a text string or rich text string
             XmlNodeList children = parentNode.ChildNodes;
             for (int temp = 0; temp < children.Count; temp++) {
                 XmlNode node = children.Item(temp);
                 if (node.NodeType == System.Xml.XmlNodeType.Text) {
+                    // getTextContent?
                     annotObject.SetContentsRichText(new PdfString(node.Value));
                 }
             }
         }
 
-        //getTextContent?
         private void VisitVerticesSubelement(XmlNode parentNode, AnnotObject annotObject) {
             //no attributes, inside a text string
             XmlNodeList children = parentNode.ChildNodes;

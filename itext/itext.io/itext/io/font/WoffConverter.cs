@@ -80,11 +80,10 @@ namespace iText.IO.Font {
             srcPos += 2;
             long totalSfntSize = BytesToUInt(woffBytes, srcPos);
             srcPos += 4;
-            srcPos += 2;
             // majorVersion
             srcPos += 2;
             // minorVersion
-            srcPos += 4;
+            srcPos += 2;
             // metaOffset
             srcPos += 4;
             // metaLength
@@ -94,8 +93,9 @@ namespace iText.IO.Font {
             // privOffset
             srcPos += 4;
             // privLength
-            byte[] otfBytes = new byte[(int)totalSfntSize];
+            srcPos += 4;
             // assuming font won't be larger than 2GB
+            byte[] otfBytes = new byte[(int)totalSfntSize];
             Array.Copy(flavor, 0, otfBytes, destPos, 4);
             destPos += 4;
             Array.Copy(numTables, 0, otfBytes, destPos, 2);

@@ -206,8 +206,8 @@ namespace iText.IO.Font {
             int[] offsets = new int[count + 1];
             if (count == 0) {
                 offsets[0] = -1;
-                nextIndexOffset += 2;
                 // TODO death store to local var .. should this be this.nextIndexOffset ?
+                nextIndexOffset += 2;
                 return offsets;
             }
             indexOffSize = GetCard8();
@@ -736,21 +736,21 @@ namespace iText.IO.Font {
             }
             //System.err.println("number of glyphs = "+nglyphs);
             // create a name index
-            l.AddLast(new CFFFont.UInt16Item((char)1));
             // count
-            l.AddLast(new CFFFont.UInt8Item((char)1));
+            l.AddLast(new CFFFont.UInt16Item((char)1));
             // offSize
             l.AddLast(new CFFFont.UInt8Item((char)1));
             // first offset
+            l.AddLast(new CFFFont.UInt8Item((char)1));
             l.AddLast(new CFFFont.UInt8Item((char)(1 + fonts[j].name.Length)));
             l.AddLast(new CFFFont.StringItem(fonts[j].name));
             // create the topdict Index
-            l.AddLast(new CFFFont.UInt16Item((char)1));
             // count
-            l.AddLast(new CFFFont.UInt8Item((char)2));
-            // offSize
             l.AddLast(new CFFFont.UInt16Item((char)1));
+            // offSize
+            l.AddLast(new CFFFont.UInt8Item((char)2));
             // first offset
+            l.AddLast(new CFFFont.UInt16Item((char)1));
             CFFFont.OffsetItem topdictIndex1Ref = new CFFFont.IndexOffsetItem(2);
             l.AddLast(topdictIndex1Ref);
             CFFFont.IndexBaseItem topdictBase = new CFFFont.IndexBaseItem();
@@ -840,15 +840,15 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                l.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
                 // count
-                l.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
+                l.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
                 // offSize
+                l.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
                 foreach (int stringOffset in stringOffsets) {
                     l.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, stringOffset - stringsBaseOffset));
                 }
                 int currentStringsOffset = stringOffsets[stringOffsets.Length - 1] - stringsBaseOffset;
-                //l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
+                // l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
                 currentStringsOffset += "Adobe".Length;
                 l.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, currentStringsOffset));
                 currentStringsOffset += "Identity".Length;
@@ -867,33 +867,33 @@ namespace iText.IO.Font {
                 // copy the FDArray, FDSelect, charset
                 // create FDSelect
                 l.AddLast(new CFFFont.MarkerItem(fdselectRef));
-                l.AddLast(new CFFFont.UInt8Item((char)3));
                 // format identifier
-                l.AddLast(new CFFFont.UInt16Item((char)1));
+                l.AddLast(new CFFFont.UInt8Item((char)3));
                 // nRanges
-                l.AddLast(new CFFFont.UInt16Item((char)0));
+                l.AddLast(new CFFFont.UInt16Item((char)1));
                 // Range[0].firstGlyph
-                l.AddLast(new CFFFont.UInt8Item((char)0));
+                l.AddLast(new CFFFont.UInt16Item((char)0));
                 // Range[0].fd
-                l.AddLast(new CFFFont.UInt16Item((char)nglyphs));
+                l.AddLast(new CFFFont.UInt8Item((char)0));
                 // sentinel
+                l.AddLast(new CFFFont.UInt16Item((char)nglyphs));
                 // recreate a new charset
                 // This format is suitable only for fonts without subsetting
                 l.AddLast(new CFFFont.MarkerItem(charsetRef));
-                l.AddLast(new CFFFont.UInt8Item((char)2));
                 // format identifier
-                l.AddLast(new CFFFont.UInt16Item((char)1));
+                l.AddLast(new CFFFont.UInt8Item((char)2));
                 // first glyph in range (ignore .notdef)
-                l.AddLast(new CFFFont.UInt16Item((char)(nglyphs - 1)));
+                l.AddLast(new CFFFont.UInt16Item((char)1));
                 // nLeft
+                l.AddLast(new CFFFont.UInt16Item((char)(nglyphs - 1)));
                 // now all are covered, the data structure is complete.
                 // create a font dict index (fdarray)
                 l.AddLast(new CFFFont.MarkerItem(fdarrayRef));
                 l.AddLast(new CFFFont.UInt16Item((char)1));
-                l.AddLast(new CFFFont.UInt8Item((char)1));
                 // offSize
                 l.AddLast(new CFFFont.UInt8Item((char)1));
                 // first offset
+                l.AddLast(new CFFFont.UInt8Item((char)1));
                 CFFFont.OffsetItem privateIndex1Ref = new CFFFont.IndexOffsetItem(1);
                 l.AddLast(privateIndex1Ref);
                 CFFFont.IndexBaseItem privateBase = new CFFFont.IndexBaseItem();
@@ -907,8 +907,8 @@ namespace iText.IO.Font {
                 l.AddLast(new CFFFont.DictNumberItem(fonts[j].privateLength));
                 CFFFont.OffsetItem privateRef = new CFFFont.DictOffsetItem();
                 l.AddLast(privateRef);
-                l.AddLast(new CFFFont.UInt8Item((char)18));
                 // Private
+                l.AddLast(new CFFFont.UInt8Item((char)18));
                 l.AddLast(new CFFFont.IndexMarkerItem(privateIndex1Ref, privateBase));
                 // copy the private index & local subroutines
                 l.AddLast(new CFFFont.MarkerItem(privateRef));
