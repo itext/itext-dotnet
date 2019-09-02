@@ -57,6 +57,8 @@ namespace iText.Layout.Renderer {
     public class LineRenderer : AbstractRenderer {
         private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
 
+        private static readonly ILog logger = LogManager.GetLogger(typeof(LineRenderer));
+
         protected internal float maxAscent;
 
         protected internal float maxDescent;
@@ -301,8 +303,9 @@ namespace iText.Layout.Renderer {
                             }
                             bbox.SetWidth(inlineBlockWidth);
                             if (childBlockMinMaxWidth.GetMinWidth() > bbox.GetWidth()) {
-                                LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
-                                    );
+                                if (logger.IsWarnEnabled) {
+                                    logger.Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
+                                }
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
                         }
@@ -479,8 +482,9 @@ namespace iText.Layout.Renderer {
                             else {
                                 if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().Count == 0 && childResult.
                                     GetStatus() == LayoutResult.PARTIAL) {
-                                    LogManager.GetLogger(typeof(LineRenderer)).Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED
-                                        );
+                                    if (logger.IsWarnEnabled) {
+                                        logger.Warn(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
+                                    }
                                 }
                                 else {
                                     split[1].childRenderers.Add(childResult.GetOverflowRenderer());
@@ -652,48 +656,7 @@ namespace iText.Layout.Renderer {
                             offset = initialPos;
                             newRenderer.line.SetGlyphs(replacementGlyphs);
                         }
-                        float currentXPos = occupiedArea.GetBBox().GetLeft();
-                        foreach (IRenderer child in children) {
-                            float currentWidth;
-                            if (child is TextRenderer) {
-                                currentWidth = ((TextRenderer)child).CalculateLineWidth();
-                                UnitValue[] margins = ((TextRenderer)child).GetMargins();
-                                if (!margins[1].IsPointValue()) {
-                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
-                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                        .MARGIN_RIGHT));
-                                }
-                                if (!margins[3].IsPointValue()) {
-                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
-                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                        .MARGIN_LEFT));
-                                }
-                                UnitValue[] paddings = ((TextRenderer)child).GetPaddings();
-                                if (!paddings[1].IsPointValue()) {
-                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
-                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                        .PADDING_RIGHT));
-                                }
-                                if (!paddings[3].IsPointValue()) {
-                                    ILog logger = LogManager.GetLogger(typeof(LineRenderer));
-                                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                                        .PADDING_LEFT));
-                                }
-                                currentWidth += margins[1].GetValue() + margins[3].GetValue() + paddings[1].GetValue() + paddings[3].GetValue
-                                    ();
-                                ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
-                            }
-                            else {
-                                currentWidth = child.GetOccupiedArea().GetBBox().GetWidth();
-                                if (child is AbstractRenderer) {
-                                    child.Move(currentXPos - child.GetOccupiedArea().GetBBox().GetX(), 0);
-                                }
-                                else {
-                                    child.GetOccupiedArea().GetBBox().SetX(currentXPos);
-                                }
-                            }
-                            currentXPos += currentWidth;
-                        }
+                        AdjustChildPositionsAfterReordering(children, occupiedArea.GetBBox().GetLeft());
                     }
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         LineRenderer overflow = (LineRenderer)result.GetOverflowRenderer();
@@ -951,7 +914,6 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                             .FONT_SIZE));
                     }
@@ -983,7 +945,6 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        ILog logger = LogManager.GetLogger(typeof(LineRenderer));
                         logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                             .FONT_SIZE));
                     }
@@ -1001,6 +962,44 @@ namespace iText.Layout.Renderer {
 
                 default: {
                     throw new InvalidOperationException();
+                }
+            }
+        }
+
+        internal static void AdjustChildPositionsAfterReordering(IList<IRenderer> children, float initialXPos) {
+            float currentXPos = initialXPos;
+            foreach (IRenderer child in children) {
+                if (!FloatingHelper.IsRendererFloating(child)) {
+                    float currentWidth;
+                    if (child is TextRenderer) {
+                        currentWidth = ((TextRenderer)child).CalculateLineWidth();
+                        UnitValue[] margins = ((TextRenderer)child).GetMargins();
+                        if (!margins[1].IsPointValue() && logger.IsErrorEnabled) {
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "right margin"
+                                ));
+                        }
+                        if (!margins[3].IsPointValue() && logger.IsErrorEnabled) {
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "left margin"
+                                ));
+                        }
+                        UnitValue[] paddings = ((TextRenderer)child).GetPaddings();
+                        if (!paddings[1].IsPointValue() && logger.IsErrorEnabled) {
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "right padding"
+                                ));
+                        }
+                        if (!paddings[3].IsPointValue() && logger.IsErrorEnabled) {
+                            logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, "left padding"
+                                ));
+                        }
+                        currentWidth += margins[1].GetValue() + margins[3].GetValue() + paddings[1].GetValue() + paddings[3].GetValue
+                            ();
+                        ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
+                    }
+                    else {
+                        currentWidth = child.GetOccupiedArea().GetBBox().GetWidth();
+                        child.Move(currentXPos - child.GetOccupiedArea().GetBBox().GetX(), 0);
+                    }
+                    currentXPos += currentWidth;
                 }
             }
         }
