@@ -248,12 +248,7 @@ namespace iText.Kernel.Geom {
         /// <returns>the hash code of this object</returns>
         /// <seealso cref="System.Object.GetHashCode()"/>
         public override int GetHashCode() {
-            //return Arrays.hashCode(vals); // JDK 5 code, replaced with the following
-            int result = 1;
-            for (int i = 0; i < vals.Length; i++) {
-                result = 31 * result + JavaUtil.FloatToIntBits(vals[i]);
-            }
-            return result;
+            return JavaUtil.ArraysHashCode(vals);
         }
 
         /// <summary>Generates a String representation of the matrix.</summary>

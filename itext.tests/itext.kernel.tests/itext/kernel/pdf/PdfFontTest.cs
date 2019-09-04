@@ -228,8 +228,8 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateDocumentWithType3Font() {
             String filename = destinationFolder + "DocumentWithType3Font.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithType3Font.pdf";
-            String testString = "A A A A E E E ~ \u00E9";
             // A A A A E E E ~ é
+            String testString = "A A A A E E E ~ \u00E9";
             //writing type3 font characters
             String title = "Type3 font iText 7 Document";
             PdfWriter writer = new PdfWriter(filename);
@@ -282,8 +282,8 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateTaggedDocumentWithType3Font() {
             String filename = destinationFolder + "createTaggedDocumentWithType3Font.pdf";
             String cmpFilename = sourceFolder + "cmp_createTaggedDocumentWithType3Font.pdf";
-            String testString = "A A A A E E E ~ \u00E9";
             // A A A A E E E ~ é
+            String testString = "A A A A E E E ~ \u00E9";
             //writing type3 font characters
             String title = "Type3 font iText 7 Document";
             PdfWriter writer = new PdfWriter(filename, new WriterProperties());
@@ -678,7 +678,7 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("A A A A A A E E E E ~ \u00E9 \u00F6"
                 ).EndText().RestoreState();
-            // é ö
+            // A A A A A A E E E E ~ é ö
             page.Flush();
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
@@ -712,7 +712,7 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("AAAAAA EEEE ~ \u00E9 \u00F6"
                 ).EndText();
-            // é ö
+            // AAAAAA EEEE ~ é ö
             page.Flush();
             outputPdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());

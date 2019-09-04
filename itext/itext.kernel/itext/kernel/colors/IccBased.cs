@@ -59,7 +59,7 @@ namespace iText.Kernel.Colors {
         /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
         public IccBased(Stream iccStream)
             : this(new PdfCieBasedCs.IccBased(iccStream), null) {
-            // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
+            // TODO if zero is outside of the Range, default value should be the nearest to the zero valid value
             colorValue = new float[GetNumberOfComponents()];
             for (int i = 0; i < GetNumberOfComponents(); i++) {
                 colorValue[i] = 0f;

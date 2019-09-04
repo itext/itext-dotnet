@@ -105,9 +105,9 @@ namespace iText.Kernel.Crypto {
                 , "user"));
             nameToSaslPrepared.Put("rfc4013Example03", new UnicodeBasedPasswordEncryptionTest.SaslPreparedString("\u00AA"
                 , "a"));
+            // match rfc4013Example01
             nameToSaslPrepared.Put("rfc4013Example04", new UnicodeBasedPasswordEncryptionTest.SaslPreparedString("\u2168"
                 , "IX"));
-            // match rfc4013Example01
             nameToSaslPrepared.Put("nonAsciiSpace01", new UnicodeBasedPasswordEncryptionTest.SaslPreparedString("\u2008 \u2009 \u200A \u200B"
                 , "       "));
             // normalization tests

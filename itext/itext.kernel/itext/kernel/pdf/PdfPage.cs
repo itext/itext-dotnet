@@ -370,9 +370,9 @@ namespace iText.Kernel.Pdf {
             }
             if (resources == null) {
                 resources = new PdfDictionary();
+                // not marking page as modified because of this change
                 GetPdfObject().Put(PdfName.Resources, resources);
             }
-            // not marking page as modified because of this change
             if (initResourcesField) {
                 this.resources = new PdfResources(resources);
                 this.resources.SetReadOnly(readOnly);

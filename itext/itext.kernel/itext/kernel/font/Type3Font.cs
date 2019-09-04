@@ -110,7 +110,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets a preferred font family name.</summary>
         /// <param name="fontFamily">a preferred font family name.</param>
         protected internal override void SetFontFamily(String fontFamily) {
-            //This dummy override allows PdfType3Font to set font family because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontFamily(fontFamily);
         }
 
@@ -121,7 +121,7 @@ namespace iText.Kernel.Font {
         /// .
         /// </param>
         protected internal override void SetFontWeight(int fontWeight) {
-            //This dummy override allows PdfType3Font to set font weight because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontWeight(fontWeight);
         }
 
@@ -132,7 +132,7 @@ namespace iText.Kernel.Font {
         /// .
         /// </param>
         protected internal override void SetFontStretch(String fontWidth) {
-            //This dummy override allows PdfType3Font to set font stretch because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontStretch(fontWidth);
         }
 
@@ -145,6 +145,7 @@ namespace iText.Kernel.Font {
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal override void SetItalicAngle(int italicAngle) {
             //This dummy override allows PdfType3Font to set the PostScript italicAngel because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetItalicAngle(italicAngle);
         }
 

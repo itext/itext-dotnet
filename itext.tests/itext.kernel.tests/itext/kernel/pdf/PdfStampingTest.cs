@@ -1236,8 +1236,8 @@ namespace iText.Kernel.Pdf {
             pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(resultStream.ToArray())));
             LocationTextExtractionStrategy strat = new LocationTextExtractionStrategy();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(strat);
-            processor.ProcessPageContent(pdfDoc.GetPage(1));
             // this fails with an NPE b/c the /F1 font isn't in the fonts dictionary
+            processor.ProcessPageContent(pdfDoc.GetPage(1));
             NUnit.Framework.Assert.IsTrue(strat.GetResultantText().Contains("TEXT TO STAMP"));
         }
 

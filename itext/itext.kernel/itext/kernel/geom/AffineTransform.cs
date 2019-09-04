@@ -528,12 +528,6 @@ namespace iText.Kernel.Geom {
                  * t2.m01 + t2.m02, t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12);
         }
 
-        // m00
-        // m01
-        // m10
-        // m11
-        // m02
-        // m12
         public virtual void Concatenate(iText.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(t, this));
         }
@@ -547,19 +541,13 @@ namespace iText.Kernel.Geom {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
+                //$NON-NLS-1$
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
-            //$NON-NLS-1$
             return new iText.Kernel.Geom.AffineTransform(m11 / det, -m10 / det, -m01 / det, m00 / det, (m01 * m12 - m11
                  * m02) / det, (m10 * m02 - m00 * m12) / det);
         }
 
-        // m00
-        // m10
-        // m01
-        // m11
-        // m02
-        // m12
         public virtual Point Transform(Point src, Point dst) {
             if (dst == null) {
                 dst = new Point();
@@ -660,9 +648,9 @@ namespace iText.Kernel.Geom {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
+                //$NON-NLS-1$
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
-            //$NON-NLS-1$
             if (dst == null) {
                 dst = new Point();
             }
@@ -677,9 +665,9 @@ namespace iText.Kernel.Geom {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
+                //$NON-NLS-1$
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
-            //$NON-NLS-1$
             while (--length >= 0) {
                 double x = src[srcOff++] - m02;
                 double y = src[srcOff++] - m12;
@@ -693,9 +681,9 @@ namespace iText.Kernel.Geom {
             float det = (float)GetDeterminant();
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
+                //$NON-NLS-1$
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
-            //$NON-NLS-1$
             while (--length >= 0) {
                 float x = (float)(src[srcOff++] - m02);
                 float y = (float)(src[srcOff++] - m12);

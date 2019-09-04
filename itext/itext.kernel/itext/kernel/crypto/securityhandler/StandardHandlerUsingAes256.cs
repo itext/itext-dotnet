@@ -319,8 +319,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     ++roundNum;
                     if (roundNum > 63) {
                         // e)
-                        int condVal = e[e.Length - 1] & 0xFF;
                         // interpreting last byte as unsigned integer
+                        int condVal = e[e.Length - 1] & 0xFF;
                         if (condVal <= roundNum - 32) {
                             break;
                         }

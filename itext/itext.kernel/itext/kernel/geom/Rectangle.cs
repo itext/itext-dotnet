@@ -593,14 +593,14 @@ namespace iText.Kernel.Geom {
             * DxE = (C-B)x(-B) = BxB-CxB = BxC DxF = (C-B)x(A-B) = CxA-CxB-BxA+BxB =
             * AxB+BxC-AxC
             */
-            x2 -= x1;
             // A
+            x2 -= x1;
             y2 -= y1;
-            x3 -= x1;
             // B
+            x3 -= x1;
             y3 -= y1;
-            x4 -= x1;
             // C
+            x4 -= x1;
             y4 -= y1;
             double AvB = x2 * y3 - x3 * y2;
             double AvC = x2 * y4 - x4 * y2;

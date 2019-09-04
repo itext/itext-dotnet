@@ -124,7 +124,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
             byte[] outp = new byte[100];
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
-            byte[] abyte0 = IVGenerator.GetIV(16); // keyp
+            // keyp
+            byte[] abyte0 = IVGenerator.GetIV(16);
             IBufferedCipher cf = CipherUtilities.GetCipher(derob);
             KeyParameter kp = new KeyParameter(abyte0);
             byte[] iv = IVGenerator.GetIV(cf.GetBlockSize());

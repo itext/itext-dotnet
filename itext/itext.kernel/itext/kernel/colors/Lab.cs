@@ -60,6 +60,6 @@ namespace iText.Kernel.Colors {
         public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
             : this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value) {
         }
-        // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
+        // TODO if zero is outside of the Range, default value should be the nearest to the zero valid value
     }
 }

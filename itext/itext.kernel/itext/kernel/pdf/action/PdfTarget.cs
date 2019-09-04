@@ -189,10 +189,10 @@ namespace iText.Kernel.Pdf.Action {
             PdfObject pValue = GetPdfObject().Get(PdfName.P);
             PdfPage page = null;
             if (pValue is PdfNumber) {
+                // zero-based index is used
                 page = pdfDocument.GetPage(((PdfNumber)pValue).IntValue() + 1);
             }
             else {
-                // zero-based index is used
                 if (pValue is PdfString) {
                     PdfNameTree destsTree = pdfDocument.GetCatalog().GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();

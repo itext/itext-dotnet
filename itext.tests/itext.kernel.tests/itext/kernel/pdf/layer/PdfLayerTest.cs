@@ -276,8 +276,8 @@ namespace iText.Kernel.Pdf.Layer {
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer layer = new PdfLayer("CreatorAndLanguageInfo", pdfDoc);
             layer.SetCreatorInfo("iText", "Technical");
-            layer.SetLanguage("en-AU", true);
             // australian english
+            layer.SetLanguage("en-AU", true);
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.SetFontAndSize(font, 14);
             PdfLayerTestUtils.AddTextInsideLayer(layer, canvas, "Some technical data in English.", 30, 530);

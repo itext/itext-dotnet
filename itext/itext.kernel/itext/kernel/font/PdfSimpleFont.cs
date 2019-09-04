@@ -460,10 +460,10 @@ namespace iText.Kernel.Font {
             //add font stream and flush it immediately
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();
-            flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
             // reset both flags
+            flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+            // set fontSpecific based on font encoding
             flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
-            // set based on font encoding
             fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
             return fontDescriptor;
         }

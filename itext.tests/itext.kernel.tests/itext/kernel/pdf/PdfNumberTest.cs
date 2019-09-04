@@ -49,8 +49,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_PROCESS_NAN)]
         public virtual void TestNaN() {
             PdfNumber number = new PdfNumber(double.NaN);
-            byte[] expected = new byte[] { 48 };
             // code for "0"
+            byte[] expected = new byte[] { 48 };
             NUnit.Framework.Assert.AreEqual(expected, number.GetInternalContent());
         }
     }

@@ -72,10 +72,10 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             SetForbidRelease();
             parentTreeHandler = new ParentTreeHandler(this);
+            // TODO may be remove?
             GetRoleMap();
         }
 
-        // TODO may be remove?
         public static PdfName ConvertRoleToPdfName(String role) {
             PdfName name = PdfName.staticNames.Get(role);
             if (name != null) {

@@ -261,10 +261,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>The Rise for the text draw operation, in user space units (Ts value, scaled to user space)</returns>
         public virtual float GetRise() {
             CheckGraphicsState();
+            // optimize the common case
             if (gs.GetTextRise() == 0) {
                 return 0;
             }
-            // optimize the common case
             return ConvertHeightFromTextSpaceToUserSpace(gs.GetTextRise());
         }
 

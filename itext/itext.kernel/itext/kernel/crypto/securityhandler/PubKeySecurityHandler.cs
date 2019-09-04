@@ -202,8 +202,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte two = (byte)(permission >> 8);
             byte three = (byte)(permission >> 16);
             byte four = (byte)(permission >> 24);
-            Array.Copy(seed, 0, pkcs7input, 0, 20);
             // put this seed in the pkcs7 input
+            Array.Copy(seed, 0, pkcs7input, 0, 20);
             pkcs7input[20] = four;
             pkcs7input[21] = three;
             pkcs7input[22] = two;

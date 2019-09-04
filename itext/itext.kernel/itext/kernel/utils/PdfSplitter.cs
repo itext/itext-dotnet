@@ -361,8 +361,8 @@ namespace iText.Kernel.Utils {
         private PageRange GetNextRange(int startPage, int endPage, long size) {
             PdfResourceCounter counter = new PdfResourceCounter(pdfDocument.GetTrailer());
             IDictionary<int, PdfObject> resources = counter.GetResources();
-            long lengthWithoutXref = counter.GetLength(null);
             // initialize with trailer length
+            long lengthWithoutXref = counter.GetLength(null);
             int currentPage = startPage;
             bool oversized = false;
             do {

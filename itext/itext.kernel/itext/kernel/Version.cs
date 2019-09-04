@@ -299,8 +299,8 @@ namespace iText.Kernel {
             //Desired Format: X.Y.Z-....
             //Also catch X, X.Y-...
             String major = split[0];
-            String minor = "0";
             //If no minor version is present, default to 0
+            String minor = "0";
             if (split.Length > 1) {
                 minor = split[1].Substring(0);
             }

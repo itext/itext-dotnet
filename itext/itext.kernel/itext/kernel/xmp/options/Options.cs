@@ -133,7 +133,6 @@ namespace iText.Kernel.XMP.Options {
                 int theBits = options;
                 while (theBits != 0) {
                     int oneLessBit = theBits & (theBits - 1);
-                    // clear rightmost one bit
                     int singleBit = theBits ^ oneLessBit;
                     String bitName = GetOptionName(singleBit);
                     sb.Append(bitName);

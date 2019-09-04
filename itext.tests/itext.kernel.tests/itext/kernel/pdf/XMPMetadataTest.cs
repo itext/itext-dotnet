@@ -93,8 +93,8 @@ namespace iText.Kernel.Pdf {
             String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode01_updatedAgain.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
             pdfDocument.AddNewPage();
-            pdfDocument.GetXmpMetadata(true);
             // create XMP metadata
+            pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
                 ());
@@ -129,8 +129,8 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
                 ());
-            pdfDocument.GetXmpMetadata(true);
             // create XMP metadata
+            pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain), new StampingProperties(
                 ).UseAppendMode());

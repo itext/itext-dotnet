@@ -563,8 +563,8 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
-            AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
             // 2 attributes
+            AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
             PdfStructureAttributes testAttr = new PdfStructureAttributes("test");
             testAttr.AddIntAttribute("N", 4);
             properties.AddAttributes(testAttr);
@@ -600,18 +600,18 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfStructureAttributes testAttrDict = new PdfStructureAttributes("test");
-            pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (testAttrDict);
-            // 1 attribute dictionary
+            // no attributes
             pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(testAttrDict
                 );
-            // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest02.pdf", "cmp_accessibleAttributesInsertionTest02.pdf", "diffAttributes02_"
                 );
@@ -628,18 +628,18 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (0, new PdfStructureAttributes(testAttrDict));
-            // 1 attribute dictionary
+            // no attributes
             pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(0, new PdfStructureAttributes
                 (testAttrDict));
-            // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest03.pdf", "cmp_accessibleAttributesInsertionTest03.pdf", "diffAttributes03_"
                 );
@@ -656,15 +656,15 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(1, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(1, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(3, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(3, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (1, new PdfStructureAttributes(testAttrDict));
-            // 1 attribute dictionary
             document.Close();
             CompareResult("accessibleAttributesInsertionTest04.pdf", "cmp_accessibleAttributesInsertionTest04.pdf", "diffAttributes04_"
                 );
@@ -682,8 +682,8 @@ namespace iText.Kernel.Pdf {
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
             try {
-                pointer.MoveToKid(1).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 1 attribute array
+                pointer.MoveToKid(1).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -691,8 +691,8 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
-                pointer.MoveToKid(2).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 3 attributes
+                pointer.MoveToKid(2).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -700,18 +700,18 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
+                // 1 attribute dictionary
                 pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                     (5, new PdfStructureAttributes(testAttrDict));
-                // 1 attribute dictionary
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
                 NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             try {
+                // no attributes
                 pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(5, new PdfStructureAttributes
                     (testAttrDict));
-                // no attributes
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {

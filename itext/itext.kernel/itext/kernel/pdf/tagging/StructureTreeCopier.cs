@@ -561,12 +561,12 @@ namespace iText.Kernel.Pdf.Tagging {
                             }
                             kids.Remove(i--);
                             PdfStructElem.AddKidObject(lastCloned.clone, -1, kid);
+                            // re-register mcr
                             document.GetStructTreeRoot().GetParentTreeHandler().RegisterMcr(mcr);
                         }
                     }
                 }
             }
-            // re-register mcr
             if (lastCloned.ancestor == structElem) {
                 lastCloned.ancestor = lastCloned.ancestor.GetAsDictionary(PdfName.P);
                 lastCloned.clone = lastCloned.clone.GetAsDictionary(PdfName.P);

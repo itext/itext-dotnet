@@ -970,8 +970,8 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference reference = xref.Get(num);
                     bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
                         () == gen;
-                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
                     // for references that are added by xref table itself (like 0 entry)
+                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
                     if (refFirstEncountered) {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
                     }
@@ -1127,8 +1127,8 @@ namespace iText.Kernel.Pdf {
                     PdfIndirectReference reference = xref.Get(@base);
                     bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
                         () == newReference.GetGenNumber();
-                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
                     // for references that are added by xref table itself (like 0 entry)
+                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
                     if (refFirstEncountered) {
                         xref.Add(newReference);
                     }

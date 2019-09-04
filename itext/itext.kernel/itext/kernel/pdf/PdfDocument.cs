@@ -185,8 +185,8 @@ namespace iText.Kernel.Pdf {
             }
             documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
-            this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties = new StampingProperties();
             this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(null);
         }
@@ -214,8 +214,8 @@ namespace iText.Kernel.Pdf {
             }
             documentId = lastDocumentId.IncrementAndGet();
             this.writer = writer;
-            this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
+            this.properties = new StampingProperties();
             this.properties.SetEventCountingMetaInfo(properties.metaInfo);
             Open(writer.properties.pdfVersion);
         }
@@ -1735,8 +1735,8 @@ namespace iText.Kernel.Pdf {
         /// <returns>the same PdfFont instance.</returns>
         public virtual PdfFont AddFont(PdfFont font) {
             font.MakeIndirect(this);
-            font.SetForbidRelease();
             // forbid release for font dictionaries that are stored in #documentFonts collection
+            font.SetForbidRelease();
             documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
             return font;
         }

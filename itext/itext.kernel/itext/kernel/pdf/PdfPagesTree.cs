@@ -365,8 +365,8 @@ namespace iText.Kernel.Pdf {
             // NOTE optimization? when we already found needed index
             for (int i = 0; i < kids.Size(); i++) {
                 PdfDictionary page = kids.GetAsDictionary(i);
+                // null values not allowed in pages tree.
                 if (page == null) {
-                    // null values not allowed in pages tree.
                     throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);

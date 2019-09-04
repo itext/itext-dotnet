@@ -373,8 +373,8 @@ namespace iText.Kernel.Pdf {
             canvas.EndText();
             canvas.Release();
             PdfPage secondPage = document.AddNewPage();
-            firstPage.Flush();
             // on flushing, the Document tag is not added
+            firstPage.Flush();
             secondPage.Flush();
             document.Close();
             CompareResult("structElemTest08.pdf", "cmp_structElemTest08.pdf", "diff_structElem_08_");

@@ -80,7 +80,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         private static readonly IDictionary<PdfName, PdfName> inlineImageFilterAbbreviationMap;
 
         static InlineImageParsingUtils() {
-            // static initializer
             // Map between key abbreviations allowed in dictionary of inline images and their
             // equivalent image dictionary keys
             inlineImageEntryAbbreviationMap = new Dictionary<PdfName, PdfName>();
@@ -278,8 +277,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             int bytesToRead = ComputeBytesPerRow(imageDictionary, colorSpaceDic) * h.IntValue();
             byte[] bytes = new byte[bytesToRead];
             PdfTokenizer tokeniser = ps.GetTokeniser();
-            int shouldBeWhiteSpace = tokeniser.Read();
             // skip next character (which better be a whitespace character - I suppose we could check for this)
+            int shouldBeWhiteSpace = tokeniser.Read();
             // from the PDF spec:  Unless the image uses ASCIIHexDecode or ASCII85Decode as one of its filters, the ID operator shall be followed by a single white-space character, and the next character shall be interpreted as the first byte of image data.
             // unfortunately, we've seen some PDFs where there is no space following the ID, so we have to capture this case and handle it
             int startIndex = 0;
@@ -338,25 +337,25 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             PdfTokenizer tokeniser = ps.GetTokeniser();
             while ((ch = tokeniser.Read()) != -1) {
                 if (ch == 'E') {
-                    baos.Write(EI, 0, found);
                     // probably some bytes were preserved so write them
+                    baos.Write(EI, 0, found);
+                    // just preserve 'E' and do not write it immediately
                     found = 1;
                 }
                 else {
-                    // just preserve 'E' and do not write it immediately
                     if (found == 1 && ch == 'I') {
+                        // just preserve 'EI' and do not write it immediately
                         found = 2;
                     }
                     else {
-                        // just preserve 'EI' and do not write it immediately
                         if (found == 2 && PdfTokenizer.IsWhitespace(ch)) {
                             byte[] tmp = baos.ToArray();
                             if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
                                 return tmp;
                             }
                         }
-                        baos.Write(EI, 0, found);
                         // probably some bytes were preserved so write them
+                        baos.Write(EI, 0, found);
                         baos.Write(ch);
                         found = 0;
                     }

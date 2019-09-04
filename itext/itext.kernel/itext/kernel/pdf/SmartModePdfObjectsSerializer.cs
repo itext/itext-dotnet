@@ -145,21 +145,21 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (obj.IsString()) {
+                            // TODO specify length for strings, streams, may be names?
                             bb.Append("$S").Append(obj.ToString());
                         }
                         else {
-                            // TODO specify length for strings, streams, may be names?
                             if (obj.IsName()) {
                                 bb.Append("$N").Append(obj.ToString());
                             }
                             else {
+                                // PdfNull case is also here
                                 bb.Append("$L").Append(obj.ToString());
                             }
                         }
                     }
                 }
             }
-            // PdfNull case is also here
             if (savedBb != null) {
                 serializedCache.Put(reference, bb.ToByteArray());
                 savedBb.Append(bb.GetInternalBuffer(), 0, bb.Size());

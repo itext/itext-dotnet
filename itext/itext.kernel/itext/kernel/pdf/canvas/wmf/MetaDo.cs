@@ -865,11 +865,11 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             WriteWord(os, 1);
             WriteWord(os, 9);
             WriteWord(os, 0x0300);
-            WriteDWord(os, 9 + 4 + 5 + 5 + 13 + sizeBmpWords + 3);
             // total metafile size
+            WriteDWord(os, 9 + 4 + 5 + 5 + 13 + sizeBmpWords + 3);
             WriteWord(os, 1);
-            WriteDWord(os, 14 + sizeBmpWords);
             // max record size
+            WriteDWord(os, 14 + sizeBmpWords);
             WriteWord(os, 0);
             // write records
             WriteDWord(os, 4);

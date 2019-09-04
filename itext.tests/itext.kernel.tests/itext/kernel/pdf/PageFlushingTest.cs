@@ -72,8 +72,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseWriting01() {
-            int total = 414;
             // not all objects are made indirect before closing
+            int total = 414;
             int flushedExpected = 0;
             int notReadExpected = 0;
             Test("baseWriting01.pdf", PageFlushingTest.DocMode.WRITING, PageFlushingTest.FlushMode.NONE, PageFlushingTest.PagesOp
@@ -94,8 +94,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushWriting01() {
             int total = 816;
-            int flushedExpected = 702;
             // 100 still hanging: new font dictionaries on every page shall not be flushed before closing
+            int flushedExpected = 702;
             int notReadExpected = 0;
             Test("unsafeDeepFlushWriting01.pdf", PageFlushingTest.DocMode.WRITING, PageFlushingTest.FlushMode.UNSAFE_DEEP
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
@@ -116,8 +116,8 @@ namespace iText.Kernel.Pdf {
         public virtual void BaseReading01() {
             int total = 817;
             int flushedExpected = 0;
-            int notReadExpected = 401;
             // link annots, line annots, actions and images: one hundred of each
+            int notReadExpected = 401;
             Test("baseReading01.pdf", PageFlushingTest.DocMode.READING, PageFlushingTest.FlushMode.NONE, PageFlushingTest.PagesOp
                 .READ, total, flushedExpected, notReadExpected);
         }
@@ -135,8 +135,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseStamping01() {
-            int total = 1618;
             // not all objects are made indirect before closing
+            int total = 1618;
             int flushedExpected = 0;
             int notReadExpected = 603;
             Test("baseStamping01.pdf", PageFlushingTest.DocMode.STAMPING, PageFlushingTest.FlushMode.NONE, PageFlushingTest.PagesOp
@@ -157,8 +157,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushStamping01() {
             int total = 2420;
-            int flushedExpected = 1602;
             // 200 still hanging: new font dictionaries on every page shall not be flushed before closing
+            int flushedExpected = 1602;
             int notReadExpected = 603;
             Test("unsafeDeepFlushStamping01.pdf", PageFlushingTest.DocMode.STAMPING, PageFlushingTest.FlushMode.UNSAFE_DEEP
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
@@ -168,8 +168,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushStamping01() {
             int total = 2219;
-            int flushedExpected = 900;
             // 300 less than with page#flush, because of not modified released objects
+            int flushedExpected = 900;
             int notReadExpected = 703;
             Test("appendModeFlushStamping01.pdf", PageFlushingTest.DocMode.STAMPING, PageFlushingTest.FlushMode.APPEND_MODE
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
@@ -180,8 +180,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleaseDeepStamping01() {
             int total = 1618;
             int flushedExpected = 0;
-            int notReadExpected = 703;
             // new objects cannot be released
+            int notReadExpected = 703;
             Test("releaseDeepStamping01.pdf", PageFlushingTest.DocMode.STAMPING, PageFlushingTest.FlushMode.RELEASE_DEEP
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
@@ -210,8 +210,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushAppendMode01() {
             int total = 2420;
-            int flushedExpected = 1502;
             // 200 still hanging: new font dictionaries on every page shall not be flushed before closing
+            int flushedExpected = 1502;
             int notReadExpected = 703;
             Test("unsafeDeepFlushAppendMode01.pdf", PageFlushingTest.DocMode.APPEND, PageFlushingTest.FlushMode.UNSAFE_DEEP
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
@@ -221,8 +221,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushAppendMode01() {
             int total = 2219;
-            int flushedExpected = 900;
             // 600 still hanging: every new page contains image, font and action
+            int flushedExpected = 900;
             int notReadExpected = 703;
             Test("appendModeFlushAppendMode01.pdf", PageFlushingTest.DocMode.APPEND, PageFlushingTest.FlushMode.APPEND_MODE
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
@@ -233,8 +233,8 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleaseDeepAppendMode01() {
             int total = 1618;
             int flushedExpected = 0;
-            int notReadExpected = 703;
             // new objects cannot be released
+            int notReadExpected = 703;
             Test("releaseDeepAppendMode01.pdf", PageFlushingTest.DocMode.APPEND, PageFlushingTest.FlushMode.RELEASE_DEEP
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
@@ -254,8 +254,8 @@ namespace iText.Kernel.Pdf {
         public virtual void PageFlushLightAppendMode01() {
             int total = 1318;
             int flushedExpected = 500;
-            int notReadExpected = 403;
             // in default PdfPage#flush annotations are always read and attempted to be flushed.
+            int notReadExpected = 403;
             Test("pageFlushLightAppendMode01.pdf", PageFlushingTest.DocMode.APPEND, PageFlushingTest.FlushMode.PAGE_FLUSH
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
@@ -274,8 +274,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushLightAppendMode01() {
             int total = 1318;
-            int flushedExpected = 500;
             // resources are not flushed, here it's font dictionaries for every page which in any case shall not be flushed before closing.
+            int flushedExpected = 500;
             int notReadExpected = 703;
             Test("appendModeFlushLightAppendMode01.pdf", PageFlushingTest.DocMode.APPEND, PageFlushingTest.FlushMode.APPEND_MODE
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
@@ -304,12 +304,12 @@ namespace iText.Kernel.Pdf {
                 ).SetPage(page).GetPdfObject();
             PageFlushingHelper flushingHelper = new PageFlushingHelper(pdfDoc);
             flushingHelper.AppendModeFlush(1);
-            NUnit.Framework.Assert.IsTrue(annotObj.IsFlushed());
             // annotation is flushed
-            NUnit.Framework.Assert.IsFalse(pageIndRef.CheckState(PdfObject.FLUSHED));
+            NUnit.Framework.Assert.IsTrue(annotObj.IsFlushed());
             // page is not flushed
-            NUnit.Framework.Assert.IsNull(pageIndRef.refersTo);
+            NUnit.Framework.Assert.IsFalse(pageIndRef.CheckState(PdfObject.FLUSHED));
             // page is released
+            NUnit.Framework.Assert.IsNull(pageIndRef.refersTo);
             // exception is not thrown
             pdfDoc.Close();
         }
@@ -330,16 +330,16 @@ namespace iText.Kernel.Pdf {
             PageFlushingHelper flushingHelper = new PageFlushingHelper(pdfDoc);
             flushingHelper.AppendModeFlush(2);
             flushingHelper.UnsafeFlushDeep(1);
-            NUnit.Framework.Assert.IsTrue(aDict.IsFlushed());
             // annotation is flushed
+            NUnit.Framework.Assert.IsTrue(aDict.IsFlushed());
+            // page is not flushed
             NUnit.Framework.Assert.IsFalse(page1IndRef.CheckState(PdfObject.FLUSHED));
-            // page is not flushed
+            // page is released
             NUnit.Framework.Assert.IsNull(page1IndRef.refersTo);
-            // page is released
-            NUnit.Framework.Assert.IsFalse(page2IndRef.CheckState(PdfObject.FLUSHED));
             // page is not flushed
-            NUnit.Framework.Assert.IsNull(page2IndRef.refersTo);
+            NUnit.Framework.Assert.IsFalse(page2IndRef.CheckState(PdfObject.FLUSHED));
             // page is released
+            NUnit.Framework.Assert.IsNull(page2IndRef.refersTo);
             // exception is not thrown
             pdfDoc.Close();
         }

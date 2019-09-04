@@ -119,8 +119,8 @@ namespace iText.Kernel.Pdf {
 
         internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
             freeReferencesLinkedList.Clear();
-            xref[0].SetState(PdfObject.FREE);
             // ensure zero object is free
+            xref[0].SetState(PdfObject.FREE);
             SortedSet<int> freeReferences = new SortedSet<int>();
             for (int i = 1; i < Size(); ++i) {
                 PdfIndirectReference @ref = xref[i];

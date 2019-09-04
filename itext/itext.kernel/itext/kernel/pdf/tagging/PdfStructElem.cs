@@ -92,11 +92,11 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>Method to to distinguish struct elements from other elements of the logical tree (like mcr or struct tree root).
         ///     </summary>
         public static bool IsStructElem(PdfDictionary dictionary) {
+            // S is required key of the struct elem
             return (PdfName.StructElem.Equals(dictionary.GetAsName(PdfName.Type)) || dictionary.ContainsKey(PdfName.S)
                 );
         }
 
-        // required key of the struct elem
         /// <summary>Gets attributes object.</summary>
         /// <param name="createNewIfNull">
         /// sometimes attributes object may not exist.

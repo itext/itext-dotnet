@@ -301,12 +301,12 @@ namespace iText.Kernel.Pdf {
                         ArrayFlushIfModified((PdfArray)contentsDirectObj);
                     }
                     else {
+                        // already checked that modified
                         contentsDirectObj.Flush();
                     }
                 }
             }
             else {
-                // already checked that modified
                 if (contents is PdfArray) {
                     ArrayFlushIfModified((PdfArray)contents);
                 }
@@ -345,8 +345,8 @@ namespace iText.Kernel.Pdf {
             PdfDictionary pageDict = page.GetPdfObject();
             // Using PdfPage package internal methods in order to avoid PdfResources initialization: initializing PdfResources
             // limits processing possibilities only to cases in which resources and specific resource type dictionaries are not flushed.
-            PdfDictionary resourcesDict = page.InitResources(false);
             // inits /Resources dict entry if not inherited and not created yet
+            PdfDictionary resourcesDict = page.InitResources(false);
             PdfResources resources = page.GetResources(false);
             if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
                 resourcesDict = resources.GetPdfObject();

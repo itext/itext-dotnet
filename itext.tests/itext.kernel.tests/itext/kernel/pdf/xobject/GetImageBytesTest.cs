@@ -200,8 +200,8 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private void CompareSoftwareVersion(TIFFField cmpField, TIFFField resultField) {
             byte[] versionBytes = resultField.GetAsString(0).GetBytes(Encoding.ASCII);
-            byte[] versionToCompare = SubArray(versionBytes, 0, versionBytes.Length - 2);
             //drop last always zero byte
+            byte[] versionToCompare = SubArray(versionBytes, 0, versionBytes.Length - 2);
             NUnit.Framework.Assert.AreEqual(iText.Kernel.Version.GetInstance().GetVersion().GetBytes(Encoding.ASCII), 
                 versionToCompare);
         }
