@@ -542,7 +542,8 @@ namespace iText.Kernel.Geom {
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 //$NON-NLS-1$
-                throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
+                throw new NoninvertibleTransformException(NoninvertibleTransformException.DETERMINANT_IS_ZERO_CANNOT_INVERT_TRANSFORMATION
+                    );
             }
             return new iText.Kernel.Geom.AffineTransform(m11 / det, -m10 / det, -m01 / det, m00 / det, (m01 * m12 - m11
                  * m02) / det, (m10 * m02 - m00 * m12) / det);
@@ -649,7 +650,8 @@ namespace iText.Kernel.Geom {
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 //$NON-NLS-1$
-                throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
+                throw new NoninvertibleTransformException(NoninvertibleTransformException.DETERMINANT_IS_ZERO_CANNOT_INVERT_TRANSFORMATION
+                    );
             }
             if (dst == null) {
                 dst = new Point();
@@ -666,7 +668,8 @@ namespace iText.Kernel.Geom {
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 //$NON-NLS-1$
-                throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
+                throw new NoninvertibleTransformException(NoninvertibleTransformException.DETERMINANT_IS_ZERO_CANNOT_INVERT_TRANSFORMATION
+                    );
             }
             while (--length >= 0) {
                 double x = src[srcOff++] - m02;
@@ -682,7 +685,8 @@ namespace iText.Kernel.Geom {
             if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 //$NON-NLS-1$
-                throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
+                throw new NoninvertibleTransformException(NoninvertibleTransformException.DETERMINANT_IS_ZERO_CANNOT_INVERT_TRANSFORMATION
+                    );
             }
             while (--length >= 0) {
                 float x = (float)(src[srcOff++] - m02);
