@@ -1136,5 +1136,30 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AppendModeAppearance() {
+            //TODO DEVSIX-2822
+            String inputFile = "appendModeAppearance.pdf";
+            String outputFile = "appendModeAppearance.pdf";
+            String line1 = "ABC";
+            // borders in with or without append mode are different
+            //PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile),
+            //          new PdfWriter(destinationFolder + outputFile));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile), new PdfWriter(destinationFolder
+                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            form.SetNeedAppearances(true);
+            PdfFormField field;
+            foreach (KeyValuePair<String, PdfFormField> entry in form.GetFormFields()) {
+                field = entry.Value;
+                field.SetValue(line1);
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + outputFile, sourceFolder
+                 + "cmp_" + outputFile, destinationFolder, "diff_"));
+        }
     }
 }
