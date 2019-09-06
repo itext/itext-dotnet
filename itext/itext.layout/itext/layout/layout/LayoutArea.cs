@@ -97,12 +97,6 @@ namespace iText.Layout.Layout {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual iText.Layout.Layout.LayoutArea Clone() {
-            iText.Layout.Layout.LayoutArea area = new iText.Layout.Layout.LayoutArea(pageNumber, bBox.Clone());
-            return area;
-        }
-
-        /// <summary><inheritDoc/></summary>
         public override bool Equals(Object obj) {
             if (GetType() != obj.GetType()) {
                 return false;
@@ -121,6 +115,17 @@ namespace iText.Layout.Layout {
         /// <summary><inheritDoc/></summary>
         public override String ToString() {
             return MessageFormatUtil.Format("{0}, page {1}", bBox.ToString(), pageNumber);
+        }
+
+        /// <summary>
+        /// Creates a "deep copy" of this LayoutArea, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <returns>the copied LayoutArea.</returns>
+        public virtual iText.Layout.Layout.LayoutArea Clone() {
+            iText.Layout.Layout.LayoutArea clone = (iText.Layout.Layout.LayoutArea) MemberwiseClone();
+            clone.bBox = bBox.Clone();
+            return clone;
         }
     }
 }
