@@ -43,16 +43,14 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
-using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Font;
-using iText.Layout.Properties;
 using iText.Test;
 
-namespace iText.Layout {
-    public class NonBreakingHyphenTest : ExtendedITextTest {
+namespace iText.Layout.Font {
+    public class FontSelectorLayoutTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/NonBreakingHyphenTest/";
 
@@ -71,53 +69,31 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenDifferentFonts() {
-            //TODO: update after fix of DEVSIX-2034
+            //TODO: update after fix of DEVSIX-2052
             String outFileName = destinationFolder + "nonBreakingHyphenDifferentFonts.pdf";
             String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenDifferentFonts.pdf";
-            String diffPrefix = "diff01_";
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
             FontProvider sel = new FontProvider();
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             sel.GetFontSet().AddFont(StandardFonts.COURIER);
             sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan2");
             sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, "NotoSans");
-            document.SetFontProvider(sel);
-            document.Add(new Paragraph("StandardFonts - non-breaking hyphen \\u2011").SetUnderline().SetTextAlignment(
-                TextAlignment.CENTER));
-            document.Add(new Paragraph("for Standard font TIMES_ROMAN: <&#8209;> non-breaking hyphen <\u2011> 2 hyphens<\u2011\u2011>here "
-                ).SetFontFamily(StandardFonts.TIMES_ROMAN));
-            document.Add(new Paragraph("for Standard font COURIER: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFontFamily(StandardFonts.COURIER));
-            document.Add(new Paragraph("for Standard font HELVETICA_BOLD: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)));
-            document.Add(new Paragraph("for Standard font SYMBOL: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(PdfFontFactory.CreateFont(StandardFonts.SYMBOL)));
-            document.Add(new Paragraph("Non-Standard fonts - non-breaking hyphen \\u2011").SetUnderline().SetTextAlignment
-                (TextAlignment.CENTER));
-            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
-                ("NotoSans"));
-            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
-                ("Puritan2"));
             sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, "FreeSans");
-            document.Add(new Paragraph("AFTER adding of FreeSans font with non-breaking hyphen \\u2011 support").SetUnderline
-                ().SetTextAlignment(TextAlignment.CENTER));
-            document.Add(new Paragraph("for Standard font TIMES_ROMAN: <&#8209;> non-breaking hyphen <\u2011> 2 hyphens<\u2011\u2011>here "
-                ).SetFontFamily(StandardFonts.TIMES_ROMAN));
-            document.Add(new Paragraph("for Standard font COURIER: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFontFamily(StandardFonts.COURIER));
-            document.Add(new Paragraph("for Standard font HELVETICA_BOLD: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD)));
-            document.Add(new Paragraph("for Standard font SYMBOL: <&#8209;> non-breaking hyphen<\u2011> 2hyphens <\u2011\u2011>here "
-                ).SetFont(PdfFontFactory.CreateFont(StandardFonts.SYMBOL)));
-            document.Add(new Paragraph("for FreeSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
-                ("FreeSans"));
-            document.Add(new Paragraph("for NotoSans: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
-                ("NotoSans"));
-            document.Add(new Paragraph("for Puritan2: <&#8209;> hyphen<\u2011> 2hyphens <\u2011\u2011>here").SetFontFamily
-                ("Puritan2"));
+            document.SetFontProvider(sel);
+            document.Add(CreateParagraph("For Standard font TIMES_ROMAN: ", StandardFonts.TIMES_ROMAN));
+            document.Add(CreateParagraph("For Standard font COURIER: ", StandardFonts.COURIER));
+            document.Add(CreateParagraph("For FreeSans: ", ("FreeSans")));
+            document.Add(CreateParagraph("For NotoSans: ", ("NotoSans")));
+            document.Add(CreateParagraph("For Puritan2: ", ("Puritan2")));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , diffPrefix));
+                , "diffPrefix"));
+        }
+
+        private static Paragraph CreateParagraph(String textParagraph, String font) {
+            String text = "here is non-breaking hyphen: <\u2011> text after non-breaking hyphen.";
+            Paragraph p = new Paragraph(textParagraph + text).SetFontFamily(font);
+            return p;
         }
     }
 }
