@@ -65,9 +65,23 @@ namespace iText.Layout.Layout {
             this.emptyArea = emptyArea;
         }
 
-        /// <summary><inheritDoc/></summary>
+        /// <summary>
+        /// Creates a "deep copy" of this RootLayoutArea, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <remarks>
+        /// Creates a "deep copy" of this RootLayoutArea, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// Note that although the return type of this method is
+        /// <see cref="LayoutArea"/>
+        /// ,
+        /// the actual type of the returned object is
+        /// <see cref="RootLayoutArea"/>
+        /// .
+        /// </remarks>
+        /// <returns>the copied RootLayoutArea.</returns>
         public override LayoutArea Clone() {
-            iText.Layout.Layout.RootLayoutArea area = new iText.Layout.Layout.RootLayoutArea(pageNumber, bBox.Clone());
+            iText.Layout.Layout.RootLayoutArea area = (iText.Layout.Layout.RootLayoutArea)base.Clone();
             area.SetEmptyArea(emptyArea);
             return area;
         }

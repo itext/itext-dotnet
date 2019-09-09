@@ -96,6 +96,8 @@ namespace iText.Layout.Layout {
             this.bBox = bbox;
         }
 
+        // super.clone performs a "shallow-copy", therefore it's needed to copy non-primitive fields manually.
+        // should never happen since Cloneable is implemented
         /// <summary><inheritDoc/></summary>
         public override bool Equals(Object obj) {
             if (GetType() != obj.GetType()) {

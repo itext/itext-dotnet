@@ -74,5 +74,7 @@ namespace iText.Layout.Margincollapse {
         public virtual MarginsCollapse Clone() {
             return (iText.Layout.Margincollapse.MarginsCollapse) MemberwiseClone();
         }
+        // super.clone is safe to return since all of the MarginsCollapse's fields are primitive.
+        // should never happen since Cloneable is implemented
     }
 }

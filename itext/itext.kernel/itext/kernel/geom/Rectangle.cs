@@ -537,6 +537,8 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
+        // super.clone is safe to return since all of the Rectangle's fields are primitive.
+        // should never happen since Cloneable is implemented
         /// <summary>Compares instance of this rectangle with given deviation equals to 0.0001</summary>
         /// <param name="that">
         /// the

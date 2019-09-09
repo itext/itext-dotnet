@@ -468,5 +468,14 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0, 200, 200).EqualsWithEpsilon(Rectangle.CalculateBBox(JavaUtil.ArraysAsList
                 (a, b, c, d))));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CloneTest() {
+            PageSize originalPageSize = new PageSize(15, 20);
+            PageSize copyAsPageSize = (PageSize)originalPageSize.Clone();
+            Rectangle copyAsRectangle = ((Rectangle)originalPageSize).Clone();
+            NUnit.Framework.Assert.AreEqual(typeof(PageSize), copyAsPageSize.GetType());
+            NUnit.Framework.Assert.AreEqual(typeof(PageSize), copyAsRectangle.GetType());
+        }
     }
 }

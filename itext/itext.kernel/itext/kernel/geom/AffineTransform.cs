@@ -696,6 +696,7 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        // super.clone is safe to return since all of the AffineTransform's fields are primitive.
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
