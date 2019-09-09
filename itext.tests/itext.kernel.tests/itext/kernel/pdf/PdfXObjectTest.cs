@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
 using iText.Kernel.Geom;
@@ -161,6 +162,76 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentWithForms1.pdf"
                 , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void XObjectIterativeReference() {
+            // The input file contains circular references chain, see: 8 0 R -> 10 0 R -> 4 0 R -> 8 0 R.
+            // Copying of such file even with smart mode is expected to be handled correctly.
+            String src = sourceFolder + "checkboxes_XObject_iterative_reference.pdf";
+            String dest = destinationFolder + "checkboxes_XObject_iterative_reference_out.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(dest).SetSmartMode(true));
+            PdfReader pdfReader = new PdfReader(src);
+            PdfDocument sourceDocumentPdf = new PdfDocument(pdfReader);
+            sourceDocumentPdf.CopyPagesTo(1, sourceDocumentPdf.GetNumberOfPages(), pdf);
+            //map <object pdf, count>
+            Dictionary<String, int?> mapIn = new Dictionary<String, int?>();
+            Dictionary<String, int?> mapOut = new Dictionary<String, int?>();
+            //map <object pdf, list of object id referenceing that podf object>
+            Dictionary<String, IList<int>> mapOutId = new Dictionary<String, IList<int>>();
+            PdfObject obj;
+            //create helpful data structures from pdf output
+            for (int i = 1; i < pdf.GetNumberOfPdfObjects(); i++) {
+                obj = pdf.GetPdfObject(i);
+                String objString = obj.ToString();
+                int? count = mapOut.Get(objString);
+                IList<int> list;
+                if (count == null) {
+                    count = 1;
+                    list = new List<int>();
+                    list.Add(i);
+                }
+                else {
+                    count++;
+                    list = mapOutId.Get(objString);
+                }
+                mapOut.Put(objString, count);
+                mapOutId.Put(objString, list);
+            }
+            //create helpful data structures from pdf input
+            for (int i = 1; i < sourceDocumentPdf.GetNumberOfPdfObjects(); i++) {
+                obj = sourceDocumentPdf.GetPdfObject(i);
+                String objString = obj.ToString();
+                int? count = mapIn.Get(objString);
+                if (count == null) {
+                    count = 1;
+                }
+                else {
+                    count++;
+                }
+                mapIn.Put(objString, count);
+            }
+            pdf.Close();
+            //the following object is copied and reused. it appears 6 times in the original pdf file. just once in the output file
+            String case1 = "<</BBox [0 0 20 20 ] /Filter /FlateDecode /FormType 1 /Length 12 /Matrix [1 0 0 1 0 0 ] /Resources <<>> /Subtype /Form /Type /XObject >>";
+            int? countOut1 = mapOut.Get(case1);
+            int? countIn1 = mapIn.Get(case1);
+            NUnit.Framework.Assert.IsTrue(countOut1.Equals(1) && countIn1.Equals(6));
+            //the following object appears 1 time in the original pdf file and just once in the output file
+            String case2 = "<</BaseFont /ZapfDingbats /Subtype /Type1 /Type /Font >>";
+            int? countOut2 = mapOut.Get(case2);
+            int? countIn2 = mapIn.Get(case2);
+            NUnit.Framework.Assert.IsTrue(countOut2.Equals(countIn2) && countOut2.Equals(1));
+            //from the original pdf the object "<</BBox [0 0 20 20 ] /Filter /FlateDecode /FormType 1 /Length 70 /Matrix [1 0 0 1 0 0 ] /Resources <</Font <</ZaDb 2 0 R >> >> /Subtype /Form /Type /XObject >>";
+            //is going to be found changed in the output pdf referencing the referenced object with another id which is retrieved through the hashmap
+            String case3 = "<</BaseFont /ZapfDingbats /Subtype /Type1 /Type /Font >>";
+            int? countIdIn = mapOutId.Get(case3)[0];
+            //EXPECTED to be as the original but with different referenced object and marked as modified
+            String expected = "<</BBox [0 0 20 20 ] /Filter /FlateDecode /FormType 1 /Length 70 /Matrix [1 0 0 1 0 0 ] /Resources <</Font <</ZaDb "
+                 + countIdIn + " 0 R Modified; >> >> /Subtype /Form /Type /XObject >>";
+            NUnit.Framework.Assert.IsTrue(mapOut.Get(expected).Equals(1));
         }
     }
 }

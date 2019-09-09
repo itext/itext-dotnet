@@ -452,5 +452,80 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_unnamedFieldsHierarchyTest.pdf"
                 , destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditTextFields() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditTextFields.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text_1").SetValue("text_1");
+            acroForm.GetField("NumberField_text.2").SetValue("-100.00");
+            acroForm.GetField("NumberField_text.2_1").SetValue("3.00");
+            acroForm.GetField("text.3_1<!").SetValue("text.3_1<!");
+            acroForm.GetField("text.4___#1+1").SetValue("CHANGEDtext");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditCheckboxes() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditCheckboxes.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("CheckBox_1").SetValue("On");
+            acroForm.GetField("Check Box.2").SetValue("Off");
+            acroForm.GetField("CheckBox4.1#1").SetValue("Off");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditRadioButtons() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditRadioButtons.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("Group.4").SetValue("Choice_3!<>3.3.3");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
     }
 }
