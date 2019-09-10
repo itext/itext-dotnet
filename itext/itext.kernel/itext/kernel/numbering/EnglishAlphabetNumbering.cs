@@ -69,7 +69,7 @@ namespace iText.Kernel.Numbering {
         /// Converts the given number to its English alphabet lowercase string representation.
         /// E.g. 1 will be converted to "a", 2 to "b", ..., 27 to "aa", and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <returns>English alphabet lowercase string representation of an integer</returns>
         public static String ToLatinAlphabetNumberLowerCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
@@ -80,7 +80,7 @@ namespace iText.Kernel.Numbering {
         /// Converts the given number to its English alphabet uppercase string representation.
         /// E.g. 1 will be converted to "A", 2 to "B", ..., 27 to "AA", and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <returns>English alphabet uppercase string representation of an integer</returns>
         public static String ToLatinAlphabetNumberUpperCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
@@ -92,7 +92,7 @@ namespace iText.Kernel.Numbering {
         /// E.g. for <code>upperCase</code> set to false,
         /// 1 will be converted to "a", 2 to "b", ..., 27 to "aa", and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         /// <returns>English alphabet string representation of an integer</returns>
         public static String ToLatinAlphabetNumber(int number, bool upperCase) {

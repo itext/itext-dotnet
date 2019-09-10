@@ -77,9 +77,11 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet lowercase string representation.
-        /// E.g. 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// E.g. 1 will be converted to a string consisting of a unicode character for greek small letter alpha,
+        /// 2 - a string consisting of a unicode character for greek small letter beta,
+        /// 25 - a string consisting of two unicode characters for greek small letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <returns>Greek alphabet lowercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberLowerCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
@@ -88,9 +90,11 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its Greek alphabet uppercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet uppercase string representation.
-        /// E.g. 1 will be converted to "A", 2 to "B", and so on.
+        /// E.g. 1 will be converted to a string consisting of a unicode character for greek capital letter alpha,
+        /// 2 - a string consisting of a unicode character for greek capital letter beta,
+        /// 25 - a string consisting of two unicode characters for greek capital letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <returns>Greek alphabet uppercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberUpperCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
@@ -100,9 +104,11 @@ namespace iText.Kernel.Numbering {
         /// <remarks>
         /// Converts the given number to its Greek alphabet string representation.
         /// E.g. for <code>upperCase</code> set to false,
-        /// 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// 1 will be converted to a string consisting of a unicode character for greek small letter alpha,
+        /// 2 - a string consisting of a unicode character for greek small letter beta,
+        /// 25 - a string consisting of two unicode characters for greek small letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         /// <returns>Greek alphabet string representation of an integer.</returns>
         public static String ToGreekAlphabetNumber(int number, bool upperCase) {
@@ -113,9 +119,15 @@ namespace iText.Kernel.Numbering {
         /// <remarks>
         /// Converts the given number to its Greek alphabet string representation.
         /// E.g. for <code>upperCase</code> set to false,
-        /// 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// 1 will be converted to a string consisting of a unicode character for greek small letter alpha
+        /// if <code>symbolFont</code> is set to false,
+        /// otherwise - a string consisting of the corresponding symbol code in Symbol standard font;
+        /// 26 will be converted to a string consisting of two unicode characters:
+        /// greek small letter alpha followed by greek small letter beta
+        /// if <code>symbolFont</code> is set to false,
+        /// otherwise - a string consisting of the corresponding sequence of symbol codes in Symbol standard font.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         /// <param name="symbolFont">if <code>true</code>, then the string representation will be returned ready to write it in Symbol font
         ///     </param>
