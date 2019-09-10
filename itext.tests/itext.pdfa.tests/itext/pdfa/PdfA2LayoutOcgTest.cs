@@ -52,12 +52,12 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Pdfa {
-    public class PDFA2LayoutOcgTest : ExtendedITextTest {
+    public class PdfA2LayoutOcgTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PDFA2LayoutOcgTest/";
+             + "/test/itext/pdfa/PdfA2LayoutOcgTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void Configure() {
@@ -72,7 +72,7 @@ namespace iText.Pdfa {
             Stream colorStream = new FileStream(sourceFolder + "color/sRGB_CS_profile.icm", FileMode.Open, FileAccess.Read
                 );
             String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + "cmp/PDFA2LayoutOcg/cmp_" + fileName;
+            String cmpFileName = sourceFolder + "cmp/PdfA2LayoutOcgTest/cmp_" + fileName;
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outFileName), PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
                 ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", colorStream));
             pdfDoc.SetTagged();
