@@ -557,9 +557,14 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfName.ID"/>
         /// key of trailer.
         /// If the size of ID array does not equal 2, an empty array will be returned.
+        /// <para />
+        /// The returned value reflects the value that was written in opened document. If document is modified,
+        /// the ultimate document id can be retrieved from
+        /// <see cref="PdfDocument.GetOriginalDocumentId()"/>
+        /// .
         /// </summary>
         /// <returns>byte array represents original file ID.</returns>
-        /// <seealso>PdfDocument#getOriginalDocumentId(). The ultimate document id should be taken from PdfDocument</seealso>
+        /// <seealso cref="PdfDocument.GetOriginalDocumentId()"/>
         public virtual byte[] GetOriginalFileId() {
             PdfArray id = trailer.GetAsArray(PdfName.ID);
             if (id != null && id.Size() == 2) {
@@ -575,6 +580,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfName.ID"/>
         /// key of trailer.
         /// If the size of ID array does not equal 2, an empty array will be returned.
+        /// <para />
+        /// The returned value reflects the value that was written in opened document. If document is modified,
+        /// the ultimate document id can be retrieved from
+        /// <see cref="PdfDocument.GetModifiedDocumentId()"/>
+        /// .
         /// </summary>
         /// <returns>byte array represents modified file ID.</returns>
         /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>

@@ -45,10 +45,7 @@ using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Handles memory limits aware processing.</summary>
-    /// <seealso>
-    /// 
-    /// <see cref="MemoryLimitsAwareHandler"/>
-    /// </seealso>
+    /// <seealso cref="MemoryLimitsAwareHandler"/>
     public abstract class MemoryLimitsAwareFilter : IFilterHandler {
         /// <summary>
         /// Creates a

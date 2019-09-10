@@ -84,11 +84,22 @@ namespace iText.Kernel.Log {
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="CounterManager"/>
+        /// instance.
+        /// </returns>
         public static iText.Kernel.Log.CounterManager GetInstance() {
             return instance;
         }
 
         /// <summary>Returns a list of registered counters for specific class.</summary>
+        /// <param name="cls">the class for which registered counters are fetched.</param>
+        /// <returns>
+        /// list of registered
+        /// <see cref="ICounter"/>
+        /// .
+        /// </returns>
         public virtual IList<ICounter> GetCounters(Type cls) {
             List<ICounter> result = new List<ICounter>();
             foreach (ICounterFactory factory in factories) {

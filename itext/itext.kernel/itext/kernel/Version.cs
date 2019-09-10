@@ -107,9 +107,15 @@ namespace iText.Kernel {
         /// <summary>Gets an instance of the iText version that is currently used.</summary>
         /// <remarks>
         /// Gets an instance of the iText version that is currently used.
+        /// <para />
         /// Note that iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
+        /// <returns>
+        /// an instance of
+        /// <see cref="Version"/>
+        /// .
+        /// </returns>
         public static iText.Kernel.Version GetInstance() {
             lock (staticLock) {
                 if (version != null) {

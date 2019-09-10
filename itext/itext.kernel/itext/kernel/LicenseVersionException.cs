@@ -144,7 +144,12 @@ namespace iText.Kernel {
             return this;
         }
 
-        /// <summary>Gets additional params for Exception message.</summary>
+        /// <summary>Gets parameters that are to be inserted in exception message placeholders.</summary>
+        /// <remarks>
+        /// Gets parameters that are to be inserted in exception message placeholders.
+        /// Placeholder format is defined similar to the following: "{0}".
+        /// </remarks>
+        /// <returns>params for exception message.</returns>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {

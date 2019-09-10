@@ -80,16 +80,18 @@ namespace iText.Kernel.Numbering {
         /// E.g. 1 will be converted to "alpha", 2 to "beta", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
+        /// <returns>Greek alphabet lowercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberLowerCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
         }
 
-        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
+        /// <summary>Converts the given number to its Greek alphabet uppercase string representation.</summary>
         /// <remarks>
-        /// Converts the given number to its Greek alphabet lowercase string representation.
+        /// Converts the given number to its Greek alphabet uppercase string representation.
         /// E.g. 1 will be converted to "A", 2 to "B", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
+        /// <returns>Greek alphabet uppercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberUpperCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
         }
@@ -102,6 +104,7 @@ namespace iText.Kernel.Numbering {
         /// </remarks>
         /// <param name="number">the number to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
+        /// <returns>Greek alphabet string representation of an integer.</returns>
         public static String ToGreekAlphabetNumber(int number, bool upperCase) {
             return ToGreekAlphabetNumber(number, upperCase, false);
         }
@@ -116,6 +119,7 @@ namespace iText.Kernel.Numbering {
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
         /// <param name="symbolFont">if <code>true</code>, then the string representation will be returned ready to write it in Symbol font
         ///     </param>
+        /// <returns>Greek alphabet string representation of an integer.</returns>
         public static String ToGreekAlphabetNumber(int number, bool upperCase, bool symbolFont) {
             String result = upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase(number
                 );
