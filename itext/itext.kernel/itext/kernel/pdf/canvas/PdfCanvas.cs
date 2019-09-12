@@ -399,14 +399,9 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Concatenates the affine transformation matrix to the current matrix
         /// in the content stream managed by this Canvas.
         /// </summary>
-        /// <remarks>
-        /// Concatenates the affine transformation matrix to the current matrix
-        /// in the content stream managed by this Canvas.
-        /// See also
-        /// <see cref="ConcatMatrix(double, double, double, double, double, double)"/>
-        /// </remarks>
-        /// <param name="transform"/>
+        /// <param name="transform">affine transformation matrix to be concatenated to the current matrix</param>
         /// <returns>current canvas</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(AffineTransform transform) {
             float[] matrix = new float[6];
             transform.GetMatrix(matrix);
@@ -1070,7 +1065,7 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Paints a shading object and adds it to the resources of this canvas</summary>
-        /// <param name="shading"/>
+        /// <param name="shading">a shading object to be painted</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas PaintShading(PdfShading shading) {
             PdfName shadingName = resources.AddShading(shading);
@@ -1200,7 +1195,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Sets the line cap style, the shape to be used at the ends of open subpaths
         /// when they are stroked.
         /// </summary>
-        /// <param name="lineCapStyle"/>
+        /// <param name="lineCapStyle">a line cap style to be set</param>
         /// <returns>current canvas.</returns>
         /// <seealso cref="LineCapStyle">for possible values.</seealso>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineCapStyle(int lineCapStyle) {
@@ -1216,7 +1211,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Sets the line join style, the shape to be used at the corners of paths
         /// when they are stroked.
         /// </summary>
-        /// <param name="lineJoinStyle"/>
+        /// <param name="lineJoinStyle">a line join style to be set</param>
         /// <returns>current canvas.</returns>
         /// <seealso cref="LineJoinStyle">for possible values.</seealso>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineJoinStyle(int lineJoinStyle) {
@@ -1232,7 +1227,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Sets the miter limit, a parameter specifying the maximum length a miter join
         /// may extend beyond the join point, relative to the angle of the line segments.
         /// </summary>
-        /// <param name="miterLimit"/>
+        /// <param name="miterLimit">a miter limit to be set</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetMiterLimit(float miterLimit) {
             if (currentGs.GetMiterLimit() == miterLimit) {
@@ -1685,8 +1680,12 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
-        /// <param name="image"/>
-        /// <param name="rect"/>
+        /// <remarks>
+        /// Creates Image XObject from image and adds it to canvas.
+        /// The created image will be fit inside on the specified rectangle without preserving aspect ratio.
+        /// </remarks>
+        /// <param name="image">image from which Image XObject will be created</param>
+        /// <param name="rect">rectangle in which the created image will be fit</param>
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, iText.Kernel.Geom.Rectangle rect, bool asInline) {
@@ -1694,9 +1693,9 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
+        /// <param name="image">image from which Image XObject will be created</param>
+        /// <param name="x">horizontal offset of the created image position</param>
+        /// <param name="y">vertical offset of the created image position</param>
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline) {
@@ -1721,10 +1720,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
         ///     </summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="width"/>
+        /// <param name="image">image from which Image XObject will be created</param>
+        /// <param name="x">horizontal offset of the created image position</param>
+        /// <param name="y">vertical offset of the created image position</param>
+        /// <param name="width">width of the created image on the basis of which the image height will be calculated</param>
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float width, bool asInline) {
@@ -1750,12 +1749,16 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
         ///     </summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="height"/>
+        /// <param name="image">image from which Image XObject will be created</param>
+        /// <param name="x">horizontal offset of the created image position</param>
+        /// <param name="y">vertical offset of the created image position</param>
+        /// <param name="height">height of the created image on the basis of which the image width will be calculated</param>
         /// <param name="asInline">true if to add image as in-line.</param>
-        /// <param name="dummy"/>
+        /// <param name="dummy">
+        /// flag to note that the method works with the height parameter as opposed to the method
+        /// <see cref="AddImage(iText.IO.Image.ImageData, float, float, float, bool)"/>
+        /// .
+        /// </param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float height, bool asInline, bool dummy
             ) {
@@ -1799,9 +1802,9 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <c>PdfXObject</c>
         /// to the specified position.
         /// </summary>
-        /// <param name="xObject"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
+        /// <param name="xObject">Image XObject to be added</param>
+        /// <param name="x">horizontal offset of the image position</param>
+        /// <param name="y">vertical offset of the image position</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y) {
             if (xObject is PdfFormXObject) {
@@ -1856,10 +1859,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <c>PdfXObject</c>
         /// to the specified position with specified width preserving aspect ratio.
         /// </summary>
-        /// <param name="xObject"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="width"/>
+        /// <param name="xObject">Image XObject to be added</param>
+        /// <param name="x">horizontal offset of the image position</param>
+        /// <param name="y">vertical offset of the image position</param>
+        /// <param name="width">width of the image on the basis of which the height will be calculated</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y, float width
             ) {
@@ -1881,11 +1884,14 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <c>PdfXObject</c>
         /// to the specified position with specified height preserving aspect ratio.
         /// </summary>
-        /// <param name="xObject"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="height"/>
-        /// <param name="dummy"/>
+        /// <param name="xObject">Image XObject to be added</param>
+        /// <param name="x">horizontal offset of the image position</param>
+        /// <param name="y">vertical offset of the image position</param>
+        /// <param name="height">height of the image on the basis of which the width will be calculated</param>
+        /// <param name="dummy">
+        /// flag to note that the method works with the height parameter as opposed to the method
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)"/>
+        /// </param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y, float height
             , bool dummy) {
