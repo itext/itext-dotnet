@@ -107,6 +107,8 @@ namespace iText.Kernel.Utils {
 
         private const String copyrightReplacement = "\u00a9<copyright years> iText Group NV";
 
+        private const String NEW_LINES = "\\r|\\n";
+
         private String gsExec;
 
         private String compareExec;
@@ -1810,13 +1812,13 @@ namespace iText.Kernel.Utils {
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR);
                 String cmpByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes[firstDifferenceOffset
-                    ] });
+                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
                 String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(cmpStreamBytes
-                    , lCmp, rCmp - lCmp), "\\r|\\n", " ");
+                    , lCmp, rCmp - lCmp, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
                 String outByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes[firstDifferenceOffset
-                    ] });
+                    ] }, iText.IO.Util.EncodingUtil.ISO_8859_1);
                 String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes(outStreamBytes
-                    , lOut, rOut - lOut), "\\r|\\n", " ");
+                    , lOut, rOut - lOut, iText.IO.Util.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
                 bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
                     , outBytesNeighbours, numberOfDifferentBytes);
@@ -1941,10 +1943,10 @@ namespace iText.Kernel.Utils {
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rOut = Math.Min(outString.Length, firstDifferenceOffset + diffBytesAreaR);
                 String cmpByte = cmpString[firstDifferenceOffset].ToString();
-                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), "\\r|\\n"
+                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), NEW_LINES
                     , " ");
                 String outByte = outString[firstDifferenceOffset].ToString();
-                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), "\\r|\\n"
+                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
                     , " ");
                 stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
                     , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte

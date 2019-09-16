@@ -210,7 +210,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (value == null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(DecodeContent());
+                return iText.IO.Util.JavaUtil.GetStringForBytes(DecodeContent(), iText.IO.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 return GetValue();

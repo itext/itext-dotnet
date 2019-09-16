@@ -124,14 +124,16 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(content);
+                return iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 if (isDouble) {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()));
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()), iText.IO.Util.EncodingUtil.ISO_8859_1
+                        );
                 }
                 else {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()));
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()), iText.IO.Util.EncodingUtil.ISO_8859_1
+                        );
                 }
             }
         }
@@ -171,8 +173,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void GenerateValue() {
             try {
-                value = Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
-                    );
+                value = Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1
+                    ), System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (FormatException) {
                 value = double.NaN;

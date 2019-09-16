@@ -1978,7 +1978,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return "/" + iText.IO.Util.JavaUtil.GetStringForBytes(content);
+                return "/" + iText.IO.Util.JavaUtil.GetStringForBytes(content, iText.IO.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 return "/" + GetValue();
