@@ -77,8 +77,6 @@ pipeline {
                 anyOf {
                     branch "master"
                     branch "develop"
-                    branch "7.0"
-                    branch "7.0-master"
                 }
             }
             steps {
