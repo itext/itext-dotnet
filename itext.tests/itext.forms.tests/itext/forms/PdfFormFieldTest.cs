@@ -507,7 +507,6 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetFormFields();
             PdfFormField field = fields.Get("Text1");
-            // TODO DEVSIX-2016: the font in /DR of AcroForm dict is not updated, even though /DA field is updated.
             field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
             field.SetValue("New value size must be 8, but with different font.");
             new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph

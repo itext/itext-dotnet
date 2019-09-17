@@ -156,11 +156,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
         public virtual void RemovePageWithOutlinesTest() {
-            // TODO DEVSIX-1583: destinations are not removed along with page
+            // TODO DEVSIX-1643: destinations are not removed along with page
             String filename = "removePageWithOutlinesTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), new PdfWriter(
                 destinationFolder + filename));
-            // TODO this causes log message errors! it's because of destinations pointing to removed page (freed reference, replaced by PdfNull)
+            // TODO DEVSIX-1643 (this causes log message errors. It's because of destinations pointing to removed page (freed reference, replaced by PdfNull))
             pdfDoc.RemovePage(102);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
@@ -178,7 +178,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadRemovedPageWithOutlinesTest() {
-            // TODO DEVSIX-1583: src document is taken from the previous removePageWithOutlinesTest test, however it contains numerous destination objects which contain PdfNull instead of page reference
+            // TODO DEVSIX-1643: src document is taken from the previous removePageWithOutlinesTest test, however it contains numerous destination objects which contain PdfNull instead of page reference
             String filename = sourceFolder + "removePagesWithOutlinesResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfPage page = pdfDoc.GetPage(102);

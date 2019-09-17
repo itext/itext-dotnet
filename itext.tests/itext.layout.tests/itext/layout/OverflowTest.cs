@@ -286,7 +286,7 @@ namespace iText.Layout {
             div.SetProperty(Property.FORCED_PLACEMENT, true);
             document.Add(div);
             document.Close();
-            // TODO DEVSIX-1001: text might be lost later in the element if previously forced placement was applied.
+            // TODO DEVSIX-1655: text might be lost later in the element if previously forced placement was applied.
             // This test is really artificial in fact, since FORCED_PLACEMENT is set explicitly. Even though at the moment
             // of test creation such situation in fact really happens during elements layout.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -314,7 +314,7 @@ namespace iText.Layout {
             div.SetProperty(Property.FORCED_PLACEMENT, true);
             document.Add(div);
             document.Close();
-            // TODO DEVSIX-1001: text might be lost later in the element if previously forced placement was applied.
+            // TODO DEVSIX-1655: text might be lost later in the element if previously forced placement was applied.
             // This test is really artificial in fact, since FORCED_PLACEMENT is set explicitly. Even though at the moment
             // of test creation such situation in fact really happens during elements layout
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

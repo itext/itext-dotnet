@@ -1317,8 +1317,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1579")]
         public virtual void SourceHanSerifKRRegularTest() {
+            // TODO DEVSIX-1653
             String filename = destinationFolder + "SourceHanSerifKRRegularTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
@@ -1337,8 +1337,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1579")]
         public virtual void SourceHanSerifKRRegularFullTest() {
+            // TODO DEVSIX-1653
             String filename = destinationFolder + "SourceHanSerifKRRegularFullTest.pdf";
             String cmpFilename = sourceFolder + "cmp_SourceHanSerifKRRegularFullTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));

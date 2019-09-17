@@ -175,7 +175,6 @@ namespace iText.Svg.Utils {
             if (null != elementFontSize && !String.IsNullOrEmpty(elementFontSize)) {
                 if (CssUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize) || CommonCssConstants
                     .SMALLER.Equals(elementFontSize)) {
-                    // TODO DEVSIX-2866 Support rem value for svgs
                     fontSize = CssUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
                 }
                 else {

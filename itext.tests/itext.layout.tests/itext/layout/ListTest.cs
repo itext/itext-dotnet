@@ -517,7 +517,7 @@ namespace iText.Layout {
             document.Add(l);
             document.Add(new Paragraph("After list."));
             document.Close();
-            // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
+            // TODO DEVSIX-1655: partially not fitting list symbol not shown at all, however this might be improved
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
         }

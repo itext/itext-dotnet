@@ -386,7 +386,7 @@ namespace iText.Layout.Renderer {
                     bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
                     bool listSymbolNotFit = listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult
                         .FULL;
-                    // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
+                    // TODO DEVSIX-1655: partially not fitting list symbol not shown at all, however this might be improved
                     if (listSymbolNotFit && isForcedPlacement) {
                         currentSymbolRenderer = null;
                     }

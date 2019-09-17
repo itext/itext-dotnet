@@ -469,7 +469,7 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        //TODO(DEVSIX-1658):Remove bugged mention
+        //TODO(DEVSIX-1659):Remove bugged mention
         /// <summary>Sets the autoscale property for the height of the image.</summary>
         /// <remarks>
         /// Sets the autoscale property for the height of the image.
