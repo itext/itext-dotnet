@@ -253,8 +253,8 @@ namespace iText.Svg.Renderers.Impl {
 
         private FontInfo ResolveFontName(String fontFamily, String fontWeight, String fontStyle, FontProvider provider
             , FontSet tempFonts) {
-            bool isBold = fontWeight != null && fontWeight.EqualsIgnoreCase(SvgConstants.Attributes.BOLD);
-            bool isItalic = fontStyle != null && fontStyle.EqualsIgnoreCase(SvgConstants.Attributes.ITALIC);
+            bool isBold = fontWeight != null && SvgConstants.Attributes.BOLD.EqualsIgnoreCase(fontWeight);
+            bool isItalic = fontStyle != null && SvgConstants.Attributes.ITALIC.EqualsIgnoreCase(fontStyle);
             FontCharacteristics fontCharacteristics = new FontCharacteristics();
             IList<String> stringArrayList = new List<String>();
             stringArrayList.Add(fontFamily);
@@ -362,7 +362,7 @@ namespace iText.Svg.Renderers.Impl {
                 )) {
                 String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
                 //Middle
-                if (textAnchorValue.Equals(SvgConstants.Values.TEXT_ANCHOR_MIDDLE)) {
+                if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
                     if (xPos != null && xPos.Length > 0) {
                         textAnchorXCorrection -= childContentLength / 2;
                     }

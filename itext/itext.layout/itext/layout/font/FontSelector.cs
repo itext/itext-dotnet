@@ -124,7 +124,7 @@ namespace iText.Layout.Font {
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
                     String fontFamily = fontFamilies[i];
-                    if (fontFamily.EqualsIgnoreCase("monospace")) {
+                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
                         fc.SetMonospaceFlag(true);
                     }
                     bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;

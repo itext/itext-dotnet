@@ -230,7 +230,7 @@ namespace iText.Svg.Processors.Impl {
             ISvgNodeRenderer parentRenderer = this.processorState.Top();
             if (parentRenderer is TextSvgBranchRenderer) {
                 String wholeText = textNode.WholeText();
-                if (!wholeText.Equals("") && !SvgTextUtil.IsOnlyWhiteSpace(wholeText)) {
+                if (!"".Equals(wholeText) && !SvgTextUtil.IsOnlyWhiteSpace(wholeText)) {
                     TextLeafSvgNodeRenderer textLeaf = new TextLeafSvgNodeRenderer();
                     textLeaf.SetParent(parentRenderer);
                     textLeaf.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, wholeText);

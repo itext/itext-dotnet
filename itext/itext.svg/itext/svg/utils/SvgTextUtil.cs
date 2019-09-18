@@ -159,7 +159,7 @@ namespace iText.Svg.Utils {
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimLeadingWhitespace(trimmedText);
             //Trim trailing whitespace
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimTrailingWhitespace(trimmedText);
-            return trimmedText.Equals("");
+            return "".Equals(trimmedText);
         }
 
         /// <summary>Resolve the font size stored inside the passed renderer</summary>

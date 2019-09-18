@@ -207,7 +207,7 @@ namespace iText.Layout.Renderer {
                 attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
             }
             TextAlignment? textAlignment = renderer.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT);
-            if (textAlignment != null && (!role.Equals(StandardRoles.TH) && !role.Equals(StandardRoles.TD))) {
+            if (textAlignment != null && (!StandardRoles.TH.Equals(role) && !StandardRoles.TD.Equals(role))) {
                 //for table cells there is an InlineAlign attribute (see below)
                 attributes.Put(PdfName.TextAlign, TransformTextAlignmentValueToName(textAlignment));
             }
@@ -216,7 +216,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
-            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
+            if (StandardRoles.TH.Equals(role) || StandardRoles.TD.Equals(role) || StandardRoles.TABLE.Equals(role)) {
                 // For large tables the width can be changed from flush to flush so the Width attribute shouldn't be applied.
                 // There are also technical issues with large tables widths being explicitly set as property on element during layouting
                 // (even if user didn't explcitly specfied it). This is required due to specificity of large elements implementation,
