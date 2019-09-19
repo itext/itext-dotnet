@@ -307,30 +307,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.IncreaseHeight(verticalBorderSpacing);
             }
             if (IsOriginalRenderer()) {
-                UnitValue[] margins = GetMargins();
-                if (!margins[1].IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_RIGHT));
-                }
-                if (!margins[3].IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .MARGIN_LEFT));
-                }
-                UnitValue[] paddings = GetPaddings();
-                if (!paddings[1].IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .PADDING_RIGHT));
-                }
-                if (!paddings[3].IsPointValue()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
-                        .PADDING_LEFT));
-                }
-                CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
-                    () - paddings[3].GetValue());
+                CalculateColumnWidths(layoutBox);
             }
             float tableWidth = GetTableWidth();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -837,53 +814,7 @@ namespace iText.Layout.Renderer {
                         }
                         for (col = 0; col < numberOfColumns; col++) {
                             if (columnsWithCellToBeEnlarged[col]) {
-                                LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
-                                if (1 == minRowspan) {
-                                    // Here we use the same cell, but create a new renderer which doesn't have any children,
-                                    // therefore it won't have any content.
-                                    // we will change properties
-                                    CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
-                                        ();
-                                    overflowCell.SetParent(this);
-                                    overflowCell.DeleteProperty(Property.HEIGHT);
-                                    overflowCell.DeleteProperty(Property.MIN_HEIGHT);
-                                    overflowCell.DeleteProperty(Property.MAX_HEIGHT);
-                                    overflowRows.SetCell(0, col, null);
-                                    overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
-                                    childRenderers.Add(currentRow[col]);
-                                    CellRenderer originalCell = currentRow[col];
-                                    currentRow[col] = null;
-                                    rows[targetOverflowRowIndex[col]][col] = originalCell;
-                                    originalCell.isLastRendererForModelElement = false;
-                                    overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
-                                        ));
-                                }
-                                else {
-                                    childRenderers.Add(currentRow[col]);
-                                    // shift all cells in the column up
-                                    int i = row;
-                                    for (; i < row + minRowspan && i + 1 < rows.Count && splitResult[1].rows[i + 1 - row][col] != null; i++) {
-                                        overflowRows.SetCell(i - row, col, splitResult[1].rows[i + 1 - row][col]);
-                                        overflowRows.SetCell(i + 1 - row, col, null);
-                                        rows[i][col] = rows[i + 1][col];
-                                        rows[i + 1][col] = null;
-                                    }
-                                    // the number of cells behind is less then minRowspan-1
-                                    // so we should process the last cell in the column as in the case 1 == minRowspan
-                                    if (i != row + minRowspan - 1 && null != rows[i][col]) {
-                                        CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
-                                            );
-                                        overflowRows.SetCell(i - row, col, null);
-                                        overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
-                                        CellRenderer originalCell = rows[i][col];
-                                        rows[i][col] = null;
-                                        rows[targetOverflowRowIndex[col]][col] = originalCell;
-                                        originalCell.isLastRendererForModelElement = false;
-                                        overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
-                                            ));
-                                    }
-                                }
-                                overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
+                                EnlargeCell(col, row, minRowspan, currentRow, overflowRows, targetOverflowRowIndex, splitResult);
                             }
                         }
                     }
@@ -1936,6 +1867,91 @@ namespace iText.Layout.Renderer {
                 }
                 return overflowRenderer.rows[row][col] = newCell;
             }
+        }
+
+        private void EnlargeCellWithBigRowspan(CellRenderer[] currentRow, TableRenderer.OverflowRowsWrapper overflowRows
+            , int row, int col, int minRowspan, TableRenderer[] splitResult, int[] targetOverflowRowIndex) {
+            childRenderers.Add(currentRow[col]);
+            // shift all cells in the column up
+            int i = row;
+            for (; i < row + minRowspan && i + 1 < rows.Count && splitResult[1].rows[i + 1 - row][col] != null; i++) {
+                overflowRows.SetCell(i - row, col, splitResult[1].rows[i + 1 - row][col]);
+                overflowRows.SetCell(i + 1 - row, col, null);
+                rows[i][col] = rows[i + 1][col];
+                rows[i + 1][col] = null;
+            }
+            // the number of cells behind is less then minRowspan-1
+            // so we should process the last cell in the column as in the case 1 == minRowspan
+            if (i != row + minRowspan - 1 && null != rows[i][col]) {
+                CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
+                    );
+                overflowRows.SetCell(i - row, col, null);
+                overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
+                CellRenderer originalCell = rows[i][col];
+                rows[i][col] = null;
+                rows[targetOverflowRowIndex[col]][col] = originalCell;
+                originalCell.isLastRendererForModelElement = false;
+                overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                    ));
+            }
+        }
+
+        private void EnlargeCell(int col, int row, int minRowspan, CellRenderer[] currentRow, TableRenderer.OverflowRowsWrapper
+             overflowRows, int[] targetOverflowRowIndex, TableRenderer[] splitResult) {
+            LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
+            if (1 == minRowspan) {
+                // Here we use the same cell, but create a new renderer which doesn't have any children,
+                // therefore it won't have any content.
+                // we will change properties
+                CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
+                    ();
+                // we will change properties
+                overflowCell.SetParent(this);
+                overflowCell.DeleteProperty(Property.HEIGHT);
+                overflowCell.DeleteProperty(Property.MIN_HEIGHT);
+                overflowCell.DeleteProperty(Property.MAX_HEIGHT);
+                overflowRows.SetCell(0, col, null);
+                overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
+                childRenderers.Add(currentRow[col]);
+                CellRenderer originalCell = currentRow[col];
+                currentRow[col] = null;
+                rows[targetOverflowRowIndex[col]][col] = originalCell;
+                originalCell.isLastRendererForModelElement = false;
+                overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
+                    ));
+            }
+            else {
+                EnlargeCellWithBigRowspan(currentRow, overflowRows, row, col, minRowspan, splitResult, targetOverflowRowIndex
+                    );
+            }
+            overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
+        }
+
+        internal virtual void CalculateColumnWidths(Rectangle layoutBox) {
+            UnitValue[] margins = GetMargins();
+            if (!margins[1].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_RIGHT));
+            }
+            if (!margins[3].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .MARGIN_LEFT));
+            }
+            UnitValue[] paddings = GetPaddings();
+            if (!paddings[1].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_RIGHT));
+            }
+            if (!paddings[3].IsPointValue()) {
+                ILog logger = LogManager.GetLogger(typeof(TableRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
+                    .PADDING_LEFT));
+            }
+            CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
+                () - paddings[3].GetValue());
         }
     }
 }

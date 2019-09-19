@@ -223,40 +223,8 @@ namespace iText.Layout.Renderer {
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
                     .LEFT);
-                if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
-                    () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
-                    if (processedRenderer != null) {
-                        Rectangle actualLineLayoutBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        processedRenderer.Justify(actualLineLayoutBox.GetWidth() - lineIndent);
-                    }
-                }
-                else {
-                    if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        Rectangle actualLineLayoutBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
-                            ().GetBBox().GetWidth());
-                        switch (textAlignment) {
-                            case TextAlignment.RIGHT: {
-                                AlignStaticKids(processedRenderer, deltaX);
-                                break;
-                            }
-
-                            case TextAlignment.CENTER: {
-                                AlignStaticKids(processedRenderer, deltaX / 2);
-                                break;
-                            }
-
-                            case TextAlignment.JUSTIFIED: {
-                                if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
-                                    AlignStaticKids(processedRenderer, deltaX);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
+                ApplyTextAlignment(textAlignment, result, processedRenderer, layoutBox, floatRendererAreas, onlyOverflowedFloatsLeft
+                    , lineIndent);
                 // could be false if e.g. line contains only floats
                 bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
                     () > 0;
@@ -639,6 +607,45 @@ namespace iText.Layout.Renderer {
                     continue;
                 }
                 childRenderer.Move(dxRight, 0);
+            }
+        }
+
+        private void ApplyTextAlignment(TextAlignment? textAlignment, LineLayoutResult result, LineRenderer processedRenderer
+            , Rectangle layoutBox, IList<Rectangle> floatRendererAreas, bool onlyOverflowedFloatsLeft, float lineIndent
+            ) {
+            if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
+                () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
+                if (processedRenderer != null) {
+                    Rectangle actualLineLayoutBox = layoutBox.Clone();
+                    FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                    processedRenderer.Justify(actualLineLayoutBox.GetWidth() - lineIndent);
+                }
+            }
+            else {
+                if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
+                    Rectangle actualLineLayoutBox = layoutBox.Clone();
+                    FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                    float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
+                        ().GetBBox().GetWidth());
+                    switch (textAlignment) {
+                        case TextAlignment.RIGHT: {
+                            AlignStaticKids(processedRenderer, deltaX);
+                            break;
+                        }
+
+                        case TextAlignment.CENTER: {
+                            AlignStaticKids(processedRenderer, deltaX / 2);
+                            break;
+                        }
+
+                        case TextAlignment.JUSTIFIED: {
+                            if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                                AlignStaticKids(processedRenderer, deltaX);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
