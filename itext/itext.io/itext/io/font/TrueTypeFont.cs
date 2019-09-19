@@ -376,9 +376,12 @@ namespace iText.IO.Font {
         ///     </summary>
         /// <remarks>
         /// The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
-        /// usedGlyphs can be used for width array and ToUnicode CMAP.
+        /// This set of used glyphs can be used for building width array and ToUnicode CMAP.
         /// </remarks>
-        /// <param name="usedGlyphs">used glyphs that will be updated if needed.</param>
+        /// <param name="usedGlyphs">
+        /// a set of integers, which are glyph ids that denote used glyphs.
+        /// This set is updated inside of the method if needed.
+        /// </param>
         /// <param name="subset">subset status</param>
         /// <param name="subsetRanges">additional subset ranges</param>
         public virtual void UpdateUsedGlyphs(SortedSet<int> usedGlyphs, bool subset, IList<int[]> subsetRanges) {
@@ -405,6 +408,17 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>
+        /// Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
+        /// ranges in one.
+        /// </summary>
+        /// <param name="ranges">
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of integer arrays, which are constituted by pairs of ints that denote
+        /// each range limits. Each integer array size shall be a multiple of two.
+        /// </param>
+        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
         private static int[] ToCompactRange(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
             foreach (int[] range in ranges) {

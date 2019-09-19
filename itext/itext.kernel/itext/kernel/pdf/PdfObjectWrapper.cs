@@ -60,8 +60,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <param name="reference"/>
+        /// <param name="document">a document the indirect reference belongs to.</param>
+        /// <param name="reference">a reference which will be assigned for the object behind wrapper.</param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
              reference) {

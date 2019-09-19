@@ -495,11 +495,16 @@ namespace iText.Kernel.Font {
             return true;
         }
 
-        /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subset.</summary>
-        /// <param name="fontName"/>
-        /// <param name="isSubset"/>
-        /// <param name="isEmbedded"/>
-        /// <returns>the font name with subset prefix if isSubset and isEmbedded are true.s</returns>
+        /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subsetted.
+        ///     </summary>
+        /// <param name="fontName">the original font name.</param>
+        /// <param name="isSubset">denotes whether font in question is subsetted, i.e. only used symbols are kept in it.
+        ///     </param>
+        /// <param name="isEmbedded">denotes whether font in question is embedded into the PDF document.</param>
+        /// <returns>
+        /// the font name prefixed with subset if isSubset and isEmbedded are true,
+        /// otherwise original font name is returned intact.
+        /// </returns>
         protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
             if (isSubset && isEmbedded) {
                 StringBuilder s = new StringBuilder(fontName.Length + 7);
@@ -548,6 +553,17 @@ namespace iText.Kernel.Font {
             return fontStream;
         }
 
+        /// <summary>
+        /// Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
+        /// ranges in one.
+        /// </summary>
+        /// <param name="ranges">
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of integer arrays, which are constituted by pairs of ints that denote
+        /// each range limits. Each integer array size shall be a multiple of two.
+        /// </param>
+        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
         [System.ObsoleteAttribute(@"The logic has been moved to iText.IO.Font.TrueTypeFont .")]
         protected internal static int[] CompactRanges(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
