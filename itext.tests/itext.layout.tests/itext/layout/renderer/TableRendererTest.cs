@@ -77,7 +77,7 @@ namespace iText.Layout.Renderer {
                     );
                 doc.Add(table);
                 TableRenderer tableRenderer = (TableRenderer)table.GetRenderer();
-                tableRenderer.CalculateColumnWidths(layoutBox);
+                tableRenderer.ApplyMarginsAndPaddingsAndCalculateColumnWidths(layoutBox);
             }
             , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
 ;

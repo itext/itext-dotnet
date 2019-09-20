@@ -307,7 +307,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.IncreaseHeight(verticalBorderSpacing);
             }
             if (IsOriginalRenderer()) {
-                CalculateColumnWidths(layoutBox);
+                ApplyMarginsAndPaddingsAndCalculateColumnWidths(layoutBox);
             }
             float tableWidth = GetTableWidth();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -1927,7 +1927,7 @@ namespace iText.Layout.Renderer {
             overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
         }
 
-        internal virtual void CalculateColumnWidths(Rectangle layoutBox) {
+        internal virtual void ApplyMarginsAndPaddingsAndCalculateColumnWidths(Rectangle layoutBox) {
             UnitValue[] margins = GetMargins();
             if (!margins[1].IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(TableRenderer));
