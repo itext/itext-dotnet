@@ -166,5 +166,13 @@ namespace iText.Svg.Renderers.Impl {
                 NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
             }
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ElementDimensionExceedsViewboxBoundaryTest() {
+            // TODO update cmp-file after DEVSIX-2948 fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "elementDimensionExceedsViewboxBoundary");
+        }
     }
 }
