@@ -368,7 +368,7 @@ namespace iText.Svg.Renderers.Impl {
                     }
                 }
                 //End
-                if (textAnchorValue.Equals(SvgConstants.Values.TEXT_ANCHOR_END)) {
+                if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
                     if (xPos != null && xPos.Length > 0) {
                         textAnchorXCorrection -= childContentLength;
                     }

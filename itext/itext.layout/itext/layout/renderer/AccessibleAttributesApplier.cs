@@ -232,7 +232,7 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.Height, new PdfNumber(height.GetValue()));
                 }
             }
-            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD)) {
+            if (StandardRoles.TH.Equals(role) || StandardRoles.TD.Equals(role)) {
                 HorizontalAlignment? horizontalAlignment = renderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                     );
                 if (horizontalAlignment != null) {
