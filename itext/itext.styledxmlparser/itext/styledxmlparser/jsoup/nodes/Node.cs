@@ -102,13 +102,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Get an attribute's value by its key.
         /// <para />
-        /// To get an absolute URL from an attribute that may be a relative URL, prefix the key with <code><b>abs</b></code>,
+        /// To get an absolute URL from an attribute that may be a relative URL, prefix the key with <c><b>abs</b></c>,
         /// which is a shortcut to the
         /// <see cref="AbsUrl(System.String)"/>
         /// method.
         /// <para />
         /// E.g.:
-        /// <blockquote><code>String url = a.attr("abs:href");</code></blockquote>
+        /// <blockquote><c>String url = a.attr("abs:href");</c></blockquote>
         /// </remarks>
         /// <param name="attributeKey">The attribute key.</param>
         /// <returns>The attribute, or empty string if not present (to avoid nulls).</returns>
@@ -199,13 +199,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>Get an absolute URL from a URL attribute that may be relative (i.e.</summary>
         /// <remarks>
-        /// Get an absolute URL from a URL attribute that may be relative (i.e. an <code>&lt;a href&gt;</code> or
-        /// <code>&lt;img src&gt;</code>).
+        /// Get an absolute URL from a URL attribute that may be relative (i.e. an <c>&lt;a href&gt;</c> or
+        /// <c>&lt;img src&gt;</c>).
         /// <para />
-        /// E.g.: <code>String absUrl = linkEl.absUrl("href");</code>
+        /// E.g.: <c>String absUrl = linkEl.absUrl("href");</c>
         /// <para />
         /// If the attribute value is already absolute (i.e. it starts with a protocol, like
-        /// <code>http://</code> or <code>https://</code> etc), and it successfully parses as a URL, the attribute is
+        /// <c>http://</c> or <c>https://</c> etc), and it successfully parses as a URL, the attribute is
         /// returned directly. Otherwise, it is treated as a URL relative to the element's
         /// <see cref="baseUri"/>
         /// , and made
@@ -213,8 +213,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <para />
         /// As an alternate, you can use the
         /// <see cref="Attr(System.String)"/>
-        /// method with the <code>abs:</code> prefix, e.g.:
-        /// <code>String absUrl = linkEl.attr("abs:href");</code>
+        /// method with the <c>abs:</c> prefix, e.g.:
+        /// <c>String absUrl = linkEl.attr("abs:href");</c>
         /// </remarks>
         /// <param name="attributeKey">The attribute key</param>
         /// <returns>

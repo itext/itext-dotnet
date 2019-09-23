@@ -584,12 +584,12 @@ namespace iText.IO.Codec {
         /// <code>TIFFField</code> by comparing the tags.
         /// </summary>
         /// <remarks>
-        /// Compares this <code>TIFFField</code> with another
-        /// <code>TIFFField</code> by comparing the tags.
+        /// Compares this <c>TIFFField</c> with another
+        /// <c>TIFFField</c> by comparing the tags.
         /// <para /><b>Note: this class has a natural ordering that is inconsistent
-        /// with <code>equals()</code>.</b>
+        /// with <c>equals()</c>.</b>
         /// </remarks>
-        /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.</exception>
+        /// <exception cref="System.ArgumentException">if the parameter is <c>null</c>.</exception>
         public virtual int CompareTo(iText.IO.Codec.TIFFField o) {
             if (o == null) {
                 throw new ArgumentException();

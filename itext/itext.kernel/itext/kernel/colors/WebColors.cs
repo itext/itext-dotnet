@@ -234,7 +234,7 @@ namespace iText.Kernel.Colors {
         /// a name such as black, violet, cornflowerblue or #RGB or
         /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B) or rgb(R,G,B,A)
         /// </param>
-        /// <returns>the corresponding array of four floats, or <code>null</code> if parsing failed.</returns>
+        /// <returns>the corresponding array of four floats, or <c>null</c> if parsing failed.</returns>
         public static float[] GetRGBAColor(String name) {
             float[] color = null;
             try {

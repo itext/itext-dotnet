@@ -160,7 +160,7 @@ namespace iText.Kernel.Geom {
         /// the Z axis to 0).
         /// <br />
         /// For example:
-        /// <code>aVector.subtract(originVector).length();</code>
+        /// <c>aVector.subtract(originVector).length();</c>
         /// </remarks>
         /// <returns>the length of this vector</returns>
         public virtual float Length() {

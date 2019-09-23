@@ -213,7 +213,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="indent">
         /// the indent value that must be applied to the first line of
-        /// the Paragraph, as a <code>float</code>
+        /// the Paragraph, as a <c>float</c>
         /// </param>
         /// <returns>this Paragraph</returns>
         public virtual iText.Layout.Element.Paragraph SetFirstLineIndent(float indent) {

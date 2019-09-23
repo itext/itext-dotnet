@@ -146,7 +146,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets the TSA request policy that will be used when retrieving timestamp token.</summary>
-        /// <returns>policy id, or <code>null</code> if not set</returns>
+        /// <returns>policy id, or <c>null</c> if not set</returns>
         public virtual String GetTSAReqPolicy() {
             return tsaReqPolicy;
         }

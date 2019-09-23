@@ -74,6 +74,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Returns <code>Btn</code>, the form type for choice form fields.</summary>
+        /// <remarks>Returns <c>Btn</c>, the form type for choice form fields.</remarks>
         /// <returns>
         /// the form type, as a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

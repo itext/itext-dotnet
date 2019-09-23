@@ -1067,7 +1067,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// PDF 2.0. This graphics state parameter controls whether black point
         /// compensation is performed while doing CIE-based colour conversions.
         /// </remarks>
-        /// <param name="useBlackPointCompensation"><code>true</code> to enable, <code>false</code> to disable</param>
+        /// <param name="useBlackPointCompensation"><c>true</c> to enable, <c>false</c> to disable</param>
         /// <returns>object itself</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetUseBlackPointCompensation(bool useBlackPointCompensation
             ) {
@@ -1078,8 +1078,8 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <remarks>PDF 2.0. Checks whether the black point compensation is performed while doing CIE-based colour conversions.
         ///     </remarks>
         /// <returns>
-        /// <code>true</code> if black point compensation is used, <code>false</code> if it is not used, or
-        /// <code>null</code> is the value is set to Default, or not set at all
+        /// <c>true</c> if black point compensation is used, <c>false</c> if it is not used, or
+        /// <c>null</c> is the value is set to Default, or not set at all
         /// </returns>
         public virtual bool? IsBlackPointCompensationUsed() {
             PdfName useBlackPointCompensation = GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
@@ -1116,7 +1116,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <remarks>PDF 2.0. Gets halftone origin</remarks>
         /// <returns>
         /// an array of two values specifying X and Y values of the halftone origin in the current coordinate system,
-        /// respectively, or <code>null</code> if halftone origin is not specified
+        /// respectively, or <c>null</c> if halftone origin is not specified
         /// </returns>
         public virtual float[] GetHalftoneOrigin() {
             PdfArray hto = GetPdfObject().GetAsArray(PdfName.HTO);

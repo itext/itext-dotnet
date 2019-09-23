@@ -44,7 +44,7 @@ namespace iText.Kernel.XMP {
             this.errorCode = errorCode;
         }
 
-        /// <summary>Constructs an exception with a message, an error code and a <code>Throwable</code></summary>
+        /// <summary>Constructs an exception with a message, an error code and a <c>Throwable</c></summary>
         /// <param name="message">the error message.</param>
         /// <param name="errorCode">the error code</param>
         /// <param name="t">the exception source</param>

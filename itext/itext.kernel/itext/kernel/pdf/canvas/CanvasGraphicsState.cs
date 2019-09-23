@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf.Canvas {
     /// <summary>This class is designed for internal usage.</summary>
     /// <remarks>
     /// This class is designed for internal usage. <br />
-    /// Use <code>PdfExtGState</code> class and <code>PdfCanvas#setExtGState()</code> method for setting extended graphics properties.
+    /// Use <c>PdfExtGState</c> class and <c>PdfCanvas#setExtGState()</c> method for setting extended graphics properties.
     /// </remarks>
     public class CanvasGraphicsState {
         /// <summary>The current transformation matrix, which maps positions from user coordinates to device coordinates.

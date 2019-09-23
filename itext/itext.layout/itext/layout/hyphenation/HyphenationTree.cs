@@ -207,12 +207,12 @@ namespace iText.Layout.Hyphenation {
         /// at index an update interletter values. In other words, it
         /// does something like:
         /// <para />
-        /// <code>
+        /// <c>
         /// for(i=0; i&lt;patterns.length; i++) {
         /// if ( word.substring(index).startsWidth(patterns[i]) )
         /// update_interletter_values(patterns[i]);
         /// }
-        /// </code>
+        /// </c>
         /// <para />
         /// But it is done in an efficient way since the patterns are
         /// stored in a ternary tree. In fact, this is the whole purpose

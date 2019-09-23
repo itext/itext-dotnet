@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// under the same title heading.
         /// </remarks>
         /// <param name="title">the title text</param>
-        /// <param name="document">the <code>PdfDocument</code></param>
+        /// <param name="document">the <c>PdfDocument</c></param>
         /// <returns>the title layer</returns>
         public static iText.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document) {
             iText.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// in the array should be ON at a time: if one group is turned
         /// ON, all others must be turned OFF.
         /// </remarks>
-        /// <param name="document">the <code>PdfDocument</code></param>
+        /// <param name="document">the <c>PdfDocument</c></param>
         /// <param name="group">the radio group</param>
         public static void AddOCGRadioGroup(PdfDocument document, IList<iText.Kernel.Pdf.Layer.PdfLayer> group) {
             document.GetCatalog().GetOCProperties(true).AddOCGRadioGroup(group);
@@ -205,7 +205,7 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Sets the visibility of the layer in Acrobat's layer panel.</summary>
         /// <remarks>
-        /// Sets the visibility of the layer in Acrobat's layer panel. If <code>false</code>
+        /// Sets the visibility of the layer in Acrobat's layer panel. If <c>false</c>
         /// the layer cannot be directly manipulated by the user. Note that any children layers will
         /// also be absent from the panel.
         /// </remarks>

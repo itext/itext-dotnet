@@ -763,8 +763,8 @@ namespace iText.Signatures {
         /// This is the first method to be called when using external signatures. The general sequence is:
         /// preClose(), getDocumentBytes() and close().
         /// <para />
-        /// <code>exclusionSizes</code> must contain at least
-        /// the <code>PdfName.CONTENTS</code> key with the size that it will take in the
+        /// <c>exclusionSizes</c> must contain at least
+        /// the <c>PdfName.CONTENTS</c> key with the size that it will take in the
         /// document. Note that due to the hex string coding this size should be byte_size*2+2.
         /// </remarks>
         /// <param name="exclusionSizes">

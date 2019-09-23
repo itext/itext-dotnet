@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Arrays of length 6 specify the operands for curveto operators.
         /// Each array is processed in sequence to construct the path.
         /// </remarks>
-        /// <returns>path, or <code>null</code> if path is not set</returns>
+        /// <returns>path, or <c>null</c> if path is not set</returns>
         public virtual PdfArray GetPath() {
             return GetPdfObject().GetAsArray(PdfName.Path);
         }

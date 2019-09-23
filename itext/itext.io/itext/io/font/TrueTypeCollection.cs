@@ -114,7 +114,7 @@ namespace iText.IO.Font {
         /// <see cref="GetFontByTccIndex(int)"/>
         /// will be cached or not.
         /// </summary>
-        /// <returns><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the created fonts will be cached, <c>false</c> otherwise</returns>
         public virtual bool IsCached() {
             return cached;
         }
@@ -124,7 +124,7 @@ namespace iText.IO.Font {
         /// <see cref="GetFontByTccIndex(int)"/>
         /// will be cached or not.
         /// </summary>
-        /// <param name="cached"><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</param>
+        /// <param name="cached"><c>true</c> if the created fonts will be cached, <c>false</c> otherwise</param>
         public virtual void SetCached(bool cached) {
             this.cached = cached;
         }

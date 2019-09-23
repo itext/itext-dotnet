@@ -363,7 +363,7 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="angleInRadians">the new rotation radAngle, as a <code>float</code>, in radians</param>
+        /// <param name="angleInRadians">the new rotation radAngle, as a <c>float</c>, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(float angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, angleInRadians);
@@ -371,7 +371,7 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>Sets the rotation angle.</summary>
-        /// <param name="angleInRadians">the new rotation angle, as a <code>double</code>, in radians</param>
+        /// <param name="angleInRadians">the new rotation angle, as a <c>double</c>, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(double angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, (float)angleInRadians);

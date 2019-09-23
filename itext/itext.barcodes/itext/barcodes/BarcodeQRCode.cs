@@ -144,12 +144,12 @@ namespace iText.Barcodes {
 
         /// <summary>* Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
         /// <remarks>
-        /// * Places the barcode in a <code>PdfCanvas</code>. The
+        /// * Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.
         /// </remarks>
-        /// <param name="canvas">the <code>PdfCanvas</code> where the barcode will be placed</param>
-        /// <param name="foreground">the foreground color. It can be <code>null</code></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="foreground">the foreground color. It can be <c>null</c></param>
         /// <param name="moduleSide">the size of the square grid cell</param>
         /// <returns>the dimensions the barcode occupies</returns>
         public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleSide) {
@@ -172,14 +172,14 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <code>null</code></param>
+        /// <param name="foreground">the color of the pixels. It can be <c>null</c></param>
         /// <returns>the XObject.</returns>
         public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">The color of the pixels. It can be <code>null</code></param>
+        /// <param name="foreground">The color of the pixels. It can be <c>null</c></param>
         /// <param name="moduleSize">The size of the pixels.</param>
         /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>

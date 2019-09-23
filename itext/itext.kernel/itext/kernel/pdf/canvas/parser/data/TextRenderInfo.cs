@@ -365,7 +365,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <summary>Gets /ActualText tag entry value if this text chunk is marked content.</summary>
-        /// <returns>/ActualText value or <code>null</code> if none found</returns>
+        /// <returns>/ActualText value or <c>null</c> if none found</returns>
         public virtual String GetActualText() {
             String lastActualText = null;
             foreach (CanvasTag tag in canvasTagHierarchy) {
@@ -378,7 +378,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <summary>Gets /E tag (expansion text) entry value if this text chunk is marked content.</summary>
-        /// <returns>/E value or <code>null</code> if none found</returns>
+        /// <returns>/E value or <c>null</c> if none found</returns>
         public virtual String GetExpansionText() {
             String expansionText = null;
             foreach (CanvasTag tag in canvasTagHierarchy) {
@@ -396,8 +396,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// instance is written in a text showing operator
         /// wrapped by /ReversedChars marked content sequence
         /// </summary>
-        /// <returns><code>true</code> if this text block lies within /ReversedChars block, <code>false</code> otherwise
-        ///     </returns>
+        /// <returns><c>true</c> if this text block lies within /ReversedChars block, <c>false</c> otherwise</returns>
         public virtual bool IsReversedChars() {
             foreach (CanvasTag tag in canvasTagHierarchy) {
                 if (tag != null) {

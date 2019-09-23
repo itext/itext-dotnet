@@ -283,18 +283,18 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Sets <code>bytes</code> as stream's content.</summary>
         /// <remarks>
-        /// Sets <code>bytes</code> as stream's content.
-        /// Could not be used with streams which were created by <code>InputStream</code>.
+        /// Sets <c>bytes</c> as stream's content.
+        /// Could not be used with streams which were created by <c>InputStream</c>.
         /// </remarks>
-        /// <param name="bytes">new content for stream; if <code>null</code> then stream's content will be discarded</param>
+        /// <param name="bytes">new content for stream; if <c>null</c> then stream's content will be discarded</param>
         public virtual void SetData(byte[] bytes) {
             SetData(bytes, false);
         }
 
         /// <summary>Sets or appends <code>bytes</code> to stream content.</summary>
         /// <remarks>
-        /// Sets or appends <code>bytes</code> to stream content.
-        /// Could not be used with streams which were created by <code>InputStream</code>.
+        /// Sets or appends <c>bytes</c> to stream content.
+        /// Could not be used with streams which were created by <c>InputStream</c>.
         /// </remarks>
         /// <param name="bytes">
         /// New content for stream. These bytes are considered to be a raw data (i.e. not encoded/compressed/encrypted)
@@ -303,10 +303,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="SetCompressionLevel(int)"/>
         /// and
         /// is handled on stream writing to the output document.
-        /// If <code>null</code> and <code>append</code> is false then stream's content will be discarded.
+        /// If <c>null</c> and <c>append</c> is false then stream's content will be discarded.
         /// </param>
         /// <param name="append">
-        /// If set to true then <code>bytes</code> will be appended to the end,
+        /// If set to true then <c>bytes</c> will be appended to the end,
         /// rather then replace original content. The original content will be decoded if needed.
         /// </param>
         public virtual void SetData(byte[] bytes, bool append) {

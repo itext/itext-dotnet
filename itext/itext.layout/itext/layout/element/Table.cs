@@ -747,7 +747,7 @@ namespace iText.Layout.Element {
         /// <summary>Returns a cell as specified by its location.</summary>
         /// <remarks>
         /// Returns a cell as specified by its location. If the cell is in a col-span
-        /// or row-span and is not the top left cell, then <code>null</code> is returned.
+        /// or row-span and is not the top left cell, then <c>null</c> is returned.
         /// </remarks>
         /// <param name="row">the row of the cell. indexes are zero-based</param>
         /// <param name="column">the column of the cell. indexes are zero-based</param>

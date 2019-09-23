@@ -170,6 +170,7 @@ namespace iText.IO.Font {
             internal int underlineThickness;
 
             /// <summary><CODE>true</CODE> if all the glyphs have the same width.</summary>
+            /// <remarks><c>true</c> if all the glyphs have the same width.</remarks>
             internal bool isFixedPitch;
         }
 
@@ -253,7 +254,7 @@ namespace iText.IO.Font {
         /// <summary>Contains the location of the several tables.</summary>
         /// <remarks>
         /// Contains the location of the several tables. The key is the name of
-        /// the table and the value is an <code>int[2]</code> where position 0
+        /// the table and the value is an <c>int[2]</c> where position 0
         /// is the offset from the start of the file and position 1 is the length
         /// of the table.
         /// </remarks>
@@ -1022,19 +1023,21 @@ namespace iText.IO.Font {
         /// Reads a <CODE>String</CODE> from the font file as bytes using the Cp1252
         /// encoding.
         /// </summary>
+        /// <remarks>
+        /// Reads a <c>String</c> from the font file as bytes using the Cp1252
+        /// encoding.
+        /// </remarks>
         /// <param name="length">the length of bytes to read</param>
-        /// <returns>the <code>String</code> read</returns>
+        /// <returns>the <c>String</c> read</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private String ReadStandardString(int length) {
             return raf.ReadString(length, PdfEncodings.WINANSI);
         }
 
         /// <summary>Reads a Unicode <CODE>String</CODE> from the font file.</summary>
-        /// <remarks>Reads a Unicode <code>String</code> from the font file. Each character is represented by two bytes.
-        ///     </remarks>
-        /// <param name="length">the length of bytes to read. The <code>String</code> will have <code>length</code>/2 characters.
-        ///     </param>
-        /// <returns>the <code>String</code> read.</returns>
+        /// <remarks>Reads a Unicode <c>String</c> from the font file. Each character is represented by two bytes.</remarks>
+        /// <param name="length">the length of bytes to read. The <c>String</c> will have <c>length</c>/2 characters.</param>
+        /// <returns>the <c>String</c> read.</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
         private String ReadUnicodeString(int length) {
             StringBuilder buf = new StringBuilder();
@@ -1060,7 +1063,7 @@ namespace iText.IO.Font {
         /// The information in the maps of the table 'cmap' is coded in several formats.
         /// Format 0 is the Apple standard character to glyph index mapping table.
         /// </remarks>
-        /// <returns>a <code>HashMap</code> representing this map</returns>
+        /// <returns>a <c>HashMap</c> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private IDictionary<int, int[]> ReadFormat0() {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
@@ -1079,7 +1082,7 @@ namespace iText.IO.Font {
         /// The information in the maps of the table 'cmap' is coded in several formats.
         /// Format 4 is the Microsoft standard character to glyph index mapping table.
         /// </remarks>
-        /// <returns>a <code>HashMap</code> representing this map</returns>
+        /// <returns>a <c>HashMap</c> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private IDictionary<int, int[]> ReadFormat4(bool fontSpecific) {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
@@ -1142,7 +1145,7 @@ namespace iText.IO.Font {
         /// Format 6 is a trimmed table mapping. It is similar to format 0 but can have
         /// less than 256 entries.
         /// </remarks>
-        /// <returns>a <code>HashMap</code> representing this map</returns>
+        /// <returns>a <c>HashMap</c> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private IDictionary<int, int[]> ReadFormat6() {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();

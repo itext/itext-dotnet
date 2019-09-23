@@ -48,7 +48,7 @@ namespace iText.Layout.Splitting {
     public interface ISplitCharacters {
         /// <summary>Returns <CODE>true</CODE> if the character can split a line.</summary>
         /// <remarks>
-        /// Returns <code>true</code> if the character can split a line. The splitting implementation
+        /// Returns <c>true</c> if the character can split a line. The splitting implementation
         /// is free to look ahead or look behind characters to make a decision.
         /// </remarks>
         /// <param name="glyphPos">

@@ -127,6 +127,7 @@ namespace iText.Kernel.Geom {
         public const int TYPE_MASK_ROTATION = TYPE_QUADRANT_ROTATION | TYPE_GENERAL_ROTATION;
 
         /// <summary>The <code>TYPE_UNKNOWN</code> is an initial type value.</summary>
+        /// <remarks>The <c>TYPE_UNKNOWN</c> is an initial type value.</remarks>
         internal const int TYPE_UNKNOWN = -1;
 
         /// <summary>The min value equivalent to zero.</summary>
@@ -146,7 +147,7 @@ namespace iText.Kernel.Geom {
 
         internal double m12;
 
-        /// <summary>The transformation <code>type</code></summary>
+        /// <summary>The transformation <c>type</c></summary>
         internal int type;
 
         public AffineTransform() {

@@ -791,13 +791,13 @@ namespace iText.Kernel.Font {
 
         /// <summary>Checks if a certain font is registered.</summary>
         /// <param name="fontName">the name of the font that has to be checked.</param>
-        /// <returns><code>true</code> if the font is found, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the font is found, <c>false</c> otherwise</returns>
         public static bool IsRegistered(String fontName) {
             return FontProgramFactory.IsRegisteredFont(fontName);
         }
 
         /// <summary>Checks if the provided dictionary is a valid font dictionary of the provided font type.</summary>
-        /// <returns><code>true</code> if the passed dictionary is a valid dictionary, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the passed dictionary is a valid dictionary, <c>false</c> otherwise</returns>
         private static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {

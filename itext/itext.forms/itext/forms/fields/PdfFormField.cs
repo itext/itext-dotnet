@@ -286,8 +286,8 @@ namespace iText.Forms.Fields {
         /// </param>
         /// <param name="rect">the location on the page for the button</param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -311,8 +311,8 @@ namespace iText.Forms.Fields {
         /// </param>
         /// <param name="rect">the location on the page for the button</param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <param name="pdfAConformanceLevel">
@@ -350,8 +350,8 @@ namespace iText.Forms.Fields {
         /// to create the button field in
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -374,8 +374,8 @@ namespace iText.Forms.Fields {
         /// to create the button field in
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <param name="pdfAConformanceLevel">
@@ -677,8 +677,8 @@ namespace iText.Forms.Fields {
         /// to create the choice field in
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -700,8 +700,8 @@ namespace iText.Forms.Fields {
         /// to create the choice field in
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <param name="pdfAConformanceLevel">
@@ -736,8 +736,8 @@ namespace iText.Forms.Fields {
         /// </param>
         /// <param name="rect">the location on the page for the choice field</param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -772,8 +772,8 @@ namespace iText.Forms.Fields {
         /// the 'on' state of one of the choices.
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -806,8 +806,8 @@ namespace iText.Forms.Fields {
         /// the 'on' state of one of the choices.
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <param name="font">the desired font to be used when displaying the text</param>
@@ -854,8 +854,8 @@ namespace iText.Forms.Fields {
         /// the 'on' state of one of the choices.
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <returns>
@@ -893,8 +893,8 @@ namespace iText.Forms.Fields {
         /// the 'on' state of one of the choices.
         /// </param>
         /// <param name="flags">
-        /// an <code>int</code>, containing a set of binary behavioral
-        /// flags. Do binary <code>OR</code> on this <code>int</code> to set the
+        /// an <c>int</c>, containing a set of binary behavioral
+        /// flags. Do binary <c>OR</c> on this <c>int</c> to set the
         /// flags you require.
         /// </param>
         /// <param name="pdfAConformanceLevel">
@@ -1619,7 +1619,7 @@ namespace iText.Forms.Fields {
         /// Creates a (subtype of)
         /// <see cref="PdfFormField"/>
         /// object. The type of the object
-        /// depends on the <code>FT</code> entry in the <code>pdfObject</code> parameter.
+        /// depends on the <c>FT</c> entry in the <c>pdfObject</c> parameter.
         /// </summary>
         /// <param name="pdfObject">
         /// assumed to be either a
@@ -1637,8 +1637,8 @@ namespace iText.Forms.Fields {
         /// <returns>
         /// a new
         /// <see cref="PdfFormField"/>
-        /// , or <code>null</code> if
-        /// <code>pdfObject</code> does not contain a <code>FT</code> entry
+        /// , or <c>null</c> if
+        /// <c>pdfObject</c> does not contain a <c>FT</c> entry
         /// </returns>
         public static iText.Forms.Fields.PdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document) {
             if (pdfObject.IsDictionary()) {
@@ -1783,8 +1783,8 @@ namespace iText.Forms.Fields {
         /// </remarks>
         /// <param name="value">the field value</param>
         /// <param name="display">
-        /// the string that is used for the appearance. If <code>null</code>
-        /// the <code>value</code> parameter will be used
+        /// the string that is used for the appearance. If <c>null</c>
+        /// the <c>value</c> parameter will be used
         /// </param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String display) {
@@ -1831,7 +1831,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Gets the kids of this object.</summary>
         /// <returns>
-        /// contents of the dictionary's <code>Kids</code> property, as a
+        /// contents of the dictionary's <c>Kids</c> property, as a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// </returns>
         public virtual PdfArray GetKids() {
@@ -1839,14 +1839,14 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// Adds a new kid to the <code>Kids</code> array property from a
+        /// Adds a new kid to the <c>Kids</c> array property from a
         /// <see cref="PdfFormField"/>
-        /// . Also sets the kid's <code>Parent</code> property to this object.
+        /// . Also sets the kid's <c>Parent</c> property to this object.
         /// </summary>
         /// <param name="kid">
         /// a new
         /// <see cref="PdfFormField"/>
-        /// entry for the field's <code>Kids</code> array property
+        /// entry for the field's <c>Kids</c> array property
         /// </param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField AddKid(iText.Forms.Fields.PdfFormField kid) {
@@ -1860,14 +1860,14 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// Adds a new kid to the <code>Kids</code> array property from a
+        /// Adds a new kid to the <c>Kids</c> array property from a
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
-        /// . Also sets the kid's <code>Parent</code> property to this object.
+        /// . Also sets the kid's <c>Parent</c> property to this object.
         /// </summary>
         /// <param name="kid">
         /// a new
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
-        /// entry for the field's <code>Kids</code> array property
+        /// entry for the field's <c>Kids</c> array property
         /// </param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField AddKid(PdfWidgetAnnotation kid) {
@@ -1962,7 +1962,7 @@ namespace iText.Forms.Fields {
         /// Checks whether a certain flag, or any of a combination of flags, is set
         /// for this form field.
         /// </summary>
-        /// <param name="flag">an <code>int</code> interpreted as a series of a binary flags</param>
+        /// <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <returns>
         /// true if any of the flags specified in the parameter is also set
         /// in the form field.
@@ -1979,7 +1979,7 @@ namespace iText.Forms.Fields {
         /// <see cref="SetFieldFlags(int)"/>
         /// .
         /// </remarks>
-        /// <param name="flag">an <code>int</code> interpreted as a series of a binary flags</param>
+        /// <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFieldFlag(int flag) {
             return SetFieldFlag(flag, true);
@@ -1993,9 +1993,9 @@ namespace iText.Forms.Fields {
         /// <see cref="SetFieldFlags(int)"/>
         /// .
         /// </remarks>
-        /// <param name="flag">an <code>int</code> interpreted as a series of a binary flags</param>
+        /// <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <param name="value">
-        /// if <code>true</code>, adds the flag(s). if <code>false</code>,
+        /// if <c>true</c>, adds the flag(s). if <c>false</c>,
         /// removes the flag(s).
         /// </param>
         /// <returns>the edited field</returns>
@@ -2035,7 +2035,7 @@ namespace iText.Forms.Fields {
         /// <see cref="SetFieldFlag(int)"/>
         /// which <em>adds</em> a flag to the existing flags.
         /// </remarks>
-        /// <param name="flags">an <code>int</code> interpreted as a series of a binary flags</param>
+        /// <param name="flags">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
             int oldFlags = GetFieldFlags();
@@ -2048,7 +2048,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Gets the current list of PDF form field flags.</summary>
-        /// <returns>the current list of flags, encoded as an <code>int</code></returns>
+        /// <returns>the current list of flags, encoded as an <c>int</c></returns>
         public virtual int GetFieldFlags() {
             PdfNumber f = GetPdfObject().GetAsNumber(PdfName.Ff);
             if (f != null) {
@@ -2469,7 +2469,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Basic setter for the <code>font</code> property.</summary>
         /// <remarks>
-        /// Basic setter for the <code>font</code> property. Regenerates the field
+        /// Basic setter for the <c>font</c> property. Regenerates the field
         /// appearance after setting the new value.
         /// Note that the font will be added to the document so ensure that the font is embedded
         /// if it's a pdf/a document.
@@ -2484,7 +2484,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
         /// <remarks>
-        /// Basic setter for the <code>fontSize</code> property. Regenerates the
+        /// Basic setter for the <c>fontSize</c> property. Regenerates the
         /// field appearance after setting the new value.
         /// </remarks>
         /// <param name="fontSize">The new font size to be set</param>
@@ -2497,7 +2497,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
         /// <remarks>
-        /// Basic setter for the <code>fontSize</code> property. Regenerates the
+        /// Basic setter for the <c>fontSize</c> property. Regenerates the
         /// field appearance after setting the new value.
         /// </remarks>
         /// <param name="fontSize">The new font size to be set</param>
@@ -2512,7 +2512,7 @@ namespace iText.Forms.Fields {
         /// properties.
         /// </summary>
         /// <remarks>
-        /// Combined setter for the <code>font</code> and <code>fontSize</code>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
         /// properties. Regenerates the field appearance after setting the new value.
         /// </remarks>
         /// <param name="font">The new font to be set</param>
@@ -2530,7 +2530,7 @@ namespace iText.Forms.Fields {
         /// properties.
         /// </summary>
         /// <remarks>
-        /// Combined setter for the <code>font</code> and <code>fontSize</code>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
         /// properties. Regenerates the field appearance after setting the new value.
         /// </remarks>
         /// <param name="font">The new font to be set</param>
@@ -2544,7 +2544,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Basic setter for the <code>backgroundColor</code> property.</summary>
         /// <remarks>
-        /// Basic setter for the <code>backgroundColor</code> property. Regenerates
+        /// Basic setter for the <c>backgroundColor</c> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="backgroundColor">
@@ -2576,7 +2576,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Basic setter for the <code>degRotation</code> property.</summary>
         /// <remarks>
-        /// Basic setter for the <code>degRotation</code> property. Regenerates
+        /// Basic setter for the <c>degRotation</c> property. Regenerates
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="degRotation">The new degRotation to be set</param>
@@ -3182,33 +3182,33 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Sets the ReadOnly flag, specifying whether or not the field can be changed.</summary>
-        /// <param name="readOnly">if <code>true</code>, then the field cannot be changed.</param>
+        /// <param name="readOnly">if <c>true</c>, then the field cannot be changed.</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetReadOnly(bool readOnly) {
             return SetFieldFlag(FF_READ_ONLY, readOnly);
         }
 
         /// <summary>Gets the ReadOnly flag, specifying whether or not the field can be changed.</summary>
-        /// <returns><code>true</code> if the field cannot be changed.</returns>
+        /// <returns><c>true</c> if the field cannot be changed.</returns>
         public virtual bool IsReadOnly() {
             return GetFieldFlag(FF_READ_ONLY);
         }
 
         /// <summary>Sets the Required flag, specifying whether or not the field must be filled in.</summary>
-        /// <param name="required">if <code>true</code>, then the field must be filled in.</param>
+        /// <param name="required">if <c>true</c>, then the field must be filled in.</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetRequired(bool required) {
             return SetFieldFlag(FF_REQUIRED, required);
         }
 
         /// <summary>Gets the Required flag, specifying whether or not the field must be filled in.</summary>
-        /// <returns><code>true</code> if the field must be filled in.</returns>
+        /// <returns><c>true</c> if the field must be filled in.</returns>
         public virtual bool IsRequired() {
             return GetFieldFlag(FF_REQUIRED);
         }
 
         /// <summary>Sets the NoExport flag, specifying whether or not exporting is forbidden.</summary>
-        /// <param name="noExport">if <code>true</code>, then exporting is <em>forbidden</em></param>
+        /// <param name="noExport">if <c>true</c>, then exporting is <em>forbidden</em></param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetNoExport(bool noExport) {
             return SetFieldFlag(FF_NO_EXPORT, noExport);
@@ -3756,7 +3756,7 @@ namespace iText.Forms.Fields {
         /// </param>
         /// <param name="width">the width of the radio button to draw</param>
         /// <param name="height">the height of the radio button to draw</param>
-        /// <param name="on">required to be <code>true</code> for fulfilling the drawing operation</param>
+        /// <param name="on">required to be <c>true</c> for fulfilling the drawing operation</param>
         protected internal virtual void DrawRadioField(PdfCanvas canvas, float width, float height, bool on) {
             canvas.SaveState();
             if (on) {

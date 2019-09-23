@@ -96,7 +96,7 @@ namespace iText.Barcodes.Qrcode {
         /// to establish best match
         /// </param>
         /// <returns>
-        /// information about the format it specifies, or <code>null</code>
+        /// information about the format it specifies, or <c>null</c>
         /// if doesn't seem to match any known pattern
         /// </returns>
         internal static iText.Barcodes.Qrcode.FormatInformation DecodeFormatInformation(int maskedFormatInfo1, int

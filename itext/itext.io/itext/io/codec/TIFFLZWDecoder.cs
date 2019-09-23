@@ -214,6 +214,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Append <code>newString</code> to the end of <code>oldString</code>.</summary>
+        /// <remarks>Append <c>newString</c> to the end of <c>oldString</c>.</remarks>
         /// <param name="oldString"/>
         /// <param name="newString"/>
         public virtual byte[] ComposeString(byte[] oldString, byte newString) {

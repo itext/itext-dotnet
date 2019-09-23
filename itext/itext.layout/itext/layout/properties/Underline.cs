@@ -70,9 +70,9 @@ namespace iText.Layout.Properties {
         /// Creates an Underline. Both the thickness and vertical positioning under
         /// the text element's base line can be set to a fixed value, or a variable
         /// one depending on the element's font size.
-        /// If you want a fixed-width thickness, set <code>thicknessMul</code> to 0;
+        /// If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;
         /// if you want a thickness solely dependent on the font size, set
-        /// <code>thickness</code> to 0.
+        /// <c>thickness</c> to 0.
         /// Mutatis mutandis for the y-position.
         /// </remarks>
         /// <param name="color">
@@ -101,9 +101,9 @@ namespace iText.Layout.Properties {
         /// Creates an Underline. Both the thickness and vertical positioning under
         /// the text element's base line can be set to a fixed value, or a variable
         /// one depending on the element's font size.
-        /// If you want a fixed-width thickness, set <code>thicknessMul</code> to 0;
+        /// If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;
         /// if you want a thickness solely dependent on the font size, set
-        /// <code>thickness</code> to 0.
+        /// <c>thickness</c> to 0.
         /// Mutatis mutandis for the y-position.
         /// </remarks>
         /// <param name="color">
@@ -151,20 +151,20 @@ namespace iText.Layout.Properties {
 
         /// <summary>Gets the total thickness of the underline (fixed + variable part).</summary>
         /// <param name="fontSize">the font size for which to calculate the variable thickness</param>
-        /// <returns>the total thickness, as a <code>float</code>, in points</returns>
+        /// <returns>the total thickness, as a <c>float</c>, in points</returns>
         public virtual float GetThickness(float fontSize) {
             return thickness + thicknessMul * fontSize;
         }
 
         /// <summary>Gets the vertical position of the underline (fixed + variable part).</summary>
         /// <param name="fontSize">the font size for which to calculate the variable position</param>
-        /// <returns>the y-position, as a <code>float</code>, in points</returns>
+        /// <returns>the y-position, as a <c>float</c>, in points</returns>
         public virtual float GetYPosition(float fontSize) {
             return yPosition + yPositionMul * fontSize;
         }
 
         /// <summary>Gets the multiplier for the vertical positioning of the text underline.</summary>
-        /// <returns>the Y-position multiplier, as a <code>float</code></returns>
+        /// <returns>the Y-position multiplier, as a <c>float</c></returns>
         public virtual float GetYPositionMul() {
             return yPositionMul;
         }
@@ -175,7 +175,7 @@ namespace iText.Layout.Properties {
         /// of the text underline.
         /// </summary>
         /// <returns>
-        /// the line cap style, as an <code>int</code> referring to
+        /// the line cap style, as an <c>int</c> referring to
         /// the values of
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
         /// </returns>

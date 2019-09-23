@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf.Canvas {
     /// <para />
     /// In Tagged PDF, a tag is the basic structure unit for marking content. The tag
     /// structure and hierarchy is largely comparable to HTML. As in HTML, every tag
-    /// type has a name, defined here in the <code>role</code> attribute. The tagging
+    /// type has a name, defined here in the <c>role</c> attribute. The tagging
     /// mechanism in Tagged PDF is extensible, so PDF creators can choose to create
     /// custom tags.
     /// </remarks>

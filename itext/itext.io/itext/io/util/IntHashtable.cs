@@ -84,6 +84,10 @@ namespace iText.IO.Util {
         /// Constructs a new, empty hashtable with a default capacity and load
         /// factor, which is <code>20</code> and <code>0.75</code> respectively.
         /// </summary>
+        /// <remarks>
+        /// Constructs a new, empty hashtable with a default capacity and load
+        /// factor, which is <c>20</c> and <c>0.75</c> respectively.
+        /// </remarks>
         public IntHashtable()
             : this(150, 0.75f) {
         }
@@ -92,6 +96,10 @@ namespace iText.IO.Util {
         /// Constructs a new, empty hashtable with the specified initial capacity
         /// and default load factor, which is <code>0.75</code>.
         /// </summary>
+        /// <remarks>
+        /// Constructs a new, empty hashtable with the specified initial capacity
+        /// and default load factor, which is <c>0.75</c>.
+        /// </remarks>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
         /// <exception cref="System.ArgumentException">
         /// if the initial capacity is less
@@ -138,8 +146,8 @@ namespace iText.IO.Util {
 
         /// <summary>Tests if this hashtable maps no keys to values.</summary>
         /// <returns>
-        /// <code>true</code> if this hashtable maps no keys to values;
-        /// <code>false</code> otherwise.
+        /// <c>true</c> if this hashtable maps no keys to values;
+        /// <c>false</c> otherwise.
         /// </returns>
         public virtual bool IsEmpty() {
             return count == 0;
@@ -148,7 +156,7 @@ namespace iText.IO.Util {
         /// <summary>Tests if some key maps into the specified value in this hashtable.</summary>
         /// <remarks>
         /// Tests if some key maps into the specified value in this hashtable.
-        /// This operation is more expensive than the <code>containsKey</code>
+        /// This operation is more expensive than the <c>containsKey</c>
         /// method.
         /// <para />
         /// Note that this method is identical in functionality to containsValue,
@@ -156,12 +164,12 @@ namespace iText.IO.Util {
         /// </remarks>
         /// <param name="value">a value to search for.</param>
         /// <returns>
-        /// <code>true</code> if and only if some key maps to the
-        /// <code>value</code> argument in this hashtable as
+        /// <c>true</c> if and only if some key maps to the
+        /// <c>value</c> argument in this hashtable as
         /// determined by the <tt>equals</tt> method;
-        /// <code>false</code> otherwise.
+        /// <c>false</c> otherwise.
         /// </returns>
-        /// <exception cref="System.NullReferenceException">if the value is <code>null</code>.</exception>
+        /// <exception cref="System.NullReferenceException">if the value is <c>null</c>.</exception>
         /// <seealso cref="ContainsKey(int)"/>
         /// <seealso cref="ContainsValue(int)"/>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
@@ -182,14 +190,14 @@ namespace iText.IO.Util {
         /// to this value.
         /// </summary>
         /// <remarks>
-        /// Returns <code>true</code> if this HashMap maps one or more keys
+        /// Returns <c>true</c> if this HashMap maps one or more keys
         /// to this value.
         /// <para />
         /// Note that this method is identical in functionality to contains
         /// (which predates the Map interface).
         /// </remarks>
         /// <param name="value">value whose presence in this HashMap is to be tested.</param>
-        /// <returns>boolean <code>true</code> if the value is contained</returns>
+        /// <returns>boolean <c>true</c> if the value is contained</returns>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
         public virtual bool ContainsValue(int value) {
             return Contains(value);
@@ -198,9 +206,9 @@ namespace iText.IO.Util {
         /// <summary>Tests if the specified int is a key in this hashtable.</summary>
         /// <param name="key">possible key.</param>
         /// <returns>
-        /// <code>true</code> if and only if the specified int is a
+        /// <c>true</c> if and only if the specified int is a
         /// key in this hashtable, as determined by the <tt>equals</tt>
-        /// method; <code>false</code> otherwise.
+        /// method; <c>false</c> otherwise.
         /// </returns>
         /// <seealso cref="Contains(int)"/>
         public virtual bool ContainsKey(int key) {
@@ -270,20 +278,20 @@ namespace iText.IO.Util {
         /// <code>value</code> in this hashtable.
         /// </summary>
         /// <remarks>
-        /// Maps the specified <code>key</code> to the specified
-        /// <code>value</code> in this hashtable. The key cannot be
-        /// <code>null</code>.
+        /// Maps the specified <c>key</c> to the specified
+        /// <c>value</c> in this hashtable. The key cannot be
+        /// <c>null</c>.
         /// <para />
-        /// The value can be retrieved by calling the <code>get</code> method
+        /// The value can be retrieved by calling the <c>get</c> method
         /// with a key that is equal to the original key.
         /// </remarks>
         /// <param name="key">the hashtable key.</param>
         /// <param name="value">the value.</param>
         /// <returns>
         /// the previous value of the specified key in this hashtable,
-        /// or <code>null</code> if it did not have one.
+        /// or <c>null</c> if it did not have one.
         /// </returns>
-        /// <exception cref="System.NullReferenceException">if the key is <code>null</code>.</exception>
+        /// <exception cref="System.NullReferenceException">if the key is <c>null</c>.</exception>
         /// <seealso cref="Get(int)"/>
         public virtual int Put(int key, int value) {
             // Makes sure the key is not already in the hashtable.
@@ -324,7 +332,7 @@ namespace iText.IO.Util {
         /// <param name="key">the key that needs to be removed.</param>
         /// <returns>
         /// the value to which the key had been mapped in this hashtable,
-        /// or <code>null</code> if the key did not have a mapping.
+        /// or <c>null</c> if the key did not have a mapping.
         /// </returns>
         public virtual int Remove(int key) {
             IntHashtable.Entry[] tab = table;

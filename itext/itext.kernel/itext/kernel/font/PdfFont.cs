@@ -378,7 +378,7 @@ namespace iText.Kernel.Font {
         /// Indicates if all the glyphs and widths for that particular
         /// encoding should be included in the document.
         /// </summary>
-        /// <returns><code>false</code> to include all the glyphs and widths.</returns>
+        /// <returns><c>false</c> to include all the glyphs and widths.</returns>
         public virtual bool IsSubset() {
             return subset;
         }
@@ -403,7 +403,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>Adds a character range when subsetting.</summary>
         /// <remarks>
-        /// Adds a character range when subsetting. The range is an <code>int</code> array
+        /// Adds a character range when subsetting. The range is an <c>int</c> array
         /// where the first element is the start range inclusive and the second element is the
         /// end range inclusive. Several ranges are allowed in the same array.
         /// Note, #setSubset(true) will be called implicitly

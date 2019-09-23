@@ -250,7 +250,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to cpt structure to.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         /// <param name="copyFromDestDocument">
-        /// indicates if <code>page2page</code> keys and values represent pages from
+        /// indicates if <c>page2page</c> keys and values represent pages from
         /// <paramref name="destDocument"/>
         /// .
         /// </param>

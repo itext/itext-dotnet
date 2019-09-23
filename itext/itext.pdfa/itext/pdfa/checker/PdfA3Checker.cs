@@ -61,8 +61,8 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>Creates a PdfA3Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
-        /// the required conformance level, <code>a</code> or
-        /// <code>u</code> or <code>b</code>
+        /// the required conformance level, <c>a</c> or
+        /// <c>u</c> or <c>b</c>
         /// </param>
         public PdfA3Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {

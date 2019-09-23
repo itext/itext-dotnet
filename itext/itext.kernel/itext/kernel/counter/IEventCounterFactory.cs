@@ -50,7 +50,7 @@ namespace iText.Kernel.Counter {
     /// and creates a counter for every reader or writer class.
     /// <para />
     /// You can implement your own counter factory and register it like this:
-    /// <code>EventCounterManager.getInstance().registerCounter(new SystemOutEventCounterFactory());</code>
+    /// <c>EventCounterManager.getInstance().registerCounter(new SystemOutEventCounterFactory());</c>
     /// <para />
     /// <see cref="SystemOutEventCounterFactory"/>
     /// is just an example of

@@ -63,7 +63,7 @@ namespace iText.Kernel.Log {
     /// and register it with
     /// <see cref="SimpleCounterFactory"/>
     /// like this:
-    /// <code>CounterManager.getInstance().register(new SimpleCounterFactory(new SystemOutCounter());</code>
+    /// <c>CounterManager.getInstance().register(new SimpleCounterFactory(new SystemOutCounter());</c>
     /// <see cref="SystemOutCounter"/>
     /// is just an example of a
     /// <see cref="ICounter"/>

@@ -233,7 +233,7 @@ namespace iText.Layout {
         /// resource-intensive for large documents.
         /// Do not use when you have set
         /// <see cref="RootElement{T}.immediateFlush"/>
-        /// to <code>true</code>.
+        /// to <c>true</c>.
         /// </remarks>
         public virtual void Relayout() {
             if (immediateFlush) {

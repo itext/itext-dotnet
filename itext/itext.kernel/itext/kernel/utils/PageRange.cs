@@ -188,8 +188,8 @@ namespace iText.Kernel.Utils {
         /// <summary>Checks if a given page is present in the range built so far.</summary>
         /// <param name="pageNumber">the page number to check</param>
         /// <returns>
-        /// <code>true</code> if the page is present in this range,
-        /// <code>false</code> otherwise
+        /// <c>true</c> if the page is present in this range,
+        /// <c>false</c> otherwise
         /// </returns>
         public virtual bool IsPageInRange(int pageNumber) {
             foreach (PageRange.IPageRangePart sequence in sequences) {

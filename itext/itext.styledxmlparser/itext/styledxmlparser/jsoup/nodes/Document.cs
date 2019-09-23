@@ -494,11 +494,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// which uses the complete set of HTML named entities.
         /// </summary>
         /// <remarks>
-        /// Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
-        /// entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
+        /// Get the document's current HTML escape mode: <c>base</c>, which provides a limited set of named HTML
+        /// entities and escapes other characters as numbered entities for maximum compatibility; or <c>extended</c>,
         /// which uses the complete set of HTML named entities.
         /// <para />
-        /// The default escape mode is <code>base</code>.
+        /// The default escape mode is <c>base</c>.
         /// </remarks>
         /// <returns>the document's current escape mode</returns>
         public virtual Entities.EscapeMode EscapeMode() {
@@ -522,7 +522,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </summary>
         /// <remarks>
         /// Get the document's current output charset, which is used to control which characters are escaped when
-        /// generating HTML (via the <code>html()</code> methods), and which are kept intact.
+        /// generating HTML (via the <c>html()</c> methods), and which are kept intact.
         /// <para />
         /// Where possible (when parsing from a URL or File), the document's output charset is automatically set to the
         /// input charset. Otherwise, it defaults to UTF-8.

@@ -70,6 +70,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Returns <code>Tx</code>, the form type for textual form fields.</summary>
+        /// <remarks>Returns <c>Tx</c>, the form type for textual form fields.</remarks>
         /// <returns>
         /// the form type, as a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

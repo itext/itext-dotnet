@@ -607,7 +607,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
-        /// Flushes page dictionary, its content streams, annotations and thumb image. If <code>flushResourcesContentStreams</code> is true,
+        /// Flushes page dictionary, its content streams, annotations and thumb image. If <c>flushResourcesContentStreams</c> is true,
         /// all content streams that are rendered on this page (like FormXObjects, annotation appearance streams, patterns)
         /// and also all images associated with this page will also be flushed.
         /// <para />
@@ -615,7 +615,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="Flush()">PdfPage#flush() method</see>
         /// .
         /// <para />
-        /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushResourcesContentStreams</code> is true.
+        /// If <c>PdfADocument</c> is used, flushing will be applied only if <c>flushResourcesContentStreams</c> is true.
         /// <para />
         /// Be careful with handling document in which some of the pages are flushed. Keep in mind that flushed objects are
         /// finalized and are completely written to the output stream. This frees their memory but makes
@@ -1386,7 +1386,7 @@ namespace iText.Kernel.Pdf {
         /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
         /// its pages in miniature form
         /// </remarks>
-        /// <returns>the thumbnail image, or <code>null</code> if it is not present</returns>
+        /// <returns>the thumbnail image, or <c>null</c> if it is not present</returns>
         public virtual PdfImageXObject GetThumbnailImage() {
             PdfStream thumbStream = GetPdfObject().GetAsStream(PdfName.Thumb);
             return thumbStream != null ? new PdfImageXObject(thumbStream) : null;

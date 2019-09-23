@@ -73,6 +73,7 @@ namespace iText.Signatures {
         protected internal PdfAcroForm acroForm;
 
         /// <summary>The date the revision was signed, or <code>null</code> for the highest revision.</summary>
+        /// <remarks>The date the revision was signed, or <c>null</c> for the highest revision.</remarks>
         protected internal DateTime signDate;
 
         /// <summary>The signature that covers the revision.</summary>
@@ -224,7 +225,7 @@ namespace iText.Signatures {
         /// <param name="signCert">the signing certificate</param>
         /// <param name="issuerCert">the issuer's certificate</param>
         /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
+        /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>

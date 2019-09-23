@@ -69,6 +69,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
+        /// <remarks>Constructs a <c>Font</c>-object.</remarks>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
         /// <returns>the Font constructed based on the parameters</returns>
@@ -78,6 +79,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
+        /// <remarks>Constructs a <c>Font</c>-object.</remarks>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
         /// <param name="cached">
@@ -304,7 +306,7 @@ namespace iText.IO.Font {
 
         /// <summary>Register all the fonts in a directory and possibly its subdirectories.</summary>
         /// <param name="dir">the directory</param>
-        /// <param name="scanSubdirectories">recursively scan subdirectories if <code>true</code></param>
+        /// <param name="scanSubdirectories">recursively scan subdirectories if <c>true</c></param>
         /// <returns>the number of fonts registered</returns>
         internal virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
             LOGGER.Debug(MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));

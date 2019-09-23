@@ -85,10 +85,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// encapsulated in PdfStream object as first element and EI command as second element.
         /// </remarks>
         /// <param name="ls">
-        /// an <code>ArrayList</code> to use. It will be cleared before using. If it's
-        /// <code>null</code> will create a new <code>ArrayList</code>
+        /// an <c>ArrayList</c> to use. It will be cleared before using. If it's
+        /// <c>null</c> will create a new <c>ArrayList</c>
         /// </param>
-        /// <returns>the same <code>ArrayList</code> given as argument or a new one</returns>
+        /// <returns>the same <c>ArrayList</c> given as argument or a new one</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         public virtual IList<PdfObject> Parse(IList<PdfObject> ls) {
             if (ls == null) {
@@ -208,7 +208,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         }
 
         /// <summary>Reads the next token skipping over the comments.</summary>
-        /// <returns><code>true</code> if a token was read, <code>false</code> if the end of content was reached</returns>
+        /// <returns><c>true</c> if a token was read, <c>false</c> if the end of content was reached</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         public virtual bool NextValidToken() {
             while (tokeniser.NextToken()) {

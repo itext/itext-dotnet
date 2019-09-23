@@ -493,7 +493,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
         /// .
         /// </summary>
-        /// <returns>paragraph lines, or <code>null</code> if layout hasn't been called yet</returns>
+        /// <returns>paragraph lines, or <c>null</c> if layout hasn't been called yet</returns>
         public virtual IList<LineRenderer> GetLines() {
             return lines;
         }

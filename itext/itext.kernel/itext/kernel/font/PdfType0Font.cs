@@ -617,7 +617,7 @@ namespace iText.Kernel.Font {
         /// metrics[0] contains the glyph index and metrics[2]
         /// contains the Unicode code
         /// </param>
-        /// <returns>the stream representing this CMap or <code>null</code></returns>
+        /// <returns>the stream representing this CMap or <c>null</c></returns>
         [System.ObsoleteAttribute(@"will be removed in 7.2. Use GetToUnicode() instead")]
         public virtual PdfStream GetToUnicode(Object[] metrics) {
             return GetToUnicode();
@@ -879,7 +879,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Creates a ToUnicode CMap to allow copy and paste from Acrobat.</summary>
-        /// <returns>the stream representing this CMap or <code>null</code></returns>
+        /// <returns>the stream representing this CMap or <c>null</c></returns>
         public virtual PdfStream GetToUnicode() {
             OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(new ByteArrayOutputStream
                 ());

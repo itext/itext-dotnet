@@ -369,7 +369,8 @@ namespace iText.IO.Image {
 
         // ignore ICC profile if it's invalid.
         /// <summary>Reads a short from the <CODE>InputStream</CODE>.</summary>
-        /// <param name="jpegStream">the <code>InputStream</code></param>
+        /// <remarks>Reads a short from the <c>InputStream</c>.</remarks>
+        /// <param name="jpegStream">the <c>InputStream</c></param>
         /// <returns>an int</returns>
         /// <exception cref="System.IO.IOException"/>
         private static int GetShort(Stream jpegStream) {

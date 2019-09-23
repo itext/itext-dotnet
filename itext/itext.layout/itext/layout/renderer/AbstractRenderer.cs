@@ -1943,8 +1943,8 @@ namespace iText.Layout.Renderer {
         /// <summary>Gets borders of the element in the specified order: top, right, bottom, left.</summary>
         /// <returns>
         /// an array of BorderDrawer objects.
-        /// In case when certain border isn't set <code>Property.BORDER</code> is used,
-        /// and if <code>Property.BORDER</code> is also not set then <code>null</code> is returned
+        /// In case when certain border isn't set <c>Property.BORDER</c> is used,
+        /// and if <c>Property.BORDER</c> is also not set then <c>null</c> is returned
         /// on position of this border
         /// </returns>
         protected internal virtual Border[] GetBorders() {
@@ -1955,8 +1955,8 @@ namespace iText.Layout.Renderer {
         ///     </summary>
         /// <returns>
         /// an array of BorderRadius objects.
-        /// In case when certain border radius isn't set <code>Property.BORDER_RADIUS</code> is used,
-        /// and if <code>Property.BORDER_RADIUS</code> is also not set then <code>null</code> is returned
+        /// In case when certain border radius isn't set <c>Property.BORDER_RADIUS</c> is used,
+        /// and if <c>Property.BORDER_RADIUS</c> is also not set then <c>null</c> is returned
         /// on position of this border radius
         /// </returns>
         protected internal virtual BorderRadius[] GetBorderRadii() {

@@ -77,7 +77,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         ///     </summary>
         /// <remarks>
         /// Creates a new, clean document, from the original dirty document, containing only elements allowed by the whitelist.
-        /// The original document is not modified. Only elements from the dirt document's <code>body</code> are used.
+        /// The original document is not modified. Only elements from the dirt document's <c>body</c> are used.
         /// </remarks>
         /// <param name="dirtyDocument">Untrusted base document to clean.</param>
         /// <returns>cleaned document.</returns>

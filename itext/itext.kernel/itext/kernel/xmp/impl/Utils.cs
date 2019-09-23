@@ -299,7 +299,7 @@ namespace iText.Kernel.XMP.Impl {
         /// correct according to the XML Spec.
         /// </remarks>
         /// <param name="name">an XML Name</param>
-        /// <returns>Return <code>true</code> if the name is correct.</returns>
+        /// <returns>Return <c>true</c> if the name is correct.</returns>
         public static bool IsXMLName(String name) {
             if (name.Length > 0 && !IsNameStartChar(name[0])) {
                 return false;
@@ -346,7 +346,7 @@ namespace iText.Kernel.XMP.Impl {
         /// Serializes the node value in XML encoding. Its used for tag bodies and
         /// attributes.<br />
         /// <em>Note:</em> The attribute is always limited by quotes,
-        /// thats why <code>&amp;apos;</code> is never serialized.<br />
+        /// thats why <c>&amp;apos;</c> is never serialized.<br />
         /// <em>Note:</em> Control chars are written unescaped, but if the user uses others than tab, LF
         /// and CR the resulting XML will become invalid.
         /// </remarks>

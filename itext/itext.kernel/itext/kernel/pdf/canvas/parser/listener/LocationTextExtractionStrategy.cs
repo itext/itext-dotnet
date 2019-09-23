@@ -109,7 +109,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>Sets if text flows from left to right or from right to left.</summary>
         /// <remarks>
         /// Sets if text flows from left to right or from right to left.
-        /// Call this method with <code>true</code> argument for extracting Arabic, Hebrew or other
+        /// Call this method with <c>true</c> argument for extracting Arabic, Hebrew or other
         /// text with right-to-left writing direction.
         /// </remarks>
         /// <param name="rightToLeftRunDirection">value specifying whether the direction should be right to left</param>

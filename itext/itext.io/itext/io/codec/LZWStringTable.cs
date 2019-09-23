@@ -50,9 +50,9 @@ namespace iText.IO.Codec {
     /// General purpose LZW String Table.
     /// Extracted from GIFEncoder by Adam Doppelt
     /// Comments added by Robin Luiten
-    /// <code>expandCode</code> added by Robin Luiten
+    /// <c>expandCode</c> added by Robin Luiten
     /// The strLen_ table to give quick access to the lenght of an expanded
-    /// code for use by the <code>expandCode</code> method added by Robin.
+    /// code for use by the <c>expandCode</c> method added by Robin.
     /// </remarks>
     public class LZWStringTable {
         /// <summary>codesize + Reserved Codes</summary>

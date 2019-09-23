@@ -87,8 +87,8 @@ namespace iText.Signatures {
         /// <param name="certChain">the certificate chain</param>
         /// <param name="interfaceDigest">the interface digest</param>
         /// <param name="hashAlgorithm">the hash algorithm</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
-        /// <param name="hasRSAdata"><code>true</code> if the sub-filter is adbe.pkcs7.sha1</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
+        /// <param name="hasRSAdata"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
         /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException">on error</exception>
         /// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
@@ -140,7 +140,7 @@ namespace iText.Signatures {
         /// <summary>Use this constructor if you want to verify a signature using the sub-filter adbe.x509.rsa_sha1.</summary>
         /// <param name="contentsKey">the /Contents key</param>
         /// <param name="certsKey">the /Cert key</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         public PdfPKCS7(byte[] contentsKey, byte[] certsKey) {
             // Constructors for validating existing signatures
             try {
@@ -164,7 +164,7 @@ namespace iText.Signatures {
         /// <summary>Use this constructor if you want to verify a signature.</summary>
         /// <param name="contentsKey">the /Contents key</param>
         /// <param name="filterSubtype">the filtersubtype</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         public PdfPKCS7(byte[] contentsKey, PdfName filterSubtype) {
             this.filterSubtype = filterSubtype;
             isTsp = PdfName.ETSI_RFC3161.Equals(filterSubtype);
@@ -541,8 +541,8 @@ namespace iText.Signatures {
         /// <param name="digest">the digest. This is the actual signature</param>
         /// <param name="rsaData">the extra data that goes into the data tag in PKCS#7</param>
         /// <param name="digestEncryptionAlgorithm">
-        /// the encryption algorithm. It may must be <code>null</code> if the <code>digest</code>
-        /// is also <code>null</code>. If the <code>digest</code> is not <code>null</code>
+        /// the encryption algorithm. It may must be <c>null</c> if the <c>digest</c>
+        /// is also <c>null</c>. If the <c>digest</c> is not <c>null</c>
         /// then it may be "RSA" or "DSA"
         /// </param>
         public virtual void SetExternalDigest(byte[] digest, byte[] rsaData, String digestEncryptionAlgorithm) {
@@ -651,7 +651,7 @@ namespace iText.Signatures {
         /// <summary>Gets the bytes for the PKCS7SignedData object.</summary>
         /// <remarks>
         /// Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
-        /// in the signerInfo can also be set. If either of the parameters is <code>null</code>, none will be used.
+        /// in the signerInfo can also be set. If either of the parameters is <c>null</c>, none will be used.
         /// </remarks>
         /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
         /// <returns>the bytes for the PKCS7SignedData object</returns>
@@ -1036,7 +1036,7 @@ namespace iText.Signatures {
         // Stefan Santesson
         // verification
         /// <summary>Verify the digest.</summary>
-        /// <returns><code>true</code> if the signature checks out, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
         /// if this signature object is not initialized properly,
         /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
@@ -1067,7 +1067,7 @@ namespace iText.Signatures {
         /// <see cref="SignatureUtil.SignatureCoversWholeDocument(System.String)"/>
         /// method.
         /// </remarks>
-        /// <returns><code>true</code> if the signature checks out, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
         /// if this signature object is not initialized properly,
         /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to

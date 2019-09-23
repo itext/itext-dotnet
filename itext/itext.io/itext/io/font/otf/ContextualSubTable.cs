@@ -59,7 +59,7 @@ namespace iText.IO.Font.Otf {
         /// Gets a most preferable context rule that matches the line at current position. If no matching context rule is found,
         /// it returns null.
         /// <br /><br />
-        /// NOTE: if matching context rule is found, the <code>GlyphLine.start</code> and <code>GlyphLine.end</code> will be
+        /// NOTE: if matching context rule is found, the <c>GlyphLine.start</c> and <c>GlyphLine.end</c> will be
         /// changed in such way, that they will point at start and end of the matching context glyph sequence inside the glyph line.
         /// </remarks>
         /// <param name="line">a line, which is to be checked if it matches some context.</param>

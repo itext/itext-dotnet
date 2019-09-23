@@ -259,7 +259,7 @@ namespace iText.Kernel.Utils {
         /// Escapes a string with the appropriated XML codes.
         /// </summary>
         /// <param name="s">the string to be escaped</param>
-        /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <code>true</code></param>
+        /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <c>true</c></param>
         /// <returns>the escaped string</returns>
         protected internal static String EscapeXML(String s, bool onlyASCII) {
             char[] cc = s.ToCharArray();

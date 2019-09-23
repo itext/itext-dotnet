@@ -38,13 +38,13 @@ namespace iText.Kernel.XMP {
     /// an object. These are all functions that layer cleanly on top of the kernel XMP toolkit.
     /// <para />
     /// These functions provide support for composing path expressions to deeply nested properties. The
-    /// functions <code>XMPMeta</code> such as <code>getProperty()</code>,
-    /// <code>getArrayItem()</code> and <code>getStructField()</code> provide easy access to top
+    /// functions <c>XMPMeta</c> such as <c>getProperty()</c>,
+    /// <c>getArrayItem()</c> and <c>getStructField()</c> provide easy access to top
     /// level simple properties, items in top level arrays, and fields of top level structs. They do not
     /// provide convenient access to more complex things like fields several levels deep in a complex
     /// struct, or fields within an array of structs, or items of an array that is a field of a struct.
     /// These functions can also be used to compose paths to top level array items or struct fields so
-    /// that you can use the binary accessors like <code>getPropertyAsInteger()</code>.
+    /// that you can use the binary accessors like <c>getPropertyAsInteger()</c>.
     /// <para />
     /// You can use these functions is to compose a complete path expression, or all but the last
     /// component. Suppose you have a property that is an array of integers within a struct. You can
@@ -82,11 +82,11 @@ namespace iText.Kernel.XMP {
         /// <summary>Compose the path expression for an item in an array.</summary>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <param name="itemIndex">
         /// The index of the desired item. Arrays in XMP are indexed from 1.
-        /// 0 and below means last array item and renders as <code>[last()]</code>.
+        /// 0 and below means last array item and renders as <c>[last()]</c>.
         /// </param>
         /// <returns>
         /// Returns the composed path basing on fullPath. This will be of the form
@@ -115,12 +115,12 @@ namespace iText.Kernel.XMP {
         /// path of
         /// </remarks>
         /// <param name="fieldNS">
-        /// The namespace URI for the field. Must not be <code>null</code> or the empty
+        /// The namespace URI for the field. Must not be <c>null</c> or the empty
         /// string.
         /// </param>
         /// <param name="fieldName">
         /// The name of the field. Must be a simple XML name, must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <returns>
         /// Returns the composed path. This will be of the form
@@ -141,12 +141,12 @@ namespace iText.Kernel.XMP {
 
         /// <summary>Compose the path expression for a qualifier.</summary>
         /// <param name="qualNS">
-        /// The namespace URI for the qualifier. May be <code>null</code> or the empty
+        /// The namespace URI for the qualifier. May be <c>null</c> or the empty
         /// string if the qualifier is in the XML empty namespace.
         /// </param>
         /// <param name="qualName">
         /// The name of the qualifier. Must be a simple XML name, must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <returns>
         /// Returns the composed path. This will be of the form
@@ -181,7 +181,7 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must
-        /// not be <code>null</code> or the empty string.
+        /// not be <c>null</c> or the empty string.
         /// </param>
         /// <param name="langName">The RFC 3066 code for the desired language.</param>
         /// <returns>
@@ -214,15 +214,15 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <param name="fieldNS">
         /// The namespace URI for the field used as the selector. Must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <param name="fieldName">
         /// The name of the field used as the selector. Must be a simple XML name, must
-        /// not be <code>null</code> or the empty string. It must be the name of a field that is
+        /// not be <c>null</c> or the empty string. It must be the name of a field that is
         /// itself simple.
         /// </param>
         /// <param name="fieldValue">The desired value of the field.</param>

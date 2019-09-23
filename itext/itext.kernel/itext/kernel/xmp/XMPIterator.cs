@@ -109,12 +109,20 @@ namespace iText.Kernel.XMP {
         /// Skip the subtree below the current node when <code>next()</code> is
         /// called.
         /// </summary>
+        /// <remarks>
+        /// Skip the subtree below the current node when <c>next()</c> is
+        /// called.
+        /// </remarks>
         void SkipSubtree();
 
         /// <summary>
         /// Skip the subtree below and remaining siblings of the current node when
         /// <code>next()</code> is called.
         /// </summary>
+        /// <remarks>
+        /// Skip the subtree below and remaining siblings of the current node when
+        /// <c>next()</c> is called.
+        /// </remarks>
         void SkipSiblings();
     }
 }

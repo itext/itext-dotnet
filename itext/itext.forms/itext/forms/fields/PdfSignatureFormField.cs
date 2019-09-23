@@ -61,6 +61,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>Returns <code>Sig</code>, the form type for signature form fields.</summary>
+        /// <remarks>Returns <c>Sig</c>, the form type for signature form fields.</remarks>
         /// <returns>
         /// the form type, as a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

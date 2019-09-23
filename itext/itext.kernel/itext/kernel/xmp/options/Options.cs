@@ -124,7 +124,7 @@ namespace iText.Kernel.XMP.Options {
         /// expensive and should only be used within tests or as
         /// </remarks>
         /// <returns>
-        /// Returns a String listing all options that are set to <code>true</code> by their name,
+        /// Returns a String listing all options that are set to <c>true</c> by their name,
         /// like &quot;option1 | option4&quot;.
         /// </returns>
         public virtual String GetOptionsString() {

@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Jsoup {
         }
 
         /// <summary>Creates and initializes a new serialization exception with the given error message and no cause.</summary>
-        /// <param name="message">the error message of the new serialization exception (may be <code>null</code>).</param>
+        /// <param name="message">the error message of the new serialization exception (may be <c>null</c>).</param>
         public SerializationException(String message)
             : base(message) {
         }
@@ -66,7 +66,12 @@ namespace iText.StyledXmlParser.Jsoup {
         /// <code>(cause==null ? null : cause.toString())</code> (which typically contains the class and error message of
         /// <code>cause</code>).
         /// </summary>
-        /// <param name="cause">the cause of the new serialization exception (may be <code>null</code>).</param>
+        /// <remarks>
+        /// Creates and initializes a new serialization exception with the specified cause and an error message of
+        /// <c>(cause==null ? null : cause.toString())</c> (which typically contains the class and error message of
+        /// <c>cause</c>).
+        /// </remarks>
+        /// <param name="cause">the cause of the new serialization exception (may be <c>null</c>).</param>
         public SerializationException(Exception cause)
             : base(cause == null ? "Exception with null cause" : cause.Message, cause) {
         }

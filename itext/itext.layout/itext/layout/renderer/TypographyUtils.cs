@@ -132,7 +132,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Checks if layout module can access pdfCalligraph</summary>
-        /// <returns><code>true</code> if layout can access pdfCalligraph and <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if layout can access pdfCalligraph and <c>false</c> otherwise</returns>
         public static bool IsPdfCalligraphAvailable() {
             return TYPOGRAPHY_MODULE_INITIALIZED;
         }

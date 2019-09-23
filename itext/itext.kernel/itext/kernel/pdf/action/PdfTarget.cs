@@ -249,7 +249,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>Get a target dictionary specifying additional path information to the target document.</summary>
         /// <remarks>
         /// Get a target dictionary specifying additional path information to the target document.
-        /// If the current target object is the final node in the target path, <code>null</code> is returned.
+        /// If the current target object is the final node in the target path, <c>null</c> is returned.
         /// </remarks>
         /// <returns>a target dictionary specifying additional path information to the target document</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTarget GetTarget() {

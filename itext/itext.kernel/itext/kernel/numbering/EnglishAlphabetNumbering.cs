@@ -89,7 +89,7 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its English alphabet string representation.</summary>
         /// <remarks>
         /// Converts the given number to its English alphabet string representation.
-        /// E.g. for <code>upperCase</code> set to false,
+        /// E.g. for <c>upperCase</c> set to false,
         /// 1 will be converted to "a", 2 to "b", ..., 27 to "aa", and so on.
         /// </remarks>
         /// <param name="number">the number greater than zero to be converted</param>

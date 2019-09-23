@@ -93,7 +93,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
-        /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
+        /// <param name="fontDictionary">a dictionary of type <c>/Font</c>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             subset = true;
@@ -240,20 +240,20 @@ namespace iText.Kernel.Font {
         /// <param name="c">the character to match this glyph.</param>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
-        /// the X lower left corner of the glyph bounding box. If the <code>colorize</code> option is
-        /// <code>true</code> the value is ignored
+        /// the X lower left corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="lly">
-        /// the Y lower left corner of the glyph bounding box. If the <code>colorize</code> option is
-        /// <code>true</code> the value is ignored
+        /// the Y lower left corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="urx">
-        /// the X upper right corner of the glyph bounding box. If the <code>colorize</code> option is
-        /// <code>true</code> the value is ignored
+        /// the X upper right corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="ury">
-        /// the Y upper right corner of the glyph bounding box. If the <code>colorize</code> option is
-        /// <code>true</code> the value is ignored
+        /// the Y upper right corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <returns>a content where the glyph can be defined</returns>
         public virtual Type3Glyph AddGlyph(char c, int wx, int llx, int lly, int urx, int ury) {

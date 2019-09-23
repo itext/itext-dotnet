@@ -122,7 +122,7 @@ namespace iText.Svg.Converter {
         }
 
         /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
-        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
@@ -132,7 +132,7 @@ namespace iText.Svg.Converter {
         }
 
         /// <summary>Convert a SVG file of a chart which contains some currently ignored tags.</summary>
-        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
+        /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

@@ -56,21 +56,31 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Barcodes {
     public class BarcodePDF417 : Barcode2D {
         /// <summary>Auto-size is made based on <CODE>aspectRatio</CODE> and <CODE>yHeight</CODE>.</summary>
+        /// <remarks>Auto-size is made based on <c>aspectRatio</c> and <c>yHeight</c>.</remarks>
         public const int PDF417_USE_ASPECT_RATIO = 0;
 
         /// <summary>The size of the barcode will be at least <CODE>codeColumns*codeRows</CODE>.</summary>
+        /// <remarks>The size of the barcode will be at least <c>codeColumns*codeRows</c>.</remarks>
         public const int PDF417_FIXED_RECTANGLE = 1;
 
         /// <summary>
         /// The size will be at least <CODE>codeColumns</CODE>
         /// with a variable number of <CODE>codeRows</CODE>.
         /// </summary>
+        /// <remarks>
+        /// The size will be at least <c>codeColumns</c>
+        /// with a variable number of <c>codeRows</c>.
+        /// </remarks>
         public const int PDF417_FIXED_COLUMNS = 2;
 
         /// <summary>
         /// The size will be at least <CODE>codeRows</CODE>
         /// with a variable number of <CODE>codeColumns</CODE>.
         /// </summary>
+        /// <remarks>
+        /// The size will be at least <c>codeRows</c>
+        /// with a variable number of <c>codeColumns</c>.
+        /// </remarks>
         public const int PDF417_FIXED_ROWS = 4;
 
         /// <summary>
@@ -90,6 +100,10 @@ namespace iText.Barcodes {
         /// No <CODE>text</CODE> interpretation is done and the content of <CODE>codewords</CODE>
         /// is used directly.
         /// </summary>
+        /// <remarks>
+        /// No <c>text</c> interpretation is done and the content of <c>codewords</c>
+        /// is used directly.
+        /// </remarks>
         public const int PDF417_USE_RAW_CODEWORDS = 64;
 
         /// <summary>
@@ -505,6 +519,7 @@ namespace iText.Barcodes {
         private float yHeight;
 
         /// <summary>Creates a new <CODE>BarcodePDF417</CODE> with the default settings.</summary>
+        /// <remarks>Creates a new <c>BarcodePDF417</c> with the default settings.</remarks>
         public BarcodePDF417() {
             SetDefaultParameters();
         }
@@ -533,6 +548,10 @@ namespace iText.Barcodes {
         /// Set the default settings that correspond to <CODE>PDF417_USE_ASPECT_RATIO</CODE>
         /// and <CODE>PDF417_AUTO_ERROR_LEVEL</CODE>.
         /// </summary>
+        /// <remarks>
+        /// Set the default settings that correspond to <c>PDF417_USE_ASPECT_RATIO</c>
+        /// and <c>PDF417_AUTO_ERROR_LEVEL</c>.
+        /// </remarks>
         public virtual void SetDefaultParameters() {
             options = 0;
             outBits = null;
@@ -732,14 +751,14 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <code>null</code></param>
+        /// <param name="foreground">the color of the pixels. It can be <c>null</c></param>
         /// <returns>the XObject.</returns>
         public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE, document);
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
-        /// <param name="foreground">The color of the pixels. It can be <code>null</code></param>
+        /// <param name="foreground">The color of the pixels. It can be <c>null</c></param>
         /// <param name="moduleWidth">The width of the pixels.</param>
         /// <param name="moduleHeight">The height of the pixels.</param>
         /// <param name="document">The document</param>
@@ -755,7 +774,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the raw image bits of the barcode.</summary>
         /// <remarks>
         /// Gets the raw image bits of the barcode. The image will have to
-        /// be scaled in the Y direction by <code>yHeight</code>.
+        /// be scaled in the Y direction by <c>yHeight</c>.
         /// </remarks>
         /// <returns>The raw barcode image</returns>
         public virtual byte[] GetOutBits() {
@@ -763,17 +782,18 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Gets the number of X pixels of <CODE>outBits</CODE>.</summary>
-        /// <returns>the number of X pixels of <code>outBits</code></returns>
+        /// <remarks>Gets the number of X pixels of <c>outBits</c>.</remarks>
+        /// <returns>the number of X pixels of <c>outBits</c></returns>
         public virtual int GetBitColumns() {
             return this.bitColumns;
         }
 
         /// <summary>Gets the number of Y pixels of <CODE>outBits</CODE>.</summary>
         /// <remarks>
-        /// Gets the number of Y pixels of <code>outBits</code>.
+        /// Gets the number of Y pixels of <c>outBits</c>.
         /// It is also the number of rows in the barcode.
         /// </remarks>
-        /// <returns>the number of Y pixels of <code>outBits</code></returns>
+        /// <returns>the number of Y pixels of <c>outBits</c></returns>
         public virtual int GetCodeRows() {
             return this.codeRows;
         }
@@ -807,7 +827,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the codeword array.</summary>
         /// <remarks>
         /// Gets the codeword array. This array is always 928 elements long.
-        /// It can be written to if the option <code>PDF417_USE_RAW_CODEWORDS</code>
+        /// It can be written to if the option <c>PDF417_USE_RAW_CODEWORDS</c>
         /// is set.
         /// </remarks>
         /// <returns>the codeword array</returns>
@@ -882,7 +902,7 @@ namespace iText.Barcodes {
         /// <summary>Sets the options to generate the barcode.</summary>
         /// <remarks>
         /// Sets the options to generate the barcode. This can be all
-        /// the <code>PDF417_*</code> constants.
+        /// the <c>PDF417_*</c> constants.
         /// </remarks>
         /// <param name="options">the options to generate the barcode</param>
         public virtual void SetOptions(int options) {

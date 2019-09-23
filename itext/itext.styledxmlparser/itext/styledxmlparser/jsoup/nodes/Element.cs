@@ -162,8 +162,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>Set a boolean attribute value on this element.</summary>
         /// <remarks>
-        /// Set a boolean attribute value on this element. Setting to <code>true</code> sets the attribute value to "" and
-        /// marks the attribute as boolean so no value is written out. Setting to <code>false</code> removes the attribute
+        /// Set a boolean attribute value on this element. Setting to <c>true</c> sets the attribute value to "" and
+        /// marks the attribute as boolean so no value is written out. Setting to <c>false</c> removes the attribute
         /// with the same key if it exists.
         /// </remarks>
         /// <param name="attributeKey">the attribute key</param>
@@ -1193,7 +1193,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </summary>
         /// <remarks>
         /// Gets the literal value of this element's "class" attribute, which may include multiple class names, space
-        /// separated. (E.g. on <code>&lt;div class="header gray"&gt;</code> returns, "<code>header gray</code>")
+        /// separated. (E.g. on <c>&lt;div class="header gray"&gt;</c> returns, "<c>header gray</c>")
         /// </remarks>
         /// <returns>The literal class attribute, or <b>empty string</b> if no class attribute set.</returns>
         public virtual String ClassName() {

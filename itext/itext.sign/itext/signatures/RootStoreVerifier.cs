@@ -51,6 +51,10 @@ namespace iText.Signatures {
     /// Verifies a certificate against a <code>KeyStore</code>
     /// containing trusted anchors.
     /// </summary>
+    /// <remarks>
+    /// Verifies a certificate against a <c>KeyStore</c>
+    /// containing trusted anchors.
+    /// </remarks>
     public class RootStoreVerifier : CertificateVerifier {
         /// <summary>A key store against which certificates can be verified.</summary>
         protected internal List<X509Certificate> rootStore = null;
@@ -72,7 +76,7 @@ namespace iText.Signatures {
         /// <param name="issuerCert">the issuer certificate</param>
         /// <param name="signDate">the date the certificate needs to be valid</param>
         /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
+        /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>

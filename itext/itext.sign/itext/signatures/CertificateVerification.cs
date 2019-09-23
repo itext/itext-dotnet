@@ -57,9 +57,9 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a single certificate for the current date.</summary>
         /// <param name="cert">the certificate to verify</param>
-        /// <param name="crls">the certificate revocation list or <code>null</code></param>
+        /// <param name="crls">the certificate revocation list or <c>null</c></param>
         /// <returns>
-        /// a <code>String</code> with the error description or <code>null</code>
+        /// a <c>String</c> with the error description or <c>null</c>
         /// if no error
         /// </returns>
         public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls) {
@@ -68,10 +68,10 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a single certificate.</summary>
         /// <param name="cert">the certificate to verify</param>
-        /// <param name="crls">the certificate revocation list or <code>null</code></param>
+        /// <param name="crls">the certificate revocation list or <c>null</c></param>
         /// <param name="calendar">the date, shall not be null</param>
         /// <returns>
-        /// a <code>String</code> with the error description or <code>null</code>
+        /// a <c>String</c> with the error description or <c>null</c>
         /// if no error
         /// </returns>
         public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls, DateTime calendar) {
@@ -96,12 +96,12 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a certificate chain against a KeyStore for the current date.</summary>
         /// <param name="certs">the certificate chain</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
-        /// <param name="crls">the certificate revocation list or <code>null</code></param>
+        /// <param name="keystore">the <c>KeyStore</c></param>
+        /// <param name="crls">the certificate revocation list or <c>null</c></param>
         /// <returns>
         /// empty list if the certificate chain could be validated or a
-        /// <code>Object[]{cert,error}</code> where <code>cert</code> is the
-        /// failed certificate and <code>error</code> is the error message
+        /// <c>Object[]{cert,error}</c> where <c>cert</c> is the
+        /// failed certificate and <c>error</c> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore, ICollection<X509Crl> crls) {
@@ -110,13 +110,13 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a certificate chain against a KeyStore.</summary>
         /// <param name="certs">the certificate chain</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
-        /// <param name="crls">the certificate revocation list or <code>null</code></param>
+        /// <param name="keystore">the <c>KeyStore</c></param>
+        /// <param name="crls">the certificate revocation list or <c>null</c></param>
         /// <param name="calendar">the date, shall not be null</param>
         /// <returns>
         /// empty list if the certificate chain could be validated or a
-        /// <code>Object[]{cert,error}</code> where <code>cert</code> is the
-        /// failed certificate and <code>error</code> is the error message
+        /// <c>Object[]{cert,error}</c> where <c>cert</c> is the
+        /// failed certificate and <c>error</c> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore, ICollection<X509Crl> crls, DateTime calendar) {
@@ -174,11 +174,11 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a certificate chain against a KeyStore for the current date.</summary>
         /// <param name="certs">the certificate chain</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
+        /// <param name="keystore">the <c>KeyStore</c></param>
         /// <returns>
-        /// <code>null</code> if the certificate chain could be validated or a
-        /// <code>Object[]{cert,error}</code> where <code>cert</code> is the
-        /// failed certificate and <code>error</code> is the error message
+        /// <c>null</c> if the certificate chain could be validated or a
+        /// <c>Object[]{cert,error}</c> where <c>cert</c> is the
+        /// failed certificate and <c>error</c> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore) {
@@ -187,12 +187,12 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a certificate chain against a KeyStore.</summary>
         /// <param name="certs">the certificate chain</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
+        /// <param name="keystore">the <c>KeyStore</c></param>
         /// <param name="calendar">the date, shall not be null</param>
         /// <returns>
-        /// <code>null</code> if the certificate chain could be validated or a
-        /// <code>Object[]{cert,error}</code> where <code>cert</code> is the
-        /// failed certificate and <code>error</code> is the error message
+        /// <c>null</c> if the certificate chain could be validated or a
+        /// <c>Object[]{cert,error}</c> where <c>cert</c> is the
+        /// failed certificate and <c>error</c> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
              keystore, DateTime calendar) {
@@ -201,9 +201,9 @@ namespace iText.Signatures {
 
         /// <summary>Verifies an OCSP response against a KeyStore.</summary>
         /// <param name="ocsp">the OCSP response</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
-        /// <param name="provider">the provider or <code>null</code> to use the BouncyCastle provider</param>
-        /// <returns><code>true</code> is a certificate was found</returns>
+        /// <param name="keystore">the <c>KeyStore</c></param>
+        /// <param name="provider">the provider or <c>null</c> to use the BouncyCastle provider</param>
+        /// <returns><c>true</c> is a certificate was found</returns>
         public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {
@@ -227,9 +227,9 @@ namespace iText.Signatures {
 
         /// <summary>Verifies a time stamp against a KeyStore.</summary>
         /// <param name="ts">the time stamp</param>
-        /// <param name="keystore">the <code>KeyStore</code></param>
-        /// <param name="provider">the provider or <code>null</code> to use the BouncyCastle provider</param>
-        /// <returns><code>true</code> is a certificate was found</returns>
+        /// <param name="keystore">the <c>KeyStore</c></param>
+        /// <param name="provider">the provider or <c>null</c> to use the BouncyCastle provider</param>
+        /// <returns><c>true</c> is a certificate was found</returns>
         public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
             try {

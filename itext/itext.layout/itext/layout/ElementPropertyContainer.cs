@@ -121,8 +121,8 @@ namespace iText.Layout {
         /// The default implementation in
         /// <see cref="iText.Layout.Renderer.AbstractRenderer"/>
         /// treats
-        /// <code>left</code> and <code>top</code> as the most important values. Only
-        /// if <code>left == 0</code> will <code>right</code> be used for the
+        /// <c>left</c> and <c>top</c> as the most important values. Only
+        /// if <c>left == 0</c> will <c>right</c> be used for the
         /// calculation; ditto for top vs. bottom.
         /// </remarks>
         /// <param name="left">movement to the left</param>
@@ -634,7 +634,7 @@ namespace iText.Layout {
         /// text causes glyph outlines to be stroked, filled, used as a clipping
         /// boundary, or some combination of the three.
         /// </summary>
-        /// <param name="textRenderingMode">an <code>int</code> value</param>
+        /// <param name="textRenderingMode">an <c>int</c> value</param>
         /// <returns>this Element.</returns>
         /// <seealso cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
         public virtual T SetTextRenderingMode(int textRenderingMode) {
@@ -759,7 +759,7 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <code>null</code> to follow the
+        /// the color of the line or <c>null</c> to follow the
         /// text color
         /// </param>
         /// <param name="thickness">the absolute thickness of the line</param>
@@ -790,7 +790,7 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <code>null</code> to follow the
+        /// the color of the line or <c>null</c> to follow the
         /// text color
         /// </param>
         /// <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent

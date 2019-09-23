@@ -104,7 +104,7 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>Encode the given byte[].</summary>
         /// <param name="src">the source string.</param>
         /// <param name="lineFeed">
-        /// a linefeed is added after <code>linefeed</code> characters;
+        /// a linefeed is added after <c>linefeed</c> characters;
         /// must be dividable by four; 0 means no linefeeds
         /// </param>
         /// <returns>the base64-encoded data.</returns>

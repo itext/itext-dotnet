@@ -52,7 +52,7 @@ namespace iText.Barcodes.Qrcode {
     /// This class contains utility methods for performing mathematical operations over
     /// the Galois Field GF(256). Operations use a given primitive polynomial in calculations.
     /// <para />
-    /// Throughout this package, elements of GF(256) are represented as an <code>int</code>
+    /// Throughout this package, elements of GF(256) are represented as an <c>int</c>
     /// for convenience and speed (but at the cost of memory).
     /// Only the bottom 8 bits are really used.
     /// </remarks>

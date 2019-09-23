@@ -1373,7 +1373,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Changes the current color for paths.</summary>
         /// <param name="color">the new color.</param>
-        /// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)</param>
+        /// <param name="fill">set fill color (<c>true</c>) or stroke color (<c>false</c>)</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(Color color, bool fill) {
             if (color is PatternColor) {
@@ -1388,7 +1388,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="colorSpace">the color space of the new color</param>
         /// <param name="colorValue">a list of numerical values with a length corresponding to the specs of the color space. Values should be in the range [0,1]
         ///     </param>
-        /// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)</param>
+        /// <param name="fill">set fill color (<c>true</c>) or stroke color (<c>false</c>)</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(PdfColorSpace colorSpace, float[] colorValue, bool
              fill) {
@@ -1400,7 +1400,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="colorValue">a list of numerical values with a length corresponding to the specs of the color space. Values should be in the range [0,1]
         ///     </param>
         /// <param name="pattern">a pattern for the colored line or area</param>
-        /// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)</param>
+        /// <param name="fill">set fill color (<c>true</c>) or stroke color (<c>false</c>)</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern
              pattern, bool fill) {
@@ -1565,7 +1565,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Begins a graphic block whose visibility is controlled by the <CODE>layer</CODE>.</summary>
         /// <remarks>
-        /// Begins a graphic block whose visibility is controlled by the <code>layer</code>.
+        /// Begins a graphic block whose visibility is controlled by the <c>layer</c>.
         /// Blocks can be nested. Each block must be terminated by an
         /// <see cref="EndLayer()"/>
         /// .<para />

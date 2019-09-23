@@ -265,7 +265,7 @@ namespace iText.Barcodes {
         /// </summary>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <code>true</code> if it is an UCC/EAN-128. In this case
+        /// <c>true</c> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <param name="codeSet">forced code set, or AUTO for optimized barcode.</param>
@@ -433,7 +433,7 @@ namespace iText.Barcodes {
         /// </remarks>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <code>true</code> if it is an UCC/EAN-128. In this case
+        /// <c>true</c> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <returns>the code ready to be fed to getBarsCode128Raw()</returns>
@@ -528,42 +528,42 @@ namespace iText.Barcodes {
 
         /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
         /// <remarks>
-        /// Places the barcode in a <code>PdfCanvas</code>. The
+        /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
         /// <table border="1" summary="barcode properties">
         /// <tr>
-        /// <th><code>barColor</code></th>
-        /// <th><code>textColor</code></th>
+        /// <th><c>barColor</c></th>
+        /// <th><c>textColor</c></th>
         /// <th>Result</th>
         /// </tr>
         /// <tr>
-        /// <td><code>null</code></td>
-        /// <td><code>null</code></td>
+        /// <td><c>null</c></td>
+        /// <td><c>null</c></td>
         /// <td>bars and text painted with current fill color</td>
         /// </tr>
         /// <tr>
-        /// <td><code>barColor</code></td>
-        /// <td><code>null</code></td>
-        /// <td>bars and text painted with <code>barColor</code></td>
+        /// <td><c>barColor</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with <c>barColor</c></td>
         /// </tr>
         /// <tr>
-        /// <td><code>null</code></td>
-        /// <td><code>textColor</code></td>
-        /// <td>bars painted with current color<br />text painted with <code>textColor</code></td>
+        /// <td><c>null</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with current color<br />text painted with <c>textColor</c></td>
         /// </tr>
         /// <tr>
-        /// <td><code>barColor</code></td>
-        /// <td><code>textColor</code></td>
-        /// <td>bars painted with <code>barColor</code><br />text painted with <code>textColor</code></td>
+        /// <td><c>barColor</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with <c>barColor</c><br />text painted with <c>textColor</c></td>
         /// </tr>
         /// </table>
         /// </remarks>
-        /// <param name="canvas">the <code>PdfCanvas</code> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <code>null</code></param>
-        /// <param name="textColor">the color of the text. It can be <code>null</code></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <c>null</c></param>
+        /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             String fullCode;
@@ -673,7 +673,7 @@ namespace iText.Barcodes {
         /// Sets the code to generate. If it's an UCC code and starts with '(' it will
         /// be split by the AI. This code in UCC mode is valid:
         /// <br />
-        /// <code>(01)00000090311314(10)ABC123(15)060916</code>
+        /// <c>(01)00000090311314(10)ABC123(15)060916</c>
         /// </remarks>
         /// <param name="code">the code to generate</param>
         public override void SetCode(String code) {
@@ -807,6 +807,10 @@ namespace iText.Barcodes {
         /// Returns <CODE>true</CODE> if the next <CODE>numDigits</CODE>
         /// starting from index <CODE>textIndex</CODE> are numeric skipping any FNC1.
         /// </summary>
+        /// <remarks>
+        /// Returns <c>true</c> if the next <c>numDigits</c>
+        /// starting from index <c>textIndex</c> are numeric skipping any FNC1.
+        /// </remarks>
         /// <param name="text">the text to check</param>
         /// <param name="textIndex">where to check from</param>
         /// <param name="numDigits">the number of digits to check</param>

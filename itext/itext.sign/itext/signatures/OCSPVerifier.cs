@@ -83,7 +83,7 @@ namespace iText.Signatures {
         /// <param name="signCert">the certificate that needs to be checked</param>
         /// <param name="issuerCert">its issuer</param>
         /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
+        /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
         /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)

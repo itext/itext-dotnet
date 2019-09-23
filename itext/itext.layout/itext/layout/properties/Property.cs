@@ -390,6 +390,12 @@ namespace iText.Layout.Properties {
         /// (<code>return false</code>), or may be defined in one of its parent
         /// elements or renderers (<code>return true</code>).
         /// </summary>
+        /// <remarks>
+        /// This method checks whether a Property, in order to be picked up by the
+        /// rendering engine, must be defined on the current element or renderer
+        /// (<c>return false</c>), or may be defined in one of its parent
+        /// elements or renderers (<c>return true</c>).
+        /// </remarks>
         /// <param name="property">the ID, defined in this class, of the property to check</param>
         /// <returns>whether the property type is inheritable</returns>
         public static bool IsPropertyInherited(int property) {

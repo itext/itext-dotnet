@@ -102,11 +102,11 @@ namespace iText.Kernel.Pdf {
         /// generated from PdfOCProperties object right before closing the PdfDocument,
         /// so if you want to make low-level changes in Pdf structures themselves (PdfArray, PdfDictionary, etc),
         /// then you should address directly those objects, e.g.:
-        /// <code>
+        /// <c>
         /// PdfCatalog pdfCatalog = pdfDoc.getCatalog();
         /// PdfDictionary ocProps = pdfCatalog.getAsDictionary(PdfName.OCProperties);
         /// // manipulate with ocProps.
-        /// </code>
+        /// </c>
         /// Also note that this method is implicitly called when creating a new PdfLayer instance,
         /// so you should either use hi-level logic of operating with layers,
         /// or manipulate low-level Pdf objects by yourself.

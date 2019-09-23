@@ -47,7 +47,7 @@ namespace iText.IO.Font.Otf {
         public abstract int GetContextLength();
 
         /// <returns>
-        /// an array of <code>SubstLookupRecord</code>. Each record specifies a position in the context glyph
+        /// an array of <c>SubstLookupRecord</c>. Each record specifies a position in the context glyph
         /// sequence and a LookupListIndex to the substitution lookup that is applied at that position.
         /// </returns>
         public abstract SubstLookupRecord[] GetSubstLookupRecords();
