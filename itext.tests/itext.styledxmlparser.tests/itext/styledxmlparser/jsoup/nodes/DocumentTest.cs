@@ -157,10 +157,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestHtmlAndXmlSyntax() {
             String h = "<!DOCTYPE html><body><img async checked='checked' src='&<>\"'>&lt;&gt;&amp;&quot;<foo />bar";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            doc.OutputSettings().Syntax(Syntax.html);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.html);
             NUnit.Framework.Assert.AreEqual("<!doctype html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async checked src=\"&amp;<>&quot;\">&lt;&gt;&amp;\"\n"
                  + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             NUnit.Framework.Assert.AreEqual("<!DOCTYPE html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async=\"\" checked=\"checked\" src=\"&amp;<>&quot;\" />&lt;&gt;&amp;\"\n"
                  + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
         }
@@ -168,7 +168,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void HtmlParseDefaultsToHtmlOutputSyntax() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("x");
-            NUnit.Framework.Assert.AreEqual(Syntax.html, doc.OutputSettings().Syntax());
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Nodes.Syntax.html, doc.OutputSettings().Syntax
+                ());
         }
 
         [NUnit.Framework.Test]
@@ -368,7 +369,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private Document CreateXmlDocument(String version, String charset, bool addDecl) {
             Document doc = new Document("");
             doc.AppendElement("root").Text("node");
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             if (addDecl == true) {
                 XmlDeclaration decl = new XmlDeclaration("xml", "", false);
                 decl.Attr("version", version);

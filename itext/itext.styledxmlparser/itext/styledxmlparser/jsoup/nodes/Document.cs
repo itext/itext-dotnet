@@ -392,8 +392,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         private void EnsureMetaCharsetElement() {
             if (updateMetaCharset) {
-                Syntax syntax = OutputSettings().Syntax();
-                if (syntax == Syntax.html) {
+                iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax = OutputSettings().Syntax();
+                if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html) {
                     iText.StyledXmlParser.Jsoup.Nodes.Element metaCharset = Select("meta[charset]").First();
                     if (metaCharset != null) {
                         metaCharset.Attr("charset", Charset().DisplayName());
@@ -408,7 +408,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     Select("meta[name=charset]").Remove();
                 }
                 else {
-                    if (syntax == Syntax.xml) {
+                    if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml) {
                         iText.StyledXmlParser.Jsoup.Nodes.Node node = ChildNodes()[0];
                         if (node is XmlDeclaration) {
                             XmlDeclaration decl = (XmlDeclaration)node;
@@ -441,14 +441,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         // indentAmount, prettyPrint are primitives so object.clone() will handle
         /// <summary>Get the document's current output settings.</summary>
         /// <returns>the document's current output settings.</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings OutputSettings() {
+        public virtual OutputSettings OutputSettings() {
             return outputSettings;
         }
 
         /// <summary>Set the document's output settings.</summary>
         /// <param name="outputSettings">new output settings.</param>
         /// <returns>this document, for chaining.</returns>
-        public virtual Document OutputSettings(iText.StyledXmlParser.Jsoup.Nodes.OutputSettings outputSettings) {
+        public virtual Document OutputSettings(OutputSettings outputSettings) {
             Validate.NotNull(outputSettings);
             this.outputSettings = outputSettings;
             return this;
@@ -511,7 +511,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </summary>
         /// <param name="escapeMode">the new escape mode to use</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings EscapeMode(Entities.EscapeMode escapeMode) {
+        public virtual OutputSettings EscapeMode(Entities.EscapeMode escapeMode) {
             this.escapeMode = escapeMode;
             return this;
         }
@@ -535,7 +535,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Update the document's output charset.</summary>
         /// <param name="charset">the new charset to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Charset(Encoding charset) {
+        public virtual OutputSettings Charset(Encoding charset) {
             this.charset = charset;
             charsetEncoder = iText.IO.Util.TextUtil.NewEncoder(charset);
             return this;
@@ -544,7 +544,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Update the document's output charset.</summary>
         /// <param name="charset">the new charset (by name) to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Charset(String charset) {
+        public virtual OutputSettings Charset(String charset) {
             Charset(EncodingUtil.GetEncoding(charset));
             return this;
         }
@@ -565,8 +565,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <param name="syntax">serialization syntax</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax
-             syntax) {
+        public virtual OutputSettings Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax) {
             this.syntax = syntax;
             return this;
         }
@@ -584,7 +583,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Enable or disable pretty printing.</summary>
         /// <param name="pretty">new pretty print setting</param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings PrettyPrint(bool pretty) {
+        public virtual OutputSettings PrettyPrint(bool pretty) {
             prettyPrint = pretty;
             return this;
         }
@@ -602,7 +601,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Enable or disable HTML outline mode.</summary>
         /// <param name="outlineMode">new outline setting</param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Outline(bool outlineMode) {
+        public virtual OutputSettings Outline(bool outlineMode) {
             outline = outlineMode;
             return this;
         }
@@ -620,15 +619,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// 0.
         /// </param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings IndentAmount(int indentAmount) {
+        public virtual OutputSettings IndentAmount(int indentAmount) {
             Validate.IsTrue(indentAmount >= 0);
             this.indentAmount = indentAmount;
             return this;
         }
 
         public virtual Object Clone() {
-            iText.StyledXmlParser.Jsoup.Nodes.OutputSettings clone;
-            clone = (iText.StyledXmlParser.Jsoup.Nodes.OutputSettings)MemberwiseClone();
+            OutputSettings clone;
+            clone = (OutputSettings)MemberwiseClone();
             clone.Charset(charset.Name());
             clone.escapeMode = Entities.EscapeMode.ValueOf(escapeMode.Name());
             return clone;

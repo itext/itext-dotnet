@@ -40,7 +40,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Layout.Element;
+
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// A specialized enum containing the potential caption side values for a
+    /// <see cref="Table"/>
+    /// 's caption.
+    /// </summary>
     public enum CaptionSide {
         BOTTOM,
         TOP

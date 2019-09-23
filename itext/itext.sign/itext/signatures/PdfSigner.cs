@@ -1162,7 +1162,7 @@ namespace iText.Signatures {
                         reference.Put(PdfName.DigestMethod, digestMethod);
                     }
                     else {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Signatures.PdfSigner));
+                        ILog logger = LogManager.GetLogger(typeof(PdfSigner));
                         logger.Error(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
                     }
                 }

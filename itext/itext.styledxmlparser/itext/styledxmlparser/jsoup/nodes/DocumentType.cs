@@ -75,7 +75,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
-            if (@out.Syntax() == Syntax.html && !Has(PUBLIC_ID) && !Has(SYSTEM_ID)) {
+            if (@out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html && !Has(PUBLIC_ID) && !Has(SYSTEM_ID)) {
                 // looks like a html5 doctype, go lowercase for aesthetics
                 accum.Append("<!doctype");
             }

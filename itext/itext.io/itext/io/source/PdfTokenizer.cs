@@ -325,7 +325,7 @@ namespace iText.IO.Source {
                                 catch (Exception) {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
-                                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.PdfTokenizer));
+                                    ILog logger = LogManager.GetLogger(typeof(PdfTokenizer));
                                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
                                         (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
@@ -918,7 +918,7 @@ namespace iText.IO.Source {
         /// <summary>Check whether line starts with object declaration.</summary>
         /// <param name="lineTokenizer">tokenizer, built by single line.</param>
         /// <returns>object number and generation if check is successful, otherwise - null.</returns>
-        public static int[] CheckObjectStart(iText.IO.Source.PdfTokenizer lineTokenizer) {
+        public static int[] CheckObjectStart(PdfTokenizer lineTokenizer) {
             try {
                 lineTokenizer.Seek(0);
                 if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number) {

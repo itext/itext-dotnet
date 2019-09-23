@@ -677,7 +677,7 @@ namespace iText.Barcodes {
         /// </remarks>
         /// <param name="code">the code to generate</param>
         public override void SetCode(String code) {
-            if (GetCodeType() == iText.Barcodes.Barcode128.CODE128_UCC && code.StartsWith("(")) {
+            if (GetCodeType() == Barcode128.CODE128_UCC && code.StartsWith("(")) {
                 int idx = 0;
                 StringBuilder ret = new StringBuilder("");
                 while (idx >= 0) {

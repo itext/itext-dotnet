@@ -1353,7 +1353,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             attributes.Html(accum, @out);
             // selfclosing includes unknown tags, isEmpty defines tags that are always empty
             if (childNodes.IsEmpty() && tag.IsSelfClosing()) {
-                if (@out.Syntax() == Syntax.html && tag.IsEmpty()) {
+                if (@out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html && tag.IsEmpty()) {
                     accum.Append('>');
                 }
                 else {

@@ -139,7 +139,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public virtual void XmlParseDefaultsToHtmlOutputSyntax() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("x", "", iText.StyledXmlParser.Jsoup.Parser.Parser.
                 XmlParser());
-            NUnit.Framework.Assert.AreEqual(Syntax.xml, doc.OutputSettings().Syntax());
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml, doc.OutputSettings().Syntax(
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -181,7 +182,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void TestCreatesValidProlog() {
             Document document = Document.CreateShell("");
-            document.OutputSettings().Syntax(Syntax.xml);
+            document.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             document.Charset(EncodingUtil.GetEncoding("utf-8"));
             NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<html>\n" + " <head></head>\n"
                  + " <body></body>\n" + "</html>", document.OuterHtml());

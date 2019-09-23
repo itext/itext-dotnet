@@ -61,7 +61,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             base.InitialiseParse(input, baseUri, errors);
             stack.Add(doc);
             // place the document onto the stack. differs from HtmlTreeBuilder (not on stack)
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
         }
 
         internal override bool Process(Token token) {

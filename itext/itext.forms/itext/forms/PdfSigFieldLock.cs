@@ -184,18 +184,18 @@ namespace iText.Forms {
         /// the document when the corresponding signature field is signed:
         /// <list type="bullet">
         /// <item><description>
-        /// <see cref="LockPermissions.NO_CHANGES_ALLOWED"/>
+        /// <see cref="NO_CHANGES_ALLOWED"/>
         /// - no changes to the document are
         /// permitted; any change to the document invalidates the signature,
         /// </description></item>
         /// <item><description>
-        /// <see cref="LockPermissions.FORM_FILLING"/>
+        /// <see cref="FORM_FILLING"/>
         /// - permitted changes are filling in forms,
         /// instantiating page templates, and signing; other changes invalidate
         /// the signature,
         /// </description></item>
         /// <item><description>
-        /// <see cref="LockPermissions.FORM_FILLING_AND_ANNOTATION"/>
+        /// <see cref="FORM_FILLING_AND_ANNOTATION"/>
         /// - permitted changes are the
         /// same as for the previous, as well as annotation creation, deletion,
         /// and modification; other changes invalidate the signature.
