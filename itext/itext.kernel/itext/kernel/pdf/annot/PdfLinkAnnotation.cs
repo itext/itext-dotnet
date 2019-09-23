@@ -264,23 +264,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Setter for the annotation's preset border style.</summary>
         /// <remarks>
         /// Setter for the annotation's preset border style. Possible values are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
         /// - A solid rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
         /// - A dashed rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
         /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
         /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
         /// - A single line along the bottom of the annotation rectangle.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// See also ISO-320001, Table 166.
         /// </remarks>
         /// <param name="style">The new value for the annotation's border style.</param>

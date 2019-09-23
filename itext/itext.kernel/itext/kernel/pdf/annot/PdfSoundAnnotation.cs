@@ -122,10 +122,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are different
         /// for different annotation types:
-        /// <ul>
-        /// <li>Speaker
-        /// <li>Mic
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>Speaker
+        /// </description></item>
+        /// <item><description>Mic
+        /// </description></item>
+        /// </list>
         /// Additional names may be supported as well.
         /// </param>
         /// <returns>

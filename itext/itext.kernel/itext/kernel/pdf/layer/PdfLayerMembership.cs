@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf.Layer {
     /// </summary>
     /// <remarks>
     /// Content typically belongs to a single optional content group,
-    /// and is visible when the group is <B>ON</B> and invisible when it is <B>OFF</B>. To express more
+    /// and is visible when the group is <b>ON</b> and invisible when it is <b>OFF</b>. To express more
     /// complex visibility policies, content should not declare itself to belong to an optional
     /// content group directly, but rather to an optional content membership dictionary
     /// represented by this class.
@@ -122,10 +122,10 @@ namespace iText.Kernel.Pdf.Layer {
         /// <remarks>
         /// Sets the visibility policy for content belonging to this
         /// membership dictionary. Possible values are AllOn, AnyOn, AnyOff and AllOff.
-        /// AllOn - Visible only if all of the entries are <B>ON</B>.
-        /// AnyOn - Visible if any of the entries are <B>ON</B>.
-        /// AnyOff - Visible if any of the entries are <B>OFF</B>.
-        /// AllOff - Visible only if all of the entries are <B>OFF</B>.
+        /// AllOn - Visible only if all of the entries are <b>ON</b>.
+        /// AnyOn - Visible if any of the entries are <b>ON</b>.
+        /// AnyOff - Visible if any of the entries are <b>OFF</b>.
+        /// AllOff - Visible only if all of the entries are <b>OFF</b>.
         /// The default value is AnyOn.
         /// </remarks>
         /// <param name="visibilityPolicy">the visibility policy</param>

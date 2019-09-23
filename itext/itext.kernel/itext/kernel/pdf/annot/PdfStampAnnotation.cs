@@ -91,22 +91,36 @@ namespace iText.Kernel.Pdf.Annot {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are:
-        /// <ul>
-        /// <li>Approved
-        /// <li>Experimental
-        /// <li>NotApproved
-        /// <li>AsIs
-        /// <li>Expired
-        /// <li>NotForPublicRelease
-        /// <li>Confidential
-        /// <li>Final
-        /// <li>Sold
-        /// <li>Departmental
-        /// <li>ForComment
-        /// <li>TopSecret
-        /// <li>Draft
-        /// <li>ForPublicRelease.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>Approved
+        /// </description></item>
+        /// <item><description>Experimental
+        /// </description></item>
+        /// <item><description>NotApproved
+        /// </description></item>
+        /// <item><description>AsIs
+        /// </description></item>
+        /// <item><description>Expired
+        /// </description></item>
+        /// <item><description>NotForPublicRelease
+        /// </description></item>
+        /// <item><description>Confidential
+        /// </description></item>
+        /// <item><description>Final
+        /// </description></item>
+        /// <item><description>Sold
+        /// </description></item>
+        /// <item><description>Departmental
+        /// </description></item>
+        /// <item><description>ForComment
+        /// </description></item>
+        /// <item><description>TopSecret
+        /// </description></item>
+        /// <item><description>Draft
+        /// </description></item>
+        /// <item><description>ForPublicRelease.
+        /// </description></item>
+        /// </list>
         /// </param>
         /// <returns>
         /// this

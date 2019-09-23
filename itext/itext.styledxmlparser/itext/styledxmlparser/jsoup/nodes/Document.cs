@@ -296,10 +296,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// be created. Obsolete charset / encoding definitions are removed!
         /// <para />
         /// <b>Elements used:</b>
-        /// <ul>
-        /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
-        /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i>
+        /// </description></item>
+        /// <item><description><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="charset">Charset</param>
         /// <seealso cref="UpdateMetaCharsetElement(bool)"></seealso>
@@ -372,16 +374,21 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="UpdateMetaCharsetElement(bool)">updateMetaCharset</see>
         /// set to
         /// <tt>true</tt>, otherwise this method does nothing.
-        /// <ul>
-        /// <li>An exsiting element gets updated with the current charset</li>
-        /// <li>If there's no element yet it will be inserted</li>
-        /// <li>Obsolete elements are removed</li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>An exsiting element gets updated with the current charset
+        /// </description></item>
+        /// <item><description>If there's no element yet it will be inserted
+        /// </description></item>
+        /// <item><description>Obsolete elements are removed
+        /// </description></item>
+        /// </list>
         /// <b>Elements used:</b>
-        /// <ul>
-        /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
-        /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i>
+        /// </description></item>
+        /// <item><description><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         private void EnsureMetaCharsetElement() {
             if (updateMetaCharset) {

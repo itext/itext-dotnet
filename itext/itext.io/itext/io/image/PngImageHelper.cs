@@ -1013,24 +1013,24 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Gets an <CODE>int</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
+        /// <param name="pngStream">an <code>InputStream</code></param>
+        /// <returns>the value of an <code>int</code></returns>
         /// <exception cref="System.IO.IOException"/>
         public static int GetInt(Stream pngStream) {
             return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
         }
 
         /// <summary>Gets a <CODE>word</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
+        /// <param name="pngStream">an <code>InputStream</code></param>
+        /// <returns>the value of an <code>int</code></returns>
         /// <exception cref="System.IO.IOException"/>
         public static int GetWord(Stream pngStream) {
             return (pngStream.Read() << 8) + pngStream.Read();
         }
 
         /// <summary>Gets a <CODE>String</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
+        /// <param name="pngStream">an <code>InputStream</code></param>
+        /// <returns>the value of an <code>int</code></returns>
         /// <exception cref="System.IO.IOException"/>
         public static String GetString(Stream pngStream) {
             StringBuilder buf = new StringBuilder();

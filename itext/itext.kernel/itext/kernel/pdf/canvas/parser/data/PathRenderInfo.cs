@@ -148,7 +148,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <returns>
-        /// <CODE>int</CODE> value which is either
+        /// <code>int</code> value which is either
         /// <see cref="NO_OP"/>
         /// or one of possible
         /// combinations of

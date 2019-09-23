@@ -1783,8 +1783,8 @@ namespace iText.Forms.Fields {
         /// </remarks>
         /// <param name="value">the field value</param>
         /// <param name="display">
-        /// the string that is used for the appearance. If <CODE>null</CODE>
-        /// the <CODE>value</CODE> parameter will be used
+        /// the string that is used for the appearance. If <code>null</code>
+        /// the <code>value</code> parameter will be used
         /// </param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String display) {
@@ -3284,11 +3284,14 @@ namespace iText.Forms.Fields {
         /// <summary>Sets an appearance for (the widgets related to) the form field.</summary>
         /// <param name="appearanceType">
         /// the type of appearance stream to be added
-        /// <ul>
-        /// <li> PdfName.N: normal appearance</li>
-        /// <li> PdfName.R: rollover appearance</li>
-        /// <li> PdfName.D: down appearance</li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description> PdfName.N: normal appearance
+        /// </description></item>
+        /// <item><description> PdfName.R: rollover appearance
+        /// </description></item>
+        /// <item><description> PdfName.D: down appearance
+        /// </description></item>
+        /// </list>
         /// </param>
         /// <param name="appearanceState">
         /// the state of the form field that needs to be true

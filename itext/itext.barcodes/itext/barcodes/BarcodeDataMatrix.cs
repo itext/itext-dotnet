@@ -180,7 +180,7 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
-        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="foreground">The color of the pixels. It can be <code>null</code></param>
         /// <param name="moduleSide">The side (width and height) of the pixels.</param>
         /// <param name="document">The document</param>
         /// <returns>the XObject.</returns>
@@ -225,14 +225,14 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a barcode.</summary>
-        /// <remarks>Creates a barcode. The <CODE>String</CODE> is interpreted with the ISO-8859-1 encoding</remarks>
+        /// <remarks>Creates a barcode. The <code>String</code> is interpreted with the ISO-8859-1 encoding</remarks>
         /// <param name="text">the text</param>
         /// <returns>
         /// the status of the generation. It can be one of this values:
-        /// <CODE>DM_NO_ERROR</CODE> - no error.<br />
-        /// <CODE>DM_ERROR_TEXT_TOO_BIG</CODE> - the text is too big for the symbology capabilities.<br />
-        /// <CODE>DM_ERROR_INVALID_SQUARE</CODE> - the dimensions given for the symbol are illegal.<br />
-        /// <CODE>DM_ERROR_EXTENSION</CODE> - an error was while parsing an extension.
+        /// <code>DM_NO_ERROR</code> - no error.<br />
+        /// <code>DM_ERROR_TEXT_TOO_BIG</code> - the text is too big for the symbology capabilities.<br />
+        /// <code>DM_ERROR_INVALID_SQUARE</code> - the dimensions given for the symbol are illegal.<br />
+        /// <code>DM_ERROR_EXTENSION</code> - an error was while parsing an extension.
         /// </returns>
         public virtual int SetCode(String text) {
             byte[] t;
@@ -251,10 +251,10 @@ namespace iText.Barcodes {
         /// <param name="textSize">the text size</param>
         /// <returns>
         /// the status of the generation. It can be one of this values:
-        /// <CODE>DM_NO_ERROR</CODE> - no error.<br />
-        /// <CODE>DM_ERROR_TEXT_TOO_BIG</CODE> - the text is too big for the symbology capabilities.<br />
-        /// <CODE>DM_ERROR_INVALID_SQUARE</CODE> - the dimensions given for the symbol are illegal.<br />
-        /// <CODE>DM_ERROR_EXTENSION</CODE> - an error was while parsing an extension.
+        /// <code>DM_NO_ERROR</code> - no error.<br />
+        /// <code>DM_ERROR_TEXT_TOO_BIG</code> - the text is too big for the symbology capabilities.<br />
+        /// <code>DM_ERROR_INVALID_SQUARE</code> - the dimensions given for the symbol are illegal.<br />
+        /// <code>DM_ERROR_EXTENSION</code> - an error was while parsing an extension.
         /// </returns>
         public virtual int SetCode(byte[] text, int textOffset, int textSize) {
             if (textOffset < 0) {
@@ -330,7 +330,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the height of the barcode.</summary>
         /// <remarks>
         /// Gets the height of the barcode. Will contain the real height used after a successful call
-        /// to <CODE>generate()</CODE>. This height doesn't include the whitespace border, if any.
+        /// to <code>generate()</code>. This height doesn't include the whitespace border, if any.
         /// </remarks>
         /// <returns>the height of the barcode</returns>
         public virtual int GetHeight() {
@@ -381,7 +381,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the width of the barcode.</summary>
         /// <remarks>
         /// Gets the width of the barcode. Will contain the real width used after a successful call
-        /// to <CODE>generate()</CODE>. This width doesn't include the whitespace border, if any.
+        /// to <code>generate()</code>. This width doesn't include the whitespace border, if any.
         /// </remarks>
         /// <returns>the width of the barcode</returns>
         public virtual int GetWidth() {
@@ -451,17 +451,17 @@ namespace iText.Barcodes {
         /// <remarks>
         /// Sets the options for the barcode generation. The options can be:<para />
         /// One of:<br />
-        /// <CODE>DM_AUTO</CODE> - the best encodation will be used<br />
-        /// <CODE>DM_ASCII</CODE> - ASCII encodation<br />
-        /// <CODE>DM_C40</CODE> - C40 encodation<br />
-        /// <CODE>DM_TEXT</CODE> - TEXT encodation<br />
-        /// <CODE>DM_B256</CODE> - binary encodation<br />
-        /// <CODE>DM_X12</CODE> - X12 encodation<br />
-        /// <CODE>DM_EDIFACT</CODE> - EDIFACT encodation<br />
-        /// <CODE>DM_RAW</CODE> - no encodation. The bytes provided are already encoded and will be added directly to the barcode, using padding if needed. It assumes that the encodation state is left at ASCII after the last byte.<br />
+        /// <code>DM_AUTO</code> - the best encodation will be used<br />
+        /// <code>DM_ASCII</code> - ASCII encodation<br />
+        /// <code>DM_C40</code> - C40 encodation<br />
+        /// <code>DM_TEXT</code> - TEXT encodation<br />
+        /// <code>DM_B256</code> - binary encodation<br />
+        /// <code>DM_X12</code> - X12 encodation<br />
+        /// <code>DM_EDIFACT</code> - EDIFACT encodation<br />
+        /// <code>DM_RAW</code> - no encodation. The bytes provided are already encoded and will be added directly to the barcode, using padding if needed. It assumes that the encodation state is left at ASCII after the last byte.<br />
         /// <br />
         /// One of:<br />
-        /// <CODE>DM_EXTENSION</CODE> - allows extensions to be embedded at the start of the text:<para />
+        /// <code>DM_EXTENSION</code> - allows extensions to be embedded at the start of the text:<para />
         /// exxxxxx - ECI number xxxxxx<br />
         /// m5 - macro 5<br />
         /// m6 - macro 6<br />
@@ -472,7 +472,7 @@ namespace iText.Barcodes {
         /// Example for a structured append, symbol 2 of 6, with FNC1 and ECI 000005. The actual text is "Hello".<para />
         /// s020600075fe000005.Hello<para />
         /// One of:<br />
-        /// <CODE>DM_TEST</CODE> - doesn't generate the image but returns all the other information.
+        /// <code>DM_TEST</code> - doesn't generate the image but returns all the other information.
         /// </remarks>
         /// <param name="options">the barcode options</param>
         public virtual void SetOptions(int options) {

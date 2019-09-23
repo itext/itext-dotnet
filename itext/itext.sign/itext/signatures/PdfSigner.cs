@@ -252,19 +252,21 @@ namespace iText.Signatures {
         /// customize the appearance of the signature.
         /// <para />
         /// Be aware:
-        /// <ul>
-        /// <li>If you create new signature field (either use
+        /// <list type="bullet">
+        /// <item><description>If you create new signature field (either use
         /// <see cref="SetFieldName(System.String)"/>
         /// with
         /// the name that doesn't exist in the document or don't specify it at all) then
-        /// the signature is invisible by default.</li>
-        /// <li>If you sign already existing field, then the signature appearance object
+        /// the signature is invisible by default.
+        /// </description></item>
+        /// <item><description>If you sign already existing field, then the signature appearance object
         /// is modified to have all the properties (page num., rect etc.) consistent with
         /// the state of the field (<strong>if you customized the appearance object
         /// before the
         /// <see cref="SetFieldName(System.String)"/>
-        /// call you'll have to do it again</strong>)</li>
-        /// </ul>
+        /// call you'll have to do it again</strong>)
+        /// </description></item>
+        /// </list>
         /// <para />
         /// </remarks>
         /// <returns>
@@ -291,20 +293,24 @@ namespace iText.Signatures {
         /// <summary>Sets the document's certification level.</summary>
         /// <param name="certificationLevel">
         /// a new certification level for a document.
-        /// Possible values are: <ul>
-        /// <li>
+        /// Possible values are: <list type="bullet">
+        /// <item><description>
         /// <see cref="NOT_CERTIFIED"/>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_NO_CHANGES_ALLOWED"/>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING"/>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING_AND_ANNOTATIONS"/>
-        /// </li>
-        /// </ul>
+        /// 
+        /// </description></item>
+        /// </list>
         /// </param>
         public virtual void SetCertificationLevel(int certificationLevel) {
             this.certificationLevel = certificationLevel;
@@ -757,8 +763,8 @@ namespace iText.Signatures {
         /// This is the first method to be called when using external signatures. The general sequence is:
         /// preClose(), getDocumentBytes() and close().
         /// <para />
-        /// <CODE>exclusionSizes</CODE> must contain at least
-        /// the <CODE>PdfName.CONTENTS</CODE> key with the size that it will take in the
+        /// <code>exclusionSizes</code> must contain at least
+        /// the <code>PdfName.CONTENTS</code> key with the size that it will take in the
         /// document. Note that due to the hex string coding this size should be byte_size*2+2.
         /// </remarks>
         /// <param name="exclusionSizes">

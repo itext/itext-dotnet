@@ -119,7 +119,7 @@ namespace iText.IO.Codec {
         /// type of the TIFF field.  Since there is no available 32-bit
         /// unsigned data type, long is used. The mapping between types is
         /// as follows:
-        /// <table border="1" summary="TIFFField data">
+        /// <table border="1" summary="tifffield data">
         /// <tr>
         /// <th> TIFF type </th> <th> Java type </th>
         /// </tr>

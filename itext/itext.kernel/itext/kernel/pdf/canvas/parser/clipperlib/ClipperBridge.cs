@@ -56,20 +56,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// abstractions into the abstractions of the Clipper library and vise versa.
     /// <para />
     /// For example:
-    /// <ul>
-    /// <li>
+    /// <list type="bullet">
+    /// <item><description>
     /// <see cref="PolyTree"/>
     /// to
     /// <see cref="iText.Kernel.Geom.Path"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="iText.Kernel.Geom.Point"/>
     /// to
     /// <see cref="IntPoint"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="IntPoint"/>
     /// to
     /// <see cref="iText.Kernel.Geom.Point"/>
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// </remarks>
     public class ClipperBridge {
         /// <summary>
@@ -280,10 +283,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// a closed polygon.
         /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
-        /// <ul>
-        /// <li>it has less than 3 vertices;
-        /// <li>the vertices are all co-linear.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>it has less than 3 vertices;
+        /// </description></item>
+        /// <item><description>the vertices are all co-linear.
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <param name="clipper">
         /// 
@@ -323,9 +328,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Polylines cannot be part of clipping polygon.
         /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
-        /// <ul>
-        /// <li>it has less than 2 vertices;
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>it has less than 2 vertices;
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <param name="clipper">
         /// 

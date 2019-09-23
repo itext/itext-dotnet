@@ -176,12 +176,16 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of all objects present in the page description at the time the trap networks
         /// were generated. If present, the array shall include the following objects:
-        /// <ul>
-        /// <li>all page content streams;
-        /// <li>all page resource objects (other than procedure sets);
-        /// <li>all resource objects (other than procedure sets) of any form XObjects on the page;
-        /// <li>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>all page content streams;
+        /// </description></item>
+        /// <item><description>all page resource objects (other than procedure sets);
+        /// </description></item>
+        /// <item><description>all resource objects (other than procedure sets) of any form XObjects on the page;
+        /// </description></item>
+        /// <item><description>all OPI dictionaries associated with XObjects on the page (see ISO-320001 14.11.7, "Open Prepress Interface (OPI)")
+        /// </description></item>
+        /// </list>
         /// </param>
         /// <returns>
         /// this

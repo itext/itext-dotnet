@@ -60,7 +60,7 @@ namespace iText.IO.Font {
         /// the requested encoding. It's mainly of use if the same class
         /// supports more than one encoding.
         /// </param>
-        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        /// <returns>the conversion or <code>null</code> if no conversion is supported</returns>
         byte[] CharToByte(String text, String encoding);
 
         /// <summary>Converts an Unicode char to a byte array according to some encoding.</summary>
@@ -69,7 +69,7 @@ namespace iText.IO.Font {
         /// the requested encoding. It's mainly of use if the same class
         /// supports more than one encoding.
         /// </param>
-        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        /// <returns>the conversion or <code>null</code> if no conversion is supported</returns>
         byte[] CharToByte(char char1, String encoding);
 
         /// <summary>Converts a byte array to an Unicode string according to some encoding.</summary>
@@ -78,7 +78,7 @@ namespace iText.IO.Font {
         /// the requested encoding. It's mainly of use if the same class
         /// supports more than one encoding.
         /// </param>
-        /// <returns>the conversion or <CODE>null</CODE> if no conversion is supported</returns>
+        /// <returns>the conversion or <code>null</code> if no conversion is supported</returns>
         String ByteToChar(byte[] b, String encoding);
     }
 }

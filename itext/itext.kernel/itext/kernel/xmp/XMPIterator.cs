@@ -75,19 +75,24 @@ namespace iText.Kernel.XMP {
     /// a struct or items of an array are visited after the qualifiers of the parent.
     /// <para />
     /// The options to control the iteration are:
-    /// <ul>
-    /// <li>JUST_CHILDREN - Visit just the immediate children of the root. Skip
+    /// <list type="bullet">
+    /// <item><description>JUST_CHILDREN - Visit just the immediate children of the root. Skip
     /// the root itself and all nodes below the immediate children. This omits the
     /// qualifiers of the immediate children, the qualifier nodes being below what
     /// they qualify, default is to visit the complete subtree.
-    /// <li>JUST_LEAFNODES - Visit just the leaf property nodes and their
+    /// </description></item>
+    /// <item><description>JUST_LEAFNODES - Visit just the leaf property nodes and their
     /// qualifiers.
-    /// <li>JUST_LEAFNAME - Return just the leaf component of the node names.
+    /// </description></item>
+    /// <item><description>JUST_LEAFNAME - Return just the leaf component of the node names.
     /// The default is to return the full xmp path.
-    /// <li>OMIT_QUALIFIERS - Do not visit the qualifiers.
-    /// <li>INCLUDE_ALIASES - Adds known alias properties to the properties in the iteration.
+    /// </description></item>
+    /// <item><description>OMIT_QUALIFIERS - Do not visit the qualifiers.
+    /// </description></item>
+    /// <item><description>INCLUDE_ALIASES - Adds known alias properties to the properties in the iteration.
     /// <em>Note:</em> Not supported in Java XMPCore!
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// <para />
     /// <c>next()</c>
     /// returns

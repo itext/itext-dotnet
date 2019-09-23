@@ -147,7 +147,7 @@ namespace iText.Kernel.Geom {
 
         /// <summary>
         /// Computes the length of this vector
-        /// <br />
+        /// <br>
         /// <b>Note:</b> If you are working with raw vectors from PDF, be careful -
         /// the Z axis will generally be set to 1.
         /// </summary>

@@ -407,7 +407,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// In case it isn't applicable pass any <CODE>byte</CODE> value.
+        /// In case it isn't applicable pass any <code>byte</code> value.
         /// </param>
         protected internal virtual void PaintPath(int operation, int rule) {
             ParserGraphicsState gs = GetGraphicsState();

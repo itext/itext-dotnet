@@ -70,7 +70,7 @@ namespace iText.Barcodes {
         protected internal float n;
 
         /// <summary>The text font.</summary>
-        /// <remarks>The text font. <CODE>null</CODE> if no text.</remarks>
+        /// <remarks>The text font. <code>null</code> if no text.</remarks>
         protected internal PdfFont font;
 
         /// <summary>
@@ -151,14 +151,14 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Gets the text font.</summary>
-        /// <remarks>Gets the text font. <CODE>null</CODE> if no text.</remarks>
-        /// <returns>the text font. <CODE>null</CODE> if no text</returns>
+        /// <remarks>Gets the text font. <code>null</code> if no text.</remarks>
+        /// <returns>the text font. <code>null</code> if no text</returns>
         public virtual PdfFont GetFont() {
             return font;
         }
 
         /// <summary>Sets the text font.</summary>
-        /// <param name="font">the text font. Set to <CODE>null</CODE> to suppress any text</param>
+        /// <param name="font">the text font. Set to <code>null</code> to suppress any text</param>
         public virtual void SetFont(PdfFont font) {
             this.font = font;
         }
@@ -322,42 +322,42 @@ namespace iText.Barcodes {
 
         /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <code>PdfCanvas</code>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
-        /// <TABLE BORDER="1" SUMMARY="barcode properties">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="barcode properties">
+        /// <tr>
+        /// <th><code>barColor</code></th>
+        /// <th><code>textColor</code></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><code>null</code></td>
+        /// <td><code>null</code></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>barColor</code></td>
+        /// <td><code>null</code></td>
+        /// <td>bars and text painted with <code>barColor</code></td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>null</code></td>
+        /// <td><code>textColor</code></td>
+        /// <td>bars painted with current color<br />text painted with <code>textColor</code></td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>barColor</code></td>
+        /// <td><code>textColor</code></td>
+        /// <td>bars painted with <code>barColor</code><br />text painted with <code>textColor</code></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <code>PdfCanvas</code> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <code>null</code></param>
+        /// <param name="textColor">the color of the text. It can be <code>null</code></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public abstract Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor);
 
@@ -405,8 +405,8 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="barColor">The color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">The color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="barColor">The color of the bars. It can be <code>null</code></param>
+        /// <param name="textColor">The color of the text. It can be <code>null</code></param>
         /// <param name="document">The document</param>
         /// <returns>the XObject</returns>
         /// <seealso cref="PlaceBarcode(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Colors.Color, iText.Kernel.Colors.Color)

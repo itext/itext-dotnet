@@ -123,23 +123,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Setter for the annotation's highlighting mode.</summary>
         /// <remarks>
         /// Setter for the annotation's highlighting mode. Possible values are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_NONE"/>
         /// - No highlighting.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_INVERT"/>
         /// - Invert the contents of the annotation rectangle.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_OUTLINE"/>
         /// - Invert the annotation's border.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_PUSH"/>
         /// - Display the annotation?s down appearance, if any.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_TOGGLE"/>
         /// - Same as P.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="mode">The new value for the annotation's highlighting mode.</param>
         /// <returns>The widget annotation which this method was called on.</returns>
@@ -362,23 +367,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Setter for the annotation's preset border style.</summary>
         /// <remarks>
         /// Setter for the annotation's preset border style. Possible values are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
         /// - A solid rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
         /// - A dashed rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
         /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
         /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
         /// - A single line along the bottom of the annotation rectangle.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// See also ISO-320001, Table 166.
         /// </remarks>
         /// <param name="style">The new value for the annotation's border style.</param>

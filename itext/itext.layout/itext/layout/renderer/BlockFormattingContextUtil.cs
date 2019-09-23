@@ -56,9 +56,9 @@ namespace iText.Layout.Renderer {
     /// specific rules of floating elements and margins collapse handling.
     /// <para />
     /// See
-    /// <a href="https://www.w3.org/TR/CSS21/visuren.html#block-formatting">https://www.w3.org/TR/CSS21/visuren.html#block-formatting</a>
+    /// <a href="https://www.w3.org/tr/css21/visuren.html#block-formatting">https://www.w3.org/TR/CSS21/visuren.html#block-formatting</a>
     /// and
-    /// <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context">https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context</a>
+    /// <a href="https://developer.mozilla.org/en-us/docs/web/guide/css/block_formatting_context">https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context</a>
     /// for more info.
     /// </remarks>
     public class BlockFormattingContextUtil {

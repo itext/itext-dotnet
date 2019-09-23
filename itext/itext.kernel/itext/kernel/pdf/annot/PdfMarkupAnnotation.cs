@@ -371,16 +371,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// (see
         /// <see cref="GetInReplyTo()"/>
         /// ). Valid values are:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.R"/>
         /// - The annotation shall be considered a reply to the annotation specified by IRT.
         /// Conforming readers shall not display replies to an annotation individually but together in the form of
         /// threaded comments.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Group"/>
         /// - The annotation shall be grouped with the annotation specified by IRT.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <returns>
         /// a
@@ -460,13 +462,14 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// An external data dictionary specifying data that shall be associated with the annotation.
         /// This dictionary contains the following entries:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
         /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
         /// .
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
         /// - (required) a name specifying the type of data that the markup annotation
         /// shall be associated with. The only defined value is
@@ -475,7 +478,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// lists the values that correspond to a subtype of Markup3D (See also
         /// <see cref="Pdf3DAnnotation"/>
         /// ).
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <returns>
         /// An external data
@@ -490,13 +494,14 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Sets an external data dictionary specifying data that shall be associated with the annotation.
         /// This dictionary should contain the following entries:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
         /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
         /// .
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
         /// - (required) a name specifying the type of data that the markup annotation
         /// shall be associated with. The only defined value is
@@ -505,7 +510,8 @@ namespace iText.Kernel.Pdf.Annot {
         /// lists the values that correspond to a subtype of Markup3D (See also
         /// <see cref="Pdf3DAnnotation"/>
         /// ).
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <returns>
         /// this

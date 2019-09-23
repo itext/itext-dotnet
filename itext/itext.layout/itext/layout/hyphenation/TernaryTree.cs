@@ -80,11 +80,13 @@ namespace iText.Layout.Hyphenation {
         /// <remarks>
         /// The character stored in this node: splitchar.
         /// Two special values are reserved:
-        /// <ul>
-        /// <li>0x0000 as string terminator
-        /// <li>0xFFFF to indicate that the branch starting at
+        /// <list type="bullet">
+        /// <item><description>0x0000 as string terminator
+        /// </description></item>
+        /// <item><description>0xFFFF to indicate that the branch starting at
         /// this node is compressed
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// This shouldn't be a problem if we give the usual semantics to
         /// strings since 0xFFFF is garanteed not to be an Unicode character.
         /// </remarks>

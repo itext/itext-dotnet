@@ -51,7 +51,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>HTML entities, and escape routines.</summary>
     /// <remarks>
     /// HTML entities, and escape routines.
-    /// Source: <a href="http://www.w3.org/TR/html5/named-character-references.html#named-character-references">W3C HTML
+    /// Source: <a href="http://www.w3.org/tr/html5/named-character-references.html#named-character-references">W3C HTML
     /// named character references</a>.
     /// </remarks>
     public class Entities {
@@ -128,7 +128,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="name">named entity (e.g. "lt" or "amp")</param>
         /// <returns>
         /// the Character value of the named entity (e.g. '
-        /// <literal>&lt;</literal>
+        /// <literal></literal>
         /// ' or '
         /// <literal>&</literal>
         /// ')

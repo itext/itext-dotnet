@@ -221,7 +221,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>
-        /// Parses an relative value based on the base value that was given, in the metric unit of the base value.<br />
+        /// Parses an relative value based on the base value that was given, in the metric unit of the base value.<br>
         /// (e.g.
         /// </summary>
         /// <remarks>
@@ -257,11 +257,14 @@ namespace iText.StyledXmlParser.Css.Util {
 
         /// <summary>Convenience method for parsing a value to pt.</summary>
         /// <remarks>
-        /// Convenience method for parsing a value to pt. Possible values are: <ul>
-        /// <li>a numeric value in pixels (e.g. 123, 1.23, .123),</li>
-        /// <li>a value with a metric unit (px, in, cm, mm, pc or pt) attached to it,</li>
-        /// <li>or a value with a relative value (%, em, ex).</li>
-        /// </ul>
+        /// Convenience method for parsing a value to pt. Possible values are: <list type="bullet">
+        /// <item><description>a numeric value in pixels (e.g. 123, 1.23, .123),
+        /// </description></item>
+        /// <item><description>a value with a metric unit (px, in, cm, mm, pc or pt) attached to it,
+        /// </description></item>
+        /// <item><description>or a value with a relative value (%, em, ex).
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="value">the value</param>
         /// <param name="emValue">the em value</param>

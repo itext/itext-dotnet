@@ -164,11 +164,14 @@ namespace iText.Forms {
         /// Enumerates the different actions of a signature field lock.
         /// Indicates the set of fields that should be locked when the
         /// corresponding signature field is signed:
-        /// <ul>
-        /// <li>all the fields in the document,</li>
-        /// <li>all the fields specified in the /Fields array,</li>
-        /// <li>all the fields except those specified in the /Fields array.</li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>all the fields in the document,
+        /// </description></item>
+        /// <item><description>all the fields specified in the /Fields array,
+        /// </description></item>
+        /// <item><description>all the fields except those specified in the /Fields array.
+        /// </description></item>
+        /// </list>
         /// </remarks>
         public enum LockAction {
             ALL,
@@ -179,22 +182,25 @@ namespace iText.Forms {
         /// <summary>
         /// Enumerates the different levels of access permissions granted for
         /// the document when the corresponding signature field is signed:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="LockPermissions.NO_CHANGES_ALLOWED"/>
         /// - no changes to the document are
-        /// permitted; any change to the document invalidates the signature,</li>
-        /// <li>
+        /// permitted; any change to the document invalidates the signature,
+        /// </description></item>
+        /// <item><description>
         /// <see cref="LockPermissions.FORM_FILLING"/>
         /// - permitted changes are filling in forms,
         /// instantiating page templates, and signing; other changes invalidate
-        /// the signature,</li>
-        /// <li>
+        /// the signature,
+        /// </description></item>
+        /// <item><description>
         /// <see cref="LockPermissions.FORM_FILLING_AND_ANNOTATION"/>
         /// - permitted changes are the
         /// same as for the previous, as well as annotation creation, deletion,
-        /// and modification; other changes invalidate the signature.</li>
-        /// </ul>
+        /// and modification; other changes invalidate the signature.
+        /// </description></item>
+        /// </list>
         /// </summary>
         public enum LockPermissions {
             NO_CHANGES_ALLOWED,

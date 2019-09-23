@@ -51,40 +51,53 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// Whitelists define what HTML (elements and attributes) to allow through the cleaner. Everything else is removed.
     /// <para />
     /// Start with one of the defaults:
-    /// <ul>
-    /// <li>
+    /// <list type="bullet">
+    /// <item><description>
     /// <see cref="None()"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="SimpleText()"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="Basic()"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="BasicWithImages()"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="Relaxed()"/>
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// If you need to allow more through (please be careful!), tweak a base whitelist with:
-    /// <ul>
-    /// <li>
+    /// <list type="bullet">
+    /// <item><description>
     /// <see cref="AddTags(System.String[])"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="AddAttributes(System.String, System.String[])"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="AddEnforcedAttribute(System.String, System.String, System.String)"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="AddProtocols(System.String, System.String, System.String[])"/>
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// You can remove any setting from an existing whitelist with:
-    /// <ul>
-    /// <li>
+    /// <list type="bullet">
+    /// <item><description>
     /// <see cref="RemoveTags(System.String[])"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="RemoveAttributes(System.String, System.String[])"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="RemoveEnforcedAttribute(System.String, System.String)"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="RemoveProtocols(System.String, System.String, System.String[])"/>
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// The cleaner and these whitelists assume that you want to clean a <code>body</code> fragment of HTML (to add user
     /// supplied HTML into a templated page), and not to clean a full HTML document. If the latter is the case, either wrap the
     /// document HTML around the cleaned body HTML, or create a whitelist that allows <code>html</code> and <code>head</code>

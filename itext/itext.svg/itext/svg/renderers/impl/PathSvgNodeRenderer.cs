@@ -65,7 +65,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &ltpath&gt element</a>
         /// <para />
         /// Find any occurrence of a letter that is not an operator
         /// </remarks>
@@ -77,7 +77,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &ltpath&gt element</a>
         /// <para />
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>

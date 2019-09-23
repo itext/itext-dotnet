@@ -127,24 +127,24 @@ namespace iText.Kernel.Font {
         /// <summary>Writes the width and optionally the bounding box parameters for a glyph</summary>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
-        /// the X lower left corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X lower left corner of the glyph bounding box. If the <code>isColor</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="lly">
-        /// the Y lower left corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y lower left corner of the glyph bounding box. If the <code>isColor</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="urx">
-        /// the X upper right corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X upper right corner of the glyph bounding box. If the <code>isColor</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="ury">
-        /// the Y upper right corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y upper right corner of the glyph bounding box. If the <code>isColor</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="isColor">
         /// defines whether the glyph color is specified in the glyph description in the font.
-        /// The consequence of value <CODE>true</CODE> is that the bounding box parameters are ignored.
+        /// The consequence of value <code>true</code> is that the bounding box parameters are ignored.
         /// </param>
         private void WriteMetrics(float wx, float llx, float lly, float urx, float ury, bool isColor) {
             this.isColor = isColor;

@@ -1510,7 +1510,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// <para />
+        /// <p>
         /// Adds file associated with PDF page and identifies the relationship between them.
         /// </summary>
         /// <remarks>

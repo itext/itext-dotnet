@@ -240,20 +240,20 @@ namespace iText.Kernel.Font {
         /// <param name="c">the character to match this glyph.</param>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
-        /// the X lower left corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X lower left corner of the glyph bounding box. If the <code>colorize</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="lly">
-        /// the Y lower left corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y lower left corner of the glyph bounding box. If the <code>colorize</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="urx">
-        /// the X upper right corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X upper right corner of the glyph bounding box. If the <code>colorize</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <param name="ury">
-        /// the Y upper right corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y upper right corner of the glyph bounding box. If the <code>colorize</code> option is
+        /// <code>true</code> the value is ignored
         /// </param>
         /// <returns>a content where the glyph can be defined</returns>
         public virtual Type3Glyph AddGlyph(char c, int wx, int llx, int lly, int urx, int ury) {

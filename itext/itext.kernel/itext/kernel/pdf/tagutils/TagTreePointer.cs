@@ -136,25 +136,30 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// .
         /// To tag page content:
-        /// <ol>
-        /// <li>Set pointer position to the tag which will be the parent of the page content item;
-        /// <li>Call
+        /// <list type="number">
+        /// <item><description>Set pointer position to the tag which will be the parent of the page content item;
+        /// </description></item>
+        /// <item><description>Call
         /// <see cref="GetTagReference()"/>
         /// to obtain the reference to the current tag;
-        /// <li>Pass
+        /// </description></item>
+        /// <item><description>Pass
         /// <see cref="TagReference"/>
         /// to the
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
         /// method of the page's
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// to start marked content item;
-        /// <li>Draw content on
+        /// </description></item>
+        /// <item><description>Draw content on
         /// <c>PdfCanvas</c>
         /// ;
-        /// <li>Use
+        /// </description></item>
+        /// <item><description>Use
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas.CloseTag()"/>
         /// to finish marked content item.
-        /// </ol>
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <param name="page">
         /// the page which content will be tagged with this instance of
@@ -811,15 +816,19 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>
         /// For current tag and all of it's parents consequentially checks if the following constraints apply,
         /// and flushes the tag if they do or stops if they don't:
-        /// <ul>
-        /// <li>tag is not already flushed;
-        /// <li>tag is not in waiting state (see
+        /// <list type="bullet">
+        /// <item><description>tag is not already flushed;
+        /// </description></item>
+        /// <item><description>tag is not in waiting state (see
         /// <see cref="WaitingTagsManager"/>
         /// );
-        /// <li>tag is not the root tag;
-        /// <li>tag has no kids or all of the kids are either flushed themselves or
+        /// </description></item>
+        /// <item><description>tag is not the root tag;
+        /// </description></item>
+        /// <item><description>tag has no kids or all of the kids are either flushed themselves or
         /// (if they are a marked content reference) belong to the flushed page.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// It makes sense to use this method in conjunction with
         /// <see cref="TagStructureContext.FlushPageTags(iText.Kernel.Pdf.PdfPage)"/>
         /// for the tags which have just lost their waiting state and might be not flushed only because they had one.

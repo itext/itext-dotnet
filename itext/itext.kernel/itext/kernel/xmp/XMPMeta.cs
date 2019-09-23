@@ -349,20 +349,24 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="arrayOptions">
         /// Option flags describing the array form. The only valid options are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY"/>
         /// ,
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ORDERED"/>
         /// ,
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALTERNATE"/>
         /// or
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>
         /// .
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// <em>Note:</em> the array options only need to be provided if the array is not
         /// already existing, otherwise you can set them to <code>null</code> or use
         /// <see cref="AppendArrayItem(System.String, System.String, System.String)"/>
@@ -660,22 +664,30 @@ namespace iText.Kernel.XMP {
         /// <para />
         /// <em>Note:</em> RFC 3066 language tags must be treated in a case insensitive manner. The XMP
         /// Toolkit does this by normalizing their capitalization:
-        /// <ul>
-        /// <li> The primary subtag is lower case, the suggested practice of ISO 639.
-        /// <li> All 2 letter secondary subtags are upper case, the suggested practice of ISO 3166.
-        /// <li> All other subtags are lower case. The XMP specification defines an artificial language,
-        /// <li>"x-default", that is used to explicitly denote a default item in an alt-text array.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description> The primary subtag is lower case, the suggested practice of ISO 639.
+        /// </description></item>
+        /// <item><description> All 2 letter secondary subtags are upper case, the suggested practice of ISO 3166.
+        /// </description></item>
+        /// <item><description> All other subtags are lower case. The XMP specification defines an artificial language,
+        /// </description></item>
+        /// <item><description>"x-default", that is used to explicitly denote a default item in an alt-text array.
+        /// </description></item>
+        /// </list>
         /// The XMP toolkit normalizes alt-text arrays such that the x-default item is the first item.
         /// The SetLocalizedText function has several special features related to the x-default item, see
         /// its description for details. The selection of the array item is the same for GetLocalizedText
         /// and SetLocalizedText:
-        /// <ul>
-        /// <li> Look for an exact match with the specific language.
-        /// <li> If a generic language is given, look for a partial match.
-        /// <li> Look for an x-default item.
-        /// <li> Choose the first item.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description> Look for an exact match with the specific language.
+        /// </description></item>
+        /// <item><description> If a generic language is given, look for a partial match.
+        /// </description></item>
+        /// <item><description> Look for an x-default item.
+        /// </description></item>
+        /// <item><description> Choose the first item.
+        /// </description></item>
+        /// </list>
         /// A partial match with the generic language is where the start of the item's language matches
         /// the generic string and the next character is '-'. An exact match is also recognized as a
         /// degenerate case. It is fine to pass x-default as the specific language. In this case,
@@ -1198,14 +1210,18 @@ namespace iText.Kernel.XMP {
         /// </summary>
         /// <remarks>
         /// Sorts the complete datamodel according to the following rules:
-        /// <ul>
-        /// <li>Schema nodes are sorted by prefix.
-        /// <li>Properties at top level and within structs are sorted by full name, that is
+        /// <list type="bullet">
+        /// <item><description>Schema nodes are sorted by prefix.
+        /// </description></item>
+        /// <item><description>Properties at top level and within structs are sorted by full name, that is
         /// prefix + local name.
-        /// <li>Array items are not sorted, even if they have no certain order such as bags.
-        /// <li>Qualifier are sorted, with the exception of "xml:lang" and/or "rdf:type"
+        /// </description></item>
+        /// <item><description>Array items are not sorted, even if they have no certain order such as bags.
+        /// </description></item>
+        /// <item><description>Qualifier are sorted, with the exception of "xml:lang" and/or "rdf:type"
         /// that stay at the top of the list in that order.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         void Sort();
 

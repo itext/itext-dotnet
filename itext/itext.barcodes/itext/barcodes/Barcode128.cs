@@ -265,7 +265,7 @@ namespace iText.Barcodes {
         /// </summary>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <CODE>true</CODE> if it is an UCC/EAN-128. In this case
+        /// <code>true</code> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <param name="codeSet">forced code set, or AUTO for optimized barcode.</param>
@@ -433,7 +433,7 @@ namespace iText.Barcodes {
         /// </remarks>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <CODE>true</CODE> if it is an UCC/EAN-128. In this case
+        /// <code>true</code> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <returns>the code ready to be fed to getBarsCode128Raw()</returns>
@@ -528,42 +528,42 @@ namespace iText.Barcodes {
 
         /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <code>PdfCanvas</code>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
-        /// <TABLE BORDER="1" SUMMARY="barcode properties">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="barcode properties">
+        /// <tr>
+        /// <th><code>barColor</code></th>
+        /// <th><code>textColor</code></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><code>null</code></td>
+        /// <td><code>null</code></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>barColor</code></td>
+        /// <td><code>null</code></td>
+        /// <td>bars and text painted with <code>barColor</code></td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>null</code></td>
+        /// <td><code>textColor</code></td>
+        /// <td>bars painted with current color<br />text painted with <code>textColor</code></td>
+        /// </tr>
+        /// <tr>
+        /// <td><code>barColor</code></td>
+        /// <td><code>textColor</code></td>
+        /// <td>bars painted with <code>barColor</code><br />text painted with <code>textColor</code></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <code>PdfCanvas</code> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <code>null</code></param>
+        /// <param name="textColor">the color of the text. It can be <code>null</code></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             String fullCode;

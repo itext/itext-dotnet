@@ -111,12 +111,12 @@ namespace iText.Layout.Element {
 
         /// <summary>Skews the text to simulate italic and other effects.</summary>
         /// <remarks>
-        /// Skews the text to simulate italic and other effects. Try <CODE>alpha=0
-        /// </CODE> and <CODE>beta=12</CODE>.
+        /// Skews the text to simulate italic and other effects. Try <code>alpha=0
+        /// </code> and <code>beta=12</code>.
         /// </remarks>
         /// <param name="alpha">the first angle in degrees</param>
         /// <param name="beta">the second angle in degrees</param>
-        /// <returns>this <CODE>Text</CODE></returns>
+        /// <returns>this <code>Text</code></returns>
         public virtual iText.Layout.Element.Text SetSkew(float alpha, float beta) {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);

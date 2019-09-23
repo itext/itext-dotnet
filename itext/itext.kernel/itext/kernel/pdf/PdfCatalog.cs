@@ -97,16 +97,16 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
         /// <remarks>
-        /// Use this method to get the <B>Optional Content Properties Dictionary</B>.
+        /// Use this method to get the <b>Optional Content Properties Dictionary</b>.
         /// Note that if you call this method, then the PdfDictionary with OCProperties will be
         /// generated from PdfOCProperties object right before closing the PdfDocument,
         /// so if you want to make low-level changes in Pdf structures themselves (PdfArray, PdfDictionary, etc),
         /// then you should address directly those objects, e.g.:
-        /// <CODE>
+        /// <code>
         /// PdfCatalog pdfCatalog = pdfDoc.getCatalog();
         /// PdfDictionary ocProps = pdfCatalog.getAsDictionary(PdfName.OCProperties);
         /// // manipulate with ocProps.
-        /// </CODE>
+        /// </code>
         /// Also note that this method is implicitly called when creating a new PdfLayer instance,
         /// so you should either use hi-level logic of operating with layers,
         /// or manipulate low-level Pdf objects by yourself.

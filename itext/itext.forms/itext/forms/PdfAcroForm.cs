@@ -675,7 +675,7 @@ namespace iText.Forms {
         /// <para />
         /// Not generating appearances will speed up form flattening but the results
         /// can be unexpected in Acrobat. Don't use it unless your environment is
-        /// well controlled. The default is <CODE>true</CODE>.
+        /// well controlled. The default is <code>true</code>.
         /// <para />
         /// If generateAppearance is set to <code>true</code>, then
         /// <code>NeedAppearances</code> is set to <code>false</code>. This does not

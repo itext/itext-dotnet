@@ -53,24 +53,40 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// <para />
         /// In the most verbose case steps are separated by '/', and each step can be
         /// of these forms:
-        /// <dl>
-        /// <dt>prefix:name
-        /// <dd> A top level property or struct field.
-        /// <dt>[index]
-        /// <dd> An element of an array.
-        /// <dt>[last()]
-        /// <dd> The last element of an array.
-        /// <dt>[fieldName=&quot;value&quot;]
-        /// <dd> An element in an array of structs, chosen by a field value.
-        /// <dt>[@xml:lang=&quot;value&quot;]
-        /// <dd> An element in an alt-text array, chosen by the xml:lang qualifier.
-        /// <dt>[?qualName=&quot;value&quot;]
-        /// <dd> An element in an array, chosen by a qualifier value.
-        /// <dt>@xml:lang
-        /// <dd> An xml:lang qualifier.
-        /// <dt>?qualName
-        /// <dd> A general qualifier.
-        /// </dl>
+        /// <list type="table">
+        /// <item><term>prefix:name
+        /// </term>
+        /// <description> A top level property or struct field.
+        /// </description></item>
+        /// <item><term>[index]
+        /// </term>
+        /// <description> An element of an array.
+        /// </description></item>
+        /// <item><term>[last()]
+        /// </term>
+        /// <description> The last element of an array.
+        /// </description></item>
+        /// <item><term>[fieldName=&quot;value&quot;]
+        /// </term>
+        /// <description> An element in an array of structs, chosen by a field value.
+        /// </description></item>
+        /// <item><term>[@xml:lang=&quot;value&quot;]
+        /// </term>
+        /// <description> An element in an alt-text array, chosen by the xml:lang qualifier.
+        /// </description></item>
+        /// <item><term>[?qualName=&quot;value&quot;]
+        /// </term>
+        /// <description> An element in an array, chosen by a qualifier value.
+        /// </description></item>
+        /// <item><term>@xml:lang
+        /// </term>
+        /// <description> An xml:lang qualifier.
+        /// </description></item>
+        /// <item><term>?qualName
+        /// </term>
+        /// <description> A general qualifier.
+        /// </description></item>
+        /// </list>
         /// <para />
         /// The logic is complicated though by shorthand for arrays, the separating
         /// '/' and leading '*' are optional. These are all equivalent: array/*[2]
@@ -340,7 +356,7 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// processing. If allowUnknownSchemaNS is true and the schema namespace is not registered, false
         /// is returned. If allowUnknownSchemaNS is false and the schema namespace is not registered, an
         /// exception is thrown
-        /// <P>
+        /// <para />
         /// (Should someday check the full syntax:)
         /// </remarks>
         /// <param name="schemaNS">schema namespace</param>

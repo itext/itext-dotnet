@@ -88,7 +88,7 @@ namespace iText.Signatures {
         /// <param name="interfaceDigest">the interface digest</param>
         /// <param name="hashAlgorithm">the hash algorithm</param>
         /// <param name="provider">the provider or <code>null</code> for the default provider</param>
-        /// <param name="hasRSAdata"><CODE>true</CODE> if the sub-filter is adbe.pkcs7.sha1</param>
+        /// <param name="hasRSAdata"><code>true</code> if the sub-filter is adbe.pkcs7.sha1</param>
         /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException">on error</exception>
         /// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
@@ -541,8 +541,8 @@ namespace iText.Signatures {
         /// <param name="digest">the digest. This is the actual signature</param>
         /// <param name="rsaData">the extra data that goes into the data tag in PKCS#7</param>
         /// <param name="digestEncryptionAlgorithm">
-        /// the encryption algorithm. It may must be <CODE>null</CODE> if the <CODE>digest</CODE>
-        /// is also <CODE>null</CODE>. If the <CODE>digest</CODE> is not <CODE>null</CODE>
+        /// the encryption algorithm. It may must be <code>null</code> if the <code>digest</code>
+        /// is also <code>null</code>. If the <code>digest</code> is not <code>null</code>
         /// then it may be "RSA" or "DSA"
         /// </param>
         public virtual void SetExternalDigest(byte[] digest, byte[] rsaData, String digestEncryptionAlgorithm) {
@@ -651,7 +651,7 @@ namespace iText.Signatures {
         /// <summary>Gets the bytes for the PKCS7SignedData object.</summary>
         /// <remarks>
         /// Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
-        /// in the signerInfo can also be set. If either of the parameters is <CODE>null</CODE>, none will be used.
+        /// in the signerInfo can also be set. If either of the parameters is <code>null</code>, none will be used.
         /// </remarks>
         /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
         /// <returns>the bytes for the PKCS7SignedData object</returns>
@@ -1036,7 +1036,7 @@ namespace iText.Signatures {
         // Stefan Santesson
         // verification
         /// <summary>Verify the digest.</summary>
-        /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
+        /// <returns><code>true</code> if the signature checks out, <code>false</code> otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
         /// if this signature object is not initialized properly,
         /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
@@ -1067,7 +1067,7 @@ namespace iText.Signatures {
         /// <see cref="SignatureUtil.SignatureCoversWholeDocument(System.String)"/>
         /// method.
         /// </remarks>
-        /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
+        /// <returns><code>true</code> if the signature checks out, <code>false</code> otherwise</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
         /// if this signature object is not initialized properly,
         /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to

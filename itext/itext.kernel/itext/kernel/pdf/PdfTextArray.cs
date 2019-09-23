@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf {
     /// defines an array with displacements and
     /// <see cref="PdfString"/>
     /// -objects.
-    /// <P>
+    /// <para />
     /// A
     /// <see cref="PdfTextArray"/>
     /// is used with the operator TJ in

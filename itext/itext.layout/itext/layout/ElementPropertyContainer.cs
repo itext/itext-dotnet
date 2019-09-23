@@ -759,7 +759,7 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <CODE>null</CODE> to follow the
+        /// the color of the line or <code>null</code> to follow the
         /// text color
         /// </param>
         /// <param name="thickness">the absolute thickness of the line</param>
@@ -790,7 +790,7 @@ namespace iText.Layout {
         /// .
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <CODE>null</CODE> to follow the
+        /// the color of the line or <code>null</code> to follow the
         /// text color
         /// </param>
         /// <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent

@@ -65,10 +65,10 @@ namespace iText.IO.Font {
         /// <summary>The map containing the kerning information.</summary>
         /// <remarks>
         /// The map containing the kerning information. It represents the content of
-        /// table 'kern'. The key is an <CODE>Integer</CODE> where the top 16 bits
+        /// table 'kern'. The key is an <code>Integer</code> where the top 16 bits
         /// are the glyph number for the first character and the lower 16 bits are the
         /// glyph number for the second character. The value is the amount of kerning in
-        /// normalized 1000 units as an <CODE>Integer</CODE>. This value is usually negative.
+        /// normalized 1000 units as an <code>Integer</code>. This value is usually negative.
         /// </remarks>
         protected internal IntHashtable kerning = new IntHashtable();
 

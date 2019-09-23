@@ -369,7 +369,7 @@ namespace iText.IO.Image {
 
         // ignore ICC profile if it's invalid.
         /// <summary>Reads a short from the <CODE>InputStream</CODE>.</summary>
-        /// <param name="jpegStream">the <CODE>InputStream</CODE></param>
+        /// <param name="jpegStream">the <code>InputStream</code></param>
         /// <returns>an int</returns>
         /// <exception cref="System.IO.IOException"/>
         private static int GetShort(Stream jpegStream) {
@@ -378,7 +378,7 @@ namespace iText.IO.Image {
 
         /// <summary>Returns a type of marker.</summary>
         /// <param name="marker">an int</param>
-        /// <returns>a type: <VAR>VALID_MARKER</VAR>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR></returns>
+        /// <returns>a type: <var>VALID_MARKER</var>, <var>UNSUPPORTED_MARKER</var> or <var>NOPARAM_MARKER</var></returns>
         private static int Marker(int marker) {
             for (int i = 0; i < VALID_MARKERS.Length; i++) {
                 if (marker == VALID_MARKERS[i]) {

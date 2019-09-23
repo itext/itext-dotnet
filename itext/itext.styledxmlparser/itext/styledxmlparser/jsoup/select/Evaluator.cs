@@ -295,7 +295,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>
         /// Evaluator for matching by sibling index number (e
-        /// <literal>&lt;</literal>
+        /// <literal></literal>
         /// idx)
         /// </summary>
         public sealed class IndexLessThan : Evaluator.IndexEvaluator {
@@ -523,7 +523,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         }
 
         /// <summary>css3 pseudo-class :root</summary>
-        /// <seealso><a href="http://www.w3.org/TR/selectors/#root-pseudo">:root selector</a></seealso>
+        /// <seealso><a href="http://www.w3.org/tr/selectors/#root-pseudo">:root selector</a></seealso>
         public sealed class IsRoot : Evaluator {
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {

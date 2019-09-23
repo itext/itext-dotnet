@@ -139,7 +139,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Appends a cubic Bezier curve to the current path.</summary>
         /// <remarks>
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
-        /// the current point to the point <CODE>(x3, y3)</CODE>.
+        /// the current point to the point <code>(x3, y3)</code>.
         /// </remarks>
         /// <param name="x1">x-coordinate of the first control point</param>
         /// <param name="y1">y-coordinate of the first control point</param>
@@ -164,7 +164,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Appends a cubic Bezier curve to the current path.</summary>
         /// <remarks>
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
-        /// the current point to the point <CODE>(x3, y3)</CODE> with the note that the current
+        /// the current point to the point <code>(x3, y3)</code> with the note that the current
         /// point represents two control points.
         /// </remarks>
         public virtual void CurveTo(float x2, float y2, float x3, float y3) {
@@ -177,7 +177,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Appends a cubic Bezier curve to the current path.</summary>
         /// <remarks>
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
-        /// the current point to the point <CODE>(x3, y3)</CODE> with the note that the (x3, y3)
+        /// the current point to the point <code>(x3, y3)</code> with the note that the (x3, y3)
         /// point represents two control points.
         /// </remarks>
         public virtual void CurveFromTo(float x1, float y1, float x3, float y3) {

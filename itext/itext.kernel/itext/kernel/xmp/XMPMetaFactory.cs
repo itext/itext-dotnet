@@ -86,11 +86,13 @@ namespace iText.Kernel.XMP {
         /// <param name="options">
         /// Options controlling the parsing.<br />
         /// The available options are:
-        /// <ul>
-        /// <li> XMP_REQUIRE_XMPMETA - The &lt;x:xmpmeta&gt; XML element is required around
+        /// <list type="bullet">
+        /// <item><description> XMP_REQUIRE_XMPMETA - The &lt;x:xmpmeta&gt; XML element is required around
         /// <tt>&lt;rdf:RDF&gt;</tt>.
-        /// <li> XMP_STRICT_ALIASING - Do not reconcile alias differences, throw an exception.
-        /// </ul>
+        /// </description></item>
+        /// <item><description> XMP_STRICT_ALIASING - Do not reconcile alias differences, throw an exception.
+        /// </description></item>
+        /// </list>
         /// <em>Note:</em>The XMP_STRICT_ALIASING option is not yet implemented.
         /// </param>
         /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>

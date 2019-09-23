@@ -303,16 +303,24 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>
         /// the text render mode that should be used for the text.  From the
         /// PDF specification, this means:
-        /// <ul>
-        /// <li>0 = Fill text
-        /// <li>1 = Stroke text
-        /// <li>2 = Fill, then stroke text
-        /// <li>3 = Invisible
-        /// <li>4 = Fill text and add to path for clipping
-        /// <li>5 = Stroke text and add to path for clipping
-        /// <li>6 = Fill, then stroke text and add to path for clipping
-        /// <li>7 = Add text to padd for clipping
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>0 = Fill text
+        /// </description></item>
+        /// <item><description>1 = Stroke text
+        /// </description></item>
+        /// <item><description>2 = Fill, then stroke text
+        /// </description></item>
+        /// <item><description>3 = Invisible
+        /// </description></item>
+        /// <item><description>4 = Fill text and add to path for clipping
+        /// </description></item>
+        /// <item><description>5 = Stroke text and add to path for clipping
+        /// </description></item>
+        /// <item><description>6 = Fill, then stroke text and add to path for clipping
+        /// </description></item>
+        /// <item><description>7 = Add text to padd for clipping
+        /// </description></item>
+        /// </list>
         /// </returns>
         public virtual int GetTextRenderMode() {
             CheckGraphicsState();

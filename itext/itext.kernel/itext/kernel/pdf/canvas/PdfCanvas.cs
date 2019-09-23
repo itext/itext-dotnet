@@ -1240,10 +1240,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
-        /// Changes the value of the <VAR>line dash pattern</VAR>.
+        /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
-        /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
+        /// It is specified by an <i>array</i> and a <i>phase</i>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
         /// pattern to start the dash.
         /// </remarks>
@@ -1258,10 +1258,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
-        /// Changes the value of the <VAR>line dash pattern</VAR>.
+        /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
-        /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
+        /// It is specified by an <i>array</i> and a <i>phase</i>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
         /// pattern to start the dash.
         /// </remarks>
@@ -1278,10 +1278,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
-        /// Changes the value of the <VAR>line dash pattern</VAR>.
+        /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
-        /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
+        /// It is specified by an <i>array</i> and a <i>phase</i>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
         /// pattern to start the dash.
         /// </remarks>
@@ -1298,10 +1298,10 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
         /// <remarks>
-        /// Changes the value of the <VAR>line dash pattern</VAR>.
+        /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
         /// The line dash pattern controls the pattern of dashes and gaps used to stroke paths.
-        /// It is specified by an <I>array</I> and a <I>phase</I>. The array specifies the length
+        /// It is specified by an <i>array</i> and a <i>phase</i>. The array specifies the length
         /// of the alternating dashes and gaps. The phase specifies the distance into the dash
         /// pattern to start the dash.
         /// </remarks>
@@ -1565,7 +1565,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Begins a graphic block whose visibility is controlled by the <CODE>layer</CODE>.</summary>
         /// <remarks>
-        /// Begins a graphic block whose visibility is controlled by the <CODE>layer</CODE>.
+        /// Begins a graphic block whose visibility is controlled by the <code>layer</code>.
         /// Blocks can be nested. Each block must be terminated by an
         /// <see cref="EndLayer()"/>
         /// .<para />

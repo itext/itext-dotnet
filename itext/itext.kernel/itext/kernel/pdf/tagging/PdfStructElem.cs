@@ -429,20 +429,24 @@ namespace iText.Kernel.Pdf.Tagging {
         /// which defines phonetic alphabet used by a
         /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
         /// attribute. Possible values are:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
         /// for the International Phonetic Alphabet by the International Phonetic Association;
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.x_sampa"/>
         /// for Extended Speech Assessment Methods Phonetic Alphabet (X-SAMPA);
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_pinyin"/>
         /// for Pinyin Latin romanization (Mandarin);
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_wadegile"/>
         /// for Wade-Giles romanization (Mandarin).
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// Other values may be used.
         /// </param>
         public virtual void SetPhoneticAlphabet(PdfName phoneticAlphabet) {
@@ -502,7 +506,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>
-        /// <para />
+        /// <p>
         /// Adds file associated with structure element and identifies the relationship between them.
         /// </summary>
         /// <remarks>

@@ -80,21 +80,24 @@ namespace iText.Kernel.XMP {
         /// button, and has been been generalized somewhat from those specific needs.
         /// It operates in one of three main modes depending on the schemaNS and
         /// propName parameters:
-        /// <ul>
-        /// <li> Non-empty <code>schemaNS</code> and <code>propName</code> - The named property is
+        /// <list type="bullet">
+        /// <item><description> Non-empty <code>schemaNS</code> and <code>propName</code> - The named property is
         /// removed if it is an external property, or if the
         /// flag <code>doAllProperties</code> option is true. It does not matter whether the
         /// named property is an actual property or an alias.
-        /// <li> Non-empty <code>schemaNS</code> and empty <code>propName</code> - The all external
+        /// </description></item>
+        /// <item><description> Non-empty <code>schemaNS</code> and empty <code>propName</code> - The all external
         /// properties in the named schema are removed. Internal properties are also
         /// removed if the flag <code>doAllProperties</code> option is set. In addition,
         /// aliases from the named schema will be removed if the flag <code>includeAliases</code>
         /// option is set.
-        /// <li> Empty <code>schemaNS</code> and empty <code>propName</code> - All external properties in
+        /// </description></item>
+        /// <item><description> Empty <code>schemaNS</code> and empty <code>propName</code> - All external properties in
         /// all schema are removed. Internal properties are also removed if the
         /// flag <code>doAllProperties</code> option is passed. Aliases are implicitly handled
         /// because the associated actuals are internal if the alias is.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// It is an error to pass an empty <code>schemaNS</code> and non-empty <code>propName</code>.
         /// </remarks>
         /// <param name="xmp">The XMP object containing the properties to be removed.</param>
@@ -143,21 +146,24 @@ namespace iText.Kernel.XMP {
         /// of existing properties. The notion of external
         /// versus internal applies only to top level properties. The keep-or-replace-old notion applies
         /// within structs and arrays as described below.
-        /// <ul>
-        /// <li>If <code>replaceOldValues</code> is true then the processing is restricted to the top
+        /// <list type="bullet">
+        /// <item><description>If <code>replaceOldValues</code> is true then the processing is restricted to the top
         /// level properties. The processed properties from the source (according to
         /// <code>doAllProperties</code>) are propagated to the destination,
         /// replacing any existing values.Properties in the destination that are not in the source
         /// are left alone.
-        /// <li>If <code>replaceOldValues</code> is not passed then the processing is more complicated.
+        /// </description></item>
+        /// <item><description>If <code>replaceOldValues</code> is not passed then the processing is more complicated.
         /// Top level properties are added to the destination if they do not already exist.
         /// If they do exist but differ in form (simple/struct/array) then the destination is left alone.
         /// If the forms match, simple properties are left unchanged while structs and arrays are merged.
-        /// <li>If <code>deleteEmptyValues</code> is passed then an empty value in the source XMP causes
+        /// </description></item>
+        /// <item><description>If <code>deleteEmptyValues</code> is passed then an empty value in the source XMP causes
         /// the corresponding destination XMP property to be deleted. The default is to treat empty
         /// values the same as non-empty values. An empty value is any of a simple empty string, an array
         /// with no items, or a struct with no fields. Qualifiers are ignored.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// <para />The detailed behavior is defined by the following pseudo-code:
         /// <blockquote>
         /// <pre>
@@ -213,16 +219,21 @@ namespace iText.Kernel.XMP {
         /// <returns>
         /// The appropriate boolean value for the string. The checked values
         /// for <code>true</code> and <code>false</code> are:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="XMPConst.TRUESTR"/>
         /// and
         /// <see cref="XMPConst.FALSESTR"/>
-        /// <li>&quot;t&quot; and &quot;f&quot;
-        /// <li>&quot;on&quot; and &quot;off&quot;
-        /// <li>&quot;yes&quot; and &quot;no&quot;
-        /// <li>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
-        /// </ul>
+        /// </description></item>
+        /// <item><description>&quot;t&quot; and &quot;f&quot;
+        /// </description></item>
+        /// <item><description>&quot;on&quot; and &quot;off&quot;
+        /// </description></item>
+        /// <item><description>&quot;yes&quot; and &quot;no&quot;
+        /// </description></item>
+        /// <item><description>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
+        /// </description></item>
+        /// </list>
         /// </returns>
         /// <exception cref="XMPException">If an empty string is passed.</exception>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>

@@ -154,7 +154,7 @@ namespace iText.Layout {
         /// <para />
         /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
         /// in the question.
-        /// </p>
+        /// 
         /// Author: mkl.
         /// </remarks>
         /// <exception cref="System.IO.IOException"/>

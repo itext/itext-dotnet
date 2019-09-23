@@ -202,7 +202,7 @@ namespace iText.Signatures {
         /// <summary>Gets the signature dictionary, the one keyed by /V.</summary>
         /// <param name="name">the field name</param>
         /// <returns>
-        /// the signature dictionary keyed by /V or <CODE>null</CODE> if the field is not
+        /// the signature dictionary keyed by /V or <code>null</code> if the field is not
         /// a signature
         /// </returns>
         public virtual PdfDictionary GetSignatureDictionary(String name) {

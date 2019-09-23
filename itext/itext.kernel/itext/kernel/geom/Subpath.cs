@@ -135,16 +135,16 @@ namespace iText.Kernel.Geom {
         }
 
         /// <returns>
-        /// <CODE>true</CODE> if this subpath contains only one point and it is not closed,
-        /// <CODE>false</CODE> otherwise
+        /// <code>true</code> if this subpath contains only one point and it is not closed,
+        /// <code>false</code> otherwise
         /// </returns>
         public virtual bool IsSinglePointOpen() {
             return segments.Count == 0 && !closed;
         }
 
         /// <returns>
-        /// <CODE>true</CODE> if this subpath contains only one point and it is closed,
-        /// <CODE>false</CODE> otherwise
+        /// <code>true</code> if this subpath contains only one point and it is closed,
+        /// <code>false</code> otherwise
         /// </returns>
         public virtual bool IsSinglePointClosed() {
             return segments.Count == 0 && closed;
@@ -152,11 +152,11 @@ namespace iText.Kernel.Geom {
 
         /// <summary>Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.</summary>
         /// <remarks>
-        /// Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.
+        /// Returns a <code>boolean</code> value indicating whether the subpath must be closed or not.
         /// Ignore this value if the subpath is a rectangle because in this case it is already closed
-        /// (of course if you paint the path using <CODE>re</CODE> operator)
+        /// (of course if you paint the path using <code>re</code> operator)
         /// </remarks>
-        /// <returns><CODE>boolean</CODE> value indicating whether the path must be closed or not.</returns>
+        /// <returns><code>boolean</code> value indicating whether the path must be closed or not.</returns>
         public virtual bool IsClosed() {
             return closed;
         }
@@ -171,11 +171,11 @@ namespace iText.Kernel.Geom {
 
         /// <summary>Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.</summary>
         /// <remarks>
-        /// Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.
+        /// Returns a <code>boolean</code> indicating whether the subpath is degenerate or not.
         /// A degenerate subpath is the subpath consisting of a single-point closed path or of
         /// two or more points at the same coordinates.
         /// </remarks>
-        /// <returns><CODE>boolean</CODE> value indicating whether the path is degenerate or not.</returns>
+        /// <returns><code>boolean</code> value indicating whether the path is degenerate or not.</returns>
         public virtual bool IsDegenerate() {
             if (segments.Count > 0 && closed) {
                 return false;

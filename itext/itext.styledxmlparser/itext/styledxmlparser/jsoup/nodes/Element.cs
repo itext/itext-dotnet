@@ -280,33 +280,38 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// with the
         /// <c>p</c>
         /// element selected:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <c>p.text()</c>
         /// =
         /// <c>"One Two Three Four"</c>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <c>p.ownText()</c>
         /// =
         /// <c>"One Three Four"</c>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <c>p.children()</c>
         /// =
         /// <c>Elements[&lt;span&gt;, &lt;br&gt;]</c>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <c>p.childNodes()</c>
         /// =
         /// <c>List&lt;Node&gt;["One ", &lt;span&gt;, " Three ", &lt;br&gt;, " Four"]</c>
-        /// </li>
-        /// <li>
+        /// 
+        /// </description></item>
+        /// <item><description>
         /// <c>p.textNodes()</c>
         /// =
         /// <c>List&lt;TextNode&gt;["One ", " Three ", " Four"]</c>
-        /// </li>
-        /// </ul>
+        /// 
+        /// </description></item>
+        /// </list>
         /// </returns>
         public virtual IList<TextNode> TextNodes() {
             IList<TextNode> textNodes = new List<TextNode>();
@@ -351,18 +356,20 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>getElementBy*</c>
         /// methods, because
         /// multiple filters can be combined, e.g.:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <c>el.select("a[href]")</c>
         /// - finds links (
         /// <c>a</c>
         /// tags with
         /// <c>href</c>
         /// attributes)
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <c>el.select("a[href*=example.com]")</c>
         /// - finds links pointing to example.com (loosely)
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// See the query syntax documentation in
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// .

@@ -732,14 +732,14 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
-        /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="foreground">the color of the pixels. It can be <code>null</code></param>
         /// <returns>the XObject.</returns>
         public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE, document);
         }
 
         /// <summary>Creates a PdfFormXObject with the barcode with given module width and module height.</summary>
-        /// <param name="foreground">The color of the pixels. It can be <CODE>null</CODE></param>
+        /// <param name="foreground">The color of the pixels. It can be <code>null</code></param>
         /// <param name="moduleWidth">The width of the pixels.</param>
         /// <param name="moduleHeight">The height of the pixels.</param>
         /// <param name="document">The document</param>
@@ -755,7 +755,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the raw image bits of the barcode.</summary>
         /// <remarks>
         /// Gets the raw image bits of the barcode. The image will have to
-        /// be scaled in the Y direction by <CODE>yHeight</CODE>.
+        /// be scaled in the Y direction by <code>yHeight</code>.
         /// </remarks>
         /// <returns>The raw barcode image</returns>
         public virtual byte[] GetOutBits() {
@@ -763,17 +763,17 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Gets the number of X pixels of <CODE>outBits</CODE>.</summary>
-        /// <returns>the number of X pixels of <CODE>outBits</CODE></returns>
+        /// <returns>the number of X pixels of <code>outBits</code></returns>
         public virtual int GetBitColumns() {
             return this.bitColumns;
         }
 
         /// <summary>Gets the number of Y pixels of <CODE>outBits</CODE>.</summary>
         /// <remarks>
-        /// Gets the number of Y pixels of <CODE>outBits</CODE>.
+        /// Gets the number of Y pixels of <code>outBits</code>.
         /// It is also the number of rows in the barcode.
         /// </remarks>
-        /// <returns>the number of Y pixels of <CODE>outBits</CODE></returns>
+        /// <returns>the number of Y pixels of <code>outBits</code></returns>
         public virtual int GetCodeRows() {
             return this.codeRows;
         }
@@ -807,7 +807,7 @@ namespace iText.Barcodes {
         /// <summary>Gets the codeword array.</summary>
         /// <remarks>
         /// Gets the codeword array. This array is always 928 elements long.
-        /// It can be written to if the option <CODE>PDF417_USE_RAW_CODEWORDS</CODE>
+        /// It can be written to if the option <code>PDF417_USE_RAW_CODEWORDS</code>
         /// is set.
         /// </remarks>
         /// <returns>the codeword array</returns>
@@ -882,7 +882,7 @@ namespace iText.Barcodes {
         /// <summary>Sets the options to generate the barcode.</summary>
         /// <remarks>
         /// Sets the options to generate the barcode. This can be all
-        /// the <CODE>PDF417_*</CODE> constants.
+        /// the <code>PDF417_*</code> constants.
         /// </remarks>
         /// <param name="options">the options to generate the barcode</param>
         public virtual void SetOptions(int options) {

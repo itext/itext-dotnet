@@ -210,32 +210,40 @@ namespace iText.Kernel.Geom {
         /// According analytic geometry new basis vectors are (m00, m01) and (m10, m11),
         /// translation vector is (m02, m12). Original basis vectors are (1, 0) and (0, 1).
         /// Type transformations classification:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="TYPE_IDENTITY"/>
         /// - new basis equals original one and zero translation
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_TRANSLATION"/>
         /// - translation vector isn't zero
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_UNIFORM_SCALE"/>
         /// - vectors length of new basis equals
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_GENERAL_SCALE"/>
         /// - vectors length of new basis doesn't equal
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_FLIP"/>
         /// - new basis vector orientation differ from original one
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_QUADRANT_ROTATION"/>
         /// - new basis is rotated by 90, 180, 270, or 360 degrees
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_GENERAL_ROTATION"/>
         /// - new basis is rotated by arbitrary angle
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="TYPE_GENERAL_TRANSFORM"/>
         /// - transformation can't be inversed
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <returns>the type of this AffineTransform</returns>
         public virtual int GetTransformType() {

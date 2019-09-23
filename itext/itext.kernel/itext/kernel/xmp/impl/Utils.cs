@@ -65,12 +65,15 @@ namespace iText.Kernel.XMP.Impl {
         /// Normalize an xml:lang value so that comparisons are effectively case
         /// insensitive as required by RFC 3066 (which superceeds RFC 1766). The
         /// normalization rules:
-        /// <ul>
-        /// <li> The primary subtag is lower case, the suggested practice of ISO 639.
-        /// <li> All 2 letter secondary subtags are upper case, the suggested
+        /// <list type="bullet">
+        /// <item><description> The primary subtag is lower case, the suggested practice of ISO 639.
+        /// </description></item>
+        /// <item><description> All 2 letter secondary subtags are upper case, the suggested
         /// practice of ISO 3166.
-        /// <li> All other subtags are lower case.
-        /// </ul>
+        /// </description></item>
+        /// <item><description> All other subtags are lower case.
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="value">raw value</param>
         /// <returns>Returns the normalized value.</returns>
@@ -114,12 +117,14 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>Split the name and value parts for field and qualifier selectors.</summary>
         /// <remarks>
         /// Split the name and value parts for field and qualifier selectors. Following selectors are taken into account:
-        /// <ul>
-        /// <li>[qualName="value"] - An element in an array of structs, chosen by a
+        /// <list type="bullet">
+        /// <item><description>[qualName="value"] - An element in an array of structs, chosen by a
         /// field value.
-        /// <li>[?qualName="value"] - An element in an array, chosen by a qualifier
+        /// </description></item>
+        /// <item><description>[?qualName="value"] - An element in an array, chosen by a qualifier
         /// value.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// The value portion is a string quoted by ''' or '"'. The value may contain
         /// any character including a doubled quoting character. The value may be
         /// empty. <em>Note:</em> It is assumed that the expression is formal
@@ -260,11 +265,13 @@ namespace iText.Kernel.XMP.Impl {
 
         /// <summary>
         /// Check some requirements for an UUID:
-        /// <ul>
-        /// <li>Length of the UUID is 32
-        /// <li>The Delimiter count is 4 and all the 4 delimiter are on their right
+        /// <list type="bullet">
+        /// <item><description>Length of the UUID is 32
+        /// </description></item>
+        /// <item><description>The Delimiter count is 4 and all the 4 delimiter are on their right
         /// position (8,13,18,23)
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <param name="uuid">uuid to test</param>
         /// <returns>true - this is a well formed UUID, false - UUID has not the expected format</returns>

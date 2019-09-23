@@ -451,7 +451,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>
-        /// <para />
+        /// <p>
         /// Adds file associated with structure tree root and identifies the relationship between them.
         /// </summary>
         /// <remarks>
