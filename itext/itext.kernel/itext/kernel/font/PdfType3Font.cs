@@ -369,8 +369,8 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>
-        /// Gets first empty code, that could use with
-        /// <seealso>addSymbol()</seealso>
+        /// Gets the first empty code that could be passed to
+        /// <see cref="iText.IO.Font.FontEncoding.AddSymbol(int, int)"/>
         /// </summary>
         /// <returns>code from 1 to 255 or -1 if all slots are busy.</returns>
         private int GetFirstEmptyCode() {

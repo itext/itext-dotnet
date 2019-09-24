@@ -119,7 +119,7 @@ namespace iText.Layout.Element {
         /// <see cref="System.Collections.IList{E}"/>
         /// of layout elements to the Paragraph.
         /// </summary>
-        /// 
+        /// <param name="elements">the content to be added</param>
         /// 
         /// <returns>this Paragraph</returns>
         public virtual iText.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)

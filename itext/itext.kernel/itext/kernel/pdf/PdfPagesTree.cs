@@ -68,10 +68,11 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
-        /// <summary>Create PdfPages tree.</summary>
+        /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
-        /// 
-        /// <seealso>PdfCatalog</seealso>
+        /// a
+        /// <see cref="PdfCatalog"/>
+        /// which will be used to create the tree
         /// </param>
         public PdfPagesTree(PdfCatalog pdfCatalog) {
             this.document = pdfCatalog.GetDocument();
@@ -100,13 +101,13 @@ namespace iText.Kernel.Pdf {
         // and reserve null indexes for pageRefs and pages.
         /// <summary>
         /// Returns the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// at the specified position in this list.
         /// </summary>
         /// <param name="pageNum">one-based index of the element to return</param>
         /// <returns>
         /// the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// at the specified position in this list
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
@@ -134,7 +135,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Returns the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// by page's PdfDictionary.
         /// </summary>
         /// <param name="pageDictionary">page's PdfDictionary</param>
@@ -189,12 +190,13 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Appends the specified
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// to the end of this tree.
         /// </summary>
         /// <param name="pdfPage">
-        /// 
-        /// <seealso>PdfPage</seealso>
+        /// a
+        /// <see cref="PdfPage"/>
+        /// to be added
         /// </param>
         public virtual void AddPage(PdfPage pdfPage) {
             PdfPages pdfPages;
@@ -223,8 +225,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Insert
-        /// <seealso>PdfPage</seealso>
+        /// Inserts
+        /// <see cref="PdfPage"/>
         /// into specific one-based position.
         /// </summary>
         /// <param name="index">one-base index of the page</param>

@@ -62,10 +62,10 @@ namespace iText.Svg.Renderers.Impl {
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
         private const String SPACE_CHAR = " ";
 
-        /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &lt;path&gt; element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         /// <para />
         /// Find any occurrence of a letter that is not an operator
         /// </remarks>
@@ -74,10 +74,10 @@ namespace iText.Svg.Renderers.Impl {
         private static Regex invalidRegexPattern = iText.IO.Util.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX, System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
-        /// <summary>The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// <summary>The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &lt;path&gt; element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         /// <para />
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>
@@ -142,13 +142,14 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="shape">The current shape.</param>
         /// <param name="previousShape">The previous shape which can affect the coordinates of the current shape.</param>
         /// <param name="pathProperties">
-        /// The operator and all arguments as a
-        /// <see>String[]</see>
+        /// The operator and all arguments as an array of
+        /// <see cref="System.String">String</see>
+        /// s
         /// </param>
         /// <returns>
         /// a
-        /// <see>String[]</see>
-        /// of coordinates that shall be passed to
+        /// <see cref="System.String"/>
+        /// array of coordinates that shall be passed to
         /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[], iText.Kernel.Geom.Point)"/>
         /// </returns>
         private String[] GetShapeCoordinates(IPathShape shape, IPathShape previousShape, String[] pathProperties) {
@@ -192,8 +193,9 @@ namespace iText.Svg.Renderers.Impl {
         /// objects.
         /// </summary>
         /// <param name="pathProperties">
-        /// The property operator and all arguments as a
-        /// <see>String[]</see>
+        /// The property operator and all arguments as an array of
+        /// <see cref="System.String"/>
+        /// s
         /// </param>
         /// <param name="previousShape">
         /// The previous shape which can affect the positioning of the current shape. If no previous

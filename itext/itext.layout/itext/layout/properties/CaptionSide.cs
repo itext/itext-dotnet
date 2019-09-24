@@ -44,7 +44,8 @@ using iText.Layout.Element;
 
 namespace iText.Layout.Properties {
     /// <summary>
-    /// A specialized enum containing the potential caption side values for a
+    /// A specialized enum containing the potential caption side values
+    /// for a
     /// <see cref="Table"/>
     /// 's caption.
     /// </summary>

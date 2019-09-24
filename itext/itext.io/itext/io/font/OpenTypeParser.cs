@@ -550,14 +550,10 @@ namespace iText.IO.Font {
         /// <remarks>
         /// Reads the glyphs widths. The widths are extracted from the table 'hmtx'.
         /// The glyphs are normalized to 1000 units (TrueTypeFont.UNITS_NORMALIZATION).
-        /// Depends from
-        /// <c>hhea.numberOfHMetrics</c>
-        /// property,
-        /// <seealso>HorizontalHeader</seealso>
+        /// Depends on
+        /// <see cref="HorizontalHeader.numberOfHMetrics"/>
         /// and
-        /// <c>head.unitsPerEm</c>
-        /// property,
-        /// <seealso>HeaderTable</seealso>
+        /// <see cref="HeaderTable.unitsPerEm"/>
         /// .
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
@@ -593,9 +589,7 @@ namespace iText.IO.Font {
         /// <summary>Reads the kerning information from the 'kern' table.</summary>
         /// <param name="unitsPerEm">
         /// 
-        /// <c>head.unitsPerEm</c>
-        /// property,
-        /// <seealso>HeaderTable</seealso>
+        /// <see cref="HeaderTable.unitsPerEm"/>
         /// .
         /// </param>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
@@ -632,13 +626,10 @@ namespace iText.IO.Font {
         /// <summary>Read the glyf bboxes from 'glyf' table.</summary>
         /// <param name="unitsPerEm">
         /// 
-        /// <c>head.unitsPerEm</c>
-        /// property,
-        /// <seealso>HeaderTable</seealso>
-        /// .
+        /// <see cref="HeaderTable.unitsPerEm"/>
         /// </param>
-        /// <exception cref="iText.IO.IOException">the font is invalid.</exception>
-        /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
+        /// <exception cref="iText.IO.IOException">the font is invalid</exception>
+        /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         protected internal virtual int[][] ReadBbox(int unitsPerEm) {
             int[] tableLocation;
             tableLocation = tables.Get("head");
@@ -814,11 +805,9 @@ namespace iText.IO.Font {
         /// <summary>Reads the windows metrics table.</summary>
         /// <remarks>
         /// Reads the windows metrics table. The metrics are extracted from the table 'OS/2'.
-        /// Depends from
-        /// <c>head.unitsPerEm</c>
-        /// property,
-        /// <seealso>HeaderTable</seealso>
-        /// .
+        /// Depends on
+        /// <see cref="HeaderTable.unitsPerEm"/>
+        /// property.
         /// </remarks>
         /// <exception cref="iText.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>

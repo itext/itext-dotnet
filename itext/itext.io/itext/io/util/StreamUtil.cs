@@ -306,10 +306,6 @@ namespace iText.IO.Util {
         /// <param name="off">an int specifying the offset into the data.</param>
         /// <param name="len">an int specifying the number of bytes to read.</param>
         /// <exception>
-        /// EOFException
-        /// if this stream reaches the end before reading all the bytes.
-        /// </exception>
-        /// <exception>
         /// IOException
         /// if an I/O error occurs.
         /// </exception>

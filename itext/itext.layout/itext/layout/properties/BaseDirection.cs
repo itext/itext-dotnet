@@ -46,10 +46,12 @@ using iText.Layout.Element;
 
 namespace iText.Layout.Properties {
     /// <summary>
-    /// A specialized enum holding the possible values for a text
+    /// A specialized enum holding the possible values
+    /// for a text
     /// <see cref="IElement"/>
-    /// 's base direction. This class is meant to
-    /// be used as the value for the
+    /// 's base direction.
+    /// This class is meant to be used as the value
+    /// for the
     /// <see cref="Property.BASE_DIRECTION"/>
     /// key in an
     /// <see cref="IPropertyContainer"/>

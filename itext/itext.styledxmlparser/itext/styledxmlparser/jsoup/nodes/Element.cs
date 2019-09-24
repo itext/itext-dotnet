@@ -894,8 +894,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>Find elements that have attributes whose values match the supplied regular expression.</summary>
         /// <param name="key">name of the attribute</param>
-        /// <param name="regex">regular expression to match against attribute values. You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a> (such as (?i) and (?m) to control regex options.
-        ///     </param>
+        /// <param name="regex">
+        /// regular expression to match against attribute values.
+        /// You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a>
+        /// (such as (?i) and (?m) to control regex options.
+        /// </param>
         /// <returns>elements that have attributes matching this regular expression</returns>
         public virtual Elements GetElementsByAttributeValueMatching(String key, String regex) {
             Regex pattern;
@@ -962,8 +965,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         /// <summary>Find elements whose text matches the supplied regular expression.</summary>
-        /// <param name="regex">regular expression to match text against. You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a> (such as (?i) and (?m) to control regex options.
-        ///     </param>
+        /// <param name="regex">
+        /// regular expression to match text against.
+        /// You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a>
+        /// (such as (?i) and (?m) to control regex options.
+        /// </param>
         /// <returns>elements matching the supplied regular expression.</returns>
         /// <seealso cref="Text()"/>
         public virtual Elements GetElementsMatchingText(String regex) {
@@ -986,8 +992,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         /// <summary>Find elements whose text matches the supplied regular expression.</summary>
-        /// <param name="regex">regular expression to match text against. You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a> (such as (?i) and (?m) to control regex options.
-        ///     </param>
+        /// <param name="regex">
+        /// regular expression to match text against.
+        /// You can use <a href="http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded flags</a>
+        /// (such as (?i) and (?m) to control regex options.
+        /// </param>
         /// <returns>elements matching the supplied regular expression.</returns>
         /// <seealso cref="OwnText()"/>
         public virtual Elements GetElementsMatchingOwnText(String regex) {
@@ -1023,12 +1032,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_949(accum)).Traverse(this);
+            new NodeTraversor(new _NodeVisitor_955(accum)).Traverse(this);
             return accum.ToString().Trim();
         }
 
-        private sealed class _NodeVisitor_949 : NodeVisitor {
-            public _NodeVisitor_949(StringBuilder accum) {
+        private sealed class _NodeVisitor_955 : NodeVisitor {
+            public _NodeVisitor_955(StringBuilder accum) {
                 this.accum = accum;
             }
 

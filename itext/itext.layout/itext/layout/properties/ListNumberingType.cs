@@ -46,12 +46,14 @@ using iText.Layout.Element;
 
 namespace iText.Layout.Properties {
     /// <summary>
-    /// A specialized enum holding the possible values for a list
+    /// A specialized enum holding the possible values
+    /// for a list
     /// <see cref="List"/>
-    /// 's entry prefix. This class is meant to
-    /// be used as the value for the
+    /// 's entry prefix.
+    /// This class is meant to be used as the value for the
     /// <see cref="Property.LIST_SYMBOL"/>
-    /// key in an
+    /// key
+    /// in an
     /// <see cref="IPropertyContainer"/>
     /// .
     /// </summary>

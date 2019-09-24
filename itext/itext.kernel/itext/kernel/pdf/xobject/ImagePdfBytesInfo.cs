@@ -172,8 +172,6 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <summary>Sets state of this object according to the color space</summary>
         /// <param name="csObj">the colorspace to use</param>
         /// <param name="allowIndexed">whether indexed color spaces will be resolved (used for recursive call)</param>
-        /// <param name="width"/>
-        /// <param name="height"/>
         /// <exception cref="System.IO.IOException">if there is a problem with reading from the underlying stream</exception>
         private void FindColorspace(PdfObject csObj, bool allowIndexed) {
             if (PdfName.DeviceGray.Equals(csObj) || (csObj == null && bpc == 1)) {

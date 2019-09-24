@@ -1370,7 +1370,7 @@ namespace iText.Svg.Converter {
 
         /// <summary>
         /// Tries to extract charset from
-        /// <seealso>ISvgConverterProperties</seealso>
+        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
         /// .
         /// </summary>
         /// <param name="props">converter properties</param>
@@ -1381,7 +1381,7 @@ namespace iText.Svg.Converter {
 
         /// <summary>
         /// Tries to extract baseUri from
-        /// <seealso>ISvgConverterProperties</seealso>
+        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
         /// .
         /// </summary>
         /// <param name="props">converter properties</param>

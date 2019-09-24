@@ -45,7 +45,8 @@ using iText.Layout.Element;
 
 namespace iText.Layout.Properties {
     /// <summary>
-    /// The possibile values for the type of break that is executed by an
+    /// The possible values for the type of break
+    /// that is executed by an
     /// <see cref="AreaBreak"/>
     /// .
     /// </summary>

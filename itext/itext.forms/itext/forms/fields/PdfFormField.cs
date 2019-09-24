@@ -2343,8 +2343,10 @@ namespace iText.Forms.Fields {
         /// <summary>Puts object directly to AcroForm dictionary.</summary>
         /// <remarks>
         /// Puts object directly to AcroForm dictionary.
-        /// It works much faster than
-        /// <see>PdfAcroForm#getAcroForm(PdfDocument, boolean)#getPdfObject()</see>
+        /// It works much faster than consequent invocation of
+        /// <see cref="iText.Forms.PdfAcroForm.GetAcroForm(iText.Kernel.Pdf.PdfDocument, bool)"/>
+        /// and
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
         /// .
         /// Note, this method assume that Catalog already has AcroForm object.
         /// <see cref="AddAcroFormToCatalog()"/>
