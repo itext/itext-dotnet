@@ -448,37 +448,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return userSpace.GetLength();
         }
 
-        /// <summary>Calculates the width of a space character.</summary>
-        /// <remarks>
-        /// Calculates the width of a space character.  If the font does not define
-        /// a width for a standard space character \u0020, we also attempt to use
-        /// the width of \u00A0 (a non-breaking space in many fonts)
-        /// </remarks>
+        /// <summary>Calculates the width of a space character in text space units.</summary>
         /// <returns>the width of a single space character in text space units</returns>
         private float GetUnscaledFontSpaceWidth() {
             CheckGraphicsState();
-            char charToUse = ' ';
-            if (gs.GetFont().GetWidth(charToUse) == 0) {
-                return gs.GetFont().GetFontProgram().GetAvgWidth() / 1000f;
+            char spaceChar = ' ';
+            int charWidth = gs.GetFont().GetWidth(spaceChar);
+            if (charWidth == 0) {
+                charWidth = gs.GetFont().GetFontProgram().GetAvgWidth();
             }
-            else {
-                return GetStringWidth(charToUse.ToString());
-            }
-        }
-
-        /// <summary>Gets the width of a String in text space units</summary>
-        /// <param name="string">the string that needs measuring</param>
-        /// <returns>the width of a String in text space units</returns>
-        private float GetStringWidth(String @string) {
-            CheckGraphicsState();
-            float totalWidth = 0;
-            for (int i = 0; i < @string.Length; i++) {
-                char c = @string[i];
-                float w = (float)(gs.GetFont().GetWidth(c) * fontMatrix[0]);
-                float wordSpacing = c == 32 ? gs.GetWordSpacing() : 0f;
-                totalWidth += (w * gs.GetFontSize() + gs.GetCharSpacing() + wordSpacing) * gs.GetHorizontalScaling() / 100f;
-            }
-            return totalWidth;
+            float w = (float)(charWidth * fontMatrix[0]);
+            return (w * gs.GetFontSize() + gs.GetCharSpacing() + gs.GetWordSpacing()) * gs.GetHorizontalScaling() / 100f;
         }
 
         /// <summary>Gets the width of a PDF string in text space units</summary>
