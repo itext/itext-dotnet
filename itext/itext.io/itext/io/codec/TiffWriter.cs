@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace iText.IO.Codec {
     /// <summary>Exports images as TIFF.</summary>
@@ -235,8 +234,8 @@ namespace iText.IO.Codec {
         /// <summary>Inner class containing info about an ASCII field.</summary>
         public class FieldAscii : TiffWriter.FieldBase {
             public FieldAscii(int tag, String values)
-                : base(tag, 2, values.GetBytes(Encoding.ASCII).Length + 1) {
-                byte[] b = values.GetBytes(Encoding.ASCII);
+                : base(tag, 2, values.GetBytes(System.Text.Encoding.ASCII).Length + 1) {
+                byte[] b = values.GetBytes(System.Text.Encoding.ASCII);
                 data = new byte[b.Length + 1];
                 Array.Copy(b, 0, data, 0, b.Length);
             }

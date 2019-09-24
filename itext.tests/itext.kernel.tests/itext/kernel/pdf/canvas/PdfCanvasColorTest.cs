@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -421,8 +420,8 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
-                );
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+                .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(1, p1Count);
@@ -466,8 +465,8 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
-                );
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+                .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(3, p1Count);

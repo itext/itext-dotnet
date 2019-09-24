@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
@@ -928,7 +927,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         private String[] ExtractXrefTableAsStrings(String @out) {
             byte[] outPdfBytes = ReadFile(destinationFolder + @out);
-            String outPdfContent = iText.IO.Util.JavaUtil.GetStringForBytes(outPdfBytes, Encoding.ASCII);
+            String outPdfContent = iText.IO.Util.JavaUtil.GetStringForBytes(outPdfBytes, System.Text.Encoding.ASCII);
             String xrefStr = "\nxref";
             String trailerStr = "trailer";
             int xrefInd = outPdfContent.IndexOf(xrefStr, StringComparison.Ordinal);

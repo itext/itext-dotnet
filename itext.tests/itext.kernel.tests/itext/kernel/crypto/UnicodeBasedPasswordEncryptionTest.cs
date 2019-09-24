@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -162,7 +161,7 @@ namespace iText.Kernel.Crypto {
             foreach (KeyValuePair<String, UnicodeBasedPasswordEncryptionTest.SaslPreparedString> entry in nameToSaslPrepared
                 ) {
                 String filename = fileNameTemplate + entry.Key + ".pdf";
-                byte[] ownerPassword = entry.Value.preparedString.GetBytes(Encoding.UTF8);
+                byte[] ownerPassword = entry.Value.preparedString.GetBytes(System.Text.Encoding.UTF8);
                 EncryptAes256AndCheck(filename, ownerPassword);
             }
         }

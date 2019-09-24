@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Node;
@@ -67,7 +66,7 @@ namespace iText.Svg.Converter {
         public virtual void Setup() {
             doc = new PdfDocument(new PdfWriter(new MemoryStream()));
             doc.AddNewPage();
-            @is = new MemoryStream(content.GetBytes(Encoding.UTF8));
+            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
         }
 
         [NUnit.Framework.TearDown]
@@ -261,7 +260,7 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamErrorEncodingTooBig() {
-            @is = new MemoryStream(content.GetBytes(Encoding.Unicode));
+            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
             INode actual = SvgConverter.Parse(@is, new DummySvgConverterProperties());
             // defaults to UTF-8
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
@@ -278,7 +277,7 @@ namespace iText.Svg.Converter {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamWithOtherEncoding() {
-            @is = new MemoryStream(content.GetBytes(Encoding.Unicode));
+            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
             INode actual = SvgConverter.Parse(@is, new SvgConverterUnitTest.OtherCharsetDummySvgConverterProperties());
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             JsoupElementNode node = (JsoupElementNode)actual.ChildNodes()[0];

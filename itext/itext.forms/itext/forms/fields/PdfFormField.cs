@@ -2226,7 +2226,7 @@ namespace iText.Forms.Fields {
         /// <returns>the edited field</returns>
         [System.ObsoleteAttribute(@"use UpdateDefaultAppearance() instead.")]
         public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
-            byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
+            byte[] b = defaultAppearance.GetBytes(System.Text.Encoding.UTF8);
             for (int k = 0; k < b.Length; ++k) {
                 if (b[k] == '\n') {
                     b[k] = 32;

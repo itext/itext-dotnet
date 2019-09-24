@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -294,8 +293,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDocument.GetPage(1);
             PdfStream contentStream = new PdfStream();
             String contentStr = iText.IO.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream(
-                ).GetBytes(), Encoding.ASCII);
-            contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(Encoding.ASCII));
+                ).GetBytes(), System.Text.Encoding.ASCII);
+            contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(System.Text.Encoding.ASCII));
             page.GetPdfObject().Put(PdfName.Contents, contentStream);
             page.SetModified();
             pdfDocument.Close();

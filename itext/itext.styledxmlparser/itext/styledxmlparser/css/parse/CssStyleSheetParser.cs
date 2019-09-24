@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse.Syntax;
@@ -73,7 +72,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         public static CssStyleSheet Parse(Stream stream, String baseUrl) {
             CssParserStateController controller = new CssParserStateController(baseUrl);
-            TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, Encoding.UTF8));
+            TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, System.Text.Encoding.UTF8));
             // TODO determine charset correctly DEVSIX-1458
             char[] buffer = new char[8192];
             int length;
@@ -113,7 +112,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static CssStyleSheet Parse(String data, String baseUrl) {
             // TODO charset? better to create parse logic based on string completely
-            MemoryStream stream = new MemoryStream(data.GetBytes(Encoding.UTF8));
+            MemoryStream stream = new MemoryStream(data.GetBytes(System.Text.Encoding.UTF8));
             try {
                 return Parse(stream, baseUrl);
             }

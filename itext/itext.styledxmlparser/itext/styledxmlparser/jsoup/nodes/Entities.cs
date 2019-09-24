@@ -156,7 +156,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             bool lastWasWhite = false;
             bool reachedNonWhite = false;
             Entities.EscapeMode escapeMode = outputSettings.EscapeMode();
-            Encoding encoder = outputSettings.Charset();
+            System.Text.Encoding encoder = outputSettings.Charset();
             Entities.CoreCharset coreCharset = GetCoreCharsetByName(outputSettings.Charset().Name());
             IDictionary<char, String> map = escapeMode.GetMap();
             int length = str.Length;
@@ -282,7 +282,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         * Alterslash: 3013, 28
         * Jsoup: 167, 2
         */
-        private static bool CanEncode(Entities.CoreCharset charset, char c, Encoding fallback) {
+        private static bool CanEncode(Entities.CoreCharset charset, char c, System.Text.Encoding fallback) {
             switch (charset) {
                 case Entities.CoreCharset.ascii: {
                     // todo add more charset tests if impacted by Android's bad perf in canEncode

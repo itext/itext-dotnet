@@ -257,7 +257,7 @@ namespace iText.Kernel.Pdf {
         public virtual void EqualStrings() {
             PdfString a = (PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
                 ())));
-            PdfString b = new PdfString("abcd".GetBytes(Encoding.ASCII));
+            PdfString b = new PdfString("abcd".GetBytes(System.Text.Encoding.ASCII));
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
             PdfString c = new PdfString("abcd", "UTF-8");
             NUnit.Framework.Assert.IsFalse(c.Equals(a));
@@ -304,7 +304,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void EqualLiterals() {
             PdfLiteral a = new PdfLiteral("abcd");
-            PdfLiteral b = new PdfLiteral("abcd".GetBytes(Encoding.ASCII));
+            PdfLiteral b = new PdfLiteral("abcd".GetBytes(System.Text.Encoding.ASCII));
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
         }
 

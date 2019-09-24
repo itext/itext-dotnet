@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Node;
@@ -78,7 +77,7 @@ namespace iText.Svg.Converter {
         public virtual void Setup() {
             doc = new PdfDocument(new PdfWriter(new MemoryStream()));
             doc.AddNewPage();
-            @is = new MemoryStream(content.GetBytes(Encoding.UTF8));
+            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
         }
 
         [NUnit.Framework.TearDown]

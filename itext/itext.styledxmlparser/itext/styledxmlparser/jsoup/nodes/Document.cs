@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Select;
@@ -306,7 +305,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="charset">Charset</param>
         /// <seealso cref="UpdateMetaCharsetElement(bool)"></seealso>
         /// <seealso cref="OutputSettings.Charset(System.Text.Encoding)"></seealso>
-        public virtual void Charset(Encoding charset) {
+        public virtual void Charset(System.Text.Encoding charset) {
             UpdateMetaCharsetElement(true);
             outputSettings.Charset(charset);
             EnsureMetaCharsetElement();
@@ -321,7 +320,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <returns>Current Charset</returns>
         /// <seealso cref="OutputSettings.Charset()"></seealso>
-        public virtual Encoding Charset() {
+        public virtual System.Text.Encoding Charset() {
             return outputSettings.Charset();
         }
 
@@ -472,9 +471,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
  {
         private Entities.EscapeMode escapeMode = Entities.EscapeMode.@base;
 
-        private Encoding charset = EncodingUtil.GetEncoding("UTF-8");
+        private System.Text.Encoding charset = EncodingUtil.GetEncoding("UTF-8");
 
-        private Encoding charsetEncoder;
+        private System.Text.Encoding charsetEncoder;
 
         private bool prettyPrint = true;
 
@@ -528,14 +527,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// input charset. Otherwise, it defaults to UTF-8.
         /// </remarks>
         /// <returns>the document's current charset.</returns>
-        public virtual Encoding Charset() {
+        public virtual System.Text.Encoding Charset() {
             return charset;
         }
 
         /// <summary>Update the document's output charset.</summary>
         /// <param name="charset">the new charset to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual OutputSettings Charset(Encoding charset) {
+        public virtual OutputSettings Charset(System.Text.Encoding charset) {
             this.charset = charset;
             charsetEncoder = iText.IO.Util.TextUtil.NewEncoder(charset);
             return this;

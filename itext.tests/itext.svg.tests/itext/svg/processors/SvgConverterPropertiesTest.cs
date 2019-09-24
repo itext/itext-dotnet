@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Text;
 using iText.Svg.Processors.Impl;
 using iText.Test;
 
@@ -49,7 +48,7 @@ namespace iText.Svg.Processors {
     public class SvgConverterPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetCharsetNameRegressionTest() {
-            String expected = Encoding.UTF8.Name();
+            String expected = System.Text.Encoding.UTF8.Name();
             String actual = new SvgConverterProperties().GetCharset();
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

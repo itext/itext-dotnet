@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.IO.Codec;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -199,11 +198,11 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         private void CompareSoftwareVersion(TIFFField cmpField, TIFFField resultField) {
-            byte[] versionBytes = resultField.GetAsString(0).GetBytes(Encoding.ASCII);
+            byte[] versionBytes = resultField.GetAsString(0).GetBytes(System.Text.Encoding.ASCII);
             //drop last always zero byte
             byte[] versionToCompare = SubArray(versionBytes, 0, versionBytes.Length - 2);
-            NUnit.Framework.Assert.AreEqual(iText.Kernel.Version.GetInstance().GetVersion().GetBytes(Encoding.ASCII), 
-                versionToCompare);
+            NUnit.Framework.Assert.AreEqual(iText.Kernel.Version.GetInstance().GetVersion().GetBytes(System.Text.Encoding
+                .ASCII), versionToCompare);
         }
 
         private void CompareFields(TIFFField cmpField, TIFFField resultField) {
