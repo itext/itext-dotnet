@@ -61,8 +61,7 @@ namespace iText.Forms {
     public class PdfAcroForm : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// To be used with
-        /// <see cref="SetSignatureFlags(int)"/>
-        /// .
+        /// <see cref="SetSignatureFlags(int)"/>.
         /// <br />
         /// <blockquote>
         /// If set, the document contains at least one signature field. This flag
@@ -76,8 +75,7 @@ namespace iText.Forms {
 
         /// <summary>
         /// To be used with
-        /// <see cref="SetSignatureFlags(int)"/>
-        /// .
+        /// <see cref="SetSignatureFlags(int)"/>.
         /// <br />
         /// <blockquote>
         /// If set, the document contains signatures that may be invalidated if the
@@ -287,8 +285,7 @@ namespace iText.Forms {
         /// Gets the
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s as a
-        /// <see cref="System.Collections.IDictionary{K, V}"/>
-        /// .
+        /// <see cref="System.Collections.IDictionary{K, V}"/>.
         /// </summary>
         /// <returns>
         /// a map of field names and their associated
@@ -393,8 +390,7 @@ namespace iText.Forms {
         /// an integer. Use
         /// <see cref="SIGNATURE_EXIST"/>
         /// and/or
-        /// <see cref="APPEND_ONLY"/>
-        /// .
+        /// <see cref="APPEND_ONLY"/>.
         /// Use bitwise OR operator to combine these values. Default value is <c>0</c>
         /// </param>
         /// <returns>current AcroForm.</returns>
@@ -417,8 +413,7 @@ namespace iText.Forms {
         /// an integer. Use
         /// <see cref="SIGNATURE_EXIST"/>
         /// and/or
-        /// <see cref="APPEND_ONLY"/>
-        /// .
+        /// <see cref="APPEND_ONLY"/>.
         /// Use bitwise OR operator to combine these values. Default is <c>0</c>
         /// </param>
         /// <returns>current AcroForm.</returns>
@@ -589,8 +584,7 @@ namespace iText.Forms {
         /// <c>XFA</c> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
         /// Its contents must be valid XFA.
         /// </remarks>
         /// <param name="xfaResource">a stream containing the XDP</param>
@@ -606,8 +600,7 @@ namespace iText.Forms {
         /// <c>XFA</c> can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
         /// Its contents must be valid XFA.
         /// </remarks>
         /// <param name="xfaResource">
@@ -626,8 +619,7 @@ namespace iText.Forms {
         /// an object representing the entire XDP. It can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>.
         /// </returns>
         public virtual PdfObject GetXFAResource() {
             return GetPdfObject().Get(PdfName.XFA);
@@ -892,8 +884,7 @@ namespace iText.Forms {
 
         /// <summary>
         /// Changes the identifier of a
-        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
-        /// .
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>.
         /// </summary>
         /// <param name="oldName">the current name of the field</param>
         /// <param name="newName">the new name of the field. Must not be used currently.</param>
@@ -937,8 +928,7 @@ namespace iText.Forms {
         /// Replaces the
         /// <see cref="iText.Forms.Fields.PdfFormField"/>
         /// of a certain name with another
-        /// <see cref="iText.Forms.Fields.PdfFormField"/>
-        /// .
+        /// <see cref="iText.Forms.Fields.PdfFormField"/>.
         /// </summary>
         /// <param name="name">
         /// the name of the

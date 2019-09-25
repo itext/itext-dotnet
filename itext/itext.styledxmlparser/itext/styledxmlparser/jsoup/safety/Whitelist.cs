@@ -408,8 +408,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         /// Configure this Whitelist to preserve relative links in an element's URL attribute, or convert them to absolute
         /// links. By default, this is <b>false</b>: URLs will be  made absolute (e.g. start with an allowed protocol, like
         /// e.g.
-        /// <c>http://</c>
-        /// .
+        /// <c>http://</c>.
         /// <para />
         /// Note that when handling relative links, the input document must have an appropriate
         /// <c>base URI</c>

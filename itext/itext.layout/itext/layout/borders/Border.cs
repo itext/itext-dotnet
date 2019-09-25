@@ -125,8 +125,7 @@ namespace iText.Layout.Borders {
         /// Creates a
         /// <see cref="Border">border</see>
         /// with given width and
-        /// <see cref="iText.Kernel.Colors.Color">color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.Color">color</see>.
         /// </summary>
         /// <param name="color">the color which the border should have</param>
         /// <param name="width">the width which the border should have</param>
@@ -475,8 +474,7 @@ namespace iText.Layout.Borders {
         /// ,
         /// <see cref="DottedBorder"/>
         /// and
-        /// <see cref="RoundDotsBorder"/>
-        /// .
+        /// <see cref="RoundDotsBorder"/>.
         /// </remarks>
         /// <param name="canvas">canvas to draw on</param>
         /// <param name="boundingRectangle">rectangle representing the bounding box of the drawing operations</param>

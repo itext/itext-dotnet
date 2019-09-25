@@ -49,80 +49,70 @@ namespace iText.Kernel.Geom {
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_IDENTITY = 0;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_TRANSLATION = 1;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_UNIFORM_SCALE = 2;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_GENERAL_SCALE = 4;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_QUADRANT_ROTATION = 8;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_GENERAL_ROTATION = 16;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_GENERAL_TRANSFORM = 32;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_FLIP = 64;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_MASK_SCALE = TYPE_UNIFORM_SCALE | TYPE_GENERAL_SCALE;
 
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
         /// The type of affine transformation. See
-        /// <see cref="GetTransformType()"/>
-        /// .
+        /// <see cref="GetTransformType()"/>.
         /// </remarks>
         public const int TYPE_MASK_ROTATION = TYPE_QUADRANT_ROTATION | TYPE_GENERAL_ROTATION;
 

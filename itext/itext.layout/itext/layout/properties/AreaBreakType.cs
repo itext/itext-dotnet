@@ -47,8 +47,7 @@ namespace iText.Layout.Properties {
     /// <summary>
     /// The possible values for the type of break
     /// that is executed by an
-    /// <see cref="AreaBreak"/>
-    /// .
+    /// <see cref="AreaBreak"/>.
     /// </summary>
     public enum AreaBreakType {
         NEXT_AREA,

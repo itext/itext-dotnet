@@ -847,8 +847,7 @@ namespace iText.Signatures {
         /// The document digest is generated and put inside the attribute. The signing is done over the DER encoded
         /// authenticatedAttributes. This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
         /// <para />
@@ -890,8 +889,7 @@ namespace iText.Signatures {
         /// The document digest is generated and put inside the attribute. The signing is done over the DER encoded
         /// authenticatedAttributes. This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
         /// <para />
@@ -933,8 +931,7 @@ namespace iText.Signatures {
         /// <summary>
         /// This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// </summary>
         /// <param name="secondDigest">the content digest</param>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>

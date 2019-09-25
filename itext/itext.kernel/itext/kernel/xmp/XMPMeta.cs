@@ -228,8 +228,7 @@ namespace iText.Kernel.XMP {
         /// <para />
         /// This is the simplest property setter, mainly for top level simple properties or after using
         /// the path composition functions in
-        /// <see cref="XMPPathFactory"/>
-        /// .
+        /// <see cref="XMPPathFactory"/>.
         /// </remarks>
         /// <param name="schemaNS">The namespace URI for the property. Has the same usage as in getProperty.</param>
         /// <param name="propName">
@@ -363,14 +362,12 @@ namespace iText.Kernel.XMP {
         /// or
         /// </description></item>
         /// <item><description>
-        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>
-        /// .
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>.
         /// </description></item>
         /// </list>
         /// <em>Note:</em> the array options only need to be provided if the array is not
         /// already existing, otherwise you can set them to <c>null</c> or use
-        /// <see cref="AppendArrayItem(System.String, System.String, System.String)"/>
-        /// .
+        /// <see cref="AppendArrayItem(System.String, System.String, System.String)"/>.
         /// </param>
         /// <param name="itemValue">the value of the array item. Has the same usage as propValue in getProperty.</param>
         /// <param name="itemOptions">

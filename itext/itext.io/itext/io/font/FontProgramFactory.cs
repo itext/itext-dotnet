@@ -412,8 +412,7 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// See
         /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
@@ -443,8 +442,7 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// See
         /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,

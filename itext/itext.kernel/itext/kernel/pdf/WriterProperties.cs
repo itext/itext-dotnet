@@ -187,8 +187,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
         /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
-        /// .
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
         /// The permissions can be combined by ORing them.
         /// </remarks>
         /// <param name="userPassword">the user password. Can be null or empty</param>
@@ -202,8 +201,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
-        /// .
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed to output the metadata in cleartext
@@ -238,8 +236,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
         /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
-        /// .
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
         /// The permissions can be combined by ORing them.
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
@@ -252,8 +249,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
-        /// .
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed to output the metadata in cleartext

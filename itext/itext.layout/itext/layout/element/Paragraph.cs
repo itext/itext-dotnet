@@ -60,8 +60,7 @@ namespace iText.Layout.Element {
     /// It is a
     /// <see cref="BlockElement{T}"/>
     /// which essentially acts as a container for
-    /// <see cref="ILeafElement">leaf elements</see>
-    /// .
+    /// <see cref="ILeafElement">leaf elements</see>.
     /// </remarks>
     public class Paragraph : BlockElement<iText.Layout.Element.Paragraph> {
         protected internal DefaultAccessibilityProperties tagProperties;
@@ -208,8 +207,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the indent value for the first line of the
-        /// <see cref="Paragraph"/>
-        /// .
+        /// <see cref="Paragraph"/>.
         /// </summary>
         /// <param name="indent">
         /// the indent value that must be applied to the first line of

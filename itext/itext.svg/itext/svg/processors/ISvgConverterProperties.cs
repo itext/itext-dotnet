@@ -77,8 +77,7 @@ namespace iText.Svg.Processors {
         /// Please be aware that this method is NOT used when handling a
         /// <c>String</c>
         /// variable in the
-        /// <see cref="iText.Svg.Converter.SvgConverter"/>
-        /// .
+        /// <see cref="iText.Svg.Converter.SvgConverter"/>.
         /// </remarks>
         /// <returns>
         /// the String name of the

@@ -69,8 +69,7 @@ namespace iText.Kernel.Utils {
         /// Constructs a
         /// <see cref="TaggedPdfReaderTool"/>
         /// via a given
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// </summary>
         /// <param name="document">the document to read tag structure from</param>
         public TaggedPdfReaderTool(PdfDocument document) {

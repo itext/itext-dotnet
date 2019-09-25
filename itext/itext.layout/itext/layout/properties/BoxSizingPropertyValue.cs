@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized enum containing potential property values for
-    /// <see cref="Property.BOX_SIZING"/>
-    /// .
+    /// <see cref="Property.BOX_SIZING"/>.
     /// </summary>
     public enum BoxSizingPropertyValue {
         CONTENT_BOX,

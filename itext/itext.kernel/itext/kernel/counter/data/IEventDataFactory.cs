@@ -46,8 +46,7 @@ using iText.Kernel.Counter.Event;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Interface that is responsible for creating new instance of
-    /// <see cref="EventData{T}"/>
-    /// .
+    /// <see cref="EventData{T}"/>.
     /// Used in
     /// <see cref="EventDataHandler{T, V}"/>
     /// </summary>

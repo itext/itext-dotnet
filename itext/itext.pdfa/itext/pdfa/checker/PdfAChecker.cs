@@ -238,8 +238,7 @@ namespace iText.Pdfa.Checker {
         /// <summary>
         /// This method checks compliance with the graphics state architectural
         /// limitation, explained by
-        /// <see cref="maxGsStackDepth"/>
-        /// .
+        /// <see cref="maxGsStackDepth"/>.
         /// </summary>
         /// <param name="stackOperation">the operation to check the graphics state counter for</param>
         public abstract void CheckCanvasStack(char stackOperation);

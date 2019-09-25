@@ -124,14 +124,12 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// Note, font provider is inherited property.
         /// </summary>
         /// <param name="fontProvider">
         /// instance of
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// </param>
         public virtual void SetFontProvider(FontProvider fontProvider) {
             SetProperty(Property.FONT_PROVIDER, fontProvider);

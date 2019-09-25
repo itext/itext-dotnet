@@ -331,8 +331,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="width">
         /// a
@@ -354,8 +353,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="height">
         /// a
@@ -394,8 +392,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the max-height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxHeight">
         /// a
@@ -410,8 +407,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the min-height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minHeight">
         /// a
@@ -435,8 +431,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the max-width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxWidth">
         /// a
@@ -459,8 +454,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the min-width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minWidth">
         /// a

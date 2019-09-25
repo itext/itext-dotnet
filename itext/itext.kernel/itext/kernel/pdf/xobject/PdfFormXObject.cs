@@ -67,8 +67,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// Create
         /// <see cref="PdfFormXObject"/>
         /// instance by
-        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
         /// Note, this constructor doesn't perform any additional checks
         /// </summary>
         /// <param name="pdfStream">
@@ -102,15 +101,13 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <summary>
         /// Creates a form XObject from
-        /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>.
         /// Unlike other images,
         /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>
         /// images are represented as
         /// <see cref="PdfFormXObject"/>
         /// , not as
-        /// <see cref="PdfImageXObject"/>
-        /// .
+        /// <see cref="PdfImageXObject"/>.
         /// </summary>
         /// <param name="image">image to create form object from</param>
         /// <param name="pdfDocument">document instance which is needed for writing form stream contents</param>
@@ -126,8 +123,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </summary>
         /// <returns>
         /// not null instance of
-        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>.
         /// </returns>
         public virtual PdfResources GetResources() {
             if (this.resources == null) {
@@ -150,8 +146,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// , that represents
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>.
         /// </returns>
         public virtual PdfArray GetBBox() {
             return GetPdfObject().GetAsArray(PdfName.BBox);
@@ -166,8 +161,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// , that represents
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>.
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfFormXObject SetBBox(PdfArray bBox) {
@@ -186,8 +180,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </remarks>
         /// <param name="transparency">
         /// instance of
-        /// <see cref="PdfTransparencyGroup"/>
-        /// .
+        /// <see cref="PdfTransparencyGroup"/>.
         /// </param>
         /// <returns>object itself.</returns>
         /// <seealso cref="PdfTransparencyGroup"/>
@@ -215,8 +208,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>
@@ -246,8 +238,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// ,
         /// <see cref="iText.Kernel.Pdf.PdfName.DeviceRGBK"/>
         /// , and
-        /// <see cref="iText.Kernel.Pdf.PdfName.DeviceN"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.DeviceN"/>.
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfFormXObject SetProcessColorModel(PdfName model) {
@@ -273,8 +264,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// ,
         /// <see cref="iText.Kernel.Pdf.PdfName.DeviceRGBK"/>
         /// , and
-        /// <see cref="iText.Kernel.Pdf.PdfName.DeviceN"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.DeviceN"/>.
         /// </returns>
         public virtual PdfName GetProcessColorModel() {
             return GetPdfObject().GetAsName(PdfName.PCM);

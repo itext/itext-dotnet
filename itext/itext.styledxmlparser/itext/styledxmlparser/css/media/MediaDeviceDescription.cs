@@ -104,8 +104,7 @@ namespace iText.StyledXmlParser.Css.Media {
 
         /// <summary>
         /// Creates the default
-        /// <see cref="MediaDeviceDescription"/>
-        /// .
+        /// <see cref="MediaDeviceDescription"/>.
         /// </summary>
         /// <returns>the media device description</returns>
         public static iText.StyledXmlParser.Css.Media.MediaDeviceDescription CreateDefault() {

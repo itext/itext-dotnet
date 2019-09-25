@@ -101,8 +101,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// creation.
         /// See also
-        /// <see cref="SetNamespaceForNewTags(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
-        /// .
+        /// <see cref="SetNamespaceForNewTags(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>.
         /// </summary>
         /// <param name="document">the document, at which tag structure this instance will point.</param>
         public TagTreePointer(PdfDocument document) {
@@ -133,8 +132,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <summary>
         /// Sets a page which content will be tagged with this instance of
-        /// <c>TagTreePointer</c>
-        /// .
+        /// <c>TagTreePointer</c>.
         /// To tag page content:
         /// <list type="number">
         /// <item><description>Set pointer position to the tag which will be the parent of the page content item;
@@ -163,8 +161,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </summary>
         /// <param name="page">
         /// the page which content will be tagged with this instance of
-        /// <c>TagTreePointer</c>
-        /// .
+        /// <c>TagTreePointer</c>.
         /// </param>
         /// <returns>
         /// this
@@ -181,8 +178,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <returns>
         /// a page which content will be tagged with this instance of
-        /// <c>TagTreePointer</c>
-        /// .
+        /// <c>TagTreePointer</c>.
         /// </returns>
         public virtual PdfPage GetCurrentPage() {
             return currentPage;
@@ -217,8 +213,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <returns>
         /// the content stream which content will be tagged with this instance of
-        /// <c>TagTreePointer</c>
-        /// .
+        /// <c>TagTreePointer</c>.
         /// </returns>
         public virtual PdfStream GetCurrentContentStream() {
             return contentStream;
@@ -245,24 +240,21 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagTreePointer"/>
         /// instance
         /// if this tag doesn't explicitly define namespace by the means of
-        /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
-        /// .
+        /// <see cref="DefaultAccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// <para />
         /// It's highly recommended to acquire
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// class instances via
-        /// <see cref="TagStructureContext.FetchNamespace(System.String)"/>
-        /// .
+        /// <see cref="TagStructureContext.FetchNamespace(System.String)"/>.
         /// </summary>
         /// <param name="namespace">
         /// a
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// to be set for the new tags created. If set to null - new tags will have
         /// a namespace set only if it is defined in the corresponding
-        /// <see cref="AccessibilityProperties"/>
-        /// .
+        /// <see cref="AccessibilityProperties"/>.
         /// </param>
         /// <returns>
         /// this
@@ -320,8 +312,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
-        /// <see cref="AddTag(System.String)"/>
-        /// .
+        /// <see cref="AddTag(System.String)"/>.
         /// </remarks>
         /// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.</param>
         /// <param name="role">role of the new tag.</param>
@@ -345,8 +336,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// to the added kid.
         /// <br />
         /// New tag will have a role and attributes defined by the given
-        /// <see cref="AccessibilityProperties"/>
-        /// .
+        /// <see cref="AccessibilityProperties"/>.
         /// </remarks>
         /// <param name="properties">accessibility properties which define a new tag role and other properties.</param>
         /// <returns>
@@ -367,13 +357,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// to the added kid.
         /// <br />
         /// New tag will have a role and attributes defined by the given
-        /// <see cref="AccessibilityProperties"/>
-        /// .
+        /// <see cref="AccessibilityProperties"/>.
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
         /// and
-        /// <see cref="AddTag(AccessibilityProperties)"/>
-        /// .
+        /// <see cref="AddTag(AccessibilityProperties)"/>.
         /// </remarks>
         /// <param name="index">zero-based index in kids array of parent tag at which new tag will be added.</param>
         /// <param name="properties">accessibility properties which define a new tag role and other properties.</param>
@@ -436,8 +424,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// with
         /// <see cref="RelocateKid(int, TagTreePointer)"/>
         /// and
-        /// <see cref="AddAnnotationTag(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>
-        /// .
+        /// <see cref="AddAnnotationTag(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>.
         /// <br />
         /// Keep in mind, that this method set property to the
         /// <c>TagTreePointer</c>
@@ -599,8 +586,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// See
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
         /// and
-        /// <see cref="SetPageForTagging(iText.Kernel.Pdf.PdfPage)"/>
-        /// .
+        /// <see cref="SetPageForTagging(iText.Kernel.Pdf.PdfPage)"/>.
         /// </remarks>
         /// <returns>the reference to the current tag.</returns>
         public virtual TagReference GetTagReference() {
@@ -614,8 +600,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// See
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
         /// and
-        /// <see cref="SetPageForTagging(iText.Kernel.Pdf.PdfPage)"/>
-        /// .
+        /// <see cref="SetPageForTagging(iText.Kernel.Pdf.PdfPage)"/>.
         /// </remarks>
         /// <param name="index">zero-based index in kids array of tag. These indexes define the logical order of the content on the page.
         ///     </param>
@@ -756,8 +741,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <remarks>
         /// Gets current tag kids roles.
         /// If certain kid is already flushed, at its position there will be a
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// If kid is a content item, at it's position there will be "MCR" string literal (stands for Marked Content Reference).
         /// </remarks>
         /// <returns>current tag kids roles</returns>
@@ -920,8 +904,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Checks if this
         /// <see cref="TagTreePointer"/>
         /// is pointing at the same tag as the giving
-        /// <see cref="TagTreePointer"/>
-        /// .
+        /// <see cref="TagTreePointer"/>.
         /// </summary>
         /// <param name="otherPointer">
         /// a

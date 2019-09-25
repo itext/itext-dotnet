@@ -126,8 +126,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <returns>compression level.</returns>
         public virtual int GetCompressionLevel() {
@@ -138,8 +137,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
         public virtual iText.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel) {

@@ -81,8 +81,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.CircleSvgNodeRenderer">circle</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.CircleSvgNodeRenderer">circle</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String CIRCLE = "circle";
@@ -106,8 +105,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining an
-            /// <see cref="iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer">ellipse</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer">ellipse</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String ELLIPSE = "ellipse";
@@ -227,8 +225,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.LineSvgNodeRenderer">line</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.LineSvgNodeRenderer">line</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String LINE = "line";
@@ -257,8 +254,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer">path</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer">path</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String PATH = "path";
@@ -287,8 +283,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer">rectangle</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer">rectangle</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String RECT = "rect";

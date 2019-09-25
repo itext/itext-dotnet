@@ -98,8 +98,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <summary>
         /// Checks if there is waiting tag which state was assigned using given
-        /// <see cref="System.Object"/>
-        /// .
+        /// <see cref="System.Object"/>.
         /// </summary>
         /// <param name="obj">
         /// an

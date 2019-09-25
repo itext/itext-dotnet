@@ -56,8 +56,7 @@ namespace iText.Kernel.Pdf {
     /// A
     /// <see cref="PdfTextArray"/>
     /// is used with the operator TJ in
-    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
     /// The first object in this array has to be a
     /// <see cref="PdfString"/>
     /// ;
@@ -85,8 +84,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Adds content of the
-        /// <c>PdfArray</c>
-        /// .
+        /// <c>PdfArray</c>.
         /// </summary>
         /// <param name="a">
         /// the

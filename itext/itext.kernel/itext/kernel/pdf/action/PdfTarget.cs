@@ -259,8 +259,7 @@ namespace iText.Kernel.Pdf.Action {
 
         /// <summary>
         /// This is a convenient method to put key-value pairs to the underlying
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>.
         /// </summary>
         /// <param name="key">
         /// the key, a

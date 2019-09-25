@@ -76,8 +76,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// The name of an icon that is used in displaying the annotation. Possible values are different for different
         /// annotation types. See
-        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// a

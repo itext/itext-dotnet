@@ -288,8 +288,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// charset / encoding element within the document.
         /// <para />
         /// This enables
-        /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>
-        /// .
+        /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>.
         /// <para />
         /// If there's no element with charset / encoding information yet it will
         /// be created. Obsolete charset / encoding definitions are removed!
@@ -315,8 +314,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Returns the charset used in this document. This method is equivalent
         /// to
-        /// <see cref="OutputSettings.Charset()"/>
-        /// .
+        /// <see cref="OutputSettings.Charset()"/>.
         /// </remarks>
         /// <returns>Current Charset</returns>
         /// <seealso cref="OutputSettings.Charset()"></seealso>

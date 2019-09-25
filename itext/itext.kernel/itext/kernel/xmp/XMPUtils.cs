@@ -259,8 +259,7 @@ namespace iText.Kernel.XMP {
         /// given by the constnts
         /// <see cref="XMPConst.TRUESTR"/>
         /// and
-        /// <see cref="XMPConst.FALSESTR"/>
-        /// .
+        /// <see cref="XMPConst.FALSESTR"/>.
         /// </returns>
         public static String ConvertFromBoolean(bool value) {
             return value ? XMPConst.TRUESTR : XMPConst.FALSESTR;

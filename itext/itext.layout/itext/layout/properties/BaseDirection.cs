@@ -54,8 +54,7 @@ namespace iText.Layout.Properties {
     /// for the
     /// <see cref="Property.BASE_DIRECTION"/>
     /// key in an
-    /// <see cref="IPropertyContainer"/>
-    /// .
+    /// <see cref="IPropertyContainer"/>.
     /// </summary>
     public enum BaseDirection {
         NO_BIDI,

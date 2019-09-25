@@ -88,8 +88,7 @@ namespace iText.Kernel.Colors {
         /// <see cref="PatternColor"/>
         /// ,
         /// and vice versa, only set colored patterns for colored
-        /// <see cref="PatternColor"/>
-        /// .
+        /// <see cref="PatternColor"/>.
         /// </summary>
         /// <param name="pattern">a pattern to be set for this instance.</param>
         [System.ObsoleteAttribute(@"To be removed in iText 7.2. In order to change pattern one shall create a new PatternColor ."

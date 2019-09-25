@@ -120,13 +120,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// The
         /// <see cref="iText.Kernel.Geom.Path"/>
         /// object to be added to the
-        /// <see cref="Clipper"/>
-        /// .
+        /// <see cref="Clipper"/>.
         /// </param>
         /// <param name="polyType">
         /// See
-        /// <see cref="PolyType"/>
-        /// .
+        /// <see cref="PolyType"/>.
         /// </param>
         public static void AddPath(Clipper clipper, Path path, PolyType polyType) {
             foreach (Subpath subpath in path.GetSubpaths()) {
@@ -259,8 +257,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         /// <returns>Clipper fill type constant.</returns>
         public static PolyFillType GetFillType(int fillingRule) {

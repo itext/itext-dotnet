@@ -57,8 +57,7 @@ namespace iText.Layout.Properties {
     /// This class is meant to be used as the value for the
     /// <see cref="Property.LEADING"/>
     /// key in an
-    /// <see cref="iText.Layout.IPropertyContainer"/>
-    /// .
+    /// <see cref="iText.Layout.IPropertyContainer"/>.
     /// </remarks>
     public class Leading {
         /// <summary>A leading type independent of font size.</summary>

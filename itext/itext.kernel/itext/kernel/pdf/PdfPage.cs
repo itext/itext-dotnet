@@ -83,8 +83,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// See
-        /// <see cref="IsPageRotationInverseMatrixWritten()"/>
-        /// .
+        /// <see cref="IsPageRotationInverseMatrixWritten()"/>.
         /// </summary>
         private bool pageRotationInverseMatrixWritten = false;
 
@@ -181,8 +180,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets the content stream at specified 0-based index in the Contents object
-        /// <see cref="PdfArray"/>
-        /// .
+        /// <see cref="PdfArray"/>.
         /// The situation when Contents object is a
         /// <see cref="PdfStream"/>
         /// is treated like a one element array.
@@ -191,8 +189,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>int</c>
         /// index of returned
-        /// <see cref="PdfStream"/>
-        /// .
+        /// <see cref="PdfStream"/>.
         /// </param>
         /// <returns>
         /// 
@@ -223,8 +220,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets the size of Contents object
-        /// <see cref="PdfArray"/>
-        /// .
+        /// <see cref="PdfArray"/>.
         /// The situation when Contents object is a
         /// <see cref="PdfStream"/>
         /// is treated like a one element array.
@@ -233,8 +229,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>int</c>
         /// size of Contents object, or 1 if Contents object is a
-        /// <see cref="PdfStream"/>
-        /// .
+        /// <see cref="PdfStream"/>.
         /// </returns>
         public virtual int GetContentStreamCount() {
             PdfObject contents = GetPdfObject().Get(PdfName.Contents);
@@ -255,8 +250,7 @@ namespace iText.Kernel.Pdf {
         /// Returns the Contents object if it is
         /// <see cref="PdfStream"/>
         /// , or first stream in the array if it is
-        /// <see cref="PdfArray"/>
-        /// .
+        /// <see cref="PdfArray"/>.
         /// </summary>
         /// <returns>
         /// first
@@ -276,8 +270,7 @@ namespace iText.Kernel.Pdf {
         /// Returns the Contents object if it is
         /// <see cref="PdfStream"/>
         /// , or last stream in the array if it is
-        /// <see cref="PdfArray"/>
-        /// .
+        /// <see cref="PdfArray"/>.
         /// </summary>
         /// <returns>
         /// first
@@ -483,8 +476,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument">a document to copy page to.</param>
         /// <returns>
         /// copied
-        /// <see cref="PdfPage"/>
-        /// .
+        /// <see cref="PdfPage"/>.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument) {
             return CopyTo(toDocument, null);
@@ -505,8 +497,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>
         /// copied
-        /// <see cref="PdfPage"/>
-        /// .
+        /// <see cref="PdfPage"/>.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
@@ -612,8 +603,7 @@ namespace iText.Kernel.Pdf {
         /// and also all images associated with this page will also be flushed.
         /// <para />
         /// For notes about tag structure flushing see
-        /// <see cref="Flush()">PdfPage#flush() method</see>
-        /// .
+        /// <see cref="Flush()">PdfPage#flush() method</see>.
         /// <para />
         /// If <c>PdfADocument</c> is used, flushing will be applied only if <c>flushResourcesContentStreams</c> is true.
         /// <para />
@@ -906,8 +896,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see cref="System.IO.IOException"/>
-        /// .
+        /// <see cref="System.IO.IOException"/>.
         /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
@@ -940,8 +929,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array.</returns>
         /// <exception cref="iText.Kernel.PdfException">
         /// in case of any
-        /// <see cref="System.IO.IOException"/>
-        /// .
+        /// <see cref="System.IO.IOException"/>.
         /// </exception>
         public virtual byte[] GetStreamBytes(int index) {
             return GetContentStream(index).GetBytes();
@@ -1218,8 +1206,7 @@ namespace iText.Kernel.Pdf {
         /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
         /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
         /// Default value -
-        /// <see langword="false"/>
-        /// .
+        /// <see langword="false"/>.
         /// </remarks>
         /// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
         ///     </param>
@@ -1424,8 +1411,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Helper method that associate specified value with specified key in the underlined
-        /// <see cref="PdfDictionary"/>
-        /// .
+        /// <see cref="PdfDictionary"/>.
         /// May be used in chain.
         /// </summary>
         /// <param name="key">

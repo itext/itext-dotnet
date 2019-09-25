@@ -52,8 +52,7 @@ namespace iText.Kernel.Pdf {
     /// <remarks>
     /// A representation of an array as described in the PDF specification. A PdfArray can contain any
     /// subclass of
-    /// <see cref="PdfObject"/>
-    /// .
+    /// <see cref="PdfObject"/>.
     /// </remarks>
     public class PdfArray : PdfObject, IEnumerable<PdfObject> {
         protected internal IList<PdfObject> list;
@@ -108,8 +107,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Create a new PdfArray filled with the values in the float[] as
-        /// <see cref="PdfNumber"/>
-        /// .
+        /// <see cref="PdfNumber"/>.
         /// </summary>
         /// <param name="numbers">values to be added to this PdfArray</param>
         public PdfArray(float[] numbers) {
@@ -121,8 +119,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Create a new PdfArray filled with the values in the double[] as
-        /// <see cref="PdfNumber"/>
-        /// .
+        /// <see cref="PdfNumber"/>.
         /// </summary>
         /// <param name="numbers">values to be added to this PdfArray</param>
         public PdfArray(double[] numbers) {
@@ -134,8 +131,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Create a new PdfArray filled with the values in the int[] as
-        /// <see cref="PdfNumber"/>
-        /// .
+        /// <see cref="PdfNumber"/>.
         /// </summary>
         /// <param name="numbers">values to be added to this PdfArray</param>
         public PdfArray(int[] numbers) {
@@ -147,8 +143,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Create a new PdfArray filled with the values in the boolean[] as
-        /// <see cref="PdfBoolean"/>
-        /// .
+        /// <see cref="PdfBoolean"/>.
         /// </summary>
         /// <param name="values">values to be added to this PdfArray</param>
         public PdfArray(bool[] values) {
@@ -260,8 +255,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Adds content of the
-        /// <c>PdfArray</c>
-        /// .
+        /// <c>PdfArray</c>.
         /// </summary>
         /// <param name="a">
         /// the

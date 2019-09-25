@@ -70,15 +70,13 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="rect">
         /// the annotation rectangle, defining the location of the annotation on the page
         /// in default user space units. See
-        /// <see cref="PdfAnnotation.SetRectangle(iText.Kernel.Pdf.PdfArray)"/>
-        /// .
+        /// <see cref="PdfAnnotation.SetRectangle(iText.Kernel.Pdf.PdfArray)"/>.
         /// </param>
         /// <param name="appearanceStream">
         /// the form XObject defining a trap network which body contains the graphics objects needed
         /// to paint the traps making up the trap network. Process colour model shall be defined for the
         /// appearance stream (see
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject.SetProcessColorModel(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject.SetProcessColorModel(iText.Kernel.Pdf.PdfName)"/>.
         /// See also ISO-320001 Table 367 "Additional entries specific to a trap network appearance stream".
         /// </param>
         public PdfTrapNetworkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
@@ -148,8 +146,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// with date. The format should be a date string as described
         /// in ISO-320001 7.9.4, "Dates". See also
-        /// <see cref="iText.Kernel.Pdf.PdfDate.Decode(System.String)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDate.Decode(System.String)"/>.
         /// </returns>
         public virtual PdfString GetLastModified() {
             return GetPdfObject().GetAsString(PdfName.LastModified);
@@ -217,8 +214,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// for annotations associated with the page. The appearance states shall be listed in the same order as the annotations
         /// in the page’s /Annots array. For an annotation with no /AS entry, the corresponding array element
         /// should be
-        /// <see cref="iText.Kernel.Pdf.PdfNull"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfNull"/>.
         /// No appearance state shall be included for the trap network annotation itself.
         /// <para />
         /// <para />
@@ -247,8 +243,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// An array of name objects representing the appearance states for annotations associated with the page.
         /// See also
-        /// <see cref="SetAnnotStates(iText.Kernel.Pdf.PdfArray)"/>
-        /// .
+        /// <see cref="SetAnnotStates(iText.Kernel.Pdf.PdfArray)"/>.
         /// </remarks>
         /// <returns>
         /// a

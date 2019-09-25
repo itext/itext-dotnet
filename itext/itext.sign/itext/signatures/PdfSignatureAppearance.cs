@@ -61,8 +61,7 @@ namespace iText.Signatures {
     /// <summary>Provides convenient methods to make a signature appearance.</summary>
     /// <remarks>
     /// Provides convenient methods to make a signature appearance. Use it in conjunction with
-    /// <see cref="PdfSigner"/>
-    /// .
+    /// <see cref="PdfSigner"/>.
     /// </remarks>
     public class PdfSignatureAppearance {
         /// <summary>Extra space at the top.</summary>

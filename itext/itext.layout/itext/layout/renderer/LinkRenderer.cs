@@ -61,8 +61,7 @@ namespace iText.Layout.Renderer {
         /// <summary>
         /// Creates a LinkRenderer from its corresponding layout object, with a custom
         /// text to replace the contents of the
-        /// <see cref="iText.Layout.Element.Link"/>
-        /// .
+        /// <see cref="iText.Layout.Element.Link"/>.
         /// </summary>
         /// <param name="linkElement">
         /// the

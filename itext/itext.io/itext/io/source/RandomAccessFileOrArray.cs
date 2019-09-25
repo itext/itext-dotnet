@@ -470,8 +470,7 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <returns>
         /// the next four bytes of this stream, interpreted as an
-        /// <c>int</c>
-        /// .
+        /// <c>int</c>.
         /// </returns>
         /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
@@ -514,8 +513,7 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <returns>
         /// the next four bytes of this stream, interpreted as a
-        /// <c>long</c>
-        /// .
+        /// <c>long</c>.
         /// </returns>
         /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading

@@ -58,8 +58,7 @@ using iText.Svg.Utils;
 namespace iText.Svg.Processors.Impl {
     /// <summary>
     /// Default implementation of
-    /// <see cref="iText.Svg.Processors.ISvgProcessor"/>
-    /// .
+    /// <see cref="iText.Svg.Processors.ISvgProcessor"/>.
     /// This implementation traverses the
     /// <see cref="iText.StyledXmlParser.Node.INode"/>
     /// tree depth-first,

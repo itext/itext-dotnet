@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized enum containing potential property values for
-    /// <see cref="Property.BORDER_COLLAPSE"/>
-    /// .
+    /// <see cref="Property.BORDER_COLLAPSE"/>.
     /// </summary>
     public enum BorderCollapsePropertyValue {
         COLLAPSE,

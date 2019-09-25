@@ -48,8 +48,7 @@ using System.Text;
 namespace iText.Layout.Hyphenation {
     /// <summary>
     /// An object that iterates over the
-    /// <see cref="TernaryTree"/>
-    /// .
+    /// <see cref="TernaryTree"/>.
     /// </summary>
     internal class TernaryTreeIterator : IEnumerator {
         /// <summary>current node index</summary>

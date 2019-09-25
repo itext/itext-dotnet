@@ -69,8 +69,7 @@ using iText.Layout.Properties;
 namespace iText.Forms.Fields {
     /// <summary>
     /// This class represents a single field or field group in an
-    /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>
-    /// .
+    /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>.
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -173,8 +172,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a form field as a wrapper object around a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// This
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// must be an indirect object.
@@ -189,8 +187,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a minimal
-        /// <see cref="PdfFormField"/>
-        /// .
+        /// <see cref="PdfFormField"/>.
         /// </summary>
         /// <param name="pdfDocument">The document</param>
         protected internal PdfFormField(PdfDocument pdfDocument)
@@ -203,8 +200,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a form field as a parent of a
-        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
         /// </summary>
         /// <param name="widget">
         /// The widget which will be a kid of the
@@ -399,8 +395,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfTextFormField">text form field</see>
-        /// .
+        /// <see cref="PdfTextFormField">text form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -417,8 +412,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfTextFormField">text form field</see>
-        /// .
+        /// <see cref="PdfTextFormField">text form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -445,8 +439,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfTextFormField">text form field</see>
-        /// .
+        /// <see cref="PdfTextFormField">text form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -468,8 +461,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfTextFormField">text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
-        /// .
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -491,8 +483,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfTextFormField">text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
-        /// .
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -646,8 +637,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfTextFormField">multiline text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
-        /// .
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -668,8 +658,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfChoiceFormField">choice form field</see>
-        /// .
+        /// <see cref="PdfChoiceFormField">choice form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -691,8 +680,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfChoiceFormField">choice form field</see>
-        /// .
+        /// <see cref="PdfChoiceFormField">choice form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -932,8 +920,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfSignatureFormField">signature form field</see>
-        /// .
+        /// <see cref="PdfSignatureFormField">signature form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -950,8 +937,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfSignatureFormField">signature form field</see>
-        /// .
+        /// <see cref="PdfSignatureFormField">signature form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -978,8 +964,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfSignatureFormField">signature form field</see>
-        /// .
+        /// <see cref="PdfSignatureFormField">signature form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -997,8 +982,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates an empty
-        /// <see cref="PdfSignatureFormField">signature form field</see>
-        /// .
+        /// <see cref="PdfSignatureFormField">signature form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -1030,8 +1014,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a
-        /// <see cref="PdfButtonFormField">radio group form field</see>
-        /// .
+        /// <see cref="PdfButtonFormField">radio group form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -1050,8 +1033,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Creates a
-        /// <see cref="PdfButtonFormField">radio group form field</see>
-        /// .
+        /// <see cref="PdfButtonFormField">radio group form field</see>.
         /// </summary>
         /// <param name="doc">
         /// the
@@ -1976,8 +1958,7 @@ namespace iText.Forms.Fields {
         /// Adds a flag, or combination of flags, for the form field. This method is
         /// intended to be used one flag at a time, but this is not technically
         /// enforced. To <em>replace</em> the current value, use
-        /// <see cref="SetFieldFlags(int)"/>
-        /// .
+        /// <see cref="SetFieldFlags(int)"/>.
         /// </remarks>
         /// <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
@@ -1990,8 +1971,7 @@ namespace iText.Forms.Fields {
         /// Adds or removes a flag, or combination of flags, for the form field. This
         /// method is intended to be used one flag at a time, but this is not
         /// technically enforced. To <em>replace</em> the current value, use
-        /// <see cref="SetFieldFlags(int)"/>
-        /// .
+        /// <see cref="SetFieldFlags(int)"/>.
         /// </remarks>
         /// <param name="flag">an <c>int</c> interpreted as a series of a binary flags</param>
         /// <param name="value">
@@ -2346,8 +2326,7 @@ namespace iText.Forms.Fields {
         /// It works much faster than consequent invocation of
         /// <see cref="iText.Forms.PdfAcroForm.GetAcroForm(iText.Kernel.Pdf.PdfDocument, bool)"/>
         /// and
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>.
         /// Note, this method assume that Catalog already has AcroForm object.
         /// <see cref="AddAcroFormToCatalog()"/>
         /// should be called explicitly.
@@ -2421,8 +2400,7 @@ namespace iText.Forms.Fields {
         /// May be either
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </remarks>
         /// <returns>the current rich text value</returns>
         public virtual PdfObject GetRichText() {
@@ -2435,8 +2413,7 @@ namespace iText.Forms.Fields {
         /// May be either
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </remarks>
         /// <param name="richText">a new rich text value</param>
         /// <returns>The edited PdfFormField</returns>

@@ -51,8 +51,7 @@ namespace iText.Kernel.Colors {
     /// ,
     /// <see cref="DeviceCmyk"/>
     /// and
-    /// <see cref="DeviceRgb"/>
-    /// .
+    /// <see cref="DeviceRgb"/>.
     /// </summary>
     public class ColorConstants {
         /// <summary>Predefined black DeviceRgb color</summary>

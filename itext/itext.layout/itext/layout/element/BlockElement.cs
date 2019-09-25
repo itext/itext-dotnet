@@ -348,8 +348,7 @@ namespace iText.Layout.Element {
         /// and the start of the next sibling of this element
         /// should be placed in the same area.
         /// Note that this will only work for high-level elements, i.e. elements added to the
-        /// <see cref="iText.Layout.RootElement{T}"/>
-        /// .
+        /// <see cref="iText.Layout.RootElement{T}"/>.
         /// </summary>
         /// <param name="keepWithNext">
         /// the new value of the
@@ -388,8 +387,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="width">
         /// a
@@ -411,8 +409,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="height">
         /// a
@@ -451,8 +448,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxHeight">
         /// a
@@ -467,8 +463,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minHeight">
         /// a
@@ -492,8 +487,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxWidth">
         /// a
@@ -516,8 +510,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minWidth">
         /// a

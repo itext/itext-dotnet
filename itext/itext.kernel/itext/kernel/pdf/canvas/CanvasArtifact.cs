@@ -59,8 +59,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <see cref="CanvasTag"/>
         /// with a role
         /// of
-        /// <see cref="iText.Kernel.Pdf.PdfName.Artifact">Artifact</see>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.Artifact">Artifact</see>.
         /// </summary>
         public CanvasArtifact()
             : base(PdfName.Artifact) {

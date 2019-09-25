@@ -96,16 +96,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.</param>
         /// <param name="clipRule">
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             , int rule, bool isClip, int clipRule)
@@ -164,8 +162,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </returns>
         public virtual int GetRule() {
             return rule;
@@ -180,8 +177,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </returns>
         public virtual int GetClippingRule() {
             return clippingRule;

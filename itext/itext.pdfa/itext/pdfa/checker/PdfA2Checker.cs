@@ -62,8 +62,7 @@ namespace iText.Pdfa.Checker {
     /// <summary>
     /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
     /// number of methods that override the implementations of its superclass
-    /// <see cref="PdfA1Checker"/>
-    /// .
+    /// <see cref="PdfA1Checker"/>.
     /// <para />
     /// The specification implemented by this class is ISO 19005-2
     /// </summary>

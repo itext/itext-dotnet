@@ -71,8 +71,7 @@ namespace iText.IO.Util {
         /// This method is an alternative for the
         /// <c>InputStream.skip()</c>
         /// -method that doesn't seem to work properly for big values of
-        /// <paramref name="size"/>
-        /// .
+        /// <paramref name="size"/>.
         /// </summary>
         /// <param name="stream">
         /// the
@@ -264,8 +263,7 @@ namespace iText.IO.Util {
         /// Copy bytes from the
         /// <c>RandomAccessSource</c>
         /// to
-        /// <c>OutputStream</c>
-        /// .
+        /// <c>OutputStream</c>.
         /// </summary>
         /// <param name="source">
         /// the

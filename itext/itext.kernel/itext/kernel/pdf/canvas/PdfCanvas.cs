@@ -301,8 +301,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Gets current
-        /// <see cref="CanvasGraphicsState"/>
-        /// .
+        /// <see cref="CanvasGraphicsState"/>.
         /// </summary>
         /// <returns>container containing properties for the current state of the canvas.</returns>
         public virtual CanvasGraphicsState GetGraphicsState() {
@@ -496,8 +495,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Moves to the next line and shows
-        /// <paramref name="text"/>
-        /// .
+        /// <paramref name="text"/>.
         /// </summary>
         /// <param name="text">the text to write</param>
         /// <returns>current canvas.</returns>
@@ -1756,8 +1754,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <param name="dummy">
         /// flag to note that the method works with the height parameter as opposed to the method
-        /// <see cref="AddImage(iText.IO.Image.ImageData, float, float, float, bool)"/>
-        /// .
+        /// <see cref="AddImage(iText.IO.Image.ImageData, float, float, float, bool)"/>.
         /// </param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float height, bool asInline, bool dummy
@@ -1833,8 +1830,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, bool)"/>
         /// ,
         /// or
-        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float)"/>
-        /// .
+        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float)"/>.
         /// </summary>
         /// <param name="xObject">the XObject to add</param>
         /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>

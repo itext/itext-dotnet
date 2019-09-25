@@ -46,8 +46,7 @@ using System.Collections.Generic;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Comparator-based implementation of
-    /// <see cref="IEventDataCache{T, V}"/>
-    /// .
+    /// <see cref="IEventDataCache{T, V}"/>.
     /// Merges data with the same signature by increasing its count.
     /// Retrieve the smallest element based on comparator.
     /// Not thread safe.

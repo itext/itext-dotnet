@@ -70,8 +70,7 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// This implementation is used by the Smooth (Shorthand) Bézier curve commands, because the conversion of the first
     /// coordinate pair is calculated in
     /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer.GetShapeCoordinates(iText.Svg.Renderers.Path.IPathShape, iText.Svg.Renderers.Path.IPathShape, System.String[])
-    ///     "/>
-    /// .
+    ///     "/>.
     /// </summary>
     internal class SmoothOperatorConverter : IOperatorConverter {
         public virtual String[] MakeCoordinatesAbsolute(String[] relativeCoordinates, double[] initialPoint) {

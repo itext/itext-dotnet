@@ -61,8 +61,7 @@ namespace iText.Layout.Renderer {
     /// object for a
     /// <see cref="iText.Layout.Element.Paragraph"/>
     /// object. It will draw the glyphs of the textual content on the
-    /// <see cref="DrawContext"/>
-    /// .
+    /// <see cref="DrawContext"/>.
     /// </summary>
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
@@ -490,8 +489,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Gets the lines which are the result of the
-        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
-        /// .
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>.
         /// </summary>
         /// <returns>paragraph lines, or <c>null</c> if layout hasn't been called yet</returns>
         public virtual IList<LineRenderer> GetLines() {

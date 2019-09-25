@@ -130,8 +130,7 @@ namespace iText.Layout.Element {
         /// the
         /// <see cref="iText.Layout.Properties.ListNumberingType"/>
         /// that will generate appropriate prefixes for the
-        /// <see cref="ListItem"/>
-        /// .
+        /// <see cref="ListItem"/>.
         /// </param>
         /// <returns>this list item.</returns>
         public virtual iText.Layout.Element.ListItem SetListSymbol(ListNumberingType listNumberingType) {

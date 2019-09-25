@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized enum containing potential property values for
-    /// <see cref="Property.FLOAT"/>
-    /// .
+    /// <see cref="Property.FLOAT"/>.
     /// </summary>
     public enum FloatPropertyValue {
         LEFT,

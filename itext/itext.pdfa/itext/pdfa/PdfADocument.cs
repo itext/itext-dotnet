@@ -67,8 +67,7 @@ namespace iText.Pdfa {
     /// ,
     /// and thus refuse to output a PDF/A file if at any point the document does not
     /// adhere to the PDF/A guidelines specified by the
-    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>.
     /// </summary>
     public class PdfADocument : PdfDocument {
         protected internal PdfAChecker checker;
@@ -229,8 +228,7 @@ namespace iText.Pdfa {
         /// <summary>
         /// Gets the PdfAConformanceLevel set in the constructor or in the metadata
         /// of the
-        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>.
         /// </summary>
         /// <returns>
         /// a

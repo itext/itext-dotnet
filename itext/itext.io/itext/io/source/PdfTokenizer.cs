@@ -122,8 +122,7 @@ namespace iText.IO.Source {
 
         /// <summary>
         /// Creates a PdfTokenizer for the specified
-        /// <see cref="RandomAccessFileOrArray"/>
-        /// .
+        /// <see cref="RandomAccessFileOrArray"/>.
         /// The beginning of the file is read to determine the location of the header, and the data source is adjusted
         /// as necessary to account for any junk that occurs in the byte source before the header
         /// </summary>
@@ -595,8 +594,7 @@ namespace iText.IO.Source {
         /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </returns>
         protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting) {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
@@ -718,8 +716,7 @@ namespace iText.IO.Source {
         /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </returns>
         public static byte[] DecodeStringContent(byte[] content, bool hexWriting) {
             return DecodeStringContent(content, 0, content.Length - 1, hexWriting);
@@ -731,8 +728,7 @@ namespace iText.IO.Source {
         /// Is a certain character a whitespace? Currently checks on the following: '0', '9', '10', '12', '13', '32'.
         /// <br />
         /// The same as calling
-        /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>
-        /// .
+        /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>.
         /// </remarks>
         /// <param name="ch">int</param>
         /// <returns>boolean</returns>
@@ -762,8 +758,7 @@ namespace iText.IO.Source {
         /// <summary>Helper method to handle content errors.</summary>
         /// <remarks>
         /// Helper method to handle content errors. Add file position to
-        /// <c>PdfRuntimeException</c>
-        /// .
+        /// <c>PdfRuntimeException</c>.
         /// </remarks>
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
@@ -812,8 +807,7 @@ namespace iText.IO.Source {
         /// for a list of whitespace characters.
         /// <br />
         /// The same as calling
-        /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>
-        /// .
+        /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>.
         /// </remarks>
         /// <param name="buffer">@see ByteBuffer</param>
         /// <returns>boolean</returns>

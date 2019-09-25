@@ -105,8 +105,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>
         /// an additional actions
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// </returns>
         /// <seealso cref="GetAction()"/>
         public virtual PdfDictionary GetAdditionalAction() {

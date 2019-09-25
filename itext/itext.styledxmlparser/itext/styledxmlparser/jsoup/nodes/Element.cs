@@ -109,8 +109,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// to a
         /// <c>&lt;div&gt;</c>
         /// with
-        /// <c>el.tagName("div");</c>
-        /// .
+        /// <c>el.tagName("div");</c>.
         /// </remarks>
         /// <param name="tagName">new tag name for this element</param>
         /// <returns>this element, for chaining</returns>
@@ -182,8 +181,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// E.g., the element
         /// <c>&lt;div data-package="jsoup" data-language="Java" class="group"&gt;...</c>
         /// has the dataset
-        /// <c>package=jsoup, language=java</c>
-        /// .
+        /// <c>package=jsoup, language=java</c>.
         /// <para />
         /// This map is a filtered view of the element's attribute map. Changes to one map (add, remove, update) are reflected
         /// in the other map.
@@ -371,8 +369,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </description></item>
         /// </list>
         /// See the query syntax documentation in
-        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
-        /// .
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>.
         /// </summary>
         /// <param name="cssQuery">
         /// a
@@ -666,8 +663,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// of the first
         /// <c>p</c>
         /// is the second
-        /// <c>p</c>
-        /// .
+        /// <c>p</c>.
         /// <para />
         /// This is similar to
         /// <see cref="Node.NextSibling()"/>
@@ -795,8 +791,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>&lt;div class="header round first"&gt;</c>
         /// . This method
         /// checks each class, so you can find the above with
-        /// <c>el.getElementsByClass("header");</c>
-        /// .
+        /// <c>el.getElementsByClass("header");</c>.
         /// </remarks>
         /// <param name="className">the name of the class to search for.</param>
         /// <returns>elements with the supplied class name, empty if none</returns>
@@ -1077,8 +1072,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// whereas
         /// <c>p.text()</c>
         /// returns
-        /// <c>"Hello there now!"</c>
-        /// .
+        /// <c>"Hello there now!"</c>.
         /// Note that the text within the
         /// <c>b</c>
         /// element is not returned, as it is not a direct child of the

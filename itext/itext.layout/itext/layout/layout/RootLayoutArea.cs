@@ -76,8 +76,7 @@ namespace iText.Layout.Layout {
         /// <see cref="LayoutArea"/>
         /// ,
         /// the actual type of the returned object is
-        /// <see cref="RootLayoutArea"/>
-        /// .
+        /// <see cref="RootLayoutArea"/>.
         /// </remarks>
         /// <returns>the copied RootLayoutArea.</returns>
         public override LayoutArea Clone() {

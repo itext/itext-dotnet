@@ -46,8 +46,7 @@ using System.Collections.Generic;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Queue-based implementation of
-    /// <see cref="IEventDataCache{T, V}"/>
-    /// .
+    /// <see cref="IEventDataCache{T, V}"/>.
     /// Merges data with the same signature by increasing its count.
     /// Will retrieve the first elements by the time of its signature registration.
     /// Not thread safe.

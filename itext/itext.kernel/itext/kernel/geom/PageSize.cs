@@ -123,8 +123,7 @@ namespace iText.Kernel.Geom {
         /// <see cref="Rectangle"/>
         /// ,
         /// the actual type of the returned object is
-        /// <see cref="PageSize"/>
-        /// .
+        /// <see cref="PageSize"/>.
         /// </remarks>
         /// <returns>the copied PageSize.</returns>
         public override Rectangle Clone() {

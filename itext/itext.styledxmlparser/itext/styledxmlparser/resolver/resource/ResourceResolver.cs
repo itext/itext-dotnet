@@ -98,8 +98,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         /// <summary>
         /// Retrieve
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>PdfImageXObject on success, otherwise null.</returns>
@@ -118,8 +117,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// Retrieve image as either
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// , or
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>PdfImageXObject on success, otherwise null.</returns>
@@ -166,8 +164,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <para />
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </remarks>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>
@@ -193,8 +190,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>

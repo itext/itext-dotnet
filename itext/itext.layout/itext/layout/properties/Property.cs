@@ -166,8 +166,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>
         /// Shall be instance of
-        /// <see cref="iText.Layout.Font.FontSet"/>
-        /// .
+        /// <see cref="iText.Layout.Font.FontSet"/>.
         /// </summary>
         public const int FONT_SET = 98;
 
@@ -310,8 +309,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>
         /// Use values from
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>.
         /// </summary>
         public const int TEXT_RENDERING_MODE = 71;
 

@@ -67,8 +67,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="bytes">
         /// initial content of
-        /// <see cref="PdfOutputStream"/>
-        /// .
+        /// <see cref="PdfOutputStream"/>.
         /// </param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
@@ -190,8 +189,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <returns>compression level.</returns>
         public virtual int GetCompressionLevel() {
@@ -202,8 +200,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
@@ -236,8 +233,7 @@ namespace iText.Kernel.Pdf {
         /// if the
         /// <c>PdfStream</c>
         /// was created by
-        /// <c>InputStream</c>
-        /// .
+        /// <c>InputStream</c>.
         /// </returns>
         public virtual byte[] GetBytes(bool decoded) {
             if (IsFlushed()) {

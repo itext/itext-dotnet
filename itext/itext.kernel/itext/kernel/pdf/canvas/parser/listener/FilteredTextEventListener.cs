@@ -74,8 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>
         /// As an resultant text we use the concatenation of all the resultant text of all the delegates that implement
-        /// <see cref="ITextExtractionStrategy"/>
-        /// .
+        /// <see cref="ITextExtractionStrategy"/>.
         /// </summary>
         /// <returns>the resulting concatenation of the text extracted from the delegates</returns>
         public virtual String GetResultantText() {

@@ -149,8 +149,7 @@ namespace iText.Layout.Minmaxwidth {
         /// <remarks>
         /// This method use derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
         /// It also calculate other handy values needed for the creation of
-        /// <see cref="RotationMinMaxWidth"/>
-        /// .
+        /// <see cref="RotationMinMaxWidth"/>.
         /// </remarks>
         /// <param name="func">
         /// the

@@ -88,8 +88,7 @@ namespace iText.Kernel.Font {
         /// 
         /// <see cref="iText.IO.Font.Otf.Glyph"/>
         /// if it exists or .NOTDEF if supported, otherwise
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </returns>
         public abstract Glyph GetGlyph(int unicode);
 
@@ -480,8 +479,7 @@ namespace iText.Kernel.Font {
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>
@@ -520,8 +518,7 @@ namespace iText.Kernel.Font {
         /// Create
         /// <c>PdfStream</c>
         /// based on
-        /// <paramref name="fontStreamBytes"/>
-        /// .
+        /// <paramref name="fontStreamBytes"/>.
         /// </summary>
         /// <param name="fontStreamBytes">original font data, must be not null.</param>
         /// <param name="fontStreamLengths">
@@ -538,8 +535,7 @@ namespace iText.Kernel.Font {
         /// Method will throw exception if
         /// <paramref name="fontStreamBytes"/>
         /// is
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </exception>
         protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
             if (fontStreamBytes == null) {
@@ -599,8 +595,7 @@ namespace iText.Kernel.Font {
         /// Helper method for making an object indirect, if the object already is indirect.
         /// Useful for FontDescriptor and FontFile to make possible immediate flushing.
         /// If there is no PdfDocument, mark the object as
-        /// <c>MUST_BE_INDIRECT</c>
-        /// .
+        /// <c>MUST_BE_INDIRECT</c>.
         /// </remarks>
         /// <param name="obj">an object to make indirect.</param>
         /// <returns>

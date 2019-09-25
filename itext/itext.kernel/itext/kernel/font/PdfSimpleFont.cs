@@ -427,8 +427,7 @@ namespace iText.Kernel.Font {
         /// </summary>
         /// <returns>
         /// the PdfDictionary containing the font descriptor or
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </returns>
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
             System.Diagnostics.Debug.Assert(fontName != null && fontName.Length > 0);

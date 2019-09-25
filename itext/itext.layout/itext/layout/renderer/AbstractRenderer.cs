@@ -319,8 +319,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Returns a property with a certain key, as a
-        /// <see cref="iText.Layout.Properties.TransparentColor"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>.
         /// </summary>
         /// <param name="property">
         /// an
@@ -924,8 +923,7 @@ namespace iText.Layout.Renderer {
         /// Gets the bounding box that contains all content written to the
         /// <see cref="DrawContext"/>
         /// by this
-        /// <see cref="IRenderer"/>
-        /// .
+        /// <see cref="IRenderer"/>.
         /// </summary>
         /// <returns>
         /// the smallest

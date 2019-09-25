@@ -46,8 +46,7 @@ using System;
 namespace iText.Kernel.Pdf {
     /// <summary>
     /// Page label numbering style constants for
-    /// <see cref="PdfPage.SetPageLabel(PageLabelNumberingStyle, String)"/>
-    /// .
+    /// <see cref="PdfPage.SetPageLabel(PageLabelNumberingStyle, String)"/>.
     /// </summary>
     public enum PageLabelNumberingStyle {
         /// <summary>1, 2, 3, 4...</summary>

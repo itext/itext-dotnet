@@ -58,8 +58,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A class to process WMF files.</summary>
     /// <remarks>
     /// A class to process WMF files. Used internally by
-    /// <see cref="WmfImageHelper"/>
-    /// .
+    /// <see cref="WmfImageHelper"/>.
     /// </remarks>
     public class MetaDo {
         public const int META_SETBKCOLOR = 0x0201;

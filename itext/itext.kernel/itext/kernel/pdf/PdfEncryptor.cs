@@ -70,8 +70,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="os">the output destination</param>
         /// <param name="properties">
         /// encryption properties. See
-        /// <see cref="EncryptionProperties"/>
-        /// .
+        /// <see cref="EncryptionProperties"/>.
         /// </param>
         /// <param name="newInfo">
         /// an optional
@@ -91,8 +90,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="os">the output destination</param>
         /// <param name="properties">
         /// encryption properties. See
-        /// <see cref="EncryptionProperties"/>
-        /// .
+        /// <see cref="EncryptionProperties"/>.
         /// </param>
         public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties) {
             Encrypt(reader, os, properties, null);

@@ -143,8 +143,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>PdfPage</c>
         /// object, that wraps
-        /// <paramref name="pageDictionary"/>
-        /// .
+        /// <paramref name="pageDictionary"/>.
         /// </returns>
         public virtual PdfPage GetPage(PdfDictionary pageDictionary) {
             int pageNum = GetPageNumber(pageDictionary);

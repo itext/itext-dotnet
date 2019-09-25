@@ -88,8 +88,7 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
         /// thrown if the certificate has expired, isn't valid yet, or if an exception has been thrown in
         /// <see cref="Org.BouncyCastle.X509.X509Certificate.Verify(Org.BouncyCastle.Crypto.AsymmetricKeyParameter)">Certificate#verify
-        ///     </see>
-        /// .
+        ///     </see>.
         /// </exception>
         /// <exception cref="System.IO.IOException">Deprecated</exception>
         public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime

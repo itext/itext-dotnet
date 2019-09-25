@@ -282,8 +282,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// Returns the document's certification level.
         /// For possible values see
-        /// <see cref="SetCertificationLevel(int)"/>
-        /// .
+        /// <see cref="SetCertificationLevel(int)"/>.
         /// </remarks>
         /// <returns>The certified status.</returns>
         public virtual int GetCertificationLevel() {
@@ -933,8 +932,7 @@ namespace iText.Signatures {
         /// ,
         /// <see cref="GetRangeStream()"/>
         /// and
-        /// <see cref="Close(iText.Kernel.Pdf.PdfDictionary)"/>
-        /// .
+        /// <see cref="Close(iText.Kernel.Pdf.PdfDictionary)"/>.
         /// </remarks>
         /// <returns>
         /// The
@@ -954,8 +952,7 @@ namespace iText.Signatures {
         /// <para />
         /// update is a PdfDictionary that must have exactly the
         /// same keys as the ones provided in
-        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>
-        /// .
+        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>.
         /// </remarks>
         /// <param name="update">
         /// a PdfDictionary with the key/value that will fill the holes defined

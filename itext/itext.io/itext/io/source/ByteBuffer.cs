@@ -182,13 +182,11 @@ namespace iText.IO.Source {
         /// </summary>
         /// <param name="b">
         /// 
-        /// <c>byte</c>
-        /// .
+        /// <c>byte</c>.
         /// </param>
         /// <returns>
         /// 
-        /// <c>ByteBuffer</c>
-        /// .
+        /// <c>ByteBuffer</c>.
         /// </returns>
         internal virtual iText.IO.Source.ByteBuffer Prepend(byte b) {
             buffer[buffer.Length - count - 1] = b;
@@ -206,13 +204,11 @@ namespace iText.IO.Source {
         /// </summary>
         /// <param name="b">
         /// 
-        /// <c>byte</c>
-        /// .
+        /// <c>byte</c>.
         /// </param>
         /// <returns>
         /// 
-        /// <c>ByteBuffer</c>
-        /// .
+        /// <c>ByteBuffer</c>.
         /// </returns>
         internal virtual iText.IO.Source.ByteBuffer Prepend(byte[] b) {
             Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);

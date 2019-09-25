@@ -174,8 +174,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="fontWeight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         public virtual void SetFontWeight(int fontWeight) {
             ((Type3Font)fontProgram).SetFontWeight(fontWeight);
@@ -195,8 +194,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         public virtual void SetFontStretch(String fontWidth) {
             ((Type3Font)fontProgram).SetFontStretch(fontWidth);

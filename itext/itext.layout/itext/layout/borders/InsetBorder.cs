@@ -49,8 +49,7 @@ namespace iText.Layout.Borders {
         /// <summary>Creates a InsetBorder instance with the specified width.</summary>
         /// <remarks>
         /// Creates a InsetBorder instance with the specified width. The color is set to the default:
-        /// <see cref="Border3D#GRAY">gray</see>
-        /// .
+        /// <see cref="Border3D#GRAY">gray</see>.
         /// </remarks>
         /// <param name="width">width of the border</param>
         public InsetBorder(float width)
@@ -59,8 +58,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a InsetBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">
@@ -74,8 +72,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a InsetBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">
@@ -89,8 +86,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a InsetBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">

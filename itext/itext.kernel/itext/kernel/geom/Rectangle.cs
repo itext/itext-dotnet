@@ -400,8 +400,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the X coordinate of the left edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the X coordinate of the left edge of the rectangle. Same as:
-        /// <c>getX()</c>
-        /// .
+        /// <c>getX()</c>.
         /// </remarks>
         /// <returns>the X coordinate of the left edge of the rectangle.</returns>
         public virtual float GetLeft() {
@@ -411,8 +410,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the X coordinate of the right edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the X coordinate of the right edge of the rectangle. Same as:
-        /// <c>getX() + getWidth()</c>
-        /// .
+        /// <c>getX() + getWidth()</c>.
         /// </remarks>
         /// <returns>the X coordinate of the right edge of the rectangle.</returns>
         public virtual float GetRight() {
@@ -422,8 +420,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the Y coordinate of the upper edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the Y coordinate of the upper edge of the rectangle. Same as:
-        /// <c>getY() + getHeight()</c>
-        /// .
+        /// <c>getY() + getHeight()</c>.
         /// </remarks>
         /// <returns>the Y coordinate of the upper edge of the rectangle.</returns>
         public virtual float GetTop() {
@@ -433,8 +430,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the Y coordinate of the lower edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the Y coordinate of the lower edge of the rectangle. Same as:
-        /// <c>getY()</c>
-        /// .
+        /// <c>getY()</c>.
         /// </remarks>
         /// <returns>the Y coordinate of the lower edge of the rectangle.</returns>
         public virtual float GetBottom() {

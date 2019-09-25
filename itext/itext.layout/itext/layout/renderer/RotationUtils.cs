@@ -56,8 +56,7 @@ namespace iText.Layout.Renderer {
         /// This method tries to calculate min-max-width of rotated element using heuristics
         /// of
         /// <see cref="iText.Layout.Minmaxwidth.RotationMinMaxWidth.Calculate(double, double, iText.Layout.Minmaxwidth.MinMaxWidth)
-        ///     "/>
-        /// .
+        ///     "/>.
         /// This method may call
         /// <see cref="IRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>
         /// once in best case
@@ -118,8 +117,7 @@ namespace iText.Layout.Renderer {
         /// This method tries to calculate width of not rotated renderer, so after rotation it fits availableWidth.
         /// This method uses heuristics of
         /// <see cref="iText.Layout.Minmaxwidth.RotationMinMaxWidth.Calculate(double, double, iText.Layout.Minmaxwidth.MinMaxWidth, double)
-        ///     "/>
-        /// .
+        ///     "/>.
         /// It doesn't take into account any of height properties of renderer or height of layoutArea.
         /// The minMaxWidth calculations and initial layout may take long time, but they won't be called if the renderer have width property.
         /// </remarks>

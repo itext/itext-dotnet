@@ -302,8 +302,7 @@ namespace iText.Kernel.Utils {
         /// 
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// instance which will be later passed to the output document
-        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>.
         /// </returns>
         public virtual ReaderProperties GetOutReaderProperties() {
             if (outProps == null) {
@@ -326,8 +325,7 @@ namespace iText.Kernel.Utils {
         /// 
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// instance which will be later passed to the cmp document
-        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>.
         /// </returns>
         public virtual ReaderProperties GetCmpReaderProperties() {
             if (cmpProps == null) {
@@ -414,8 +412,7 @@ namespace iText.Kernel.Utils {
         /// <br />
         /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
         /// For more info see
-        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>
-        /// .
+        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>.
         /// For this overload, differenceImagePrefix value is generated using diff_%outPdfFileName%_ format.
         /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
@@ -460,8 +457,7 @@ namespace iText.Kernel.Utils {
         /// <br />
         /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
         /// For more info see
-        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>
-        /// .
+        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>.
         /// <br /><br />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -510,8 +506,7 @@ namespace iText.Kernel.Utils {
         /// <br />
         /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
         /// For more info see
-        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>
-        /// .
+        /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>.
         /// <br /><br />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -555,8 +550,7 @@ namespace iText.Kernel.Utils {
         /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
         /// For more info see
         /// <see cref="CompareVisually(System.String, System.String, System.String, System.String, System.Collections.Generic.IDictionary{K, V})
-        ///     "/>
-        /// .
+        ///     "/>.
         /// <br /><br />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -601,8 +595,7 @@ namespace iText.Kernel.Utils {
         /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
         /// For more info see
         /// <see cref="CompareVisually(System.String, System.String, System.String, System.String, System.Collections.Generic.IDictionary{K, V})
-        ///     "/>
-        /// .
+        ///     "/>.
         /// <br /><br />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -668,8 +661,7 @@ namespace iText.Kernel.Utils {
         /// <para />
         /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
         /// simply comparing their page numbers. This behavior can be disabled by calling
-        /// <see cref="DisableCachedPagesComparison()"/>
-        /// .
+        /// <see cref="DisableCachedPagesComparison()"/>.
         /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -710,8 +702,7 @@ namespace iText.Kernel.Utils {
         /// <para />
         /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
         /// simply comparing their page numbers. This behavior can be disabled by calling
-        /// <see cref="DisableCachedPagesComparison()"/>
-        /// .
+        /// <see cref="DisableCachedPagesComparison()"/>.
         /// <para />
         /// For more explanations about what is outPdf and cmpPdf see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -2333,8 +2324,7 @@ namespace iText.Kernel.Utils {
             /// <summary>Adds array item to the direct path.</summary>
             /// <remarks>
             /// Adds array item to the direct path. See
-            /// <see cref="ArrayPathItem"/>
-            /// .
+            /// <see cref="ArrayPathItem"/>.
             /// </remarks>
             /// <param name="index">index in the array of the direct object to be compared.</param>
             public virtual void PushArrayItemToPath(int index) {
@@ -2344,8 +2334,7 @@ namespace iText.Kernel.Utils {
             /// <summary>Adds dictionary item to the direct path.</summary>
             /// <remarks>
             /// Adds dictionary item to the direct path. See
-            /// <see cref="DictPathItem"/>
-            /// .
+            /// <see cref="DictPathItem"/>.
             /// </remarks>
             /// <param name="key">key in the dictionary to which corresponds direct object to be compared.</param>
             public virtual void PushDictItemToPath(PdfName key) {
@@ -2355,8 +2344,7 @@ namespace iText.Kernel.Utils {
             /// <summary>Adds offset item to the direct path.</summary>
             /// <remarks>
             /// Adds offset item to the direct path. See
-            /// <see cref="OffsetPathItem"/>
-            /// .
+            /// <see cref="OffsetPathItem"/>.
             /// </remarks>
             /// <param name="offset">offset to the specific byte in the stream that is compared.</param>
             public virtual void PushOffsetToPath(int offset) {
@@ -2507,8 +2495,7 @@ namespace iText.Kernel.Utils {
 
             /// <summary>
             /// An abstract class for the items in the direct path (see
-            /// <see cref="ObjectPath"/>
-            /// .
+            /// <see cref="ObjectPath"/>.
             /// </summary>
             public abstract class LocalPathItem {
                 /// <summary>Creates an xml node that describes this direct path item.</summary>
@@ -2529,8 +2516,7 @@ namespace iText.Kernel.Utils {
 
                 /// <summary>
                 /// Creates an instance of the
-                /// <see cref="DictPathItem"/>
-                /// .
+                /// <see cref="DictPathItem"/>.
                 /// </summary>
                 /// <param name="key">
                 /// the key which defines to which entry of the
@@ -2590,8 +2576,7 @@ namespace iText.Kernel.Utils {
 
                 /// <summary>
                 /// Creates an instance of the
-                /// <see cref="ArrayPathItem"/>
-                /// .
+                /// <see cref="ArrayPathItem"/>.
                 /// </summary>
                 /// <param name="index">
                 /// the index which defines element of the
@@ -2640,21 +2625,18 @@ namespace iText.Kernel.Utils {
             /// <see cref="ObjectPath"/>
             /// , which describes transition to the
             /// specific position in
-            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-            /// .
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
             /// </summary>
             public class OffsetPathItem : CompareTool.ObjectPath.LocalPathItem {
                 internal int offset;
 
                 /// <summary>
                 /// Creates an instance of the
-                /// <see cref="OffsetPathItem"/>
-                /// .
+                /// <see cref="OffsetPathItem"/>.
                 /// </summary>
                 /// <param name="offset">
                 /// bytes offset to the specific position in
-                /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-                /// .
+                /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
                 /// </param>
                 public OffsetPathItem(int offset) {
                     this.offset = offset;

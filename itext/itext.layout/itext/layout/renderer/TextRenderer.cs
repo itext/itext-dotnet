@@ -71,8 +71,7 @@ namespace iText.Layout.Renderer {
     /// object for a
     /// <see cref="iText.Layout.Element.Text"/>
     /// object. It will draw the glyphs of the textual content on the
-    /// <see cref="DrawContext"/>
-    /// .
+    /// <see cref="DrawContext"/>.
     /// </summary>
     public class TextRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal const float TEXT_SPACE_COEFF = FontProgram.UNITS_NORMALIZATION;
@@ -114,8 +113,7 @@ namespace iText.Layout.Renderer {
         /// <summary>
         /// Creates a TextRenderer from its corresponding layout object, with a custom
         /// text to replace the contents of the
-        /// <see cref="iText.Layout.Element.Text"/>
-        /// .
+        /// <see cref="iText.Layout.Element.Text"/>.
         /// </summary>
         /// <param name="textElement">
         /// the

@@ -176,8 +176,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <c>PdfName.UseOC</c>
         /// ,
-        /// <c>PdfName.UseAttachments</c>
-        /// .
+        /// <c>PdfName.UseAttachments</c>.
         /// </remarks>
         /// <param name="pageMode">page mode.</param>
         /// <returns>current instance of PdfCatalog</returns>

@@ -304,8 +304,7 @@ namespace iText.Kernel.Pdf {
         /// or
         /// <c>content</c>
         /// ot the
-        /// <c>PdfString</c>
-        /// .
+        /// <c>PdfString</c>.
         /// </remarks>
         /// <param name="bytes">byte array to manipulate with.</param>
         /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>

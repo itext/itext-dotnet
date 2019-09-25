@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized enum containing potential property values for
-    /// <see cref="Property.HORIZONTAL_ALIGNMENT"/>
-    /// .
+    /// <see cref="Property.HORIZONTAL_ALIGNMENT"/>.
     /// </summary>
     public enum HorizontalAlignment {
         LEFT,

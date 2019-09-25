@@ -54,12 +54,10 @@ using iText.Layout.Renderer;
 namespace iText.Layout {
     /// <summary>
     /// This class is used for adding content directly onto a specified
-    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
     /// <see cref="Canvas"/>
     /// does not know the concept of a page, so it can't reflow to a 'next'
-    /// <see cref="Canvas"/>
-    /// .
+    /// <see cref="Canvas"/>.
     /// This class effectively acts as a bridge between the high-level <em>layout</em>
     /// API and the low-level <em>kernel</em> API.
     /// </summary>
@@ -70,8 +68,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Is initialized and used only when Canvas element autotagging is enabled, see
-        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>
-        /// .
+        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>.
         /// It is also used to determine if autotagging is enabled.
         /// </summary>
         protected internal PdfPage page;
@@ -91,8 +88,7 @@ namespace iText.Layout {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.IsTagged()"/>
         /// is true, using this constructor would automatically enable
         /// the tagging for the content. Regarding tagging the effect is the same as using
-        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>
-        /// .
+        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>.
         /// </remarks>
         /// <param name="page">
         /// the page on which this canvas will be rendered, shall not be flushed (see
@@ -134,8 +130,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Creates a new Canvas to manipulate a specific
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <param name="formXObject">the form</param>
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
@@ -161,8 +156,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Gets the
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
         /// </summary>
         /// <returns>the low-level content stream writer</returns>
         public virtual PdfCanvas GetPdfCanvas() {

@@ -56,8 +56,7 @@ namespace iText.Layout.Renderer {
     /// the corresponding type, e.g. you can ask an
     /// <see cref="iText.Layout.Element.Image"/>
     /// for its
-    /// <see cref="ImageRenderer"/>
-    /// .
+    /// <see cref="ImageRenderer"/>.
     /// Renderers are designed to be extensible, and custom implementations can be
     /// seeded to layout objects (or their custom subclasses) at runtime.
     /// </remarks>
@@ -143,8 +142,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Gets the parent
-        /// <see cref="IRenderer"/>
-        /// .
+        /// <see cref="IRenderer"/>.
         /// </summary>
         /// <returns>
         /// direct parent

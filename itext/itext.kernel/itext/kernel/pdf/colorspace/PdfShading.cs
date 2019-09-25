@@ -171,8 +171,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <summary>Gets the shading type.</summary>
         /// <returns>
         /// int value of
-        /// <see cref="iText.Kernel.Pdf.PdfName.ShadingType"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ShadingType"/>.
         /// </returns>
         public virtual int GetShadingType() {
             return (int)GetPdfObject().GetAsInt(PdfName.ShadingType);
@@ -239,8 +238,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>
@@ -617,8 +615,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the Extend object with the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of two
-            /// <c>boolean</c>
-            /// .
+            /// <c>boolean</c>.
             /// If first is true shading will extend beyond the starting point of Coords.
             /// If second is true shading will extend beyond the ending point of Coords.
             /// </summary>
@@ -918,8 +915,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the Extend object with the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of two
-            /// <c>boolean</c>
-            /// .
+            /// <c>boolean</c>.
             /// If first is true shading will extend beyond the starting circle of Coords.
             /// If second is true shading will extend beyond the ending circle of Coords.
             /// </summary>

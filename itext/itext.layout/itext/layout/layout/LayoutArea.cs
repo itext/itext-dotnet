@@ -48,8 +48,7 @@ using iText.Kernel.Geom;
 namespace iText.Layout.Layout {
     /// <summary>
     /// Represents the area for content
-    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
     /// </summary>
     public class LayoutArea {
         /// <summary>The number of page on which the area is located.</summary>
@@ -60,8 +59,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Creates the area for content
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// </summary>
         /// <param name="pageNumber">the number of page on which the area is located.</param>
         /// <param name="bBox">the area's bounding box</param>

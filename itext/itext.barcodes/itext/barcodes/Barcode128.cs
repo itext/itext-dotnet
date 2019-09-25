@@ -155,8 +155,7 @@ namespace iText.Barcodes {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
         /// will be implicitly called.
         /// If you want to use this barcode in PDF/A documents, please consider using
-        /// <see cref="Barcode128(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
-        /// .
+        /// <see cref="Barcode128(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>.
         /// </remarks>
         /// <param name="document">The document to which the barcode will be added</param>
         public Barcode128(PdfDocument document)

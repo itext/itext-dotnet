@@ -635,8 +635,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>
         /// Write this node and its children to the given
-        /// <see cref="System.Text.StringBuilder"/>
-        /// .
+        /// <see cref="System.Text.StringBuilder"/>.
         /// </summary>
         /// <param name="appendable">
         /// the
@@ -696,8 +695,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// original node.
         /// <para />
         /// The cloned node may be adopted into another Document or node structure using
-        /// <see cref="Element.AppendChild(Node)"/>
-        /// .
+        /// <see cref="Element.AppendChild(Node)"/>.
         /// </remarks>
         /// <returns>stand-alone cloned node</returns>
         public virtual Object Clone() {

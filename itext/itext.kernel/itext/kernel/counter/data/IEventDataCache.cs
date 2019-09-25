@@ -46,11 +46,9 @@ using System.Collections.Generic;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Interface responsible for caching
-    /// <see cref="EventData{T}"/>
-    /// .
+    /// <see cref="EventData{T}"/>.
     /// Used in
-    /// <see cref="EventDataHandler{T, V}"/>
-    /// .
+    /// <see cref="EventDataHandler{T, V}"/>.
     /// </summary>
     /// 
     /// 

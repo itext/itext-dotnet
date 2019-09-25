@@ -57,8 +57,7 @@ namespace iText.Kernel.Pdf {
     /// ,
     /// <see cref="ReleaseDeep(int)"/>
     /// ,
-    /// <see cref="AppendModeFlush(int)"/>
-    /// .
+    /// <see cref="AppendModeFlush(int)"/>.
     /// <para />
     /// Each approach is designed to be most suitable for specific modes of document processing. There are four document
     /// processing modes: reading, writing, stamping and append mode.

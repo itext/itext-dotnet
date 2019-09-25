@@ -47,8 +47,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
     /// This class only contains properties relevant for any generic XML+CSS combo:
     /// specific properties must be implemented in a project-specific subclass.
     /// Used by
-    /// <see cref="iText.StyledXmlParser.Css.ICssResolver"/>
-    /// .
+    /// <see cref="iText.StyledXmlParser.Css.ICssResolver"/>.
     /// </remarks>
     public abstract class AbstractCssContext {
         /// <summary>The quotes depth.</summary>

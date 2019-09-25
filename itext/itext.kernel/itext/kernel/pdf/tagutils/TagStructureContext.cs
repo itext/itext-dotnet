@@ -60,8 +60,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// There shall be only one instance of this class per
     /// <c>PdfDocument</c>
     /// . To obtain instance of this class use
-    /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>.
     /// </summary>
     public class TagStructureContext {
         private static readonly ICollection<String> allowedRootTagRoles = new HashSet<String>();
@@ -101,8 +100,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this
         /// class per
-        /// <c>PdfDocument</c>
-        /// .
+        /// <c>PdfDocument</c>.
         /// </summary>
         /// <param name="document">the document which tag structure will be manipulated with this class.</param>
         public TagStructureContext(PdfDocument document)
@@ -118,8 +116,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this
         /// class per
-        /// <c>PdfDocument</c>
-        /// .
+        /// <c>PdfDocument</c>.
         /// </summary>
         /// <param name="document">the document which tag structure will be manipulated with this class.</param>
         /// <param name="tagStructureTargetVersion">the version of the pdf standard to which the tag structure shall adhere.
@@ -212,8 +209,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <para />
         /// By default, this value is defined based on the PDF document version and the existing tag structure inside
         /// a document. For the new empty PDF 2.0 documents this namespace is set to
-        /// <see cref="iText.Kernel.Pdf.Tagging.StandardNamespaces.PDF_2_0"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardNamespaces.PDF_2_0"/>.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
@@ -463,8 +459,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <remarks>
         /// Removes all tags that belong only to this page. The logic which defines if tag belongs to the page is described
         /// at
-        /// <see cref="FlushPageTags(iText.Kernel.Pdf.PdfPage)"/>
-        /// .
+        /// <see cref="FlushPageTags(iText.Kernel.Pdf.PdfPage)"/>.
         /// </remarks>
         /// <param name="page">page that defines which tags are to be removed</param>
         /// <returns>
@@ -581,8 +576,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// a
         /// <see cref="TagTreePointer"/>
         /// which points at desired
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>.
         /// </param>
         /// <returns>
         /// a
@@ -599,8 +593,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Creates a new
         /// <see cref="TagTreePointer"/>
         /// which points at given
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>.
         /// </summary>
         /// <param name="structElem">
         /// a
@@ -611,8 +604,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </param>
         /// <returns>
         /// a new
-        /// <see cref="TagTreePointer"/>
-        /// .
+        /// <see cref="TagTreePointer"/>.
         /// </returns>
         public virtual TagTreePointer CreatePointerForStructElem(PdfStructElem structElem) {
             return new TagTreePointer(structElem, document);

@@ -113,8 +113,7 @@ namespace iText.Kernel {
         /// </remarks>
         /// <returns>
         /// an instance of
-        /// <see cref="Version"/>
-        /// .
+        /// <see cref="Version"/>.
         /// </returns>
         public static iText.Kernel.Version GetInstance() {
             lock (staticLock) {

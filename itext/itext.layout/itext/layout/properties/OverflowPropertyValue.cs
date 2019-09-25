@@ -45,8 +45,7 @@ using iText.Layout.Element;
 namespace iText.Layout.Properties {
     /// <summary>
     /// The possible values for the type of overflow of
-    /// <see cref="BlockElement{T}"/>
-    /// .
+    /// <see cref="BlockElement{T}"/>.
     /// </summary>
     public enum OverflowPropertyValue {
         FIT,

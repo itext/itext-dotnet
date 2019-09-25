@@ -50,8 +50,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Document"/>
     /// . Generally best to use one of the  more convenient parse methods
     /// in
-    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>
-    /// .
+    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
     /// </summary>
     public class Parser {
         private const int DEFAULT_MAX_ERRORS = 0;

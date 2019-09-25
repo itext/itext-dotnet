@@ -97,8 +97,7 @@ namespace iText.Kernel.Log {
         /// <param name="cls">the class for which registered counters are fetched.</param>
         /// <returns>
         /// list of registered
-        /// <see cref="ICounter"/>
-        /// .
+        /// <see cref="ICounter"/>.
         /// </returns>
         public virtual IList<ICounter> GetCounters(Type cls) {
             List<ICounter> result = new List<ICounter>();

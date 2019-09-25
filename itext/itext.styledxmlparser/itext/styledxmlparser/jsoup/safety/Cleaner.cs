@@ -60,8 +60,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// Rather than interacting directly with a Cleaner object, generally see the
     /// <c>clean</c>
     /// methods in
-    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>
-    /// .
+    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
     /// </remarks>
     public class Cleaner {
         private Whitelist whitelist;

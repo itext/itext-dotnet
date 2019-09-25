@@ -51,8 +51,7 @@ namespace iText.StyledXmlParser.Css.Parse {
     public sealed class CssStyleSheetParser {
         /// <summary>
         /// Creates a new
-        /// <see cref="CssStyleSheetParser"/>
-        /// .
+        /// <see cref="CssStyleSheetParser"/>.
         /// </summary>
         private CssStyleSheetParser() {
         }
@@ -60,8 +59,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         // TODO refactor into interface
         /// <summary>
         /// Parses a stream into a
-        /// <see cref="CssRuleSetParser"/>
-        /// .
+        /// <see cref="CssRuleSetParser"/>.
         /// </summary>
         /// <param name="stream">the stream</param>
         /// <param name="baseUrl">the base url</param>
@@ -86,8 +84,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>
         /// Parses a stream into a
-        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
-        /// .
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>.
         /// </summary>
         /// <param name="stream">the stream</param>
         /// <returns>
@@ -101,8 +98,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>
         /// Parses a string into a
-        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
-        /// .
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>.
         /// </summary>
         /// <param name="data">the style sheet data</param>
         /// <param name="baseUrl">the base url</param>
@@ -123,8 +119,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>
         /// Parses a string into a
-        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
-        /// .
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>.
         /// </summary>
         /// <param name="data">the data</param>
         /// <returns>

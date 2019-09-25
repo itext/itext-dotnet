@@ -49,8 +49,7 @@ using iText.StyledXmlParser.Css.Selector;
 namespace iText.StyledXmlParser.Css.Page {
     /// <summary>
     /// Class for a non standard
-    /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>
-    /// .
+    /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>.
     /// </summary>
     internal class CssNonStandardRuleSet : CssRuleSet {
         /// <summary>

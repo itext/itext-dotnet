@@ -172,8 +172,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Close
-        /// <see cref="iText.IO.Source.PdfTokenizer"/>
-        /// .
+        /// <see cref="iText.IO.Source.PdfTokenizer"/>.
         /// </summary>
         /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual void Close() {
@@ -336,8 +335,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Reads, decrypt and optionally decode stream bytes into
-        /// <see cref="System.IO.MemoryStream"/>
-        /// .
+        /// <see cref="System.IO.MemoryStream"/>.
         /// User is responsible for closing returned stream.
         /// </summary>
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
@@ -485,8 +483,7 @@ namespace iText.Kernel.Pdf {
         /// Checks if the document was opened with the owner password so that the end application
         /// can decide what level of access restrictions to apply. If the document is not encrypted
         /// it will return
-        /// <see langword="true"/>
-        /// .
+        /// <see langword="true"/>.
         /// </remarks>
         /// <returns>
         /// 
@@ -502,8 +499,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets the encryption permissions.</summary>
         /// <remarks>
         /// Gets the encryption permissions. It can be used directly in
-        /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>
-        /// .
+        /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>.
         /// See ISO 32000-1, Table 22 for more details.
         /// </remarks>
         /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
@@ -560,8 +556,7 @@ namespace iText.Kernel.Pdf {
         /// <para />
         /// The returned value reflects the value that was written in opened document. If document is modified,
         /// the ultimate document id can be retrieved from
-        /// <see cref="PdfDocument.GetOriginalDocumentId()"/>
-        /// .
+        /// <see cref="PdfDocument.GetOriginalDocumentId()"/>.
         /// </summary>
         /// <returns>byte array represents original file ID.</returns>
         /// <seealso cref="PdfDocument.GetOriginalDocumentId()"/>
@@ -583,8 +578,7 @@ namespace iText.Kernel.Pdf {
         /// <para />
         /// The returned value reflects the value that was written in opened document. If document is modified,
         /// the ultimate document id can be retrieved from
-        /// <see cref="PdfDocument.GetModifiedDocumentId()"/>
-        /// .
+        /// <see cref="PdfDocument.GetModifiedDocumentId()"/>.
         /// </summary>
         /// <returns>byte array represents modified file ID.</returns>
         /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>

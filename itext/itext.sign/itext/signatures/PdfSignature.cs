@@ -80,8 +80,7 @@ namespace iText.Signatures {
         /// which usually has a value either
         /// <see cref="iText.Kernel.Pdf.PdfName.Adbe_pkcs7_detached"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName.ETSI_CAdES_DETACHED"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ETSI_CAdES_DETACHED"/>.
         /// </returns>
         public virtual PdfName GetSubFilter() {
             return GetPdfObject().GetAsName(PdfName.SubFilter);
@@ -97,8 +96,7 @@ namespace iText.Signatures {
         /// is
         /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
         /// . The default value is:
-        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>.
         /// </summary>
         /// <returns>
         /// a

@@ -57,8 +57,7 @@ namespace iText.Layout.Element {
     /// A
     /// <see cref="Cell"/>
     /// is one piece of data in an enclosing grid, the
-    /// <see cref="Table"/>
-    /// .
+    /// <see cref="Table"/>.
     /// This object is a
     /// <see cref="BlockElement{T}"/>
     /// , giving it a number of visual layout
@@ -68,8 +67,7 @@ namespace iText.Layout.Element {
     /// <see cref="BlockElement{T}"/>
     /// objects or images. Other types of layout
     /// elements must be wrapped in a
-    /// <see cref="BlockElement{T}"/>
-    /// .
+    /// <see cref="BlockElement{T}"/>.
     /// </summary>
     public class Cell : BlockElement<iText.Layout.Element.Cell> {
         private static readonly Border DEFAULT_BORDER = new SolidBorder(0.5f);

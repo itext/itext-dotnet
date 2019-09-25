@@ -553,8 +553,7 @@ namespace iText.IO.Font {
         /// Depends on
         /// <see cref="HorizontalHeader.numberOfHMetrics"/>
         /// and
-        /// <see cref="HeaderTable.unitsPerEm"/>
-        /// .
+        /// <see cref="HeaderTable.unitsPerEm"/>.
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
         protected internal virtual void ReadGlyphWidths() {
@@ -589,8 +588,7 @@ namespace iText.IO.Font {
         /// <summary>Reads the kerning information from the 'kern' table.</summary>
         /// <param name="unitsPerEm">
         /// 
-        /// <see cref="HeaderTable.unitsPerEm"/>
-        /// .
+        /// <see cref="HeaderTable.unitsPerEm"/>.
         /// </param>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         protected internal virtual IntHashtable ReadKerning(int unitsPerEm) {
@@ -897,8 +895,7 @@ namespace iText.IO.Font {
         /// Reads the several maps from the table 'cmap'. The maps of interest are 1.0 for symbolic
         /// fonts and 3.1 for all others. A symbolic font is defined as having the map 3.0.
         /// Depends from
-        /// <c>readGlyphWidths()</c>
-        /// .
+        /// <c>readGlyphWidths()</c>.
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private void ReadCmapTable() {

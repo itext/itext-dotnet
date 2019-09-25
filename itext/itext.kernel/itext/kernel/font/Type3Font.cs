@@ -50,8 +50,7 @@ namespace iText.Kernel.Font {
     /// <summary>FontProgram class for Type 3 font.</summary>
     /// <remarks>
     /// FontProgram class for Type 3 font. Contains map of
-    /// <see cref="Type3Glyph"/>
-    /// .
+    /// <see cref="Type3Glyph"/>.
     /// Type3Glyphs belong to a particular pdf document.
     /// Note, an instance of Type3Font can not be reused for multiple pdf documents.
     /// </remarks>
@@ -117,8 +116,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="fontWeight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal override void SetFontWeight(int fontWeight) {
             //This dummy override allows PdfType3Font to set font name because of different modules.
@@ -128,8 +126,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal override void SetFontStretch(String fontWidth) {
             //This dummy override allows PdfType3Font to set font name because of different modules.
@@ -153,8 +150,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
         /// <param name="flags">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontDescriptorFlags"/>.
         /// </param>
         internal virtual void SetPdfFontFlags(int flags) {
             this.flags = flags;

@@ -62,8 +62,7 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Creates instance of this class that allows all events from unknown
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// .
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>.
         /// </summary>
         public EventCounter()
             : this(UnknownContext.PERMISSIVE) {
@@ -71,8 +70,7 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Creates instance of this class with custom fallback
-        /// <see cref="iText.Kernel.Counter.Context.IContext"/>
-        /// .
+        /// <see cref="iText.Kernel.Counter.Context.IContext"/>.
         /// </summary>
         /// <param name="fallback">
         /// the

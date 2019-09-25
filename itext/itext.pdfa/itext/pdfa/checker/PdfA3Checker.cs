@@ -51,8 +51,7 @@ namespace iText.Pdfa.Checker {
     /// <summary>
     /// PdfA3Checker defines the requirements of the PDF/A-3 standard and contains a
     /// number of methods that override the implementations of its superclass
-    /// <see cref="PdfA2Checker"/>
-    /// .
+    /// <see cref="PdfA2Checker"/>.
     /// The specification implemented by this class is ISO 19005-3
     /// </summary>
     public class PdfA3Checker : PdfA2Checker {

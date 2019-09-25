@@ -116,8 +116,7 @@ namespace iText.Layout {
         /// side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.RELATIVE">relative</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.RELATIVE">relative</see>.
         /// The default implementation in
         /// <see cref="iText.Layout.Renderer.AbstractRenderer"/>
         /// treats
@@ -148,8 +147,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
         /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
@@ -168,8 +166,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
         /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
@@ -194,8 +191,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
@@ -216,8 +212,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
@@ -752,11 +747,9 @@ namespace iText.Layout {
         /// Multiple call to this method will produce multiple lines.
         /// <para />
         /// The thickness of the line will be
-        /// <c>thickness + thicknessMul * fontSize</c>
-        /// .
+        /// <c>thickness + thicknessMul * fontSize</c>.
         /// The position of the line will be
-        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>
-        /// .
+        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>.
         /// </remarks>
         /// <param name="color">
         /// the color of the line or <c>null</c> to follow the
@@ -783,11 +776,9 @@ namespace iText.Layout {
         /// Multiple call to this method will produce multiple lines.
         /// <para />
         /// The thickness of the line will be
-        /// <c>thickness + thicknessMul * fontSize</c>
-        /// .
+        /// <c>thickness + thicknessMul * fontSize</c>.
         /// The position of the line will be
-        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>
-        /// .
+        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>.
         /// </remarks>
         /// <param name="color">
         /// the color of the line or <c>null</c> to follow the

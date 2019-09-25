@@ -151,8 +151,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Widget annotation highlighting mode. See ISO-320001, Table 188 (H key).
         /// Also see
-        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         public static readonly PdfName HIGHLIGHT_NONE = PdfName.N;
 
@@ -160,8 +159,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Widget annotation highlighting mode. See ISO-320001, Table 188 (H key).
         /// Also see
-        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         public static readonly PdfName HIGHLIGHT_INVERT = PdfName.I;
 
@@ -169,8 +167,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Widget annotation highlighting mode. See ISO-320001, Table 188 (H key).
         /// Also see
-        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         public static readonly PdfName HIGHLIGHT_OUTLINE = PdfName.O;
 
@@ -178,8 +175,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Widget annotation highlighting mode. See ISO-320001, Table 188 (H key).
         /// Also see
-        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         public static readonly PdfName HIGHLIGHT_PUSH = PdfName.P;
 
@@ -187,8 +183,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Widget annotation highlighting mode. See ISO-320001, Table 188 (H key).
         /// Also see
-        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="PdfWidgetAnnotation.SetHighlightMode(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         public static readonly PdfName HIGHLIGHT_TOGGLE = PdfName.T;
 
@@ -216,8 +211,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Marked = new PdfString("Marked");
 
@@ -225,8 +219,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Unmarked = new PdfString("Unmarked");
 
@@ -234,8 +227,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Accepted = new PdfString("Accepted");
 
@@ -243,8 +235,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Rejected = new PdfString("Rejected");
 
@@ -252,8 +243,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Canceled = new PdfString("Cancelled");
 
@@ -261,8 +251,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString Completed = new PdfString("Completed");
 
@@ -270,8 +259,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state. See ISO-320001 12.5.6.3 "Annotation States" and Table 171 in particular.
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetState(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString None = new PdfString("None");
 
@@ -279,8 +267,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state model. See ISO-320001, Table 172 (StateModel key).
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetStateModel(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetStateModel(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString MarkedModel = new PdfString("Marked");
 
@@ -288,8 +275,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Annotation state model. See ISO-320001, Table 172 (StateModel key).
         /// Also see
-        /// <see cref="PdfTextAnnotation.SetStateModel(iText.Kernel.Pdf.PdfString)"/>
-        /// .
+        /// <see cref="PdfTextAnnotation.SetStateModel(iText.Kernel.Pdf.PdfString)"/>.
         /// </remarks>
         public static readonly PdfString ReviewModel = new PdfString("Review");
 
@@ -311,8 +297,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </param>
         /// <returns>
         /// created
-        /// <see cref="PdfAnnotation"/>
-        /// .
+        /// <see cref="PdfAnnotation"/>.
         /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject) {
             iText.Kernel.Pdf.Annot.PdfAnnotation annotation = null;
@@ -564,8 +549,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Method that modifies annotation page property, which defines to which page annotation belongs.
         /// Keep in mind that this doesn't actually add an annotation to the page,
         /// it should be done via
-        /// <see cref="iText.Kernel.Pdf.PdfPage.AddAnnotation(PdfAnnotation)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfPage.AddAnnotation(PdfAnnotation)"/>.
         /// Also you don't need to set this property manually, this is done automatically on addition to the page.
         /// </remarks>
         /// <param name="page">
@@ -651,8 +635,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// A set of flags specifying various characteristics of the annotation (see ISO-320001 12.5.3, "Annotation Flags").
         /// For specific annotation flag constants see
-        /// <see cref="SetFlag(int)"/>
-        /// .
+        /// <see cref="SetFlag(int)"/>.
         /// Default value: 0.
         /// </remarks>
         /// <returns>an integer interpreted as one-bit flags specifying various characteristics of the annotation.</returns>
@@ -789,8 +772,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Checks if the certain flag that specifies a characteristic of the annotation
         /// is in enabled state (see ISO-320001 12.5.3, "Annotation Flags").
         /// This method allows only one flag to be checked at once, use constants listed in
-        /// <see cref="SetFlag(int)"/>
-        /// .
+        /// <see cref="SetFlag(int)"/>.
         /// </remarks>
         /// <param name="flag">
         /// an integer interpreted as set of one-bit flags. Only one bit must be set in this integer, otherwise
@@ -840,8 +822,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// ,
         /// <see cref="iText.Kernel.Pdf.PdfName.R">Rollover</see>
         /// and
-        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>.
         /// </param>
         /// <returns>
         /// null if their is no such appearance type or an appearance object which might be either
@@ -863,8 +844,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// The normal appearance is used when the annotation is not interacting with the user.
         /// This appearance is also used for printing the annotation.
         /// See also
-        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>an appearance object which might be either an appearance stream or an appearance subdictionary.</returns>
         public virtual PdfDictionary GetNormalAppearanceObject() {
@@ -879,8 +859,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// The rollover appearance is used when the user moves the cursor into the annotation’s active area
         /// without pressing the mouse button. If not specified normal appearance is used.
         /// See also
-        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// null if rollover appearance is not specified or an appearance object which might be either
@@ -896,8 +875,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// The down appearance is used when the mouse button is pressed or held down within the annotation’s active area.
         /// If not specified normal appearance is used.
         /// See also
-        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// null if down appearance is not specified or an appearance object which might be either
@@ -923,8 +901,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// ,
         /// <see cref="iText.Kernel.Pdf.PdfName.R">Rollover</see>
         /// and
-        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>.
         /// </param>
         /// <param name="appearance">an appearance object which might be either an appearance stream or an appearance subdictionary.
         ///     </param>
@@ -1019,13 +996,11 @@ namespace iText.Kernel.Pdf.Annot {
         /// ,
         /// <see cref="iText.Kernel.Pdf.PdfName.R">Rollover</see>
         /// and
-        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>.
         /// </param>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
-        /// <see cref="PdfAnnotationAppearance"/>
-        /// .
+        /// <see cref="PdfAnnotationAppearance"/>.
         /// </param>
         /// <returns>
         /// this
@@ -1049,8 +1024,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </summary>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
-        /// <see cref="PdfAnnotationAppearance"/>
-        /// .
+        /// <see cref="PdfAnnotationAppearance"/>.
         /// </param>
         /// <returns>
         /// this
@@ -1074,8 +1048,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </summary>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
-        /// <see cref="PdfAnnotationAppearance"/>
-        /// .
+        /// <see cref="PdfAnnotationAppearance"/>.
         /// </param>
         /// <returns>
         /// this
@@ -1099,8 +1072,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </summary>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
-        /// <see cref="PdfAnnotationAppearance"/>
-        /// .
+        /// <see cref="PdfAnnotationAppearance"/>.
         /// </param>
         /// <returns>
         /// this
@@ -1242,8 +1214,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// of the passing
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// see
-        /// <see cref="GetColorObject()"/>
-        /// .
+        /// <see cref="GetColorObject()"/>.
         /// </remarks>
         /// <param name="color">an array of numbers in the range 0.0 to 1.0, specifying color.</param>
         /// <returns>
@@ -1259,8 +1230,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Sets an annotation color. For more details on annotation color purposes and the format
         /// of the passing array see
-        /// <see cref="GetColorObject()"/>
-        /// .
+        /// <see cref="GetColorObject()"/>.
         /// </remarks>
         /// <param name="color">an array of numbers in the range 0.0 to 1.0, specifying color.</param>
         /// <returns>
@@ -1276,8 +1246,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Sets an annotation color. For more details on annotation color purposes
         /// see
-        /// <see cref="GetColorObject()"/>
-        /// .
+        /// <see cref="GetColorObject()"/>.
         /// </remarks>
         /// <param name="color">
         /// 
@@ -1534,8 +1503,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Removes the specified key from the underlying
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// of this
-        /// <see cref="PdfAnnotation"/>
-        /// .
+        /// <see cref="PdfAnnotation"/>.
         /// </summary>
         /// <param name="key">key to be removed</param>
         /// <returns>
@@ -1593,8 +1561,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>

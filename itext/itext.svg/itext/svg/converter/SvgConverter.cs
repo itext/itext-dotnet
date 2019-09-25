@@ -483,8 +483,7 @@ namespace iText.Svg.Converter {
         /// Converts SVG stored in a
         /// <see cref="System.IO.FileInfo"/>
         /// to a PDF
-        /// <see cref="System.IO.FileInfo"/>
-        /// .
+        /// <see cref="System.IO.FileInfo"/>.
         /// </summary>
         /// <param name="svgFile">
         /// the
@@ -508,8 +507,7 @@ namespace iText.Svg.Converter {
         /// <see cref="System.IO.FileInfo"/>
         /// ,
         /// using specific
-        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
-        /// .
+        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>.
         /// </summary>
         /// <param name="svgFile">
         /// the
@@ -569,8 +567,7 @@ namespace iText.Svg.Converter {
         /// using specific
         /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
         /// and
-        /// <see cref="iText.Kernel.Pdf.WriterProperties"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.WriterProperties"/>.
         /// </summary>
         /// <param name="svgFile">
         /// the
@@ -746,8 +743,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -759,8 +755,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="content">the String value containing valid SVG content</param>
         /// <param name="document">
@@ -789,8 +784,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -802,8 +796,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="content">the String value containing valid SVG content</param>
         /// <param name="document">
@@ -840,8 +833,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -853,8 +845,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="stream">
         /// the
@@ -910,8 +901,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -923,8 +913,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="stream">
         /// the
@@ -958,8 +947,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -971,8 +959,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="stream">the Stream object containing valid SVG content</param>
         /// <param name="document">
@@ -1002,8 +989,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -1015,8 +1001,7 @@ namespace iText.Svg.Converter {
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
         /// , or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
         /// <param name="stream">
         /// the
@@ -1068,8 +1053,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -1080,8 +1064,7 @@ namespace iText.Svg.Converter {
         /// class and convert its result to an XObject with
         /// this method, or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </remarks>
         /// <param name="topSvgRenderer">
         /// the
@@ -1115,8 +1098,7 @@ namespace iText.Svg.Converter {
         /// <para />
         /// This method (or its overloads) is the best method to use if you want to
         /// reuse the same SVG image multiple times on the same
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// <para />
         /// If you want to reuse this object on other
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -1127,8 +1109,7 @@ namespace iText.Svg.Converter {
         /// class and convert its result to an XObject with
         /// this method, or look into
         /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </remarks>
         /// <param name="topSvgRenderer">
         /// the
@@ -1259,8 +1240,7 @@ namespace iText.Svg.Converter {
         /// Parse a Stream containing valid SVG into an XML DOM node, using the
         /// default JSoup XML parser. This method will assume that the encoding of
         /// the Stream is
-        /// <c>UTF-8</c>
-        /// .
+        /// <c>UTF-8</c>.
         /// </remarks>
         /// <param name="stream">
         /// the
@@ -1370,8 +1350,7 @@ namespace iText.Svg.Converter {
 
         /// <summary>
         /// Tries to extract charset from
-        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
-        /// .
+        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>.
         /// </summary>
         /// <param name="props">converter properties</param>
         /// <returns>charset  | null</returns>
@@ -1381,8 +1360,7 @@ namespace iText.Svg.Converter {
 
         /// <summary>
         /// Tries to extract baseUri from
-        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
-        /// .
+        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>.
         /// </summary>
         /// <param name="props">converter properties</param>
         /// <returns>baseUrl  | null</returns>

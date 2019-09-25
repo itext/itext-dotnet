@@ -58,8 +58,7 @@ namespace iText.Layout.Element {
         /// Overrides the
         /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// instance which will be returned by the next call to the
-        /// <see cref="GetRenderer()"/>
-        /// .
+        /// <see cref="GetRenderer()"/>.
         /// </summary>
         /// <param name="renderer">the renderer instance</param>
         void SetNextRenderer(IRenderer renderer);

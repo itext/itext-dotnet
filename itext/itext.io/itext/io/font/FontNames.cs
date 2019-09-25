@@ -85,8 +85,7 @@ namespace iText.IO.Font {
         /// not empty
         /// <c>String[][]</c>
         /// if any names exists, otherwise
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </returns>
         public virtual String[][] GetNames(int id) {
             IList<String[]> names = allNames.Get(id);
@@ -124,8 +123,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="weight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal virtual void SetFontWeight(int weight) {
             this.weight = FontWeights.NormalizeFontWeight(weight);
@@ -144,8 +142,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font stretch in css notation (font-stretch property).</summary>
         /// <param name="fontStretch">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal virtual void SetFontStretch(String fontStretch) {
             this.fontStretch = fontStretch;

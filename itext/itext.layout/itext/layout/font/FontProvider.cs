@@ -65,14 +65,12 @@ namespace iText.Layout.Font {
     /// unless reset with
     /// <see cref="Reset()"/>
     /// or recreated with
-    /// <see cref="GetFontSet()"/>
-    /// .
+    /// <see cref="GetFontSet()"/>.
     /// In the former case the
     /// <see cref="FontSelectorCache"/>
     /// is reused and in the latter it's reinitialised.
     /// FontProvider the only end point for creating
-    /// <see cref="iText.Kernel.Font.PdfFont"/>
-    /// .
+    /// <see cref="iText.Kernel.Font.PdfFont"/>.
     /// <para />
     /// It is allowed to use only one
     /// <see cref="FontProvider"/>
@@ -85,14 +83,12 @@ namespace iText.Layout.Font {
     /// <see cref="GetPdfFont(FontInfo, FontSet)"/>
     /// ,
     /// <see cref="GetStrategy(System.String, System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
-    ///     >
-    /// .
+    ///     >.
     /// <para />
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
     /// s, because of possible conflicts with
-    /// <see cref="iText.IO.Font.FontCache"/>
-    /// .
+    /// <see cref="iText.IO.Font.FontCache"/>.
     /// </remarks>
     public class FontProvider {
         private const String DEFAULT_FONT_FAMILY = "Helvetica";
@@ -211,8 +207,7 @@ namespace iText.Layout.Font {
 
         /// <summary>
         /// Gets
-        /// <see cref="FontSet"/>
-        /// .
+        /// <see cref="FontSet"/>.
         /// </summary>
         /// <returns>the fontset</returns>
         public virtual FontSet GetFontSet() {
@@ -265,13 +260,11 @@ namespace iText.Layout.Font {
         /// <param name="fontFamilies">target font families</param>
         /// <param name="fc">
         /// instance of
-        /// <see cref="FontCharacteristics"/>
-        /// .
+        /// <see cref="FontCharacteristics"/>.
         /// </param>
         /// <returns>
         /// an instance of
-        /// <see cref="FontSelector"/>
-        /// .
+        /// <see cref="FontSelector"/>.
         /// </returns>
         /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
         ///     "/>
@@ -294,14 +287,12 @@ namespace iText.Layout.Font {
         /// <param name="fontFamilies">target font families</param>
         /// <param name="fc">
         /// instance of
-        /// <see cref="FontCharacteristics"/>
-        /// .
+        /// <see cref="FontCharacteristics"/>.
         /// </param>
         /// <param name="tempFonts">set of temporary fonts.</param>
         /// <returns>
         /// an instance of
-        /// <see cref="FontSelector"/>
-        /// .
+        /// <see cref="FontSelector"/>.
         /// </returns>
         /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
         ///     ">}</seealso>
@@ -319,23 +310,19 @@ namespace iText.Layout.Font {
         /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
-        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/>
-        /// .
+        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/>.
         /// This method just create a new instance of
-        /// <see cref="FontSelector"/>
-        /// .
+        /// <see cref="FontSelector"/>.
         /// </summary>
         /// <param name="fonts">Set of all available fonts in current context.</param>
         /// <param name="fontFamilies">target font families</param>
         /// <param name="fc">
         /// instance of
-        /// <see cref="FontCharacteristics"/>
-        /// .
+        /// <see cref="FontCharacteristics"/>.
         /// </param>
         /// <returns>
         /// an instance of
-        /// <see cref="FontSelector"/>
-        /// .
+        /// <see cref="FontSelector"/>.
         /// </returns>
         protected internal virtual FontSelector CreateFontSelector(ICollection<FontInfo> fonts, IList<String> fontFamilies
             , FontCharacteristics fc) {
@@ -346,20 +333,17 @@ namespace iText.Layout.Font {
 
         /// <summary>
         /// Get from cache or create a new instance of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </summary>
         /// <param name="fontInfo">
         /// font info, to create
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// and
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </param>
         /// <returns>
         /// cached or new instance of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </returns>
         public virtual PdfFont GetPdfFont(FontInfo fontInfo) {
             return GetPdfFont(fontInfo, null);
@@ -367,21 +351,18 @@ namespace iText.Layout.Font {
 
         /// <summary>
         /// Get from cache or create a new instance of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </summary>
         /// <param name="fontInfo">
         /// font info, to create
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// and
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </param>
         /// <param name="tempFonts">Set of temporary fonts.</param>
         /// <returns>
         /// cached or new instance of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </returns>
         public virtual PdfFont GetPdfFont(FontInfo fontInfo, FontSet tempFonts) {
             if (pdfFonts.ContainsKey(fontInfo)) {

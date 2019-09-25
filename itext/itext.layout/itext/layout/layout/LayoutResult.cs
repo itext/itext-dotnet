@@ -48,8 +48,7 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Layout {
     /// <summary>
     /// Represents the result of content
-    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
     /// </summary>
     public class LayoutResult {
         /// <summary>
@@ -83,24 +82,21 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// The area occupied by the content during its
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// which indicates whether the content was added or not and, if yes, was it added fully or partially.
         /// </summary>
         protected internal LayoutArea occupiedArea;
 
         /// <summary>
         /// The split renderer created during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// This renderer will be used to draw the splitted part of content.
         /// </summary>
         protected internal IRenderer splitRenderer;
 
         /// <summary>
         /// The overflow renderer created during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// This renderer will be used to draw the overflowed part of content.
         /// </summary>
         protected internal IRenderer overflowRenderer;
@@ -111,8 +107,7 @@ namespace iText.Layout.Layout {
         /// The first renderer to produce
         /// <see cref="NOTHING"/>
         /// during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>.
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
@@ -167,8 +162,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Gets the status of
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>.
         /// </summary>
         /// <returns>the status</returns>
         public virtual int GetStatus() {
@@ -177,8 +171,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Sets the status of
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>.
         /// </summary>
         /// <param name="status"/>
         public virtual void SetStatus(int status) {
@@ -189,8 +182,7 @@ namespace iText.Layout.Layout {
         /// Gets the
         /// <see cref="LayoutArea">layout area</see>
         /// occupied by the content during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// </summary>
         /// <returns>
         /// the
@@ -205,8 +197,7 @@ namespace iText.Layout.Layout {
         /// Gets the split
         /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
         /// created during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// </summary>
         /// <returns>
         /// the
@@ -218,8 +209,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Sets the split
-        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>.
         /// </summary>
         /// <param name="splitRenderer"/>
         public virtual void SetSplitRenderer(IRenderer splitRenderer) {
@@ -228,8 +218,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Gets the overflow renderer created during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
         /// </summary>
         /// <returns>
         /// the
@@ -241,8 +230,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Sets the overflow
-        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>.
         /// </summary>
         /// <param name="overflowRenderer"/>
         public virtual void SetOverflowRenderer(IRenderer overflowRenderer) {

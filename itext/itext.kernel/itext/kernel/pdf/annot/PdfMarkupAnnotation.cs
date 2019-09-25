@@ -389,8 +389,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// specifying relationship with the specified by the IRT entry; or null if reply
         /// type is not specified, in this case the default value is
-        /// <see cref="iText.Kernel.Pdf.PdfName.R"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.R"/>.
         /// </returns>
         public virtual PdfName GetReplyType() {
             return GetPdfObject().GetAsName(PdfName.RT);
@@ -401,8 +400,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// (see
         /// <see cref="SetInReplyTo(PdfAnnotation)"/>
         /// ). For valid values see
-        /// <see cref="GetInReplyTo()"/>
-        /// .
+        /// <see cref="GetInReplyTo()"/>.
         /// </summary>
         /// <param name="replyType">
         /// a
@@ -466,8 +464,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
-        /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>.
         /// </description></item>
         /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>
@@ -498,8 +495,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Type"/>
         /// - (optional) If present, shall be
-        /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ExData"/>.
         /// </description></item>
         /// <item><description>
         /// <see cref="iText.Kernel.Pdf.PdfName.Subtype"/>

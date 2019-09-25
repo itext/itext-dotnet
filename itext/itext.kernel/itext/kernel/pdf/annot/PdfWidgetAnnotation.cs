@@ -248,8 +248,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>
         /// an additional actions
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// </returns>
         /// <seealso cref="GetAction()"/>
         public virtual PdfDictionary GetAdditionalAction() {
@@ -407,8 +406,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Setter for the annotation's preset dashed border style. This property has affect only if
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
         /// style was used for the annotation border style (see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>.
         /// See ISO-320001 8.4.3.6, "Line Dash Pattern" for the format in which dash pattern shall be specified.
         /// </remarks>
         /// <param name="dashPattern">

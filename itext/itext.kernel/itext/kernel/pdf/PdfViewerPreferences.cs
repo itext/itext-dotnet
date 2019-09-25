@@ -49,38 +49,32 @@ namespace iText.Kernel.Pdf {
         public enum PdfViewerPreferencesConstants {
             /// <summary>
             /// PageMode constant for
-            /// <see cref="PdfName.NonFullScreenPageMode"/>
-            /// .
+            /// <see cref="PdfName.NonFullScreenPageMode"/>.
             /// </summary>
             USE_NONE,
             /// <summary>
             /// PageMode constant for
-            /// <see cref="PdfName.NonFullScreenPageMode"/>
-            /// .
+            /// <see cref="PdfName.NonFullScreenPageMode"/>.
             /// </summary>
             USE_OUTLINES,
             /// <summary>
             /// PageMode constant for
-            /// <see cref="PdfName.NonFullScreenPageMode"/>
-            /// .
+            /// <see cref="PdfName.NonFullScreenPageMode"/>.
             /// </summary>
             USE_THUMBS,
             /// <summary>
             /// PageMode constant for
-            /// <see cref="PdfName.NonFullScreenPageMode"/>
-            /// .
+            /// <see cref="PdfName.NonFullScreenPageMode"/>.
             /// </summary>
             USE_OC,
             /// <summary>
             /// Direction constant for
-            /// <see cref="PdfName.Direction"/>
-            /// .
+            /// <see cref="PdfName.Direction"/>.
             /// </summary>
             LEFT_TO_RIGHT,
             /// <summary>
             /// Direction constant for
-            /// <see cref="PdfName.Direction"/>
-            /// .
+            /// <see cref="PdfName.Direction"/>.
             /// </summary>
             RIGHT_TO_LEFT,
             /// <summary>
@@ -91,8 +85,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PRINT_AREA"/>
             /// ,
-            /// <see cref="PRINT_CLIP"/>
-            /// .
+            /// <see cref="PRINT_CLIP"/>.
             /// </summary>
             MEDIA_BOX,
             /// <summary>
@@ -103,8 +96,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PRINT_AREA"/>
             /// ,
-            /// <see cref="PRINT_CLIP"/>
-            /// .
+            /// <see cref="PRINT_CLIP"/>.
             /// </summary>
             CROP_BOX,
             /// <summary>
@@ -115,8 +107,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PRINT_AREA"/>
             /// ,
-            /// <see cref="PRINT_CLIP"/>
-            /// .
+            /// <see cref="PRINT_CLIP"/>.
             /// </summary>
             BLEED_BOX,
             /// <summary>
@@ -127,8 +118,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PRINT_AREA"/>
             /// ,
-            /// <see cref="PRINT_CLIP"/>
-            /// .
+            /// <see cref="PRINT_CLIP"/>.
             /// </summary>
             TRIM_BOX,
             /// <summary>
@@ -139,8 +129,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PRINT_AREA"/>
             /// ,
-            /// <see cref="PRINT_CLIP"/>
-            /// .
+            /// <see cref="PRINT_CLIP"/>.
             /// </summary>
             ART_BOX,
             /// <summary>ViewArea constant.</summary>
@@ -153,32 +142,27 @@ namespace iText.Kernel.Pdf {
             PRINT_CLIP,
             /// <summary>
             /// Page scaling option constant for
-            /// <see cref="PdfName.PrintScaling"/>
-            /// .
+            /// <see cref="PdfName.PrintScaling"/>.
             /// </summary>
             NONE,
             /// <summary>
             /// Page scaling option constant for
-            /// <see cref="PdfName.PrintScaling"/>
-            /// .
+            /// <see cref="PdfName.PrintScaling"/>.
             /// </summary>
             APP_DEFAULT,
             /// <summary>
             /// The paper handling option constant for
-            /// <see cref="PdfName.Duplex"/>
-            /// .
+            /// <see cref="PdfName.Duplex"/>.
             /// </summary>
             SIMPLEX,
             /// <summary>
             /// The paper handling option constant for
-            /// <see cref="PdfName.Duplex"/>
-            /// .
+            /// <see cref="PdfName.Duplex"/>.
             /// </summary>
             DUPLEX_FLIP_SHORT_EDGE,
             /// <summary>
             /// The paper handling option constant for
-            /// <see cref="PdfName.Duplex"/>
-            /// .
+            /// <see cref="PdfName.Duplex"/>.
             /// </summary>
             DUPLEX_FLIP_LONG_EDGE
         }

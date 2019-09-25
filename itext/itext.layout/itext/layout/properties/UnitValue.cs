@@ -105,8 +105,7 @@ namespace iText.Layout.Properties {
         /// a new normalized (Σ=100%) array of
         /// <see cref="PERCENT"/>
         /// 
-        /// <see cref="UnitValue"/>
-        /// .
+        /// <see cref="UnitValue"/>.
         /// </returns>
         public static iText.Layout.Properties.UnitValue[] CreatePercentArray(float[] values) {
             iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
@@ -126,8 +125,7 @@ namespace iText.Layout.Properties {
         /// a array of equal
         /// <see cref="PERCENT"/>
         /// 
-        /// <see cref="UnitValue"/>
-        /// .
+        /// <see cref="UnitValue"/>.
         /// </returns>
         public static iText.Layout.Properties.UnitValue[] CreatePercentArray(int size) {
             iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[size];

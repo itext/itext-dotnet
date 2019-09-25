@@ -67,8 +67,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Copies structure to a
-        /// <paramref name="destDocument"/>
-        /// .
+        /// <paramref name="destDocument"/>.
         /// <br/><br/>
         /// NOTE: Works only for
         /// <c>PdfStructTreeRoot</c>
@@ -244,15 +243,13 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Copies structure to a
-        /// <paramref name="destDocument"/>
-        /// .
+        /// <paramref name="destDocument"/>.
         /// </summary>
         /// <param name="destDocument">document to cpt structure to.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         /// <param name="copyFromDestDocument">
         /// indicates if <c>page2page</c> keys and values represent pages from
-        /// <paramref name="destDocument"/>
-        /// .
+        /// <paramref name="destDocument"/>.
         /// </param>
         private static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument 
             callingDocument, bool copyFromDestDocument) {

@@ -70,15 +70,13 @@ namespace iText.Kernel.Utils {
         /// if true, then tags from the source document are copied even if destination document is not set as
         /// tagged. Note, that if false, tag structure is still could be copied if the destination document
         /// is explicitly marked as tagged with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument.SetTagged()"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.SetTagged()"/>.
         /// </param>
         /// <param name="mergeOutlines">
         /// if true, then outlines from the source document are copied even if in destination document
         /// outlines are not initialized. Note, that if false, outlines are still could be copied if the
         /// destination document outlines were explicitly initialized with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>.
         /// </param>
         public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines) {
             this.pdfDocument = pdfDocument;

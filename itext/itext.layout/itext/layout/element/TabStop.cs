@@ -51,13 +51,11 @@ namespace iText.Layout.Element {
     /// <see cref="Tab"/>
     /// is inserted. At least one TabStop must be defined on an
     /// element if you want to use
-    /// <see cref="Tab">Tabs</see>
-    /// .
+    /// <see cref="Tab">Tabs</see>.
     /// This object can be added to a
     /// <see cref="Paragraph"/>
     /// with the method
-    /// <see cref="Paragraph.AddTabStops(TabStop[])"/>
-    /// .
+    /// <see cref="Paragraph.AddTabStops(TabStop[])"/>.
     /// </summary>
     public class TabStop {
         private float tabPosition;

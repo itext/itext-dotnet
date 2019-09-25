@@ -95,8 +95,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// Create
         /// <see cref="PdfImageXObject"/>
         /// instance by
-        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
         /// Note, this constructor doesn't perform any additional checks
         /// </summary>
         /// <param name="pdfStream">
@@ -139,8 +138,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note, that not every wrapper require this, only those that have such warning in documentation.
         /// </summary>
@@ -152,8 +150,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="document">target document</param>
         /// <returns>
         /// just created instance of
-        /// <see cref="PdfImageXObject"/>
-        /// .
+        /// <see cref="PdfImageXObject"/>.
         /// </returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
             iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject((PdfStream)GetPdfObject
@@ -211,8 +208,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <summary>
         /// Identifies the type of the image that is stored in the bytes of this
-        /// <see cref="PdfImageXObject"/>
-        /// .
+        /// <see cref="PdfImageXObject"/>.
         /// Note that this has nothing to do with the original type of the image. For instance, the return value
         /// of this method will never be
         /// <see cref="iText.IO.Image.ImageType.PNG"/>
@@ -271,12 +267,10 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <summary>
         /// Identifies recommended file extension to store the bytes of this
-        /// <see cref="PdfImageXObject"/>
-        /// .
+        /// <see cref="PdfImageXObject"/>.
         /// Possible values are: 'png', 'jpg', 'jp2', 'tif', 'jbig2'.
         /// This extension can later be used together with the result of
-        /// <see cref="GetImageBytes()"/>
-        /// .
+        /// <see cref="GetImageBytes()"/>.
         /// </summary>
         /// <returns>
         /// a

@@ -97,8 +97,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Gets the name of the default standard structure namespace. When a namespace is not
         /// explicitly specified for a given structure element or attribute, it shall be assumed to be within this
         /// default standard structure namespace. According to ISO 32000-2 default namespace is
-        /// <see cref="PDF_1_7"/>
-        /// .
+        /// <see cref="PDF_1_7"/>.
         /// </remarks>
         /// <returns>the name of the default standard structure namespace.</returns>
         public static String GetDefault() {

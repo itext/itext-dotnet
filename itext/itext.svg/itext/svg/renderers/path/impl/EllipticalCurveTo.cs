@@ -203,8 +203,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// and the angular extent of the ellipse that is to be drawn.
         /// The output is an intermediate step to calculating the Bézier curve(s) that approximate(s) the elliptical arc,
         /// which happens in
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
         /// </remarks>
         internal class EllipseArc {
             internal readonly Point ll;

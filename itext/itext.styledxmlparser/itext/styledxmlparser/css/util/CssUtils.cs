@@ -495,8 +495,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// Parses
         /// <c>url("file.jpg")</c>
         /// to
-        /// <c>file.jpg</c>
-        /// .
+        /// <c>file.jpg</c>.
         /// </summary>
         /// <param name="url">the url attribute to parse</param>
         /// <returns>the parsed url. Or original url if not wrappend in url()</returns>

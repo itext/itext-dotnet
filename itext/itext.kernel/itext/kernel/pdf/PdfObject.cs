@@ -573,8 +573,7 @@ namespace iText.Kernel.Pdf {
         /// the second case is processed if
         /// <c>document</c>
         /// is
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </remarks>
         /// <param name="documentTo">if not null: document to copy object to; otherwise indicates that object is to be cloned.
         ///     </param>

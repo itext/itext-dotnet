@@ -260,8 +260,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// A
         /// <see cref="System.Collections.IList{E}"/>
         /// containing one or more
-        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>.
         /// </returns>
         public virtual IList<PdfFileSpec> GetPronunciationLexiconsList() {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
@@ -282,8 +281,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
         /// object, which specifies XML file conforming to PLS.
         /// For more info see
-        /// <see cref="GetPronunciationLexiconsList()"/>
-        /// .
+        /// <see cref="GetPronunciationLexiconsList()"/>.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
         /// </summary>
@@ -361,8 +359,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Copies structure to a
-        /// <paramref name="destDocument"/>
-        /// .
+        /// <paramref name="destDocument"/>.
         /// NOTE: Works only for
         /// <see cref="PdfStructTreeRoot"/>
         /// that is read from the document opened in reading mode,

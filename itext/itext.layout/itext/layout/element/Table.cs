@@ -114,8 +114,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="columnWidths">
         /// preferable column widths in points.  Values must be greater than or equal to zero,
@@ -158,8 +157,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="columnWidths">
         /// preferable column widths, points and/or percents.  Values must be greater than or equal to zero,
@@ -199,8 +197,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="columnWidths">
         /// preferable column widths, points and/or percents. Values must be greater than or equal to zero,
@@ -228,8 +225,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="pointColumnWidths">
         /// preferable column widths in points. Values must be greater than or equal to zero,
@@ -263,8 +259,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <param name="largeTable">
@@ -304,8 +299,7 @@ namespace iText.Layout.Element {
         /// For more information see
         /// <see cref="SetAutoLayout()"/>
         /// and
-        /// <see cref="SetFixedLayout()"/>
-        /// .
+        /// <see cref="SetFixedLayout()"/>.
         /// </summary>
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <seealso cref="SetAutoLayout()"/>
@@ -332,8 +326,7 @@ namespace iText.Layout.Element {
         /// Cell width has lower priority in comparing with column. Cell width doesn't include borders and paddings.
         /// <br />
         /// 2.1 If cell has colspan and all columns are undefined, each column will get equal width:
-        /// <c>width/colspan</c>
-        /// .
+        /// <c>width/colspan</c>.
         /// <br />
         /// 2.2 If some columns already have width, equal remain (original width minus existed) width will be added
         /// <c>remainWidth/colspan</c>
@@ -413,8 +406,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell to the header of the table.
         /// The header will be displayed in the top of every area of this table.
         /// See also
-        /// <see cref="SetSkipFirstHeader(bool)"/>
-        /// .
+        /// <see cref="SetSkipFirstHeader(bool)"/>.
         /// </remarks>
         /// <param name="headerCell">a header cell to be added</param>
         /// <returns>this element</returns>
@@ -429,8 +421,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received blockElement as a content to the header of the table.
         /// The header will be displayed in the top of every area of this table.
         /// See also
-        /// <see cref="SetSkipFirstHeader(bool)"/>
-        /// .
+        /// <see cref="SetSkipFirstHeader(bool)"/>.
         /// </remarks>
         /// <param name="blockElement">an element to be added to a header cell</param>
         /// 
@@ -447,8 +438,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received image to the header of the table.
         /// The header will be displayed in the top of every area of this table.
         /// See also
-        /// <see cref="SetSkipFirstHeader(bool)"/>
-        /// .
+        /// <see cref="SetSkipFirstHeader(bool)"/>.
         /// </remarks>
         /// <param name="image">an element to be added to a header cell</param>
         /// <returns>this element</returns>
@@ -463,8 +453,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received string as a content to the header of the table.
         /// The header will be displayed in the top of every area of this table.
         /// See also
-        /// <see cref="SetSkipFirstHeader(bool)"/>
-        /// .
+        /// <see cref="SetSkipFirstHeader(bool)"/>.
         /// </remarks>
         /// <param name="content">a string to be added to a header cell</param>
         /// <returns>this element</returns>
@@ -493,8 +482,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell to the footer of the table.
         /// The footer will be displayed in the bottom of every area of this table.
         /// See also
-        /// <see cref="SetSkipLastFooter(bool)"/>
-        /// .
+        /// <see cref="SetSkipLastFooter(bool)"/>.
         /// </remarks>
         /// <param name="footerCell">a footer cell</param>
         /// <returns>this element</returns>
@@ -509,8 +497,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received blockElement as a content to the footer of the table.
         /// The footer will be displayed in the bottom of every area of this table.
         /// See also
-        /// <see cref="SetSkipLastFooter(bool)"/>
-        /// .
+        /// <see cref="SetSkipLastFooter(bool)"/>.
         /// </remarks>
         /// <param name="blockElement">an element to be added to a footer cell</param>
         /// 
@@ -527,8 +514,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received image as a content to the footer of the table.
         /// The footer will be displayed in the bottom of every area of this table.
         /// See also
-        /// <see cref="SetSkipLastFooter(bool)"/>
-        /// .
+        /// <see cref="SetSkipLastFooter(bool)"/>.
         /// </remarks>
         /// <param name="image">an image to be added to a footer cell</param>
         /// <returns>this element</returns>
@@ -543,8 +529,7 @@ namespace iText.Layout.Element {
         /// Adds a new cell with received string as a content to the footer of the table.
         /// The footer will be displayed in the bottom of every area of this table.
         /// See also
-        /// <see cref="SetSkipLastFooter(bool)"/>
-        /// .
+        /// <see cref="SetSkipLastFooter(bool)"/>.
         /// </remarks>
         /// <param name="content">a content string to be added to a footer cell</param>
         /// <returns>this element</returns>

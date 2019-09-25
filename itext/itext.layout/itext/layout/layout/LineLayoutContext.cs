@@ -47,8 +47,7 @@ using iText.Layout.Margincollapse;
 namespace iText.Layout.Layout {
     /// <summary>
     /// Represents the context for content of a line
-    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
     /// </summary>
     public class LineLayoutContext : LayoutContext {
         private bool floatOverflowedToNextPageWithNothing = false;
@@ -76,8 +75,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Changes the value of property specified by
-        /// <see cref="IsFloatOverflowedToNextPageWithNothing()"/>
-        /// .
+        /// <see cref="IsFloatOverflowedToNextPageWithNothing()"/>.
         /// </summary>
         /// <param name="floatOverflowedToNextPageWithNothing">true if some floating element already completely overflowed.
         ///     </param>

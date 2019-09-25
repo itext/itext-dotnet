@@ -62,8 +62,7 @@ namespace iText.Layout {
     /// 's rendering behavior can be modified by extending
     /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
     /// and setting an instance of this newly created with
-    /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>
-    /// .
+    /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>.
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
         [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_LEFT instead."
@@ -89,8 +88,7 @@ namespace iText.Layout {
         /// with the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// 's current default
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         public Document(PdfDocument pdfDoc)
@@ -101,8 +99,7 @@ namespace iText.Layout {
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         /// <param name="pageSize">the page size</param>
@@ -114,8 +111,7 @@ namespace iText.Layout {
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         /// <param name="pageSize">the page size</param>

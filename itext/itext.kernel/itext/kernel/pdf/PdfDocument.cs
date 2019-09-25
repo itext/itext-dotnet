@@ -343,8 +343,7 @@ namespace iText.Kernel.Pdf {
         /// Gets the
         /// <see cref="PdfPage"/>
         /// instance by
-        /// <see cref="PdfDictionary"/>
-        /// .
+        /// <see cref="PdfDictionary"/>.
         /// </summary>
         /// <param name="pageDictionary">
         /// 
@@ -353,8 +352,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>
         /// page by
-        /// <see cref="PdfDictionary"/>
-        /// .
+        /// <see cref="PdfDictionary"/>.
         /// </returns>
         public virtual PdfPage GetPage(PdfDictionary pageDictionary) {
             CheckClosingStatus();
@@ -472,8 +470,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets page number by
-        /// <see cref="PdfDictionary"/>
-        /// .
+        /// <see cref="PdfDictionary"/>.
         /// </summary>
         /// <param name="pageDictionary">
         /// 
@@ -482,8 +479,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>
         /// page number by
-        /// <see cref="PdfDictionary"/>
-        /// .
+        /// <see cref="PdfDictionary"/>.
         /// </returns>
         public virtual int GetPageNumber(PdfDictionary pageDictionary) {
             return catalog.GetPageTree().GetPageNumber(pageDictionary);
@@ -937,14 +933,12 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets document
-        /// <c>TagStructureContext</c>
-        /// .
+        /// <c>TagStructureContext</c>.
         /// The document must be tagged, otherwise an exception will be thrown.
         /// </summary>
         /// <returns>
         /// document
-        /// <c>TagStructureContext</c>
-        /// .
+        /// <c>TagStructureContext</c>.
         /// </returns>
         public virtual TagStructureContext GetTagStructureContext() {
             CheckClosingStatus();
@@ -959,8 +953,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Copies a range of pages from current document to
-        /// <paramref name="toDocument"/>
-        /// .
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
         /// </summary>
@@ -1058,8 +1051,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Copies a range of pages from current document to
-        /// <paramref name="toDocument"/>
-        /// .
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
         /// </summary>
@@ -1074,8 +1066,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Copies a range of pages from current document to
-        /// <paramref name="toDocument"/>
-        /// .
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
         /// </summary>
@@ -1462,8 +1453,7 @@ namespace iText.Kernel.Pdf {
         /// <para />
         /// Associated files may be used in Pdf/A-3 and Pdf 2.0 documents.
         /// The method is very similar to
-        /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
-        /// .
+        /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>.
         /// However, besides adding file description to Names tree, it adds file to array value of the AF key in the document catalog.
         /// <para />
         /// For associated files their associated file specification dictionaries shall include the AFRelationship key
@@ -1684,8 +1674,7 @@ namespace iText.Kernel.Pdf {
         /// until it will be added to
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// or
-        /// <see cref="PdfResources"/>
-        /// .
+        /// <see cref="PdfResources"/>.
         /// </summary>
         public virtual PdfFont GetFont(PdfDictionary dictionary) {
             System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
@@ -1775,8 +1764,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Initialize
-        /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext"/>.
         /// </summary>
         protected internal virtual void InitTagStructureContext() {
             tagStructureContext = new TagStructureContext(this);
@@ -1812,8 +1800,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Mark an object with
-        /// <see cref="PdfObject.MUST_BE_FLUSHED"/>
-        /// .
+        /// <see cref="PdfObject.MUST_BE_FLUSHED"/>.
         /// </summary>
         /// <param name="pdfObject">an object to mark.</param>
         protected internal virtual void MarkObjectAsMustBeFlushed(PdfObject pdfObject) {
@@ -2044,8 +2031,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Update XMP metadata values from
-        /// <see cref="PdfDocumentInfo"/>
-        /// .
+        /// <see cref="PdfDocumentInfo"/>.
         /// </summary>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
@@ -2062,8 +2048,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>List all newly added or loaded fonts</summary>
         /// <returns>
         /// List of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </returns>
         protected internal virtual ICollection<PdfFont> GetDocumentFonts() {
             return documentFonts.Values;

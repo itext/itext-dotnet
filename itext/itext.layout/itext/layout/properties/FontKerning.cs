@@ -54,8 +54,7 @@ namespace iText.Layout.Properties {
     /// <see cref="Property.FONT_KERNING"/>
     /// key
     /// in an
-    /// <see cref="IPropertyContainer"/>
-    /// .
+    /// <see cref="IPropertyContainer"/>.
     /// </summary>
     public enum FontKerning {
         YES,

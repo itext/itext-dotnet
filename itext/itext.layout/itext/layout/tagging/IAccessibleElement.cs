@@ -46,8 +46,7 @@ using iText.Kernel.Pdf.Tagutils;
 namespace iText.Layout.Tagging {
     /// <summary>
     /// A layout element which has
-    /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>.
     /// They define element's <em>role</em> (
     /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties.GetRole()"/>
     /// ) - the name
@@ -59,8 +58,7 @@ namespace iText.Layout.Tagging {
         /// Gets the
         /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>
         /// . See also
-        /// <see cref="IAccessibleElement"/>
-        /// .
+        /// <see cref="IAccessibleElement"/>.
         /// </summary>
         /// <returns>an interface that allows to specify properties of a tagged element in Tagged PDF.</returns>
         AccessibilityProperties GetAccessibilityProperties();

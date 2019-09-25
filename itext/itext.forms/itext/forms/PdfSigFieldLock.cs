@@ -54,8 +54,7 @@ namespace iText.Forms {
     public class PdfSigFieldLock : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// Creates an instance of
-        /// <see cref="PdfSigFieldLock"/>
-        /// .
+        /// <see cref="PdfSigFieldLock"/>.
         /// </summary>
         public PdfSigFieldLock()
             : this(new PdfDictionary()) {
@@ -63,8 +62,7 @@ namespace iText.Forms {
 
         /// <summary>
         /// Creates an instance of
-        /// <see cref="PdfSigFieldLock"/>
-        /// .
+        /// <see cref="PdfSigFieldLock"/>.
         /// </summary>
         /// <param name="dict">
         /// The dictionary whose entries should be added to

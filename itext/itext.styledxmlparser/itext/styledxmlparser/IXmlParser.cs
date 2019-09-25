@@ -64,8 +64,7 @@ namespace iText.StyledXmlParser {
 
         /// <summary>
         /// Parses XML provided as a
-        /// <c>String</c>
-        /// .
+        /// <c>String</c>.
         /// </summary>
         /// <param name="Xml">the Xml string</param>
         /// <returns>a document node</returns>
