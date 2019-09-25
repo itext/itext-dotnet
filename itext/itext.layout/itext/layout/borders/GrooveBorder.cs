@@ -47,10 +47,8 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Layout.Borders {
     public class GrooveBorder : Border3D {
         /// <summary>Creates a GrooveBorder instance with the specified width.</summary>
-        /// <remarks>
-        /// Creates a GrooveBorder instance with the specified width. The color is set to the default:
-        /// <see cref="Border3D#GRAY">gray</see>.
-        /// </remarks>
+        /// <remarks>Creates a GrooveBorder instance with the specified width. The color is set to the predefined gray.
+        ///     </remarks>
         /// <param name="width">width of the border</param>
         public GrooveBorder(float width)
             : base(width) {
