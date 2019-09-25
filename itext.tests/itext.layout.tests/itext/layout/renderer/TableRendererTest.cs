@@ -82,5 +82,17 @@ namespace iText.Layout.Renderer {
             , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIsOriginalNonSplitRenderer() {
+            Table table = new Table(1);
+            table.AddCell(new Cell());
+            table.AddCell(new Cell());
+            table.AddCell(new Cell());
+            TableRenderer original = (TableRenderer)table.CreateRendererSubTree();
+            TableRenderer[] children = original.Split(1);
+            TableRenderer[] grandChildren = children[1].Split(1);
+            NUnit.Framework.Assert.IsFalse(grandChildren[0].isOriginalNonSplitRenderer);
+        }
     }
 }

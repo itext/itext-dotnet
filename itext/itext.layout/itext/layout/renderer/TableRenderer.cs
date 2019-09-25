@@ -1238,6 +1238,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.isLastRendererForModelElement = false;
             splitRenderer.topBorderMaxWidth = topBorderMaxWidth;
             splitRenderer.captionRenderer = captionRenderer;
+            splitRenderer.isOriginalNonSplitRenderer = isOriginalNonSplitRenderer;
             return splitRenderer;
         }
 
