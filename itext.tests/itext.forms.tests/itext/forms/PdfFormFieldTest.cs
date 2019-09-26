@@ -169,6 +169,17 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TextFieldValueInStreamTest() {
+            String filename = sourceFolder + "textFieldValueInStream.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String fieldValue = form.GetField("fieldName").GetValueAsString();
+            // Trailing newline is not trimmed which seems to match Acrobat's behavior on copy-paste
+            NUnit.Framework.Assert.AreEqual("some value\n", fieldValue);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ChoiceFieldTest01() {
@@ -1031,7 +1042,6 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestDaInAppendMode() {
             String testName = "testDaInAppendMode.pdf";

@@ -2086,13 +2086,13 @@ namespace iText.Forms.Fields {
         /// <see cref="System.String"/>
         /// </returns>
         public virtual String GetValueAsString() {
-            PdfObject value = GetPdfObject().Get(PdfName.V);
+            PdfObject value = GetValue();
             if (value == null) {
                 return "";
             }
             else {
                 if (value is PdfStream) {
-                    return iText.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes());
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.UTF8);
                 }
                 else {
                     if (value is PdfName) {
@@ -2238,7 +2238,7 @@ namespace iText.Forms.Fields {
                     b[k] = 32;
                 }
             }
-            Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
+            Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b, System.Text.Encoding.UTF8)));
             return this;
         }
 
@@ -2276,101 +2276,6 @@ namespace iText.Forms.Fields {
             else {
                 GetPdfObject().Remove(PdfName.DA);
                 SetModified();
-            }
-        }
-
-        private bool HasDefaultAppearance() {
-            PdfName type = GetFormType();
-            return type == PdfName.Tx || type == PdfName.Ch || (type == PdfName.Btn && (GetFieldFlags() & PdfButtonFormField
-                .FF_PUSH_BUTTON) != 0);
-        }
-
-        private PdfName GetUniqueFontNameForDR(PdfDictionary fontResources) {
-            int indexer = 1;
-            ICollection<PdfName> fontNames = fontResources.KeySet();
-            PdfName uniqueName;
-            do {
-                uniqueName = new PdfName("F" + indexer++);
-            }
-            while (fontNames.Contains(uniqueName));
-            return uniqueName;
-        }
-
-        private PdfName GetFontNameFromDR(PdfDictionary fontResources, PdfObject font) {
-            foreach (KeyValuePair<PdfName, PdfObject> drFont in fontResources.EntrySet()) {
-                if (drFont.Value == font) {
-                    return drFont.Key;
-                }
-            }
-            return null;
-        }
-
-        private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
-            System.Diagnostics.Debug.Assert(font != null);
-            MemoryStream output = new MemoryStream();
-            PdfOutputStream pdfStream = new PdfOutputStream(new OutputStream<Stream>(output));
-            byte[] g = new byte[] { (byte)'g' };
-            byte[] rg = new byte[] { (byte)'r', (byte)'g' };
-            byte[] k = new byte[] { (byte)'k' };
-            byte[] Tf = new byte[] { (byte)'T', (byte)'f' };
-            pdfStream.Write(font).WriteSpace().WriteFloat(fontSize).WriteSpace().WriteBytes(Tf);
-            if (textColor != null) {
-                if (textColor is DeviceGray) {
-                    pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(g);
-                }
-                else {
-                    if (textColor is DeviceRgb) {
-                        pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(rg);
-                    }
-                    else {
-                        if (textColor is DeviceCmyk) {
-                            pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
-                        }
-                        else {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                            logger.Error(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
-                        }
-                    }
-                }
-            }
-            return new PdfString(output.ToArray());
-        }
-
-        private PdfObject GetAcroFormObject(PdfName key, int type) {
-            PdfObject acroFormObject = null;
-            PdfDictionary acroFormDictionary = GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm
-                );
-            if (acroFormDictionary != null) {
-                acroFormObject = acroFormDictionary.Get(key);
-            }
-            return (acroFormObject != null && acroFormObject.GetObjectType() == type) ? acroFormObject : null;
-        }
-
-        /// <summary>Puts object directly to AcroForm dictionary.</summary>
-        /// <remarks>
-        /// Puts object directly to AcroForm dictionary.
-        /// It works much faster than consequent invocation of
-        /// <see cref="iText.Forms.PdfAcroForm.GetAcroForm(iText.Kernel.Pdf.PdfDocument, bool)"/>
-        /// and
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>.
-        /// Note, this method assume that Catalog already has AcroForm object.
-        /// <see cref="AddAcroFormToCatalog()"/>
-        /// should be called explicitly.
-        /// </remarks>
-        /// <param name="acroFormKey">the key of the object.</param>
-        /// <param name="acroFormObject">the object to add.</param>
-        private void PutAcroFormObject(PdfName acroFormKey, PdfObject acroFormObject) {
-            GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).Put(acroFormKey, acroFormObject
-                );
-        }
-
-        private void AddAcroFormToCatalog() {
-            if (GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm) == null) {
-                PdfDictionary acroform = new PdfDictionary();
-                acroform.MakeIndirect(GetDocument());
-                // PdfName.Fields is the only required key.
-                acroform.Put(PdfName.Fields, new PdfArray());
-                GetDocument().GetCatalog().Put(PdfName.AcroForm, acroform);
             }
         }
 
@@ -2694,8 +2599,9 @@ namespace iText.Forms.Fields {
             PdfName type = GetFormType();
             String value = GetValueAsString();
             PdfPage page = null;
-            if (GetWidgets().Count > 0) {
-                page = GetWidgets()[0].GetPage();
+            IList<PdfWidgetAnnotation> widgets = GetWidgets();
+            if (widgets.Count > 0) {
+                page = widgets[0].GetPage();
             }
             if (PdfName.Tx.Equals(type) || PdfName.Ch.Equals(type)) {
                 PdfArray bBox = GetBBox();
@@ -2712,8 +2618,9 @@ namespace iText.Forms.Fields {
                     double angle = pageRotation % 360;
                     //Get angle in radians
                     angle = DegreeToRadians(angle);
+                    Rectangle initialBboxRectangle = bBox.ToRectangle();
                     //rotate the bounding box
-                    Rectangle rect = bBox.ToRectangle();
+                    Rectangle rect = initialBboxRectangle.Clone();
                     //Calculate origin offset
                     double translationWidth = 0;
                     double translationHeight = 0;
@@ -2728,8 +2635,8 @@ namespace iText.Forms.Fields {
                         translationWidth, translationHeight });
                     //If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box need to be switched
                     if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
-                        rect.SetWidth(bBox.ToRectangle().GetHeight());
-                        rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        rect.SetWidth(initialBboxRectangle.GetHeight());
+                        rect.SetHeight(initialBboxRectangle.GetWidth());
                     }
                     // Adapt origin
                     rect.SetX(rect.GetX() + (float)translationWidth);
@@ -2752,14 +2659,15 @@ namespace iText.Forms.Fields {
                     fieldRotation += pageRotation;
                 }
                 if (fieldRotation % 90 == 0) {
+                    Rectangle initialBboxRectangle = bBox.ToRectangle();
                     //Cast angle to [-360, 360]
                     double angle = fieldRotation % 360;
                     //Get angle in radians
                     angle = DegreeToRadians(angle);
                     //Calculate origin offset
-                    double translationWidth = CalculateTranslationWidthAfterFieldRot(bBox.ToRectangle(), DegreeToRadians(pageRotation
+                    double translationWidth = CalculateTranslationWidthAfterFieldRot(initialBboxRectangle, DegreeToRadians(pageRotation
                         ), angle);
-                    double translationHeight = CalculateTranslationHeightAfterFieldRot(bBox.ToRectangle(), DegreeToRadians(pageRotation
+                    double translationHeight = CalculateTranslationHeightAfterFieldRot(initialBboxRectangle, DegreeToRadians(pageRotation
                         ), angle);
                     //Concatenate rotation and translation into the matrix
                     Matrix currentMatrix = new Matrix(matrix.GetAsNumber(0).FloatValue(), matrix.GetAsNumber(1).FloatValue(), 
@@ -2771,11 +2679,11 @@ namespace iText.Forms.Fields {
                     matrix = new PdfArray(new float[] { currentMatrix.Get(0), currentMatrix.Get(1), currentMatrix.Get(3), currentMatrix
                         .Get(4), currentMatrix.Get(6), currentMatrix.Get(7) });
                     //Construct bounding box
-                    Rectangle rect = bBox.ToRectangle();
+                    Rectangle rect = initialBboxRectangle.Clone();
                     //If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box need to be switched
                     if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
-                        rect.SetWidth(bBox.ToRectangle().GetHeight());
-                        rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        rect.SetWidth(initialBboxRectangle.GetHeight());
+                        rect.SetHeight(initialBboxRectangle.GetWidth());
                     }
                     rect.SetX(rect.GetX() + (float)translationWidth);
                     rect.SetY(rect.GetY() + (float)translationHeight);
@@ -2783,16 +2691,17 @@ namespace iText.Forms.Fields {
                     bBox = new PdfArray(rect);
                 }
                 //Create appearance
-                PdfFormXObject appearance = new PdfFormXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle
-                    ().GetHeight()));
+                Rectangle bboxRectangle = bBox.ToRectangle();
+                PdfFormXObject appearance = new PdfFormXObject(new Rectangle(0, 0, bboxRectangle.GetWidth(), bboxRectangle
+                    .GetHeight()));
                 appearance.Put(PdfName.Matrix, matrix);
                 //Create text appearance
                 if (PdfName.Tx.Equals(type)) {
                     if (IsMultiline()) {
-                        DrawMultiLineTextAppearance(bBox.ToRectangle(), this.font, GetFontSize(bBox, value), value, appearance);
+                        DrawMultiLineTextAppearance(bboxRectangle, this.font, GetFontSize(bBox, value), value, appearance);
                     }
                     else {
-                        DrawTextAppearance(bBox.ToRectangle(), this.font, GetFontSize(bBox, value), value, appearance);
+                        DrawTextAppearance(bboxRectangle, this.font, GetFontSize(bBox, value), value, appearance);
                     }
                 }
                 else {
@@ -2825,7 +2734,6 @@ namespace iText.Forms.Fields {
                         Rectangle rect = GetRect(GetPdfObject());
                         PdfDictionary apDic = GetPdfObject().GetAsDictionary(PdfName.AP);
                         if (apDic == null) {
-                            IList<PdfWidgetAnnotation> widgets = GetWidgets();
                             if (widgets.Count == 1) {
                                 widget = widgets[0].GetPdfObject();
                                 apDic = widget.GetAsDictionary(PdfName.AP);
@@ -2902,215 +2810,6 @@ namespace iText.Forms.Fields {
                 }
             }
             return false;
-        }
-
-        private PdfArray GetBBox() {
-            PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);
-            if (bBox == null) {
-                PdfArray kids = GetKids();
-                if (kids == null) {
-                    throw new PdfException(PdfException.WrongFormFieldAddAnnotationToTheField);
-                }
-                bBox = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
-            }
-            return bBox;
-        }
-
-        private static void CreatePushButtonAppearanceState(PdfDictionary widget) {
-            PdfDictionary appearances = widget.GetAsDictionary(PdfName.AP);
-            PdfStream normalAppearanceStream = appearances.GetAsStream(PdfName.N);
-            if (normalAppearanceStream != null) {
-                PdfName stateName = widget.GetAsName(PdfName.AS);
-                if (stateName == null) {
-                    stateName = new PdfName("push");
-                }
-                widget.Put(PdfName.AS, stateName);
-                PdfDictionary normalAppearance = new PdfDictionary();
-                normalAppearance.Put(stateName, normalAppearanceStream);
-                appearances.Put(PdfName.N, normalAppearance);
-            }
-        }
-
-        // TODO DEVSIX-2536
-        // Actually this entire method is a mess,
-        // because only radio group has FF_RADIO type and there is no RadioButton at all.
-        // So the goal of that method is just to save backward compatibility until refactoring.
-        private bool IsRadioButton() {
-            if (IsWidgetAnnotation(GetPdfObject())) {
-                return true;
-            }
-            else {
-                if (GetPdfObject().GetAsName(PdfName.V) != null) {
-                    return false;
-                }
-                else {
-                    if (GetKids() != null) {
-                        return IsWidgetAnnotation(GetKids().GetAsDictionary(0));
-                    }
-                    else {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        private static bool IsWidgetAnnotation(PdfDictionary pdfObject) {
-            return pdfObject != null && PdfName.Widget.Equals(pdfObject.GetAsName(PdfName.Subtype));
-        }
-
-        private String GetRadioButtonValue(String value) {
-            //Otherwise something wrong with getValueAsString().
-            System.Diagnostics.Debug.Assert(value != null);
-            if ("".Equals(value)) {
-                //let it as default value
-                value = "Yes";
-                foreach (String state in GetAppearanceStates()) {
-                    if (!"Off".Equals(state)) {
-                        value = state;
-                        break;
-                    }
-                }
-            }
-            return value;
-        }
-
-        /// <summary>Adjust font in case autosize.</summary>
-        private float GetFontSize(PdfArray bBox, String value) {
-            if (this.fontSize == 0) {
-                //We do not support autosize with multiline.
-                if (IsMultiline() || bBox == null || value == null || String.IsNullOrEmpty(value)) {
-                    return DEFAULT_FONT_SIZE;
-                }
-                else {
-                    return Math.Max(ApproximateFontSizeToFitBBox(this.font, bBox.ToRectangle(), value), MIN_FONT_SIZE);
-                }
-            }
-            return this.fontSize;
-        }
-
-        // For text field that value shall be min 4, for checkbox there is no min value.
-        private float ApproximateFontSizeToFitBBox(PdfFont localFont, Rectangle bBox, String value) {
-            float fs;
-            float height = bBox.GetHeight() - borderWidth * 2;
-            int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-            fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
-            float baseWidth = localFont.GetWidth(value, 1);
-            if (baseWidth != 0) {
-                float availableWidth = Math.Max(bBox.GetWidth() - borderWidth * 2, 0);
-                // This constant is taken based on what was the resultant padding in previous version of this algorithm in case border width was zero.
-                float absMaxPadding = 4f;
-                // relative value is quite big in order to preserve visible padding on small field sizes. This constant is taken arbitrary, based on visual similarity to Acrobat behaviour.
-                float relativePaddingForSmallSizes = 0.15f;
-                // with current constants, if availableWidth is less than ~26 points, padding will be made relative
-                if (availableWidth * relativePaddingForSmallSizes < absMaxPadding) {
-                    availableWidth -= availableWidth * relativePaddingForSmallSizes * 2;
-                }
-                else {
-                    availableWidth -= absMaxPadding * 2;
-                }
-                fs = Math.Min(fs, availableWidth / baseWidth);
-            }
-            return fs;
-        }
-
-        /// <summary>
-        /// Calculate the necessary height offset after applying field rotation
-        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
-        /// </summary>
-        /// <param name="bBox">bounding box rectangle before rotation</param>
-        /// <param name="pageRotation">rotation of the page</param>
-        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
-        /// <returns>translation value for height</returns>
-        private float CalculateTranslationHeightAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
-            ) {
-            if (relFieldRotation == 0) {
-                return 0.0f;
-            }
-            if (pageRotation == 0) {
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI) {
-                    return bBox.GetHeight();
-                }
-            }
-            if (pageRotation == -Math.PI / 2) {
-                if (relFieldRotation == -Math.PI / 2) {
-                    return bBox.GetWidth() - bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI) {
-                    return bBox.GetWidth();
-                }
-            }
-            if (pageRotation == -Math.PI) {
-                if (relFieldRotation == -1 * Math.PI) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == -1 * Math.PI / 2) {
-                    return bBox.GetHeight() - bBox.GetWidth();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-            }
-            if (pageRotation == -3 * Math.PI / 2) {
-                if (relFieldRotation == -3 * Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-                if (relFieldRotation == -Math.PI) {
-                    return bBox.GetWidth();
-                }
-            }
-            return 0.0f;
-        }
-
-        /// <summary>
-        /// Calculate the necessary width offset after applying field rotation
-        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
-        /// </summary>
-        /// <param name="bBox">bounding box rectangle before rotation</param>
-        /// <param name="pageRotation">rotation of the page</param>
-        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
-        /// <returns>translation value for width</returns>
-        private float CalculateTranslationWidthAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
-            ) {
-            if (relFieldRotation == 0) {
-                return 0.0f;
-            }
-            if (pageRotation == 0 && (relFieldRotation == Math.PI || relFieldRotation == 3 * Math.PI / 2)) {
-                return bBox.GetWidth();
-            }
-            if (pageRotation == -Math.PI / 2) {
-                if (relFieldRotation == -Math.PI / 2 || relFieldRotation == Math.PI) {
-                    return bBox.GetHeight();
-                }
-            }
-            if (pageRotation == -Math.PI) {
-                if (relFieldRotation == -1 * Math.PI) {
-                    return bBox.GetWidth();
-                }
-                if (relFieldRotation == -1 * Math.PI / 2) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == Math.PI / 2) {
-                    return -1 * (bBox.GetHeight() - bBox.GetWidth());
-                }
-            }
-            if (pageRotation == -3 * Math.PI / 2) {
-                if (relFieldRotation == -3 * Math.PI / 2) {
-                    return -1 * (bBox.GetWidth() - bBox.GetHeight());
-                }
-                if (relFieldRotation == -Math.PI) {
-                    return bBox.GetHeight();
-                }
-                if (relFieldRotation == -Math.PI / 2) {
-                    return bBox.GetWidth();
-                }
-            }
-            return 0.0f;
         }
 
         /// <summary>Gets the border width for the field.</summary>
@@ -3229,8 +2928,9 @@ namespace iText.Forms.Fields {
         /// <param name="pageNum">the page number</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetPage(int pageNum) {
-            if (GetWidgets().Count > 0) {
-                PdfAnnotation annot = GetWidgets()[0];
+            IList<PdfWidgetAnnotation> widgets = GetWidgets();
+            if (widgets.Count > 0) {
+                PdfAnnotation annot = widgets[0];
                 if (annot != null) {
                     annot.SetPage(GetDocument().GetPage(pageNum));
                 }
@@ -3419,7 +3119,7 @@ namespace iText.Forms.Fields {
             if (color != null) {
                 canvas.SetColor(color, true);
             }
-            return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
+            return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes(), System.Text.Encoding.UTF8);
         }
 
         /// <summary>Gets font and font size.</summary>
@@ -4046,6 +3746,310 @@ namespace iText.Forms.Fields {
                     DrawingUtil.DrawPdfAStar(canvas, width, height);
                     break;
                 }
+            }
+        }
+
+        private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
+            System.Diagnostics.Debug.Assert(font != null);
+            MemoryStream output = new MemoryStream();
+            PdfOutputStream pdfStream = new PdfOutputStream(new OutputStream<Stream>(output));
+            byte[] g = new byte[] { (byte)'g' };
+            byte[] rg = new byte[] { (byte)'r', (byte)'g' };
+            byte[] k = new byte[] { (byte)'k' };
+            byte[] Tf = new byte[] { (byte)'T', (byte)'f' };
+            pdfStream.Write(font).WriteSpace().WriteFloat(fontSize).WriteSpace().WriteBytes(Tf);
+            if (textColor != null) {
+                if (textColor is DeviceGray) {
+                    pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(g);
+                }
+                else {
+                    if (textColor is DeviceRgb) {
+                        pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(rg);
+                    }
+                    else {
+                        if (textColor is DeviceCmyk) {
+                            pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
+                        }
+                        else {
+                            ILog logger = LogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                            logger.Error(iText.IO.LogMessageConstant.UNSUPPORTED_COLOR_IN_DA);
+                        }
+                    }
+                }
+            }
+            return new PdfString(output.ToArray());
+        }
+
+        private static bool IsWidgetAnnotation(PdfDictionary pdfObject) {
+            return pdfObject != null && PdfName.Widget.Equals(pdfObject.GetAsName(PdfName.Subtype));
+        }
+
+        private static void CreatePushButtonAppearanceState(PdfDictionary widget) {
+            PdfDictionary appearances = widget.GetAsDictionary(PdfName.AP);
+            PdfStream normalAppearanceStream = appearances.GetAsStream(PdfName.N);
+            if (normalAppearanceStream != null) {
+                PdfName stateName = widget.GetAsName(PdfName.AS);
+                if (stateName == null) {
+                    stateName = new PdfName("push");
+                }
+                widget.Put(PdfName.AS, stateName);
+                PdfDictionary normalAppearance = new PdfDictionary();
+                normalAppearance.Put(stateName, normalAppearanceStream);
+                appearances.Put(PdfName.N, normalAppearance);
+            }
+        }
+
+        private PdfArray GetBBox() {
+            PdfArray bBox = GetPdfObject().GetAsArray(PdfName.Rect);
+            if (bBox == null) {
+                PdfArray kids = GetKids();
+                if (kids == null) {
+                    throw new PdfException(PdfException.WrongFormFieldAddAnnotationToTheField);
+                }
+                bBox = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
+            }
+            return bBox;
+        }
+
+        // TODO DEVSIX-2536
+        // Actually this entire method is a mess,
+        // because only radio group has FF_RADIO type and there is no RadioButton at all.
+        // So the goal of that method is just to save backward compatibility until refactoring.
+        private bool IsRadioButton() {
+            if (IsWidgetAnnotation(GetPdfObject())) {
+                return true;
+            }
+            else {
+                if (GetPdfObject().GetAsName(PdfName.V) != null) {
+                    return false;
+                }
+                else {
+                    if (GetKids() != null) {
+                        return IsWidgetAnnotation(GetKids().GetAsDictionary(0));
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        private String GetRadioButtonValue(String value) {
+            //Otherwise something wrong with getValueAsString().
+            System.Diagnostics.Debug.Assert(value != null);
+            if ("".Equals(value)) {
+                //let it as default value
+                value = "Yes";
+                foreach (String state in GetAppearanceStates()) {
+                    if (!"Off".Equals(state)) {
+                        value = state;
+                        break;
+                    }
+                }
+            }
+            return value;
+        }
+
+        /// <summary>Adjust font in case autosize.</summary>
+        private float GetFontSize(PdfArray bBox, String value) {
+            if (this.fontSize == 0) {
+                //We do not support autosize with multiline.
+                if (IsMultiline() || bBox == null || value == null || String.IsNullOrEmpty(value)) {
+                    return DEFAULT_FONT_SIZE;
+                }
+                else {
+                    return Math.Max(ApproximateFontSizeToFitBBox(this.font, bBox.ToRectangle(), value), MIN_FONT_SIZE);
+                }
+            }
+            return this.fontSize;
+        }
+
+        // For text field that value shall be min 4, for checkbox there is no min value.
+        private float ApproximateFontSizeToFitBBox(PdfFont localFont, Rectangle bBox, String value) {
+            float fs;
+            float height = bBox.GetHeight() - borderWidth * 2;
+            int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
+            fs = height / (fontBbox[2] - fontBbox[1]) * FontProgram.UNITS_NORMALIZATION;
+            float baseWidth = localFont.GetWidth(value, 1);
+            if (baseWidth != 0) {
+                float availableWidth = Math.Max(bBox.GetWidth() - borderWidth * 2, 0);
+                // This constant is taken based on what was the resultant padding in previous version of this algorithm in case border width was zero.
+                float absMaxPadding = 4f;
+                // relative value is quite big in order to preserve visible padding on small field sizes. This constant is taken arbitrary, based on visual similarity to Acrobat behaviour.
+                float relativePaddingForSmallSizes = 0.15f;
+                // with current constants, if availableWidth is less than ~26 points, padding will be made relative
+                if (availableWidth * relativePaddingForSmallSizes < absMaxPadding) {
+                    availableWidth -= availableWidth * relativePaddingForSmallSizes * 2;
+                }
+                else {
+                    availableWidth -= absMaxPadding * 2;
+                }
+                fs = Math.Min(fs, availableWidth / baseWidth);
+            }
+            return fs;
+        }
+
+        /// <summary>
+        /// Calculate the necessary height offset after applying field rotation
+        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
+        /// </summary>
+        /// <param name="bBox">bounding box rectangle before rotation</param>
+        /// <param name="pageRotation">rotation of the page</param>
+        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
+        /// <returns>translation value for height</returns>
+        private float CalculateTranslationHeightAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
+            ) {
+            if (relFieldRotation == 0) {
+                return 0.0f;
+            }
+            if (pageRotation == 0) {
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI) {
+                    return bBox.GetHeight();
+                }
+            }
+            if (pageRotation == -Math.PI / 2) {
+                if (relFieldRotation == -Math.PI / 2) {
+                    return bBox.GetWidth() - bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI) {
+                    return bBox.GetWidth();
+                }
+            }
+            if (pageRotation == -Math.PI) {
+                if (relFieldRotation == -1 * Math.PI) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == -1 * Math.PI / 2) {
+                    return bBox.GetHeight() - bBox.GetWidth();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+            }
+            if (pageRotation == -3 * Math.PI / 2) {
+                if (relFieldRotation == -3 * Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+                if (relFieldRotation == -Math.PI) {
+                    return bBox.GetWidth();
+                }
+            }
+            return 0.0f;
+        }
+
+        /// <summary>
+        /// Calculate the necessary width offset after applying field rotation
+        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
+        /// </summary>
+        /// <param name="bBox">bounding box rectangle before rotation</param>
+        /// <param name="pageRotation">rotation of the page</param>
+        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
+        /// <returns>translation value for width</returns>
+        private float CalculateTranslationWidthAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
+            ) {
+            if (relFieldRotation == 0) {
+                return 0.0f;
+            }
+            if (pageRotation == 0 && (relFieldRotation == Math.PI || relFieldRotation == 3 * Math.PI / 2)) {
+                return bBox.GetWidth();
+            }
+            if (pageRotation == -Math.PI / 2) {
+                if (relFieldRotation == -Math.PI / 2 || relFieldRotation == Math.PI) {
+                    return bBox.GetHeight();
+                }
+            }
+            if (pageRotation == -Math.PI) {
+                if (relFieldRotation == -1 * Math.PI) {
+                    return bBox.GetWidth();
+                }
+                if (relFieldRotation == -1 * Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return -1 * (bBox.GetHeight() - bBox.GetWidth());
+                }
+            }
+            if (pageRotation == -3 * Math.PI / 2) {
+                if (relFieldRotation == -3 * Math.PI / 2) {
+                    return -1 * (bBox.GetWidth() - bBox.GetHeight());
+                }
+                if (relFieldRotation == -Math.PI) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == -Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+            }
+            return 0.0f;
+        }
+
+        private bool HasDefaultAppearance() {
+            PdfName type = GetFormType();
+            return type == PdfName.Tx || type == PdfName.Ch || (type == PdfName.Btn && (GetFieldFlags() & PdfButtonFormField
+                .FF_PUSH_BUTTON) != 0);
+        }
+
+        private PdfName GetUniqueFontNameForDR(PdfDictionary fontResources) {
+            int indexer = 1;
+            ICollection<PdfName> fontNames = fontResources.KeySet();
+            PdfName uniqueName;
+            do {
+                uniqueName = new PdfName("F" + indexer++);
+            }
+            while (fontNames.Contains(uniqueName));
+            return uniqueName;
+        }
+
+        private PdfName GetFontNameFromDR(PdfDictionary fontResources, PdfObject font) {
+            foreach (KeyValuePair<PdfName, PdfObject> drFont in fontResources.EntrySet()) {
+                if (drFont.Value == font) {
+                    return drFont.Key;
+                }
+            }
+            return null;
+        }
+
+        private PdfObject GetAcroFormObject(PdfName key, int type) {
+            PdfObject acroFormObject = null;
+            PdfDictionary acroFormDictionary = GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm
+                );
+            if (acroFormDictionary != null) {
+                acroFormObject = acroFormDictionary.Get(key);
+            }
+            return (acroFormObject != null && acroFormObject.GetObjectType() == type) ? acroFormObject : null;
+        }
+
+        /// <summary>Puts object directly to AcroForm dictionary.</summary>
+        /// <remarks>
+        /// Puts object directly to AcroForm dictionary.
+        /// It works much faster than consequent invocation of
+        /// <see cref="iText.Forms.PdfAcroForm.GetAcroForm(iText.Kernel.Pdf.PdfDocument, bool)"/>
+        /// and
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>.
+        /// Note, this method assume that Catalog already has AcroForm object.
+        /// <see cref="AddAcroFormToCatalog()"/>
+        /// should be called explicitly.
+        /// </remarks>
+        /// <param name="acroFormKey">the key of the object.</param>
+        /// <param name="acroFormObject">the object to add.</param>
+        private void PutAcroFormObject(PdfName acroFormKey, PdfObject acroFormObject) {
+            GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).Put(acroFormKey, acroFormObject
+                );
+        }
+
+        private void AddAcroFormToCatalog() {
+            if (GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm) == null) {
+                PdfDictionary acroform = new PdfDictionary();
+                acroform.MakeIndirect(GetDocument());
+                // PdfName.Fields is the only required key.
+                acroform.Put(PdfName.Fields, new PdfArray());
+                GetDocument().GetCatalog().Put(PdfName.AcroForm, acroform);
             }
         }
 

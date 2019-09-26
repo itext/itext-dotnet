@@ -99,7 +99,7 @@ namespace iText.Forms.Xfdf {
         }
 
         internal static String ConvertFloatToString(float coord) {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord));
+            return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord), System.Text.Encoding.UTF8);
         }
 
         internal static float[] ConvertQuadPointsFromCoordsString(String coordsString) {
@@ -128,7 +128,7 @@ namespace iText.Forms.Xfdf {
         }
 
         private static String FloatToPaddedString(float number) {
-            return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number));
+            return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number), System.Text.Encoding.UTF8);
         }
 
         internal static int ConvertFlagsFromString(String flagsString) {
