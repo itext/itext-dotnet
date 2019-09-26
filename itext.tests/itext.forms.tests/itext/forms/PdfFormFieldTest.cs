@@ -1181,5 +1181,20 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + outputFile, sourceFolder
                  + "cmp_" + outputFile, destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillUnmergedTextFormField() {
+            // TODO update cmp-file after DEVSIX-2622 fixed
+            String file = sourceFolder + "fillUnmergedTextFormField.pdf";
+            String outfile = destinationFolder + "outfile.pdf";
+            String text = "John";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(file), new PdfWriter(outfile));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "outfile.pdf", sourceFolder
+                 + "cmp_" + "fillUnmergedTextFormField.pdf", destinationFolder, "diff_"));
+        }
     }
 }
