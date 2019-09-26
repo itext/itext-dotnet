@@ -286,10 +286,17 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfAnnotation"/>
         /// from the given
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// that represents annotation object.
+        /// </summary>
+        /// <remarks>
+        /// Factory method that creates the type specific
+        /// <see cref="PdfAnnotation"/>
+        /// from the given
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
         /// that represents annotation object. This method is useful for property reading in reading mode or
         /// modifying in stamping mode. See derived classes of this class to see possible specific annotation types
         /// created.
-        /// </summary>
+        /// </remarks>
         /// <param name="pdfObject">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
@@ -438,8 +445,13 @@ namespace iText.Kernel.Pdf.Annot {
         /// Gets a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// which value is a subtype of this annotation.
-        /// See ISO-320001 12.5.6, "Annotation Types" for the reference to the possible types.
         /// </summary>
+        /// <remarks>
+        /// Gets a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which value is a subtype of this annotation.
+        /// See ISO-320001 12.5.6, "Annotation Types" for the reference to the possible types.
+        /// </remarks>
         /// <returns>subtype of this annotation.</returns>
         public abstract PdfName GetSubtype();
 
@@ -982,12 +994,17 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets a specific type of the appearance using
         /// <see cref="PdfAnnotationAppearance"/>
         /// wrapper.
+        /// </summary>
+        /// <remarks>
+        /// Sets a specific type of the appearance using
+        /// <see cref="PdfAnnotationAppearance"/>
+        /// wrapper.
         /// This method is used to set only an appearance subdictionary. See
         /// <see cref="GetAppearanceObject(iText.Kernel.Pdf.PdfName)"/>
         /// and
         /// <see cref="GetAppearanceDictionary()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="appearanceType">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -1015,13 +1032,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>
         /// Sets normal appearance using
         /// <see cref="PdfAnnotationAppearance"/>
+        /// wrapper.
+        /// </summary>
+        /// <remarks>
+        /// Sets normal appearance using
+        /// <see cref="PdfAnnotationAppearance"/>
         /// wrapper. This method is used to set only
         /// appearance subdictionary. See
         /// <see cref="GetNormalAppearanceObject()"/>
         /// and
         /// <see cref="GetAppearanceDictionary()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
         /// <see cref="PdfAnnotationAppearance"/>.
@@ -1039,13 +1061,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>
         /// Sets rollover appearance using
         /// <see cref="PdfAnnotationAppearance"/>
+        /// wrapper.
+        /// </summary>
+        /// <remarks>
+        /// Sets rollover appearance using
+        /// <see cref="PdfAnnotationAppearance"/>
         /// wrapper. This method is used to set only
         /// appearance subdictionary. See
         /// <see cref="GetRolloverAppearanceObject()"/>
         /// and
         /// <see cref="GetAppearanceDictionary()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
         /// <see cref="PdfAnnotationAppearance"/>.
@@ -1063,13 +1090,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>
         /// Sets down appearance using
         /// <see cref="PdfAnnotationAppearance"/>
+        /// wrapper.
+        /// </summary>
+        /// <remarks>
+        /// Sets down appearance using
+        /// <see cref="PdfAnnotationAppearance"/>
         /// wrapper. This method is used to set only
         /// appearance subdictionary. See
         /// <see cref="GetDownAppearanceObject()"/>
         /// and
         /// <see cref="GetAppearanceDictionary()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="appearance">
         /// an appearance subdictionary wrapped in
         /// <see cref="PdfAnnotationAppearance"/>.
@@ -1481,11 +1513,19 @@ namespace iText.Kernel.Pdf.Annot {
         /// of this
         /// <see cref="PdfAnnotation"/>
         /// and associates it
+        /// with the specified key.
+        /// </summary>
+        /// <remarks>
+        /// Inserts the value into into the underlying
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of this
+        /// <see cref="PdfAnnotation"/>
+        /// and associates it
         /// with the specified key. If the key is already present in this
         /// <see cref="PdfAnnotation"/>
         /// , this method will override
         /// the old value with the specified one.
-        /// </summary>
+        /// </remarks>
         /// <param name="key">key to insert or to override</param>
         /// <param name="value">the value to associate with the specified key</param>
         /// <returns>
@@ -1517,7 +1557,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF annotation and identifies the relationship between them.
         /// </summary>
         /// <remarks>
@@ -1560,11 +1600,17 @@ namespace iText.Kernel.Pdf.Annot {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }

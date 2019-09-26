@@ -204,9 +204,13 @@ namespace iText.Kernel.Pdf.Extgstate {
 
         /// <summary>
         /// Gets miter limit value,
+        /// <c>ML key</c>.
+        /// </summary>
+        /// <remarks>
+        /// Gets miter limit value,
         /// <c>ML key</c>
         /// . See also line join style.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <c>float</c>
@@ -219,9 +223,13 @@ namespace iText.Kernel.Pdf.Extgstate {
 
         /// <summary>
         /// Sets miter limit value,
+        /// <c>ML key</c>.
+        /// </summary>
+        /// <remarks>
+        /// Sets miter limit value,
         /// <c>ML key</c>
         /// . See also line join style.
-        /// </summary>
+        /// </remarks>
         /// <param name="miterLimit">
         /// a
         /// <c>float</c>
@@ -265,6 +273,11 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// Gets rendering intent value,
         /// <c>RI</c>
         /// key.
+        /// </summary>
+        /// <remarks>
+        /// Gets rendering intent value,
+        /// <c>RI</c>
+        /// key.
         /// Valid values are:
         /// <c>AbsoluteColorimetric</c>
         /// ,
@@ -273,7 +286,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <c>Saturation</c>
         /// ,
         /// <c>Perceptual</c>.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <c>PdfName</c>
@@ -419,10 +432,15 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// Sets font and size,
         /// <c>Font</c>
         /// key.
+        /// </summary>
+        /// <remarks>
+        /// Sets font and size,
+        /// <c>Font</c>
+        /// key.
         /// NOTE: If you want add the font object which has just been created, make sure to register the font with
         /// <see cref="iText.Kernel.Pdf.PdfDocument.AddFont(iText.Kernel.Font.PdfFont)"/>
         /// method first.
-        /// </summary>
+        /// </remarks>
         /// <param name="font">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -494,6 +512,13 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// ,
         /// <c>BG2</c>
         /// key.
+        /// </summary>
+        /// <remarks>
+        /// Sets the black-generation function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>BG2</c>
+        /// key.
         /// Note, if both
         /// <c>BG</c>
         /// and
@@ -501,7 +526,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// are present in the same graphics state parameter dictionary,
         /// <c>BG2</c>
         /// takes precedence.
-        /// </summary>
+        /// </remarks>
         /// <param name="blackGenerationFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
@@ -573,6 +598,13 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// ,
         /// <c>UCR2</c>
         /// key.
+        /// </summary>
+        /// <remarks>
+        /// Sets the undercolor-removal function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>UCR2</c>
+        /// key.
         /// Note, if both
         /// <c>UCR</c>
         /// and
@@ -580,7 +612,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// are present in the same graphics state parameter dictionary,
         /// <c>UCR2</c>
         /// takes precedence.
-        /// </summary>
+        /// </remarks>
         /// <param name="undercolorRemovalFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
@@ -661,6 +693,13 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// ,
         /// <c>TR2</c>
         /// key.
+        /// </summary>
+        /// <remarks>
+        /// Sets the transfer function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>TR2</c>
+        /// key.
         /// Note, if both
         /// <c>TR</c>
         /// and
@@ -668,7 +707,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// are present in the same graphics state parameter dictionary,
         /// <c>TR2</c>
         /// takes precedence.
-        /// </summary>
+        /// </remarks>
         /// <param name="transferFunction2">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfObject"/>
@@ -1116,11 +1155,17 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }

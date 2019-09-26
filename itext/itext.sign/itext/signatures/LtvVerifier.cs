@@ -72,8 +72,7 @@ namespace iText.Signatures {
         /// <summary>The fields in the revision that is being verified.</summary>
         protected internal PdfAcroForm acroForm;
 
-        /// <summary>The date the revision was signed, or <code>null</code> for the highest revision.</summary>
-        /// <remarks>The date the revision was signed, or <c>null</c> for the highest revision.</remarks>
+        /// <summary>The date the revision was signed, or <c>null</c> for the highest revision.</summary>
         protected internal DateTime signDate;
 
         /// <summary>The signature that covers the revision.</summary>

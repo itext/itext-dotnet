@@ -308,12 +308,16 @@ namespace iText.Layout.Font {
 
         /// <summary>
         /// Create a new instance of
+        /// <see cref="FontSelector"/>.
+        /// </summary>
+        /// <remarks>
+        /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
         /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/>.
         /// This method just create a new instance of
         /// <see cref="FontSelector"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="fonts">Set of all available fonts in current context.</param>
         /// <param name="fontFamilies">target font families</param>
         /// <param name="fc">
@@ -411,12 +415,16 @@ namespace iText.Layout.Font {
 
         /// <summary>
         /// Resets
+        /// <see cref="pdfFonts">PdfFont cache</see>.
+        /// </summary>
+        /// <remarks>
+        /// Resets
         /// <see cref="pdfFonts">PdfFont cache</see>
         /// . After calling that method
         /// <see cref="FontProvider"/>
         /// can be reused with another
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// </summary>
+        /// </remarks>
         public virtual void Reset() {
             pdfFonts.Clear();
         }

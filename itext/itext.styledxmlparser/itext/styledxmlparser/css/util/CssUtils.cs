@@ -138,13 +138,12 @@ namespace iText.StyledXmlParser.Css.Util {
             }
         }
 
-        /// <summary>Parses a length with an allowed metric unit (px, pt, in, cm, mm, pc, q) or numeric value (e.g.</summary>
-        /// <remarks>
+        /// <summary>
         /// Parses a length with an allowed metric unit (px, pt, in, cm, mm, pc, q) or numeric value (e.g. 123, 1.23,
         /// .123) to pt.<br />
         /// A numeric value (without px, pt, etc in the given length string) is considered to be in the default metric that
         /// was given.
-        /// </remarks>
+        /// </summary>
         /// <param name="length">the string containing the length.</param>
         /// <param name="defaultMetric">
         /// the string containing the metric if it is possible that the length string does not contain
@@ -221,13 +220,9 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>
-        /// Parses an relative value based on the base value that was given, in the metric unit of the base value.<br>
-        /// (e.g.
-        /// </summary>
-        /// <remarks>
         /// Parses an relative value based on the base value that was given, in the metric unit of the base value.<br />
         /// (e.g. margin=10% should be based on the page width, so if an A4 is used, the margin = 0.10*595.0 = 59.5f)
-        /// </remarks>
+        /// </summary>
         /// <param name="relativeValue">in %, em or ex.</param>
         /// <param name="baseValue">the value the returned float is based on.</param>
         /// <returns>the parsed float in the metric unit of the base value.</returns>
@@ -411,13 +406,11 @@ namespace iText.StyledXmlParser.Css.Util {
             return f;
         }
 
-        /// <summary>Method used in preparation of splitting a string containing a numeric value with a metric unit (e.g.
-        ///     </summary>
-        /// <remarks>
+        /// <summary>
         /// Method used in preparation of splitting a string containing a numeric value with a metric unit (e.g. 18px, 9pt, 6cm, etc).<br /><br />
         /// Determines the position between digits and affiliated characters ('+','-','0-9' and '.') and all other characters.<br />
         /// e.g. string "16px" will return 2, string "0.5em" will return 3 and string '-8.5mm' will return 4.
-        /// </remarks>
+        /// </summary>
         /// <param name="string">containing a numeric value with a metric unit</param>
         /// <returns>int position between the numeric value and unit or 0 if string is null or string started with a non-numeric value.
         ///     </returns>
@@ -481,7 +474,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 .Length - CommonCssConstants.REM.Length).Trim());
         }
 
-        /// <summary>Checks whether a string matches a numeric value (e.g.</summary>
+        /// <summary>Checks whether a string matches a numeric value (e.g. 123, 1.23, .123).</summary>
         /// <remarks>Checks whether a string matches a numeric value (e.g. 123, 1.23, .123). All these metric values are allowed in HTML/CSS.
         ///     </remarks>
         /// <param name="value">the string that needs to be checked.</param>

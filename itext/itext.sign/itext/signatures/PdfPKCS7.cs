@@ -482,8 +482,7 @@ namespace iText.Signatures {
             return signerversion;
         }
 
-        /// <summary>The ID of the digest algorithm, e.g.</summary>
-        /// <remarks>The ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</remarks>
+        /// <summary>The ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         private String digestAlgorithmOid;
 
         /// <summary>The object that will create the digest</summary>
@@ -498,14 +497,12 @@ namespace iText.Signatures {
         private PdfName filterSubtype;
 
         // Message digest algorithm
-        /// <summary>Getter for the ID of the digest algorithm, e.g.</summary>
-        /// <remarks>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1"</remarks>
+        /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1"</summary>
         public virtual String GetDigestAlgorithmOid() {
             return digestAlgorithmOid;
         }
 
-        /// <summary>Returns the name of the digest algorithm, e.g.</summary>
-        /// <remarks>Returns the name of the digest algorithm, e.g. "SHA256".</remarks>
+        /// <summary>Returns the name of the digest algorithm, e.g. "SHA256".</summary>
         /// <returns>the digest algorithm name, e.g. "SHA256"</returns>
         public virtual String GetHashAlgorithm() {
             return DigestAlgorithms.GetDigest(digestAlgorithmOid);
@@ -520,8 +517,7 @@ namespace iText.Signatures {
             return digestEncryptionAlgorithmOid;
         }
 
-        /// <summary>Get the algorithm used to calculate the message digest, e.g.</summary>
-        /// <remarks>Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".</remarks>
+        /// <summary>Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".</summary>
         /// <returns>the algorithm used to calculate the message digest</returns>
         public virtual String GetDigestAlgorithm() {
             return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();

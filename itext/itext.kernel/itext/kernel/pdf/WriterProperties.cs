@@ -119,8 +119,13 @@ namespace iText.Kernel.Pdf {
         /// If true, default XMPMetadata based on
         /// <see cref="PdfDocumentInfo"/>
         /// will be added.
-        /// For PDF 2.0 documents, metadata will be added in any case.
         /// </summary>
+        /// <remarks>
+        /// If true, default XMPMetadata based on
+        /// <see cref="PdfDocumentInfo"/>
+        /// will be added.
+        /// For PDF 2.0 documents, metadata will be added in any case.
+        /// </remarks>
         /// <returns>
         /// this
         /// <c>WriterProperties</c>

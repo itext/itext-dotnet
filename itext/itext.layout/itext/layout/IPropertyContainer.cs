@@ -68,9 +68,8 @@ namespace iText.Layout {
         /// </returns>
         bool HasProperty(int property);
 
-        /// <summary>Checks if this entity has the specified property, i.e.</summary>
-        /// <remarks>Checks if this entity has the specified property, i.e. if it was set to this very element earlier
-        ///     </remarks>
+        /// <summary>Checks if this entity has the specified property, i.e. if it was set to this very element earlier
+        ///     </summary>
         /// <param name="property">the property to be checked</param>
         /// <returns>
         /// 

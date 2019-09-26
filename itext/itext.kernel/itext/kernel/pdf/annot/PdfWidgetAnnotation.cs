@@ -260,9 +260,16 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// to this annotation which will be performed in response to
         /// the specific trigger event defined by
+        /// <paramref name="key"/>.
+        /// </summary>
+        /// <remarks>
+        /// Sets an additional
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed in response to
+        /// the specific trigger event defined by
         /// <paramref name="key"/>
         /// . See ISO-320001 12.6.3, "Trigger Events".
-        /// </summary>
+        /// </remarks>
         /// <param name="key">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -346,10 +353,15 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets border style dictionary that has more settings than the array specified for the Border entry (
         /// <see cref="PdfAnnotation.GetBorder()"/>
         /// ).
+        /// </summary>
+        /// <remarks>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
         /// See ISO-320001, Table 166 and
         /// <see cref="GetBorderStyle()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="borderStyle">
         /// a border style dictionary specifying the line width and dash pattern that shall be used
         /// in drawing the annotation’s border.

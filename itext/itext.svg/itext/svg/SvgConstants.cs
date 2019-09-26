@@ -57,8 +57,7 @@ namespace iText.Svg {
             /// <summary>Tag defining a Hyperlink.</summary>
             public const String A = "a";
 
-            /// <summary>Alternate glyphs to be used instead of regular grlyphs, e.g.</summary>
-            /// <remarks>Alternate glyphs to be used instead of regular grlyphs, e.g. ligatures, Asian scripts, ...</remarks>
+            /// <summary>Alternate glyphs to be used instead of regular grlyphs, e.g. ligatures, Asian scripts, ...</summary>
             public const String ALT_GLYPH = "altGlyph";
 
             /// <summary>Defines a set of glyph substitions.</summary>

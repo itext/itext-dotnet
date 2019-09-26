@@ -48,7 +48,7 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Layer {
     /// <summary>
     /// Content typically belongs to a single optional content group,
-    /// and is visible when the group is <B>ON</B> and invisible when it is <B>OFF</B>.
+    /// and is visible when the group is <b>ON</b> and invisible when it is <b>OFF</b>.
     /// </summary>
     /// <remarks>
     /// Content typically belongs to a single optional content group,

@@ -282,8 +282,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Accessor method for the
         /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
         /// object maintained in this class.
-        /// Necessary for implementing custom ContentOperator implementations.
         /// </summary>
+        /// <remarks>
+        /// Accessor method for the
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
+        /// object maintained in this class.
+        /// Necessary for implementing custom ContentOperator implementations.
+        /// </remarks>
         /// <returns>the renderListener</returns>
         public virtual IEventListener GetEventListener() {
             return eventListener;
@@ -453,8 +458,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>
         /// Creates a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// object by a font dictionary. The font may have been cached in case it is an indirect object.
+        /// object by a font dictionary.
         /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// object by a font dictionary. The font may have been cached in case it is an indirect object.
+        /// </remarks>
         /// <param name="fontDict"/>
         /// <returns>the font</returns>
         protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {

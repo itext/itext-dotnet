@@ -72,12 +72,17 @@ namespace iText.Signatures {
         /// <summary>
         /// Gets the
         /// <see cref="PdfSignatureApp"/>
+        /// from this dictionary.
+        /// </summary>
+        /// <remarks>
+        /// Gets the
+        /// <see cref="PdfSignatureApp"/>
         /// from this dictionary. If it
         /// does not exist, it adds a new
         /// <see cref="PdfSignatureApp"/>
         /// and
         /// returns this instance.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="PdfSignatureApp"/>

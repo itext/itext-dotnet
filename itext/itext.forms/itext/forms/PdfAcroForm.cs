@@ -62,6 +62,10 @@ namespace iText.Forms {
         /// <summary>
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>.
+        /// </summary>
+        /// <remarks>
+        /// To be used with
+        /// <see cref="SetSignatureFlags(int)"/>.
         /// <br />
         /// <blockquote>
         /// If set, the document contains at least one signature field. This flag
@@ -70,10 +74,14 @@ namespace iText.Forms {
         /// scan the entire document for the presence of signature fields.
         /// (ISO 32000-1, section 12.7.2 "Interactive Form Dictionary")
         /// </blockquote>
-        /// </summary>
+        /// </remarks>
         public const int SIGNATURE_EXIST = 1;
 
         /// <summary>
+        /// To be used with
+        /// <see cref="SetSignatureFlags(int)"/>.
+        /// </summary>
+        /// <remarks>
         /// To be used with
         /// <see cref="SetSignatureFlags(int)"/>.
         /// <br />
@@ -87,7 +95,7 @@ namespace iText.Forms {
         /// continuing with the operation.
         /// (ISO 32000-1, section 12.7.2 "Interactive Form Dictionary")
         /// </blockquote>
-        /// </summary>
+        /// </remarks>
         public const int APPEND_ONLY = 2;
 
         /// <summary>
@@ -137,8 +145,13 @@ namespace iText.Forms {
         /// Creates a PdfAcroForm from a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of fields.
-        /// Also initializes an empty XFA form.
         /// </summary>
+        /// <remarks>
+        /// Creates a PdfAcroForm from a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of fields.
+        /// Also initializes an empty XFA form.
+        /// </remarks>
         /// <param name="fields">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -305,10 +318,17 @@ namespace iText.Forms {
         /// s, prepared for flattening using
         /// <see cref="PartialFormFlattening(System.String)"/>
         /// method.
+        /// </summary>
+        /// <remarks>
+        /// Gets a collection of
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s, prepared for flattening using
+        /// <see cref="PartialFormFlattening(System.String)"/>
+        /// method.
         /// If returned collection is empty, all form fields will be flattened on
         /// <see cref="FlattenFields()">flattenFields</see>
         /// call.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a collection of
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -330,7 +350,7 @@ namespace iText.Forms {
             return document;
         }
 
-        /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
+        /// <summary>Sets the <c>NeedAppearances</c> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>NeedAppearances</c> boolean property on the AcroForm.
         /// NeedAppearances has been deprecated in PDF 2.0.
@@ -355,7 +375,7 @@ namespace iText.Forms {
             }
         }
 
-        /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
+        /// <summary>Gets the <c>NeedAppearances</c> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>NeedAppearances</c> boolean property on the AcroForm.
         /// NeedAppearances has been deprecated in PDF 2.0.
@@ -376,7 +396,7 @@ namespace iText.Forms {
             return GetPdfObject().GetAsBoolean(PdfName.NeedAppearances);
         }
 
-        /// <summary>Sets the <code>SigFlags</code> integer property on the AcroForm.</summary>
+        /// <summary>Sets the <c>SigFlags</c> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>SigFlags</c> integer property on the AcroForm.
         /// <br />
@@ -398,7 +418,7 @@ namespace iText.Forms {
             return Put(PdfName.SigFlags, new PdfNumber(sigFlags));
         }
 
-        /// <summary>Changes the <code>SigFlags</code> integer property on the AcroForm.</summary>
+        /// <summary>Changes the <c>SigFlags</c> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Changes the <c>SigFlags</c> integer property on the AcroForm.
         /// This method allows only to add flags, not to remove them.
@@ -423,7 +443,7 @@ namespace iText.Forms {
             return SetSignatureFlags(flags);
         }
 
-        /// <summary>Gets the <code>SigFlags</code> integer property on the AcroForm.</summary>
+        /// <summary>Gets the <c>SigFlags</c> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>SigFlags</c> integer property on the AcroForm.
         /// <br />
@@ -444,7 +464,7 @@ namespace iText.Forms {
             }
         }
 
-        /// <summary>Sets the <code>CO</code> array property on the AcroForm.</summary>
+        /// <summary>Sets the <c>CO</c> array property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>CO</c> array property on the AcroForm.
         /// <br />
@@ -462,7 +482,7 @@ namespace iText.Forms {
             return Put(PdfName.CO, calculationOrder);
         }
 
-        /// <summary>Gets the <code>CO</code> array property on the AcroForm.</summary>
+        /// <summary>Gets the <c>CO</c> array property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>CO</c> array property on the AcroForm.
         /// <br />
@@ -479,7 +499,7 @@ namespace iText.Forms {
             return GetPdfObject().GetAsArray(PdfName.CO);
         }
 
-        /// <summary>Sets the <code>DR</code> dictionary property on the AcroForm.</summary>
+        /// <summary>Sets the <c>DR</c> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>DR</c> dictionary property on the AcroForm.
         /// <br />
@@ -498,7 +518,7 @@ namespace iText.Forms {
             return Put(PdfName.DR, defaultResources);
         }
 
-        /// <summary>Gets the <code>DR</code> dictionary property on the AcroForm.</summary>
+        /// <summary>Gets the <c>DR</c> dictionary property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>DR</c> dictionary property on the AcroForm.
         /// <br />
@@ -516,7 +536,7 @@ namespace iText.Forms {
             return GetPdfObject().GetAsDictionary(PdfName.DR);
         }
 
-        /// <summary>Sets the <code>DA</code> String property on the AcroForm.</summary>
+        /// <summary>Sets the <c>DA</c> String property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>DA</c> String property on the AcroForm.
         /// <br />
@@ -532,7 +552,7 @@ namespace iText.Forms {
             return Put(PdfName.DA, new PdfString(appearance));
         }
 
-        /// <summary>Gets the <code>DA</code> String property on the AcroForm.</summary>
+        /// <summary>Gets the <c>DA</c> String property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>DA</c> String property on the AcroForm.
         /// <br />
@@ -546,7 +566,7 @@ namespace iText.Forms {
             return GetPdfObject().GetAsString(PdfName.DA);
         }
 
-        /// <summary>Sets the <code>Q</code> integer property on the AcroForm.</summary>
+        /// <summary>Sets the <c>Q</c> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>Q</c> integer property on the AcroForm.
         /// <br />
@@ -562,7 +582,7 @@ namespace iText.Forms {
             return Put(PdfName.Q, new PdfNumber(justification));
         }
 
-        /// <summary>Gets the <code>Q</code> integer property on the AcroForm.</summary>
+        /// <summary>Gets the <c>Q</c> integer property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <c>Q</c> integer property on the AcroForm.
         /// <br />
@@ -577,7 +597,7 @@ namespace iText.Forms {
             return GetPdfObject().GetAsNumber(PdfName.Q);
         }
 
-        /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
+        /// <summary>Sets the <c>XFA</c> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>XFA</c> property on the AcroForm.
         /// <br />
@@ -593,7 +613,7 @@ namespace iText.Forms {
             return Put(PdfName.XFA, xfaResource);
         }
 
-        /// <summary>Sets the <code>XFA</code> property on the AcroForm.</summary>
+        /// <summary>Sets the <c>XFA</c> property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <c>XFA</c> property on the AcroForm.
         /// <br />
@@ -613,8 +633,7 @@ namespace iText.Forms {
             return Put(PdfName.XFA, xfaResource);
         }
 
-        /// <summary>Gets the <code>XFA</code> property on the AcroForm.</summary>
-        /// <remarks>Gets the <c>XFA</c> property on the AcroForm.</remarks>
+        /// <summary>Gets the <c>XFA</c> property on the AcroForm.</summary>
         /// <returns>
         /// an object representing the entire XDP. It can either be a
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
@@ -665,6 +684,14 @@ namespace iText.Forms {
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s
         /// that don't have one.
+        /// </summary>
+        /// <remarks>
+        /// Sets the attribute generateAppearance, which tells
+        /// <see cref="FlattenFields()"/>
+        /// to generate an appearance Stream for all
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s
+        /// that don't have one.
         /// <para />
         /// Not generating appearances will speed up form flattening but the results
         /// can be unexpected in Acrobat. Don't use it unless your environment is
@@ -677,7 +704,7 @@ namespace iText.Forms {
         /// Note, this method does not change default behaviour of
         /// <see cref="iText.Forms.Fields.PdfFormField.SetValue(System.String)"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <param name="generateAppearance">a boolean</param>
         public virtual void SetGenerateAppearance(bool generateAppearance) {
             if (generateAppearance) {
@@ -689,13 +716,18 @@ namespace iText.Forms {
         /// <summary>
         /// Flattens interactive
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// s in the document.
+        /// </summary>
+        /// <remarks>
+        /// Flattens interactive
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// s in the document. If
         /// no fields have been explicitly included via
         /// <see cref="PartialFormFlattening(System.String)"/>
         /// ,
         /// then all fields are flattened. Otherwise only the included fields are
         /// flattened.
-        /// </summary>
+        /// </remarks>
         public virtual void FlattenFields() {
             if (document.IsAppendMode()) {
                 throw new PdfException(PdfException.FieldFlatteningIsNotSupportedInAppendMode);
@@ -868,8 +900,13 @@ namespace iText.Forms {
         /// Adds a
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
         /// , identified by name, to the list of fields to be flattened.
-        /// Does not perform a flattening operation in itself.
         /// </summary>
+        /// <remarks>
+        /// Adds a
+        /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
+        /// , identified by name, to the list of fields to be flattened.
+        /// Does not perform a flattening operation in itself.
+        /// </remarks>
         /// <param name="fieldName">
         /// the name of the
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>
@@ -903,10 +940,14 @@ namespace iText.Forms {
 
         /// <summary>
         /// Creates an in-memory copy of a
+        /// <see cref="iText.Forms.Fields.PdfFormField"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates an in-memory copy of a
         /// <see cref="iText.Forms.Fields.PdfFormField"/>
         /// . This new field is
         /// not added to the document.
-        /// </summary>
+        /// </remarks>
         /// <param name="name">
         /// the name of the
         /// <see cref="iText.Forms.Fields.PdfFormField">form field</see>

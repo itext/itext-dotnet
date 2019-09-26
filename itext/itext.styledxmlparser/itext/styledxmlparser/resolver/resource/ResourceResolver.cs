@@ -76,6 +76,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>
         /// Creates
         /// <see cref="ResourceResolver"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="ResourceResolver"/>
         /// instance. If
         /// <paramref name="baseUri"/>
         /// is a string that represents an absolute URI with any schema
@@ -84,7 +89,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <para />
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
-        /// </summary>
+        /// </remarks>
         /// <param name="baseUri">base URI against which all relative resource URIs will be resolved.</param>
         public ResourceResolver(String baseUri) {
             // TODO handle <base href=".."> tag?

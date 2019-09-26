@@ -151,8 +151,7 @@ namespace iText.Kernel.Font {
             return 1;
         }
 
-        /// <summary>Checks whether the glyph is appendable, i.e.</summary>
-        /// <remarks>Checks whether the glyph is appendable, i.e. has valid unicode and code values</remarks>
+        /// <summary>Checks whether the glyph is appendable, i.e. has valid unicode and code values</summary>
         /// <param name="glyph">
         /// not-null
         /// <see cref="iText.IO.Font.Otf.Glyph"/>

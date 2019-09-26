@@ -62,11 +62,18 @@ namespace iText.Layout.Renderer {
     /// <see cref="IRenderer">renderer</see>
     /// object for a
     /// <see cref="iText.Layout.Element.Table"/>
+    /// object.
+    /// </summary>
+    /// <remarks>
+    /// This class represents the
+    /// <see cref="IRenderer">renderer</see>
+    /// object for a
+    /// <see cref="iText.Layout.Element.Table"/>
     /// object. It will delegate its drawing operations on to the
     /// <see cref="CellRenderer"/>
     /// instances associated with the
     /// <see cref="iText.Layout.Element.Cell">table cells</see>.
-    /// </summary>
+    /// </remarks>
     public class TableRenderer : AbstractRenderer {
         protected internal IList<CellRenderer[]> rows = new List<CellRenderer[]>();
 

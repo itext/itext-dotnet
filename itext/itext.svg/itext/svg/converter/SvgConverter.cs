@@ -736,44 +736,9 @@ namespace iText.Svg.Converter {
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// that can then be used on the passed
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// . This method does NOT manipulate the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// in any way.
-        /// <para />
-        /// This method (or its overloads) is the best method to use if you want to
-        /// reuse the same SVG image multiple times on the same
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
-        /// <para />
-        /// If you want to reuse this object on other
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// instances,
-        /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
-        /// overloads in this same
-        /// class and convert its result to an XObject with
-        /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
-        /// , or look into
-        /// using
-        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
         /// </summary>
-        /// <param name="content">the String value containing valid SVG content</param>
-        /// <param name="document">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// instance to draw on
-        /// </param>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
-        /// containing the PDF instructions
-        /// corresponding to the passed SVG content
-        /// </returns>
-        public static PdfFormXObject ConvertToXObject(String content, PdfDocument document) {
-            return ConvertToXObject(content, document, null);
-        }
-
-        /// <summary>
+        /// <remarks>
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// that can then be used on the passed
@@ -797,7 +762,54 @@ namespace iText.Svg.Converter {
         /// , or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
+        /// </remarks>
+        /// <param name="content">the String value containing valid SVG content</param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to draw on
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// containing the PDF instructions
+        /// corresponding to the passed SVG content
+        /// </returns>
+        public static PdfFormXObject ConvertToXObject(String content, PdfDocument document) {
+            return ConvertToXObject(content, document, null);
+        }
+
+        /// <summary>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// </summary>
+        /// <remarks>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// . This method does NOT manipulate the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// in any way.
+        /// <para />
+        /// This method (or its overloads) is the best method to use if you want to
+        /// reuse the same SVG image multiple times on the same
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// <para />
+        /// If you want to reuse this object on other
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instances,
+        /// please either use any of the
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// overloads in this same
+        /// class and convert its result to an XObject with
+        /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
+        /// , or look into
+        /// using
+        /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
+        /// </remarks>
         /// <param name="content">the String value containing valid SVG content</param>
         /// <param name="document">
         /// the
@@ -826,6 +838,12 @@ namespace iText.Svg.Converter {
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -846,7 +864,7 @@ namespace iText.Svg.Converter {
         /// , or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="stream">
         /// the
         /// <see cref="System.IO.Stream">Stream</see>
@@ -894,6 +912,12 @@ namespace iText.Svg.Converter {
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -914,7 +938,7 @@ namespace iText.Svg.Converter {
         /// , or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="stream">
         /// the
         /// <see cref="System.IO.Stream">Stream</see>
@@ -940,6 +964,12 @@ namespace iText.Svg.Converter {
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
         /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">XObject</see>
+        /// that can then be used on the passed
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . This method does NOT manipulate the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -960,7 +990,7 @@ namespace iText.Svg.Converter {
         /// , or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="stream">the Stream object containing valid SVG content</param>
         /// <param name="document">
         /// the
@@ -979,6 +1009,12 @@ namespace iText.Svg.Converter {
         }
 
         /// <summary>
+        /// Converts a String containing valid SVG content to an
+        /// <see cref="iText.Layout.Element.Image">image</see>
+        /// that can then be used on the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
         /// Converts a String containing valid SVG content to an
         /// <see cref="iText.Layout.Element.Image">image</see>
         /// that can then be used on the passed
@@ -1002,7 +1038,7 @@ namespace iText.Svg.Converter {
         /// , or look into
         /// using
         /// <see cref="iText.Kernel.Pdf.PdfObject.CopyTo(iText.Kernel.Pdf.PdfDocument)"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="stream">
         /// the
         /// <see cref="System.IO.Stream">Stream</see>
@@ -1148,9 +1184,15 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
         /// )
         /// The parsing of the stream is done using UTF-8 as the default charset.
+        /// </summary>
+        /// <remarks>
+        /// Parse and process an Inputstream containing an SVG, using the default Svg processor (
+        /// <see cref="iText.Svg.Processors.Impl.DefaultSvgProcessor"/>
+        /// )
+        /// The parsing of the stream is done using UTF-8 as the default charset.
         /// The properties used by the processor are the
         /// <see cref="iText.Svg.Processors.Impl.SvgConverterProperties"/>
-        /// </summary>
+        /// </remarks>
         /// <param name="svgStream">Input stream containing the SVG to parse and process</param>
         /// <returns>
         /// 
@@ -1207,8 +1249,14 @@ namespace iText.Svg.Converter {
         /// Use the default implementation of
         /// <see cref="iText.Svg.Processors.ISvgProcessor"/>
         /// to convert an XML
-        /// DOM tree to a node renderer tree. The passed properties can modify the default behaviour
+        /// DOM tree to a node renderer tree.
         /// </summary>
+        /// <remarks>
+        /// Use the default implementation of
+        /// <see cref="iText.Svg.Processors.ISvgProcessor"/>
+        /// to convert an XML
+        /// DOM tree to a node renderer tree. The passed properties can modify the default behaviour
+        /// </remarks>
         /// <param name="root">the XML DOM tree</param>
         /// <param name="props">
         /// 

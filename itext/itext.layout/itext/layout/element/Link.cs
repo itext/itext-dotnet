@@ -56,10 +56,16 @@ namespace iText.Layout.Element {
     /// A clickable piece of
     /// <see cref="Text"/>
     /// which contains a
+    /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary</see>.
+    /// </summary>
+    /// <remarks>
+    /// A clickable piece of
+    /// <see cref="Text"/>
+    /// which contains a
     /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation">link annotation dictionary</see>
     /// . The concept is largely similar to that of the
     /// HTML anchor tag.
-    /// </summary>
+    /// </remarks>
     public class Link : Text {
         /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
         /// <param name="text">the textual contents of the link</param>

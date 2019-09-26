@@ -50,12 +50,18 @@ namespace iText.Layout.Properties {
     /// for a text
     /// <see cref="IElement"/>
     /// 's kerning property.
+    /// </summary>
+    /// <remarks>
+    /// A specialized enum holding the possible values
+    /// for a text
+    /// <see cref="IElement"/>
+    /// 's kerning property.
     /// This class is meant to be used as the value for the
     /// <see cref="Property.FONT_KERNING"/>
     /// key
     /// in an
     /// <see cref="IPropertyContainer"/>.
-    /// </summary>
+    /// </remarks>
     public enum FontKerning {
         YES,
         NO

@@ -1236,7 +1236,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
+        /// <summary>Changes the value of the <var>line dash pattern</var>.</summary>
         /// <remarks>
         /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
@@ -1254,7 +1254,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
+        /// <summary>Changes the value of the <var>line dash pattern</var>.</summary>
         /// <remarks>
         /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
@@ -1274,7 +1274,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
+        /// <summary>Changes the value of the <var>line dash pattern</var>.</summary>
         /// <remarks>
         /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
@@ -1294,7 +1294,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Changes the value of the <VAR>line dash pattern</VAR>.</summary>
+        /// <summary>Changes the value of the <var>line dash pattern</var>.</summary>
         /// <remarks>
         /// Changes the value of the <var>line dash pattern</var>.
         /// <br />
@@ -1561,7 +1561,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return SetStrokeColorCmyk(0, 0, 0, 1);
         }
 
-        /// <summary>Begins a graphic block whose visibility is controlled by the <CODE>layer</CODE>.</summary>
+        /// <summary>Begins a graphic block whose visibility is controlled by the <c>layer</c>.</summary>
         /// <remarks>
         /// Begins a graphic block whose visibility is controlled by the <c>layer</c>.
         /// Blocks can be nested. Each block must be terminated by an
@@ -1821,6 +1821,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// Adds
         /// <c>PdfXObject</c>
         /// to specified rectangle on canvas.
+        /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <c>PdfXObject</c>
+        /// to specified rectangle on canvas.
         /// Do note that using this method of adding an XObject <b>will scale</b> the XObject using the width and the height
         /// of the provided Rectangle. If you don't wish to scale the XObject, use
         /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float)"/>
@@ -1831,7 +1836,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// ,
         /// or
         /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float)"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="xObject">the XObject to add</param>
         /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
         /// <returns>current canvas.</returns>

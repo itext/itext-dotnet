@@ -169,8 +169,7 @@ namespace iText.IO.Font {
 
             internal int underlineThickness;
 
-            /// <summary><CODE>true</CODE> if all the glyphs have the same width.</summary>
-            /// <remarks><c>true</c> if all the glyphs have the same width.</remarks>
+            /// <summary><c>true</c> if all the glyphs have the same width.</summary>
             internal bool isFixedPitch;
         }
 
@@ -1006,13 +1005,9 @@ namespace iText.IO.Font {
         }
 
         /// <summary>
-        /// Reads a <CODE>String</CODE> from the font file as bytes using the Cp1252
-        /// encoding.
-        /// </summary>
-        /// <remarks>
         /// Reads a <c>String</c> from the font file as bytes using the Cp1252
         /// encoding.
-        /// </remarks>
+        /// </summary>
         /// <param name="length">the length of bytes to read</param>
         /// <returns>the <c>String</c> read</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
@@ -1020,7 +1015,7 @@ namespace iText.IO.Font {
             return raf.ReadString(length, PdfEncodings.WINANSI);
         }
 
-        /// <summary>Reads a Unicode <CODE>String</CODE> from the font file.</summary>
+        /// <summary>Reads a Unicode <c>String</c> from the font file.</summary>
         /// <remarks>Reads a Unicode <c>String</c> from the font file. Each character is represented by two bytes.</remarks>
         /// <param name="length">the length of bytes to read. The <c>String</c> will have <c>length</c>/2 characters.</param>
         /// <returns>the <c>String</c> read.</returns>

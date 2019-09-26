@@ -176,10 +176,15 @@ namespace iText.IO.Source {
         /// Fill
         /// <c>ByteBuffer</c>
         /// from the end.
+        /// </summary>
+        /// <remarks>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
         /// Set byte at
         /// <c>capacity() - size() - 1</c>
         /// position.
-        /// </summary>
+        /// </remarks>
         /// <param name="b">
         /// 
         /// <c>byte</c>.
@@ -198,10 +203,15 @@ namespace iText.IO.Source {
         /// Fill
         /// <c>ByteBuffer</c>
         /// from the end.
+        /// </summary>
+        /// <remarks>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
         /// Set bytes from
         /// <c>capacity() - size() - b.length</c>
         /// position.
-        /// </summary>
+        /// </remarks>
         /// <param name="b">
         /// 
         /// <c>byte</c>.

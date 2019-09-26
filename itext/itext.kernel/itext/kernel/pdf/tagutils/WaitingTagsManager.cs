@@ -71,13 +71,19 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Assigns waiting state to the tag at which given
         /// <see cref="TagTreePointer"/>
         /// points, associating it with the given
+        /// <see cref="System.Object"/>.
+        /// </summary>
+        /// <remarks>
+        /// Assigns waiting state to the tag at which given
+        /// <see cref="TagTreePointer"/>
+        /// points, associating it with the given
         /// <see cref="System.Object"/>
         /// . If current tag of the given
         /// <see cref="TagTreePointer"/>
         /// is already waiting, then after this method call
         /// it's associated object will change to the one passed as the argument and the old one will not longer be
         /// an associated object.
-        /// </summary>
+        /// </remarks>
         /// <param name="pointerToTag">
         /// a
         /// <see cref="TagTreePointer"/>
@@ -117,10 +123,15 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Moves given
         /// <see cref="TagTreePointer"/>
         /// to the waiting tag which is associated with the given object.
+        /// </summary>
+        /// <remarks>
+        /// Moves given
+        /// <see cref="TagTreePointer"/>
+        /// to the waiting tag which is associated with the given object.
         /// If the passed object is not associated with any waiting tag,
         /// <see cref="TagTreePointer"/>
         /// position won't change.
-        /// </summary>
+        /// </remarks>
         /// <param name="tagPointer">
         /// a
         /// <see cref="TagTreePointer"/>

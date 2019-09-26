@@ -53,12 +53,22 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// multiple
     /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// instances for each glyph occurred.
+    /// </summary>
+    /// <remarks>
+    /// This class expands each
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// for
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
+    /// event types into
+    /// multiple
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// instances for each glyph occurred.
     /// The only difference from
     /// <see cref="GlyphEventListener"/>
     /// is that this class conveniently implements
     /// <see cref="ITextExtractionStrategy"/>
     /// and can therefore used as a strategy on its own.
-    /// </summary>
+    /// </remarks>
     public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy {
         /// <summary>
         /// Constructs a

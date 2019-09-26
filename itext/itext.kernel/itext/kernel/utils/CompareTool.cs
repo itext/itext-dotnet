@@ -2450,10 +2450,14 @@ namespace iText.Kernel.Utils {
 
             /// <summary>
             /// An item in the indirect path (see
+            /// <see cref="ObjectPath"/>.
+            /// </summary>
+            /// <remarks>
+            /// An item in the indirect path (see
             /// <see cref="ObjectPath"/>
             /// . It encapsulates two corresponding objects from the two
             /// comparing documents that were met to get to the path base objects during comparing process.
-            /// </summary>
+            /// </remarks>
             public class IndirectPathItem {
                 private PdfIndirectReference cmpObject;
 
@@ -2543,10 +2547,15 @@ namespace iText.Kernel.Utils {
                 /// The key which defines to which entry of the
                 /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
                 /// the transition was performed.
+                /// </summary>
+                /// <remarks>
+                /// The key which defines to which entry of the
+                /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+                /// the transition was performed.
                 /// See
                 /// <see cref="DictPathItem"/>
                 /// for more info.
-                /// </summary>
+                /// </remarks>
                 /// <returns>
                 /// a
                 /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -2604,10 +2613,15 @@ namespace iText.Kernel.Utils {
                 /// The index which defines element of the
                 /// <see cref="iText.Kernel.Pdf.PdfArray"/>
                 /// to which the transition was performed.
+                /// </summary>
+                /// <remarks>
+                /// The index which defines element of the
+                /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+                /// to which the transition was performed.
                 /// See
                 /// <see cref="ArrayPathItem"/>
                 /// for more info.
-                /// </summary>
+                /// </remarks>
                 /// <returns>the index which defines element of the array to which the transition was performed</returns>
                 public virtual int GetIndex() {
                     return index;

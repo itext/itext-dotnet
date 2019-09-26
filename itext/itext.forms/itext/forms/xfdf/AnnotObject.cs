@@ -146,9 +146,13 @@ namespace iText.Forms.Xfdf {
 
         /// <summary>
         /// The reference to the source
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>.
+        /// </summary>
+        /// <remarks>
+        /// The reference to the source
         /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
         /// . Used for attaching popups in case of reading data from pdf file.
-        /// </summary>
+        /// </remarks>
         private PdfIndirectReference @ref;
 
         public AnnotObject() {

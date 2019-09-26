@@ -68,12 +68,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>
         /// Copies structure to a
         /// <paramref name="destDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies structure to a
+        /// <paramref name="destDocument"/>.
         /// <br/><br/>
         /// NOTE: Works only for
         /// <c>PdfStructTreeRoot</c>
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
-        /// </summary>
+        /// </remarks>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         public static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument callingDocument
@@ -88,6 +92,11 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Copies structure to a
         /// <paramref name="destDocument"/>
         /// and insert it in a specified position in the document.
+        /// </summary>
+        /// <remarks>
+        /// Copies structure to a
+        /// <paramref name="destDocument"/>
+        /// and insert it in a specified position in the document.
         /// <br/><br/>
         /// NOTE: Works only for
         /// <c>PdfStructTreeRoot</c>
@@ -96,7 +105,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <br/>
         /// Also, to insert a tagged page into existing tag structure, existing tag structure shouldn't be flushed, otherwise
         /// an exception may be raised.
-        /// </summary>
+        /// </remarks>
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>

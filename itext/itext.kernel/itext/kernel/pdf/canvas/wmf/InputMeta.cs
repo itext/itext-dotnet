@@ -46,8 +46,7 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
-    /// <summary>Helper class to read nt, short, words, etc.</summary>
-    /// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
+    /// <summary>Helper class to read nt, short, words, etc. from an InputStream.</summary>
     public class InputMeta {
         internal Stream @in;
 
@@ -122,8 +121,13 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>
         /// Read the next
         /// <see cref="iText.Kernel.Colors.Color"/>
-        /// from the InputStream. This reads 4 bytes.
+        /// from the InputStream.
         /// </summary>
+        /// <remarks>
+        /// Read the next
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// from the InputStream. This reads 4 bytes.
+        /// </remarks>
         /// <returns>the next Color</returns>
         /// <exception cref="System.IO.IOException"/>
         public virtual Color ReadColor() {

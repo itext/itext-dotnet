@@ -69,8 +69,13 @@ namespace iText.Kernel.Pdf {
         /// Offset in a document of the
         /// <c>refersTo</c>
         /// object.
-        /// If the object placed into object stream then it is an object index inside object stream.
         /// </summary>
+        /// <remarks>
+        /// Offset in a document of the
+        /// <c>refersTo</c>
+        /// object.
+        /// If the object placed into object stream then it is an object index inside object stream.
+        /// </remarks>
         protected internal long offsetOrIndex = 0;
 
         /// <summary>PdfDocument object belongs to.</summary>
@@ -215,11 +220,16 @@ namespace iText.Kernel.Pdf {
         /// Checks if this
         /// <see cref="PdfIndirectReference"/>
         /// instance corresponds to free indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// Checks if this
+        /// <see cref="PdfIndirectReference"/>
+        /// instance corresponds to free indirect reference.
         /// Indirect reference might be in a free state either because it was read as such from the opened existing
         /// PDF document or because it was set free via
         /// <see cref="SetFree()"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// 
         /// <see langword="true"/>

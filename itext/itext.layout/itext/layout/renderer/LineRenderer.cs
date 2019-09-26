@@ -796,8 +796,7 @@ namespace iText.Layout.Renderer {
             return length;
         }
 
-        /// <summary>Returns the number of base characters, i.e.</summary>
-        /// <remarks>Returns the number of base characters, i.e. non-mark characters</remarks>
+        /// <summary>Returns the number of base characters, i.e. non-mark characters</summary>
         protected internal virtual int BaseCharactersCount() {
             int count = 0;
             foreach (IRenderer child in childRenderers) {

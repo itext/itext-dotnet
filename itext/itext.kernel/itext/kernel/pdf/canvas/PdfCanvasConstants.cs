@@ -74,8 +74,7 @@ namespace iText.Kernel.Pdf.Canvas {
             /// <summary>Fill and stroke text</summary>
             public const int FILL_STROKE = 2;
 
-            /// <summary>Neither fill nor stroke, i.e.</summary>
-            /// <remarks>Neither fill nor stroke, i.e. render invisibly</remarks>
+            /// <summary>Neither fill nor stroke, i.e. render invisibly</summary>
             public const int INVISIBLE = 3;
 
             /// <summary>Fill text and add to path for clipping</summary>

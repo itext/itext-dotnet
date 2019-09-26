@@ -207,7 +207,7 @@ namespace iText.Kernel.XMP {
         // ---------------------------------------------------------------------------------------------
         // Functions for setting property values
         /// <summary>
-        /// The property value <code>setters</code> all take a property specification, their
+        /// The property value <c>setters</c> all take a property specification, their
         /// differences are in the form of this.
         /// </summary>
         /// <remarks>
@@ -784,7 +784,7 @@ namespace iText.Kernel.XMP {
         // ---------------------------------------------------------------------------------------------
         // Functions accessing properties as binary values.
         /// <summary>
-        /// These are very similar to <code>getProperty()</code> and <code>SetProperty()</code> above,
+        /// These are very similar to <c>getProperty()</c> and <c>SetProperty()</c> above,
         /// but the value is returned or provided in a literal form instead of as a UTF-8 string.
         /// </summary>
         /// <remarks>
@@ -957,8 +957,7 @@ namespace iText.Kernel.XMP {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         String GetPropertyString(String schemaNS, String propName);
 
-        /// <summary>Convenience method to set a property to a literal <code>boolean</code> value.</summary>
-        /// <remarks>Convenience method to set a property to a literal <c>boolean</c> value.</remarks>
+        /// <summary>Convenience method to set a property to a literal <c>boolean</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
         /// <c>setProperty()</c>.
@@ -982,8 +981,7 @@ namespace iText.Kernel.XMP {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBoolean(String schemaNS, String propName, bool propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>int</code> value.</summary>
-        /// <remarks>Convenience method to set a property to a literal <c>int</c> value.</remarks>
+        /// <summary>Convenience method to set a property to a literal <c>int</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
         /// <c>setProperty()</c>.
@@ -1007,8 +1005,7 @@ namespace iText.Kernel.XMP {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyInteger(String schemaNS, String propName, int propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>long</code> value.</summary>
-        /// <remarks>Convenience method to set a property to a literal <c>long</c> value.</remarks>
+        /// <summary>Convenience method to set a property to a literal <c>long</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
         /// <c>setProperty()</c>.
@@ -1032,8 +1029,7 @@ namespace iText.Kernel.XMP {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyLong(String schemaNS, String propName, long propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>double</code> value.</summary>
-        /// <remarks>Convenience method to set a property to a literal <c>double</c> value.</remarks>
+        /// <summary>Convenience method to set a property to a literal <c>double</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
         /// <c>setProperty()</c>.
@@ -1112,13 +1108,9 @@ namespace iText.Kernel.XMP {
         void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue);
 
         /// <summary>
-        /// Convenience method to set a property from a binary <code>byte[]</code>-array,
-        /// which is serialized as base64-string.
-        /// </summary>
-        /// <remarks>
         /// Convenience method to set a property from a binary <c>byte[]</c>-array,
         /// which is serialized as base64-string.
-        /// </remarks>
+        /// </summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
         /// <c>setProperty()</c>.
@@ -1210,8 +1202,8 @@ namespace iText.Kernel.XMP {
 
         /// <summary>
         /// Sorts the complete datamodel according to the following rules:
-        /// <ul>
-        /// <li>Schema nodes are sorted by prefix.
+        /// <list type="bullet">
+        /// <item><description>Schema nodes are sorted by prefix.
         /// </summary>
         /// <remarks>
         /// Sorts the complete datamodel according to the following rules:

@@ -48,10 +48,14 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Ordered range for
     /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
+    /// </summary>
+    /// <remarks>
+    /// Ordered range for
+    /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
     /// To create a custom Range instance
     /// <see cref="RangeBuilder"/>
     /// shall be used.
-    /// </summary>
+    /// </remarks>
     public class Range {
         private Range.SubRange[] ranges;
 

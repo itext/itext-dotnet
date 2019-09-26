@@ -38,8 +38,7 @@ namespace iText.Kernel.XMP {
     public sealed class XMPMetaFactory {
         private static readonly Object staticLock = new Object();
 
-        /// <summary>The singleton instance of the <code>XMPSchemaRegistry</code>.</summary>
-        /// <remarks>The singleton instance of the <c>XMPSchemaRegistry</c>.</remarks>
+        /// <summary>The singleton instance of the <c>XMPSchemaRegistry</c>.</summary>
         private static XMPSchemaRegistry schema = new XMPSchemaRegistryImpl();
 
         /// <summary>cache for version info</summary>
@@ -113,8 +112,7 @@ namespace iText.Kernel.XMP {
             return ParseFromString(packet, null);
         }
 
-        /// <summary>Creates an <code>XMPMeta</code>-object from a string.</summary>
-        /// <remarks>Creates an <c>XMPMeta</c>-object from a string.</remarks>
+        /// <summary>Creates an <c>XMPMeta</c>-object from a string.</summary>
         /// <param name="packet">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
         /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
@@ -135,8 +133,7 @@ namespace iText.Kernel.XMP {
             return ParseFromBuffer(buffer, null);
         }
 
-        /// <summary>Creates an <code>XMPMeta</code>-object from a byte-buffer.</summary>
-        /// <remarks>Creates an <c>XMPMeta</c>-object from a byte-buffer.</remarks>
+        /// <summary>Creates an <c>XMPMeta</c>-object from a byte-buffer.</summary>
         /// <param name="buffer">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
         /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
@@ -148,13 +145,9 @@ namespace iText.Kernel.XMP {
         }
 
         /// <summary>
-        /// Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>
-        /// with default options.
-        /// </summary>
-        /// <remarks>
         /// Serializes an <c>XMPMeta</c>-object as RDF into an <c>OutputStream</c>
         /// with default options.
-        /// </remarks>
+        /// </summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="out">an <c>OutputStream</c> to write the serialized RDF to.</param>
         /// <exception cref="XMPException">on serializsation errors.</exception>
@@ -163,8 +156,7 @@ namespace iText.Kernel.XMP {
             Serialize(xmp, @out, null);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>.</summary>
-        /// <remarks>Serializes an <c>XMPMeta</c>-object as RDF into an <c>OutputStream</c>.</remarks>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into an <c>OutputStream</c>.</summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="options">
         /// Options to control the serialization (see
@@ -179,8 +171,7 @@ namespace iText.Kernel.XMP {
             XMPSerializerHelper.Serialize((XMPMetaImpl)xmp, @out, options);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a byte buffer.</summary>
-        /// <remarks>Serializes an <c>XMPMeta</c>-object as RDF into a byte buffer.</remarks>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into a byte buffer.</summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="options">
         /// Options to control the serialization (see
@@ -195,7 +186,7 @@ namespace iText.Kernel.XMP {
             return XMPSerializerHelper.SerializeToBuffer((XMPMetaImpl)xmp, options);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a string.</summary>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into a string.</summary>
         /// <remarks>
         /// Serializes an <c>XMPMeta</c>-object as RDF into a string. <em>Note:</em> Encoding
         /// is ignored when serializing to a string.

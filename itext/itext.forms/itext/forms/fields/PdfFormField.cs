@@ -70,13 +70,17 @@ namespace iText.Forms.Fields {
     /// <summary>
     /// This class represents a single field or field group in an
     /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>.
+    /// </summary>
+    /// <remarks>
+    /// This class represents a single field or field group in an
+    /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>.
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
     /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
-    /// </summary>
+    /// </remarks>
     public class PdfFormField : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// Flag that designates, if set, that the field can contain multiple lines
@@ -173,10 +177,14 @@ namespace iText.Forms.Fields {
         /// <summary>
         /// Creates a form field as a wrapper object around a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// This
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// must be an indirect object.
-        /// </summary>
+        /// </remarks>
         /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
         public PdfFormField(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -1302,9 +1310,14 @@ namespace iText.Forms.Fields {
         /// <summary>
         /// Creates a
         /// <see cref="PdfButtonFormField"/>
+        /// as a checkbox.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="PdfButtonFormField"/>
         /// as a checkbox. Check symbol will fit rectangle.
         /// You may set font and font size after creation.
-        /// </summary>
+        /// </remarks>
         /// <param name="doc">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -1600,9 +1613,14 @@ namespace iText.Forms.Fields {
         /// <summary>
         /// Creates a (subtype of)
         /// <see cref="PdfFormField"/>
+        /// object.
+        /// </summary>
+        /// <remarks>
+        /// Creates a (subtype of)
+        /// <see cref="PdfFormField"/>
         /// object. The type of the object
         /// depends on the <c>FT</c> entry in the <c>pdfObject</c> parameter.
-        /// </summary>
+        /// </remarks>
         /// <param name="pdfObject">
         /// assumed to be either a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -1822,9 +1840,13 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Adds a new kid to the <c>Kids</c> array property from a
+        /// <see cref="PdfFormField"/>.
+        /// </summary>
+        /// <remarks>
+        /// Adds a new kid to the <c>Kids</c> array property from a
         /// <see cref="PdfFormField"/>
         /// . Also sets the kid's <c>Parent</c> property to this object.
-        /// </summary>
+        /// </remarks>
         /// <param name="kid">
         /// a new
         /// <see cref="PdfFormField"/>
@@ -1843,9 +1865,13 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Adds a new kid to the <c>Kids</c> array property from a
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
+        /// </summary>
+        /// <remarks>
+        /// Adds a new kid to the <c>Kids</c> array property from a
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// . Also sets the kid's <c>Parent</c> property to this object.
-        /// </summary>
+        /// </remarks>
         /// <param name="kid">
         /// a new
         /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
@@ -2446,7 +2472,7 @@ namespace iText.Forms.Fields {
             return color;
         }
 
-        /// <summary>Basic setter for the <code>font</code> property.</summary>
+        /// <summary>Basic setter for the <c>font</c> property.</summary>
         /// <remarks>
         /// Basic setter for the <c>font</c> property. Regenerates the field
         /// appearance after setting the new value.
@@ -2461,7 +2487,7 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
+        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
         /// <remarks>
         /// Basic setter for the <c>fontSize</c> property. Regenerates the
         /// field appearance after setting the new value.
@@ -2474,7 +2500,7 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
+        /// <summary>Basic setter for the <c>fontSize</c> property.</summary>
         /// <remarks>
         /// Basic setter for the <c>fontSize</c> property. Regenerates the
         /// field appearance after setting the new value.
@@ -2487,7 +2513,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// Combined setter for the <code>font</code> and <code>fontSize</code>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
         /// properties.
         /// </summary>
         /// <remarks>
@@ -2505,7 +2531,7 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
-        /// Combined setter for the <code>font</code> and <code>fontSize</code>
+        /// Combined setter for the <c>font</c> and <c>fontSize</c>
         /// properties.
         /// </summary>
         /// <remarks>
@@ -2521,7 +2547,7 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <summary>Basic setter for the <code>backgroundColor</code> property.</summary>
+        /// <summary>Basic setter for the <c>backgroundColor</c> property.</summary>
         /// <remarks>
         /// Basic setter for the <c>backgroundColor</c> property. Regenerates
         /// the field appearance after setting the new value.
@@ -2553,7 +2579,7 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <summary>Basic setter for the <code>degRotation</code> property.</summary>
+        /// <summary>Basic setter for the <c>degRotation</c> property.</summary>
         /// <remarks>
         /// Basic setter for the <c>degRotation</c> property. Regenerates
         /// the field appearance after setting the new value.

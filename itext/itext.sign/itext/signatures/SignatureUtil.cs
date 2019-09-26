@@ -98,6 +98,11 @@ namespace iText.Signatures {
         /// Prepares an
         /// <see cref="PdfPKCS7"/>
         /// instance for the given signature.
+        /// </summary>
+        /// <remarks>
+        /// Prepares an
+        /// <see cref="PdfPKCS7"/>
+        /// instance for the given signature.
         /// This method handles signature parsing and might throw an exception if
         /// signature is malformed.
         /// <para />
@@ -110,7 +115,7 @@ namespace iText.Signatures {
         /// use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <param name="name">the signature field name</param>
         /// <param name="provider">the security provider or null for the default provider</param>
         /// <returns>
@@ -129,6 +134,11 @@ namespace iText.Signatures {
         /// Prepares an
         /// <see cref="PdfPKCS7"/>
         /// instance for the given signature.
+        /// </summary>
+        /// <remarks>
+        /// Prepares an
+        /// <see cref="PdfPKCS7"/>
+        /// instance for the given signature.
         /// This method handles signature parsing and might throw an exception if
         /// signature is malformed.
         /// <para />
@@ -144,7 +154,7 @@ namespace iText.Signatures {
         /// revision please use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <param name="signatureFieldName">the signature field name</param>
         /// <param name="securityProvider">the security provider or null for the default provider</param>
         /// <returns>

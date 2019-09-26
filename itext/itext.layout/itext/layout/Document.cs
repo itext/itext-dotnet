@@ -83,13 +83,17 @@ namespace iText.Layout {
 
         /// <summary>
         /// Creates a document from a
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . Initializes the first page
         /// with the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// 's current default
         /// <see cref="iText.Kernel.Geom.PageSize"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         public Document(PdfDocument pdfDoc)
             : this(pdfDoc, pdfDoc.GetDefaultPageSize()) {
@@ -176,11 +180,16 @@ namespace iText.Layout {
         /// <summary>
         /// Changes the
         /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
+        /// at runtime.
+        /// </summary>
+        /// <remarks>
+        /// Changes the
+        /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
         /// at runtime. Use this to customize
         /// the Document's
         /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// behavior.
-        /// </summary>
+        /// </remarks>
         /// <param name="documentRenderer">the DocumentRenderer to set</param>
         public virtual void SetRenderer(DocumentRenderer documentRenderer) {
             this.rootRenderer = documentRenderer;

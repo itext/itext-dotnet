@@ -50,8 +50,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// <returns>the object representing the layer</returns>
         PdfDictionary GetPdfObject();
 
-        /// <summary>Gets the <CODE>PdfIndirectReference</CODE> that represents this layer.</summary>
-        /// <remarks>Gets the <c>PdfIndirectReference</c> that represents this layer.</remarks>
+        /// <summary>Gets the <c>PdfIndirectReference</c> that represents this layer.</summary>
         /// <returns>the <c>PdfIndirectReference</c> that represents this layer</returns>
         PdfIndirectReference GetIndirectReference();
     }

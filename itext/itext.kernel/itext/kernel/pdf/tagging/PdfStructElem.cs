@@ -319,9 +319,15 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
         /// identifies the structure element to which the item of content, contained
         /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
+        /// </summary>
+        /// <remarks>
+        /// A
+        /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
+        /// identifies the structure element to which the item of content, contained
+        /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <param name="ref">
         /// a
         /// <see cref="PdfStructElem"/>
@@ -419,10 +425,15 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Attribute for a structure element that indicates the phonetic alphabet used by a
         /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
         /// attribute.
+        /// </summary>
+        /// <remarks>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
         /// Applies to the structure element and its children, except where overridden by a child structure element.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <param name="phoneticAlphabet">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -459,8 +470,13 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Attribute for a structure element that indicates the phonetic alphabet used by a
         /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
         /// attribute.
-        /// Applies to the structure element and its children, except where overridden by a child structure element.
         /// </summary>
+        /// <remarks>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
+        /// Applies to the structure element and its children, except where overridden by a child structure element.
+        /// </remarks>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -506,7 +522,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with structure element and identifies the relationship between them.
         /// </summary>
         /// <remarks>

@@ -236,9 +236,14 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Gets the descent of a
         /// <c>String</c>
+        /// in points.
+        /// </summary>
+        /// <remarks>
+        /// Gets the descent of a
+        /// <c>String</c>
         /// in points. The descent will always be
         /// less than or equal to zero even if all the characters have an higher descent.
-        /// </summary>
+        /// </remarks>
         /// <param name="text">
         /// the
         /// <c>String</c>
@@ -302,9 +307,14 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Gets the ascent of a
         /// <c>String</c>
+        /// in points.
+        /// </summary>
+        /// <remarks>
+        /// Gets the ascent of a
+        /// <c>String</c>
         /// in points. The ascent will always be
         /// greater than or equal to zero even if all the characters have a lower ascent.
-        /// </summary>
+        /// </remarks>
         /// <param name="text">
         /// the
         /// <c>String</c>
@@ -460,8 +470,13 @@ namespace iText.Kernel.Font {
         /// Checks whether the
         /// <see cref="PdfFont"/>
         /// was built with corresponding fontProgram and encoding or CMAP.
-        /// Default value is false unless overridden.
         /// </summary>
+        /// <remarks>
+        /// Checks whether the
+        /// <see cref="PdfFont"/>
+        /// was built with corresponding fontProgram and encoding or CMAP.
+        /// Default value is false unless overridden.
+        /// </remarks>
         /// <param name="fontProgram">a font name or path to a font program</param>
         /// <param name="encoding">an encoding or CMAP</param>
         /// <returns>true, if the PdfFont was built with the fontProgram and encoding. Otherwise false.</returns>
@@ -478,11 +493,17 @@ namespace iText.Kernel.Font {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }

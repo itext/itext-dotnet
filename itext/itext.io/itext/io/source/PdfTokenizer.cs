@@ -123,9 +123,13 @@ namespace iText.IO.Source {
         /// <summary>
         /// Creates a PdfTokenizer for the specified
         /// <see cref="RandomAccessFileOrArray"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a PdfTokenizer for the specified
+        /// <see cref="RandomAccessFileOrArray"/>.
         /// The beginning of the file is read to determine the location of the header, and the data source is adjusted
         /// as necessary to account for any junk that occurs in the byte source before the header
-        /// </summary>
+        /// </remarks>
         /// <param name="file">the source</param>
         public PdfTokenizer(RandomAccessFileOrArray file) {
             this.file = file;

@@ -320,7 +320,7 @@ namespace iText.Barcodes {
         /// <returns>the size the barcode occupies.</returns>
         public abstract Rectangle GetBarcodeSize();
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
         /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the

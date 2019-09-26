@@ -109,11 +109,16 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// Parses a rule set into a list of
         /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>
         /// instances.
+        /// </summary>
+        /// <remarks>
+        /// Parses a rule set into a list of
+        /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>
+        /// instances.
         /// This method returns a
         /// <see cref="System.Collections.IList{E}"/>
         /// because a selector can
         /// be compound, like "p, div, #navbar".
-        /// </summary>
+        /// </remarks>
         /// <param name="selectorStr">the selector</param>
         /// <param name="propertiesStr">the properties</param>
         /// <returns>

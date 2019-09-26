@@ -135,7 +135,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
             return new iText.StyledXmlParser.Jsoup.Safety.Whitelist();
         }
 
-        /// <summary>This whitelist allows only simple text formatting: <code>b, em, i, strong, u</code>.</summary>
+        /// <summary>This whitelist allows only simple text formatting: <c>b, em, i, strong, u</c>.</summary>
         /// <remarks>
         /// This whitelist allows only simple text formatting: <c>b, em, i, strong, u</c>. All other HTML (tags and
         /// attributes) will be removed.
@@ -146,8 +146,8 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         }
 
         /// <summary>
-        /// This whitelist allows a fuller range of text nodes: <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
-        /// ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and appropriate attributes.
+        /// This whitelist allows a fuller range of text nodes: <c>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
+        /// ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</c>, and appropriate attributes.
         /// </summary>
         /// <remarks>
         /// This whitelist allows a fuller range of text nodes: <c>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
@@ -181,9 +181,9 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         }
 
         /// <summary>
-        /// This whitelist allows a full range of text and structural body HTML: <code>a, b, blockquote, br, caption, cite,
+        /// This whitelist allows a full range of text and structural body HTML: <c>a, b, blockquote, br, caption, cite,
         /// code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
-        /// sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
+        /// sup, table, tbody, td, tfoot, th, thead, tr, u, ul</c>
         /// </summary>
         /// <remarks>
         /// This whitelist allows a full range of text and structural body HTML: <c>a, b, blockquote, br, caption, cite,

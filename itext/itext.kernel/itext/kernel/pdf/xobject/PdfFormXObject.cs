@@ -68,8 +68,14 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <see cref="PdfFormXObject"/>
         /// instance by
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
-        /// Note, this constructor doesn't perform any additional checks
         /// </summary>
+        /// <remarks>
+        /// Create
+        /// <see cref="PdfFormXObject"/>
+        /// instance by
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
+        /// Note, this constructor doesn't perform any additional checks
+        /// </remarks>
         /// <param name="pdfStream">
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
@@ -102,13 +108,17 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <summary>
         /// Creates a form XObject from
         /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a form XObject from
+        /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>.
         /// Unlike other images,
         /// <see cref="iText.Kernel.Pdf.Canvas.Wmf.WmfImageData"/>
         /// images are represented as
         /// <see cref="PdfFormXObject"/>
         /// , not as
         /// <see cref="PdfImageXObject"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="image">image to create form object from</param>
         /// <param name="pdfDocument">document instance which is needed for writing form stream contents</param>
         public PdfFormXObject(WmfImageData image, PdfDocument pdfDocument)
@@ -119,8 +129,13 @@ namespace iText.Kernel.Pdf.Xobject {
         /// Gets
         /// <see cref="iText.Kernel.Pdf.PdfResources"/>
         /// of the Form XObject.
-        /// Note, if there is no resources, a new instance will be created.
         /// </summary>
+        /// <remarks>
+        /// Gets
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
+        /// of the Form XObject.
+        /// Note, if there is no resources, a new instance will be created.
+        /// </remarks>
         /// <returns>
         /// not null instance of
         /// <see cref="iText.Kernel.Pdf.PdfResources"/>.
@@ -207,11 +222,17 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             resources = null;
             if (GetPdfObject().Get(PdfName.BBox) == null) {

@@ -51,12 +51,18 @@ namespace iText.Layout.Element {
     /// A
     /// <see cref="Div"/>
     /// is a container object that defines a section in a document,
+    /// which will have some shared layout properties.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="Div"/>
+    /// is a container object that defines a section in a document,
     /// which will have some shared layout properties. Like all
     /// <see cref="BlockElement{T}"/>
     /// types, it will try to take up as much horizontal space as possible.
     /// <para />
     /// The concept is very similar to that of the div tag in HTML.
-    /// </summary>
+    /// </remarks>
     public class Div : BlockElement<Div> {
         protected internal DefaultAccessibilityProperties tagProperties;
 

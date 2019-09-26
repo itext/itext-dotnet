@@ -59,21 +59,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>the orientation as a scalar for quick sorting</summary>
         private readonly int orientationMagnitude;
 
-        /// <summary>perpendicular distance to the orientation unit vector (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system)
         /// we round to the nearest integer to handle the fuzziness of comparing floats
-        /// </remarks>
+        /// </summary>
         private readonly int distPerpendicular;
 
-        /// <summary>distance of the start of the chunk parallel to the orientation unit vector (i.e.</summary>
-        /// <remarks>distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
-        ///     </remarks>
+        /// <summary>distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
+        ///     </summary>
         private readonly float distParallelStart;
 
-        /// <summary>distance of the end of the chunk parallel to the orientation unit vector (i.e.</summary>
-        /// <remarks>distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
-        ///     </remarks>
+        /// <summary>distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
+        ///     </summary>
         private readonly float distParallelEnd;
 
         /// <summary>the width of a single space character in the font of the chunk</summary>

@@ -50,12 +50,18 @@ namespace iText.Layout.Properties {
     /// for a list
     /// <see cref="List"/>
     /// 's entry prefix.
+    /// </summary>
+    /// <remarks>
+    /// A specialized enum holding the possible values
+    /// for a list
+    /// <see cref="List"/>
+    /// 's entry prefix.
     /// This class is meant to be used as the value for the
     /// <see cref="Property.LIST_SYMBOL"/>
     /// key
     /// in an
     /// <see cref="IPropertyContainer"/>.
-    /// </summary>
+    /// </remarks>
     public enum ListNumberingType {
         DECIMAL,
         DECIMAL_LEADING_ZERO,

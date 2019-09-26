@@ -125,8 +125,12 @@ namespace iText.Layout {
         /// <summary>
         /// Sets
         /// <see cref="iText.Layout.Font.FontProvider"/>.
-        /// Note, font provider is inherited property.
         /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// Note, font provider is inherited property.
+        /// </remarks>
         /// <param name="fontProvider">
         /// instance of
         /// <see cref="iText.Layout.Font.FontProvider"/>.

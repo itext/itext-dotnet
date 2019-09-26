@@ -88,9 +88,15 @@ namespace iText.Kernel.Utils {
         /// If set to <i>true</i> then passed to the <i>
         /// <c>PdfMerger#merge</c>
         /// </i> method source documents will be closed
+        /// immediately after merging specified pages into current document.
+        /// </summary>
+        /// <remarks>
+        /// If set to <i>true</i> then passed to the <i>
+        /// <c>PdfMerger#merge</c>
+        /// </i> method source documents will be closed
         /// immediately after merging specified pages into current document. If <i>false</i> - PdfDocuments are left open.
         /// Default value - <i>false</i>.
-        /// </summary>
+        /// </remarks>
         /// <param name="closeSourceDocuments">should be true to close pdf documents in merge method.</param>
         /// <returns>
         /// this

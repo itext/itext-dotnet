@@ -116,8 +116,7 @@ namespace iText.Kernel.Geom {
         /// </remarks>
         public const int TYPE_MASK_ROTATION = TYPE_QUADRANT_ROTATION | TYPE_GENERAL_ROTATION;
 
-        /// <summary>The <code>TYPE_UNKNOWN</code> is an initial type value.</summary>
-        /// <remarks>The <c>TYPE_UNKNOWN</c> is an initial type value.</remarks>
+        /// <summary>The <c>TYPE_UNKNOWN</c> is an initial type value.</summary>
         internal const int TYPE_UNKNOWN = -1;
 
         /// <summary>The min value equivalent to zero.</summary>

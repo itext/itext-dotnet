@@ -51,8 +51,7 @@ using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Barcodes {
     public class BarcodeCodabar : Barcode1D {
-        /// <summary>The index chars to <CODE>BARS</CODE>.</summary>
-        /// <remarks>The index chars to <c>BARS</c>.</remarks>
+        /// <summary>The index chars to <c>BARS</c>.</summary>
         private const String CHARS = "0123456789-$:/.+ABCD";
 
         private const int START_STOP_IDX = 16;
@@ -202,7 +201,7 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
         /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the

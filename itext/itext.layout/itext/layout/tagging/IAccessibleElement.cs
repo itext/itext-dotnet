@@ -47,19 +47,27 @@ namespace iText.Layout.Tagging {
     /// <summary>
     /// A layout element which has
     /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>.
+    /// </summary>
+    /// <remarks>
+    /// A layout element which has
+    /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>.
     /// They define element's <em>role</em> (
     /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties.GetRole()"/>
     /// ) - the name
     /// that will be used to tag the element if it is added to a Tagged PDF document.
     /// They can also define other metadata for the tag.
-    /// </summary>
+    /// </remarks>
     public interface IAccessibleElement {
         /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>.
+        /// </summary>
+        /// <remarks>
         /// Gets the
         /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties">accessibility properties</see>
         /// . See also
         /// <see cref="IAccessibleElement"/>.
-        /// </summary>
+        /// </remarks>
         /// <returns>an interface that allows to specify properties of a tagged element in Tagged PDF.</returns>
         AccessibilityProperties GetAccessibilityProperties();
     }

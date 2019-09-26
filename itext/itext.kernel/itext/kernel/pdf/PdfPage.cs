@@ -181,10 +181,14 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Gets the content stream at specified 0-based index in the Contents object
         /// <see cref="PdfArray"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the content stream at specified 0-based index in the Contents object
+        /// <see cref="PdfArray"/>.
         /// The situation when Contents object is a
         /// <see cref="PdfStream"/>
         /// is treated like a one element array.
-        /// </summary>
+        /// </remarks>
         /// <param name="index">
         /// the
         /// <c>int</c>
@@ -221,10 +225,14 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Gets the size of Contents object
         /// <see cref="PdfArray"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the size of Contents object
+        /// <see cref="PdfArray"/>.
         /// The situation when Contents object is a
         /// <see cref="PdfStream"/>
         /// is treated like a one element array.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// the
         /// <c>int</c>
@@ -325,6 +333,11 @@ namespace iText.Kernel.Pdf {
         /// Gets the
         /// <see cref="PdfResources"/>
         /// wrapper object for this page resources.
+        /// </summary>
+        /// <remarks>
+        /// Gets the
+        /// <see cref="PdfResources"/>
+        /// wrapper object for this page resources.
         /// If page doesn't have resource object, then it will be inherited from page's parents.
         /// If neither parents nor page has the resource object, then the new one is created and added to page dictionary.
         /// <br /><br />
@@ -335,7 +348,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// or you can add it manually with this line, if needed:<br />
         /// <c>getPdfObject().put(PdfName.Resources, getResources().getPdfObject());</c>
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="PdfResources"/>
@@ -735,9 +748,14 @@ namespace iText.Kernel.Pdf {
         /// Gets the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// specified by page's CropBox, that defines the visible region of default user space.
+        /// </summary>
+        /// <remarks>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// specified by page's CropBox, that defines the visible region of default user space.
         /// When the page is displayed or printed, its contents shall be clipped (cropped) to this rectangle
         /// and then shall be imposed on the output medium in some implementation-defined manner.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
@@ -1065,8 +1083,13 @@ namespace iText.Kernel.Pdf {
         /// Adds specified
         /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
         /// to specified index in annotations array with or without autotagging.
-        /// May be used in chain.
         /// </summary>
+        /// <remarks>
+        /// Adds specified
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// to specified index in annotations array with or without autotagging.
+        /// May be used in chain.
+        /// </remarks>
         /// <param name="index">
         /// the index at which specified annotation will be added. If
         /// <c>-1</c>
@@ -1412,8 +1435,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Helper method that associate specified value with specified key in the underlined
         /// <see cref="PdfDictionary"/>.
-        /// May be used in chain.
         /// </summary>
+        /// <remarks>
+        /// Helper method that associate specified value with specified key in the underlined
+        /// <see cref="PdfDictionary"/>.
+        /// May be used in chain.
+        /// </remarks>
         /// <param name="key">
         /// the
         /// <see cref="PdfName"/>
@@ -1496,7 +1523,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// <p>
+        /// <para />
         /// Adds file associated with PDF page and identifies the relationship between them.
         /// </summary>
         /// <remarks>

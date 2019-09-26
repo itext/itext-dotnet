@@ -52,11 +52,16 @@ namespace iText.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Text"/>
+    /// is a piece of text of any length.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="Text"/>
     /// is a piece of text of any length. As a
     /// <see cref="ILeafElement">leaf element</see>
     /// ,
     /// it is the smallest piece of content that may bear specific layout attributes.
-    /// </summary>
+    /// </remarks>
     public class Text : AbstractElement<iText.Layout.Element.Text>, ILeafElement, IAccessibleElement {
         protected internal String text;
 

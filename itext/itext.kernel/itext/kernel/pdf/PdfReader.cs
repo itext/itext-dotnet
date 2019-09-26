@@ -336,8 +336,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Reads, decrypt and optionally decode stream bytes into
         /// <see cref="System.IO.MemoryStream"/>.
-        /// User is responsible for closing returned stream.
         /// </summary>
+        /// <remarks>
+        /// Reads, decrypt and optionally decode stream bytes into
+        /// <see cref="System.IO.MemoryStream"/>.
+        /// User is responsible for closing returned stream.
+        /// </remarks>
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
         /// <returns>
         /// InputStream or
@@ -552,12 +556,17 @@ namespace iText.Kernel.Pdf {
         /// Gets original file ID, the first element in
         /// <see cref="PdfName.ID"/>
         /// key of trailer.
+        /// </summary>
+        /// <remarks>
+        /// Gets original file ID, the first element in
+        /// <see cref="PdfName.ID"/>
+        /// key of trailer.
         /// If the size of ID array does not equal 2, an empty array will be returned.
         /// <para />
         /// The returned value reflects the value that was written in opened document. If document is modified,
         /// the ultimate document id can be retrieved from
         /// <see cref="PdfDocument.GetOriginalDocumentId()"/>.
-        /// </summary>
+        /// </remarks>
         /// <returns>byte array represents original file ID.</returns>
         /// <seealso cref="PdfDocument.GetOriginalDocumentId()"/>
         public virtual byte[] GetOriginalFileId() {
@@ -574,12 +583,17 @@ namespace iText.Kernel.Pdf {
         /// Gets modified file ID, the second element in
         /// <see cref="PdfName.ID"/>
         /// key of trailer.
+        /// </summary>
+        /// <remarks>
+        /// Gets modified file ID, the second element in
+        /// <see cref="PdfName.ID"/>
+        /// key of trailer.
         /// If the size of ID array does not equal 2, an empty array will be returned.
         /// <para />
         /// The returned value reflects the value that was written in opened document. If document is modified,
         /// the ultimate document id can be retrieved from
         /// <see cref="PdfDocument.GetModifiedDocumentId()"/>.
-        /// </summary>
+        /// </remarks>
         /// <returns>byte array represents modified file ID.</returns>
         /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>
         public virtual byte[] GetModifiedFileId() {

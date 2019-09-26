@@ -245,6 +245,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Flushes to the output stream modified objects that can belong only to the given page, which makes this method
         /// "safe" compared to the
+        /// <see cref="UnsafeFlushDeep(int)"/>.
+        /// </summary>
+        /// <remarks>
+        /// Flushes to the output stream modified objects that can belong only to the given page, which makes this method
+        /// "safe" compared to the
         /// <see cref="UnsafeFlushDeep(int)"/>
         /// . Flushed object frees the memory, but it's impossible to
         /// modify such objects or read data from them. This method releases all other page structure objects that are not
@@ -270,7 +275,7 @@ namespace iText.Kernel.Pdf {
         /// <para />
         /// This method shall be used only when it's known that the page and its inner structures processing is finished.
         /// This includes reading data from pages, page modification and page handling via addons/utilities.
-        /// </summary>
+        /// </remarks>
         /// <param name="pageNum">the page number which low level objects structure is to be flushed or released from memory.
         ///     </param>
         public virtual void AppendModeFlush(int pageNum) {

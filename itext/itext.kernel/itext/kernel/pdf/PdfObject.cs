@@ -74,9 +74,8 @@ namespace iText.Kernel.Pdf {
         ///     </summary>
         protected internal const short FREE = 1 << 1;
 
-        /// <summary>Indicates that definition of the indirect reference of the object still not found (e.g.</summary>
-        /// <remarks>Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
-        ///     </remarks>
+        /// <summary>Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
+        ///     </summary>
         protected internal const short READING = 1 << 2;
 
         /// <summary>Indicates that object changed (is used in append mode).</summary>
@@ -349,12 +348,17 @@ namespace iText.Kernel.Pdf {
         /// Checks if it's forbidden to release this
         /// <see cref="PdfObject"/>
         /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Checks if it's forbidden to release this
+        /// <see cref="PdfObject"/>
+        /// instance.
         /// Some objects are vital for the living period of
         /// <see cref="PdfDocument"/>
         /// or may be
         /// prevented from releasing by high-level entities dealing with the objects.
         /// Also it's not possible to release the objects that have been modified.
-        /// </summary>
+        /// </remarks>
         public virtual bool IsReleaseForbidden() {
             return CheckState(FORBID_RELEASE);
         }
@@ -377,117 +381,81 @@ namespace iText.Kernel.Pdf {
 
         //TODO log reasonless call of method
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfNull</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfNull</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsNull() {
             return GetObjectType() == NULL;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfBoolean</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfBoolean</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsBoolean() {
             return GetObjectType() == BOOLEAN;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfNumber</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfNumber</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsNumber() {
             return GetObjectType() == NUMBER;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfString</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfString</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsString() {
             return GetObjectType() == STRING;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfName</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfName</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsName() {
             return GetObjectType() == NAME;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfArray</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfArray</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsArray() {
             return GetObjectType() == ARRAY;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfDictionary</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfDictionary</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsDictionary() {
             return GetObjectType() == DICTIONARY;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfStream</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfStream</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns><c>true</c> or <c>false</c></returns>
         public virtual bool IsStream() {
             return GetObjectType() == STREAM;
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfIndirectReference</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfIndirectReference</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns>
         /// <c>true</c> if this is an indirect reference,
         /// otherwise <c>false</c>
@@ -497,13 +465,9 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Checks if this <CODE>PdfObject</CODE> is of the type
-        /// <CODE>PdfLiteral</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfLiteral</c>.
-        /// </remarks>
+        /// </summary>
         /// <returns>
         /// <c>true</c> if this is a literal,
         /// otherwise <c>false</c>
@@ -553,10 +517,12 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Processes two cases of object copying:
-        /// <ol>
-        /// <li>copying to the other document
-        /// <li>cloning inside of the current document
-        /// </ol>
+        /// <list type="number">
+        /// <item><description>copying to the other document
+        /// </description></item>
+        /// <item><description>cloning inside of the current document
+        /// </description></item>
+        /// </list>
         /// </summary>
         /// <remarks>
         /// Processes two cases of object copying:

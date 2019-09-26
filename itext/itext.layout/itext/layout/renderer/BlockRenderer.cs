@@ -666,9 +666,15 @@ namespace iText.Layout.Renderer {
         /// This method creates
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
         /// instance that could be used
+        /// to rotate content inside the occupied area.
+        /// </summary>
+        /// <remarks>
+        /// This method creates
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance that could be used
         /// to rotate content inside the occupied area. Be aware that it should be used only after
         /// layout rendering is finished and correct occupied area for the rotated element is calculated.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>

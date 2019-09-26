@@ -639,12 +639,8 @@ namespace iText.IO.Codec {
         // Utilities
         /// <summary>
         /// Returns the number of image directories (subimages) stored in a
-        /// given TIFF file, represented by a <code>SeekableStream</code>.
-        /// </summary>
-        /// <remarks>
-        /// Returns the number of image directories (subimages) stored in a
         /// given TIFF file, represented by a <c>SeekableStream</c>.
-        /// </remarks>
+        /// </summary>
         /// <param name="stream">RandomAccessFileOrArray</param>
         /// <returns>
         /// The number of image directories (subimages) stored
@@ -688,37 +684,25 @@ namespace iText.IO.Codec {
 
         /// <summary>
         /// Returns a boolean indicating whether the byte order used in the
-        /// the TIFF file is big-endian (i.e.
-        /// </summary>
-        /// <remarks>
-        /// Returns a boolean indicating whether the byte order used in the
         /// the TIFF file is big-endian (i.e. whether the byte order is from
         /// the most significant to the least significant)
-        /// </remarks>
+        /// </summary>
         public virtual bool IsBigEndian() {
             return isBigEndian;
         }
 
         /// <summary>
         /// Returns the offset of the IFD corresponding to this
-        /// <code>TIFFDirectory</code>.
-        /// </summary>
-        /// <remarks>
-        /// Returns the offset of the IFD corresponding to this
         /// <c>TIFFDirectory</c>.
-        /// </remarks>
+        /// </summary>
         public virtual long GetIFDOffset() {
             return IFDOffset;
         }
 
         /// <summary>
         /// Returns the offset of the next IFD after the IFD corresponding to this
-        /// <code>TIFFDirectory</code>.
-        /// </summary>
-        /// <remarks>
-        /// Returns the offset of the next IFD after the IFD corresponding to this
         /// <c>TIFFDirectory</c>.
-        /// </remarks>
+        /// </summary>
         public virtual long GetNextIFDOffset() {
             return nextIFDOffset;
         }

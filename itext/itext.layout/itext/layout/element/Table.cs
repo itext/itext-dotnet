@@ -57,6 +57,12 @@ namespace iText.Layout.Element {
     /// A
     /// <see cref="Table"/>
     /// is a layout element that represents data in a two-dimensional
+    /// grid.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="Table"/>
+    /// is a layout element that represents data in a two-dimensional
     /// grid. It is filled with
     /// <see cref="Cell">cells</see>
     /// , ordered in rows and columns.
@@ -65,7 +71,7 @@ namespace iText.Layout.Element {
     /// <see cref="ILargeElement"/>
     /// , which means it can be flushed
     /// to the canvas, in order to reclaim memory that is locked up.
-    /// </summary>
+    /// </remarks>
     public class Table : BlockElement<iText.Layout.Element.Table>, ILargeElement {
         protected internal DefaultAccessibilityProperties tagProperties;
 
@@ -101,6 +107,11 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the preferable column widths.
         /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
@@ -115,7 +126,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="columnWidths">
         /// preferable column widths in points.  Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
@@ -144,6 +155,11 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the preferable column widths.
         /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default, except large tables.
         /// For large table 100% width and fixed layout set implicitly.
@@ -158,7 +174,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="columnWidths">
         /// preferable column widths, points and/or percents.  Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
@@ -185,6 +201,11 @@ namespace iText.Layout.Element {
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the preferable column widths.
         /// <br />
         /// Since 7.0.2 table layout algorithms were introduced. Auto layout is default.
         /// <br />
@@ -198,7 +219,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="columnWidths">
         /// preferable column widths, points and/or percents. Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
@@ -210,6 +231,11 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the preferable column widths.
+        /// </summary>
+        /// <remarks>
         /// Constructs a
         /// <c>Table</c>
         /// with the preferable column widths.
@@ -226,7 +252,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="pointColumnWidths">
         /// preferable column widths in points. Values must be greater than or equal to zero,
         /// otherwise it will be interpreted as undefined.
@@ -238,6 +264,11 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with specified number of columns.
+        /// </summary>
+        /// <remarks>
         /// Constructs a
         /// <c>Table</c>
         /// with specified number of columns.
@@ -260,7 +291,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <param name="largeTable">
         /// whether parts of the table will be written before all data is added.
@@ -278,6 +309,11 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with specified number of columns.
+        /// </summary>
+        /// <remarks>
         /// Constructs a
         /// <c>Table</c>
         /// with specified number of columns.
@@ -300,7 +336,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetAutoLayout()"/>
         /// and
         /// <see cref="SetFixedLayout()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>

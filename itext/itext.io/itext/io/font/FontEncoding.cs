@@ -58,11 +58,15 @@ namespace iText.IO.Font {
 
         /// <summary>
         /// <see langword="true"/>
+        /// if the font must use its built in encoding.
+        /// </summary>
+        /// <remarks>
+        /// <see langword="true"/>
         /// if the font must use its built in encoding. In that case
         /// the
         /// <c>encoding</c>
         /// is only used to map a char to the position inside the font, not to the expected char name.
-        /// </summary>
+        /// </remarks>
         protected internal bool fontSpecific;
 
         /// <summary>Mapping map from unicode to simple code according to the encoding.</summary>
@@ -168,8 +172,15 @@ namespace iText.IO.Font {
         /// to a
         /// <c>byte</c>
         /// array according to the encoding.
-        /// String could contain a unicode symbols or font specific codes.
         /// </summary>
+        /// <remarks>
+        /// Converts a
+        /// <c>String</c>
+        /// to a
+        /// <c>byte</c>
+        /// array according to the encoding.
+        /// String could contain a unicode symbols or font specific codes.
+        /// </remarks>
         /// <param name="text">
         /// the
         /// <c>String</c>

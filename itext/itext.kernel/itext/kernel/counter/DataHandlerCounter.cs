@@ -49,8 +49,12 @@ namespace iText.Kernel.Counter {
     /// <summary>
     /// Counter based on
     /// <see cref="iText.Kernel.Counter.Data.EventDataHandler{T, V}"/>.
-    /// Registers shutdown hook and thread for triggering event processing after wait time
     /// </summary>
+    /// <remarks>
+    /// Counter based on
+    /// <see cref="iText.Kernel.Counter.Data.EventDataHandler{T, V}"/>.
+    /// Registers shutdown hook and thread for triggering event processing after wait time
+    /// </remarks>
     /// 
     /// 
     public class DataHandlerCounter<T, V> : EventCounter

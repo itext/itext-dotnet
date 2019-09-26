@@ -197,7 +197,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             private readonly String baseUri;
         }
 
-        /// <summary>Get an absolute URL from a URL attribute that may be relative (i.e.</summary>
+        /// <summary>
+        /// Get an absolute URL from a URL attribute that may be relative (i.e. an <c>&lt;a href&gt;</c> or
+        /// <c>&lt;img src&gt;</c>).
+        /// </summary>
         /// <remarks>
         /// Get an absolute URL from a URL attribute that may be relative (i.e. an <c>&lt;a href&gt;</c> or
         /// <c>&lt;img src&gt;</c>).
@@ -317,8 +320,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             parentNode.RemoveChild(this);
         }
 
-        /// <summary>Insert the specified HTML into the DOM before this node (i.e.</summary>
-        /// <remarks>Insert the specified HTML into the DOM before this node (i.e. as a preceding sibling).</remarks>
+        /// <summary>Insert the specified HTML into the DOM before this node (i.e. as a preceding sibling).</summary>
         /// <param name="html">HTML to add before this node</param>
         /// <returns>this node, for chaining</returns>
         /// <seealso cref="After(System.String)"/>
@@ -327,8 +329,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        /// <summary>Insert the specified node into the DOM before this node (i.e.</summary>
-        /// <remarks>Insert the specified node into the DOM before this node (i.e. as a preceding sibling).</remarks>
+        /// <summary>Insert the specified node into the DOM before this node (i.e. as a preceding sibling).</summary>
         /// <param name="node">to add before this node</param>
         /// <returns>this node, for chaining</returns>
         /// <seealso cref="After(Node)"/>
@@ -339,8 +340,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        /// <summary>Insert the specified HTML into the DOM after this node (i.e.</summary>
-        /// <remarks>Insert the specified HTML into the DOM after this node (i.e. as a following sibling).</remarks>
+        /// <summary>Insert the specified HTML into the DOM after this node (i.e. as a following sibling).</summary>
         /// <param name="html">HTML to add after this node</param>
         /// <returns>this node, for chaining</returns>
         /// <seealso cref="Before(System.String)"/>
@@ -349,8 +349,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        /// <summary>Insert the specified node into the DOM after this node (i.e.</summary>
-        /// <remarks>Insert the specified node into the DOM after this node (i.e. as a following sibling).</remarks>
+        /// <summary>Insert the specified node into the DOM after this node (i.e. as a following sibling).</summary>
         /// <param name="node">to add after this node</param>
         /// <returns>this node, for chaining</returns>
         /// <seealso cref="Before(Node)"/>

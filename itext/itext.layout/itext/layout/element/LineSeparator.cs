@@ -53,8 +53,14 @@ namespace iText.Layout.Element {
     /// a style specified by
     /// <see cref="iText.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
     /// custom drawing interface instance.
-    /// This might be thought of as an HTML's &lt;hr&gt; element alternative.
     /// </summary>
+    /// <remarks>
+    /// This is a line separator element which is basically just a horizontal line with
+    /// a style specified by
+    /// <see cref="iText.Kernel.Pdf.Canvas.Draw.ILineDrawer"/>
+    /// custom drawing interface instance.
+    /// This might be thought of as an HTML's &lt;hr&gt; element alternative.
+    /// </remarks>
     public class LineSeparator : BlockElement<iText.Layout.Element.LineSeparator> {
         protected internal DefaultAccessibilityProperties tagProperties;
 

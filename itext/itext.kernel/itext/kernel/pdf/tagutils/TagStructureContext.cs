@@ -54,6 +54,10 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>
     /// <c>TagStructureContext</c>
     /// class is used to track necessary information of document's tag structure.
+    /// </summary>
+    /// <remarks>
+    /// <c>TagStructureContext</c>
+    /// class is used to track necessary information of document's tag structure.
     /// It is also used to make some global modifications of the tag tree like removing or flushing page tags, however
     /// these two methods and also others are called automatically and are for the most part for internal usage.
     /// <br />
@@ -61,7 +65,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// <c>PdfDocument</c>
     /// . To obtain instance of this class use
     /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>.
-    /// </summary>
+    /// </remarks>
     public class TagStructureContext {
         private static readonly ICollection<String> allowedRootTagRoles = new HashSet<String>();
 
@@ -95,13 +99,18 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Do not use this constructor, instead use
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
         /// method.
+        /// </summary>
+        /// <remarks>
+        /// Do not use this constructor, instead use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
+        /// method.
         /// <br />
         /// Creates
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this
         /// class per
         /// <c>PdfDocument</c>.
-        /// </summary>
+        /// </remarks>
         /// <param name="document">the document which tag structure will be manipulated with this class.</param>
         public TagStructureContext(PdfDocument document)
             : this(document, document.GetPdfVersion()) {
@@ -111,13 +120,18 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Do not use this constructor, instead use
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
         /// method.
+        /// </summary>
+        /// <remarks>
+        /// Do not use this constructor, instead use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
+        /// method.
         /// <para />
         /// Creates
         /// <c>TagStructureContext</c>
         /// for document. There shall be only one instance of this
         /// class per
         /// <c>PdfDocument</c>.
-        /// </summary>
+        /// </remarks>
         /// <param name="document">the document which tag structure will be manipulated with this class.</param>
         /// <param name="tagStructureTargetVersion">the version of the pdf standard to which the tag structure shall adhere.
         ///     </param>
@@ -167,10 +181,16 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// uses
         /// <see cref="TagTreePointer"/>
         /// returned by this method to manipulate the tag structure.
+        /// </summary>
+        /// <remarks>
+        /// All tagging logic performed by iText automatically (along with addition of content, annotations etc)
+        /// uses
+        /// <see cref="TagTreePointer"/>
+        /// returned by this method to manipulate the tag structure.
         /// Typically it points at the root tag. This pointer also could be used to tweak auto tagging process
         /// (e.g. move this pointer to the Section tag, which would result in placing all automatically tagged content
         /// under Section tag).
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// the
         /// <c>TagTreePointer</c>
@@ -186,9 +206,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>
         /// Gets
         /// <see cref="WaitingTagsManager"/>
+        /// for the current document.
+        /// </summary>
+        /// <remarks>
+        /// Gets
+        /// <see cref="WaitingTagsManager"/>
         /// for the current document. It allows to mark tags as waiting,
         /// which would indicate that they are incomplete and are not ready to be flushed.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// document's
         /// <see cref="WaitingTagsManager"/>
@@ -206,13 +231,22 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="GetAutoTaggingPointer()"/>
         /// , which implies that automatically
         /// created tag structure will be in this namespace by default).
+        /// </summary>
+        /// <remarks>
+        /// A namespace that is used as a default value for the tagging for any new
+        /// <see cref="TagTreePointer"/>
+        /// created
+        /// (including the pointer returned by
+        /// <see cref="GetAutoTaggingPointer()"/>
+        /// , which implies that automatically
+        /// created tag structure will be in this namespace by default).
         /// <para />
         /// By default, this value is defined based on the PDF document version and the existing tag structure inside
         /// a document. For the new empty PDF 2.0 documents this namespace is set to
         /// <see cref="iText.Kernel.Pdf.Tagging.StandardNamespaces.PDF_2_0"/>.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
@@ -223,6 +257,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
+        /// Sets a namespace that will be used as a default value for the tagging for any new
+        /// <see cref="TagTreePointer"/>
+        /// created.
+        /// </summary>
+        /// <remarks>
         /// Sets a namespace that will be used as a default value for the tagging for any new
         /// <see cref="TagTreePointer"/>
         /// created.
@@ -240,7 +279,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// method was called for the first time.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <param name="namespace">
         /// a
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
@@ -261,6 +300,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method defines a recommended way to obtain
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
         /// class instances.
+        /// </summary>
+        /// <remarks>
+        /// This method defines a recommended way to obtain
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// class instances.
         /// <para />
         /// Returns either a wrapper over an already existing namespace dictionary in the document or over a new one
         /// if such namespace wasn't encountered before. Calling this method is considered as encountering a namespace,
@@ -271,7 +315,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// will be returned by this method). However encountered namespaces will not be added to the document's structure tree root
         /// <see cref="iText.Kernel.Pdf.PdfName.Namespaces">/Namespaces</see>
         /// array unless they were set to the certain element of the tag structure.
-        /// </summary>
+        /// </remarks>
         /// <param name="namespaceName">
         /// a
         /// <see cref="System.String"/>
@@ -295,8 +339,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Gets an instance of the
         /// <see cref="IRoleMappingResolver"/>
         /// corresponding to the current tag structure target version.
-        /// This method implies that role is in the default standard structure namespace.
         /// </summary>
+        /// <remarks>
+        /// Gets an instance of the
+        /// <see cref="IRoleMappingResolver"/>
+        /// corresponding to the current tag structure target version.
+        /// This method implies that role is in the default standard structure namespace.
+        /// </remarks>
         /// <param name="role">a role in the default standard structure namespace which mapping is to be resolved.</param>
         /// <returns>
         /// a
@@ -549,14 +598,27 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// A utility method that prepares the current instance of the
         /// <see cref="TagStructureContext"/>
         /// for
-        /// the closing of document. Essentially it flushes all the "hanging" information to the document.
+        /// the closing of document.
         /// </summary>
+        /// <remarks>
+        /// A utility method that prepares the current instance of the
+        /// <see cref="TagStructureContext"/>
+        /// for
+        /// the closing of document. Essentially it flushes all the "hanging" information to the document.
+        /// </remarks>
         public virtual void PrepareToDocumentClosing() {
             waitingTagsManager.RemoveAllWaitingStates();
             ActualizeNamespacesInStructTreeRoot();
         }
 
         /// <summary>
+        /// Gets
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
+        /// at which
+        /// <see cref="TagTreePointer"/>
+        /// points.
+        /// </summary>
+        /// <remarks>
         /// Gets
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
         /// at which
@@ -571,7 +633,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// and
         /// <see cref="TagStructureContext"/>
         /// classes.
-        /// </summary>
+        /// </remarks>
         /// <param name="pointer">
         /// a
         /// <see cref="TagTreePointer"/>

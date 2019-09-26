@@ -50,11 +50,15 @@ namespace iText.Layout.Font {
     /// <summary>
     /// Complex FontSelectorStrategy split text based on
     /// <see cref="iText.IO.Util.UnicodeScript?"/>.
+    /// </summary>
+    /// <remarks>
+    /// Complex FontSelectorStrategy split text based on
+    /// <see cref="iText.IO.Util.UnicodeScript?"/>.
     /// If unicode script changes, a new font will be found.
     /// If there is no suitable font, only one notdef glyph from
     /// <see cref="FontSelector.BestMatch()"/>
     /// will be added.
-    /// </summary>
+    /// </remarks>
     public class ComplexFontSelectorStrategy : FontSelectorStrategy {
         private PdfFont font;
 

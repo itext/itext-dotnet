@@ -150,7 +150,7 @@ namespace iText.Kernel.Geom {
             return segments.Count == 0 && closed;
         }
 
-        /// <summary>Returns a <CODE>boolean</CODE> value indicating whether the subpath must be closed or not.</summary>
+        /// <summary>Returns a <c>boolean</c> value indicating whether the subpath must be closed or not.</summary>
         /// <remarks>
         /// Returns a <c>boolean</c> value indicating whether the subpath must be closed or not.
         /// Ignore this value if the subpath is a rectangle because in this case it is already closed
@@ -169,7 +169,7 @@ namespace iText.Kernel.Geom {
             this.closed = closed;
         }
 
-        /// <summary>Returns a <CODE>boolean</CODE> indicating whether the subpath is degenerate or not.</summary>
+        /// <summary>Returns a <c>boolean</c> indicating whether the subpath is degenerate or not.</summary>
         /// <remarks>
         /// Returns a <c>boolean</c> indicating whether the subpath is degenerate or not.
         /// A degenerate subpath is the subpath consisting of a single-point closed path or of

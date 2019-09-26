@@ -525,7 +525,7 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
         /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
@@ -803,13 +803,9 @@ namespace iText.Barcodes {
         }
 
         /// <summary>
-        /// Returns <CODE>true</CODE> if the next <CODE>numDigits</CODE>
-        /// starting from index <CODE>textIndex</CODE> are numeric skipping any FNC1.
-        /// </summary>
-        /// <remarks>
         /// Returns <c>true</c> if the next <c>numDigits</c>
         /// starting from index <c>textIndex</c> are numeric skipping any FNC1.
-        /// </remarks>
+        /// </summary>
         /// <param name="text">the text to check</param>
         /// <param name="textIndex">where to check from</param>
         /// <param name="numDigits">the number of digits to check</param>

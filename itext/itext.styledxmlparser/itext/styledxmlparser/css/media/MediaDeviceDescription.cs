@@ -115,11 +115,16 @@ namespace iText.StyledXmlParser.Css.Media {
         /// Gets default
         /// <see cref="MediaDeviceDescription"/>
         /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Gets default
+        /// <see cref="MediaDeviceDescription"/>
+        /// instance.
         /// Do not modify any fields of the returned media device description because it may lead
         /// to unpredictable results. Use
         /// <see cref="CreateDefault()"/>
         /// if you want to modify device description.
-        /// </summary>
+        /// </remarks>
         /// <returns>the default media device description</returns>
         public static iText.StyledXmlParser.Css.Media.MediaDeviceDescription GetDefault() {
             return DEFAULT;

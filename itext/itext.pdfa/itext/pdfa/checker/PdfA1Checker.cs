@@ -60,9 +60,15 @@ namespace iText.Pdfa.Checker {
     /// method implementations from the abstract
     /// <see cref="PdfAChecker"/>
     /// class.
+    /// </summary>
+    /// <remarks>
+    /// PdfA1Checker defines the requirements of the PDF/A-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfAChecker"/>
+    /// class.
     /// <para />
     /// The specification implemented by this class is ISO 19005-1
-    /// </summary>
+    /// </remarks>
     public class PdfA1Checker : PdfAChecker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));

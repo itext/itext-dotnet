@@ -54,9 +54,9 @@ namespace iText.StyledXmlParser.Css.Media {
         }
 
         /// <summary>
-        /// Value: &lt;integer&gt;<br>
-        /// Media: visual<br>
-        /// Accepts min/max prefixes: yes<br>
+        /// Value: &lt;integer&gt;<br />
+        /// Media: visual<br />
+        /// Accepts min/max prefixes: yes<br />
         /// Indicates the number of bits per color component of the output device.
         /// </summary>
         /// <remarks>
@@ -68,23 +68,17 @@ namespace iText.StyledXmlParser.Css.Media {
         public const String COLOR = "color";
 
         /// <summary>
-        /// Value: &lt;integer&gt;<br>
-        /// Media: visual<br>
-        /// Accepts min/max prefixes: yes<br>
-        /// Indicates the number of entries in the color look-up table for the output device.
-        /// </summary>
-        /// <remarks>
         /// Value: &lt;integer&gt;<br />
         /// Media: visual<br />
         /// Accepts min/max prefixes: yes<br />
         /// Indicates the number of entries in the color look-up table for the output device.
-        /// </remarks>
+        /// </summary>
         public const String COLOR_INDEX = "color-index";
 
         /// <summary>
-        /// Value: &lt;ratio&gt;<br>
-        /// Media: visual, tactile<br>
-        /// Accepts min/max prefixes: yes<br>
+        /// Value: &lt;ratio&gt;<br />
+        /// Media: visual, tactile<br />
+        /// Accepts min/max prefixes: yes<br />
         /// Describes the aspect ratio of the targeted display area of the output device.
         /// </summary>
         /// <remarks>
@@ -98,9 +92,9 @@ namespace iText.StyledXmlParser.Css.Media {
         public const String ASPECT_RATIO = "aspect-ratio";
 
         /// <summary>
-        /// Value: &lt;mq-boolean&gt; which is an &lt;integer&gt; that can only have the 0 and 1 value.<br>
-        /// Media: all<br>
-        /// Accepts min/max prefixes: no<br>
+        /// Value: &lt;mq-boolean&gt; which is an &lt;integer&gt; that can only have the 0 and 1 value.<br />
+        /// Media: all<br />
+        /// Accepts min/max prefixes: no<br />
         /// Determines whether the output device is a grid device or a bitmap device.
         /// </summary>
         /// <remarks>
@@ -114,39 +108,26 @@ namespace iText.StyledXmlParser.Css.Media {
         public const String GRID = "grid";
 
         /// <summary>
-        /// Value: progressive | interlace<br>
-        /// Media: tv<br>
-        /// Accepts min/max prefixes: no<br>
-        /// Describes the scanning process of television output devices.
-        /// </summary>
-        /// <remarks>
         /// Value: progressive | interlace<br />
         /// Media: tv<br />
         /// Accepts min/max prefixes: no<br />
         /// Describes the scanning process of television output devices.
-        /// </remarks>
+        /// </summary>
         public const String SCAN = "scan";
 
         /// <summary>
-        /// Value: landscape | portrait<br>
-        /// Media: visual<br>
-        /// Accepts min/max prefixes: no<br>
-        /// Indicates whether the viewport is in landscape (the display is wider than it is tall) or
-        /// portrait (the display is taller than it is wide) mode.
-        /// </summary>
-        /// <remarks>
         /// Value: landscape | portrait<br />
         /// Media: visual<br />
         /// Accepts min/max prefixes: no<br />
         /// Indicates whether the viewport is in landscape (the display is wider than it is tall) or
         /// portrait (the display is taller than it is wide) mode.
-        /// </remarks>
+        /// </summary>
         public const String ORIENTATION = "orientation";
 
         /// <summary>
-        /// Value: &lt;integer&gt;<br>
-        /// Media: visual<br>
-        /// Accepts min/max prefixes: yes<br>
+        /// Value: &lt;integer&gt;<br />
+        /// Media: visual<br />
+        /// Accepts min/max prefixes: yes<br />
         /// Indicates the number of bits per pixel on a monochrome (greyscale) device.
         /// </summary>
         /// <remarks>
@@ -159,25 +140,18 @@ namespace iText.StyledXmlParser.Css.Media {
         public const String MONOCHROME = "monochrome";
 
         /// <summary>
-        /// Value: &lt;length&gt;<br>
-        /// Media: visual, tactile<br>
-        /// Accepts min/max prefixes: yes<br>
-        /// The height media feature describes the height of the output device's rendering surface
-        /// (such as the height of the viewport or of the page box on a printer).
-        /// </summary>
-        /// <remarks>
         /// Value: &lt;length&gt;<br />
         /// Media: visual, tactile<br />
         /// Accepts min/max prefixes: yes<br />
         /// The height media feature describes the height of the output device's rendering surface
         /// (such as the height of the viewport or of the page box on a printer).
-        /// </remarks>
+        /// </summary>
         public const String HEIGHT = "height";
 
         /// <summary>
-        /// Value: &lt;resolution&gt;<br>
-        /// Media: bitmap<br>
-        /// Accepts min/max prefixes: yes<br>
+        /// Value: &lt;resolution&gt;<br />
+        /// Media: bitmap<br />
+        /// Accepts min/max prefixes: yes<br />
         /// Indicates the resolution (pixel density) of the output device.
         /// </summary>
         /// <remarks>
@@ -190,19 +164,12 @@ namespace iText.StyledXmlParser.Css.Media {
         public const String RESOLUTION = "resolution";
 
         /// <summary>
-        /// Value: &lt;length&gt;<br>
-        /// Media: visual, tactile<br>
-        /// Accepts min/max prefixes: yes<br>
-        /// The width media feature describes the width of the rendering surface of the output device
-        /// (such as the width of the document window, or the width of the page box on a printer).
-        /// </summary>
-        /// <remarks>
         /// Value: &lt;length&gt;<br />
         /// Media: visual, tactile<br />
         /// Accepts min/max prefixes: yes<br />
         /// The width media feature describes the width of the rendering surface of the output device
         /// (such as the width of the document window, or the width of the page box on a printer).
-        /// </remarks>
+        /// </summary>
         public const String WIDTH = "width";
     }
 }

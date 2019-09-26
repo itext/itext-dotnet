@@ -277,7 +277,7 @@ namespace iText.Kernel.Pdf {
             return bytes;
         }
 
-        /// <summary>Sets <code>bytes</code> as stream's content.</summary>
+        /// <summary>Sets <c>bytes</c> as stream's content.</summary>
         /// <remarks>
         /// Sets <c>bytes</c> as stream's content.
         /// Could not be used with streams which were created by <c>InputStream</c>.
@@ -287,7 +287,7 @@ namespace iText.Kernel.Pdf {
             SetData(bytes, false);
         }
 
-        /// <summary>Sets or appends <code>bytes</code> to stream content.</summary>
+        /// <summary>Sets or appends <c>bytes</c> to stream content.</summary>
         /// <remarks>
         /// Sets or appends <c>bytes</c> to stream content.
         /// Could not be used with streams which were created by <c>InputStream</c>.

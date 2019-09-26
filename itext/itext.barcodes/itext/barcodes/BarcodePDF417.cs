@@ -55,32 +55,22 @@ using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Barcodes {
     public class BarcodePDF417 : Barcode2D {
-        /// <summary>Auto-size is made based on <CODE>aspectRatio</CODE> and <CODE>yHeight</CODE>.</summary>
-        /// <remarks>Auto-size is made based on <c>aspectRatio</c> and <c>yHeight</c>.</remarks>
+        /// <summary>Auto-size is made based on <c>aspectRatio</c> and <c>yHeight</c>.</summary>
         public const int PDF417_USE_ASPECT_RATIO = 0;
 
-        /// <summary>The size of the barcode will be at least <CODE>codeColumns*codeRows</CODE>.</summary>
-        /// <remarks>The size of the barcode will be at least <c>codeColumns*codeRows</c>.</remarks>
+        /// <summary>The size of the barcode will be at least <c>codeColumns*codeRows</c>.</summary>
         public const int PDF417_FIXED_RECTANGLE = 1;
 
         /// <summary>
-        /// The size will be at least <CODE>codeColumns</CODE>
-        /// with a variable number of <CODE>codeRows</CODE>.
-        /// </summary>
-        /// <remarks>
         /// The size will be at least <c>codeColumns</c>
         /// with a variable number of <c>codeRows</c>.
-        /// </remarks>
+        /// </summary>
         public const int PDF417_FIXED_COLUMNS = 2;
 
         /// <summary>
-        /// The size will be at least <CODE>codeRows</CODE>
-        /// with a variable number of <CODE>codeColumns</CODE>.
-        /// </summary>
-        /// <remarks>
         /// The size will be at least <c>codeRows</c>
         /// with a variable number of <c>codeColumns</c>.
-        /// </remarks>
+        /// </summary>
         public const int PDF417_FIXED_ROWS = 4;
 
         /// <summary>
@@ -97,13 +87,9 @@ namespace iText.Barcodes {
         public const int PDF417_FORCE_BINARY = 32;
 
         /// <summary>
-        /// No <CODE>text</CODE> interpretation is done and the content of <CODE>codewords</CODE>
-        /// is used directly.
-        /// </summary>
-        /// <remarks>
         /// No <c>text</c> interpretation is done and the content of <c>codewords</c>
         /// is used directly.
-        /// </remarks>
+        /// </summary>
         public const int PDF417_USE_RAW_CODEWORDS = 64;
 
         /// <summary>
@@ -518,8 +504,7 @@ namespace iText.Barcodes {
         /// <summary>Holds value of property yHeight.</summary>
         private float yHeight;
 
-        /// <summary>Creates a new <CODE>BarcodePDF417</CODE> with the default settings.</summary>
-        /// <remarks>Creates a new <c>BarcodePDF417</c> with the default settings.</remarks>
+        /// <summary>Creates a new <c>BarcodePDF417</c> with the default settings.</summary>
         public BarcodePDF417() {
             SetDefaultParameters();
         }
@@ -545,13 +530,9 @@ namespace iText.Barcodes {
         }
 
         /// <summary>
-        /// Set the default settings that correspond to <CODE>PDF417_USE_ASPECT_RATIO</CODE>
-        /// and <CODE>PDF417_AUTO_ERROR_LEVEL</CODE>.
-        /// </summary>
-        /// <remarks>
         /// Set the default settings that correspond to <c>PDF417_USE_ASPECT_RATIO</c>
         /// and <c>PDF417_AUTO_ERROR_LEVEL</c>.
-        /// </remarks>
+        /// </summary>
         public virtual void SetDefaultParameters() {
             options = 0;
             outBits = null;
@@ -781,14 +762,13 @@ namespace iText.Barcodes {
             return this.outBits;
         }
 
-        /// <summary>Gets the number of X pixels of <CODE>outBits</CODE>.</summary>
-        /// <remarks>Gets the number of X pixels of <c>outBits</c>.</remarks>
+        /// <summary>Gets the number of X pixels of <c>outBits</c>.</summary>
         /// <returns>the number of X pixels of <c>outBits</c></returns>
         public virtual int GetBitColumns() {
             return this.bitColumns;
         }
 
-        /// <summary>Gets the number of Y pixels of <CODE>outBits</CODE>.</summary>
+        /// <summary>Gets the number of Y pixels of <c>outBits</c>.</summary>
         /// <remarks>
         /// Gets the number of Y pixels of <c>outBits</c>.
         /// It is also the number of rows in the barcode.

@@ -50,12 +50,18 @@ namespace iText.Layout.Properties {
     /// for a text
     /// <see cref="IElement"/>
     /// 's base direction.
+    /// </summary>
+    /// <remarks>
+    /// A specialized enum holding the possible values
+    /// for a text
+    /// <see cref="IElement"/>
+    /// 's base direction.
     /// This class is meant to be used as the value
     /// for the
     /// <see cref="Property.BASE_DIRECTION"/>
     /// key in an
     /// <see cref="IPropertyContainer"/>.
-    /// </summary>
+    /// </remarks>
     public enum BaseDirection {
         NO_BIDI,
         DEFAULT_BIDI,

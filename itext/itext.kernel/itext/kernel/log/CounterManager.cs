@@ -47,6 +47,10 @@ using System.Collections.Generic;
 namespace iText.Kernel.Log {
     /// <summary>
     /// Manager that works with
+    /// <see cref="ICounterFactory"/>.
+    /// </summary>
+    /// <remarks>
+    /// Manager that works with
     /// <see cref="ICounterFactory"/>
     /// . Create
     /// <see cref="ICounter"/>
@@ -70,7 +74,7 @@ namespace iText.Kernel.Log {
     /// implementation.
     /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
-    /// </summary>
+    /// </remarks>
     [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.EventCounterHandler instead."
         )]
     public class CounterManager {
@@ -112,9 +116,13 @@ namespace iText.Kernel.Log {
 
         /// <summary>
         /// Register new
+        /// <see cref="ICounterFactory"/>.
+        /// </summary>
+        /// <remarks>
+        /// Register new
         /// <see cref="ICounterFactory"/>
         /// . Does nothing if same factory was already registered.
-        /// </summary>
+        /// </remarks>
         /// <param name="factory">
         /// 
         /// <see cref="ICounterFactory"/>
@@ -128,9 +136,13 @@ namespace iText.Kernel.Log {
 
         /// <summary>
         /// Unregister specified
+        /// <see cref="ICounterFactory"/>.
+        /// </summary>
+        /// <remarks>
+        /// Unregister specified
         /// <see cref="ICounterFactory"/>
         /// . Does nothing if this factory wasn't registered first.
-        /// </summary>
+        /// </remarks>
         /// <param name="factory">
         /// 
         /// <see cref="ICounterFactory"/>

@@ -69,13 +69,18 @@ namespace iText.StyledXmlParser.Css {
         /// Creates a new
         /// <see cref="CssRuleSet"/>
         /// from selector and raw list of declarations.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="CssRuleSet"/>
+        /// from selector and raw list of declarations.
         /// The declarations are split into normal and important under the hood.
         /// To construct the
         /// <see cref="CssRuleSet"/>
         /// instance from normal and important declarations, see
         /// <see cref="CssRuleSet(iText.StyledXmlParser.Css.Selector.ICssSelector, System.Collections.Generic.IList{E}, System.Collections.Generic.IList{E})
         ///     "/>
-        /// </summary>
+        /// </remarks>
         /// <param name="selector">the CSS selector</param>
         /// <param name="declarations">the CSS declarations</param>
         public CssRuleSet(ICssSelector selector, IList<CssDeclaration> declarations) {

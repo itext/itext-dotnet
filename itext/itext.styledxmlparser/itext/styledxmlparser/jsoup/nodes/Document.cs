@@ -133,13 +133,18 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>
         /// Set the document's
         /// <paramref name="title"/>
+        /// element.
+        /// </summary>
+        /// <remarks>
+        /// Set the document's
+        /// <paramref name="title"/>
         /// element. Updates the existing element, or adds
         /// <paramref name="title"/>
         /// to
         /// <c>head</c>
         /// if
         /// not present
-        /// </summary>
+        /// </remarks>
         /// <param name="title">string to set as title</param>
         public virtual void Title(String title) {
             Validate.NotNull(title);
@@ -265,8 +270,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>
         /// Set the text of the
         /// <c>body</c>
-        /// of this document. Any existing nodes within the body will be cleared.
+        /// of this document.
         /// </summary>
+        /// <remarks>
+        /// Set the text of the
+        /// <c>body</c>
+        /// of this document. Any existing nodes within the body will be cleared.
+        /// </remarks>
         /// <param name="text">unencoded text</param>
         /// <returns>this document</returns>
         public override iText.StyledXmlParser.Jsoup.Nodes.Element Text(String text) {
@@ -327,10 +337,16 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// updated on changes through
         /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
         /// or not.
+        /// </summary>
+        /// <remarks>
+        /// Sets whether the element with charset information in this document is
+        /// updated on changes through
+        /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
+        /// or not.
         /// <para />
         /// If set to <tt>false</tt> <i>(default)</i> there are no elements
         /// modified.
-        /// </summary>
+        /// </remarks>
         /// <param name="update">
         /// If <tt>true</tt> the element updated on charset
         /// changes, <tt>false</tt> if not
@@ -486,8 +502,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         /// <summary>
-        /// Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
-        /// entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
+        /// Get the document's current HTML escape mode: <c>base</c>, which provides a limited set of named HTML
+        /// entities and escapes other characters as numbered entities for maximum compatibility; or <c>extended</c>,
         /// which uses the complete set of HTML named entities.
         /// </summary>
         /// <remarks>
@@ -515,7 +531,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>
         /// Get the document's current output charset, which is used to control which characters are escaped when
-        /// generating HTML (via the <code>html()</code> methods), and which are kept intact.
+        /// generating HTML (via the <c>html()</c> methods), and which are kept intact.
         /// </summary>
         /// <remarks>
         /// Get the document's current output charset, which is used to control which characters are escaped when

@@ -30,8 +30,7 @@
 using System;
 
 namespace iText.Kernel.XMP.Options {
-    /// <summary>Options for <code>XMPIterator</code> construction.</summary>
-    /// <remarks>Options for <c>XMPIterator</c> construction.</remarks>
+    /// <summary>Options for <c>XMPIterator</c> construction.</summary>
     /// <since>24.01.2006</since>
     public sealed class IteratorOptions : iText.Kernel.XMP.Options.Options {
         /// <summary>Just do the immediate children of the root, default is subtree.</summary>

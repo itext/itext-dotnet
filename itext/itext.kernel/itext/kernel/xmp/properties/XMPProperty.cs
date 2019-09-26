@@ -43,8 +43,7 @@ namespace iText.Kernel.XMP.Properties {
         /// <summary>
         /// Only set by
         /// <see cref="iText.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
-        ///     "/>
-        /// .
+        ///     "/>.
         /// </summary>
         /// <returns>Returns the language of the alt-text item.</returns>
         String GetLanguage();

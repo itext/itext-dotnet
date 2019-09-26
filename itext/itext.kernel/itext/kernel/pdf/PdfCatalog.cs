@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
         }
 
-        /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
+        /// <summary>Use this method to get the <b>Optional Content Properties Dictionary</b>.</summary>
         /// <remarks>
         /// Use this method to get the <b>Optional Content Properties Dictionary</b>.
         /// Note that if you call this method, then the PdfDictionary with OCProperties will be

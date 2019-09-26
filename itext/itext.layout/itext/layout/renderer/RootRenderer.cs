@@ -323,11 +323,16 @@ namespace iText.Layout.Renderer {
         /// This method correctly closes the
         /// <see cref="RootRenderer"/>
         /// instance.
+        /// </summary>
+        /// <remarks>
+        /// This method correctly closes the
+        /// <see cref="RootRenderer"/>
+        /// instance.
         /// There might be hanging elements, like in case of
         /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>
         /// is set to true
         /// and when no consequent element has been added. This method addresses such situations.
-        /// </summary>
+        /// </remarks>
         public virtual void Close() {
             AddAllWaitingNextPageRenderers();
             if (keepWithNextHangingRenderer != null) {

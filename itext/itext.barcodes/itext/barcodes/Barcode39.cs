@@ -73,13 +73,9 @@ namespace iText.Barcodes {
             1, 0, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 1, 0, 1, 0, 0 } };
 
         /// <summary>
-        /// The index chars to <CODE>BARS</CODE>, symbol * use only start and stop  characters,
-        /// the * character will not appear in the input data.
-        /// </summary>
-        /// <remarks>
         /// The index chars to <c>BARS</c>, symbol * use only start and stop  characters,
         /// the * character will not appear in the input data.
-        /// </remarks>
+        /// </summary>
         private const String CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%*";
 
         /// <summary>The character combinations to make the code 39 extended.</summary>
@@ -225,7 +221,7 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
         /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the

@@ -95,7 +95,12 @@ namespace iText.Pdfa.Checker {
         /// <summary>The Monitor device class</summary>
         public const String ICC_DEVICE_CLASS_MONITOR_PROFILE = "mntr";
 
-        /// <summary>The maximum Graphics State stack depth in PDF/A documents, i.e.</summary>
+        /// <summary>
+        /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
+        /// maximum number of graphics state operators with code <c>q</c> that
+        /// may be opened (i.e. not yet closed by a corresponding <c>Q</c>) at
+        /// any point in a content stream sequence.
+        /// </summary>
         /// <remarks>
         /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
         /// maximum number of graphics state operators with code <c>q</c> that

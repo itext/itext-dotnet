@@ -57,10 +57,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// Constructs a
         /// <see cref="FilteredEventListener"/>
         /// empty instance.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <see cref="FilteredEventListener"/>
+        /// empty instance.
         /// Use
         /// <see cref="AttachEventListener{T}(IEventListener, iText.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])"/>
         /// to add an event listener along with its filters.
-        /// </summary>
+        /// </remarks>
         public FilteredEventListener() {
             this.delegates = new List<IEventListener>();
             this.filters = new List<IEventFilter[]>();
@@ -70,13 +75,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// Constructs a
         /// <see cref="FilteredEventListener"/>
         /// instance with one delegate.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <see cref="FilteredEventListener"/>
+        /// instance with one delegate.
         /// Use
         /// <see cref="AttachEventListener{T}(IEventListener, iText.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter[])"/>
         /// to add more
         /// <see cref="IEventListener"/>
         /// delegates
         /// along with their filters.
-        /// </summary>
+        /// </remarks>
         /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
@@ -90,6 +100,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// Attaches another
         /// <see cref="IEventListener"/>
         /// delegate with its filters.
+        /// </summary>
+        /// <remarks>
+        /// Attaches another
+        /// <see cref="IEventListener"/>
+        /// delegate with its filters.
         /// When all the filters attached to the delegate for an event accept the event, the event will be passed on to
         /// the delegate.
         /// You can attach multiple delegates to this
@@ -99,7 +114,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <see cref="FilteredEventListener"/>
         /// instances and parsing the content stream multiple times. This is useful, for instance, when you want
         /// to extract content from multiple regions of a page.
-        /// </summary>
+        /// </remarks>
         /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate

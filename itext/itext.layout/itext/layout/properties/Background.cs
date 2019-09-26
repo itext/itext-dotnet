@@ -47,6 +47,11 @@ namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized class holding configurable properties related to an
     /// <see cref="iText.Layout.Element.IElement"/>
+    /// 's background.
+    /// </summary>
+    /// <remarks>
+    /// A specialized class holding configurable properties related to an
+    /// <see cref="iText.Layout.Element.IElement"/>
     /// 's background. This class is meant to be used as the value for the
     /// <see cref="Property.BACKGROUND"/>
     /// key in an
@@ -54,7 +59,7 @@ namespace iText.Layout.Properties {
     /// . Allows
     /// to define a background color, and positive or negative changes to the
     /// location of the edges of the background coloring.
-    /// </summary>
+    /// </remarks>
     public class Background {
         protected internal TransparentColor transparentColor;
 

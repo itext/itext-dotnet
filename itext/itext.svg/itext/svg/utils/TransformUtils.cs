@@ -153,7 +153,8 @@ namespace iText.Svg.Utils {
             return matrix;
         }
 
-        /// <summary>A transformation attribute can encompass multiple transformation operation (e.g.</summary>
+        /// <summary>A transformation attribute can encompass multiple transformation operation (e.g. "translate(10,20) scale(30,40)".
+        ///     </summary>
         /// <remarks>
         /// A transformation attribute can encompass multiple transformation operation (e.g. "translate(10,20) scale(30,40)".
         /// This method splits the original transformation string into multiple strings so that they can be handled separately.

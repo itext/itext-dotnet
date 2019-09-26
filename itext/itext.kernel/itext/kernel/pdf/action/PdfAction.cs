@@ -108,9 +108,14 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>
         /// Constructs a
         /// <see cref="PdfAction"/>
+        /// instance with a given dictionary.
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <see cref="PdfAction"/>
         /// instance with a given dictionary. It can be used for handy
         /// property reading in reading mode or modifying in stamping mode.
-        /// </summary>
+        /// </remarks>
         /// <param name="pdfObject">the dictionary to construct the wrapper around</param>
         public PdfAction(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -606,10 +611,15 @@ namespace iText.Kernel.Pdf.Action {
         /// Inserts the value into the underlying object of this
         /// <see cref="PdfAction"/>
         /// and associates it with the specified key.
+        /// </summary>
+        /// <remarks>
+        /// Inserts the value into the underlying object of this
+        /// <see cref="PdfAction"/>
+        /// and associates it with the specified key.
         /// If the key is already present in this
         /// <see cref="PdfAction"/>
         /// , this method will override the old value with the specified one.
-        /// </summary>
+        /// </remarks>
         /// <param name="key">key to insert or to override</param>
         /// <param name="value">the value to associate with the specified key</param>
         /// <returns>
@@ -628,11 +638,17 @@ namespace iText.Kernel.Pdf.Action {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }

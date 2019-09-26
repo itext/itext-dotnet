@@ -102,9 +102,15 @@ namespace iText.IO.Source {
         /// <inheritDoc/>
         /// Note: the length is determined when the
         /// <see cref="RAFRandomAccessSource"/>
+        /// is constructed.
+        /// </summary>
+        /// <remarks>
+        /// <inheritDoc/>
+        /// Note: the length is determined when the
+        /// <see cref="RAFRandomAccessSource"/>
         /// is constructed.  If the file length changes
         /// after construction, that change will not be reflected in this call.
-        /// </summary>
+        /// </remarks>
         public virtual long Length() {
             return length;
         }

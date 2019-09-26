@@ -68,9 +68,14 @@ namespace iText.Layout.Renderer {
     /// <summary>
     /// Defines the most common properties and behavior that are shared by most
     /// <see cref="IRenderer"/>
+    /// implementations.
+    /// </summary>
+    /// <remarks>
+    /// Defines the most common properties and behavior that are shared by most
+    /// <see cref="IRenderer"/>
     /// implementations. All default Renderers are subclasses of
     /// this default implementation.
-    /// </summary>
+    /// </remarks>
     public abstract class AbstractRenderer : IRenderer {
         /// <summary>
         /// The maximum difference between
@@ -209,12 +214,8 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Checks if this renderer or its model element have the specified property,
-        /// i.e.
-        /// </summary>
-        /// <remarks>
-        /// Checks if this renderer or its model element have the specified property,
         /// i.e. if it was set to this very element or its very model element earlier.
-        /// </remarks>
+        /// </summary>
         /// <param name="property">the property to be checked</param>
         /// <returns>
         /// 
@@ -866,13 +867,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>Indicates whether this renderer is flushed or not, i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Indicates whether this renderer is flushed or not, i.e. if
         /// <see cref="Draw(DrawContext)"/>
         /// has already
         /// been called.
-        /// </remarks>
+        /// </summary>
         /// <returns>whether the renderer has been flushed</returns>
         /// <seealso cref="Draw(DrawContext)"/>
         public virtual bool IsFlushed() {
@@ -1989,7 +1989,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,
-        /// e.g.
+        /// e.g. document page or form xObject.
         /// </summary>
         /// <remarks>
         /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,

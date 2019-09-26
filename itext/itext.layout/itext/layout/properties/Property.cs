@@ -338,9 +338,15 @@ namespace iText.Layout.Properties {
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
         /// objects that
+        /// are lower in the document's hierarchy.
+        /// </summary>
+        /// <remarks>
+        /// Some properties must be passed to
+        /// <see cref="iText.Layout.IPropertyContainer"/>
+        /// objects that
         /// are lower in the document's hierarchy. Most inherited properties are
         /// related to textual operations. Indicates whether or not this type of property is inheritable.
-        /// </summary>
+        /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
         private const int MAX_INHERITED_PROPERTY_ID = 119;
@@ -385,15 +391,9 @@ namespace iText.Layout.Properties {
         /// <summary>
         /// This method checks whether a Property, in order to be picked up by the
         /// rendering engine, must be defined on the current element or renderer
-        /// (<code>return false</code>), or may be defined in one of its parent
-        /// elements or renderers (<code>return true</code>).
-        /// </summary>
-        /// <remarks>
-        /// This method checks whether a Property, in order to be picked up by the
-        /// rendering engine, must be defined on the current element or renderer
         /// (<c>return false</c>), or may be defined in one of its parent
         /// elements or renderers (<c>return true</c>).
-        /// </remarks>
+        /// </summary>
         /// <param name="property">the ID, defined in this class, of the property to check</param>
         /// <returns>whether the property type is inheritable</returns>
         public static bool IsPropertyInherited(int property) {

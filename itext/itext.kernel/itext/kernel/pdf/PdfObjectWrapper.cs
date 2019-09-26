@@ -142,6 +142,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Some wrappers use object's indirect reference to obtain the
         /// <c>PdfDocument</c>
+        /// to which the object belongs to.
+        /// </summary>
+        /// <remarks>
+        /// Some wrappers use object's indirect reference to obtain the
+        /// <c>PdfDocument</c>
         /// to which the object belongs to. For this matter, for these wrappers it is implicitly defined
         /// that they work with indirect objects only. Commonly these wrappers have two constructors: one with
         /// <c>PdfDocument</c>
@@ -152,7 +157,7 @@ namespace iText.Kernel.Pdf {
         /// type of constructors to ensure that wrapper will able to obtain the
         /// <c>PdfDocument</c>
         /// instance.
-        /// </summary>
+        /// </remarks>
         /// <param name="object">
         /// the
         /// <c>PdfObject</c>

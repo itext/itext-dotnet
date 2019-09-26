@@ -96,8 +96,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <see langword="true"/>
         /// ,
         /// /ActualText marked content property will be used instead of raw decoded bytes.
-        /// Beware: the logic is not stable yet.
         /// </summary>
+        /// <remarks>
+        /// Changes the behavior of text extraction so that if the parameter is set to
+        /// <see langword="true"/>
+        /// ,
+        /// /ActualText marked content property will be used instead of raw decoded bytes.
+        /// Beware: the logic is not stable yet.
+        /// </remarks>
         /// <param name="useActualText">true to use /ActualText, false otherwise</param>
         /// <returns>this object</returns>
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetUseActualText(bool

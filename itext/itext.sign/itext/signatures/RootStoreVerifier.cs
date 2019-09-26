@@ -48,13 +48,9 @@ using Org.BouncyCastle.X509;
 
 namespace iText.Signatures {
     /// <summary>
-    /// Verifies a certificate against a <code>KeyStore</code>
-    /// containing trusted anchors.
-    /// </summary>
-    /// <remarks>
     /// Verifies a certificate against a <c>KeyStore</c>
     /// containing trusted anchors.
-    /// </remarks>
+    /// </summary>
     public class RootStoreVerifier : CertificateVerifier {
         /// <summary>A key store against which certificates can be verified.</summary>
         protected internal List<X509Certificate> rootStore = null;

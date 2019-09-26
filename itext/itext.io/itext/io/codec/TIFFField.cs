@@ -580,8 +580,8 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>
-        /// Compares this <code>TIFFField</code> with another
-        /// <code>TIFFField</code> by comparing the tags.
+        /// Compares this <c>TIFFField</c> with another
+        /// <c>TIFFField</c> by comparing the tags.
         /// </summary>
         /// <remarks>
         /// Compares this <c>TIFFField</c> with another

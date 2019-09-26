@@ -194,13 +194,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return -1;
         }
 
-        /// <summary>Gets the baseline for the text (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Gets the baseline for the text (i.e. the line that the text 'sits' on)
         /// This value includes the Rise of the draw operation - see
         /// <see cref="GetRise()"/>
         /// for the amount added by Rise
-        /// </remarks>
+        /// </summary>
         /// <returns>the baseline line segment</returns>
         public virtual LineSegment GetBaseline() {
             CheckGraphicsState();
@@ -212,13 +211,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
         }
 
-        /// <summary>Gets the ascentline for the text (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Gets the ascentline for the text (i.e. the line that represents the topmost extent that a string of the current font could have)
         /// This value includes the Rise of the draw operation - see
         /// <see cref="GetRise()"/>
         /// for the amount added by Rise
-        /// </remarks>
+        /// </summary>
         /// <returns>the ascentline line segment</returns>
         public virtual LineSegment GetAscentLine() {
             CheckGraphicsState();
@@ -226,7 +224,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 );
         }
 
-        /// <summary>Gets the descentline for the text (i.e.</summary>
+        /// <summary>Gets the descentline for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
+        ///     </summary>
         /// <remarks>
         /// Gets the descentline for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
         /// This value includes the Rise of the draw operation - see

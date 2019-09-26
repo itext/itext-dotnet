@@ -51,10 +51,16 @@ namespace iText.Layout.Element {
     /// A
     /// <see cref="BlockElement{T}"/>
     /// will try to take up as much horizontal space as
+    /// available to it on the canvas or page.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="BlockElement{T}"/>
+    /// will try to take up as much horizontal space as
     /// available to it on the canvas or page. The concept is comparable to the block
     /// element in HTML. Also like in HTML, the visual representation of the object
     /// can be delimited by padding, a border, and/or a margin.
-    /// </summary>
+    /// </remarks>
     /// 
     public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement, IBlockElement
         where T : IElement {
@@ -347,9 +353,15 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// and the start of the next sibling of this element
         /// should be placed in the same area.
+        /// </summary>
+        /// <remarks>
+        /// Sets whether the end of this
+        /// <see cref="BlockElement{T}"/>
+        /// and the start of the next sibling of this element
+        /// should be placed in the same area.
         /// Note that this will only work for high-level elements, i.e. elements added to the
         /// <see cref="iText.Layout.RootElement{T}"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="keepWithNext">
         /// the new value of the
         /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>

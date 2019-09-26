@@ -370,6 +370,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// A name specifying the relationship (the "reply type") between this annotation and one specified by IRT entry
         /// (see
         /// <see cref="GetInReplyTo()"/>
+        /// ).
+        /// </summary>
+        /// <remarks>
+        /// A name specifying the relationship (the "reply type") between this annotation and one specified by IRT entry
+        /// (see
+        /// <see cref="GetInReplyTo()"/>
         /// ). Valid values are:
         /// <list type="bullet">
         /// <item><description>
@@ -383,7 +389,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// - The annotation shall be grouped with the annotation specified by IRT.
         /// </description></item>
         /// </list>
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -399,9 +405,15 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets the relationship (the "reply type") between this annotation and one specified by IRT entry
         /// (see
         /// <see cref="SetInReplyTo(PdfAnnotation)"/>
+        /// ).
+        /// </summary>
+        /// <remarks>
+        /// Sets the relationship (the "reply type") between this annotation and one specified by IRT entry
+        /// (see
+        /// <see cref="SetInReplyTo(PdfAnnotation)"/>
         /// ). For valid values see
         /// <see cref="GetInReplyTo()"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="replyType">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

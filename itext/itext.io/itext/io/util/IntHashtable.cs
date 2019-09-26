@@ -82,24 +82,16 @@ namespace iText.IO.Util {
 
         /// <summary>
         /// Constructs a new, empty hashtable with a default capacity and load
-        /// factor, which is <code>20</code> and <code>0.75</code> respectively.
-        /// </summary>
-        /// <remarks>
-        /// Constructs a new, empty hashtable with a default capacity and load
         /// factor, which is <c>20</c> and <c>0.75</c> respectively.
-        /// </remarks>
+        /// </summary>
         public IntHashtable()
             : this(150, 0.75f) {
         }
 
         /// <summary>
         /// Constructs a new, empty hashtable with the specified initial capacity
-        /// and default load factor, which is <code>0.75</code>.
-        /// </summary>
-        /// <remarks>
-        /// Constructs a new, empty hashtable with the specified initial capacity
         /// and default load factor, which is <c>0.75</c>.
-        /// </remarks>
+        /// </summary>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
         /// <exception cref="System.ArgumentException">
         /// if the initial capacity is less
@@ -186,7 +178,7 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// Returns <code>true</code> if this HashMap maps one or more keys
+        /// Returns <c>true</c> if this HashMap maps one or more keys
         /// to this value.
         /// </summary>
         /// <remarks>
@@ -274,8 +266,8 @@ namespace iText.IO.Util {
         }
 
         /// <summary>
-        /// Maps the specified <code>key</code> to the specified
-        /// <code>value</code> in this hashtable.
+        /// Maps the specified <c>key</c> to the specified
+        /// <c>value</c> in this hashtable.
         /// </summary>
         /// <remarks>
         /// Maps the specified <c>key</c> to the specified

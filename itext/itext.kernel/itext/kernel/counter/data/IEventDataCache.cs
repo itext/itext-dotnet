@@ -47,9 +47,13 @@ namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Interface responsible for caching
     /// <see cref="EventData{T}"/>.
+    /// </summary>
+    /// <remarks>
+    /// Interface responsible for caching
+    /// <see cref="EventData{T}"/>.
     /// Used in
     /// <see cref="EventDataHandler{T, V}"/>.
-    /// </summary>
+    /// </remarks>
     /// 
     /// 
     public interface IEventDataCache<T, V>

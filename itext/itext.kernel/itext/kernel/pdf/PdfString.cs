@@ -55,6 +55,14 @@ namespace iText.Kernel.Pdf {
     /// JAVA-
     /// <c>String</c>
     /// -object.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <c>PdfString</c>
+    /// -class is the PDF-equivalent of a
+    /// JAVA-
+    /// <c>String</c>
+    /// -object.
     /// <para />
     /// A string is a sequence of characters delimited by parenthesis.
     /// If a string is too long to be conveniently placed on a single line, it may
@@ -66,7 +74,7 @@ namespace iText.Kernel.Pdf {
     /// way to represent characters outside the printable ASCII character set.<br />
     /// This object is described in the 'Portable Document Format Reference Manual
     /// version 1.7' section 3.2.3 (page 53-56).
-    /// </summary>
+    /// </remarks>
     /// <seealso cref="PdfObject"/>
     public class PdfString : PdfPrimitiveObject {
         protected internal String value;
@@ -265,9 +273,14 @@ namespace iText.Kernel.Pdf {
         /// Encrypt content of
         /// <c>value</c>
         /// and set as content.
+        /// </summary>
+        /// <remarks>
+        /// Encrypt content of
+        /// <c>value</c>
+        /// and set as content.
         /// <c>generateContent()</c>
         /// won't be called.
-        /// </summary>
+        /// </remarks>
         /// <param name="encrypt">@see PdfEncryption</param>
         /// <returns>true if value was encrypted, otherwise false.</returns>
         protected internal virtual bool Encrypt(PdfEncryption encrypt) {

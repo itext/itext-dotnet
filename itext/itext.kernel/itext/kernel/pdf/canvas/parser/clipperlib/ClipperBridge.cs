@@ -278,6 +278,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="Clipper"/>
         /// instance, treating the path as
         /// a closed polygon.
+        /// </summary>
+        /// <remarks>
+        /// Adds polygon path based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
+        /// a closed polygon.
         /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
         /// <list type="bullet">
@@ -286,7 +297,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <item><description>the vertices are all co-linear.
         /// </description></item>
         /// </list>
-        /// </summary>
+        /// </remarks>
         /// <param name="clipper">
         /// 
         /// <see cref="Clipper"/>
@@ -321,6 +332,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// ) and adds this path to
         /// <see cref="Clipper"/>
         /// instance, treating the path as
+        /// a polyline (an open path in terms of clipper library).
+        /// </summary>
+        /// <remarks>
+        /// Adds polyline path based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
         /// a polyline (an open path in terms of clipper library). This path is added to the subject of future clipping.
         /// Polylines cannot be part of clipping polygon.
         /// <para />
@@ -329,7 +351,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <item><description>it has less than 2 vertices;
         /// </description></item>
         /// </list>
-        /// </summary>
+        /// </remarks>
         /// <param name="clipper">
         /// 
         /// <see cref="Clipper"/>

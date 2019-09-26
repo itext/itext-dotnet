@@ -47,11 +47,15 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>
     /// Parses HTML into a
+    /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Document"/>.
+    /// </summary>
+    /// <remarks>
+    /// Parses HTML into a
     /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Document"/>
     /// . Generally best to use one of the  more convenient parse methods
     /// in
     /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
-    /// </summary>
+    /// </remarks>
     public class Parser {
         private const int DEFAULT_MAX_ERRORS = 0;
 

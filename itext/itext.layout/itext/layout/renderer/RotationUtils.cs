@@ -57,11 +57,17 @@ namespace iText.Layout.Renderer {
         /// of
         /// <see cref="iText.Layout.Minmaxwidth.RotationMinMaxWidth.Calculate(double, double, iText.Layout.Minmaxwidth.MinMaxWidth)
         ///     "/>.
+        /// </summary>
+        /// <remarks>
+        /// This method tries to calculate min-max-width of rotated element using heuristics
+        /// of
+        /// <see cref="iText.Layout.Minmaxwidth.RotationMinMaxWidth.Calculate(double, double, iText.Layout.Minmaxwidth.MinMaxWidth)
+        ///     "/>.
         /// This method may call
         /// <see cref="IRenderer.Layout(iText.Layout.Layout.LayoutContext)"/>
         /// once in best case
         /// (if the width is set on element, or if we are really lucky) and three times in worst case.
-        /// </summary>
+        /// </remarks>
         /// <param name="minMaxWidth">the minMaxWidth of NOT rotated renderer</param>
         /// <param name="renderer">the actual renderer</param>
         /// <returns>minMaxWidth of rotated renderer or original value in case rotated value can not be calculated, or renderer isn't rotated.

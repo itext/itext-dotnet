@@ -105,8 +105,7 @@ namespace iText.Barcodes {
             this.checksumText = false;
         }
 
-        /// <summary>Deletes all the non numeric characters from <CODE>text</CODE>.</summary>
-        /// <remarks>Deletes all the non numeric characters from <c>text</c>.</remarks>
+        /// <summary>Deletes all the non numeric characters from <c>text</c>.</summary>
         /// <param name="text">the text</param>
         /// <returns>a <c>String</c> with only numeric characters</returns>
         public static String KeepNumbers(String text) {
@@ -201,7 +200,7 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
         /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the

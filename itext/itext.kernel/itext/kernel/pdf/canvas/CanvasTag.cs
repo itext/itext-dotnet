@@ -63,21 +63,19 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>The properties of the tag.</summary>
         protected internal PdfDictionary properties;
 
-        /// <summary>Creates a tag that is referenced to the document's tag structure (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Creates a tag that is referenced to the document's tag structure (i.e.
         /// logical structure).
-        /// </remarks>
+        /// </summary>
         /// <param name="role">the type of tag</param>
         public CanvasTag(PdfName role) {
             this.role = role;
         }
 
-        /// <summary>Creates a tag that is referenced to the document's tag structure (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Creates a tag that is referenced to the document's tag structure (i.e.
         /// logical structure).
-        /// </remarks>
+        /// </summary>
         /// <param name="role">the type of tag</param>
         /// <param name="mcid">marked content id which serves as a reference to the document's logical structure</param>
         public CanvasTag(PdfName role, int mcid) {
@@ -85,11 +83,10 @@ namespace iText.Kernel.Pdf.Canvas {
             AddProperty(PdfName.MCID, new PdfNumber(mcid));
         }
 
-        /// <summary>Creates a tag that is referenced to the document's tag structure (i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Creates a tag that is referenced to the document's tag structure (i.e.
         /// logical structure).
-        /// </remarks>
+        /// </summary>
         /// <param name="mcr">
         /// the
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfMcr">Marked Content Reference</see>
@@ -128,8 +125,13 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>
         /// Sets a dictionary of properties to the
         /// <see cref="CanvasTag">tag</see>
-        /// 's properties. All existing properties (if any) will be lost.
+        /// 's properties.
         /// </summary>
+        /// <remarks>
+        /// Sets a dictionary of properties to the
+        /// <see cref="CanvasTag">tag</see>
+        /// 's properties. All existing properties (if any) will be lost.
+        /// </remarks>
         /// <param name="properties">a dictionary</param>
         /// <returns>
         /// current

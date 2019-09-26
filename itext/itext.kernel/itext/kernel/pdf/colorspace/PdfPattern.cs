@@ -120,11 +120,17 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }
@@ -184,8 +190,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Creates new instance from the
             /// <see cref="iText.Kernel.Pdf.PdfStream"/>
             /// object.
-            /// This stream should have PatternType equals to 1.
             /// </summary>
+            /// <remarks>
+            /// Creates new instance from the
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+            /// object.
+            /// This stream should have PatternType equals to 1.
+            /// </remarks>
             /// <param name="pdfObject">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfStream"/>

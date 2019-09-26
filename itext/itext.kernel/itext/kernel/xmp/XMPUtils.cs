@@ -122,8 +122,7 @@ namespace iText.Kernel.XMP {
             XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases);
         }
 
-        /// <summary>Alias without the new option <code>deleteEmptyValues</code>.</summary>
-        /// <remarks>Alias without the new option <c>deleteEmptyValues</c>.</remarks>
+        /// <summary>Alias without the new option <c>deleteEmptyValues</c>.</summary>
         /// <param name="source">The source XMP object.</param>
         /// <param name="dest">The destination XMP object.</param>
         /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
@@ -265,8 +264,7 @@ namespace iText.Kernel.XMP {
             return value ? XMPConst.TRUESTR : XMPConst.FALSESTR;
         }
 
-        /// <summary>Converts a string value to an <code>int</code>.</summary>
-        /// <remarks>Converts a string value to an <c>int</c>.</remarks>
+        /// <summary>Converts a string value to an <c>int</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns an int.</returns>
         /// <exception cref="XMPException">
@@ -298,8 +296,7 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to a <code>long</code>.</summary>
-        /// <remarks>Converts a string value to a <c>long</c>.</remarks>
+        /// <summary>Converts a string value to a <c>long</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns a long.</returns>
         /// <exception cref="XMPException">
@@ -331,8 +328,7 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to a <code>double</code>.</summary>
-        /// <remarks>Converts a string value to a <c>double</c>.</remarks>
+        /// <summary>Converts a string value to a <c>double</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns a double.</returns>
         /// <exception cref="XMPException">
@@ -361,8 +357,7 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to an <code>XMPDateTime</code>.</summary>
-        /// <remarks>Converts a string value to an <c>XMPDateTime</c>.</remarks>
+        /// <summary>Converts a string value to an <c>XMPDateTime</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns an <c>XMPDateTime</c>-object.</returns>
         /// <exception cref="XMPException">
@@ -379,8 +374,7 @@ namespace iText.Kernel.XMP {
             }
         }
 
-        /// <summary>Convert from <code>XMPDateTime</code> to string.</summary>
-        /// <remarks>Convert from <c>XMPDateTime</c> to string.</remarks>
+        /// <summary>Convert from <c>XMPDateTime</c> to string.</summary>
         /// <param name="value">an <c>XMPDateTime</c></param>
         /// <returns>The string representation of the long.</returns>
         public static String ConvertFromDate(XMPDateTime value) {

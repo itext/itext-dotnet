@@ -59,10 +59,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// ,
         /// The data structure that gets returned contains both the plaintext,
         /// as well as the mapping of indices (from the list to the string).
+        /// </summary>
+        /// <remarks>
+        /// This method converts a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of
+        /// <see cref="CharacterRenderInfo"/>
+        /// ,
+        /// The data structure that gets returned contains both the plaintext,
+        /// as well as the mapping of indices (from the list to the string).
         /// These indices can differ; if there is sufficient spacing between two CharacterRenderInfo
         /// objects, this algorithm will decide to insert space. The inserted space will cause
         /// the indices to differ by at least 1.
-        /// </summary>
+        /// </remarks>
         internal static CharacterRenderInfo.StringConversionInfo MapString(IList<iText.Kernel.Pdf.Canvas.Parser.Listener.CharacterRenderInfo
             > cris) {
             IDictionary<int, int?> indexMap = new Dictionary<int, int?>();

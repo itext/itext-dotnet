@@ -204,9 +204,14 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets n quadrilaterals in default user space by passing an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers.
+        /// </summary>
+        /// <remarks>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
         /// Quadrilaterals are used to define regions inside annotation rectangle
         /// in which the link annotation should be activated.
-        /// </summary>
+        /// </remarks>
         /// <param name="quadPoints">
         /// an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -225,12 +230,18 @@ namespace iText.Kernel.Pdf.Annot {
         /// BS entry specifies a border style dictionary that has more settings than the array specified for the Border
         /// entry (see
         /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
+        /// </summary>
+        /// <remarks>
+        /// BS entry specifies a border style dictionary that has more settings than the array specified for the Border
+        /// entry (see
+        /// <see cref="PdfAnnotation.GetBorder()"/>
         /// ). If an annotation dictionary includes the BS entry, then the Border
         /// entry is ignored. If annotation includes AP (see
         /// <see cref="PdfAnnotation.GetAppearanceDictionary()"/>
         /// ) it takes
         /// precedence over the BS entry. For more info on BS entry see ISO-320001, Table 166.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -244,10 +255,15 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets border style dictionary that has more settings than the array specified for the Border entry (
         /// <see cref="PdfAnnotation.GetBorder()"/>
         /// ).
+        /// </summary>
+        /// <remarks>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
         /// See ISO-320001, Table 166 and
         /// <see cref="GetBorderStyle()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="borderStyle">
         /// a border style dictionary specifying the line width and dash pattern that shall be used
         /// in drawing the annotation’s border.

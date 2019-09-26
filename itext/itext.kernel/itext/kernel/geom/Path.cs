@@ -110,8 +110,7 @@ namespace iText.Kernel.Geom {
             return currentPoint;
         }
 
-        /// <summary>Begins a new subpath by moving the current point to coordinates <CODE>(x, y)</CODE>.</summary>
-        /// <remarks>Begins a new subpath by moving the current point to coordinates <c>(x, y)</c>.</remarks>
+        /// <summary>Begins a new subpath by moving the current point to coordinates <c>(x, y)</c>.</summary>
         /// <param name="x">x-coordinate of the new point</param>
         /// <param name="y">y-coordinate of the new point</param>
         public virtual void MoveTo(float x, float y) {
@@ -125,8 +124,7 @@ namespace iText.Kernel.Geom {
             }
         }
 
-        /// <summary>Appends a straight line segment from the current point to the point <CODE>(x, y)</CODE>.</summary>
-        /// <remarks>Appends a straight line segment from the current point to the point <c>(x, y)</c>.</remarks>
+        /// <summary>Appends a straight line segment from the current point to the point <c>(x, y)</c>.</summary>
         /// <param name="x">x-coordinate of the new point</param>
         /// <param name="y">y-coordinate of the new point</param>
         public virtual void LineTo(float x, float y) {

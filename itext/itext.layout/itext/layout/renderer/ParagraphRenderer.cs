@@ -60,9 +60,16 @@ namespace iText.Layout.Renderer {
     /// <see cref="IRenderer">renderer</see>
     /// object for a
     /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// object.
+    /// </summary>
+    /// <remarks>
+    /// This class represents the
+    /// <see cref="IRenderer">renderer</see>
+    /// object for a
+    /// <see cref="iText.Layout.Element.Paragraph"/>
     /// object. It will draw the glyphs of the textual content on the
     /// <see cref="DrawContext"/>.
-    /// </summary>
+    /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
 

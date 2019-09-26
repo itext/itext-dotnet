@@ -45,7 +45,10 @@ using iText.Layout;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
-    /// <summary>This class represents a layout element, i.e.</summary>
+    /// <summary>
+    /// This class represents a layout element, i.e. a piece of content that will
+    /// take up 'physical' space on a canvas or document.
+    /// </summary>
     /// <remarks>
     /// This class represents a layout element, i.e. a piece of content that will
     /// take up 'physical' space on a canvas or document. Its presence and positioning

@@ -68,8 +68,7 @@ namespace iText.IO.Font {
             RegisterStandardFontFamilies();
         }
 
-        /// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
-        /// <remarks>Constructs a <c>Font</c>-object.</remarks>
+        /// <summary>Constructs a <c>Font</c>-object.</summary>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
         /// <returns>the Font constructed based on the parameters</returns>
@@ -78,8 +77,7 @@ namespace iText.IO.Font {
             return GetFont(fontName, style, true);
         }
 
-        /// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
-        /// <remarks>Constructs a <c>Font</c>-object.</remarks>
+        /// <summary>Constructs a <c>Font</c>-object.</summary>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
         /// <param name="cached">

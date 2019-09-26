@@ -124,12 +124,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// otherwise
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
+        /// </summary>
+        /// <remarks>
+        /// If the operation is
+        /// <see cref="NO_OP"/>
+        /// then the rule is ignored,
+        /// otherwise
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
         /// <para />
         /// See
         /// <see cref="PathRenderInfo(System.Collections.Generic.Stack{E}, iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Geom.Path, int, int, bool, int)
         ///     "/>
-        /// </summary>
+        /// </remarks>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             )
             : this(canvasTagHierarchy, gs, path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule

@@ -52,10 +52,16 @@ namespace iText.Layout.Font {
     /// <see cref="iText.IO.Font.FontProgram"/>
     /// and
     /// <see cref="iText.Kernel.Font.PdfFont"/>.
+    /// </summary>
+    /// <remarks>
+    /// Contains all font related data to create
+    /// <see cref="iText.IO.Font.FontProgram"/>
+    /// and
+    /// <see cref="iText.Kernel.Font.PdfFont"/>.
     /// <see cref="iText.IO.Font.FontProgramDescriptor"/>
     /// fetches with
     /// <see cref="iText.IO.Font.FontProgramDescriptorFactory"/>.
-    /// </summary>
+    /// </remarks>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo)"/>
     /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)">
     /// Note,
@@ -156,9 +162,14 @@ namespace iText.Layout.Font {
         /// Gets path to font, if
         /// <see cref="FontInfo"/>
         /// was created by String.
+        /// </summary>
+        /// <remarks>
+        /// Gets path to font, if
+        /// <see cref="FontInfo"/>
+        /// was created by String.
         /// Note, to get PostScript or full name, use
         /// <see cref="GetDescriptor()"/>.
-        /// </summary>
+        /// </remarks>
         /// <returns>the font name</returns>
         public String GetFontName() {
             return fontName;

@@ -63,9 +63,14 @@ namespace iText.Pdfa.Checker {
     /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
     /// number of methods that override the implementations of its superclass
     /// <see cref="PdfA1Checker"/>.
+    /// </summary>
+    /// <remarks>
+    /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
+    /// number of methods that override the implementations of its superclass
+    /// <see cref="PdfA1Checker"/>.
     /// <para />
     /// The specification implemented by this class is ISO 19005-2
-    /// </summary>
+    /// </remarks>
     public class PdfA2Checker : PdfA1Checker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));

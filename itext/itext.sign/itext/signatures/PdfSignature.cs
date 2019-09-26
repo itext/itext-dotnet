@@ -92,12 +92,20 @@ namespace iText.Signatures {
         /// for a signature
         /// dictionary or
         /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
+        /// for a timestamp signature dictionary.
+        /// </summary>
+        /// <remarks>
+        /// The type of PDF object that the wrapped dictionary describes; if present, shall be
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
+        /// for a signature
+        /// dictionary or
+        /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
         /// for a timestamp signature dictionary. Shall be not null if it's value
         /// is
         /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
         /// . The default value is:
         /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

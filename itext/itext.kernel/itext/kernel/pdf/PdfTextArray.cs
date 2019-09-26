@@ -52,6 +52,12 @@ namespace iText.Kernel.Pdf {
     /// defines an array with displacements and
     /// <see cref="PdfString"/>
     /// -objects.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="PdfTextArray"/>
+    /// defines an array with displacements and
+    /// <see cref="PdfString"/>
+    /// -objects.
     /// <para />
     /// A
     /// <see cref="PdfTextArray"/>
@@ -65,7 +71,7 @@ namespace iText.Kernel.Pdf {
     /// see reference manual version 1.6 section 5.3.2, pages 378-379.
     /// To emit a more efficient array, we consolidate repeated numbers or strings into single array entries.
     /// For example: "add( 50 ); add( -50 );" will REMOVE the combined zero from the array.
-    /// </summary>
+    /// </remarks>
     public class PdfTextArray : PdfArray {
         private float lastNumber = float.NaN;
 

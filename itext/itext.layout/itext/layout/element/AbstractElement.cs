@@ -133,8 +133,7 @@ namespace iText.Layout.Element {
             return childElements;
         }
 
-        /// <summary>Returns <code>true</code> if this list contains no elements.</summary>
-        /// <remarks>Returns <c>true</c> if this list contains no elements.</remarks>
+        /// <summary>Returns <c>true</c> if this list contains no elements.</summary>
         /// <returns><c>true</c> if this list contains no elements</returns>
         public virtual bool IsEmpty() {
             return 0 == childElements.Count;

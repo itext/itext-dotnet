@@ -78,6 +78,11 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>
         /// Creates a new
         /// <see cref="PdfTarget"/>
+        /// object given its type.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="PdfTarget"/>
         /// object given its type. The type must be either
         /// <see cref="iText.Kernel.Pdf.PdfName.P"/>
         /// , or
@@ -86,7 +91,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <see cref="iText.Kernel.Pdf.PdfName.C"/>
         /// , additional entries must be specified
         /// according to the spec.
-        /// </summary>
+        /// </remarks>
         /// <param name="r">the relationship between the current document and the target</param>
         private static iText.Kernel.Pdf.Action.PdfTarget Create(PdfName r) {
             iText.Kernel.Pdf.Action.PdfTarget pdfTarget = new iText.Kernel.Pdf.Action.PdfTarget(new PdfDictionary());

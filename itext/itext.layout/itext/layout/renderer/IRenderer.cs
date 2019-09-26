@@ -71,6 +71,13 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Layout.LayoutResult"/>
         /// , representing the layout result, including occupied area, status, i.e.
         /// if there was enough place to fit the renderer subtree, etc.
+        /// </summary>
+        /// <remarks>
+        /// This method simulates positioning of the renderer, including all of its children, and returns
+        /// the
+        /// <see cref="iText.Layout.Layout.LayoutResult"/>
+        /// , representing the layout result, including occupied area, status, i.e.
+        /// if there was enough place to fit the renderer subtree, etc.
         /// <see cref="iText.Layout.Layout.LayoutResult"/>
         /// can be extended to return custom layout results for custom elements, e.g.
         /// <see cref="TextRenderer"/>
@@ -81,18 +88,17 @@ namespace iText.Layout.Renderer {
         /// before
         /// <see cref="Draw(DrawContext)"/>
         /// , to prepare the renderer to be flushed to the output stream.
-        /// </summary>
+        /// </remarks>
         /// <param name="layoutContext">the description of layout area and any other additional information</param>
         /// <returns>result of the layout process</returns>
         LayoutResult Layout(LayoutContext layoutContext);
 
-        /// <summary>Flushes the renderer subtree contents, i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Flushes the renderer subtree contents, i.e. draws itself on canvas,
         /// adds necessary objects to the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// etc.
-        /// </remarks>
+        /// </summary>
         /// <param name="drawContext">
         /// contains the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
@@ -133,9 +139,15 @@ namespace iText.Layout.Renderer {
         /// Explicitly sets this object as the child of another
         /// <see cref="IRenderer"/>
         /// in
+        /// the renderer hierarchy.
+        /// </summary>
+        /// <remarks>
+        /// Explicitly sets this object as the child of another
+        /// <see cref="IRenderer"/>
+        /// in
         /// the renderer hierarchy. Some implementations also use this method
         /// internally to create a consistent hierarchy tree.
-        /// </summary>
+        /// </remarks>
         /// <param name="parent">the object to place higher in the renderer hierarchy</param>
         /// <returns>by default, this object</returns>
         IRenderer SetParent(IRenderer parent);
@@ -170,13 +182,12 @@ namespace iText.Layout.Renderer {
         /// </returns>
         IList<IRenderer> GetChildRenderers();
 
-        /// <summary>Indicates whether this renderer is flushed or not, i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Indicates whether this renderer is flushed or not, i.e. if
         /// <see cref="Draw(DrawContext)"/>
         /// has already
         /// been called.
-        /// </remarks>
+        /// </summary>
         /// <returns>whether the renderer has been flushed</returns>
         bool IsFlushed();
 

@@ -347,6 +347,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>
         /// Find elements that match the
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
+        /// CSS query, with this element as the starting context.
+        /// </summary>
+        /// <remarks>
+        /// Find elements that match the
+        /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
         /// CSS query, with this element as the starting context. Matched elements
         /// may include this element, or any of its children.
         /// <para />
@@ -370,7 +375,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </list>
         /// See the query syntax documentation in
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>.
-        /// </summary>
+        /// </remarks>
         /// <param name="cssQuery">
         /// a
         /// <see cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>

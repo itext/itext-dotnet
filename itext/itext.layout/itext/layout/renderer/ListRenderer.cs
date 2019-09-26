@@ -283,6 +283,11 @@ namespace iText.Layout.Renderer {
         /// Corrects split and overflow renderers when
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// is applied.
+        /// </summary>
+        /// <remarks>
+        /// Corrects split and overflow renderers when
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// is applied.
         /// <para />
         /// We assume that
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
@@ -301,7 +306,7 @@ namespace iText.Layout.Renderer {
         /// if we can render the first item renderer and strongly recommend not to set
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// manually.
-        /// </summary>
+        /// </remarks>
         /// <param name="splitRenderer">
         /// the
         /// <see cref="IRenderer">split renderer</see>

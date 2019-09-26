@@ -59,13 +59,17 @@ namespace iText.Svg.Processors.Impl {
     /// <summary>
     /// Default implementation of
     /// <see cref="iText.Svg.Processors.ISvgProcessor"/>.
+    /// </summary>
+    /// <remarks>
+    /// Default implementation of
+    /// <see cref="iText.Svg.Processors.ISvgProcessor"/>.
     /// This implementation traverses the
     /// <see cref="iText.StyledXmlParser.Node.INode"/>
     /// tree depth-first,
     /// using a stack to recreate a tree of
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// with the same structure.
-    /// </summary>
+    /// </remarks>
     public class DefaultSvgProcessor : ISvgProcessor {
         private ProcessorState processorState;
 

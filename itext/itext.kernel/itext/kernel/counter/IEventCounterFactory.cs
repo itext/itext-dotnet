@@ -48,6 +48,11 @@ namespace iText.Kernel.Counter {
     /// Factory that can be registered in
     /// <see cref="EventCounterHandler"/>
     /// and creates a counter for every reader or writer class.
+    /// </summary>
+    /// <remarks>
+    /// Factory that can be registered in
+    /// <see cref="EventCounterHandler"/>
+    /// and creates a counter for every reader or writer class.
     /// <para />
     /// You can implement your own counter factory and register it like this:
     /// <c>EventCounterManager.getInstance().registerCounter(new SystemOutEventCounterFactory());</c>
@@ -62,7 +67,7 @@ namespace iText.Kernel.Counter {
     /// <see cref="System.Console.Out"/>
     /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
-    /// </summary>
+    /// </remarks>
     public interface IEventCounterFactory {
         EventCounter GetCounter(Type cls);
     }

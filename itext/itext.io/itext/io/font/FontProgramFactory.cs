@@ -51,7 +51,7 @@ using iText.IO.Util;
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
     public sealed class FontProgramFactory {
-        /// <summary>This is the default value of the <VAR>cached</VAR> variable.</summary>
+        /// <summary>This is the default value of the <var>cached</var> variable.</summary>
         private static bool DEFAULT_CACHED = true;
 
         private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider();

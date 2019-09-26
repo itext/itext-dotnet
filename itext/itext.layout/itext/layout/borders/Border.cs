@@ -52,8 +52,7 @@ using iText.Layout.Properties;
 namespace iText.Layout.Borders {
     /// <summary>Represents a border.</summary>
     public abstract class Border {
-        /// <summary>The null Border, i.e.</summary>
-        /// <remarks>The null Border, i.e. the presence of such border is equivalent to the absence of the border</remarks>
+        /// <summary>The null Border, i.e. the presence of such border is equivalent to the absence of the border</summary>
         public static readonly iText.Layout.Borders.Border NO_BORDER = null;
 
         /// <summary>Value used by discontinuous borders during the drawing process</summary>
@@ -112,10 +111,15 @@ namespace iText.Layout.Borders {
         /// Creates a
         /// <see cref="Border">border</see>
         /// with the given width.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="Border">border</see>
+        /// with the given width.
         /// The
         /// <see cref="iText.Kernel.Colors.Color">color</see>
         /// to be set by default is black
-        /// </summary>
+        /// </remarks>
         /// <param name="width">the width which the border should have</param>
         protected internal Border(float width)
             : this(ColorConstants.BLACK, width) {
@@ -378,9 +382,14 @@ namespace iText.Layout.Borders {
         /// Returns the
         /// <see cref="Side">side</see>
         /// corresponded to the line between two points.
+        /// </summary>
+        /// <remarks>
+        /// Returns the
+        /// <see cref="Side">side</see>
+        /// corresponded to the line between two points.
         /// Notice that we consider the rectangle traversal to be clockwise.
         /// In case side couldn't be detected we will fallback to default side
-        /// </summary>
+        /// </remarks>
         /// <param name="x1">the abscissa of the left-bottom point</param>
         /// <param name="y1">the ordinate of the left-bottom point</param>
         /// <param name="x2">the abscissa of the right-top point</param>

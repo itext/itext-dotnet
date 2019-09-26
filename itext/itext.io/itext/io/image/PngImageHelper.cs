@@ -1012,8 +1012,7 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <summary>Gets an <CODE>int</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <remarks>Gets an <c>int</c> from an <c>InputStream</c>.</remarks>
+        /// <summary>Gets an <c>int</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
         /// <exception cref="System.IO.IOException"/>
@@ -1021,8 +1020,7 @@ namespace iText.IO.Image {
             return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
         }
 
-        /// <summary>Gets a <CODE>word</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <remarks>Gets a <c>word</c> from an <c>InputStream</c>.</remarks>
+        /// <summary>Gets a <c>word</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
         /// <exception cref="System.IO.IOException"/>
@@ -1030,8 +1028,7 @@ namespace iText.IO.Image {
             return (pngStream.Read() << 8) + pngStream.Read();
         }
 
-        /// <summary>Gets a <CODE>String</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <remarks>Gets a <c>String</c> from an <c>InputStream</c>.</remarks>
+        /// <summary>Gets a <c>String</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
         /// <exception cref="System.IO.IOException"/>

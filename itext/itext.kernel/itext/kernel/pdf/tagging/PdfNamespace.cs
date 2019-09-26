@@ -59,8 +59,13 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Constructs namespace from the given
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represents namespace dictionary.
-        /// This method is useful for property reading in reading mode or modifying in stamping mode.
         /// </summary>
+        /// <remarks>
+        /// Constructs namespace from the given
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// that represents namespace dictionary.
+        /// This method is useful for property reading in reading mode or modifying in stamping mode.
+        /// </remarks>
         /// <param name="dictionary">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>

@@ -34,6 +34,11 @@ namespace iText.Kernel.XMP {
     /// Interface for the
     /// <c>XMPMeta</c>
     /// iteration services.
+    /// </summary>
+    /// <remarks>
+    /// Interface for the
+    /// <c>XMPMeta</c>
+    /// iteration services.
     /// <c>XMPIterator</c>
     /// provides a uniform means to iterate over the
     /// schema and properties within an XMP object.
@@ -102,27 +107,19 @@ namespace iText.Kernel.XMP {
     /// <c>NoSuchElementException</c>
     /// if there are no more properties to
     /// return.
-    /// </summary>
+    /// </remarks>
     /// <since>25.01.2006</since>
     public interface XMPIterator : IEnumerator {
         /// <summary>
-        /// Skip the subtree below the current node when <code>next()</code> is
-        /// called.
-        /// </summary>
-        /// <remarks>
         /// Skip the subtree below the current node when <c>next()</c> is
         /// called.
-        /// </remarks>
+        /// </summary>
         void SkipSubtree();
 
         /// <summary>
         /// Skip the subtree below and remaining siblings of the current node when
-        /// <code>next()</code> is called.
-        /// </summary>
-        /// <remarks>
-        /// Skip the subtree below and remaining siblings of the current node when
         /// <c>next()</c> is called.
-        /// </remarks>
+        /// </summary>
         void SkipSiblings();
     }
 }

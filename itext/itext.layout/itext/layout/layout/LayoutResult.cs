@@ -83,22 +83,34 @@ namespace iText.Layout.Layout {
         /// <summary>
         /// The area occupied by the content during its
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
-        /// which indicates whether the content was added or not and, if yes, was it added fully or partially.
         /// </summary>
+        /// <remarks>
+        /// The area occupied by the content during its
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
+        /// which indicates whether the content was added or not and, if yes, was it added fully or partially.
+        /// </remarks>
         protected internal LayoutArea occupiedArea;
 
         /// <summary>
         /// The split renderer created during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
-        /// This renderer will be used to draw the splitted part of content.
         /// </summary>
+        /// <remarks>
+        /// The split renderer created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
+        /// This renderer will be used to draw the splitted part of content.
+        /// </remarks>
         protected internal IRenderer splitRenderer;
 
         /// <summary>
         /// The overflow renderer created during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
-        /// This renderer will be used to draw the overflowed part of content.
         /// </summary>
+        /// <remarks>
+        /// The overflow renderer created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>.
+        /// This renderer will be used to draw the overflowed part of content.
+        /// </remarks>
         protected internal IRenderer overflowRenderer;
 
         protected internal AreaBreak areaBreak;
@@ -117,10 +129,17 @@ namespace iText.Layout.Layout {
         /// result of
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
         /// }.
+        /// </summary>
+        /// <remarks>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
         /// The
         /// <see cref="causeOfNothing"/>
         /// will be set as null.
-        /// </summary>
+        /// </remarks>
         /// <param name="status">
         /// the status of
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>

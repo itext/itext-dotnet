@@ -32,13 +32,9 @@ using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Options {
     /// <summary>
-    /// The property flags are used when properties are fetched from the <code>XMPMeta</code>-object
-    /// and provide more detailed information about the property.
-    /// </summary>
-    /// <remarks>
     /// The property flags are used when properties are fetched from the <c>XMPMeta</c>-object
     /// and provide more detailed information about the property.
-    /// </remarks>
+    /// </summary>
     /// <since>03.07.2006</since>
     public sealed class PropertyOptions : iText.Kernel.XMP.Options.Options {
         public const int NO_OPTIONS = 0x00000000;

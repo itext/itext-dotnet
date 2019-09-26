@@ -934,8 +934,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Gets document
         /// <c>TagStructureContext</c>.
-        /// The document must be tagged, otherwise an exception will be thrown.
         /// </summary>
+        /// <remarks>
+        /// Gets document
+        /// <c>TagStructureContext</c>.
+        /// The document must be tagged, otherwise an exception will be thrown.
+        /// </remarks>
         /// <returns>
         /// document
         /// <c>TagStructureContext</c>.
@@ -954,9 +958,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pageFrom">start of the range of pages to be copied.</param>
         /// <param name="pageTo">end of the range of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
@@ -969,6 +977,10 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>
         /// . This range is inclusive, both
         /// <c>page</c>
@@ -977,7 +989,7 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
         ///     </param>
@@ -1002,6 +1014,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>
+        /// appending copied pages to the end.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>
         /// appending copied pages to the end. This range
         /// is inclusive, both
         /// <c>page</c>
@@ -1010,7 +1027,7 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
         ///     </param>
@@ -1024,6 +1041,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>
+        /// appending copied pages to the end.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>
         /// appending copied pages to the end. This range
         /// is inclusive, both
         /// <c>page</c>
@@ -1032,7 +1054,7 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
         ///     </param>
@@ -1052,9 +1074,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
@@ -1067,9 +1093,13 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
@@ -1155,9 +1185,14 @@ namespace iText.Kernel.Pdf {
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>
         /// appending copied pages to the end.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>
+        /// appending copied pages to the end.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <returns>list of copied pages</returns>
@@ -1169,9 +1204,14 @@ namespace iText.Kernel.Pdf {
         /// Copies a range of pages from current document to
         /// <paramref name="toDocument"/>
         /// appending copied pages to the end.
+        /// </summary>
+        /// <remarks>
+        /// Copies a range of pages from current document to
+        /// <paramref name="toDocument"/>
+        /// appending copied pages to the end.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
-        /// </summary>
+        /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="copier">
@@ -1263,8 +1303,14 @@ namespace iText.Kernel.Pdf {
         /// Checks, whether
         /// <see cref="Close()"/>
         /// will flush unused objects,
-        /// e.g. unreachable from PDF Catalog. By default - false.
+        /// e.g. unreachable from PDF Catalog.
         /// </summary>
+        /// <remarks>
+        /// Checks, whether
+        /// <see cref="Close()"/>
+        /// will flush unused objects,
+        /// e.g. unreachable from PDF Catalog. By default - false.
+        /// </remarks>
         /// <returns>
         /// false, if
         /// <see cref="Close()"/>
@@ -1667,6 +1713,11 @@ namespace iText.Kernel.Pdf {
         /// Create a new instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// or load already created one.
+        /// </summary>
+        /// <remarks>
+        /// Create a new instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// or load already created one.
         /// <para />
         /// Note, PdfFont which created with
         /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
@@ -1675,7 +1726,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// or
         /// <see cref="PdfResources"/>.
-        /// </summary>
+        /// </remarks>
         public virtual PdfFont GetFont(PdfDictionary dictionary) {
             System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
             if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
@@ -1719,8 +1770,14 @@ namespace iText.Kernel.Pdf {
         /// Adds a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// instance to this document so that this font is flushed automatically
-        /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
+        /// on document close.
         /// </summary>
+        /// <remarks>
+        /// Adds a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to this document so that this font is flushed automatically
+        /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
+        /// </remarks>
         /// <returns>the same PdfFont instance.</returns>
         public virtual PdfFont AddFont(PdfFont font) {
             font.MakeIndirect(this);
