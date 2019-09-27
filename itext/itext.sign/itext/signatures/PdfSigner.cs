@@ -435,7 +435,6 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <exception cref="System.IO.IOException"/>
@@ -459,7 +458,6 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
@@ -484,7 +482,6 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>

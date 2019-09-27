@@ -117,7 +117,6 @@ namespace iText.Signatures {
         /// method.
         /// </remarks>
         /// <param name="name">the signature field name</param>
-        /// <param name="provider">the security provider or null for the default provider</param>
         /// <returns>
         /// a
         /// <see cref="PdfPKCS7"/>
@@ -156,7 +155,6 @@ namespace iText.Signatures {
         /// method.
         /// </remarks>
         /// <param name="signatureFieldName">the signature field name</param>
-        /// <param name="securityProvider">the security provider or null for the default provider</param>
         /// <returns>
         /// a
         /// <see cref="PdfPKCS7"/>

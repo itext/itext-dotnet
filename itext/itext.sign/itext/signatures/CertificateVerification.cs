@@ -202,7 +202,6 @@ namespace iText.Signatures {
         /// <summary>Verifies an OCSP response against a KeyStore.</summary>
         /// <param name="ocsp">the OCSP response</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
-        /// <param name="provider">the provider or <c>null</c> to use the BouncyCastle provider</param>
         /// <returns><c>true</c> is a certificate was found</returns>
         public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
@@ -228,7 +227,6 @@ namespace iText.Signatures {
         /// <summary>Verifies a time stamp against a KeyStore.</summary>
         /// <param name="ts">the time stamp</param>
         /// <param name="keystore">the <c>KeyStore</c></param>
-        /// <param name="provider">the provider or <c>null</c> to use the BouncyCastle provider</param>
         /// <returns><c>true</c> is a certificate was found</returns>
         public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
             IList<Exception> exceptionsThrown = new List<Exception>();
