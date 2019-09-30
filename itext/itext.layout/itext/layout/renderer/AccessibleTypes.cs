@@ -64,7 +64,6 @@ namespace iText.Layout.Renderer {
     /// <list type="bullet">
     /// <item><description>Standard structure types for pdf 1.7 and 2.0 are very alike. There are some differences, like new/removed roles
     /// and attributes, however they are not used in current layout auto tagging mechanism.
-    /// 
     /// </description></item>
     /// <item><description>Differentiating  possible types for the same role based on the context is not supported at the moment.
     /// </description></item>
@@ -165,23 +164,18 @@ namespace iText.Layout.Renderer {
         /// <list type="bullet">
         /// <item><description>
         /// <see cref="Unknown"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="Grouping"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="BlockLevel"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="InlineLevel"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="Illustration"/>
-        /// 
         /// </description></item>
         /// </list>
         /// See also remarks in the

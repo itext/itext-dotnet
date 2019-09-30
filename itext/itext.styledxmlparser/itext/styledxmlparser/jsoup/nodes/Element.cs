@@ -283,31 +283,26 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <c>p.text()</c>
         /// =
         /// <c>"One Two Three Four"</c>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <c>p.ownText()</c>
         /// =
         /// <c>"One Three Four"</c>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <c>p.children()</c>
         /// =
         /// <c>Elements[&lt;span&gt;, &lt;br&gt;]</c>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <c>p.childNodes()</c>
         /// =
         /// <c>List&lt;Node&gt;["One ", &lt;span&gt;, " Three ", &lt;br&gt;, " Four"]</c>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <c>p.textNodes()</c>
         /// =
         /// <c>List&lt;TextNode&gt;["One ", " Three ", " Four"]</c>
-        /// 
         /// </description></item>
         /// </list>
         /// </returns>

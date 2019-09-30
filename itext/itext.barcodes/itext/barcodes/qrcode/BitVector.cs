@@ -126,7 +126,7 @@ namespace iText.Barcodes.Qrcode {
         /// - appendBits(0xff, 8) adds 11111111.
         /// </remarks>
         /// <param name="value">int interpreted as bitvector</param>
-        /// <param name="numBits">0&lt;= numBits &lt;= 32.</param>
+        /// <param name="numBits">0 &lt;= numBits &lt;= 32.</param>
         public void AppendBits(int value, int numBits) {
             if (numBits < 0 || numBits > 32) {
                 throw new ArgumentException("Num bits must be between 0 and 32");

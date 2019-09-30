@@ -295,19 +295,15 @@ namespace iText.Signatures {
         /// Possible values are: <list type="bullet">
         /// <item><description>
         /// <see cref="NOT_CERTIFIED"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="CERTIFIED_NO_CHANGES_ALLOWED"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING"/>
-        /// 
         /// </description></item>
         /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING_AND_ANNOTATIONS"/>
-        /// 
         /// </description></item>
         /// </list>
         /// </param>
