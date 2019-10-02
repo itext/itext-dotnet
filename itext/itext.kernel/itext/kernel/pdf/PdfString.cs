@@ -92,6 +92,7 @@ namespace iText.Kernel.Pdf {
         public PdfString(String value, String encoding)
             : base() {
             // if it's not null: content shall contain encrypted data; value shall be null
+            System.Diagnostics.Debug.Assert(value != null);
             this.value = value;
             this.encoding = encoding;
         }

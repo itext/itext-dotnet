@@ -131,8 +131,12 @@ namespace iText.Forms.Xfdf {
                         AddCommonAnnotationAttributes(pdfTextAnnotation, annotObject);
                         AddMarkupAnnotationAttributes(pdfTextAnnotation, annotObject);
                         pdfTextAnnotation.SetIconName(new PdfName(annotObject.GetAttributeValue(XfdfConstants.ICON)));
-                        pdfTextAnnotation.SetState(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE)));
-                        pdfTextAnnotation.SetStateModel(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL)));
+                        if (annotObject.GetAttributeValue(XfdfConstants.STATE) != null) {
+                            pdfTextAnnotation.SetState(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE)));
+                        }
+                        if (annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL) != null) {
+                            pdfTextAnnotation.SetStateModel(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL)));
+                        }
                         pdfDocument.GetPage(Convert.ToInt32(annotObject.GetAttributeValue(XfdfConstants.PAGE))).AddAnnotation(pdfTextAnnotation
                             );
                         break;

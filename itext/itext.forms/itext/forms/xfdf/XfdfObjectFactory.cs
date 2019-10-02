@@ -238,7 +238,6 @@ namespace iText.Forms.Xfdf {
             for (int temp = 0; temp < children.Count; temp++) {
                 XmlNode node = children.Item(temp);
                 if (node.NodeType == System.Xml.XmlNodeType.Text) {
-                    // getTextContent?
                     annotObject.SetContents(new PdfString(node.Value));
                 }
             }
@@ -250,7 +249,6 @@ namespace iText.Forms.Xfdf {
             for (int temp = 0; temp < children.Count; temp++) {
                 XmlNode node = children.Item(temp);
                 if (node.NodeType == System.Xml.XmlNodeType.Text) {
-                    // getTextContent?
                     annotObject.SetContentsRichText(new PdfString(node.Value));
                 }
             }

@@ -138,7 +138,7 @@ namespace iText.Forms.Xfdf {
             return childrenFields;
         }
 
-        private static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
+        internal static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
             <FieldObject> fieldList) {
             IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
             XmlElement field = document.CreateElement("field");
@@ -149,7 +149,7 @@ namespace iText.Forms.Xfdf {
                 }
             }
             else {
-                if (fieldObject.GetValue() != null) {
+                if (fieldObject.GetValue() != null && !String.IsNullOrEmpty(fieldObject.GetValue())) {
                     XmlElement value = document.CreateElement("value");
                     value.InnerText = fieldObject.GetValue();
                     field.AppendChild(value);
@@ -175,7 +175,7 @@ namespace iText.Forms.Xfdf {
             }
             if (annotObject.GetContents() != null) {
                 XmlElement contents = document.CreateElement("contents");
-                contents.InnerText = annotObject.GetContents().ToString();
+                contents.InnerText = annotObject.GetContents().ToString().Replace('\r', '\n');
                 annot.AppendChild(contents);
             }
             if (annotObject.GetAppearance() != null) {
