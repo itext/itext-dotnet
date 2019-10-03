@@ -941,6 +941,7 @@ namespace iText.IO.Source {
             return null;
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. This inner class is not used anywhere")]
         protected internal class ReusableRandomAccessSource : IRandomAccessSource {
             private ByteBuffer buffer;
 
