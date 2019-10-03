@@ -133,7 +133,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadOutlinesFromDocumentTest() {
             String filename = sourceFolder + "addOutlinesResult.pdf";
@@ -258,7 +257,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocWithOutlines() {
             String filename = sourceFolder + "documentWithOutlines.pdf";

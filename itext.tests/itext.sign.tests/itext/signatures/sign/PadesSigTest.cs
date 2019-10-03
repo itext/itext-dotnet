@@ -73,8 +73,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTest01() {
             SignApproval(certsSrc + "signCertRsa01.p12", destinationFolder + "padesRsaSigTest01.pdf");
@@ -83,8 +81,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTestWithChain01() {
             SignApproval(certsSrc + "signCertRsaWithChain.p12", destinationFolder + "padesRsaSigTestWithChain01.pdf");
@@ -93,8 +89,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1620: For some reason signatures created with the given cert (either by iText or acrobat) are considered invalid"
             )]
@@ -104,8 +98,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesEccSigTest01() {
             SignApproval(certsSrc + "signCertEcc01.p12", destinationFolder + "padesEccSigTest01.pdf");

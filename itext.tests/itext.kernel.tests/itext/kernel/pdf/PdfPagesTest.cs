@@ -211,7 +211,6 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void InsertFlushedPageTest() {
@@ -233,7 +232,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(error);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void AddFlushedPageTest() {

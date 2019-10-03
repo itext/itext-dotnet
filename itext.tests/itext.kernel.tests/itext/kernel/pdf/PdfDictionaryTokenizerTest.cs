@@ -57,9 +57,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReaderTurnsCorrectlyNotWellFormattedValueInDictionary_01() {
             String inPath = sourceFolder + "documentWithMalformedNumberOnDictionary.pdf";
@@ -86,9 +83,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReaderTurnsCorrectlyNotWellFormattedValueInDictionary_02() {
             String inPath = sourceFolder + "documentWithMalformedNumberOnDictionary2.pdf";

@@ -292,7 +292,6 @@ namespace iText.Signatures {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void UpdateDss() {
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             catalog.SetModified();
@@ -354,12 +353,10 @@ namespace iText.Signatures {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CreateDss() {
             OutputDss(new PdfDictionary(), new PdfDictionary(), new PdfArray(), new PdfArray(), new PdfArray());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void OutputDss(PdfDictionary dss, PdfDictionary vrim, PdfArray ocsps, PdfArray crls, PdfArray certs
             ) {
             PdfCatalog catalog = document.GetCatalog();

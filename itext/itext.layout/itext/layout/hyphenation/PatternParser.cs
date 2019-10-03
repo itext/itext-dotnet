@@ -51,8 +51,6 @@ namespace iText.Layout.Hyphenation {
         internal const int ELEM_HYPHEN = 4;
 
         /// <summary>Construct a pattern parser.</summary>
-        /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         private PatternParser() {
             token = new StringBuilder();
             // default
@@ -62,7 +60,6 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Construct a pattern parser.</summary>
         /// <param name="consumer">a pattern consumer</param>
         /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public PatternParser(IPatternConsumer consumer)
             : this() {
             this.consumer = consumer;

@@ -1019,7 +1019,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateWrongAfm1() {
             String message = "";
@@ -1035,7 +1034,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateWrongAfm2() {
             String message = "";
@@ -1051,7 +1049,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
         public virtual void CreateWrongPfb() {
@@ -1063,7 +1060,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoDetect1() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
@@ -1073,7 +1069,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoDetect2() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
@@ -1085,7 +1080,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoDetect3() {
             byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf", FileMode.Open, FileAccess.Read
@@ -1095,7 +1089,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoDetect4() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
@@ -1105,7 +1098,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoDetect5() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
@@ -1463,7 +1455,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(list2.Count == 5);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KozminNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
@@ -1472,7 +1463,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelveticaNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("Helvetica");
@@ -1482,7 +1472,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 500);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OtfByStringNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
@@ -1508,7 +1497,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TtfByStringNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "abserif4_5.ttf"

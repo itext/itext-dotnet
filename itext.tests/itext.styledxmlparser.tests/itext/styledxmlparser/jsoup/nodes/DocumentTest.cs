@@ -194,7 +194,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             doc.Clone();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DocumentsWithSameContentAreEqual() {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
@@ -206,7 +205,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.IsFalse(docA.GetHashCode() == docC.GetHashCode());
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DocumentsWithSameContentAreVerifialbe() {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");

@@ -636,7 +636,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
         public virtual void SoundTestAif() {
             String filename = destinationFolder + "soundAnnotation02.pdf";
@@ -711,7 +710,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
         public virtual void SoundTestSnd() {
             String filename = destinationFolder + "soundAnnotation04.pdf";
@@ -734,7 +732,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
         public virtual void SoundTestWav() {
             String filename = destinationFolder + "soundAnnotation01.pdf";
@@ -757,7 +754,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
         public virtual void SoundTestWav01() {
             String filename = destinationFolder + "soundAnnotation05.pdf";
@@ -828,7 +824,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile01() {
             String filename = destinationFolder + "screenAnnotation02.pdf";
@@ -853,7 +848,6 @@ namespace iText.Kernel.Pdf {
         //            Assert.fail(errorMessage);
         //        }
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile02() {
             String filename = destinationFolder + "screenAnnotation03.pdf";
@@ -878,7 +872,6 @@ namespace iText.Kernel.Pdf {
         //            Assert.fail(errorMessage);
         //        }
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile03() {
             String filename = destinationFolder + "screenAnnotation04.pdf";

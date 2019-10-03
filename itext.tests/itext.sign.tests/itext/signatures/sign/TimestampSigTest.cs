@@ -71,8 +71,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void TimestampTest01() {
             String tsaCertFileName = certsSrc + "tsCertRsa.p12";

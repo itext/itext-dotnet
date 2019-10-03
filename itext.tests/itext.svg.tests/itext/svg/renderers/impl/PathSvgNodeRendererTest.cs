@@ -206,7 +206,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest1() {
             String filename = "smoothCurveTest1.pdf";
@@ -226,7 +225,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest2() {
             String filename = "smoothCurveTest2.pdf";
@@ -246,7 +244,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest3() {
             String filename = "smoothCurveTest3.pdf";

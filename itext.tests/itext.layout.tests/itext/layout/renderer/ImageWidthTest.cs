@@ -114,7 +114,6 @@ namespace iText.Layout.Renderer {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWidthTest02() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(imageFolder + "Desert.jpg"));

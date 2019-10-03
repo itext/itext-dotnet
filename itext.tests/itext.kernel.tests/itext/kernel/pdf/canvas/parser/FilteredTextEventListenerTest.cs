@@ -62,7 +62,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.IsFalse(TextIsInRectangle(doc, "Upper Right", upperLeft));
         }
 
-        /// <exception cref="System.Exception"/>
         private bool TextIsInRectangle(PdfDocument doc, String text, Rectangle rect) {
             FilteredTextEventListener filterListener = new FilteredTextEventListener(new LocationTextExtractionStrategy
                 (), new TextRegionEventFilter(rect));

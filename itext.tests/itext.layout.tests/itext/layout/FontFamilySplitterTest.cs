@@ -46,7 +46,6 @@ using System.Text;
 
 namespace iText.Layout {
     public class FontFamilySplitterTest {
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontFamilySplitter() {
             String fontFamilies = "'Puritan'\n" + "Puritan\n" + "'Pur itan'\n" + "Pur itan\n" + "'Pur it an'\n" + "Pur it an\n"

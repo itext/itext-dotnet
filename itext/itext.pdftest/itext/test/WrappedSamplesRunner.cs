@@ -171,7 +171,6 @@ namespace iText.Test {
             }
         }
 
-        /// <exception cref="System.MissingMethodException"/>
         /// <exception cref="System.MemberAccessException"/>
         /// <exception cref="System.Reflection.TargetInvocationException"/>
         private void RunMain() {

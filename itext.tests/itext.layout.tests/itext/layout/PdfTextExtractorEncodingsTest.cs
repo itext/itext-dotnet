@@ -108,7 +108,6 @@ namespace iText.Layout {
             return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embedded);
         }
 
-        /// <exception cref="System.Exception"/>
         private static byte[] CreatePdf(PdfFont font) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));

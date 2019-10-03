@@ -256,9 +256,6 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -282,9 +279,6 @@ namespace iText.Layout {
 
         // compareResult("docWithInvalidMapping01");
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -307,9 +301,6 @@ namespace iText.Layout {
 
         // compareResult("docWithInvalidMapping02");
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping03() {
             NUnit.Framework.Assert.That(() =>  {
@@ -350,9 +341,6 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping05() {
             NUnit.Framework.Assert.That(() =>  {
@@ -409,9 +397,6 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS, Count
              = 1)]
@@ -442,9 +427,6 @@ namespace iText.Layout {
 
         //        compareResult("docWithInvalidMapping07");
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping08() {
             NUnit.Framework.Assert.That(() =>  {

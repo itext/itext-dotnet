@@ -462,12 +462,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListSetSymbol() {
             List list = new List();
-            //Assert.assertEquals("- ", ((Text) list.getProperty(Property.LIST_SYMBOL)).getText());
-            NUnit.Framework.Assert.AreEqual(null, list.GetProperty<Object>(Property.LIST_SYMBOL));
+            NUnit.Framework.Assert.IsNull(list.GetProperty<Object>(Property.LIST_SYMBOL));
             list.SetListSymbol("* ");
             NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
             list = new List();

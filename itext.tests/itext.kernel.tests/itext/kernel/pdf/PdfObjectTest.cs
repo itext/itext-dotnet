@@ -192,7 +192,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(object2 is PdfArray);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing3() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));

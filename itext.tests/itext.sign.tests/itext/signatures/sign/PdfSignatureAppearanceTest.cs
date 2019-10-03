@@ -92,7 +92,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest01() {
             String fileName = "textAutoscaleTest01.pdf";
@@ -104,7 +103,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest02() {
             String fileName = "textAutoscaleTest02.pdf";
@@ -116,7 +114,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest03() {
             String fileName = "textAutoscaleTest03.pdf";
@@ -128,7 +125,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest04() {
             String fileName = "textAutoscaleTest04.pdf";
@@ -140,7 +136,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest05() {
             String fileName = "textAutoscaleTest05.pdf";
@@ -152,7 +147,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest06() {
             String fileName = "textAutoscaleTest06.pdf";

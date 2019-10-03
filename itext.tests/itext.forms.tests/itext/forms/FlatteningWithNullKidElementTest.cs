@@ -58,7 +58,6 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTestWithNullKidElement() {
             String filename = "Form_NullKidElement";

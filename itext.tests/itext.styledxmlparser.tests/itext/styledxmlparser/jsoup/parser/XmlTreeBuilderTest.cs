@@ -91,7 +91,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Net.URISyntaxException"/>
         [NUnit.Framework.Test]
         public virtual void TestSupplyParserToDataStream() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-test.xml");
@@ -151,7 +150,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Net.URISyntaxException"/>
         [NUnit.Framework.Test]
         public virtual void TestDetectCharsetEncodingDeclaration() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-charset.xml");

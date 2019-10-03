@@ -154,7 +154,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SigningTaggedDocument() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
@@ -167,7 +166,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SigningTaggedDocumentAppendMode() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
@@ -228,7 +226,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignPdf2CertificationAfterApproval() {
             NUnit.Framework.Assert.That(() =>  {
@@ -278,7 +275,6 @@ namespace iText.Signatures.Sign {
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignEncryptedDoc01() {
             String fileName = "encrypted.pdf";
@@ -305,7 +301,6 @@ namespace iText.Signatures.Sign {
         // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignEncryptedDoc02() {
             String fileName = "encrypted_cert.pdf";

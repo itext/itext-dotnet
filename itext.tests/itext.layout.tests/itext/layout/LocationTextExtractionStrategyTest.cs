@@ -253,7 +253,6 @@ namespace iText.Layout {
             return baos.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreateSimplePdf(Rectangle pageSize, params String[] text) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)), new PageSize(pageSize));
@@ -265,7 +264,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[] text1, String[] text2) {
             MemoryStream baos = new MemoryStream();
             Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
@@ -307,7 +305,6 @@ namespace iText.Layout {
             return new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreatePdfWithSupescript(String regularText, String superscriptText) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));

@@ -57,8 +57,6 @@ namespace iText.Svg.Renderers {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MeetTheTeam() {
             IList<Exception> assertionErrorsThrown = new List<Exception>();

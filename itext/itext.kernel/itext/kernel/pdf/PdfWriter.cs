@@ -163,7 +163,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual PdfObjectStream GetObjectStream() {
             if (!IsFullCompression()) {
                 return null;

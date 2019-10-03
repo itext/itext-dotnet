@@ -283,7 +283,6 @@ namespace iText.Svg.Processors.Impl {
             dsp.ExecuteDepthFirstTraversal(root);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void XLinkAttributeBaseDirDoesNotExistTest() {
             INode root = CreateSvgContainingImage();
@@ -299,7 +298,6 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(expectedURL, url);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void XLinkAttributeResolveNonEmptyBaseUrlTest() {
             INode root = CreateSvgContainingImage();

@@ -113,7 +113,6 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUAXMPMetaDataTaggedTest() {
             String fileName = "addUAXMPMetaDataTaggedTest.pdf";

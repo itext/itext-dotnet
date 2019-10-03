@@ -287,7 +287,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SearchNames() {
             FontProvider sel = new FontProvider();
@@ -314,7 +313,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SearchNames2() {
             FontProvider sel = new FontProvider();

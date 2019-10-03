@@ -217,8 +217,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return cms;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private PdfArray GetEncodedRecipients() {
             PdfArray EncodedRecipients = new PdfArray();
             byte[] cms;

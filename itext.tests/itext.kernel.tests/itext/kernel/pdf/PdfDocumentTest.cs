@@ -138,7 +138,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RemoveUnusedObjectsInWriterModeTest() {
             String filename = "removeUnusedObjectsInWriter.pdf";
@@ -158,7 +157,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RemoveUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_1.pdf";
@@ -182,7 +180,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedObjectsInWriterModeTest() {
             String filename = "addUnusedObjectsInWriter.pdf";
@@ -202,7 +199,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_2.pdf";
@@ -226,7 +222,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedStreamObjectsTest() {
             String filenameIn = "docWithUnusedObjects_3.pdf";

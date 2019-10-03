@@ -69,8 +69,6 @@ namespace iText.IO.Font {
         /// <param name="pfb">the PFB file if the input is made with a <c>byte</c> array</param>
         /// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
         ///     </param>
-        /// <the>AFM file is invalid</the>
-        /// <exception cref="System.IO.IOException">the AFM file could not be read</exception>
         public Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
             this.afmData = afm;
             this.pfbData = pfb;

@@ -63,7 +63,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         internal const String customInfoEntryKey = "Custom";
@@ -84,7 +84,6 @@ namespace iText.Forms {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256Pdf2PermissionsTest01() {
             String filename = "encryptAes256Pdf2PermissionsTest01.pdf";
@@ -116,7 +115,6 @@ namespace iText.Forms {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256Pdf2PermissionsTest02() {
             String filename = "encryptAes256Pdf2PermissionsTest02.pdf";

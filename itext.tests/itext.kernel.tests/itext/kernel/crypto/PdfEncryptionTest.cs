@@ -189,7 +189,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -200,7 +199,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -211,7 +209,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -222,7 +219,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -233,7 +229,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -244,7 +239,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -255,7 +249,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -266,7 +259,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
@@ -372,7 +364,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void MetadataReadingInEncryptedDoc() {
@@ -407,9 +398,7 @@ namespace iText.Kernel.Crypto {
                  + "cmp_" + fileName, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void OpenDocNoUserPassword() {
             String fileName = "noUserPassword.pdf";
@@ -418,9 +407,7 @@ namespace iText.Kernel.Crypto {
             CheckDecryptedWithPasswordContent(sourceFolder + fileName, null, pageTextContent);
         }
 
-        /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void StampDocNoUserPassword() {
             NUnit.Framework.Assert.That(() =>  {
@@ -434,9 +421,6 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EncryptWithPasswordAes128EmbeddedFilesOnly() {
             String filename = "encryptWithPasswordAes128EmbeddedFilesOnly.pdf";
@@ -475,7 +459,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256Pdf2NotEncryptMetadata02() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata02.pdf";
@@ -485,7 +468,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256EncryptedStampingPreserve() {
             String filename = "encryptAes256EncryptedStampingPreserve.pdf";
@@ -504,7 +486,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256EncryptedStampingUpdate() {
             String filename = "encryptAes256EncryptedStampingUpdate.pdf";
@@ -524,7 +505,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256FullCompression() {
             String filename = "encryptAes256FullCompression.pdf";
@@ -534,7 +514,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptWithPasswordAes256Pdf2() {
             String filename = "encryptWithPasswordAes256Pdf2.pdf";
@@ -544,7 +523,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void EncryptWithPasswordAes128Pdf2() {
@@ -555,7 +533,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
         public virtual void StampAndUpdateVersionPreserveStandard40() {
@@ -569,7 +546,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         [LogMessage(VersionConforming.DEPRECATED_AES256_REVISION)]
         public virtual void StampAndUpdateVersionPreserveAes256() {
@@ -583,7 +559,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void StampAndUpdateVersionNewAes256() {
             String filename = "stampAndUpdateVersionNewAes256.pdf";
@@ -596,7 +571,6 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptAes256Pdf2Permissions() {
             String filename = "encryptAes256Pdf2Permissions.pdf";
@@ -632,14 +606,12 @@ namespace iText.Kernel.Crypto {
             NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression, bool isPdf2
@@ -663,14 +635,12 @@ namespace iText.Kernel.Crypto {
             CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void EncryptWithPassword(String filename, int encryptionType, int compression) {
             EncryptWithPassword(filename, encryptionType, compression, false);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public virtual void EncryptWithPassword(String filename, int encryptionType, int compression, bool fullCompression
@@ -691,7 +661,6 @@ namespace iText.Kernel.Crypto {
             CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>

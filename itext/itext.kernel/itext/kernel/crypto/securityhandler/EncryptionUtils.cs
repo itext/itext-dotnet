@@ -84,7 +84,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier) {
             IBufferedCipher cipher = CipherUtilities.GetCipher(algorithmidentifier.ObjectID);
             cipher.Init(true, x509Certificate.GetPublicKey());

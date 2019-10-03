@@ -132,7 +132,6 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest04() {

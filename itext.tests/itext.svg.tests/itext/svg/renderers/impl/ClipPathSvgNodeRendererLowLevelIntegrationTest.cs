@@ -56,7 +56,6 @@ namespace iText.Svg.Renderers.Impl {
 
         private SvgDrawContext sdc;
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.SetUp]
         public virtual void SetupDrawContextAndCanvas() {
             sdc = new SvgDrawContext(new ResourceResolver(""), new FontProvider());

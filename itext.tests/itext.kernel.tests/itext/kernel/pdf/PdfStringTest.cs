@@ -98,8 +98,6 @@ namespace iText.Kernel.Pdf {
                  + "cmp_" + fileName, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestUnicodeString() {
             String unicode = "Привет!";
@@ -108,7 +106,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8ActualText() {
             String filename = sourceFolder + "utf-8-actual-text.pdf";
@@ -122,7 +119,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD)]
         public virtual void ReadUtf8AltText() {
@@ -139,7 +135,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8Bookmarks() {
             String filename = sourceFolder + "utf-8-bookmarks.pdf";
@@ -168,7 +163,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8PageLabelPrefix() {
             String filename = sourceFolder + "utf-8-page-label-prefix.pdf";

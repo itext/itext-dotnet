@@ -117,7 +117,6 @@ namespace iText.IO.Util {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         public static StringBuilder RunProcessAndCollectErrors(String execPath, String @params)
         {
             Process p = new Process();

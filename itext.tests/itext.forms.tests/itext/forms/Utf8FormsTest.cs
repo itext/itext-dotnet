@@ -67,7 +67,6 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8FieldName() {
             String filename = sourceFolder + "utf-8-field-name.pdf";
@@ -83,7 +82,6 @@ namespace iText.Forms {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8TextAnnot() {
             String filename = sourceFolder + "utf-8-text-annot.pdf";

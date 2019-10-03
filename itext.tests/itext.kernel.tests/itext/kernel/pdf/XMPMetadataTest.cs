@@ -152,7 +152,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void CreateEmptyDocumentWithAbcXmp() {

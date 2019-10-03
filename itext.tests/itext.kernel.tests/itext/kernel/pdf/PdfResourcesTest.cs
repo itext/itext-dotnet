@@ -48,7 +48,6 @@ using iText.Kernel.Pdf.Extgstate;
 
 namespace iText.Kernel.Pdf {
     public class PdfResourcesTest {
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ResourcesTest1() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
