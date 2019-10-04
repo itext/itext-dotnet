@@ -123,6 +123,21 @@ namespace iText.StyledXmlParser.Css.Util {
             }
         }
 
+        /// <summary>Parses a double without throwing an exception if something goes wrong.</summary>
+        /// <param name="str">a string that might be a double value</param>
+        /// <returns>the double value, or null if something went wrong</returns>
+        public static double? ParseDouble(String str) {
+            if (str == null) {
+                return null;
+            }
+            try {
+                return Double.Parse(str, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (FormatException) {
+                return null;
+            }
+        }
+
         /// <summary>Parses an aspect ratio into an array with two integers.</summary>
         /// <param name="str">a string that might contain two integer values</param>
         /// <returns>the aspect ratio as an array of two integer values</returns>

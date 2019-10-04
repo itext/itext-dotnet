@@ -607,5 +607,15 @@ namespace iText.Svg.Converter {
             , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
 ;
         }
+
+        /// <exception cref="iText.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleValues() {
+            // Before the changes have been implemented this test had been produced different result in Java and .NET.
+            // So this test checks if there are any differences
+            ConvertAndCompare(sourceFolder, destinationFolder, "svgStackOver");
+        }
     }
 }

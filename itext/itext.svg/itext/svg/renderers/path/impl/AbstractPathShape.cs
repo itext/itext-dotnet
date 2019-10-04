@@ -79,7 +79,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 
         protected internal virtual Point CreatePoint(String coordX, String coordY) {
-            return new Point((float)CssUtils.ParseFloat(coordX), (float)CssUtils.ParseFloat(coordY));
+            return new Point((double)CssUtils.ParseDouble(coordX), (double)CssUtils.ParseDouble(coordY));
         }
 
         public virtual Point GetEndingPoint() {

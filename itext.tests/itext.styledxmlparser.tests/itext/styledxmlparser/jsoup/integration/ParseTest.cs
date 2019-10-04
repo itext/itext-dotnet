@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
 
@@ -209,6 +210,41 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
                 ).First();
             NUnit.Framework.Assert.AreEqual("In July, GM said its electric Chevrolet Volt will be sold in the United States at $41,000 -- $8,000 more than its nearest competitor, the Nissan Leaf."
                 , p.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleIntegerValueTest() {
+            double? expectedString = 5.0;
+            double? actualString = CssUtils.ParseDouble("5");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleManyCharsAfterDotTest() {
+            double? expectedString = 5.123456789;
+            double? actualString = CssUtils.ParseDouble("5.123456789");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleManyCharsAfterDotNegativeTest() {
+            double? expectedString = -5.123456789;
+            double? actualString = CssUtils.ParseDouble("-5.123456789");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleNullValueTest() {
+            double? expectedString = null;
+            double? actualString = CssUtils.ParseDouble(null);
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleNegativeTextTest() {
+            double? expectedString = null;
+            double? actualString = CssUtils.ParseDouble("text");
+            NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 
         public static Stream InputStreamFrom(String s) {
