@@ -50,7 +50,6 @@ namespace iText.IO.Font {
     public class FontProgramTest {
         private const String notExistingFont = "some-font.ttf";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -60,7 +59,6 @@ namespace iText.IO.Font {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BoldTest() {
             FontProgram fp = FontProgramFactory.CreateFont(StandardFonts.HELVETICA);

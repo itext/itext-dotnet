@@ -58,7 +58,6 @@ namespace iText.Kernel.Crypto {
             return new X509CertificateParser().ReadCertificate(s);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public static ICipherParameters ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
             return new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
         }

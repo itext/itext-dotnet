@@ -67,7 +67,6 @@ namespace iText.IO.Util {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {

@@ -29,7 +29,6 @@ namespace iText.IO.Util {
 		/// </summary>
 		/// <param name="in">   The reader from which characters will be read </param>
 		/// <param name="size"> The size of the pushback buffer </param>
-		/// <exception cref="IllegalArgumentException"> if size is ≤ 0 </exception>
 		public PushbackReader(TextReader inp, int size)
 			: base(inp) {
 			if (size <= 0) {
@@ -61,7 +60,6 @@ namespace iText.IO.Util {
 		/// <returns>     The character read, or -1 if the end of the stream has been
 		///             reached
 		/// </returns>
-		/// <exception cref="IOException">  If an I/O error occurs </exception>
 		public override int Read() {
 			EnsureOpen();
 			if (_pos < _buf.Length) {
@@ -80,7 +78,6 @@ namespace iText.IO.Util {
 		/// <returns>     The number of characters read, or -1 if the end of the
 		///             stream has been reached
 		/// </returns>
-		/// <exception cref="IOException">  If an I/O error occurs </exception>
 		public override int Read(char[] cbuf, int off, int len) {
 			EnsureOpen();
 			try {
@@ -124,8 +121,6 @@ namespace iText.IO.Util {
 		/// </summary>
 		/// <param name="c">  The int value representing a character to be pushed back
 		/// </param>
-		/// <exception cref="IOException">  If the pushback buffer is full,
-		///                          or if some other I/O error occurs </exception>
 		public virtual void Unread(int c) {
 			EnsureOpen();
 			if (_pos == 0) {
@@ -145,8 +140,6 @@ namespace iText.IO.Util {
 		/// <param name="off">   Offset of first character to push back </param>
 		/// <param name="len">   Number of characters to push back
 		/// </param>
-		/// <exception cref="IOException">  If there is insufficient room in the pushback
-		///                          buffer, or if some other I/O error occurs </exception>
 		public virtual void Unread(char[] cbuf, int off, int len) {
 			EnsureOpen();
 			if (len > _pos) {
@@ -164,8 +157,6 @@ namespace iText.IO.Util {
 		/// </summary>
 		/// <param name="cbuf">  Character array to push back
 		/// </param>
-		/// <exception cref="IOException">  If there is insufficient room in the pushback
-		///                          buffer, or if some other I/O error occurs </exception>
 		public virtual void Unread(char[] cbuf) {
 			Unread(cbuf, 0, cbuf.Length);
 		}
@@ -176,7 +167,6 @@ namespace iText.IO.Util {
 		/// unread(), ready(), or skip() invocations will throw an IOException.
 		/// Closing a previously closed stream has no effect.
 		/// </summary>
-		/// <exception cref="IOException">  If an I/O error occurs </exception>
 	    protected override void Dispose(bool disposing) {
 		    _buf = null;
 	        base.Dispose(disposing);

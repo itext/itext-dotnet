@@ -88,8 +88,6 @@ namespace iText.IO.Util {
             return Environment.GetEnvironmentVariable(name);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         public static bool RunProcessAndWait(String execPath, String @params) {
             Process p = new Process();
             p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
@@ -104,7 +102,6 @@ namespace iText.IO.Util {
             return true;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void PrintProcessOutput(Process p) {
             StringBuilder bri = new StringBuilder();
             StringBuilder bre = new StringBuilder();
@@ -116,7 +113,6 @@ namespace iText.IO.Util {
             System.Console.Out.WriteLine(bre.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static StringBuilder RunProcessAndCollectErrors(String execPath, String @params)
         {
             Process p = new Process();

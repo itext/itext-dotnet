@@ -132,7 +132,6 @@ namespace iText.IO.Source
 			return new ArrayRandomAccessSource(data);
 		}
 
-		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(FileStream raf)
 		{
 			return new RAFRandomAccessSource(raf);
@@ -150,7 +149,6 @@ namespace iText.IO.Source
 		/// the newly created
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
-		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(Uri url) {
 #if !NETSTANDARD1_6
 			// Creation of web request via url.AbsoluteUri breaks UNC pathes (like \\computer-name\\img.jpg),
@@ -193,7 +191,6 @@ namespace iText.IO.Source
 		/// the newly created
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
-		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateSource(Stream inputStream)
 		{
 			return CreateSource(StreamUtil.InputStreamToArray(inputStream));
@@ -224,7 +221,6 @@ namespace iText.IO.Source
 		/// the newly created
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
-		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateBestSource(String filename)
 		{
             if (!File.Exists(filename))
@@ -247,7 +243,6 @@ namespace iText.IO.Source
             return new RAFRandomAccessSource(new FileStream(filename, FileMode.Open, FileAccess.Read, exclusivelyLockFile ? FileShare.None : FileShare.Read));
 		}
 
-		/// <exception cref="System.IO.IOException"/>
         public IRandomAccessSource CreateRanged(IRandomAccessSource source, long[] ranges)
 		{
             IRandomAccessSource[] sources = new IRandomAccessSource[ranges.Length / 2];
@@ -268,8 +263,6 @@ namespace iText.IO.Source
 		/// the newly created
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
-		/// <exception cref="System.IO.IOException">if reading the underling file or stream fails
-		/// 	</exception>
         private IRandomAccessSource CreateByReadingToMemory(String filename)
 		{
 			Stream stream = ResourceUtil.GetResourceStream(filename);
@@ -291,8 +284,6 @@ namespace iText.IO.Source
 		/// the newly created
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
-		/// <exception cref="System.IO.IOException">if reading the underling file or stream fails
-		/// 	</exception>
         private IRandomAccessSource CreateByReadingToMemory(Stream stream)
 		{
 			try

@@ -59,8 +59,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="xmp">the raw metadata object</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the normalized metadata object</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Collects all severe processing errors.
-		/// 	</exception>
 		internal static XMPMeta Process(XMPMetaImpl xmp, ParseOptions options)
 		{
 			XMPNode tree = xmp.GetRoot();
@@ -86,7 +84,6 @@ namespace iText.Kernel.XMP.Impl
 		/// property is updated by an old app that uses <em>rdf:about</em>.
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if tweaking fails.</exception>
 		private static void TweakOldXMP(XMPNode tree)
 		{
 			if (tree.GetName() != null && tree.GetName().Length >= Utils.UUID_LENGTH)
@@ -121,8 +118,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Visit all schemas to do general fixes and handle special cases.</summary>
 		/// <param name="xmp">the metadata object implementation</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the normalisation fails.
-		/// 	</exception>
 		private static void TouchUpDataModel(XMPMetaImpl xmp)
 		{
 			// make sure the DC schema is existing, because it might be needed within the normalization
@@ -192,8 +187,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <code>alt-text</code> item if the language was <code>x-default</code>.
 		/// </remarks>
 		/// <param name="dcSchema">the DC schema node</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if normalization fails
-		/// 	</exception>
 		private static void NormalizeDCArrays(XMPNode dcSchema)
 		{
 			for (int i = 1; i <= dcSchema.GetChildrenLength(); i++)
@@ -244,8 +237,6 @@ namespace iText.Kernel.XMP.Impl
 		/// non-empty items by adding the "xml:lang" with value "x-repair".
 		/// </remarks>
 		/// <param name="arrayNode">the property node of the array to repair.</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards unexpected exceptions.
-		/// 	</exception>
 		private static void RepairAltText(XMPNode arrayNode)
 		{
 			if (arrayNode == null || !arrayNode.GetOptions().IsArray()) {
@@ -293,7 +284,6 @@ namespace iText.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
 		/// <param name="options">th parsing options</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards XMP errors</exception>
 		private static void MoveExplicitAliases(XMPNode tree, ParseOptions options)
 		{
 			if (!tree.GetHasAliases()) {
@@ -398,7 +388,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Moves an alias node of array form to another schema into an array </summary>
 		/// <param name="childNode"> the node to be moved </param>
 		/// <param name="baseArray"> the base array for the array item </param>
-		/// <exception cref="XMPException"> Forwards XMP errors </exception>
 		private static void TransplantArrayItemAlias(XMPNode childNode, XMPNode baseArray) {
 			if (baseArray.GetOptions().IsArrayAltText()) {
 				if (childNode.GetOptions().GetHasLanguage()) {
@@ -417,8 +406,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Fixes the GPS Timestamp in EXIF.</summary>
 		/// <param name="exifSchema">the EXIF schema node</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the date conversion fails.
-		/// 	</exception>
 		private static void FixGPSTimeStamp(XMPNode exifSchema)
 		{
 			// Note: if dates are not found the convert-methods throws an exceptions,
@@ -476,7 +463,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="aliasNode">the alias node</param>
 		/// <param name="baseNode">the base node of the alias</param>
 		/// <param name="outerCall">marks the outer call of the recursion</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards XMP errors</exception>
 		private static void CompareAliasedSubtrees(XMPNode aliasNode, XMPNode baseNode, bool
 			 outerCall)
 		{

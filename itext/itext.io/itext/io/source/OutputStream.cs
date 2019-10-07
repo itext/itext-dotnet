@@ -73,14 +73,12 @@ namespace iText.IO.Source {
 			this.outputStream = outputStream;
 		}
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Write(int b)
         {
             outputStream.WriteByte((byte)b);
             currentPos++;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Write(byte[] b)
         {
             Write(b, 0, b.Length);
@@ -101,7 +99,6 @@ namespace iText.IO.Source {
             throw new NotSupportedException("You cann't read from OutputStream");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public override void Write(byte[] b, int off, int len)
         {
             outputStream.Write(b, off, len);
@@ -149,7 +146,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public override void Flush()
 		{
 			outputStream.Flush();

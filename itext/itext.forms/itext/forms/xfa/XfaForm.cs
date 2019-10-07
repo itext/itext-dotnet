@@ -151,7 +151,6 @@ namespace iText.Forms.Xfa
 	    /// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
 	    /// <param name="form">the data</param>
 	    /// <param name="pdfDocument">pdfDocument</param>
-	    /// <exception cref="System.IO.IOException">on IO error</exception>
 	    public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfDocument pdfDocument) {
 	        PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
 	        SetXfaForm(form, acroForm);
@@ -161,7 +160,6 @@ namespace iText.Forms.Xfa
 		/// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
 		/// <param name="form">the data</param>
 		/// <param name="acroForm">an AcroForm instance</param>
-		/// <exception cref="System.IO.IOException">on IO error</exception>
 		public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfAcroForm acroForm)
 		{
 		    if (form == null || acroForm == null || acroForm.GetPdfDocument() == null) {
@@ -254,7 +252,6 @@ namespace iText.Forms.Xfa
 
 		/// <summary>Write the XfaForm to the provided PdfDocument.</summary>
 		/// <param name="document">the PdfDocument to write the XFA Form to</param>
-		/// <exception cref="System.IO.IOException"/>
 		public virtual void Write(PdfDocument document)
 		{
 			SetXfaForm(this, document);
@@ -262,7 +259,6 @@ namespace iText.Forms.Xfa
 
 	    /// <summary>Write the XfaForm to the provided PdfDocument.</summary>
 	    /// <param name="acroForm">the PdfAcroForm to write the XFA Form to</param>
-	    /// <exception cref="System.IO.IOException"/>
 	    public virtual void Write(PdfAcroForm acroForm)
 	    {
 	        SetXfaForm(this, acroForm);
@@ -441,10 +437,6 @@ namespace iText.Forms.Xfa
 		/// the
 		/// <see cref="System.IO.FileInfo"/>
 		/// </param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(FileInfo file)
 		{
 			FillXfaForm(file, false);
@@ -464,10 +456,6 @@ namespace iText.Forms.Xfa
 		/// <see cref="System.IO.FileInfo"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(FileInfo file, bool readOnly)
 		{
 			FillXfaForm(new FileStream(file.FullName, FileMode.Open, FileAccess.Read), readOnly);
@@ -484,10 +472,6 @@ namespace iText.Forms.Xfa
 		/// the
 		/// <see cref="System.IO.Stream"/>
 		/// </param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(Stream @is)
 		{
 			FillXfaForm(@is, false);
@@ -504,10 +488,6 @@ namespace iText.Forms.Xfa
 		/// <see cref="System.IO.Stream"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(Stream @is, bool readOnly) {
             XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
             XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
@@ -537,10 +517,6 @@ namespace iText.Forms.Xfa
 		/// the
 		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// </param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(XmlReader @is)
 		{
 			FillXfaForm(@is, false);
@@ -557,10 +533,6 @@ namespace iText.Forms.Xfa
 		/// <see cref="Org.Xml.Sax.InputSource">SAX input source</see>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
-		/// <exception cref="System.IO.IOException">
-		/// on IO error on the
-		/// <see cref="Org.Xml.Sax.InputSource"/>
-		/// </exception>
 		public virtual void FillXfaForm(XmlReader @is, bool readOnly) {
 		    FillXfaForm(XDocument.Load(@is, LoadOptions.PreserveWhitespace), readOnly);
 		}
@@ -673,7 +645,6 @@ namespace iText.Forms.Xfa
 		/// <summary>Serializes a XML document to a byte array.</summary>
 		/// <param name="n">the XML document</param>
 		/// <returns>the serialized XML document</returns>
-		/// <exception cref="System.IO.IOException">on error</exception>
 		private static byte[] SerializeDocument(XNode n)
 		{
 		    MemoryStream fout = new MemoryStream(INIT_SERIALIZER_BUFFER_SIZE);
@@ -698,9 +669,6 @@ namespace iText.Forms.Xfa
 		    return fout.ToArray();
 		}
 
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(PdfObject xfa)
 		{
 			MemoryStream bout = new MemoryStream();
@@ -729,9 +697,6 @@ namespace iText.Forms.Xfa
 			InitXfaForm(new MemoryStream(bout.ToArray()));
 		}
 
-		/// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-		/// <exception cref="System.IO.IOException"/>
-		/// <exception cref="Org.Xml.Sax.SAXException"/>
 		private void InitXfaForm(Stream inputStream)
 		{
 			XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();

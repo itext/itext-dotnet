@@ -15,7 +15,6 @@ namespace iText.IO.Codec.Brotli.Dec
 	/// </summary>
 	public class SynthTest : ExtendedITextTest
 	{
-		/// <exception cref="System.IO.IOException"/>
 		private byte[] Decompress(byte[] data)
 		{
 			byte[] buffer = new byte[65536];

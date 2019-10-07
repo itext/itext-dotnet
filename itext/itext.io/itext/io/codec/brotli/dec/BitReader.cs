@@ -169,7 +169,6 @@ namespace iText.IO.Codec.Brotli.Dec
 			}
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		internal static void Close(iText.IO.Codec.Brotli.Dec.BitReader br)
 		{
 			System.IO.Stream @is = br.input;

@@ -188,8 +188,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>Get the HTML representation of these attributes.</summary>
         /// <returns>HTML</returns>
-        /// <exception cref="iText.StyledXmlParser.Jsoup.SerializationException">if the HTML representation of the attributes cannot be constructed.
-        ///     </exception>
         public virtual String Html() {
             StringBuilder accum = new StringBuilder();
             try {
@@ -203,7 +201,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return accum.ToString();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void Html(StringBuilder accum, OutputSettings @out) {
             if (attributes == null) {
                 return;

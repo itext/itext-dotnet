@@ -81,8 +81,6 @@ namespace iText.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="iso8601String">a date string that is ISO 8601 conform.</param>
 		/// <returns>Returns a <c>XMPDateTime</c>.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Is thrown when the string is non-conform.
-		/// 	</exception>
 		public static XMPDateTime Parse(String iso8601String)
 		{
 			return Parse(iso8601String, new XMPDateTimeImpl());
@@ -91,8 +89,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="iso8601String">a date string that is ISO 8601 conform.</param>
 		/// <param name="binValue">an existing XMPDateTime to set with the parsed date</param>
 		/// <returns>Returns an XMPDateTime-object containing the ISO8601-date.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Is thrown when the string is non-conform.
-		/// 	</exception>
 		public static XMPDateTime Parse(String iso8601String, XMPDateTime binValue)
 		{
 			if (iso8601String == null) {
@@ -327,8 +323,6 @@ namespace iText.Kernel.XMP.Impl
 		/// 	</param>
 		/// <param name="maxValue">the max value of the number to return</param>
 		/// <returns>Returns the parsed integer.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if no integer can be found.
-		/// 	</exception>
 		public virtual int GatherInt(String errorMsg, int maxValue)
 		{
 			int value = 0;

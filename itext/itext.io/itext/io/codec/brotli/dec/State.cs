@@ -153,7 +153,6 @@ namespace iText.IO.Codec.Brotli.Dec
 			state.runningState = iText.IO.Codec.Brotli.Dec.RunningState.BlockStart;
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		internal static void Close(iText.IO.Codec.Brotli.Dec.State state)
 		{
 			if (state.runningState == iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized)

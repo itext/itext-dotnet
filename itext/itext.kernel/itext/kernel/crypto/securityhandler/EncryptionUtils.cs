@@ -83,7 +83,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return envelopedData;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier) {
             IBufferedCipher cipher = CipherUtilities.GetCipher(algorithmidentifier.ObjectID);
             cipher.Init(true, x509Certificate.GetPublicKey());
@@ -115,8 +114,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return locale;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in) {
             /*
              According to ISO 32000-2 (7.6.5.3 Public-key encryption algorithms) RC-2 algorithm is outdated

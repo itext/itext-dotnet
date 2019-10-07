@@ -84,7 +84,6 @@ namespace iText.Kernel.XMP.Impl
 		// Namespace Functions
 		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.RegisterNamespace(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public String RegisterNamespace(String namespaceURI, String suggestedPrefix)
 		{
 			lock (this)
@@ -196,8 +195,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Specification and some other Adobe private namespaces.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards processing exceptions
-		/// 	</exception>
 		private void RegisterStandardNamespaces()
 		{
 			// register standard namespaces
@@ -353,7 +350,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <see cref="iText.Kernel.XMP.Options.AliasOptions"/>
 		/// ).
 		/// </param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">for inconsistant aliases.</exception>
 		internal void RegisterAlias(String aliasNS, String aliasProp, String actualNS, String
 			 actualProp, AliasOptions aliasForm)
 		{
@@ -468,8 +464,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Register the standard aliases.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If the registrations of at least one alias fails.
-		/// 	</exception>
 		private void RegisterStandardAliases()
 		{
 			AliasOptions aliasToArrayOrdered = new AliasOptions().SetArrayOrdered(true);

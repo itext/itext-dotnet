@@ -47,7 +47,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     public class UriResolverTest : ExtendedITextTest {
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest01() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToExternalForm();
@@ -56,7 +55,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(absolutePathRoot, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest01A() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToExternalForm();
@@ -65,7 +63,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(absolutePathRoot, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest02() {
             UriResolver resolver = new UriResolver("test/folder/index.html");
@@ -73,7 +70,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(runFolder, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest03() {
             UriResolver resolver = new UriResolver("/test/folder/index.html");
@@ -81,7 +77,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(rootFolder, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest04() {
             UriResolver resolver = new UriResolver("index.html");
@@ -97,7 +92,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 //                ).ToExternalForm());
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest05() {
             UriResolver resolver = new UriResolver("/../test/folder/index.html");
@@ -105,7 +99,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(rootFolder, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest06() {
             UriResolver resolver = new UriResolver("../test/folder/index.html");
@@ -113,7 +106,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(parentFolder, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest07() {
             UriResolver resolver = new UriResolver("http://itextpdf.com/itext7");
@@ -157,7 +149,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 //                ("//folder2/innerTest2").ToExternalForm());
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest08() {
             UriResolver resolver = new UriResolver("http://itextpdf.com/itext7/");
@@ -170,7 +161,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 ).ToExternalForm());
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest09() {
             Uri absoluteBaseUri = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory()) + "test/folder/index.html");
@@ -228,7 +218,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(malformedPath, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest13() {
             UriResolver resolver = new UriResolver("");
@@ -246,7 +235,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 //                ).ToExternalForm());
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest14() {
             UriResolver resolver = new UriResolver("base/uri/index.html");
@@ -264,7 +252,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         // It is windows specific to assume this to work. On unix it shall fail, as it will assume that it is
         // an absolute URI with scheme 'c', and will not recognize this scheme.
         // Assert.assertEquals("file:/c:/test/folder/data.jpg", resolver.resolveAgainstBaseUri("c:/test/folder/data.jpg").toExternalForm());
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest15() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToString();
@@ -273,7 +260,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             TestPaths(absolutePathRoot, resolver);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest16() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToString();
@@ -354,7 +340,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         // the whitespace characters are
-        /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void UriResolverTest17()
         {

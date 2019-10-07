@@ -110,7 +110,6 @@ namespace iText.IO.Image {
         /// <param name="filename">filename of the file containing the image</param>
         /// <param name="recoverImage">whether to recover from a image error (for TIFF-images)</param>
         /// <returns>The created ImageData object.</returns>
-        /// <exception cref="Java.Net.MalformedURLException"/>
         public static ImageData Create(String filename, bool recoverImage) {
             return Create(UrlUtil.ToURL(filename), recoverImage);
         }
@@ -118,7 +117,6 @@ namespace iText.IO.Image {
         /// <summary>Create an ImageData instance representing the image from the specified file.</summary>
         /// <param name="filename">filename of the file containing the image</param>
         /// <returns>The created ImageData object.</returns>
-        /// <exception cref="Java.Net.MalformedURLException"/>
         public static ImageData Create(String filename) {
             return Create(filename, false);
         }
@@ -194,7 +192,6 @@ namespace iText.IO.Image {
         /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
         ///     </param>
         /// <returns>RawImage</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static ImageData Create(System.Drawing.Image image, Color? color) {
             return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
@@ -205,7 +202,6 @@ namespace iText.IO.Image {
         ///     </param>
         /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white</param>
         /// <returns>RawImage</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }

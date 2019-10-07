@@ -38,7 +38,6 @@ namespace iText.IO.Codec.Brotli.Dec
 		/// <p> Will block the thread until first kilobyte of data of source is available.
 		/// </summary>
 		/// <param name="source">underlying data source</param>
-		/// <exception cref="System.IO.IOException">in case of corrupted data or source stream problems</exception>
 		public BrotliInputStream(System.IO.Stream source)
 			: this(source, DefaultInternalBufferSize, null)
 		{
@@ -59,7 +58,6 @@ namespace iText.IO.Codec.Brotli.Dec
 		/// size of internal buffer used in case of
 		/// byte-by-byte reading
 		/// </param>
-		/// <exception cref="System.IO.IOException">in case of corrupted data or source stream problems</exception>
 		public BrotliInputStream(System.IO.Stream source, int byteReadBufferSize)
 			: this(source, byteReadBufferSize, null)
 		{
@@ -85,7 +83,6 @@ namespace iText.IO.Codec.Brotli.Dec
 		/// <see langword="null"/>
 		/// if not used
 		/// </param>
-		/// <exception cref="System.IO.IOException">in case of corrupted data or source stream problems</exception>
 		public BrotliInputStream(System.IO.Stream source, int byteReadBufferSize, byte[] customDictionary)
 		{
 			if (byteReadBufferSize <= 0)
@@ -118,7 +115,6 @@ namespace iText.IO.Codec.Brotli.Dec
 	    }
 
 	    /// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
 		public override int ReadByte()
 		{
 			if (bufferOffset >= remainingBufferBytes)
@@ -134,7 +130,6 @@ namespace iText.IO.Codec.Brotli.Dec
 		}
 
 		/// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
 		public override int Read(byte[] destBuffer, int destOffset, int destLen)
 		{
 			if (destOffset < 0)

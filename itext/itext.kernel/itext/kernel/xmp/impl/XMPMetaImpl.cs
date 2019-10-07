@@ -86,7 +86,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.AppendArrayItem(System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, PropertyOptions
 			 arrayOptions, String itemValue, PropertyOptions itemOptions)
 		{
@@ -145,14 +144,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.AppendArrayItem(System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void AppendArrayItem(String schemaNS, String arrayName, String itemValue
 			)
 		{
 			AppendArrayItem(schemaNS, arrayName, null, itemValue, null);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.CountArrayItems(System.String, System.String)
 		/// 	"/>
 		public virtual int CountArrayItems(String schemaNS, String arrayName)
@@ -330,7 +327,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetArrayItem(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual XMPProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex
 			)
 		{
@@ -340,7 +336,6 @@ namespace iText.Kernel.XMP.Impl
 			return GetProperty(schemaNS, itemPath);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetLocalizedText(String schemaNS, String altTextName, 
@@ -404,7 +399,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue, PropertyOptions options)
 		{
@@ -590,7 +584,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetLocalizedText(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetLocalizedText(String schemaNS, String altTextName, String 
 			genericLang, String specificLang, String itemValue)
 		{
@@ -598,7 +591,6 @@ namespace iText.Kernel.XMP.Impl
 				);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetProperty(System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetProperty(String schemaNS, String propName)
@@ -633,8 +625,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="propName">a property name or path</param>
 		/// <param name="valueType">the type of the value, see VALUE_...</param>
 		/// <returns>Returns an <code>XMPProperty</code></returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Collects any exception that occurs.
-		/// 	</exception>
 		protected internal virtual XMPProperty GetProperty(String schemaNS, String propName
 			, int valueType)
 		{
@@ -701,8 +691,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Returns the node value as an object according to the
 		/// <code>valueType</code>.
 		/// </returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Collects any exception that occurs.
-		/// 	</exception>
 		protected internal virtual Object GetPropertyObject(String schemaNS, String propName
 			, int valueType)
 		{
@@ -727,13 +715,11 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyBoolean(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual bool? GetPropertyBoolean(String schemaNS, String propName)
 		{
 			return (bool?)GetPropertyObject(schemaNS, propName, VALUE_BOOLEAN);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyBoolean(System.String, System.String, bool, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
@@ -744,7 +730,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyBoolean(System.String, System.String, bool)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyBoolean(String schemaNS, String propName, bool propValue
 			)
 		{
@@ -753,7 +738,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyInteger(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual int? GetPropertyInteger(String schemaNS, String propName)
 		{
 			return (int?)GetPropertyObject(schemaNS, propName, VALUE_INTEGER);
@@ -761,7 +745,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyInteger(System.String, System.String, int, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			, PropertyOptions options)
 		{
@@ -770,7 +753,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyInteger(System.String, System.String, int)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyInteger(String schemaNS, String propName, int propValue
 			)
 		{
@@ -779,7 +761,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyLong(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual long? GetPropertyLong(String schemaNS, String propName)
 		{
 			return (long?) GetPropertyObject(schemaNS, propName, VALUE_LONG);
@@ -787,7 +768,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyLong(System.String, System.String, long, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			, PropertyOptions options)
 		{
@@ -796,7 +776,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyLong(System.String, System.String, long)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyLong(String schemaNS, String propName, long propValue
 			)
 		{
@@ -805,7 +784,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyDouble(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual double? GetPropertyDouble(String schemaNS, String propName)
 		{
 			return (double?)GetPropertyObject(schemaNS, propName, VALUE_DOUBLE);
@@ -813,7 +791,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyDouble(System.String, System.String, double, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			, PropertyOptions options)
 		{
@@ -822,7 +799,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyDouble(System.String, System.String, double)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyDouble(String schemaNS, String propName, double propValue
 			)
 		{
@@ -831,7 +807,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyDate(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual XMPDateTime GetPropertyDate(String schemaNS, String propName)
 		{
 			return (XMPDateTime)GetPropertyObject(schemaNS, propName, VALUE_DATE);
@@ -839,7 +814,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyDate(System.String, System.String, iText.Kernel.XMP.XMPDateTime, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
 			 propValue, PropertyOptions options)
 		{
@@ -848,7 +822,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyDate(System.String, System.String, iText.Kernel.XMP.XMPDateTime)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyDate(String schemaNS, String propName, XMPDateTime
 			 propValue)
 		{
@@ -857,7 +830,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyCalendar(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual DateTime GetPropertyCalendar(String schemaNS, String propName)
 		{
 			return (DateTime)GetPropertyObject(schemaNS, propName, VALUE_CALENDAR);
@@ -865,7 +837,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue, PropertyOptions options)
 		{
@@ -874,7 +845,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyCalendar(System.String, System.String, System.DateTime)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyCalendar(String schemaNS, String propName, DateTime
 			 propValue)
 		{
@@ -883,7 +853,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyBase64(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual byte[] GetPropertyBase64(String schemaNS, String propName)
 		{
 			return (byte[])GetPropertyObject(schemaNS, propName, VALUE_BASE64);
@@ -891,7 +860,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetPropertyString(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual String GetPropertyString(String schemaNS, String propName)
 		{
 			return (String)GetPropertyObject(schemaNS, propName, VALUE_STRING);
@@ -899,7 +867,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyBase64(System.String, System.String, byte[], iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			, PropertyOptions options)
 		{
@@ -908,14 +875,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetPropertyBase64(System.String, System.String, byte[])
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetPropertyBase64(String schemaNS, String propName, byte[] propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetQualifier(System.String, System.String, System.String, System.String)
 		/// 	"/>
 		public virtual XMPProperty GetQualifier(String schemaNS, String propName, String 
@@ -931,7 +896,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.GetStructField(System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual XMPProperty GetStructField(String schemaNS, String structName, String
 			 fieldNS, String fieldName)
 		{
@@ -943,7 +907,6 @@ namespace iText.Kernel.XMP.Impl
 			return GetProperty(schemaNS, fieldPath);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.Iterator()"/>
 		public virtual XMPIterator Iterator()
 		{
@@ -952,7 +915,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.Iterator(iText.Kernel.XMP.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual XMPIterator Iterator(IteratorOptions options)
 		{
 			return Iterator(null, null, options);
@@ -960,14 +922,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.Iterator(System.String, System.String, iText.Kernel.XMP.Options.IteratorOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual XMPIterator Iterator(String schemaNS, String propName, IteratorOptions
 			 options)
 		{
 			return new XMPIteratorImpl(this, schemaNS, propName, options);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetArrayItem(System.String, System.String, int, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
@@ -990,14 +950,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			SetArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
@@ -1020,14 +978,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.InsertArrayItem(System.String, System.String, int, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void InsertArrayItem(String schemaNS, String arrayName, int itemIndex
 			, String itemValue)
 		{
 			InsertArrayItem(schemaNS, arrayName, itemIndex, itemValue, null);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetProperty(System.String, System.String, System.Object, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
@@ -1050,14 +1006,12 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetProperty(System.String, System.String, System.Object)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetProperty(String schemaNS, String propName, Object propValue
 			)
 		{
 			SetProperty(schemaNS, propName, propValue, null);
 		}
 
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
@@ -1076,7 +1030,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetQualifier(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetQualifier(String schemaNS, String propName, String qualNS, 
 			String qualName, String qualValue)
 		{
@@ -1085,7 +1038,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue, PropertyOptions options)
 		{
@@ -1098,7 +1050,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.SetStructField(System.String, System.String, System.String, System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void SetStructField(String schemaNS, String structName, String fieldNS
 			, String fieldName, String fieldValue)
 		{
@@ -1153,7 +1104,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <seealso cref="iText.Kernel.XMP.XMPMeta.Normalize(iText.Kernel.XMP.Options.ParseOptions)
 		/// 	"/>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public virtual void Normalize(ParseOptions options)
 		{
 			if (options == null)
@@ -1184,7 +1134,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="itemValue">the item value</param>
 		/// <param name="itemOptions">the options for the new item</param>
 		/// <param name="insert">insert oder overwrite at index position?</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void DoSetArrayItem(XMPNode arrayNode, int itemIndex, String itemValue, PropertyOptions
 			 itemOptions, bool insert)
 		{
@@ -1222,8 +1171,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="newOptions">options for the new node, must not be <code>null</code>.
 		/// 	</param>
 		/// <param name="deleteExisting">flag if the existing value is to be overwritten</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">thrown if options and value do not correspond
-		/// 	</exception>
 		internal virtual void SetNode(XMPNode node, Object value, PropertyOptions newOptions
 			, bool deleteExisting)
 		{
@@ -1255,7 +1202,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="valueType">an int indicating the value type</param>
 		/// <param name="propNode">the node containing the value</param>
 		/// <returns>Returns a literal value for the node.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private Object EvaluateNodeValue(int valueType, XMPNode propNode)
 		{
 			Object value;
