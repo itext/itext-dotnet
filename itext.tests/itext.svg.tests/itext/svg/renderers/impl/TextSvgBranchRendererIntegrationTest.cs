@@ -58,99 +58,71 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TooLongTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoLinesNewlineTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "two_lines_newline");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleUpXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleUpYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleUpY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleDownXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldScaleDownYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_scaleDownY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldTranslateTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_translate");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldRotateTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_rotate");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldSkewYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_skewY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldCombinedTransformationsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_combinedTransformations");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelloWorldFontSizeMissingTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_fontSizeMissing");
@@ -158,29 +130,21 @@ namespace iText.Svg.Renderers.Impl {
 
         //Absolute position
         //X
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionpositiveXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-positiveX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionnegativeXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-negativeX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionzeroXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-zeroX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionInvalidXTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -191,29 +155,21 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         //Y
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionPositiveYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-positiveY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionNegativeYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-negativeY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionZeroYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-absolutePosition-zeroY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextAbsolutePositionInvalidYTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -225,29 +181,21 @@ namespace iText.Svg.Renderers.Impl {
 
         //Relative move
         //X
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMovePositiveXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-positiveX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveNegativeXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-negativeX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveZeroXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-zeroX");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidXTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -258,29 +206,21 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         //Y
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMovePositiveYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-positiveY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveNegativeYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-negativeY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveZeroYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-zeroY");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidYTest() {
             NUnit.Framework.Assert.That(() =>  {

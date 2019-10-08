@@ -52,7 +52,6 @@ namespace iText.IO.Source {
         /// <summary>Gets a byte at the specified position</summary>
         /// <param name="position">byte position</param>
         /// <returns>the byte, or -1 if EOF is reached</returns>
-        /// <exception cref="System.IO.IOException">in case of any reading error.</exception>
         int Get(long position);
 
         /// <summary>Read an array of bytes of specified length from the specified position of source to the buffer applying the offset.
@@ -67,7 +66,6 @@ namespace iText.IO.Source {
         /// <param name="off">offset into the output buffer where results will be placed</param>
         /// <param name="len">the number of bytes to read</param>
         /// <returns>the number of bytes actually read, or -1 if the file is at EOF</returns>
-        /// <exception cref="System.IO.IOException">in case of any I/O error.</exception>
         int Get(long position, byte[] bytes, int off, int len);
 
         /// <summary>Gets the length of the source</summary>
@@ -76,7 +74,6 @@ namespace iText.IO.Source {
 
         /// <summary>Closes this source.</summary>
         /// <remarks>Closes this source. The underlying data structure or source (if any) will also be closed</remarks>
-        /// <exception cref="System.IO.IOException"/>
         void Close();
     }
 }

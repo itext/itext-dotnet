@@ -62,8 +62,6 @@ namespace iText.IO.Colors {
         /// <param name="data">byte[] containing the raw icc profile data</param>
         /// <param name="numComponents">number of components the profile contains</param>
         /// <returns>IccProfile constructed from the data</returns>
-        /// <exception cref="iText.IO.IOException">when the specified number of components and the number of components in the created profile do not match.
-        ///     </exception>
         public static iText.IO.Colors.IccProfile GetInstance(byte[] data, int numComponents) {
             if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73 || data[39] != 0x70) {
                 throw new iText.IO.IOException(iText.IO.IOException.InvalidIccProfile);
@@ -95,7 +93,6 @@ namespace iText.IO.Colors {
         /// <summary>Construct an icc profile from the passed random-access file or array.</summary>
         /// <param name="file">random-access file or array containing the profile</param>
         /// <returns>IccProfile constructed from the data</returns>
-        /// <exception cref="iText.IO.IOException">if the source does not contain a valid icc profile</exception>
         public static iText.IO.Colors.IccProfile GetInstance(RandomAccessFileOrArray file) {
             try {
                 byte[] head = new byte[128];
@@ -135,7 +132,6 @@ namespace iText.IO.Colors {
         /// <summary>Construct an icc profile from the passed InputStream.</summary>
         /// <param name="stream">inputstream containing the profile</param>
         /// <returns>IccProfile constructed from the data</returns>
-        /// <exception cref="iText.IO.IOException">if the source does not contain a valid icc profile</exception>
         public static iText.IO.Colors.IccProfile GetInstance(Stream stream) {
             RandomAccessFileOrArray raf;
             try {
@@ -150,7 +146,6 @@ namespace iText.IO.Colors {
         /// <summary>Construct an icc profile from the file found at the passed path</summary>
         /// <param name="filename">path to the file contaning the profile</param>
         /// <returns>IccProfile constructed from the data</returns>
-        /// <exception cref="iText.IO.IOException">if the source does not contain a valid icc profile</exception>
         public static iText.IO.Colors.IccProfile GetInstance(String filename) {
             RandomAccessFileOrArray raf;
             try {
@@ -165,7 +160,6 @@ namespace iText.IO.Colors {
         /// <summary>Get the Color space name of the icc profile found in the data.</summary>
         /// <param name="data">byte[] containing the icc profile</param>
         /// <returns>String containing the color space of the profile</returns>
-        /// <exception cref="iText.IO.IOException">if the source does not contain a valid icc profile</exception>
         public static String GetIccColorSpaceName(byte[] data) {
             String colorSpace;
             try {
@@ -180,7 +174,6 @@ namespace iText.IO.Colors {
         /// <summary>Get the device class of the icc profile found in the data.</summary>
         /// <param name="data">byte[] containing the icc profile</param>
         /// <returns>String containing the device class of the profile</returns>
-        /// <exception cref="iText.IO.IOException">if the source does not contain a valid icc profile</exception>
         public static String GetIccDeviceClass(byte[] data) {
             String deviceClass;
             try {

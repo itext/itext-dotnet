@@ -58,7 +58,6 @@ namespace iText.Svg.Processors.Impl.Font {
         public static void BeforeClass() {
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SrcPropertyTest() {
             String fontSrc = "web-fonts/droid-serif-invalid.";
@@ -117,7 +116,6 @@ namespace iText.Svg.Processors.Impl.Font {
             }
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION)]
         public virtual void ParseBase64SrcTest() {

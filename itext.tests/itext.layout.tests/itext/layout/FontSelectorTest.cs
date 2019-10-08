@@ -72,7 +72,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup() {
             String fileName = "cyrillicAndLatinGroup";
@@ -96,7 +95,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup2() {
             String fileName = "cyrillicAndLatinGroup2";
@@ -119,7 +117,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup3() {
             String fileName = "cyrillicAndLatinGroup3";
@@ -142,7 +139,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
             )]
@@ -167,7 +163,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LatinAndNotdefGroup() {
             String fileName = "latinAndNotdefGroup";
@@ -188,7 +183,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight() {
             String fileName = "customFontWeight";
@@ -215,7 +209,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight2() {
             String fileName = "customFontWeight2";
@@ -239,7 +232,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight3() {
             String fileName = "customFontWeight3";
@@ -264,7 +256,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StandardPdfFonts() {
             String fileName = "standardPdfFonts";
@@ -382,8 +373,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WriteTextInFontWhichAliasWithUnicodeChars() {
             String fileName = "writeTextInFontWhichAliasWithUnicodeChars";
@@ -408,7 +397,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinWithUnicodeRange() {
             String fileName = "cyrillicAndLatinWithUnicodeRange";
@@ -433,7 +421,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DuplicateFontWithUnicodeRange() {
             String fileName = "duplicateFontWithUnicodeRange";
@@ -459,7 +446,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleFontWithUnicodeRange() {
             String fileName = "singleFontWithUnicodeRange";

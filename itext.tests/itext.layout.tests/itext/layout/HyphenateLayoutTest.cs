@@ -69,7 +69,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ParenthesisTest01() {
             //TODO DEVSIX-3148
@@ -91,7 +90,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UriTest01() {
             String outFileName = destinationFolder + "uriTest01.pdf";
@@ -122,7 +120,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WidthTest01() {
             String outFileName = destinationFolder + "widthTest01.pdf";
@@ -142,7 +139,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WidthTest02() {
             String outFileName = destinationFolder + "widthTest02.pdf";
@@ -160,7 +156,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WidthTest03() {
             String outFileName = destinationFolder + "widthTest03.pdf";
@@ -188,7 +183,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenTest01() {
             String outFileName = destinationFolder + "nonBreakingHyphenTest01.pdf";
@@ -212,7 +206,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenTest02() {
             String outFileName = destinationFolder + "nonBreakingHyphenTest02.pdf";
@@ -237,7 +230,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HyphenSymbolTest01() {
             String outFileName = destinationFolder + "hyphenSymbolTest01.pdf";

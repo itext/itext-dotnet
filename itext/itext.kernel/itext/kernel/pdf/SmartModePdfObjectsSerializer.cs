@@ -98,7 +98,6 @@ namespace iText.Kernel.Pdf {
             return new SerializedObjectContent(content);
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerObject(PdfObject obj, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             if (level <= 0) {
@@ -166,7 +165,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerDic(PdfDictionary dic, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]>
              serializedCache) {
             bb.Append("$D");
@@ -183,7 +181,6 @@ namespace iText.Kernel.Pdf {
             bb.Append("$\\D");
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerArray(PdfArray array, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             bb.Append("$A");

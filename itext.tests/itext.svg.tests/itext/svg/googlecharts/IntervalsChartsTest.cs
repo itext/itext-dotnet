@@ -57,97 +57,61 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_area_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_area_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_backgroundBox_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_backgroundBox_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_box_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_box_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_boxPlot_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_boxPlot_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_boxThick_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_boxThick_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_combining_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_combining_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_line_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_line_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_points_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_points_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_pointsWhiskers_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_pointsWhiskers_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_stick_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_stick_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_sticksHorizontal_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_sticksHorizontal_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Intervals_tailored_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "intervals_tailored_chart");

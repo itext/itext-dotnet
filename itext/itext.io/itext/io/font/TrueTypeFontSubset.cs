@@ -148,7 +148,6 @@ namespace iText.IO.Font {
 
         /// <summary>Does the actual work of subsetting the font.</summary>
         /// <returns>the subset font</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         internal virtual byte[] Process() {
             try {
                 CreateTableDirectory();
@@ -168,7 +167,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void AssembleFont() {
             int[] tableLocation;
             int fullFontSize = 0;
@@ -256,7 +254,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CreateTableDirectory() {
             tableDirectory = new Dictionary<String, int[]>();
             rf.Seek(directoryOffset);
@@ -276,7 +273,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
@@ -307,7 +303,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CreateNewGlyphTables() {
             newLocaTable = new int[locaTable.Length];
             int[] activeGlyphs = new int[glyphsInList.Count];
@@ -360,7 +355,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
@@ -380,7 +374,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CheckGlyphComposite(int glyph) {
             int start = locaTable[glyph];
             if (start == locaTable[glyph + 1]) {
@@ -436,7 +429,6 @@ namespace iText.IO.Font {
         /// <c>String</c>
         /// read
         /// </returns>
-        /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private String ReadStandardString(int length) {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);

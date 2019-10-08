@@ -147,7 +147,6 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         /// <param name="query">CSS selector</param>
         /// <param name="root">root element to descend into</param>
         /// <returns>matching elements, empty if none</returns>
-        /// <exception cref="SelectorParseException">(unchecked) on an invalid CSS query.</exception>
         public static Elements Select(String query, iText.StyledXmlParser.Jsoup.Nodes.Element root) {
             return new iText.StyledXmlParser.Jsoup.Select.Selector(query, root).Select();
         }

@@ -58,9 +58,6 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TaggedPdfReaderToolTest01() {
             String filename = "iphone_user_guide.pdf";

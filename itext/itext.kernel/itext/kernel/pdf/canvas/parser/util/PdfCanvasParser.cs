@@ -89,7 +89,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <c>null</c> will create a new <c>ArrayList</c>
         /// </param>
         /// <returns>the same <c>ArrayList</c> given as argument or a new one</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual IList<PdfObject> Parse(IList<PdfObject> ls) {
             if (ls == null) {
                 ls = new List<PdfObject>();
@@ -129,7 +128,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <summary>Reads a dictionary.</summary>
         /// <remarks>Reads a dictionary. The tokeniser must be positioned past the "&lt;&lt;" token.</remarks>
         /// <returns>the dictionary</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfDictionary ReadDictionary() {
             PdfDictionary dic = new PdfDictionary();
             while (true) {
@@ -152,7 +150,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <summary>Reads an array.</summary>
         /// <remarks>Reads an array. The tokeniser must be positioned past the "[" token.</remarks>
         /// <returns>an array</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfArray ReadArray() {
             PdfArray array = new PdfArray();
             while (true) {
@@ -171,7 +168,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
 
         /// <summary>Reads a pdf object.</summary>
         /// <returns>the pdf object</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfObject ReadObject() {
             if (!NextValidToken()) {
                 return null;
@@ -209,7 +205,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
 
         /// <summary>Reads the next token skipping over the comments.</summary>
         /// <returns><c>true</c> if a token was read, <c>false</c> if the end of content was reached</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual bool NextValidToken() {
             while (tokeniser.NextToken()) {
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Comment) {

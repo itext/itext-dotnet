@@ -55,13 +55,11 @@ namespace iText.Signatures.Testutils.Client {
 
         private readonly ICipherParameters caPrivateKey;
 
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public TestCrlClient(TestCrlBuilder crlBuilder, ICipherParameters caPrivateKey) {
             this.crlBuilder = crlBuilder;
             this.caPrivateKey = caPrivateKey;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public TestCrlClient(X509Certificate caCert, ICipherParameters caPrivateKey) {
             this.crlBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-1));
             this.caPrivateKey = caPrivateKey;

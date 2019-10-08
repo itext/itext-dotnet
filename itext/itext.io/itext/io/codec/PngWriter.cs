@@ -63,13 +63,11 @@ namespace iText.IO.Codec {
 
         private Stream outp;
 
-        /// <exception cref="System.IO.IOException"/>
         public PngWriter(Stream outp) {
             this.outp = outp;
             outp.Write(PNG_SIGNTURE);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteHeader(int width, int height, int bitDepth, int colorType) {
             MemoryStream ms = new MemoryStream();
             OutputInt(width, ms);
@@ -82,12 +80,10 @@ namespace iText.IO.Codec {
             WriteChunk(IHDR, ms.ToArray());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteEnd() {
             WriteChunk(IEND, new byte[0]);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteData(byte[] data, int stride) {
             MemoryStream stream = new MemoryStream();
             DeflaterOutputStream zip = new DeflaterOutputStream(stream);
@@ -105,12 +101,10 @@ namespace iText.IO.Codec {
             WriteChunk(IDAT, stream.ToArray());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WritePalette(byte[] data) {
             WriteChunk(PLTE, data);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteIccProfile(byte[] data) {
             MemoryStream stream = new MemoryStream();
             stream.Write((byte)'I');
@@ -163,12 +157,10 @@ namespace iText.IO.Codec {
             return ~Update_crc(-1, buf, 0, buf.Length);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void OutputInt(int n) {
             OutputInt(n, outp);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void OutputInt(int n, Stream s) {
             s.Write((byte)(n >> 24));
             s.Write((byte)(n >> 16));
@@ -176,7 +168,6 @@ namespace iText.IO.Codec {
             s.Write((byte)n);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteChunk(byte[] chunkType, byte[] data) {
             OutputInt(data.Length);
             outp.Write(chunkType, 0, 4);

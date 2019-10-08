@@ -61,14 +61,10 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>The method writes data from XfdfObject into a xfdf data file.</summary>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         internal virtual void Write(XfdfObject xfdfObject) {
             this.WriteDom(xfdfObject);
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         private void WriteDom(XfdfObject xfdfObject) {
             XmlDocument document = XfdfFileUtils.CreateNewXfdfDocument();
             // root xfdf element

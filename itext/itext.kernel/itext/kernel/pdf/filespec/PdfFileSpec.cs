@@ -178,7 +178,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="mimeType"/>
         /// <param name="fileParameter"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
@@ -201,7 +200,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileDisplay"/>
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, mimeType, null, afRelationshipValue
@@ -214,7 +212,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="description"/>
         /// <param name="fileDisplay"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, null, null, afRelationshipValue);
@@ -225,7 +222,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="filePath"/>
         /// <param name="fileDisplay"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, null, fileDisplay, null, null, afRelationshipValue);

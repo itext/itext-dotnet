@@ -50,7 +50,6 @@ namespace iText.IO.Image {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff1() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.tif");
@@ -59,7 +58,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff2() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_gray.tiff");
@@ -68,7 +66,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff3() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_monochrome.tiff");
@@ -77,7 +74,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff4() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_negate.tiff");
@@ -86,7 +82,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff5() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_year1900.tiff");
@@ -95,7 +90,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenTiff6() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_year1980.tiff");
@@ -104,7 +98,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetStringDataFromTiff() {
             byte[] bytes = File.ReadAllBytes(Path.Combine(sourceFolder, "img_cmyk.tif"));

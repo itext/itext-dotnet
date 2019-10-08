@@ -76,13 +76,11 @@ namespace iText.Signatures {
         /// <see cref="Org.BouncyCastle.Crypto.IDigest"/>
         /// object.
         /// </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         IDigest GetMessageDigest();
 
         /// <summary>Returns RFC 3161 timeStampToken.</summary>
         /// <param name="imprint">byte[] - data imprint to be time-stamped</param>
         /// <returns>byte[] - encoded, TSA signed data of the timeStampToken</returns>
-        /// <exception cref="System.Exception">- TSA request failed</exception>
         byte[] GetTimeStampToken(byte[] imprint);
     }
 }

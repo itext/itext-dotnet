@@ -67,7 +67,6 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// the resulting
         /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         public static CssStyleSheet Parse(Stream stream, String baseUrl) {
             CssParserStateController controller = new CssParserStateController(baseUrl);
             TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, System.Text.Encoding.UTF8));
@@ -91,7 +90,6 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// the resulting
         /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         public static CssStyleSheet Parse(Stream stream) {
             return Parse(stream, null);
         }

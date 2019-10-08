@@ -55,14 +55,12 @@ namespace iText.Signatures.Testutils.Client {
         private readonly IDictionary<String, TestOcspResponseBuilder> issuerIdToResponseBuilder = new LinkedDictionary
             <String, TestOcspResponseBuilder>();
 
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, ICipherParameters privateKey) {
             issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), new TestOcspResponseBuilder(cert, privateKey
                 ));
             return this;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public virtual TestOcspClient AddBuilderForCertIssuer(X509Certificate cert, TestOcspResponseBuilder builder
             ) {
             issuerIdToResponseBuilder.Put(cert.SerialNumber.ToString(16), builder);

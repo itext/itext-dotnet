@@ -90,7 +90,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 .Html()));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestSupplyParserToDataStream() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-test.xml");
@@ -149,7 +148,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("<img src=\"asdf\" onerror=\"alert(1)\" x=\"\" />", xmlDoc.Html());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestDetectCharsetEncodingDeclaration() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-charset.xml");

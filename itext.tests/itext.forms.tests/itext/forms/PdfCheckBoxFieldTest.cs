@@ -64,8 +64,6 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest01() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest01.pdf";
@@ -81,8 +79,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest02() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest02.pdf";
@@ -106,8 +102,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest03() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest03.pdf";
@@ -123,8 +117,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest04() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest04.pdf";
@@ -149,8 +141,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest05() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest05.pdf";
@@ -167,8 +157,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxToggleTest01() {
             String srcPdf = sourceFolder + "checkBoxToggledOn.pdf";
@@ -186,8 +174,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckBoxToggleTest02() {
             String srcPdf = sourceFolder + "checkBoxToggledOn.pdf";
@@ -205,14 +191,12 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, float checkBoxH) {
             Rectangle rect = new Rectangle(50, yPos, checkBoxW, checkBoxH);
             AddCheckBox(pdfDoc, fontSize, yPos, checkBoxW, PdfFormField.CreateCheckBox(pdfDoc, rect, MessageFormatUtil
                 .Format("cb_fs_{0}_{1}_{2}", fontSize, checkBoxW, checkBoxH), "YES", PdfFormField.TYPE_CHECK));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void AddCheckBox(PdfDocument pdfDoc, float fontSize, float yPos, float checkBoxW, PdfFormField checkBox
             ) {
             PdfPage page = pdfDoc.GetFirstPage();

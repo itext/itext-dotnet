@@ -1020,7 +1020,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.IsTrue(SystemUtil.GetRelativeTimeMillis() - start < 1000);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestInvalidTableContents() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/table-invalid-elements.html");

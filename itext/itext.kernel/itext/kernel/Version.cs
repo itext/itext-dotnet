@@ -319,11 +319,6 @@ namespace iText.Kernel {
             return new String[] { major, minor };
         }
 
-        /// <exception cref="System.TypeLoadException"/>
-        /// <exception cref="System.MissingMethodException"/>
-        /// <exception cref="System.MemberAccessException"/>
-        /// <exception cref="Java.Lang.InstantiationException"/>
-        /// <exception cref="System.Reflection.TargetInvocationException"/>
         private static String[] GetLicenseeInfoFromLicenseKey(String validatorKey) {
             String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
             Type klass = GetLicenseKeyClass();

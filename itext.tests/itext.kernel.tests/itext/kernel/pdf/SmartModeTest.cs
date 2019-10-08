@@ -59,8 +59,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SmartModeSameResourcesCopyingAndFlushing() {
             String outFile = destinationFolder + "smartModeSameResourcesCopyingAndFlushing.pdf";
@@ -88,7 +86,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SmartModeSameResourcesCopyingModifyingAndFlushing() {
             String outFile = destinationFolder + "smartModeSameResourcesCopyingModifyingAndFlushing.pdf";
@@ -128,8 +125,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SmartModeSameResourcesCopyingModifyingAndFlushing_ensureObjectFresh() {
             String outFile = destinationFolder + "smartModeSameResourcesCopyingModifyingAndFlushing_ensureObjectFresh.pdf";

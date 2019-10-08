@@ -613,7 +613,6 @@ namespace iText.Kernel.Geom {
         /// <summary>Create a list of bounding rectangles from an 8 x n array of Quadpoints.</summary>
         /// <param name="quadPoints">8xn array of numbers representing 4 points</param>
         /// <returns>a list of bounding rectangles for the passed quadpoints</returns>
-        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
         public static IList<iText.Kernel.Geom.Rectangle> CreateBoundingRectanglesFromQuadPoint(PdfArray quadPoints
             ) {
             IList<iText.Kernel.Geom.Rectangle> boundingRectangles = new List<iText.Kernel.Geom.Rectangle>();
@@ -631,7 +630,6 @@ namespace iText.Kernel.Geom {
         /// <summary>Create the bounding rectangle for the given array of quadpoints.</summary>
         /// <param name="quadPoints">an array containing 8 numbers that correspond to 4 points.</param>
         /// <returns>The smallest orthogonal rectangle containing the quadpoints.</returns>
-        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
         public static iText.Kernel.Geom.Rectangle CreateBoundingRectangleFromQuadPoint(PdfArray quadPoints) {
             //Check if array length is a multiple of 8
             if (quadPoints.Size() % 8 != 0) {

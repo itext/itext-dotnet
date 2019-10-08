@@ -210,7 +210,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();

@@ -626,10 +626,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         /// <summary>Get the outer HTML of this node.</summary>
         /// <param name="accum">accumulator to place HTML into</param>
-        /// <exception cref="System.IO.IOException">if appending to the given accumulator fails.</exception>
         internal abstract void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out);
 
-        /// <exception cref="System.IO.IOException"/>
         internal abstract void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out);
 
         /// <summary>
@@ -655,7 +653,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return OuterHtml();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Indent(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append("\n").Append(iText.StyledXmlParser.Jsoup.Helper.StringUtil.Padding(depth * @out.IndentAmount(
                 )));

@@ -83,7 +83,6 @@ namespace iText.IO.Source {
         /// <inheritDoc/>
         /// Note that the position will be adjusted to read from the corrected location in the underlying source
         /// </summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             if (position >= length) {
                 return -1;
@@ -95,7 +94,6 @@ namespace iText.IO.Source {
         /// <inheritDoc/>
         /// Note that the position will be adjusted to read from the corrected location in the underlying source
         /// </summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             if (position >= length) {
                 return -1;
@@ -113,7 +111,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             source.Close();
         }

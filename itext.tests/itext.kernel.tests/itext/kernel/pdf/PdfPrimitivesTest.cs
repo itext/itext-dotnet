@@ -98,7 +98,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberTest() {
             String filename = "primitivesFloatNumberTest.pdf";
@@ -113,7 +112,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberTest() {
             String filename = "primitivesIntNumberTest.pdf";
@@ -128,7 +126,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameTest() {
             String filename = "primitivesNameTest.pdf";
@@ -143,7 +140,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringTest() {
             String filename = "primitivesStringTest.pdf";
@@ -158,7 +154,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanTest() {
             String filename = "primitivesBooleanTest.pdf";
@@ -171,7 +166,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberIndirectTest() {
             String filename = "primitivesFloatNumberIndirectTest.pdf";
@@ -184,7 +178,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberIndirectTest() {
             String filename = "primitivesIntNumberIndirectTest.pdf";
@@ -197,7 +190,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringIndirectTest() {
             String filename = "primitivesStringIndirectTest.pdf";
@@ -210,7 +202,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameIndirectTest() {
             String filename = "primitivesNameIndirectTest.pdf";
@@ -223,7 +214,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanIndirectTest() {
             String filename = "primitivesBooleanIndirectTest.pdf";

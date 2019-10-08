@@ -65,14 +65,12 @@ namespace iText.IO.Source {
 
         /// <summary>Creates this object</summary>
         /// <param name="raf">the source for this RandomAccessSource</param>
-        /// <exception cref="System.IO.IOException">if the RAF can't be read</exception>
         public RAFRandomAccessSource(FileStream raf) {
             this.raf = raf;
             length = raf.Length;
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             // TODO: test to make sure we are handling the length properly (i.e. is raf.length() the last byte in the file, or one past the last byte?)
             if (position > length) {
@@ -86,7 +84,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             if (position > length) {
                 return -1;
@@ -116,7 +113,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary>Closes the underlying RandomAccessFile</summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             raf.Dispose();
         }

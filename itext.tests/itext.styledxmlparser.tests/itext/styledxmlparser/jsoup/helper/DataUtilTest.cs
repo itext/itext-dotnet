@@ -139,7 +139,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SupportsBOMinFiles() {
             // test files from http://www.i18nl10n.com/korean/utftest/

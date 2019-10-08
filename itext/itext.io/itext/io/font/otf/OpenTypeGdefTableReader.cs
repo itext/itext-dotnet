@@ -64,7 +64,6 @@ namespace iText.IO.Font.Otf {
             this.tableLocation = tableLocation;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ReadTable() {
             if (tableLocation > 0) {
                 rf.Seek(tableLocation);

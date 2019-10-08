@@ -62,7 +62,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -85,8 +84,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest2() {
             String outPdf = destinationFolder + "pdfA1b_canvasCheckTest2.pdf";
@@ -111,7 +108,6 @@ namespace iText.Pdfa {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {

@@ -57,33 +57,21 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "line_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_classic_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "line_classic_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_material_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "line_material_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Line_topX_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "line_topX_chart");

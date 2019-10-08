@@ -330,7 +330,6 @@ namespace iText.IO.Image {
         /// Load data from URL. url must be not null.
         /// Note, this method doesn't check if data or url is null.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void LoadData() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(url
                 ));

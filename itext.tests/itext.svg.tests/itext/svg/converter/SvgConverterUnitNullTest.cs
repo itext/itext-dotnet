@@ -94,7 +94,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentInputStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -104,7 +103,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentDocNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -123,7 +121,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentAllNullTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -138,7 +135,6 @@ namespace iText.Svg.Converter {
             SvgConverter.DrawOnDocument(content, doc, 1, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentInputStreamPropsNullTest() {
             SvgConverter.DrawOnDocument(@is, doc, 1, null);
@@ -154,7 +150,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageInputStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -165,7 +160,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageDocNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -184,7 +178,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageAllNullTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -200,7 +193,6 @@ namespace iText.Svg.Converter {
             SvgConverter.DrawOnPage(content, page, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageInputStreamPropsNullTest() {
             PdfPage page = doc.GetFirstPage();
@@ -217,7 +209,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasInputStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -228,7 +219,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasDocNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -247,7 +237,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasAllNullTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -263,7 +252,6 @@ namespace iText.Svg.Converter {
             SvgConverter.DrawOnCanvas(content, canvas, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasInputStreamPropsNullTest() {
             PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
@@ -279,7 +267,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectInputStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -298,7 +285,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectDocWithStringNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -308,7 +294,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectDocWithStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -318,7 +303,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectDocWithRendererNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -338,7 +322,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectAllWithStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -362,7 +345,6 @@ namespace iText.Svg.Converter {
             SvgConverter.ConvertToXObject(content, doc, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectInputStreamPropsNullTest() {
             SvgConverter.ConvertToXObject(@is, doc, null);
@@ -377,7 +359,6 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamNullTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -387,13 +368,11 @@ namespace iText.Svg.Converter {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamPropsNullTest() {
             SvgConverter.Parse(@is, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStringPropsNullTest() {
             NUnit.Framework.Assert.That(() =>  {

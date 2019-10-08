@@ -93,10 +93,6 @@ namespace iText.IO.Util {
         /// and default load factor, which is <c>0.75</c>.
         /// </summary>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
-        /// <exception cref="System.ArgumentException">
-        /// if the initial capacity is less
-        /// than zero.
-        /// </exception>
         public IntHashtable(int initialCapacity)
             : this(initialCapacity, 0.75f) {
         }
@@ -107,10 +103,6 @@ namespace iText.IO.Util {
         /// </summary>
         /// <param name="initialCapacity">the initial capacity of the hashtable.</param>
         /// <param name="loadFactor">the load factor of the hashtable.</param>
-        /// <exception cref="System.ArgumentException">
-        /// if the initial capacity is less
-        /// than zero, or if the load factor is nonpositive.
-        /// </exception>
         public IntHashtable(int initialCapacity, float loadFactor) {
             if (initialCapacity < 0) {
                 throw new ArgumentException(MessageFormatUtil.Format("Illegal Capacity: {0}", initialCapacity));
@@ -161,7 +153,6 @@ namespace iText.IO.Util {
         /// determined by the <tt>equals</tt> method;
         /// <c>false</c> otherwise.
         /// </returns>
-        /// <exception cref="System.NullReferenceException">if the value is <c>null</c>.</exception>
         /// <seealso cref="ContainsKey(int)"/>
         /// <seealso cref="ContainsValue(int)"/>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
@@ -283,7 +274,6 @@ namespace iText.IO.Util {
         /// the previous value of the specified key in this hashtable,
         /// or <c>null</c> if it did not have one.
         /// </returns>
-        /// <exception cref="System.NullReferenceException">if the key is <c>null</c>.</exception>
         /// <seealso cref="Get(int)"/>
         public virtual int Put(int key, int value) {
             // Makes sure the key is not already in the hashtable.
@@ -389,7 +379,6 @@ namespace iText.IO.Util {
                 return value;
             }
 
-            /// <exception cref="Java.Lang.CloneNotSupportedException"/>
             protected internal virtual Object Clone() {
                 return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next.Clone() : null);
             }
@@ -439,7 +428,6 @@ namespace iText.IO.Util {
             return entry.key;
         }
 
-        /// <exception cref="Java.Lang.CloneNotSupportedException"/>
         public virtual Object Clone() {
             IntHashtable t = new IntHashtable(this);
             t.table = new IntHashtable.Entry[table.Length];

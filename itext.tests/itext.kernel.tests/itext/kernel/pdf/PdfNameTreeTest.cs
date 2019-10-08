@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmbeddedFileAndJavascriptTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "FileWithSingleAttachment.pdf"));
@@ -79,7 +78,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1, objs2.Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmbeddedFileAddedInAppendModeTest() {
             //Create input document
@@ -115,7 +113,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(embeddedFilesMap.ContainsKey("Test File"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationAppearanceTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "AnnotationAppearanceTest.pdf"

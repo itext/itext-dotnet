@@ -50,7 +50,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
     /// <summary>Integration test: parses from real-world example HTML.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class ParseTest {
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestSmhBizArticle() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/smh-biz-article-1.html");
@@ -64,7 +63,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
         }
 
         // todo: more tests!
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestNewsHomepage() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/news-com-au-home.html");
@@ -83,7 +81,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual(hs.Attr("href"), hs.Attr("abs:href"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestGoogleSearchIpod() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/google-ipod.html");
@@ -97,7 +94,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual("http://www.apple.com/itunes/", results[1].Attr("href"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestBinary() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/thumb.jpg");
@@ -106,7 +102,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.IsTrue(doc.Text().Contains("gd-jpeg"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestYahooJp() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/yahoo-jp.html");
@@ -122,7 +117,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
 
         private const String newsHref = "http://news.baidu.com/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestBaidu() {
             // tests <meta http-equiv="Content-Type" content="text/html;charset=gb2312">
@@ -144,7 +138,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
                 , doc.Select("title").OuterHtml());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestBaiduVariant() {
             // tests <meta charset> when preceded by another <meta>
@@ -156,7 +149,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual("<title>百度一下，你就知道</title>", doc.Select("title").OuterHtml());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestHtml5Charset() {
             // test that <meta charset="gb2312"> works
@@ -180,7 +172,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual("新", doc.Text());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestBrokenHtml5CharsetWithASingleDoubleQuote() {
             Stream @in = InputStreamFrom("<html>\n" + "<head><meta charset=UTF-8\"></head>\n" + "<body></body>\n" + "</html>"
@@ -189,7 +180,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual("UTF-8", doc.OutputSettings().Charset().DisplayName());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestNytArticle() {
             // has tags like <nyt_text>
@@ -200,7 +190,6 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             NUnit.Framework.Assert.AreEqual("As BP Lays Out Future, It Will Not Include Hayward", headline.Text());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestYahooArticle() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/yahoo-article-1.html");

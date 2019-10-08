@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextOverflowTest01() {
             String outFileName = destinationFolder + "textOverflowTest01.pdf";
@@ -87,8 +85,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextOverflowTest02() {
             String outFileName = destinationFolder + "textOverflowTest02.pdf";
@@ -105,8 +101,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextOverflowTest03() {
             String outFileName = destinationFolder + "textOverflowTest03.pdf";
@@ -123,8 +117,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextOverflowTest04() {
             String outFileName = destinationFolder + "textOverflowTest04.pdf";
@@ -138,8 +130,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AlignedInlineContentOverflowHiddenTest01() {
             String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest01.pdf";
@@ -162,8 +152,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AlignedInlineContentOverflowHiddenTest02() {
             String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest02.pdf";
@@ -184,8 +172,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowHiddenOnCanvasTest01() {
             String outFileName = destinationFolder + "overflowHiddenOnCanvasTest01.pdf";
@@ -201,8 +187,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowHiddenOnCanvasTest02() {
             String outFileName = destinationFolder + "overflowHiddenOnCanvasTest02.pdf";
@@ -218,8 +202,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowVisibleOnCanvasTest01() {
             String outFileName = destinationFolder + "overflowVisibleOnCanvasTest01.pdf";
@@ -235,8 +217,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowVisibleOnCanvasTest02() {
             String outFileName = destinationFolder + "overflowVisibleOnCanvasTest02.pdf";
@@ -252,7 +232,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private static void AddParaWithImgSetOverflowX(iText.Layout.Canvas canvas, OverflowPropertyValue? overflowX
             ) {
             String imgPath = sourceFolder + "itis.jpg";
@@ -266,8 +245,6 @@ namespace iText.Layout {
             canvas.Add(p.Add(img));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ForcedPlacementTest01() {
             String outFileName = destinationFolder + "forcedPlacementTest01.pdf";
@@ -293,8 +270,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED)]
         public virtual void ForcedPlacementTest02() {

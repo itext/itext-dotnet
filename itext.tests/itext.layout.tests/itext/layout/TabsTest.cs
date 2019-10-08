@@ -90,8 +90,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ChunkEndsAfterOrBeforeTabPosition() {
             String outFileName = destinationFolder + "chunkEndsAfterOrBeforeTabPosition.pdf";
@@ -117,8 +115,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefaultTabsTest() {
             String outFileName = destinationFolder + "defaultTabTest.pdf";
@@ -139,8 +135,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleTabStopsTest() {
             String fileName = "simpleTabStopsTest.pdf";
@@ -187,8 +181,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AnchorTabStopsTest01() {
             String fileName = "anchorTabStopsTest01.pdf";
@@ -213,8 +205,6 @@ namespace iText.Layout {
                 , "diff" + outFileName));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AnchorTabStopsTest02() {
             String fileName = "anchorTabStopsTest02.pdf";
@@ -236,8 +226,6 @@ namespace iText.Layout {
                 , "diff" + outFileName));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TablesAndTabInsideOfParagraph() {
             String testName = "tablesAndTabInsideOfParagraph.pdf";
@@ -275,8 +263,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SeveralTabsInRowTest() {
             String fileName = "severalTabsInRowTest.pdf";
@@ -310,8 +296,6 @@ namespace iText.Layout {
                 , "diff" + outFileName));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OutOfPageBoundsTest() {
             String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
@@ -362,8 +346,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TabsInParagraphTest01() {
             String outFileName = destinationFolder + "tabsInParagraphTest01.pdf";
@@ -395,8 +377,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TabsAnchorSemicolonTest01() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest01.pdf";
@@ -420,8 +400,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TabsAnchorSemicolonTest02() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest02.pdf";
@@ -446,8 +424,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TabsAnchorSemicolonTest03() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest03.pdf";
@@ -470,8 +446,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillParagraphWithTabsDifferently() {
             String outFileName = destinationFolder + "fillParagraphWithTabsDifferently.pdf";
@@ -486,12 +460,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
             return InitDocument(outFileName, false);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName, bool tagged) {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             if (tagged) {

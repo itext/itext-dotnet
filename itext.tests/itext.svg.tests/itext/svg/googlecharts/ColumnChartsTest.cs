@@ -57,25 +57,16 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Column_dualY_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "column_dualY_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Column_material_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "column_material_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Column_topX_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "column_topX_chart");

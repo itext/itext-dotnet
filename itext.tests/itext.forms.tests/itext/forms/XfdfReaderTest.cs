@@ -60,10 +60,6 @@ namespace iText.Forms {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfNoFields() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFields.pdf", 
@@ -79,10 +75,6 @@ namespace iText.Forms {
                  + "cmp_xfdfNoFields.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfNoFieldsNoFAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoFAttributes.pdf"
@@ -98,10 +90,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfNoFieldsNoFAttributes.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfNoFieldsNoIdsAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
@@ -117,10 +105,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfNoFieldsNoIdsAttributes.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfWithFieldsWithValue() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValue.pdf"
@@ -136,10 +120,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfWithFieldsWithValue.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfValueRichText() {
             //TODO DEVSIX-3215 Support annots
@@ -156,10 +136,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfValueRichText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfHierarchyFieldsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "hierarchy_fields.pdf"
@@ -175,10 +151,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_hierarchy_fields.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfWithFieldsWithValueParentAndChild() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
@@ -194,10 +166,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfWithFieldsWithValueParentAndChild.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
@@ -213,10 +181,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationHighlightedText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationUnderlineText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineText.pdf"
@@ -232,10 +196,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlineText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationUnderlineTextRectWithTwoCoords() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
@@ -251,10 +211,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationUnderlinePopupAllFlags() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
@@ -270,10 +226,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlinePopupAllFlags.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationText.pdf"
@@ -289,10 +241,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationStrikeout() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStrikeout.pdf"
@@ -308,10 +256,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationStrikeout.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationSquigglyText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquigglyText.pdf"
@@ -327,10 +271,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSquigglyText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationLine() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLine.pdf"
@@ -346,10 +286,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationLine.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationCircle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCircle.pdf"
@@ -365,10 +301,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCircle.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationSquare() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquare.pdf"
@@ -384,10 +316,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSquare.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationCaret() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCaret.pdf"
@@ -403,10 +331,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCaret.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationPolygon() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolygon.pdf"
@@ -422,10 +346,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationPolygon.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationPolyline() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolyline.pdf"
@@ -441,10 +361,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationPolyline.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationStamp() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStamp.pdf"
@@ -460,10 +376,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationStamp.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationInk() {
             //TODO DEVSIX-3215 Support annots
@@ -480,10 +392,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationInk.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationFreeText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFreeText.pdf"
@@ -499,10 +407,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationFreeText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationFileAttachment() {
             //TODO DEVSIX-3215 Support annots
@@ -519,10 +423,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationFileAttachment.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationSound() {
             //TODO DEVSIX-3215 Support annots
@@ -539,10 +439,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSound.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationLink() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLink.pdf"
@@ -558,10 +454,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationLink.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationRedact() {
             //TODO DEVSIX-3215 Support annots
@@ -578,10 +470,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationRedact.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationProjection() {
             //TODO DEVSIX-3215 Support annots
@@ -598,10 +486,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationProjection.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationLinkAllParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLinkAllParams.pdf"
@@ -617,10 +501,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationLinkAllParams.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationReplaceText() {
             //TODO DEVSIX-3215 Support annots
@@ -637,10 +517,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationReplaceText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationArrow() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationArrow.pdf"
@@ -656,10 +532,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationArrow.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationCallout() {
             //TODO DEVSIX-3215 Support annots
@@ -676,10 +548,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCallout.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationCloud() {
             //TODO DEVSIX-3215 Support annots
@@ -696,10 +564,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCloud.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationCloudNested() {
             //TODO DEVSIX-3215 Support annots
@@ -716,10 +580,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCloudNested.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationTextBoxAllParams() {
             //TODO DEVSIX-3215 Support annots
@@ -736,10 +596,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationTextBoxAllParams.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfJavaScriptForms() {
             //TODO DEVSIX-3215 Support annots
@@ -756,10 +612,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfJavaScriptForms.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfFormsFieldParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFormsFieldParams.pdf"
@@ -775,10 +627,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfFormsFieldParams.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationAttrColor() {
             //TODO DEVSIX-3215 Support annots
@@ -795,10 +643,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrColor.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationAttrFlagsOpacity() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
@@ -814,10 +658,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrFlagsOpacity.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationAttrTitle() {
             //TODO DEVSIX-3215 Support annots
@@ -834,10 +674,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrTitle.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DMeasurement() {
             //TODO DEVSIX-3215 Support annots
@@ -854,10 +690,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DMeasurement.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DAngular() {
             //TODO DEVSIX-3215 Support annots
@@ -874,10 +706,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DAngular.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DRadial() {
             //TODO DEVSIX-3215 Support annots
@@ -894,10 +722,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DRadial.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSubelementContents() {
             //TODO DEVSIX-3215
@@ -914,10 +738,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfSubelementContents.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSubelementOverlayAppearance() {
             //TODO DEVSIX-3215 Support annots
@@ -934,10 +754,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfSubelementOverlayAppearance.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfButton() {
             //TODO DEVSIX-3215
@@ -954,10 +770,6 @@ namespace iText.Forms {
                  + "cmp_xfdfButton.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCheckBox() {
             //TODO DEVSIX-3215
@@ -974,10 +786,6 @@ namespace iText.Forms {
                  + "cmp_xfdfCheckBox.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfList() {
             //TODO DEVSIX-3215
@@ -994,10 +802,6 @@ namespace iText.Forms {
                  + "cmp_xfdfList.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XfdfDropDown() {
             //TODO DEVSIX-3215 Support richtext

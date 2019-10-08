@@ -145,7 +145,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, !reference.IsFree(), "Not IsInUse");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing1() {
             MemoryStream baos = new MemoryStream();
@@ -168,7 +167,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing2() {
             MemoryStream baos = new MemoryStream();

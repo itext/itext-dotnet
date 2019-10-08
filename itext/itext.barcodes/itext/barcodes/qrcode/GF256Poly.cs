@@ -69,11 +69,6 @@ namespace iText.Barcodes.Qrcode {
         /// coefficients as ints representing elements of GF(256), arranged
         /// from most significant (highest-power term) coefficient to least significant
         /// </param>
-        /// <exception cref="System.ArgumentException">
-        /// if argument is null or empty,
-        /// or if leading coefficient is 0 and this is not a
-        /// constant polynomial (that is, it is not the monomial "0")
-        /// </exception>
         internal GF256Poly(GF256 field, int[] coefficients) {
             if (coefficients == null || coefficients.Length == 0) {
                 throw new ArgumentException();

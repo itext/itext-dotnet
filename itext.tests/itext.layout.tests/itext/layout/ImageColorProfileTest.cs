@@ -63,7 +63,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
             )]
@@ -72,15 +71,11 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNotNull(imageData.GetProfile());
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PngEmbeddedColorProfileTest() {
             RunTest("pngEmbeddedColorProfile.pdf", "png-embedded-color-profile.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
             )]
@@ -90,8 +85,6 @@ namespace iText.Layout {
             RunTest("pngIncorrectEmbeddedColorProfile.pdf", "png-incorrect-embedded-color-profile.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
             )]
@@ -100,22 +93,16 @@ namespace iText.Layout {
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PngIndexedEmbeddedColorProfileTest() {
             RunTest("pngIndexedEmbeddedColorProfile.pdf", "png-indexed-embedded-color-profile.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PngGreyscaleEmbeddedColorProfileTest() {
             RunTest("pngGreyscaleEmbeddedColorProfile.pdf", "png-greyscale-embedded-color-profile.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
             )]
@@ -123,8 +110,6 @@ namespace iText.Layout {
             RunTest("pngGreyscaleIncorrectColorProfile.pdf", "png-greyscale.png", "sRGB_v4_ICC_preference.icc");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
             )]
@@ -134,8 +119,6 @@ namespace iText.Layout {
             RunTest("pngUnsupportedColorSpace.pdf", "png-embedded-color-profile.png", null, fakeColorSpaceAttributes);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
             )]
@@ -148,27 +131,19 @@ namespace iText.Layout {
                 , fakeColorSpaceAttributes);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PngNoColorProfileTest() {
             RunTest("pngNoColorProfile.pdf", "png-greyscale.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void RunTest(String pdfName, String imageName) {
             RunTest(pdfName, imageName, null, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void RunTest(String pdfName, String imageName, String colorProfileName) {
             RunTest(pdfName, imageName, colorProfileName, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void RunTest(String pdfName, String imageName, String colorProfileName, IDictionary<String, Object
             > customImageAttribute) {
             String outFileName = destinationFolder + pdfName;

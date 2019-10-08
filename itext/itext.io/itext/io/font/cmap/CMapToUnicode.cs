@@ -124,7 +124,6 @@ namespace iText.IO.Font.Cmap {
             return result;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual IDictionary<int, int?> CreateReverseMapping() {
             IDictionary<int, int?> result = new Dictionary<int, int?>();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {

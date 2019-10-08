@@ -78,20 +78,12 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="Java.Security.KeyStoreException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.UnrecoverableKeyException"/>
         [NUnit.Framework.SetUp]
         public virtual void Init() {
             pk = Pkcs12FileHelper.ReadFirstKey(keystorePath, password, password);
             chain = Pkcs12FileHelper.ReadFirstChain(keystorePath, password);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleSigningTest() {
             String src = sourceFolder + "simpleDocument.pdf";
@@ -109,9 +101,6 @@ namespace iText.Signatures.Sign {
                 , "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SigningIntoExistingFieldTest01() {
             String src = sourceFolder + "emptySignature01.pdf";
@@ -125,9 +114,6 @@ namespace iText.Signatures.Sign {
                 , "diff_", GetTestMap(new Rectangle(67, 725, 200, 15))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SigningIntoExistingFieldTest02() {
             String src = sourceFolder + "emptySignature02.pdf";
@@ -141,8 +127,6 @@ namespace iText.Signatures.Sign {
                 , "diff_", GetTestMap(new Rectangle(67, 725, 200, 15))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SigningIntoExistingReuseAppearanceTest() {
             String src = sourceFolder + "emptySigWithAppearance.pdf";
@@ -152,8 +136,6 @@ namespace iText.Signatures.Sign {
                 , null, true, false);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SigningTaggedDocument() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
@@ -164,8 +146,6 @@ namespace iText.Signatures.Sign {
                 , rect, false, false);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SigningTaggedDocumentAppendMode() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
@@ -176,9 +156,6 @@ namespace iText.Signatures.Sign {
                 , rect, false, true);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
             String file = "AnnotsIndirect.pdf";
@@ -192,9 +169,6 @@ namespace iText.Signatures.Sign {
                 , "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignPdf2Cms() {
             String file = "simpleDocPdf2.pdf";
@@ -208,9 +182,6 @@ namespace iText.Signatures.Sign {
                 , destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignPdf2Cades() {
             String file = "simpleDocPdf2.pdf";
@@ -224,8 +195,6 @@ namespace iText.Signatures.Sign {
                 file, destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SignPdf2CertificationAfterApproval() {
             NUnit.Framework.Assert.That(() =>  {
@@ -242,9 +211,6 @@ namespace iText.Signatures.Sign {
 ;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignedTwicePdf2Test() {
             String src = sourceFolder + "simpleDocPdf2.pdf";
@@ -273,8 +239,6 @@ namespace iText.Signatures.Sign {
                  + "cmp_" + fileName3, destinationFolder, "diff_", map));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SignEncryptedDoc01() {
             String fileName = "encrypted.pdf";
@@ -299,8 +263,6 @@ namespace iText.Signatures.Sign {
         }
 
         // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SignEncryptedDoc02() {
             String fileName = "encrypted_cert.pdf";
@@ -319,8 +281,6 @@ namespace iText.Signatures.Sign {
         }
 
         // TODO improve testing, e.g. check ID. For not at least we assert that exception is not thrown
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
@@ -328,8 +288,6 @@ namespace iText.Signatures.Sign {
                 , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize

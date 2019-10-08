@@ -48,7 +48,6 @@ namespace iText.Signatures.Sign {
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/";
 
-        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void CrlClientOnlineURLConstructorTest() {
             String PROTOCOL = "file://";

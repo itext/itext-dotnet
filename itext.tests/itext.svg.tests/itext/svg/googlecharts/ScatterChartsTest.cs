@@ -57,41 +57,26 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Scatter_charts() {
             ConvertAndCompare(sourceFolder, destinationFolder, "scatter_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Scatter_dualY_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "scatter_dualY_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Scatter_material_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "scatter_material_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Scatter_stars_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "scatter_stars_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Scatter_topX_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "scatter_topX_chart");

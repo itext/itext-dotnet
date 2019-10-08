@@ -60,7 +60,6 @@ namespace iText.StyledXmlParser.Css {
         public static void BeforeClass() {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             String htmlFileName = sourceFolder + "html01.html";
@@ -77,7 +76,6 @@ namespace iText.StyledXmlParser.Css {
             NUnit.Framework.Assert.AreEqual("font-weight: bold", declarations[0].ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test02() {
             String htmlFileName = sourceFolder + "html02.html";
@@ -95,7 +93,6 @@ namespace iText.StyledXmlParser.Css {
             NUnit.Framework.Assert.AreEqual("color: red", declarations[0].ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test03() {
             String htmlFileName = sourceFolder + "html03.html";
@@ -113,7 +110,6 @@ namespace iText.StyledXmlParser.Css {
             NUnit.Framework.Assert.AreEqual("color: black", declarations[1].ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test04() {
             String htmlFileName = sourceFolder + "html04.html";
@@ -130,7 +126,6 @@ namespace iText.StyledXmlParser.Css {
             NUnit.Framework.Assert.AreEqual("font-size: 100px", declarations[0].ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test05() {
             String htmlFileName = sourceFolder + "html05.html";
@@ -147,7 +142,6 @@ namespace iText.StyledXmlParser.Css {
             NUnit.Framework.Assert.AreEqual("color: red", declarations[0].ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test06() {
             String htmlFileName = sourceFolder + "html06.html";

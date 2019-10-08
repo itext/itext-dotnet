@@ -278,7 +278,6 @@ namespace iText.Pdfa {
             checker.CheckDocument(catalog);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             MarkObjectAsMustBeFlushed(pdfObject);
             if (isClosing || checker.ObjectIsChecked(pdfObject)) {

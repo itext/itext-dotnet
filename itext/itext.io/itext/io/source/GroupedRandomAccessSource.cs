@@ -66,7 +66,6 @@ namespace iText.IO.Source {
         /// based on the specified set of sources
         /// </summary>
         /// <param name="sources">the sources used to build this group</param>
-        /// <exception cref="System.IO.IOException"/>
         public GroupedRandomAccessSource(IRandomAccessSource[] sources) {
             this.sources = new GroupedRandomAccessSource.SourceEntry[sources.Length];
             long totalSize = 0;
@@ -106,8 +105,6 @@ namespace iText.IO.Source {
         /// </summary>
         /// <param name="offset">the offset of the byte to look for</param>
         /// <returns>the SourceEntry that contains the byte at the specified offset</returns>
-        /// <exception cref="System.IO.IOException">if there is a problem with IO (usually the result of the sourceReleased() call)
-        ///     </exception>
         private GroupedRandomAccessSource.SourceEntry GetSourceEntryForOffset(long offset) {
             if (offset >= size) {
                 return null;
@@ -132,7 +129,6 @@ namespace iText.IO.Source {
         /// <remarks>Called when a given source is no longer the active source.  This gives subclasses the abilty to release resources, if appropriate.
         ///     </remarks>
         /// <param name="source">the source that is no longer the active source</param>
-        /// <exception cref="System.IO.IOException">if there are any problems</exception>
         protected internal virtual void SourceReleased(IRandomAccessSource source) {
         }
 
@@ -141,7 +137,6 @@ namespace iText.IO.Source {
         /// <remarks>Called when a given source is about to become the active source.  This gives subclasses the abilty to retrieve resources, if appropriate.
         ///     </remarks>
         /// <param name="source">the source that is about to become the active source</param>
-        /// <exception cref="System.IO.IOException">if there are any problems</exception>
         protected internal virtual void SourceInUse(IRandomAccessSource source) {
         }
 
@@ -151,7 +146,6 @@ namespace iText.IO.Source {
         /// The source that contains the byte at position is retrieved, the correct offset into that source computed, then the value
         /// from that offset in the underlying source is returned.
         /// </summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
             if (entry == null) {
@@ -162,7 +156,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
             if (entry == null) {
@@ -202,7 +195,6 @@ namespace iText.IO.Source {
         /// <br/>
         /// Closes all of the underlying sources.
         /// </summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             System.IO.IOException firstThrownIOExc = null;
             foreach (GroupedRandomAccessSource.SourceEntry entry in sources) {

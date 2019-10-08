@@ -52,8 +52,6 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.IsFalse(mapper.GetMapping().IsEmpty());
         }
 
-        /// <exception cref="Java.Lang.InstantiationException"/>
-        /// <exception cref="System.MemberAccessException"/>
         [NUnit.Framework.Test]
         public virtual void CreateAllRenderersTest() {
             DefaultSvgNodeRendererMapper mapper = new DefaultSvgNodeRendererMapper();

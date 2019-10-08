@@ -66,8 +66,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1aCheckFieldOffAppearanceTest() {
             String name = "pdfA1a_checkFieldOffAppearance";
@@ -92,8 +90,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1aCheckFieldOnAppearanceTest() {
             String name = "pdfA1a_checkFieldOnAppearance";
@@ -118,8 +114,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bCheckFieldOffAppearanceTest() {
             String name = "pdfA1b_checkFieldOffAppearance";
@@ -142,8 +136,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bCheckFieldOnAppearanceTest() {
             String name = "pdfA1b_checkFieldOnAppearance";
@@ -166,8 +158,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2aCheckFieldOffAppearanceTest() {
             String name = "pdfA2a_checkFieldOffAppearance";
@@ -192,8 +182,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2aCheckFieldOnAppearanceTest() {
             String name = "pdfA2a_checkFieldOnAppearance";
@@ -218,8 +206,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2bCheckFieldOffAppearanceTest() {
             String name = "pdfA2b_checkFieldOffAppearance";
@@ -242,8 +228,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2bCheckFieldOnAppearanceTest() {
             String name = "pdfA2b_checkFieldOnAppearance";
@@ -266,8 +250,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2uCheckFieldOffAppearanceTest() {
             String name = "pdfA2u_checkFieldOffAppearance";
@@ -290,8 +272,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA2uCheckFieldOnAppearanceTest() {
             String name = "pdfA2u_checkFieldOnAppearance";
@@ -314,8 +294,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3aCheckFieldOffAppearanceTest() {
             String name = "pdfA3a_checkFieldOffAppearance";
@@ -340,8 +318,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3aCheckFieldOnAppearanceTest() {
             String name = "pdfA3a_checkFieldOnAppearance";
@@ -366,8 +342,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3bCheckFieldOffAppearanceTest() {
             String name = "pdfA3b_checkFieldOffAppearance";
@@ -390,8 +364,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3bCheckFieldOnAppearanceTest() {
             String name = "pdfA3b_checkFieldOnAppearance";
@@ -414,8 +386,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3uCheckFieldOffAppearanceTest() {
             String name = "pdfA3u_checkFieldOffAppearance";
@@ -438,8 +408,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA3uCheckFieldOnAppearanceTest() {
             String name = "pdfA3u_checkFieldOnAppearance";

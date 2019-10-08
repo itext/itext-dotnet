@@ -49,7 +49,6 @@ namespace iText.IO.Font.Otf {
 
         private IList<FeatureRecord> records;
 
-        /// <exception cref="System.IO.IOException"/>
         public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable) {
             this.openTypeReader = openTypeReader;
             records = new List<FeatureRecord>();

@@ -52,7 +52,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/FilteredTextEventListenerTest/";
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRegion() {
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "in.pdf"));

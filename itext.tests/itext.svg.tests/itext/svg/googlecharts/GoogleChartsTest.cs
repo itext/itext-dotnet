@@ -62,26 +62,17 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BarChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "bar_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Annotation_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "annotation_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Area_chart() {
             PageSize pageSize = PageSize.A4;
@@ -91,9 +82,6 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_area_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Bubble_chart() {
             PageSize pageSize = PageSize.A4;
@@ -103,9 +91,6 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_bubble_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void Calendar_chart() {
@@ -116,17 +101,11 @@ namespace iText.Svg.Googlecharts {
                 sourceFolder + "cmp_calendar_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Candlestick_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "candlestick_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Combo_chart() {
             PageSize pageSize = PageSize.A4;
@@ -136,34 +115,22 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_combo_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
         public virtual void Diff_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "diff_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Donut_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "donut_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Waterfall_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "waterfall_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Histogram_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "histogram_chart");

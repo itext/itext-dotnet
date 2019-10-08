@@ -589,7 +589,6 @@ namespace iText.IO.Codec {
         /// <para /><b>Note: this class has a natural ordering that is inconsistent
         /// with <c>equals()</c>.</b>
         /// </remarks>
-        /// <exception cref="System.ArgumentException">if the parameter is <c>null</c>.</exception>
         public virtual int CompareTo(iText.IO.Codec.TIFFField o) {
             if (o == null) {
                 throw new ArgumentException();

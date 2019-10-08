@@ -62,8 +62,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LineSeparatorWidthPercentageTest01() {
             String outFileName = destinationFolder + "lineSeparatorWidthPercentageTest01.pdf";
@@ -80,8 +78,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LineSeparatorBackgroundTest01() {
             String outFileName = destinationFolder + "lineSeparatorBackgroundTest01.pdf";
@@ -98,8 +94,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotatedLineSeparatorTest01() {
             String outFileName = destinationFolder + "rotatedLineSeparatorTest01.pdf";
@@ -113,8 +107,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotatedLineSeparatorTest02() {
             String outFileName = destinationFolder + "rotatedLineSeparatorTest02.pdf";

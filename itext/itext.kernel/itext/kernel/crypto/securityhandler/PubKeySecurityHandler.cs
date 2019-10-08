@@ -177,8 +177,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return recipients.Count;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private byte[] GetEncodedRecipient(int index) {
             //Certificate certificate = recipient.getX509();
             PublicKeyRecipient recipient = recipients[index];
@@ -239,8 +237,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return EncodedRecipients;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private Asn1Object CreateDERForRecipient(byte[] @in, X509Certificate cert) {
             EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
             KeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
@@ -254,8 +250,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return contentinfo.ToAsn1Object();
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate, byte[] abyte0) {
             Asn1InputStream asn1inputstream = new Asn1InputStream(new MemoryStream(x509certificate.GetTbsCertificate()
                 ));

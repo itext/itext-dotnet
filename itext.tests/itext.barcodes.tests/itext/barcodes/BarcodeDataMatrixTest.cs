@@ -60,9 +60,6 @@ namespace iText.Barcodes {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeDataMatrix.pdf";
@@ -79,9 +76,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcodeDataMatrix2.pdf";
@@ -96,9 +90,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
             String filename = "barcodeDataMatrix3.pdf";
@@ -116,9 +107,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode04Test() {
             String filename = "barcodeDataMatrix4.pdf";
@@ -136,9 +124,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode05Test() {
             String filename = "barcodeDataMatrix5.pdf";
@@ -156,9 +141,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode06Test() {
             String filename = "barcodeDataMatrix6.pdf";
@@ -273,9 +255,6 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.AreEqual(BarcodeDataMatrix.DM_NO_ERROR, result);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode16Test() {
             String filename = "barcode16Test.pdf";

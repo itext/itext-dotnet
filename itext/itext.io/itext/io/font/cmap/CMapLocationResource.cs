@@ -50,7 +50,6 @@ using iText.IO.Util;
 namespace iText.IO.Font.Cmap {
     /// <author>psoares</author>
     public class CMapLocationResource : ICMapLocation {
-        /// <exception cref="System.IO.IOException"/>
         public virtual PdfTokenizer GetLocation(String location) {
             String fullName = FontResources.CMAPS + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);

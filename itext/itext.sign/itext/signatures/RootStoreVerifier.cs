@@ -75,8 +75,6 @@ namespace iText.Signatures {
         /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             // verify using the CertificateVerifier if root store is missing

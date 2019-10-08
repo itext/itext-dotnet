@@ -96,9 +96,6 @@ namespace iText.Forms.Xfdf {
             return resultXfdf;
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         public virtual XfdfObject CreateXfdfObject(Stream xfdfInputStream) {
             XfdfObject xfdfObject = new XfdfObject();
             XmlDocument document = XfdfFileUtils.CreateXfdfDocumentFromStream(xfdfInputStream);

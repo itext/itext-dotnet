@@ -67,8 +67,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckPageEndEvent() {
             // TODO DEVSIX-2645

@@ -59,35 +59,23 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void WordTrees_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees2_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees3_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void WordTrees4_chart() {

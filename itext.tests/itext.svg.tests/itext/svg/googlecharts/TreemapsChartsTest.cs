@@ -59,18 +59,12 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Treemaps_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "treemaps_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Treemaps2_chart() {

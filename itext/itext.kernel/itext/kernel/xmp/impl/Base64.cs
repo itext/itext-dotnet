@@ -180,10 +180,6 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>Decode the given byte[].</summary>
         /// <param name="src">the base64-encoded data.</param>
         /// <returns>the decoded data.</returns>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown if the base 64 strings contains non-valid characters,
-        /// beside the bas64 chars, LF, CR, tab and space are accepted.
-        /// </exception>
         public static byte[] Decode(byte[] src) {
             //
             // Do ascii printable to 0-63 conversion.

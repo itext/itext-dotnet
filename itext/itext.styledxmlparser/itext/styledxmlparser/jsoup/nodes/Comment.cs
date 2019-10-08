@@ -67,7 +67,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return attributes.Get(COMMENT_KEY);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             if (@out.PrettyPrint()) {
                 Indent(accum, depth, @out);

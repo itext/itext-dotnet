@@ -74,8 +74,6 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatMaxWidthTest01() {
             /* This test illustrate behaviour of images with different width and mas_width properties, that have
@@ -138,8 +136,6 @@ namespace iText.Layout.Renderer {
                 "diff01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatMaxWidthTest02() {
             /* This test illustrate behaviour of images, wrapped in Div containers, that have paragraph below image
@@ -167,7 +163,6 @@ namespace iText.Layout.Renderer {
                 "diff01_"));
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private void AddContent(Document document, bool wrapImages, int imageWidthProperty, UnitValue imageWidth, 
             int divWidthProperty, UnitValue divWidth, ClearPropertyValue? clearValue, int firstImage, int lastImage
             ) {

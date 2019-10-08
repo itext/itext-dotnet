@@ -81,7 +81,6 @@ namespace iText.Svg.Css.Impl {
         /// with a given default CSS.
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
-        /// <exception cref="System.IO.IOException"/>
         public SvgStyleResolver(Stream defaultCssStream) {
             this.css = CssStyleSheetParser.Parse(defaultCssStream);
         }

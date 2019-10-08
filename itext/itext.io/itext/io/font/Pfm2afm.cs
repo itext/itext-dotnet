@@ -55,7 +55,6 @@ namespace iText.IO.Font {
         private StreamWriter output;
 
         /// <summary>Creates a new instance of Pfm2afm</summary>
-        /// <exception cref="System.IO.IOException"/>
         private Pfm2afm(RandomAccessFileOrArray input, Stream output) {
             this.input = input;
             this.output = FileUtil.CreatePrintWriter(output, "ISO-8859-1");
@@ -64,7 +63,6 @@ namespace iText.IO.Font {
         /// <summary>Converts a PFM file into an AFM file.</summary>
         /// <param name="input">the PFM file</param>
         /// <param name="output">the AFM file</param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public static void Convert(RandomAccessFileOrArray input, Stream output) {
             iText.IO.Font.Pfm2afm p = new iText.IO.Font.Pfm2afm(input, output);
             p.Openpfm();
@@ -75,7 +73,6 @@ namespace iText.IO.Font {
             p.output.Flush();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private String ReadString(int n) {
             byte[] b = new byte[n];
             input.ReadFully(b);
@@ -88,7 +85,6 @@ namespace iText.IO.Font {
             return iText.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private String ReadString() {
             StringBuilder buf = new StringBuilder();
             while (true) {
@@ -121,7 +117,6 @@ namespace iText.IO.Font {
             output.Write(" ;\n");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Openpfm() {
             input.Seek(0);
             vers = input.ReadShortLE();
@@ -170,7 +165,6 @@ namespace iText.IO.Font {
             descender = input.ReadShortLE();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putheader() {
             output.Write("StartFontMetrics 2.0\n");
             if (copyright.Length > 0) {
@@ -269,7 +263,6 @@ namespace iText.IO.Font {
             output.Write('\n');
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putchartab() {
             int count = lastchar - firstchar + 1;
             int[] ctabs = new int[count];
@@ -320,7 +313,6 @@ namespace iText.IO.Font {
             output.Write("EndCharMetrics\n");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putkerntab() {
             if (kernpairs == 0) {
                 return;

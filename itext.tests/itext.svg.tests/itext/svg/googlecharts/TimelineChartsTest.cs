@@ -60,17 +60,11 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Timeline_advanced_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "timeline_advanced_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Timeline_chart() {
             PageSize pageSize = PageSize.A4;
@@ -80,9 +74,6 @@ namespace iText.Svg.Googlecharts {
                 sourceFolder + "cmp_timeline_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Timeline_labeled_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "timeline_labeled_chart");

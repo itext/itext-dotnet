@@ -57,139 +57,88 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BasicEllipseTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipse");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxCyAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxCyAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCxNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCxNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCyNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseCyAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseCyAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRxAbsentTest() {
             //TODO: update cmp_ when DEVSIX-3119
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRyAbsentTest() {
             //TODO: update cmp_ when DEVSIX-3119
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRxNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRxNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRyNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRyNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseTranslatedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseTranslated");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseRotatedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseRotated");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledUpTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledUp");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledDownTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledDown");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseScaledXYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseScaledXY");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseSkewXTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewX");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EllipseSkewYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewY");

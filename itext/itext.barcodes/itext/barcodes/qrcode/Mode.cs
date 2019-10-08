@@ -98,7 +98,6 @@ namespace iText.Barcodes.Qrcode {
         /// <see cref="Mode"/>
         /// encoded by these bits
         /// </returns>
-        /// <exception cref="System.ArgumentException">if bits do not correspond to a known mode</exception>
         public static iText.Barcodes.Qrcode.Mode ForBits(int bits) {
             switch (bits) {
                 case 0x0: {

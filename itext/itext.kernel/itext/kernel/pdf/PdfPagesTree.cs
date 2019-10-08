@@ -290,7 +290,6 @@ namespace iText.Kernel.Pdf {
         /// root
         /// <see cref="PdfPages"/>
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException">in case empty document</exception>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
                 throw new PdfException(PdfException.DocumentHasNoPages);

@@ -51,7 +51,6 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType4 : OpenTableLookup {
         private readonly IList<GposLookupType4.MarkToBase> marksbases;
 
-        /// <exception cref="System.IO.IOException"/>
         public GposLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             marksbases = new List<GposLookupType4.MarkToBase>();
@@ -116,7 +115,6 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
             // skip format, always 1

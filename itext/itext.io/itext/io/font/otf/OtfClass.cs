@@ -55,7 +55,6 @@ namespace iText.IO.Font.Otf {
 
         private IntHashtable mapClass = new IntHashtable();
 
-        /// <exception cref="System.IO.IOException"/>
         private OtfClass(RandomAccessFileOrArray rf, int classLocation) {
             //key is glyph, value is class inside all 2
             rf.Seek(classLocation);

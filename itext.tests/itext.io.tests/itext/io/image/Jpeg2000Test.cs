@@ -47,7 +47,6 @@ namespace iText.IO.Image {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2000_1() {
             try {
@@ -59,7 +58,6 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2000_2() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JPC");

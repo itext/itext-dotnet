@@ -46,7 +46,6 @@ using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     public class TextLeafSvgNodeRendererIntegrationTest : SvgIntegrationTest {
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthBaseTest() {
             TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();
@@ -58,7 +57,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthNoValueTest() {
             TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();
@@ -69,7 +67,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthNaNTest() {
             TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();
@@ -81,7 +78,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.AreEqual(expected, actual, 1e-6f);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GetContentLengthNegativeTest() {
             TextLeafSvgNodeRenderer toTest = new TextLeafSvgNodeRenderer();

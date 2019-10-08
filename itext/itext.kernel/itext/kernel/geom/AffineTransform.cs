@@ -534,7 +534,6 @@ namespace iText.Kernel.Geom {
             SetTransform(Multiply(this, t));
         }
 
-        /// <exception cref="iText.Kernel.Geom.NoninvertibleTransformException"/>
         public virtual iText.Kernel.Geom.AffineTransform CreateInverse() {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -642,7 +641,6 @@ namespace iText.Kernel.Geom {
             }
         }
 
-        /// <exception cref="iText.Kernel.Geom.NoninvertibleTransformException"/>
         public virtual Point InverseTransform(Point src, Point dst) {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -660,7 +658,6 @@ namespace iText.Kernel.Geom {
             return dst;
         }
 
-        /// <exception cref="iText.Kernel.Geom.NoninvertibleTransformException"/>
         public virtual void InverseTransform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -677,7 +674,6 @@ namespace iText.Kernel.Geom {
             }
         }
 
-        /// <exception cref="iText.Kernel.Geom.NoninvertibleTransformException"/>
         public virtual void InverseTransform(float[] src, int srcOff, float[] dst, int dstOff, int length) {
             float det = (float)GetDeterminant();
             if (Math.Abs(det) < ZERO) {

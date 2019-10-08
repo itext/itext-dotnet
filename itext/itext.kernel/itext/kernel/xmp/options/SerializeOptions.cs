@@ -138,7 +138,6 @@ namespace iText.Kernel.XMP.Options {
 
         /// <summary>Constructor using inital options</summary>
         /// <param name="options">the inital options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if options are not consistant.</exception>
         public SerializeOptions(int options)
             : base(options) {
         }
@@ -342,7 +341,6 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <returns>Returns clone of this SerializeOptions-object with the same options set.</returns>
-        /// <exception cref="Java.Lang.CloneNotSupportedException">Cannot happen in this place.</exception>
         public Object Clone() {
             iText.Kernel.XMP.Options.SerializeOptions clone;
             try {

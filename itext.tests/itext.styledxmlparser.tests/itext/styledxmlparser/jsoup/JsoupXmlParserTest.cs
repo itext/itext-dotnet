@@ -50,7 +50,6 @@ using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Jsoup {
     public class JsoupXmlParserTest : ExtendedITextTest {
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestXmlDeclarationAndComment() {
             String xml = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!-- just declaration and comment -->";

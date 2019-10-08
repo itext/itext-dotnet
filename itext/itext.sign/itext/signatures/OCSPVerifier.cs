@@ -88,8 +88,6 @@ namespace iText.Signatures {
         /// </returns>
         /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
         ///     "/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             IList<VerificationOK> result = new List<VerificationOK>();
@@ -134,8 +132,6 @@ namespace iText.Signatures {
         /// <see langword="true"/>
         /// , in case successful check, otherwise false.
         /// </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool Verify(BasicOcspResp ocspResp, X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             if (ocspResp == null) {
@@ -195,8 +191,6 @@ namespace iText.Signatures {
         /// <param name="ocspResp">the OCSP response</param>
         /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
         ///     </param>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [System.ObsoleteAttribute(@"Will be removed in iText 7.2. Use IsValidResponse(Org.BouncyCastle.Ocsp.BasicOcspResp, Org.BouncyCastle.X509.X509Certificate, System.DateTime) instead"
             )]
         public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert) {
@@ -212,7 +206,6 @@ namespace iText.Signatures {
         /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
         ///     </param>
         /// <param name="signDate">sign date</param>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert, DateTime signDate) {
             // OCSP response might be signed by the issuer certificate or
             // the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension

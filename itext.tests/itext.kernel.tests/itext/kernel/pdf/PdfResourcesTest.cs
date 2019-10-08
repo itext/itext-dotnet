@@ -64,7 +64,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ResourcesTest2() {
             MemoryStream baos = new MemoryStream();

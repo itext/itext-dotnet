@@ -136,39 +136,32 @@ namespace iText.IO.Source {
             this.outBuf = new ByteBuffer();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Seek(long pos) {
             file.Seek(pos);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ReadFully(byte[] bytes) {
             file.ReadFully(bytes);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long GetPosition() {
             return file.GetPosition();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             if (closeStream) {
                 file.Close();
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long Length() {
             return file.Length();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Read() {
             return file.Read();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual String ReadString(int size) {
             StringBuilder buf = new StringBuilder();
             int ch;
@@ -228,7 +221,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int GetHeaderOffset() {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
@@ -241,7 +233,6 @@ namespace iText.IO.Source {
             return idx;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual String CheckPdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -252,7 +243,6 @@ namespace iText.IO.Source {
             return str.JSubstring(idx + 1, idx + 8);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void CheckFdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -262,7 +252,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long GetStartxref() {
             int arrLength = 1024;
             long fileLength = file.Length();
@@ -283,7 +272,6 @@ namespace iText.IO.Source {
             throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void NextValidToken() {
             int level = 0;
             byte[] n1 = null;
@@ -363,7 +351,6 @@ namespace iText.IO.Source {
         // if we hit here, the file is either corrupt (stream ended unexpectedly),
         // or the last token ended exactly at the end of a stream.  This last
         // case can occur inside an Object Stream.
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool NextToken() {
             int ch;
             outBuf.Reset();
@@ -766,11 +753,6 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
-        /// <exception cref="iText.IO.IOException">
-        /// wrap error message into
-        /// <c>PdfRuntimeException</c>
-        /// and add position in file.
-        /// </exception>
         public virtual void ThrowError(String error, params Object[] messageParams) {
             try {
                 throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
@@ -815,7 +797,6 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <param name="buffer">@see ByteBuffer</param>
         /// <returns>boolean</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool ReadLineSegment(ByteBuffer buffer) {
             return ReadLineSegment(buffer, true);
         }
@@ -836,7 +817,6 @@ namespace iText.IO.Source {
         /// <see cref="ReadLineSegment(ByteBuffer)">readLineSegment(input)</see>
         /// </param>
         /// <returns>boolean</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace) {
             int c;
             bool eol = false;
@@ -977,7 +957,6 @@ namespace iText.IO.Source {
                 return buffer.Size();
             }
 
-            /// <exception cref="System.IO.IOException"/>
             public virtual void Close() {
                 buffer = null;
             }

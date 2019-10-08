@@ -463,7 +463,6 @@ namespace iText.Signatures {
         /// <seealso><a href="http://partners.adobe.com/asn/developer/pdfs/tn/ppkappearances.pdf">PPKAppearances.pdf</a> for further details
         ///     </seealso>
         /// <returns>a top-level signature appearance</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfFormXObject GetAppearance() {
             PdfCanvas canvas;
             if (IsInvisible()) {

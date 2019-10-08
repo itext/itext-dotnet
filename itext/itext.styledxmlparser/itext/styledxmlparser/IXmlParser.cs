@@ -59,7 +59,6 @@ namespace iText.StyledXmlParser {
         /// then parser should detect encoding from stream.
         /// </param>
         /// <returns>a document node</returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         IDocumentNode Parse(Stream XmlStream, String charset);
 
         /// <summary>

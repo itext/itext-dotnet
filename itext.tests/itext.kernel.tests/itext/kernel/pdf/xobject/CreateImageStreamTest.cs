@@ -62,8 +62,6 @@ namespace iText.Kernel.Pdf.Xobject {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CompareColorspacesTest() {
             String[] imgFiles = new String[] { "adobe.png", "anon.gif", "anon.jpg", "anon.png", "gamma.png", "odd.png"
@@ -84,57 +82,41 @@ namespace iText.Kernel.Pdf.Xobject {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDictionaryFromMapIntArrayTest() {
             TestSingleImage("createDictionaryFromMapIntArrayTest.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgCalrgb() {
             TestSingleImage("img_calrgb.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgCmyk() {
             TestSingleImage("img_cmyk.tif");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgCmykIcc() {
             TestSingleImage("img_cmyk_icc.tif");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgIndexed() {
             TestSingleImage("img_indexed.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgRgb() {
             TestSingleImage("img_rgb.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImgRgbIcc() {
             TestSingleImage("img_rgb_icc.png");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void TestSingleImage(String imgName) {
             String @out = destinationFolder + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";
             String cmp = sourceFolder + "cmp_" + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";

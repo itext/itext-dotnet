@@ -89,9 +89,6 @@ namespace iText.Signatures {
         /// <param name="hashAlgorithm">the hash algorithm</param>
         /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         /// <param name="hasRSAdata"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException">on error</exception>
-        /// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
         public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm, bool hasRSAdata
             ) {
             // Encryption provider
@@ -575,18 +572,12 @@ namespace iText.Signatures {
 
         // The signature is created internally
         // Signing functionality.
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
         private ISigner InitSignature(ICipherParameters key) {
             ISigner signature = SignUtils.GetSignatureHelper(GetDigestAlgorithm());
             signature.InitSign(key);
             return signature;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
         private ISigner InitSignature(AsymmetricKeyParameter key) {
             String digestAlgorithm = GetDigestAlgorithm();
             if (PdfName.Adbe_x509_rsa_sha1.Equals(GetFilterSubtype())) {
@@ -605,7 +596,6 @@ namespace iText.Signatures {
         /// <param name="buf">the data buffer</param>
         /// <param name="off">the offset in the data buffer</param>
         /// <param name="len">the data length</param>
-        /// <exception cref="Java.Security.SignatureException">on error</exception>
         public virtual void Update(byte[] buf, int off, int len) {
             if (rsaData != null || digestAttr != null || isTsp) {
                 messageDigest.Update(buf, off, len);
@@ -817,7 +807,6 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="timeStampToken">byte[] - time stamp token, DER encoded signedData</param>
         /// <returns>ASN1EncodableVector</returns>
-        /// <exception cref="System.IO.IOException"/>
         private Asn1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken) {
             if (timeStampToken == null) {
                 return null;
@@ -1030,12 +1019,6 @@ namespace iText.Signatures {
         // verification
         /// <summary>Verify the digest.</summary>
         /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
-        /// if this signature object is not initialized properly,
-        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
-        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
-        /// are not recognized, etc.
-        /// </exception>
         [System.ObsoleteAttribute(@"This method will be removed in future versions. Please use VerifySignatureIntegrityAndAuthenticity() instead."
             )]
         public virtual bool Verify() {
@@ -1061,12 +1044,6 @@ namespace iText.Signatures {
         /// method.
         /// </remarks>
         /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
-        /// if this signature object is not initialized properly,
-        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
-        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
-        /// are not recognized, etc.
-        /// </exception>
         public virtual bool VerifySignatureIntegrityAndAuthenticity() {
             if (verified) {
                 return verifyResult;
@@ -1105,7 +1082,6 @@ namespace iText.Signatures {
             return verifyResult;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private bool VerifySigAttributes(byte[] attr) {
             ISigner signature = InitSignature(signCert.GetPublicKey());
             signature.Update(attr);
@@ -1114,7 +1090,6 @@ namespace iText.Signatures {
 
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">on error</exception>
         public virtual bool VerifyTimestampImprint() {
             // TODO ensure this method works correctly
             if (timeStampToken == null) {
@@ -1257,7 +1232,6 @@ namespace iText.Signatures {
 
         /// <summary>Helper method that creates the BasicOCSPResp object.</summary>
         /// <param name="seq"/>
-        /// <exception cref="System.IO.IOException"/>
         private void FindOcsp(Asn1Sequence seq) {
             basicResp = (BasicOcspResp)null;
             bool ret = false;

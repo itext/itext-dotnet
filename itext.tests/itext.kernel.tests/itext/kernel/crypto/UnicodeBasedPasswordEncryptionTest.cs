@@ -153,8 +153,6 @@ namespace iText.Kernel.Crypto {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Aes256EncryptedPdfWithUnicodeBasedPassword() {
             String fileNameTemplate = "unicodePassword_";
@@ -171,8 +169,6 @@ namespace iText.Kernel.Crypto {
         // 1.1 Check opening both of these documents with both strings.
         // 2.  Try encrypt document with invalid input string.
         // 3.  Try open encrypted document with password that contains unassigned code points and ensure error is due to wrong password instead of the invalid input string.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void EncryptAes256AndCheck(String filename, byte[] ownerPassword) {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(PdfEncryptionTest.USER, ownerPassword

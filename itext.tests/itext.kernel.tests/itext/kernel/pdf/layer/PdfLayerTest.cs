@@ -104,7 +104,6 @@ namespace iText.Kernel.Pdf.Layer {
             NUnit.Framework.Assert.AreEqual(new PdfName[] { PdfName.View }, postNullIntents.ToArray(new PdfName[1]));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void NestedLayers() {
             String outPdf = destinationFolder + "nestedLayers.pdf";
@@ -125,7 +124,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void LockedLayer() {
             String outPdf = destinationFolder + "lockedLayer.pdf";
@@ -143,7 +141,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void LayerGroup() {
             String outPdf = destinationFolder + "layerGroup.pdf";
@@ -163,7 +160,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void LayersRadioGroup() {
             String outPdf = destinationFolder + "layersRadioGroup.pdf";
@@ -194,7 +190,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void NotPrintNotOnPanel() {
             String outPdf = destinationFolder + "notPrintNotOnPanel.pdf";
@@ -217,7 +212,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ZoomNotOnPanel() {
             String outPdf = destinationFolder + "zoomNotOnPanel.pdf";
@@ -235,7 +229,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OcConfigUniqueName() {
             String srcPdf = sourceFolder + "ocpConfigs.pdf";
@@ -254,7 +247,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ProcessTitledHierarchies() {
             String srcPdf = sourceFolder + "titledHierarchies.pdf";
@@ -267,7 +259,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetCreatorInfoAndLanguage() {
             String outPdf = destinationFolder + "setCreatorInfoAndLanguage.pdf";
@@ -285,7 +276,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetUserAndPageElement() {
             String outPdf = destinationFolder + "setUserAndPageElement.pdf";
@@ -302,7 +292,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetExportViewIsTrue() {
             String outPdf = destinationFolder + "setExportViewIsTrue.pdf";
@@ -313,7 +302,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetExportViewIsFalse() {
             String outPdf = destinationFolder + "setExportViewIsFalse.pdf";
@@ -324,7 +312,6 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CreateCustomExportLayers(PdfDocument pdfDoc, bool view) {
             PdfFont font = PdfFontFactory.CreateFont();
             PdfLayer layerTrue = new PdfLayer("Export - true", pdfDoc);
@@ -351,8 +338,6 @@ namespace iText.Kernel.Pdf.Layer {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode1() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder
@@ -362,8 +347,6 @@ namespace iText.Kernel.Pdf.Layer {
                 , sourceFolder + "input_layered.pdf", destinationFolder, "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode2() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder

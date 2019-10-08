@@ -88,7 +88,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(expected, textArray.Get(0));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AddStringWithFontTest() {
             PdfTextArray textArray = new PdfTextArray();

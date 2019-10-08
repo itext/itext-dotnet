@@ -54,7 +54,6 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <param name="options">the options to init with</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If options are not consistant</exception>
         public AliasOptions(int options)
             : base(options) {
         }
@@ -118,7 +117,6 @@ namespace iText.Kernel.XMP.Options {
         /// <see cref="PropertyOptions"/>
         /// s object
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not consistant.</exception>
         public PropertyOptions ToPropertyOptions() {
             return new PropertyOptions(GetOptions());
         }

@@ -189,7 +189,6 @@ namespace iText.IO.Font {
             return font;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void LoadRegistry() {
             Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + CJK_REGISTRY_FILENAME);
             try {
@@ -214,7 +213,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static IDictionary<String, Object> ReadFontProperties(String name) {
             Stream resource = ResourceUtil.GetResourceStream(FontResources.CMAPS + name + ".properties");
             try {

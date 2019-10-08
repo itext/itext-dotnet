@@ -61,7 +61,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithXmp() {
             String filename = "emptyDocumentWithXmp.pdf";
@@ -85,7 +84,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EmptyDocumentWithXmpAppendMode01() {
             String created = destinationFolder + "emptyDocumentWithXmpAppendMode01.pdf";
@@ -118,7 +116,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EmptyDocumentWithXmpAppendMode02() {
             String created = destinationFolder + "emptyDocumentWithXmpAppendMode02.pdf";
@@ -151,7 +148,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void CreateEmptyDocumentWithAbcXmp() {
@@ -175,8 +171,6 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1899: fails in .NET passes in Java")]
         public virtual void CustomXmpTest() {
@@ -190,8 +184,6 @@ namespace iText.Kernel.Pdf {
                  + " </rdf:Description>\n" + "\n" + "</rdf:RDF>\n" + "<?xpacket end='r'?>");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1899: fails in .NET passes in Java")]
         public virtual void CustomXmpTest02() {
@@ -201,8 +193,6 @@ namespace iText.Kernel.Pdf {
                  + "</rdf:RDF><?xpacket end='r'?>");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void RunCustomXmpTest(String name, String xmp) {
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
@@ -217,7 +207,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(compareTool.CompareDocumentInfo(outPath, cmpPath));
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private byte[] RemoveAlwaysDifferentEntries(byte[] cmpBytes) {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes);
             XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);

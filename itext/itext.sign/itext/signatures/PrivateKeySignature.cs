@@ -93,7 +93,6 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual byte[] Sign(byte[] message) {
             String algorithm = hashAlgorithm + "with" + encryptionAlgorithm;
             ISigner sig = SignUtils.GetSignatureHelper(algorithm);

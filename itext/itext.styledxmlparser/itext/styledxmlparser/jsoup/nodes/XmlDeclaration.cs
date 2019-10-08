@@ -81,7 +81,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         // attr html starts with a " "
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append("<").Append(isProcessingInstruction ? "!" : "?").Append(name);
             attributes.Html(accum, @out);

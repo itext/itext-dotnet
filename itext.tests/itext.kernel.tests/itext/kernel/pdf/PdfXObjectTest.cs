@@ -68,8 +68,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentFromImages1() {
             String destinationDocument = destinationFolder + "documentFromImages1.pdf";
@@ -104,8 +102,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void CreateDocumentFromImages2() {
@@ -125,8 +121,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithForms() {
             String destinationDocument = destinationFolder + "documentWithForms1.pdf";
@@ -164,7 +158,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void XObjectIterativeReference() {

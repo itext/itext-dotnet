@@ -91,8 +91,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>.
         /// </remarks>
         /// <returns>created font</returns>
-        /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
-        ///     </exception>
         public static PdfFont CreateFont() {
             return CreateFont(StandardFonts.HELVETICA, DEFAULT_ENCODING);
         }
@@ -154,7 +152,6 @@ namespace iText.Kernel.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateFont(String fontProgram, String encoding, PdfDocument cacheTo) {
             PdfFont pdfFont;
             if (cacheTo != null) {
@@ -181,8 +178,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram) {
             return CreateFont(fontProgram, DEFAULT_ENCODING);
         }
@@ -202,8 +197,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -226,8 +219,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the contents of the TrueType Collection is mal-formed or an error occurred during reading the font
-        ///     </exception>
         public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
             return CreateFont(fontProgram, encoding, embedded);
@@ -251,10 +242,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">
-        /// in case the file is not found, contents of the TrueType Collection is mal-formed
-        /// or an error occurred during reading the font
-        /// </exception>
         public static PdfFont CreateTtcFont(String ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
             return CreateFont(fontProgram, encoding, embedded);
@@ -272,8 +259,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, bool embedded) {
             return CreateFont(fontProgram, DEFAULT_ENCODING, embedded);
         }
@@ -294,8 +279,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -317,8 +300,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
@@ -441,7 +422,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -458,7 +438,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, bool embedded) {
             return CreateFont(fontProgram, null, embedded);
         }
@@ -479,7 +458,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -501,7 +479,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
@@ -564,8 +541,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -607,8 +582,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -647,8 +620,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -691,8 +662,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -730,8 +699,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -765,8 +732,6 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// was found among registered, otherwise null.
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>

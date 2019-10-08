@@ -143,8 +143,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image) {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8) {
@@ -371,7 +369,6 @@ namespace iText.IO.Image {
         /// <summary>Reads a short from the <c>InputStream</c>.</summary>
         /// <param name="jpegStream">the <c>InputStream</c></param>
         /// <returns>an int</returns>
-        /// <exception cref="System.IO.IOException"/>
         private static int GetShort(Stream jpegStream) {
             return (jpegStream.Read() << 8) + jpegStream.Read();
         }

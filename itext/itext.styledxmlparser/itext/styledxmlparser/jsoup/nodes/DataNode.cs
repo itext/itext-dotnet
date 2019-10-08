@@ -76,7 +76,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append(GetWholeData());
         }

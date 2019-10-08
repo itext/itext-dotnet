@@ -52,7 +52,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/FilteredEventListenerTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));
@@ -82,7 +81,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void MultipleFiltersForOneRegionTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));

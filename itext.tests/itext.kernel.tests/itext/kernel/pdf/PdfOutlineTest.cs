@@ -61,8 +61,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleDocWithOutlines() {
             String filename = "simpleDocWithOutlines.pdf";
@@ -80,7 +78,6 @@ namespace iText.Kernel.Pdf {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OutlinesTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
@@ -91,7 +88,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(children[0].GetDestination() is PdfStringDestination);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OutlinesWithPagesTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
@@ -107,8 +103,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlinesToDocumentTest() {
             PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
@@ -132,7 +126,6 @@ namespace iText.Kernel.Pdf {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadOutlinesFromDocumentTest() {
             String filename = sourceFolder + "addOutlinesResult.pdf";
@@ -148,10 +141,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE, Count = 36)]
         public virtual void RemovePageWithOutlinesTest() {
@@ -174,7 +163,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadRemovedPageWithOutlinesTest() {
             // TODO DEVSIX-1643: src document is taken from the previous removePageWithOutlinesTest test, however it contains numerous destination objects which contain PdfNull instead of page reference
@@ -190,8 +178,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UpdateOutlineTitle() {
             PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
@@ -205,7 +191,6 @@ namespace iText.Kernel.Pdf {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadOutlineTitle() {
             String filename = sourceFolder + "updateOutlineTitleResult.pdf";
@@ -220,8 +205,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlineInNotOutlineMode() {
             String filename = "addOutlineInNotOutlineMode.pdf";
@@ -242,7 +225,6 @@ namespace iText.Kernel.Pdf {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadOutlineAddedInNotOutlineMode() {
             String filename = sourceFolder + "addOutlinesWithoutOutlineModeResult.pdf";
@@ -256,7 +238,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocWithOutlines() {
             String filename = sourceFolder + "documentWithOutlines.pdf";
@@ -271,7 +252,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines() {
@@ -294,8 +274,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01() {
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
@@ -335,8 +313,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations02() {
             String filename = destinationFolder + "outlinesWithNamedDestinations02.pdf";
@@ -374,7 +350,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OutlineStackOverflowTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "outlineStackOverflowTest01.pdf");
@@ -387,8 +362,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OutlineTypeNull() {
             String filename = "outlineTypeNull";
@@ -402,8 +375,6 @@ namespace iText.Kernel.Pdf {
                  + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RemoveAllOutlinesTest() {
             String filename = "iphone_user_guide_removeAllOutlinesTest.pdf";

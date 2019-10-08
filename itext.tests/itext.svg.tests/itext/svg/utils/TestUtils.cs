@@ -48,7 +48,6 @@ using iText.Svg.Converter;
 
 namespace iText.Svg.Utils {
     public class TestUtils {
-        /// <exception cref="System.IO.IOException"/>
         public static void ConvertSVGtoPDF(String pdfFilePath, String svgFilePath, int PageNo, PageSize pageSize) {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(pdfFilePath, FileMode.Create), new 
                 WriterProperties().SetCompressionLevel(0)));

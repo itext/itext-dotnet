@@ -552,12 +552,6 @@ namespace iText.Kernel.Font {
         /// <see langword="null"/>
         /// , if there is an error reading the font.
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// Method will throw exception if
-        /// <paramref name="fontStreamBytes"/>
-        /// is
-        /// <see langword="null"/>.
-        /// </exception>
         protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
             if (fontStreamBytes == null) {
                 throw new PdfException(PdfException.FontEmbeddingIssue);

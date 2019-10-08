@@ -58,8 +58,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StreamAppendDataOnJustCopiedWithCompression() {
             String srcFile = sourceFolder + "pageWithContent.pdf";
@@ -77,7 +75,6 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RunLengthEncodingTest01() {
             String srcFile = sourceFolder + "runLengthEncodedImages.pdf";

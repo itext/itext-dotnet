@@ -57,8 +57,6 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
         public static void Before() {
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
         public virtual void TestISA03() {
@@ -72,8 +70,6 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void TestISAValidPdf() {
             String filePath = sourceFolder + "isaValidPdf.pdf";

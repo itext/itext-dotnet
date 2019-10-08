@@ -66,8 +66,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceTest() {
             String name = "pdfA1b_ButtonAppearanceTest";
@@ -93,8 +91,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceRegenerateTest() {
             String name = "pdfA1b_ButtonAppearanceRegenerateTest";
@@ -121,8 +117,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceSetValueTest() {
             String name = "pdfA1b_ButtonAppearanceSetValueTest";

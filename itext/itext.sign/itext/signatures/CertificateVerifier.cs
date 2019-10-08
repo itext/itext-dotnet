@@ -85,12 +85,6 @@ namespace iText.Signatures {
         /// <param name="signDate">the date the certificate needs to be valid</param>
         /// <returns>a list of <c>VerificationOK</c> objects. The list will be empty if the certificate couldn't be verified.
         ///     </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
-        /// thrown if the certificate has expired, isn't valid yet, or if an exception has been thrown in
-        /// <see cref="Org.BouncyCastle.X509.X509Certificate.Verify(Org.BouncyCastle.Crypto.AsymmetricKeyParameter)">Certificate#verify
-        ///     </see>.
-        /// </exception>
-        /// <exception cref="System.IO.IOException">Deprecated</exception>
         public virtual IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             // Check if the certificate is valid on the signDate

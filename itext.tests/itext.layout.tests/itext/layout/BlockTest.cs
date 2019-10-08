@@ -77,8 +77,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties01() {
@@ -127,8 +125,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties02() {
@@ -181,8 +177,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties03() {
@@ -266,8 +260,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties04() {
@@ -351,8 +343,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowTest01() {
             // TODO DEVSIX-1373
@@ -378,8 +368,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowTest02() {
             String outFileName = destinationFolder + "overflowTest02.pdf";
@@ -402,8 +390,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OverflowTest03() {
             String outFileName = destinationFolder + "overflowTest03.pdf";
@@ -427,8 +413,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Ignore("DEVSIX-1375")]
         [NUnit.Framework.Test]
         public virtual void OverflowTest04() {
@@ -454,8 +438,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Ignore("DEVSIX-1373")]
         [NUnit.Framework.Test]
         public virtual void OverflowTest05() {
@@ -482,8 +464,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Ignore("DEVSIX-1373")]
         [NUnit.Framework.Test]
         public virtual void OverflowTest06() {
@@ -504,8 +484,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlockFillAvailableArea01() {
             String outFileName = destinationFolder + "blockFillAvailableArea01.pdf";
@@ -559,8 +537,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1092")]
         public virtual void MarginsBordersPaddingOverflow01() {
@@ -580,8 +556,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1092")]
         public virtual void MarginsBordersPaddingOverflow02() {
@@ -600,8 +574,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1092")]
         public virtual void MarginsBordersPaddingOverflow03() {
@@ -631,8 +603,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest01() {
             String outFileName = destinationFolder + "borderRadiusTest01.pdf";
@@ -673,8 +643,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest02() {
             String outFileName = destinationFolder + "borderRadiusTest02.pdf";
@@ -703,8 +671,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest03() {
             String outFileName = destinationFolder + "borderRadiusTest03.pdf";
@@ -749,8 +715,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest04() {
             String outFileName = destinationFolder + "borderRadiusTest04.pdf";
@@ -795,8 +759,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest05() {
             String outFileName = destinationFolder + "borderRadiusTest05.pdf";
@@ -841,8 +803,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderRadiusTest06() {
             String outFileName = destinationFolder + "borderRadiusTest06.pdf";
@@ -887,8 +847,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1897")]
         public virtual void ParagraphVerticalAlignmentTest01() {

@@ -62,7 +62,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateXMP() {
             String created = destinationFolder + "testCreateAndUpdateXMP_create.pdf";
@@ -97,7 +96,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1, freeRef.genNr);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateTwiceXMP() {
             String created = destinationFolder + "testCreateAndUpdateTwiceXMP_create.pdf";

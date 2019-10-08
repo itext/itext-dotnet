@@ -3125,7 +3125,6 @@ namespace iText.Forms.Fields {
         /// <summary>Gets font and font size.</summary>
         /// <param name="asNormal">normal appearance, will be ignored.</param>
         /// <returns>array where first index is PdfFont and the second is font name.</returns>
-        /// <exception cref="System.IO.IOException">never happens.</exception>
         [System.ObsoleteAttribute(@"use GetFont() and GetFontSize() instead.")]
         protected internal virtual Object[] GetFontAndSize(PdfDictionary asNormal) {
             return new Object[] { GetFont(), GetFontSize() };

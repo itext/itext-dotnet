@@ -65,10 +65,6 @@ namespace iText.Svg.Processors {
         /// <see cref="ISvgProcessorResult"/>
         /// }
         /// </returns>
-        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException">
-        /// throws an exception if the root
-        /// node is null or if the child node being processed is null
-        /// </exception>
         ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps);
     }
 }

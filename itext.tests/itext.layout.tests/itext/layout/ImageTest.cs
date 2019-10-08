@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest01() {
             String outFileName = destinationFolder + "imageTest01.pdf";
@@ -89,8 +87,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest02() {
             String outFileName = destinationFolder + "imageTest02.pdf";
@@ -111,8 +107,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest03() {
             String outFileName = destinationFolder + "imageTest03.pdf";
@@ -133,8 +127,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest04() {
             String outFileName = destinationFolder + "imageTest04.pdf";
@@ -155,8 +147,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest05() {
             String outFileName = destinationFolder + "imageTest05.pdf";
@@ -177,8 +167,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest06() {
             String outFileName = destinationFolder + "imageTest06.pdf";
@@ -199,8 +187,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest07() {
@@ -219,8 +205,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest08() {
@@ -240,8 +224,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest09() {
@@ -259,8 +241,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest10() {
             String outFileName = destinationFolder + "imageTest10.pdf";
@@ -277,8 +257,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest11() {
             String outFileName = destinationFolder + "imageTest11.pdf";
@@ -295,8 +273,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest12_HorizontalAlignment_CENTER() {
             String outFileName = destinationFolder + "imageTest12.pdf";
@@ -313,8 +289,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest13_HorizontalAlignment_RIGHT() {
             String outFileName = destinationFolder + "imageTest13.pdf";
@@ -331,8 +305,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest14_HorizontalAlignment_LEFT() {
             String outFileName = destinationFolder + "imageTest14.pdf";
@@ -349,8 +321,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest15() {
@@ -368,8 +338,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest16() {
             String outFileName = destinationFolder + "imageTest16.pdf";
@@ -388,8 +356,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
         public virtual void ImageTest17() {
@@ -415,8 +381,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest18() {
             String outFileName = destinationFolder + "imageTest18.pdf";
@@ -439,8 +403,6 @@ namespace iText.Layout {
         }
 
         //TODO(DEVSIX-1659)
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest19() {
             String outFileName = destinationFolder + "imageTest19.pdf";
@@ -462,8 +424,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest20() {
             String outFileName = destinationFolder + "imageTest20.pdf";
@@ -486,8 +446,6 @@ namespace iText.Layout {
         }
 
         //TODO(DEVSIX-1659)
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest21() {
             String outFileName = destinationFolder + "imageTest21.pdf";
@@ -515,8 +473,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void ImageTest22() {
@@ -535,8 +491,6 @@ namespace iText.Layout {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest23() {
             String outFileName = destinationFolder + "imageTest23.pdf";
@@ -554,8 +508,6 @@ namespace iText.Layout {
         }
 
         /// <summary>Image can be reused in layout, so flushing it on the very first draw is a bad thing.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushOnDrawTest() {
             String outFileName = destinationFolder + "flushOnDrawTest.pdf";
@@ -591,8 +543,6 @@ namespace iText.Layout {
         /// that was caused by getting
         /// a value from flushed image.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushOnDrawCheckCircularReferencesTest() {
             String outFileName = destinationFolder + "flushOnDrawCheckCircularReferencesTest.pdf";
@@ -626,8 +576,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithBordersSurroundedByTextTest() {
             String outFileName = destinationFolder + "imageBordersTextTest.pdf";
@@ -649,8 +597,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageInParagraphBorderTest() {
             String outFileName = destinationFolder + "imageParagraphBorderTest.pdf";
@@ -671,8 +617,6 @@ namespace iText.Layout {
         }
 
         //TODO(DEVSIX-1022)
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
@@ -693,8 +637,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ImageInTableTest01() {
@@ -723,8 +665,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ImageInTableTest02() {
@@ -755,8 +695,6 @@ namespace iText.Layout {
         }
 
         //TODO(DEVSIX-1045)
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedPositionImageTest01() {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
@@ -771,8 +709,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithMinMaxHeightTest01() {
             String outFileName = destinationFolder + "imageWithMinMaxHeightTest01.pdf";
@@ -800,8 +736,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PrecisionTest01() {
             String outFileName = destinationFolder + "precisionTest01.pdf";
@@ -827,8 +761,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageBorderRadiusTest01() {
             String outFileName = destinationFolder + "imageBorderRadiusTest01.pdf";

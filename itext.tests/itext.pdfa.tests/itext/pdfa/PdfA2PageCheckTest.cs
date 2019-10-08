@@ -51,7 +51,6 @@ namespace iText.Pdfa {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck01() {
             NUnit.Framework.Assert.That(() =>  {

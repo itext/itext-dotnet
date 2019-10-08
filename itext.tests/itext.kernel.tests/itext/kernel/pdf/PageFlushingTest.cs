@@ -69,7 +69,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseWriting01() {
             // not all objects are made indirect before closing
@@ -80,7 +79,6 @@ namespace iText.Kernel.Pdf {
                 .MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageFlushWriting01() {
             int total = 715;
@@ -90,7 +88,6 @@ namespace iText.Kernel.Pdf {
                 .MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushWriting01() {
             int total = 816;
@@ -101,7 +98,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushWriting01() {
             int total = 715;
@@ -111,7 +107,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseReading01() {
             int total = 817;
@@ -122,7 +117,6 @@ namespace iText.Kernel.Pdf {
                 .READ, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReleaseDeepReading01() {
             int total = 817;
@@ -132,7 +126,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.READ, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseStamping01() {
             // not all objects are made indirect before closing
@@ -143,7 +136,6 @@ namespace iText.Kernel.Pdf {
                 .MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageFlushStamping01() {
             int total = 2219;
@@ -153,7 +145,6 @@ namespace iText.Kernel.Pdf {
                 PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushStamping01() {
             int total = 2420;
@@ -164,7 +155,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushStamping01() {
             int total = 2219;
@@ -175,7 +165,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReleaseDeepStamping01() {
             int total = 1618;
@@ -186,7 +175,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseAppendMode01() {
             int total = 1618;
@@ -196,7 +184,6 @@ namespace iText.Kernel.Pdf {
                 .MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageFlushAppendMode01() {
             int total = 2219;
@@ -206,7 +193,6 @@ namespace iText.Kernel.Pdf {
                 PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushAppendMode01() {
             int total = 2420;
@@ -217,7 +203,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushAppendMode01() {
             int total = 2219;
@@ -228,7 +213,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReleaseDeepAppendMode01() {
             int total = 1618;
@@ -239,7 +223,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BaseLightAppendMode01() {
             int total = 1018;
@@ -249,7 +232,6 @@ namespace iText.Kernel.Pdf {
                 .MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageFlushLightAppendMode01() {
             int total = 1318;
@@ -260,7 +242,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnsafeDeepFlushLightAppendMode01() {
             int total = 1318;
@@ -270,7 +251,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeFlushLightAppendMode01() {
             int total = 1318;
@@ -281,7 +261,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReleaseDeepLightAppendMode01() {
             int total = 1018;
@@ -291,7 +270,6 @@ namespace iText.Kernel.Pdf {
                 , PageFlushingTest.PagesOp.MODIFY_LIGHTLY, total, flushedExpected, notReadExpected);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ModifyAnnotationOnlyAppendMode() {
             String input = sourceFolder + "100pages.pdf";
@@ -314,7 +292,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetLinkDestinationToPageAppendMode() {
             String input = sourceFolder + "100pages.pdf";
@@ -366,7 +343,6 @@ namespace iText.Kernel.Pdf {
         }
 
         // exception is not thrown
-        /// <exception cref="System.IO.IOException"/>
         private static void Test(String filename, PageFlushingTest.DocMode docMode, PageFlushingTest.FlushMode flushMode
             , PageFlushingTest.PagesOp pagesOp, int total, int flushedExpected, int notReadExpected) {
             String input = sourceFolder + "100pages.pdf";
@@ -500,7 +476,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(notReadExpected, notReadActual, "wrong num of not read objects");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void AddContentToPage(PdfPage pdfPage, PdfFont font, PdfImageXObject xObject) {
             PdfCanvas canvas = AddBasicContent(pdfPage, font);
             canvas.SaveState().Rectangle(250, 500, 100, 100).Fill().RestoreState();

@@ -64,8 +64,6 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PolygonLineRendererTest() {
             String filename = "polygonLineRendererTest.pdf";
@@ -134,8 +132,6 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PolygonEmptyPointCheckerTest() {
             String filename = "polygonEmptyPointCheckerTest.pdf";

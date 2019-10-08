@@ -54,7 +54,6 @@ namespace iText.Signatures {
         /// <param name="data">the data to sign</param>
         /// <returns>a container with the signature and other objects, like CRL and OCSP. The container will generally be a PKCS7 one.
         ///     </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         byte[] Sign(Stream data);
 
         /// <summary>Modifies the signature dictionary to suit the container.</summary>

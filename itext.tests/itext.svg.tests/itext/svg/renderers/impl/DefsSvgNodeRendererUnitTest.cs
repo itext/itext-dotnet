@@ -53,7 +53,6 @@ namespace iText.Svg.Renderers.Impl {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/DefsSvgNodeRendererTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ProcessDefsNoChildrenTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithNoChildren.svg", FileMode.Open
@@ -62,7 +61,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().IsEmpty());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ProcessDefsOneChildTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open
@@ -71,7 +69,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("circle1") is CircleSvgNodeRenderer);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ProcessDefsMultipleChildrenTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithMultipleChildren.svg", FileMode.Open
@@ -82,7 +79,6 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("rect1") is RectangleSvgNodeRenderer);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ProcessDefsParentShouldBeNullTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open

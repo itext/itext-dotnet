@@ -54,7 +54,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void ContentStreamProcessorTest() {
@@ -124,7 +123,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestClosingEmptyPath() {
             String fileName = "closingEmptyPath.pdf";
@@ -134,7 +132,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             processor.ProcessPageContent(document.GetPage(1));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
         public virtual void TestNoninvertibleMatrix() {

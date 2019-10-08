@@ -105,7 +105,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="end">end of range, exclusive</param>
         /// <param name="value">if true, checks that bits in range are set, otherwise checks that they are not set</param>
         /// <returns>true iff all bits are set or not set in range, according to value argument</returns>
-        /// <exception cref="System.ArgumentException">if end is less than or equal to start</exception>
         public bool IsRange(int start, int end, bool value) {
             if (end < start) {
                 throw new ArgumentException();

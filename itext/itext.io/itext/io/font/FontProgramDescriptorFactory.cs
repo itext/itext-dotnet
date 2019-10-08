@@ -143,7 +143,6 @@ namespace iText.IO.Font {
             return fontFound != null ? FetchDescriptorFromFontProgram(fontFound) : null;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgramDescriptor FetchTTCDescriptor(String baseName) {
             int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
             if (ttcSplit > 0) {
@@ -168,28 +167,24 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgramDescriptor FetchTrueTypeFontDescriptor(String fontName) {
             using (OpenTypeParser parser = new OpenTypeParser(fontName)) {
                 return FetchOpenTypeFontDescriptor(parser);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgramDescriptor FetchTrueTypeFontDescriptor(byte[] fontProgram) {
             using (OpenTypeParser parser = new OpenTypeParser(fontProgram)) {
                 return FetchOpenTypeFontDescriptor(parser);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgramDescriptor FetchOpenTypeFontDescriptor(OpenTypeParser fontParser) {
             fontParser.LoadTables(false);
             return new FontProgramDescriptor(fontParser.GetFontNames(), fontParser.GetPostTable().italicAngle, fontParser
                 .GetPostTable().isFixedPitch);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgramDescriptor FetchType1FontDescriptor(String fontName, byte[] afm) {
             //TODO close original stream, may be separate static method should introduced
             Type1Font fp = new Type1Font(fontName, null, afm, null);

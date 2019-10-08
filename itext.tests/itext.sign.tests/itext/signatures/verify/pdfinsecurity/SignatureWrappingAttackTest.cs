@@ -54,8 +54,6 @@ namespace iText.Signatures.Verify.Pdfinsecurity {
         public static void Before() {
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void TestSWA01() {
             String filePath = sourceFolder + "siwa.pdf";

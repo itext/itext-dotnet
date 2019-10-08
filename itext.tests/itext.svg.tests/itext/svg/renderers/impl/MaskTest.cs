@@ -68,16 +68,12 @@ namespace iText.Svg.Renderers.Impl {
             properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MaskBasic() {
             //TODO: update after DEVSIX-2378 implementation
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskBasic", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void MaskWithGradient() {

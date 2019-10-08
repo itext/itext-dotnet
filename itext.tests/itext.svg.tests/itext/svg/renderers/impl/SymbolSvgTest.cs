@@ -68,9 +68,6 @@ namespace iText.Svg.Renderers.Impl {
             properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 4)]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 4)]

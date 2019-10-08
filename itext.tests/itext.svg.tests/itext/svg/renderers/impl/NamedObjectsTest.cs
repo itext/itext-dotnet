@@ -50,7 +50,6 @@ using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class NamedObjectsTest : SvgIntegrationTest {
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.RULE_IS_NOT_SUPPORTED)]
         public virtual void AddNamedObject() {

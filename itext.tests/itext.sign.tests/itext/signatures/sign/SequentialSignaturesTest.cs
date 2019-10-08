@@ -68,8 +68,6 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void SequentialSignOfFileWithAnnots() {
             String signCertFileName = certsSrc + "signCertRsa01.p12";

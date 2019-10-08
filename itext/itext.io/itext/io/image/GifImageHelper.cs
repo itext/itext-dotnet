@@ -165,7 +165,6 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void Process(Stream stream, GifImageHelper.GifParameters gif, int lastFrameNumber) {
             gif.input = stream;
             ReadHeader(gif);
@@ -176,7 +175,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Reads GIF file header information.</summary>
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadHeader(GifImageHelper.GifParameters gif) {
             StringBuilder id = new StringBuilder("");
             for (int i = 0; i < 6; i++) {
@@ -192,7 +190,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Reads Logical Screen Descriptor</summary>
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadLSD(GifImageHelper.GifParameters gif) {
             // logical screen size
             gif.image.SetLogicalWidth(ReadShort(gif));
@@ -209,7 +206,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Reads next 16-bit value, LSB first</summary>
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadShort(GifImageHelper.GifParameters gif) {
             // read 16-bit value, LSB first
             return gif.input.Read() | gif.input.Read() << 8;
@@ -217,7 +213,6 @@ namespace iText.IO.Image {
 
         /// <summary>Reads next variable length block from input.</summary>
         /// <returns>number of bytes stored in "buffer"</returns>
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadBlock(GifImageHelper.GifParameters gif) {
             gif.blockSize = gif.input.Read();
             if (gif.blockSize <= 0) {
@@ -227,7 +222,6 @@ namespace iText.IO.Image {
             return gif.blockSize;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static byte[] ReadColorTable(int bpc, GifImageHelper.GifParameters gif) {
             int ncolors = 1 << bpc;
             int nbytes = 3 * ncolors;
@@ -256,7 +250,6 @@ namespace iText.IO.Image {
             return bpc;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadContents(GifImageHelper.GifParameters gif, int lastFrameNumber) {
             // read GIF file content blocks
             bool done = false;
@@ -310,7 +303,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Reads next frame image</summary>
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadFrame(GifImageHelper.GifParameters gif) {
             // (sub)image position & size
             gif.ix = ReadShort(gif);
@@ -372,7 +364,6 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static bool DecodeImageData(GifImageHelper.GifParameters gif) {
             int NullCode = -1;
             int npix = gif.iw * gif.ih;
@@ -551,7 +542,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Reads Graphics Control Extension values</summary>
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadGraphicControlExt(GifImageHelper.GifParameters gif) {
             // block size
             gif.input.Read();
@@ -576,7 +566,6 @@ namespace iText.IO.Image {
         /// Skips variable length blocks up to and including
         /// next zero length block.
         /// </summary>
-        /// <exception cref="System.IO.IOException"/>
         private static void Skip(GifImageHelper.GifParameters gif) {
             do {
                 ReadBlock(gif);

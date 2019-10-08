@@ -74,8 +74,6 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvas() {
             String author = "Alexander Chingarev";
@@ -101,7 +99,6 @@ namespace iText.Kernel.Pdf.Canvas {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithDrawing() {
             String fileName = "simpleCanvasWithDrawing.pdf";
@@ -135,7 +132,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithText() {
             String fileName = "simpleCanvasWithText.pdf";
@@ -174,7 +170,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlush() {
             String author = "Alexander Chingarev";
@@ -201,7 +196,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithFullCompression() {
             String author = "Alexander Chingarev";
@@ -229,7 +223,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression() {
             String author = "Alexander Chingarev";
@@ -258,7 +251,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create1000PagesDocument() {
             int pageCount = 1000;
@@ -293,7 +285,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create100PagesDocument() {
             int pageCount = 100;
@@ -328,7 +319,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create10PagesDocument() {
             int pageCount = 10;
@@ -363,7 +353,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
@@ -398,7 +387,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create1000PagesDocumentWithFullCompression() {
             int pageCount = 1000;
@@ -434,7 +422,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(0)]
 #endif
@@ -476,7 +463,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SmallDocumentWithFullCompression() {
             String filename = destinationFolder + "smallDocumentWithFullCompression.pdf";
@@ -505,7 +491,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create100PagesDocumentWithFullCompression() {
             int pageCount = 100;
@@ -541,7 +526,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create197PagesDocumentWithFullCompression() {
             int pageCount = 197;
@@ -577,7 +561,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Create10PagesDocumentWithFullCompression() {
             int pageCount = 10;
@@ -613,8 +596,6 @@ namespace iText.Kernel.Pdf.Canvas {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest1() {
             String file1 = destinationFolder + "copyPages1_1.pdf";
@@ -654,7 +635,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest2() {
             String file1 = destinationFolder + "copyPages2_1.pdf";
@@ -700,7 +680,6 @@ namespace iText.Kernel.Pdf.Canvas {
             doc2.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest3() {
             String file1 = destinationFolder + "copyPages3_1.pdf";
@@ -746,7 +725,6 @@ namespace iText.Kernel.Pdf.Canvas {
             doc2.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest4() {
             String file1 = destinationFolder + "copyPages4_1.pdf";
@@ -788,7 +766,6 @@ namespace iText.Kernel.Pdf.Canvas {
             doc1.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest5() {
             int documentCount = 3;
@@ -838,7 +815,6 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesTest6() {
             String file1 = destinationFolder + "copyPages6_1.pdf";
@@ -918,7 +894,6 @@ namespace iText.Kernel.Pdf.Canvas {
             NUnit.Framework.Assert.AreEqual(PdfException.UnbalancedBeginEndMarkedContentOperators, message);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MarkedContentTest2() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "markedContentTest2.pdf"));
@@ -958,8 +933,6 @@ namespace iText.Kernel.Pdf.Canvas {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WmfImageTest01() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest01.pdf"));
@@ -972,8 +945,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_wmfImageTest01.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WmfImageTest02() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest02.pdf"));
@@ -986,8 +957,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_wmfImageTest02.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WmfImageTest03() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest03.pdf"));
@@ -1000,8 +969,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_wmfImageTest03.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WmfImageTest04() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest04.pdf"));
@@ -1014,8 +981,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_wmfImageTest04.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WmfImageTest05() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "wmfImageTest05.pdf"));
@@ -1031,8 +996,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_wmfImageTest05.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest01() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest01.pdf"));
@@ -1045,8 +1008,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_gifImageTest01.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest02() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest02.pdf"));
@@ -1066,8 +1027,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_gifImageTest02.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest03() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest03.pdf"));
@@ -1087,7 +1046,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 sourceFolder + "cmp_gifImageTest03.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest04() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest04.pdf"));
@@ -1108,8 +1066,6 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GifImageTest05() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "gifImageTest05.pdf"));
@@ -1177,8 +1133,6 @@ namespace iText.Kernel.Pdf.Canvas {
         
         Assert.assertNull(new CompareTool().compareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
         }*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
@@ -1201,8 +1155,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
@@ -1246,8 +1198,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineImagesTest03() {
             String filename = "inlineImages03.pdf";
@@ -1261,8 +1211,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CanvasInitializationPageNoContentsKey() {
             String srcFile = sourceFolder + "pageNoContents.pdf";
@@ -1277,8 +1225,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CanvasInitializationStampingExistingStream() {
             String srcFile = sourceFolder + "pageWithContent.pdf";
@@ -1294,8 +1240,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CanvasStampingJustCopiedStreamWithCompression() {
             String srcFile = sourceFolder + "pageWithContent.pdf";
@@ -1314,8 +1258,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CanvasSmallFontSize01() {
             String cmpFile = sourceFolder + "cmp_canvasSmallFontSize01.pdf";

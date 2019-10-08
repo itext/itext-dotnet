@@ -76,7 +76,6 @@ namespace iText.IO.Font {
             this.pfbPath = binaryPath;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
             if (StandardFonts.IsStandardFont(afmPath)) {
@@ -152,7 +151,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetPostscriptBinary() {
             if (pfbData != null) {
                 return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
@@ -176,7 +174,6 @@ namespace iText.IO.Font {
             return afmPath;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool IsAfmFile(RandomAccessFileOrArray raf) {
             StringBuilder builder = new StringBuilder(AFM_HEADER.Length);
             for (int i = 0; i < AFM_HEADER.Length; i++) {

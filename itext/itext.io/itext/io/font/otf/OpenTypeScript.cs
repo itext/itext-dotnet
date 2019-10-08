@@ -52,7 +52,6 @@ namespace iText.IO.Font.Otf {
 
         private IList<ScriptRecord> records;
 
-        /// <exception cref="System.IO.IOException"/>
         public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable) {
             this.openTypeReader = openTypeReader;
             records = new List<ScriptRecord>();
@@ -109,7 +108,6 @@ namespace iText.IO.Font.Otf {
             return lang;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void ReadScriptRecord(TagAndLocation tagLoc) {
             openTypeReader.rf.Seek(tagLoc.location);
             int locationDefaultLanguage = openTypeReader.rf.ReadUnsignedShort();
@@ -132,7 +130,6 @@ namespace iText.IO.Font.Otf {
             records.Add(srec);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private LanguageRecord ReadLanguageRecord(TagAndLocation tagLoc) {
             LanguageRecord rec = new LanguageRecord();
             //skip lookup order

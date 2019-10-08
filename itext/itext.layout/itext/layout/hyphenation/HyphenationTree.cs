@@ -117,9 +117,6 @@ namespace iText.Layout.Hyphenation {
 
         /// <summary>Read hyphenation patterns from an XML file.</summary>
         /// <param name="filename">the filename</param>
-        /// <exception cref="HyphenationException">In case the parsing fails</exception>
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void LoadPatterns(String filename) {
             LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
         }
@@ -127,8 +124,6 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Read hyphenation patterns from an XML file.</summary>
         /// <param name="stream">the InputSource for the file</param>
         /// <param name="name">unique key representing country-language combination</param>
-        /// <exception cref="HyphenationException">In case the parsing fails</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void LoadPatterns(Stream stream, String name) {
             PatternParser pp = new PatternParser(this);
             ivalues = new TernaryTree();

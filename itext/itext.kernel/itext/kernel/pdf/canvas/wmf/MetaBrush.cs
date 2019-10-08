@@ -84,7 +84,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Initializes this MetaBrush object.</summary>
         /// <param name="in">the InputMeta</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Init(InputMeta @in) {
             style = @in.ReadWord();
             color = @in.ReadColor();

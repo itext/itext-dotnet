@@ -313,7 +313,6 @@ namespace iText.Signatures {
         /// <summary>Extracts a revision from the document.</summary>
         /// <param name="field">the signature field name</param>
         /// <returns>an InputStream covering the revision. Returns null if it's not a signature field</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual Stream ExtractRevision(String field) {
             GetSignatureNames();
             if (!sigNames.ContainsKey(field)) {
@@ -442,7 +441,6 @@ namespace iText.Signatures {
 
             private bool rangeIsCorrect = false;
 
-            /// <exception cref="System.IO.IOException"/>
             public ContentsChecker(IRandomAccessSource byteSource)
                 : base(byteSource, null) {
             }
@@ -485,7 +483,6 @@ namespace iText.Signatures {
                 return rangeIsCorrect;
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected override PdfDictionary ReadDictionary(bool objStm) {
                 // The method copies the logic of PdfReader's method.
                 // Only Contents related checks have been introduced.

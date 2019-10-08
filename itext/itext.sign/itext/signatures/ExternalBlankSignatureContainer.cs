@@ -75,7 +75,6 @@ namespace iText.Signatures {
             sigDic.Put(PdfName.SubFilter, subFilter);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual byte[] Sign(Stream data) {
             return new byte[0];
         }

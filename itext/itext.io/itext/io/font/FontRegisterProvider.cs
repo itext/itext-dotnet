@@ -72,7 +72,6 @@ namespace iText.IO.Font {
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
         /// <returns>the Font constructed based on the parameters</returns>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual FontProgram GetFont(String fontName, int style) {
             return GetFont(fontName, style, true);
         }
@@ -85,7 +84,6 @@ namespace iText.IO.Font {
         /// the cache if new, false if the font is always created new
         /// </param>
         /// <returns>the Font constructed based on the parameters</returns>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual FontProgram GetFont(String fontName, int style, bool cached) {
             if (fontName == null) {
                 return null;
@@ -161,7 +159,6 @@ namespace iText.IO.Font {
             fontFamilies.Put(StandardFontFamilies.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual FontProgram GetFontProgram(String fontName, bool cached) {
             FontProgram fontProgram = null;
             fontName = fontNames.Get(fontName.ToLowerInvariant());

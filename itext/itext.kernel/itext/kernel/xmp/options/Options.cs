@@ -53,7 +53,6 @@ namespace iText.Kernel.XMP.Options {
 
         /// <summary>Constructor with the options bit mask.</summary>
         /// <param name="options">the options bit mask</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not correct</exception>
         public Options(int options) {
             // EMTPY
             AssertOptionsValid(options);
@@ -102,7 +101,6 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <param name="options">The options to set.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException"></exception>
         public virtual void SetOptions(int options) {
             AssertOptionsValid(options);
             this.options = options;
@@ -172,7 +170,6 @@ namespace iText.Kernel.XMP.Options {
         /// (it has to be made public therefore).
         /// </remarks>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal virtual void AssertConsistency(int options) {
         }
 
@@ -186,7 +183,6 @@ namespace iText.Kernel.XMP.Options {
         /// -method is called.
         /// </remarks>
         /// <param name="options">the options to check</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are invalid.</exception>
         private void AssertOptionsValid(int options) {
             int invalidOptions = options & ~GetValidOptions();
             if (invalidOptions == 0) {

@@ -62,8 +62,6 @@ namespace iText.Kernel.Pdf.Layer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EnabledVisibilityPolicyAllOnTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -84,8 +82,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DisabledVisibilityPolicyAllOnTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -106,8 +102,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EnabledVisibilityPolicyAllOffTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -129,8 +123,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DisabledVisibilityPolicyAllOffTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -152,8 +144,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EnabledVisibilityPolicyAnyOnTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -174,8 +164,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DisabledVisibilityPolicyAnyOnTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -196,8 +184,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EnabledVisibilityPolicyAnyOffTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -218,8 +204,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DisabledVisibilityPolicyAnyOffTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -240,8 +224,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EnabledVisualExpressionTest01() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
@@ -272,8 +254,6 @@ namespace iText.Kernel.Pdf.Layer {
                  + cmpPdf, destinationFolder));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DisabledVisualExpressionTest01() {
             String srcPdf = "sourceWithDifferentLayers.pdf";

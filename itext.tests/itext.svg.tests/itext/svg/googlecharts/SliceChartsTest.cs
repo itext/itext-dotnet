@@ -57,17 +57,11 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Exploding_slice_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "exploding_slice_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Removing_slice_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "removing_slice_chart");

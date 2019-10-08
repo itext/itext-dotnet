@@ -61,8 +61,6 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest01() {
@@ -99,8 +97,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest02() {
@@ -145,8 +141,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest03() {
@@ -185,8 +179,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest04() {
@@ -226,7 +218,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentByOutlineTest() {
@@ -243,8 +234,6 @@ namespace iText.Kernel.Utils {
             list[1].Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";

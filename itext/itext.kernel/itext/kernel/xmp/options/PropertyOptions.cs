@@ -74,7 +74,6 @@ namespace iText.Kernel.XMP.Options {
 
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not valid</exception>
         public PropertyOptions(int options)
             : base(options) {
         }
@@ -262,7 +261,6 @@ namespace iText.Kernel.XMP.Options {
         /// If the other options set is null, this objects stays the same.
         /// </remarks>
         /// <param name="options">other options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If illegal options are provided</exception>
         public void MergeWith(iText.Kernel.XMP.Options.PropertyOptions options) {
             if (options != null) {
                 SetOptions(GetOptions() | options.GetOptions());
@@ -338,7 +336,6 @@ namespace iText.Kernel.XMP.Options {
         /// and URI cannot be a struct.
         /// </summary>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal override void AssertConsistency(int options) {
             if ((options & STRUCT) > 0 && (options & ARRAY) > 0) {
                 throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError.BADOPTIONS);

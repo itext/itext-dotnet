@@ -67,10 +67,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocDefault() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocDefault.pdf", new WriterProperties
@@ -87,10 +83,6 @@ namespace iText.Layout {
             CompareResult("simpleDocDefault");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocNullNsByDefault() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocNullNsByDefault.pdf"
@@ -107,10 +99,6 @@ namespace iText.Layout {
             CompareResult("simpleDocNullNsByDefault");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocExplicitlyOldStdNs() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocExplicitlyOldStdNs.pdf"
@@ -129,10 +117,6 @@ namespace iText.Layout {
             CompareResult("simpleDocExplicitlyOldStdNs");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf2() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf2.pdf", 
@@ -164,10 +148,6 @@ namespace iText.Layout {
             CompareResult("customRolesMappingPdf2");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf17() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf17.pdf", 
@@ -200,10 +180,6 @@ namespace iText.Layout {
             CompareResult("customRolesMappingPdf17");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithExplicitAndImplicitDefaultNsAtTheSameTime() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithExplicitAndImplicitDefaultNsAtTheSameTime.pdf"
@@ -255,7 +231,6 @@ namespace iText.Layout {
             CompareResult("docWithExplicitAndImplicitDefaultNsAtTheSameTime");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -278,7 +253,6 @@ namespace iText.Layout {
         }
 
         // compareResult("docWithInvalidMapping01");
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -300,7 +274,6 @@ namespace iText.Layout {
         }
 
         // compareResult("docWithInvalidMapping02");
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping03() {
             NUnit.Framework.Assert.That(() =>  {
@@ -318,10 +291,6 @@ namespace iText.Layout {
         }
 
         // compareResult("docWithInvalidMapping03");
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping04() {
             // TODO this test passes, however it seems, that mingling two standard namespaces in the same tag structure tree should be illegal
@@ -340,7 +309,6 @@ namespace iText.Layout {
             CompareResult("docWithInvalidMapping04");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping05() {
             NUnit.Framework.Assert.That(() =>  {
@@ -367,10 +335,6 @@ namespace iText.Layout {
         }
 
         //         compareResult("docWithInvalidMapping05");
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping06() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping06.pdf", 
@@ -396,7 +360,6 @@ namespace iText.Layout {
             CompareResult("docWithInvalidMapping06");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS, Count
              = 1)]
@@ -426,7 +389,6 @@ namespace iText.Layout {
         }
 
         //        compareResult("docWithInvalidMapping07");
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping08() {
             NUnit.Framework.Assert.That(() =>  {
@@ -444,10 +406,6 @@ namespace iText.Layout {
         }
 
         //        compareResult("docWithInvalidMapping08");
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping09() {
@@ -463,10 +421,6 @@ namespace iText.Layout {
             CompareResult("docWithInvalidMapping09");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping10() {
@@ -483,10 +437,6 @@ namespace iText.Layout {
             CompareResult("docWithInvalidMapping10");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void StampTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocOldStdNs.pdf"), new PdfWriter
@@ -499,10 +449,6 @@ namespace iText.Layout {
             CompareResult("stampTest01");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void StampTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNoNs.pdf"), new PdfWriter
@@ -515,10 +461,6 @@ namespace iText.Layout {
             CompareResult("stampTest02");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void StampTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
@@ -531,10 +473,6 @@ namespace iText.Layout {
             CompareResult("stampTest03");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void StampTest04() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDoc1_7.pdf"), new PdfWriter(
@@ -547,10 +485,6 @@ namespace iText.Layout {
             CompareResult("stampTest04");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void StampTest05() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
@@ -567,10 +501,6 @@ namespace iText.Layout {
             CompareResult("stampTest05");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CopyTest01() {
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"));
@@ -583,10 +513,6 @@ namespace iText.Layout {
             CompareResult("copyTest01");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CopyTest02() {
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "docSeveralNs.pdf"));
@@ -613,7 +539,6 @@ namespace iText.Layout {
             internal static String span = "span";
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private void AddSimpleContentToDoc(Document document, Paragraph p2) {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100);
@@ -637,7 +562,6 @@ namespace iText.Layout {
             document.Add(table);
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private void AddContentToDocInCustomNs(PdfDocument pdfDocument, PdfNamespace defaultNamespace, PdfNamespace
              xhtmlNs, PdfNamespace html4Ns, String hnRole, Document document) {
             Paragraph h1P = new Paragraph("Header level 1");
@@ -671,10 +595,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         private void CompareResult(String testName) {
             String outFileName = testName + ".pdf";
             String cmpFileName = "cmp_" + outFileName;

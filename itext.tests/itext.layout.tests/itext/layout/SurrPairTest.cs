@@ -65,8 +65,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SurrogatePairFrom2Chars() {
             String outFileName = destinationFolder + "surrogatePairFrom2Chars.pdf";
@@ -84,8 +82,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SurrogatePair2Pairs() {
             String outFileName = destinationFolder + "surrogatePair2Pairs.pdf";
@@ -103,8 +99,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SurrogatePairFullCharacter() {
             String outFileName = destinationFolder + "surrogatePairFullCharacter.pdf";
@@ -122,8 +116,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE)]
         public virtual void SurrogatePairCombingFullSurrs() {
@@ -150,8 +142,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_SUBSET_ISSUE)]
         public virtual void SurrogatePairCombingFullSurrsWithNoSurrs() {

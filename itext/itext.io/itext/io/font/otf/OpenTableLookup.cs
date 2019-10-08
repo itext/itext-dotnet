@@ -75,14 +75,12 @@ namespace iText.IO.Font.Otf {
             return false;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadSubTables() {
             foreach (int subTableLocation in subTableLocations) {
                 ReadSubTable(subTableLocation);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal abstract void ReadSubTable(int subTableLocation);
 
         public class GlyphIndexer {

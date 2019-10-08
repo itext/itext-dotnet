@@ -255,12 +255,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen) {
             return ComputeHash(password, salt, saltOffset, saltLen, null);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
             IDigest mdSha256 = DigestUtilities.GetDigest("SHA-256");
             mdSha256.Update(password);

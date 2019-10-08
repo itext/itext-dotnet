@@ -61,83 +61,70 @@ namespace iText.Kernel.Pdf.Xobject {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestMultiStageFilters() {
             // TODO DEVSIX-2940: extracted image is blank
             TestFile("multistagefilter1.pdf", "Obj13", "jpg");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestAscii85Filters() {
             TestFile("ASCII85_RunLengthDecode.pdf", "Im9", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestCcittFilters() {
             TestFile("ccittfaxdecode.pdf", "background0", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateDecodeFilters() {
             // TODO DEVSIX-2941: extracted indexed devicegray RunLengthDecode gets color inverted
             TestFile("flatedecode_runlengthdecode.pdf", "Im9", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestDctDecodeFilters() {
             // TODO DEVSIX-2940: extracted image is upside down
             TestFile("dctdecode.pdf", "im1", "jpg");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Testjbig2Filters() {
             // TODO DEVSIX-2942: extracted jbig2 image is not readable by most popular image viewers
             TestFile("jbig2decode.pdf", "2", "jbig2");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateCmyk() {
             TestFile("img_cmyk.pdf", "Im1", "tif");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateCmykIcc() {
             TestFile("img_cmyk_icc.pdf", "Im1", "tif");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateIndexed() {
             TestFile("img_indexed.pdf", "Im1", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateRgbIcc() {
             TestFile("img_rgb_icc.pdf", "Im1", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateRgb() {
             TestFile("img_rgb.pdf", "Im1", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFlateCalRgb() {
             TestFile("img_calrgb.pdf", "Im1", "png");
         }
 
-        /// <exception cref="System.Exception"/>
         private void TestFile(String filename, String objectid, String expectedImageFormat) {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + filename));
             try {
@@ -166,7 +153,6 @@ namespace iText.Kernel.Pdf.Xobject {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CompareTiffImages(byte[] cmpBytes, byte[] resultBytes) {
             int cmpNumDirectories = TIFFDirectory.GetNumDirectories(new RandomAccessFileOrArray(new RandomAccessSourceFactory
                 ().CreateSource(cmpBytes)));

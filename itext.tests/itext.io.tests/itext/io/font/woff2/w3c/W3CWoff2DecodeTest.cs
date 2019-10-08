@@ -65,7 +65,6 @@ namespace iText.IO.Font.Woff2.W3c {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RunTest() {
             System.Console.Out.Write("\n" + GetTestInfo() + "\n");

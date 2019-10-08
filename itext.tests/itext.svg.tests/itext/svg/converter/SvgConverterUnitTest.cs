@@ -95,14 +95,12 @@ namespace iText.Svg.Converter {
             TestResourceCreated(doc, 1);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnDocumentCreatesResourceTest() {
             SvgConverter.DrawOnDocument(@is, doc, 1);
             TestResourceCreated(doc, 1);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnDocumentWithPropsCreatesResourceTest() {
             SvgConverter.DrawOnDocument(@is, doc, 1, new DummySvgConverterProperties());
@@ -125,7 +123,6 @@ namespace iText.Svg.Converter {
             TestResourceCreated(doc, 2);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnPageCreatesResourceTest() {
             PdfPage page = doc.AddNewPage();
@@ -134,7 +131,6 @@ namespace iText.Svg.Converter {
             TestResourceCreated(doc, 2);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnPageWithPropsCreatesResourceTest() {
             PdfPage page = doc.AddNewPage();
@@ -161,7 +157,6 @@ namespace iText.Svg.Converter {
             TestResourceCreated(doc, 2);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnCanvasCreatesResourceTest() {
             PdfPage page = doc.AddNewPage();
@@ -171,7 +166,6 @@ namespace iText.Svg.Converter {
             TestResourceCreated(doc, 2);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnCanvasWithPropsCreatesResourceTest() {
             PdfPage page = doc.AddNewPage();
@@ -193,14 +187,12 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertStreamToXObjectCreatesNoResourceTest() {
             SvgConverter.ConvertToXObject(@is, doc);
             NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ConvertStreamToXObjectWithPropsCreatesNoResourceTest() {
             SvgConverter.ConvertToXObject(@is, doc, new DummySvgConverterProperties());
@@ -237,7 +229,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(0, node.ChildNodes().Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStream() {
             INode actual = SvgConverter.Parse(@is);
@@ -247,7 +238,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(0, node.ChildNodes().Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamWithProps() {
             INode actual = SvgConverter.Parse(@is, new DummySvgConverterProperties());
@@ -257,7 +247,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(0, node.ChildNodes().Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamErrorEncodingTooBig() {
             @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
@@ -274,7 +263,6 @@ namespace iText.Svg.Converter {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamWithOtherEncoding() {
             @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
@@ -285,7 +273,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.AreEqual(0, node.ChildNodes().Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseStreamErrorOtherCharset() {
             INode actual = SvgConverter.Parse(@is, new SvgConverterUnitTest.OtherCharsetDummySvgConverterProperties());

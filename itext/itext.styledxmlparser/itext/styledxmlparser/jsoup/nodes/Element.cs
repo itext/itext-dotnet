@@ -378,8 +378,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </param>
         /// <returns>elements that match the query (empty if none match)</returns>
         /// <seealso cref="iText.StyledXmlParser.Jsoup.Select.Selector"/>
-        /// <exception cref="iText.StyledXmlParser.Jsoup.Select.Selector.SelectorParseException">(unchecked) on an invalid CSS query.
-        ///     </exception>
         public virtual Elements Select(String cssQuery) {
             return Selector.Select(cssQuery, this);
         }
@@ -1339,7 +1337,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             if (@out.PrettyPrint() && (tag.FormatAsBlock() || (Parent() != null && ((iText.StyledXmlParser.Jsoup.Nodes.Element
                 )Parent()).Tag().FormatAsBlock()) || @out.Outline())) {
@@ -1369,7 +1366,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
             if (!(childNodes.IsEmpty() && tag.IsSelfClosing())) {
                 if (@out.PrettyPrint() && (!childNodes.IsEmpty() && (tag.FormatAsBlock() || (@out.Outline() && (childNodes

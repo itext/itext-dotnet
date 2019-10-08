@@ -66,7 +66,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -93,7 +92,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -133,8 +131,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest4() {
             String outPdf = destinationFolder + "pdfA1b_colorCheckTest4.pdf";
@@ -155,7 +151,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -174,8 +169,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest2() {
             String outPdf = destinationFolder + "pdfA1b_egsCheckTest2.pdf";
@@ -193,7 +186,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -212,7 +204,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest4() {
             NUnit.Framework.Assert.That(() =>  {
@@ -231,7 +222,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -257,7 +247,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -276,8 +265,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest3() {
             String outPdf = destinationFolder + "pdfA1b_transparencyCheckTest3.pdf";
@@ -295,8 +282,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

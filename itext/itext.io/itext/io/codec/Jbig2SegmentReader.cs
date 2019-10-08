@@ -209,7 +209,6 @@ namespace iText.IO.Codec {
             /// if for_embedding, skip the segment types that are known to be not for acrobat.
             /// </remarks>
             /// <param name="for_embedding">True if the bytes represents embedded data, false otherwise</param>
-            /// <exception cref="System.IO.IOException"/>
             /// <returns>a byte array</returns>
             public virtual byte[] GetData(bool for_embedding) {
                 MemoryStream os = new MemoryStream();
@@ -248,7 +247,6 @@ namespace iText.IO.Codec {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public Jbig2SegmentReader(RandomAccessFileOrArray ra) {
             this.ra = ra;
         }
@@ -259,7 +257,6 @@ namespace iText.IO.Codec {
             return bc;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Read() {
             if (this.read) {
                 throw new InvalidOperationException("already.attempted.a.read.on.this.jbig2.file");
@@ -290,7 +287,6 @@ namespace iText.IO.Codec {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s) {
             int ptr = (int)ra.GetPosition();
             if (s.dataLength == unchecked((long)(0xffffffffl))) {
@@ -316,7 +312,6 @@ namespace iText.IO.Codec {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal virtual Jbig2SegmentReader.Jbig2Segment ReadHeader() {
             int ptr = (int)ra.GetPosition();
             // 7.2.1
@@ -424,7 +419,6 @@ namespace iText.IO.Codec {
             return s;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void ReadFileHeader() {
             ra.Seek(0);
             byte[] idstring = new byte[8];

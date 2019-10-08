@@ -81,8 +81,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest01() {
             String outFileName = destinationFolder + "keepWithNextTest01.pdf";
@@ -103,8 +101,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest02() {
             String outFileName = destinationFolder + "keepWithNextTest02.pdf";
@@ -123,8 +119,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest03() {
             String outFileName = destinationFolder + "keepWithNextTest03.pdf";
@@ -143,8 +137,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest04() {
             String outFileName = destinationFolder + "keepWithNextTest04.pdf";
@@ -164,8 +156,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest05() {
             String outFileName = destinationFolder + "keepWithNextTest05.pdf";
@@ -186,8 +176,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest06() {
             String outFileName = destinationFolder + "keepWithNextTest06.pdf";
@@ -200,8 +188,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest07() {
             String outFileName = destinationFolder + "keepWithNextTest07.pdf";
@@ -216,8 +202,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest08() {
             String outFileName = destinationFolder + "keepWithNextTest08.pdf";
@@ -240,8 +224,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest09() {
             String outFileName = destinationFolder + "keepWithNextTest09.pdf";
@@ -263,8 +245,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest10() {
             String outFileName = destinationFolder + "keepWithNextTest10.pdf";
@@ -286,8 +266,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest11() {
             String outFileName = destinationFolder + "keepWithNextTest11.pdf";

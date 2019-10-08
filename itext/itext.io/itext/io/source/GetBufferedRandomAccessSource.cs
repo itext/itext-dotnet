@@ -63,7 +63,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             if (position < getBufferStart || position > getBufferEnd) {
                 int count = source.Get(position, getBuffer, 0, getBuffer.Length);
@@ -78,7 +77,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             return source.Get(position, bytes, off, len);
         }
@@ -89,7 +87,6 @@ namespace iText.IO.Source {
         }
 
         /// <summary>Does nothing - the underlying source is not closed</summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             source.Close();
             getBufferStart = -1;

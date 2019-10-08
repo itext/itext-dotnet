@@ -73,7 +73,6 @@ namespace iText.IO.Font.Cmap {
         /// <c>ArrayList</c>
         /// to use. It will be cleared before using.
         /// </param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual void Parse(IList<CMapObject> ls) {
             ls.Clear();
             CMapObject ob;
@@ -93,7 +92,6 @@ namespace iText.IO.Font.Cmap {
         /// token.
         /// </remarks>
         /// <returns>the dictionary</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual CMapObject ReadDictionary() {
             IDictionary<String, CMapObject> dic = new Dictionary<String, CMapObject>();
             while (true) {
@@ -128,7 +126,6 @@ namespace iText.IO.Font.Cmap {
         /// <summary>Reads an array.</summary>
         /// <remarks>Reads an array. The tokeniser must be positioned past the "[" token.</remarks>
         /// <returns>an array</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual CMapObject ReadArray() {
             IList<CMapObject> array = new List<CMapObject>();
             while (true) {
@@ -148,7 +145,6 @@ namespace iText.IO.Font.Cmap {
 
         /// <summary>Reads a pdf object.</summary>
         /// <returns>the pdf object</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual CMapObject ReadObject() {
             if (!NextValidToken()) {
                 return null;
@@ -218,7 +214,6 @@ namespace iText.IO.Font.Cmap {
         /// <see langword="false"/>
         /// if the end of content was reached.
         /// </returns>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual bool NextValidToken() {
             while (tokeniser.NextToken()) {
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Comment) {

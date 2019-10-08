@@ -65,8 +65,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
             String outPdf = destinationFolder + "pdfA1b_listTest01.pdf";

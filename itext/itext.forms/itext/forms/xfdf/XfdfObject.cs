@@ -102,17 +102,12 @@ namespace iText.Forms.Xfdf {
             reader.MergeXfdfIntoPdf(this, pdfDocument, pdfDocumentName);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         public virtual void WriteToFile(String filename) {
             using (Stream os = new FileStream(filename, FileMode.Create)) {
                 WriteToFile(os);
             }
         }
 
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         public virtual void WriteToFile(Stream os) {
             XfdfWriter writer = new XfdfWriter(os);
             writer.Write(this);

@@ -294,7 +294,6 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <see cref="TilingType"/>
             /// to set.
             /// </param>
-            /// <exception cref="System.ArgumentException">in case of wrong value.</exception>
             public virtual void SetTilingType(int tilingType) {
                 if (tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING && tilingType != PdfPattern.Tiling.TilingType
                     .NO_DISTORTION && tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING_AND_FASTER_TILING) {

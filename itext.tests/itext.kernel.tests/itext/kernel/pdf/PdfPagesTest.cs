@@ -72,7 +72,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
@@ -109,7 +108,6 @@ namespace iText.Kernel.Pdf {
         //        pdfDoc.close();
         //        verifyPagesOrder(destinationFolder + filename, pageCount);
         //    }
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
@@ -125,7 +123,6 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReversePagesTest2() {
             String filename = "1000PagesDocument_reversed.pdf";
@@ -140,7 +137,6 @@ namespace iText.Kernel.Pdf {
                 , "diff");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RandomObjectPagesTest() {
             String filename = "randomObjectPagesTest.pdf";
@@ -175,7 +171,6 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RandomNumberPagesTest() {
             String filename = "randomNumberPagesTest.pdf";
@@ -253,7 +248,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(error);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
         public virtual void RemoveFlushedPage() {
@@ -276,7 +270,6 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount - 1);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void VerifyPagesOrder(String filename, int numOfPages) {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
@@ -303,7 +296,6 @@ namespace iText.Kernel.Pdf {
             return -1;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestInheritedResources() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"));
@@ -323,8 +315,6 @@ namespace iText.Kernel.Pdf {
         //        List<PdfFont> list = page.getResources().getFonts(true);
         //    }
         //
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestInheritedResourcesUpdate() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"), new PdfWriter
@@ -340,8 +330,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(compareResult);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReorderInheritedResourcesTest() {
             //TODO: DEVSIX-1643 Inherited resources aren't copied on page reordering
@@ -356,7 +344,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(compareResult);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetPageByDictionary() {
             String filename = sourceFolder + "1000PagesDocument.pdf";
@@ -373,7 +360,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RemovePageWithFormFieldsTest() {
             String filename = sourceFolder + "docWithFields.pdf";
@@ -388,7 +374,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetPageSizeWithInheritedMediaBox() {
             double eps = 0.0000001;
@@ -401,7 +386,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PageThumbnailTest() {
             String filename = "pageThumbnail.pdf";
@@ -416,7 +400,6 @@ namespace iText.Kernel.Pdf {
                 , "diff");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RotationPagesRotationTest() {
             String filename = "singlePageDocumentWithRotation.pdf";
@@ -425,7 +408,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(90, page.GetRotation(), "Inherited value is invalid");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageTreeCleanupParentRefTest() {
             String src = sourceFolder + "CatalogWithPageAndPagesEntries.pdf";
@@ -437,7 +419,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(TestPageTreeParentsValid(src) && TestPageTreeParentsValid(dest));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdfNumberInPageContentArrayTest() {
             String src = sourceFolder + "pdfNumberInPageContentArray.pdf";
@@ -456,8 +437,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(invalidContentsArray.Get(4).IsStream());
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.IO.IOException"/>
         private bool TestPageTreeParentsValid(String src) {
             bool valid = true;
             PdfReader reader = new PdfReader(src);
@@ -479,7 +458,6 @@ namespace iText.Kernel.Pdf {
             return valid;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestExcessiveXrefEntriesForCopyXObject() {
             PdfDocument inputPdf = new PdfDocument(new PdfReader(sourceFolder + "input500.pdf"));
@@ -500,7 +478,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(500, outputPdf.GetXref().Size() - inputPdf.GetXref().Size());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS, Count = 1)]
         public virtual void PageGetMediaBoxTooManyArgumentsTest() {
@@ -512,7 +489,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PageGetMediaBoxNotEnoughArgumentsTest() {
             NUnit.Framework.Assert.That(() =>  {

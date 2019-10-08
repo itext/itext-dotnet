@@ -60,9 +60,6 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeEAN_01.pdf";
@@ -80,9 +77,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcodeEAN_02.pdf";
@@ -100,9 +94,6 @@ namespace iText.Barcodes {
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
             String filename = "barcodeEANSUP.pdf";

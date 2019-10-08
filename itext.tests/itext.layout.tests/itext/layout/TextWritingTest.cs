@@ -64,8 +64,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRiseTest01() {
             // CountryChunks example
@@ -86,8 +84,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextRenderingModeTest01() {
             String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
@@ -109,8 +105,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LeadingTest01() {
             String outFileName = destinationFolder + "leadingTest01.pdf";
@@ -129,8 +123,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LeadingTest02() {
             String outFileName = destinationFolder + "leadingTest02.pdf";
@@ -145,8 +137,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FirstLineIndentTest01() {
             String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
@@ -181,8 +171,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CharSpacingTest01() {
             String outFileName = destinationFolder + "charSpacingTest01.pdf";
@@ -204,8 +192,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordSpacingTest01() {
             String outFileName = destinationFolder + "wordSpacingTest01.pdf";
@@ -229,8 +215,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontStyleSimulationTest01() {
             String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
@@ -251,8 +235,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BigWordTest01() {
             String outFileName = destinationFolder + "bigWordTest01.pdf";
@@ -290,8 +272,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
             String outFileName = destinationFolder + "underline.pdf";
@@ -308,8 +288,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LineThroughTest() {
             //TODO: update after DEVSIX-2623 fix

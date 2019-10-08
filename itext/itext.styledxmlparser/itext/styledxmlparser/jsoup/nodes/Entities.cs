@@ -150,7 +150,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         // this method is ugly, and does a lot. but other breakups cause rescanning and stringbuilder generations
-        /// <exception cref="System.IO.IOException"/>
         internal static void Escape(StringBuilder accum, String str, OutputSettings outputSettings, bool inAttribute
             , bool normaliseWhite, bool stripLeadingWhite) {
             bool lastWasWhite = false;

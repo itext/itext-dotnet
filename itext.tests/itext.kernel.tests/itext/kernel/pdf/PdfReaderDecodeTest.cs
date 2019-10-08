@@ -59,7 +59,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void NoMemoryHandlerTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -79,7 +78,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
@@ -99,7 +97,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
@@ -129,7 +126,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
@@ -162,7 +158,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(0, PdfReader.DecodeBytes(b, stream).Length);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
@@ -184,7 +179,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
@@ -204,7 +198,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]

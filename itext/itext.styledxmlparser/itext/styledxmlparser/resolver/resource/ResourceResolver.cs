@@ -154,7 +154,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// the
         /// <see cref="System.IO.Stream"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         public virtual Stream RetrieveStyleSheet(String uri) {
             return UrlUtil.OpenStream(uriResolver.ResolveAgainstBaseUri(uri));
         }
@@ -249,7 +248,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Resolves a given URI against the base URI.</summary>
         /// <param name="uri">the uri</param>
         /// <returns>the url</returns>
-        /// <exception cref="System.UriFormatException">the malformed URL exception</exception>
         public virtual Uri ResolveAgainstBaseUri(String uri) {
             return uriResolver.ResolveAgainstBaseUri(uri);
         }
@@ -316,7 +314,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// containing the Image loaded in
         /// </returns>
-        /// <exception cref="System.Exception">thrown if error occurred during fetching or constructing the image</exception>
         protected internal virtual PdfXObject CreateImageByUrl(Uri url) {
             return new PdfImageXObject(ImageDataFactory.Create(url));
         }

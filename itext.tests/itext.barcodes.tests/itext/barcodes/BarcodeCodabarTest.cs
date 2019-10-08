@@ -59,9 +59,6 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "codabar.pdf";

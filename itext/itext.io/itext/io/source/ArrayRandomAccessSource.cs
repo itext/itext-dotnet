@@ -80,7 +80,6 @@ namespace iText.IO.Source {
             return array.Length;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             array = null;
         }

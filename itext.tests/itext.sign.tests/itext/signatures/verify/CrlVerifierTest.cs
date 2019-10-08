@@ -64,8 +64,6 @@ namespace iText.Signatures.Verify {
         public static void Before() {
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ValidCrl01() {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "rootRsa.p12", password
@@ -74,8 +72,6 @@ namespace iText.Signatures.Verify {
             NUnit.Framework.Assert.IsTrue(VerifyTest(crlBuilder));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void InvalidRevokedCrl01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -93,8 +89,6 @@ namespace iText.Signatures.Verify {
 ;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void InvalidOutdatedCrl01() {
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "rootRsa.p12", password
@@ -104,8 +98,6 @@ namespace iText.Signatures.Verify {
             NUnit.Framework.Assert.IsFalse(VerifyTest(crlBuilder));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         private bool VerifyTest(TestCrlBuilder crlBuilder) {
             String caCertFileName = certsSrc + "rootRsa.p12";
             X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(caCertFileName, password)[0];

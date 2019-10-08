@@ -87,7 +87,6 @@ namespace iText.Svg.Processors.Impl {
         public DefaultSvgProcessor() {
         }
 
-        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgProcessorResult Process(INode root, ISvgConverterProperties converterProps) {
             if (root == null) {
                 throw new SvgProcessingException(SvgLogMessageConstant.INODEROOTISNULL);
@@ -111,7 +110,6 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
-        /// <exception cref="iText.Svg.Exceptions.SvgProcessingException"/>
         public virtual ISvgProcessorResult Process(INode root) {
             return Process(root, null);
         }

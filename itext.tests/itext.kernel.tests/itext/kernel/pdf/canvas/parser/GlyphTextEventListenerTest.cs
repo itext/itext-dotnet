@@ -52,7 +52,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/GlyphTextEventListenerTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));
@@ -70,7 +69,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual("1234\nt5678", extractedText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "Sample.pdf"));
@@ -80,7 +78,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual("Your ", extractedText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestWithMultiFilteredRenderListener() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));

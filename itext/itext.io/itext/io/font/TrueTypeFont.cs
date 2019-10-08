@@ -74,7 +74,6 @@ namespace iText.IO.Font {
 
         private byte[] fontStreamBytes;
 
-        /// <exception cref="System.IO.IOException"/>
         private TrueTypeFont(OpenTypeParser fontParser) {
             this.fontParser = fontParser;
             this.fontParser.LoadTables(true);
@@ -85,22 +84,18 @@ namespace iText.IO.Font {
             fontNames = new FontNames();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path)
             : this(new OpenTypeParser(path)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(byte[] ttf)
             : this(new OpenTypeParser(ttf)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(String ttcPath, int ttcIndex)
             : this(new OpenTypeParser(ttcPath, ttcIndex)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(byte[] ttc, int ttcIndex)
             : this(new OpenTypeParser(ttc, ttcIndex)) {
         }
@@ -213,7 +208,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGdefTable() {
             int[] gdef = fontParser.tables.Get("GDEF");
             if (gdef != null) {
@@ -225,7 +219,6 @@ namespace iText.IO.Font {
             gdefTable.ReadTable();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGsubTable() {
             int[] gsub = fontParser.tables.Get("GSUB");
             if (gsub != null) {
@@ -234,7 +227,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGposTable() {
             int[] gpos = fontParser.tables.Get("GPOS");
             if (gpos != null) {
@@ -243,7 +235,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void InitializeFontProperties() {
             // initialize sfnt tables
             OpenTypeParser.HeaderTable head = fontParser.GetHeadTable();
@@ -364,7 +355,6 @@ namespace iText.IO.Font {
             return Object.Equals(fontParser.fileName, fontProgram);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             if (fontParser != null) {
                 fontParser.Close();

@@ -61,8 +61,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DestinationTest01() {
             String outFileName = destinationFolder + "destinationTest01.pdf";

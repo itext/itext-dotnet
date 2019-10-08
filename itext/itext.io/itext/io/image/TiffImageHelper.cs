@@ -694,7 +694,6 @@ namespace iText.IO.Image {
             return dpi;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessExtraSamples(DeflaterOutputStream zip, DeflaterOutputStream mzip, byte[] outBuf
             , int samplePerPixel, int bitsPerSample, int width, int height) {
             if (bitsPerSample == 8) {

@@ -60,10 +60,6 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleFormWithOneFieldTest() {
             String pdfDocumentName = "simpleFormWithOneField.pdf";
@@ -80,10 +76,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleFormWithMultipleFieldsTest() {
             String pdfDocumentName = "simpleFormWithMultipleFields.pdf";
@@ -100,10 +92,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfValueRichText() {
             //TODO DEVSIX-3215
@@ -121,10 +109,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfHierarchyFields() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHierarchyFields.pdf"
@@ -141,10 +125,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfFreeText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFreeText.pdf", 
@@ -161,10 +141,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHighlightedText.pdf"
@@ -181,10 +157,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfUnderlineText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfUnderlineText.pdf"
@@ -201,10 +173,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfPopupNewFlags() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPopupNewFlags.pdf"
@@ -221,10 +189,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfStrikeout() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStrikeout.pdf", 
@@ -241,10 +205,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquigglyText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquigglyText.pdf"
@@ -261,10 +221,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLine() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLine.pdf", FileMode.Open
@@ -281,10 +237,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCircle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCircle.pdf", FileMode.Open
@@ -301,10 +253,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquare() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquare.pdf", FileMode.Open
@@ -321,10 +269,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquareAndCircleInteriorColor() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquareAndCircleInteriorColor.pdf"
@@ -341,10 +285,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCaret() {
             //TODO DEVSIX-3215
@@ -362,10 +302,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfPolygon() {
             //TODO DEVSIX-3215 Support annots
@@ -383,10 +319,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfPolyline() {
             //TODO DEVSIX-3215 Support annots
@@ -404,10 +336,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfStamp() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStamp.pdf", FileMode.Open
@@ -424,10 +352,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfStampWithAppearance() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStampWithAppearance.pdf"
@@ -444,10 +368,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfInk() {
             //TODO DEVSIX-3215 Support annots
@@ -464,10 +384,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfFileAttachment() {
             //TODO DEVSIX-3215
@@ -485,10 +401,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSound() {
             //TODO DEVSIX-3215
@@ -506,10 +418,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLink() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLink.pdf", FileMode.Open
@@ -526,10 +434,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkBorderStyle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkBorderStyle.pdf"
@@ -546,10 +450,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDest.pdf", 
@@ -566,10 +466,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFit() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFit.pdf"
@@ -586,10 +482,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitB() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitB.pdf"
@@ -606,10 +498,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitR() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitR.pdf"
@@ -626,10 +514,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitH() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitH.pdf"
@@ -646,10 +530,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBH() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBH.pdf"
@@ -666,10 +546,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBV() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBV.pdf"
@@ -686,10 +562,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitV() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitV.pdf"
@@ -706,10 +578,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfRedact() {
             //TODO DEVSIX-3215
@@ -727,10 +595,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfProjection() {
             //TODO DEVSIX-3215
@@ -748,10 +612,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkAllParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkAllParams.pdf"
@@ -768,10 +628,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReplaceText() {
             //TODO DEVSIX-3215 Support caret annontation
@@ -789,10 +645,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfArrow() {
             //TODO DEVSIX-3215
@@ -810,10 +662,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCallout() {
             //TODO DEVSIX-3215
@@ -831,10 +679,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCloud() {
             //TODO DEVSIX-3215 Support annots
@@ -852,10 +696,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCloudNested() {
             //TODO DEVSIX-3215 Support annots
@@ -873,10 +713,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfTextBoxAllParams() {
             //TODO DEVSIX-3215 Support richtext
@@ -894,10 +730,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfJavaScriptForms() {
             //TODO DEVSIX-3215
@@ -915,10 +747,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAttrColor() {
             //TODO DEVSIX-3215
@@ -936,10 +764,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAttrFlagsOpacity() {
             //TODO DEVSIX-3215
@@ -957,10 +781,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfAttrTitle() {
             //TODO DEVSIX-3215
@@ -978,10 +798,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DMeasurement() {
             //TODO DEVSIX-3215
@@ -998,10 +814,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DAngular() {
             //TODO DEVSIX-3215
@@ -1019,10 +831,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DRadial() {
             //TODO DEVSIX-3215
@@ -1040,10 +848,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSubelementContents() {
             //TODO DEVSIX-3215
@@ -1061,10 +865,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSubelementOverlayAppearance() {
             //check when Redact annotation is implemented
@@ -1083,10 +883,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfButton() {
             //Widget annotation is not supported in xfdf 2014 spec version
@@ -1105,10 +901,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCheckBox() {
             //Widget annotation is not supported in xfdf 2014 spec version
@@ -1127,10 +919,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfList() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
@@ -1147,10 +935,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfDropDown() {
             //Widget annotation is not supported in 2014 spec version
@@ -1189,10 +973,6 @@ namespace iText.Forms {
         }
 
         //TODO how to define test as unit test inside this whole class? is it even possible
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void FieldEmptyValueTest() {
             XfdfObject xfdfObject = new XfdfObject();
@@ -1208,10 +988,6 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_fieldEmptyValueTest.xfdf"));
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void FieldNullValueTest() {
             XfdfObject xfdfObject = new XfdfObject();
@@ -1227,10 +1003,6 @@ namespace iText.Forms {
         }
 
         //TODO how to define test as unit test inside this whole class? is it even possible
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void FieldValueTest() {
             XfdfObject xfdfObject = new XfdfObject();

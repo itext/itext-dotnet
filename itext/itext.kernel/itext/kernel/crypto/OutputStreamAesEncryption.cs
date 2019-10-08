@@ -150,13 +150,6 @@ namespace iText.Kernel.Crypto {
         /// <param name="b">the data.</param>
         /// <param name="off">the start offset in the data.</param>
         /// <param name="len">the number of bytes to write.</param>
-        /// <exception cref="System.IO.IOException">
-        /// if an I/O error occurs. In particular,
-        /// an
-        /// <c>IOException</c>
-        /// is thrown if the output
-        /// stream is closed.
-        /// </exception>
         public override void Write(byte[] b, int off, int len) {
             byte[] b2 = cipher.Update(b, off, len);
             if (b2 == null || b2.Length == 0) {

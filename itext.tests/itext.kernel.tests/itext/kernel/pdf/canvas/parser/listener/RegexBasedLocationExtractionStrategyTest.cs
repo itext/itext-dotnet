@@ -54,7 +54,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/RegexBasedLocationExtractionStrategyTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
@@ -86,7 +85,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         // https://jira.itextsupport.com/browse/DEVSIX-1940
         // text is 'calligraphy' and 'll' is composing a ligature
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLigatureBeforeLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
@@ -115,7 +113,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLigatureCrossLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
@@ -144,7 +141,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLigatureInLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
@@ -173,7 +169,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "rotatedText.pdf"));

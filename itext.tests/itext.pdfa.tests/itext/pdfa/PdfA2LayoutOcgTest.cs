@@ -64,8 +64,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckIfOcgForPdfA2Works() {
             String fileName = "createdOcgPdfA.pdf";

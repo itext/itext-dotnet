@@ -224,7 +224,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         }
 
         /// <summary>Reads and processes all the data of the InputMeta.</summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ReadAll() {
             if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7))) {
                 throw new PdfException(PdfException.NotAPlaceableWindowsMetafile);
@@ -701,7 +700,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <param name="x2">x2-coordinate of the rectangle if clipped or opaque</param>
         /// <param name="y2">y1-coordinate of the rectangle if clipped or opaque</param>
         /// <param name="text">text to output</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void OutputText(int x, int y, int flag, int x1, int y1, int x2, int y2, String text) {
             MetaFont font = state.GetCurrentFont();
             float refX = state.TransformX(x);
@@ -838,7 +836,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Wrap a BMP image in an WMF.</summary>
         /// <param name="image">the BMP image to be wrapped</param>
         /// <returns>the wrapped BMP</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static byte[] WrapBMP(ImageData image) {
             if (image.GetOriginalType() != ImageType.BMP) {
                 throw new PdfException(PdfException.OnlyBmpCanBeWrappedInWmf);
@@ -906,7 +903,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Writes the specified value to the specified outputstream as a word.</summary>
         /// <param name="os">outputstream to write the word to</param>
         /// <param name="v">value to be written</param>
-        /// <exception cref="System.IO.IOException"/>
         public static void WriteWord(Stream os, int v) {
             os.Write(v & 0xff);
             os.Write((int)(((uint)v) >> 8) & 0xff);
@@ -915,7 +911,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Writes the specified value to the specified outputstream as a dword.</summary>
         /// <param name="os">outputstream to write the dword to</param>
         /// <param name="v">value to be written</param>
-        /// <exception cref="System.IO.IOException"/>
         public static void WriteDWord(Stream os, int v) {
             WriteWord(os, v & 0xffff);
             WriteWord(os, (int)(((uint)v) >> 16) & 0xffff);

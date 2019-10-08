@@ -212,7 +212,6 @@ namespace iText.IO.Image {
             RawImageHelper.UpdateImageAttributes(png.image, png.additional);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png) {
             ReadPng(pngStream, png);
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
@@ -416,7 +415,6 @@ namespace iText.IO.Image {
             return (png.colorType & 2) == 0 ? 1 : 3;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadPng(Stream pngStream, PngImageHelper.PngParameters png) {
             for (int i = 0; i < PNGID.Length; i++) {
                 if (PNGID[i] != pngStream.Read()) {
@@ -1015,7 +1013,6 @@ namespace iText.IO.Image {
         /// <summary>Gets an <c>int</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        /// <exception cref="System.IO.IOException"/>
         public static int GetInt(Stream pngStream) {
             return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
         }
@@ -1023,7 +1020,6 @@ namespace iText.IO.Image {
         /// <summary>Gets a <c>word</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        /// <exception cref="System.IO.IOException"/>
         public static int GetWord(Stream pngStream) {
             return (pngStream.Read() << 8) + pngStream.Read();
         }
@@ -1031,7 +1027,6 @@ namespace iText.IO.Image {
         /// <summary>Gets a <c>String</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        /// <exception cref="System.IO.IOException"/>
         public static String GetString(Stream pngStream) {
             StringBuilder buf = new StringBuilder();
             for (int i = 0; i < 4; i++) {

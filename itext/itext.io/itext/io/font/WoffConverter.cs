@@ -53,7 +53,6 @@ namespace iText.IO.Font {
             return BytesToUInt(woffBytes, 0) == woffSignature;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static byte[] Convert(byte[] woffBytes) {
             int srcPos = 0;
             int destPos = 0;

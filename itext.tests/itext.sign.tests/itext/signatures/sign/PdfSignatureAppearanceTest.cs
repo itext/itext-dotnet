@@ -79,19 +79,12 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="Java.Security.KeyStoreException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.UnrecoverableKeyException"/>
         [NUnit.Framework.SetUp]
         public virtual void Init() {
             pk = Pkcs12FileHelper.ReadFirstKey(keystorePath, password, password);
             chain = Pkcs12FileHelper.ReadFirstChain(keystorePath, password);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest01() {
             String fileName = "textAutoscaleTest01.pdf";
@@ -101,8 +94,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 13.94f);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest02() {
             String fileName = "textAutoscaleTest02.pdf";
@@ -112,8 +103,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 6.83f);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest03() {
             String fileName = "textAutoscaleTest03.pdf";
@@ -123,8 +112,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 44.35f);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest04() {
             String fileName = "textAutoscaleTest04.pdf";
@@ -134,8 +121,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 21.25f);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest05() {
             String fileName = "textAutoscaleTest05.pdf";
@@ -145,8 +130,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 12.77f);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextAutoscaleTest06() {
             String fileName = "textAutoscaleTest06.pdf";
@@ -156,9 +139,6 @@ namespace iText.Signatures.Sign {
             AssertAppearanceFontSize(dest, 6.26f);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestSigningInAppendModeWithHybridDocument() {
             String src = sourceFolder + "hybrid.pdf";
@@ -180,9 +160,6 @@ namespace iText.Signatures.Sign {
                 (new Rectangle(36, 748, 200, 100))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontColorTest01() {
             String fileName = "fontColorTest01.pdf";
@@ -202,9 +179,6 @@ namespace iText.Signatures.Sign {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SignaturesOnRotatedPages() {
             StringBuilder assertionResults = new StringBuilder();
@@ -218,9 +192,6 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual("", assertionResults.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.Exception"/>
         private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder
              assertionResults) {
             String fileName = "signaturesOnRotatedPages" + pageNum + "_mode_" + renderingMode.ToString() + ".pdf";
@@ -249,8 +220,6 @@ namespace iText.Signatures.Sign {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private void TestSignatureAppearanceAutoscale(String dest, Rectangle rect, PdfSignatureAppearance.RenderingMode
              renderingMode) {
             String src = sourceFolder + "simpleDocument.pdf";
@@ -266,7 +235,6 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void AssertAppearanceFontSize(String filename, float expectedFontSize) {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(filename));
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);

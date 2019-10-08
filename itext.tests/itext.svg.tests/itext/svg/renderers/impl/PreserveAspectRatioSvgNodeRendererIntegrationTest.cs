@@ -57,60 +57,44 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void XMinYMinTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "xminymin");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestPreserveAspectDefaultAll() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestPreserveAspectDefaultAll"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxWithoutSetPreserveAspectRatio() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxWithoutSetPreserveAspectRatio");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspectMin() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestDoNotPreserveAspectMin");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspectAll() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestDoNotPreserveAspectAll");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspectMetricDimensionsMin() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestDoNotPreserveAspectMetricDimensionsMin"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewBoxScalingTestDoNotPreserveAspectMetricDimensionsAll() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxScalingTestDoNotPreserveAspectMetricDimensionsAll"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DifferentAspectRatios() {
             //TODO: update cmp_ when DEVSIX-2250 fixed

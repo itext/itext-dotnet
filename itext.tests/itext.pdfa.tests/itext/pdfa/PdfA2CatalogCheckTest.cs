@@ -62,7 +62,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -87,7 +86,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -115,8 +113,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck03() {
             String outPdf = destinationFolder + "pdfA2b_catalogCheck03.pdf";
@@ -143,7 +139,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck04() {
             NUnit.Framework.Assert.That(() =>  {
@@ -170,8 +165,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck05() {
             String outPdf = destinationFolder + "pdfA2b_catalogCheck05.pdf";
@@ -207,7 +200,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck06() {
             NUnit.Framework.Assert.That(() =>  {
@@ -243,7 +235,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck07() {
             NUnit.Framework.Assert.That(() =>  {
@@ -279,7 +270,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck08() {
             NUnit.Framework.Assert.That(() =>  {
@@ -320,7 +310,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck09() {
             NUnit.Framework.Assert.That(() =>  {
@@ -338,7 +327,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck10() {
             NUnit.Framework.Assert.That(() =>  {
@@ -354,8 +342,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

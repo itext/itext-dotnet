@@ -129,9 +129,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="ps">the content parser to use for reading the image.</param>
         /// <param name="colorSpaceDic">a color space dictionary</param>
         /// <returns>the parsed image</returns>
-        /// <exception cref="System.IO.IOException">if anything goes wring with the parsing</exception>
-        /// <exception cref="InlineImageParseException">if parsing of the inline image failed due to issues specific to inline image processing
-        ///     </exception>
         public static PdfStream Parse(PdfCanvasParser ps, PdfDictionary colorSpaceDic) {
             PdfDictionary inlineImageDict = ParseDictionary(ps);
             byte[] samples = ParseSamples(inlineImageDict, colorSpaceDic, ps);
@@ -148,7 +145,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="ps">the parser to extract the embedded image information from</param>
         /// <returns>the dictionary for the inline image, with any abbreviations converted to regular image dictionary keys and values
         ///     </returns>
-        /// <exception cref="System.IO.IOException">if the parse fails</exception>
         private static PdfDictionary ParseDictionary(PdfCanvasParser ps) {
             // by the time we get to here, we have already parsed the BI operator
             PdfDictionary dict = new PdfDictionary();
@@ -265,7 +261,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
-        /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseUnfilteredSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
              ps) {
             // special case:  when no filter is specified, we just read the number of bits
@@ -321,7 +316,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
-        /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
              ps) {
             // by the time we get to here, we have already parsed the ID operator

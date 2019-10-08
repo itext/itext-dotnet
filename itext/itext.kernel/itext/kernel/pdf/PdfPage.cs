@@ -201,7 +201,6 @@ namespace iText.Kernel.Pdf {
         /// object at specified index;
         /// will return null in case page dictionary doesn't adhere to the specification, meaning that the document is an invalid PDF.
         /// </returns>
-        /// <exception cref="System.IndexOutOfRangeException">if the index is out of range</exception>
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
             if (index >= count || index < 0) {
@@ -418,7 +417,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
             PdfStream xmp = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             xmp.GetOutputStream().Write(xmpMetadata);
@@ -444,8 +442,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
-        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             return SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
@@ -462,8 +458,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
-        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
@@ -551,7 +545,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// object.
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
             foreach (PdfName key in GetPdfObject().KeySet()) {
@@ -692,7 +685,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// object specified by page Media Box, expressed in default user space units.
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException">in case of any error while reading MediaBox object.</exception>
         public virtual Rectangle GetMediaBox() {
             PdfArray mediaBox = GetPdfObject().GetAsArray(PdfName.MediaBox);
             if (mediaBox == null) {
@@ -912,10 +904,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Get decoded bytes for the whole page content.</summary>
         /// <returns>byte array.</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case of any
-        /// <see cref="System.IO.IOException"/>.
-        /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
                 MemoryLimitsAwareHandler handler = GetDocument().memoryLimitsAwareHandler;
@@ -945,17 +933,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets decoded bytes of a certain stream of a page content.</summary>
         /// <param name="index">index of stream inside Content.</param>
         /// <returns>byte array.</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case of any
-        /// <see cref="System.IO.IOException"/>.
-        /// </exception>
         public virtual byte[] GetStreamBytes(int index) {
             return GetContentStream(index).GetBytes();
         }
 
         /// <summary>Calculates and returns next available MCID reference.</summary>
         /// <returns>calculated MCID reference.</returns>
-        /// <exception cref="iText.Kernel.PdfException">in case of not tagged document.</exception>
         public virtual int GetNextMcid() {
             if (!GetDocument().IsTagged()) {
                 throw new PdfException(PdfException.MustBeATaggedDocument);

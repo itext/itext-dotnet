@@ -87,7 +87,6 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Converts the current tag structure into an XML file with default encoding (UTF-8).</summary>
         /// <param name="os">the output stream to save XML file to</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os) {
             ConvertToXml(os, "UTF-8");
         }
@@ -95,7 +94,6 @@ namespace iText.Kernel.Utils {
         /// <summary>Converts the current tag structure into an XML file with provided encoding.</summary>
         /// <param name="os">the output stream to save XML file to</param>
         /// <param name="charset">the charset of the resultant XML file</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
             @out = new StreamWriter(os, EncodingUtil.GetEncoding(charset));
             if (rootTag != null) {

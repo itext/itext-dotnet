@@ -72,7 +72,6 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.IsTrue(one.Equals(two));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesAddition() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -97,7 +96,6 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(containerLine.glyphs.Count, 40);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -118,7 +116,6 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual("France---Viva", containerLine.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition02() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -144,7 +141,6 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual("Fide---Viva", containerLine.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestContentReplacingWithNullActualText() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

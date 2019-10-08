@@ -192,7 +192,6 @@ namespace iText.Forms.Fields {
             return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON, radiosInUnison);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual iText.Forms.Fields.PdfButtonFormField SetImage(String image) {
             Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
             String str = Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));

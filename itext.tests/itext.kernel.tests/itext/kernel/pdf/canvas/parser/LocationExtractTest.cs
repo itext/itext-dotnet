@@ -57,7 +57,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/LocationExtractionTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLocationExtraction() {
             String inputFile = sourceFolder + "aliceInWonderland.pdf";

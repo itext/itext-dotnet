@@ -62,8 +62,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(outputFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SurrogatePairTest() {
             String fileName = "surrogatePairTest.pdf";
@@ -79,8 +77,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomSimpleEncodingTimesRomanTest() {
             String fileName = "customSimpleEncodingTimesRomanTest.pdf";
@@ -97,8 +93,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFullEncodingTimesRomanTest() {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
@@ -114,8 +108,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NotdefInStandardFontTest() {
             String fileName = "notdefInStandardFontTest.pdf";
@@ -134,8 +126,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NotdefInTrueTypeFontTest() {
             String fileName = "notdefInTrueTypeFontTest.pdf";
@@ -154,8 +144,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NotdefInType0Test() {
             String fileName = "notdefInType0Test.pdf";
@@ -170,8 +158,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolDefaultFontTest() {
             String fileName = "symbolDefaultFontTest.pdf";
@@ -208,8 +194,6 @@ namespace iText.Kernel.Pdf {
             canvas.BeginText().MoveText(36, 766).ShowText(builder.ToString()).EndText().RestoreState();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontWinAnsiTest() {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
@@ -240,8 +224,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontIdentityTest() {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
@@ -273,8 +255,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontSameCharsIdentityTest() {
             String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
@@ -290,7 +270,6 @@ namespace iText.Kernel.Pdf {
                  + fileName, outputFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EncodingStreamExtractionTest() {
             String fileName = sourceFolder + "encodingStream01.pdf";
@@ -299,7 +278,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("abc", extractedText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DifferentCodeSpaceRangeLengthsExtractionTest() {
             String fileName = sourceFolder + "differentCodeSpaceRangeLengths01.pdf";

@@ -50,7 +50,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfTextExtractorTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoSpecifiedDictionaryInPropertiesTest() {
@@ -62,7 +61,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoPropertiesInResourcesTest() {

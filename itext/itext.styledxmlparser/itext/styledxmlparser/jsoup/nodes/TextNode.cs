@@ -122,7 +122,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return tailNode;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             if (@out.PrettyPrint() && ((SiblingIndex() == 0 && parentNode is iText.StyledXmlParser.Jsoup.Nodes.Element
                  && ((iText.StyledXmlParser.Jsoup.Nodes.Element)parentNode).Tag().FormatAsBlock() && !IsBlank()) || (@out

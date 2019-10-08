@@ -61,7 +61,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         [LogMessage(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
@@ -78,7 +77,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(sigRef.Get(PdfName.Data).IsNull());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying1() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copying1_1.pdf"));
@@ -105,7 +103,6 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying2() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copying2_1.pdf"));
@@ -136,7 +133,6 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying3() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copying3_1.pdf"));
@@ -181,8 +177,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyDocumentsWithFormFieldsTest() {
@@ -197,8 +191,6 @@ namespace iText.Kernel.Pdf {
                 , sourceFolder + "cmp_copyDocumentsWithFormFields.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopySamePageWithAnnotationsSeveralTimes() {
             String filename = sourceFolder + "rotated_annotation.pdf";
@@ -213,8 +205,6 @@ namespace iText.Kernel.Pdf {
                 , sourceFolder + "cmp_copySamePageWithAnnotationsSeveralTimes.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyIndirectInheritablePageEntriesTest01() {
             String src = sourceFolder + "indirectPageProps.pdf";
@@ -229,7 +219,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopySelfContainedObject() {
             ByteArrayOutputStream inputBytes = new ByteArrayOutputStream();

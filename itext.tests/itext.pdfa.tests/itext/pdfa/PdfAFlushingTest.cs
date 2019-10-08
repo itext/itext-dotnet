@@ -63,8 +63,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest01() {
             String outPdf = destinationFolder + "pdfA1b_flushingTest01.pdf";
@@ -85,8 +83,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest02() {
             String outPdf = destinationFolder + "pdfA2b_flushingTest02.pdf";
@@ -108,8 +104,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
             String outPdf = destinationFolder + "pdfA3b_flushingTest03.pdf";
@@ -131,8 +125,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedStreamObjectsTest() {
             String outPdf = destinationFolder + "pdfA1b_docWithUnusedObjects_3.pdf";
@@ -158,8 +150,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outFile, String cmpFile) {
             String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_");
             if (differences != null) {

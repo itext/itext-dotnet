@@ -390,7 +390,6 @@ namespace iText.IO.Font {
 
         /// <summary>Function uses BuildNewIndex to create the new index of the subset charstrings</summary>
         /// <param name="FontIndex">the font</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void BuildNewCharString(int FontIndex) {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
         }
@@ -401,7 +400,6 @@ namespace iText.IO.Font {
         /// the FD Array lsubrs will be subsetted.
         /// </remarks>
         /// <param name="Font">the font</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void BuildNewLGSubrs(int Font) {
             // If the font is CID then the lsubrs are divided into FontDicts.
             // for each FD array the lsubrs will be subsetted.
@@ -931,7 +929,6 @@ namespace iText.IO.Font {
         /// <param name="Used">the Map of the used objects</param>
         /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
         /// <returns>the new index subset version</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual byte[] BuildNewIndex(int[] Offsets, ICollection<int> Used, byte OperatorForUnusedEntries
             ) {
             int unusedCount = 0;
@@ -985,7 +982,6 @@ namespace iText.IO.Font {
         /// <param name="Offsets">the offset array of the original index</param>
         /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
         /// <returns>the new index subset version</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual byte[] BuildNewIndexAndCopyAllGSubrs(int[] Offsets, byte OperatorForUnusedEntries
             ) {
             int unusedCount = 0;

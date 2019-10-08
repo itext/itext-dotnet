@@ -93,8 +93,6 @@ namespace iText.Kernel.XMP {
         /// <tt>ns:arrayName[i]</tt>, where &quot;ns&quot; is the prefix for schemaNS and
         /// &quot;i&quot; is the decimal representation of itemIndex.
         /// </returns>
-        /// <exception cref="XMPException">Throws exeption if index zero is used.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String ComposeArrayItemPath(String arrayName, int itemIndex) {
             if (itemIndex > 0) {
                 return arrayName + '[' + itemIndex + ']';
@@ -127,8 +125,6 @@ namespace iText.Kernel.XMP {
         /// <tt>ns:structName/fNS:fieldName</tt>, where &quot;ns&quot; is the prefix for
         /// schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
         /// </returns>
-        /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String ComposeStructFieldPath(String fieldNS, String fieldName) {
             AssertFieldNS(fieldNS);
             AssertFieldName(fieldName);
@@ -153,8 +149,6 @@ namespace iText.Kernel.XMP {
         /// <tt>ns:propName/?qNS:qualName</tt>, where &quot;ns&quot; is the prefix for
         /// schemaNS and &quot;qNS&quot; is the prefix for qualNS.
         /// </returns>
-        /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String ComposeQualifierPath(String qualNS, String qualName) {
             AssertQualNS(qualNS);
             AssertQualName(qualName);
@@ -231,8 +225,6 @@ namespace iText.Kernel.XMP {
         /// <tt>ns:arrayName[fNS:fieldName='fieldValue']</tt>, where &quot;ns&quot; is the
         /// prefix for schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
         /// </returns>
-        /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String ComposeFieldSelector(String arrayName, String fieldNS, String fieldName, String fieldValue
             ) {
             XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
@@ -244,8 +236,6 @@ namespace iText.Kernel.XMP {
 
         /// <summary>ParameterAsserts that a qualifier namespace is set.</summary>
         /// <param name="qualNS">a qualifier namespace</param>
-        /// <exception cref="XMPException">Qualifier schema is null or empty</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static void AssertQualNS(String qualNS) {
             if (qualNS == null || qualNS.Length == 0) {
                 throw new XMPException("Empty qualifier namespace URI", XMPError.BADSCHEMA);
@@ -254,8 +244,6 @@ namespace iText.Kernel.XMP {
 
         /// <summary>ParameterAsserts that a qualifier name is set.</summary>
         /// <param name="qualName">a qualifier name or path</param>
-        /// <exception cref="XMPException">Qualifier name is null or empty</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static void AssertQualName(String qualName) {
             if (qualName == null || qualName.Length == 0) {
                 throw new XMPException("Empty qualifier name", XMPError.BADXPATH);
@@ -264,8 +252,6 @@ namespace iText.Kernel.XMP {
 
         /// <summary>ParameterAsserts that a struct field namespace is set.</summary>
         /// <param name="fieldNS">a struct field namespace</param>
-        /// <exception cref="XMPException">Struct field schema is null or empty</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static void AssertFieldNS(String fieldNS) {
             if (fieldNS == null || fieldNS.Length == 0) {
                 throw new XMPException("Empty field namespace URI", XMPError.BADSCHEMA);
@@ -274,8 +260,6 @@ namespace iText.Kernel.XMP {
 
         /// <summary>ParameterAsserts that a struct field name is set.</summary>
         /// <param name="fieldName">a struct field name or path</param>
-        /// <exception cref="XMPException">Struct field name is null or empty</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static void AssertFieldName(String fieldName) {
             if (fieldName == null || fieldName.Length == 0) {
                 throw new XMPException("Empty f name", XMPError.BADXPATH);

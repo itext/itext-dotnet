@@ -131,8 +131,6 @@ namespace iText.Signatures {
         /// <param name="level">the validation options to include</param>
         /// <param name="certInclude">certificate inclusion options</param>
         /// <returns>true if a validation was generated, false otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
              certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude) {
             if (used) {
@@ -216,8 +214,6 @@ namespace iText.Signatures {
         /// <param name="crls">collection of crls</param>
         /// <param name="certs">collection of certificates</param>
         /// <returns>boolean</returns>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps, ICollection<byte[]> crls
             , ICollection<byte[]> certs) {
             if (used) {
@@ -243,7 +239,6 @@ namespace iText.Signatures {
             return true;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
             DerOctetString doctet = new DerOctetString(basicOcspResponse);
             OcspResponseStatus respStatus = new OcspResponseStatus(Org.BouncyCastle.Asn1.Ocsp.OcspResponseStatus.Successful
@@ -253,8 +248,6 @@ namespace iText.Signatures {
             return new OcspResp(ocspResponse).GetEncoded();
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="System.IO.IOException"/>
         private PdfName GetSignatureHashKey(String signatureName) {
             PdfSignature sig = sgnUtil.GetSignature(signatureName);
             PdfString contents = sig.GetContents();
@@ -269,14 +262,12 @@ namespace iText.Signatures {
             return new PdfName(ConvertToHex(bt));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         private static byte[] HashBytesSha1(byte[] b) {
             IDigest sh = DigestUtilities.GetDigest("SHA1");
             return sh.Digest(b);
         }
 
         /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Merge() {
             if (used || validated.Count == 0) {
                 return;

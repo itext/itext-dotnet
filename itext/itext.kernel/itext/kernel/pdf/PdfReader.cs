@@ -105,7 +105,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
         /// <param name="properties">properties of the created reader</param>
-        /// <exception cref="System.IO.IOException"/>
         public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties) {
             //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
             // For internal usage only
@@ -123,7 +122,6 @@ namespace iText.Kernel.Pdf {
         /// end but is not closed.
         /// </param>
         /// <param name="properties">properties of the created reader</param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(Stream @is, ReaderProperties properties)
             : this(new RandomAccessSourceFactory().CreateSource(@is), properties) {
         }
@@ -134,8 +132,6 @@ namespace iText.Kernel.Pdf {
         /// <c>File</c>
         /// containing the document.
         /// </param>
-        /// <exception cref="System.IO.IOException">on error</exception>
-        /// <exception cref="System.IO.FileNotFoundException">when the specified File is not found</exception>
         public PdfReader(FileInfo file)
             : this(file.FullName) {
         }
@@ -149,7 +145,6 @@ namespace iText.Kernel.Pdf {
         /// containing the document. The stream is read to the
         /// end but is not closed.
         /// </param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(Stream @is)
             : this(@is, new ReaderProperties()) {
         }
@@ -157,7 +152,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Reads and parses a PDF document.</summary>
         /// <param name="filename">the file name of the document</param>
         /// <param name="properties">properties of the created reader</param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(String filename, ReaderProperties properties)
             : this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename), properties) {
             this.sourcePath = filename;
@@ -165,7 +159,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Reads and parses a PDF document.</summary>
         /// <param name="filename">the file name of the document</param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public PdfReader(String filename)
             : this(filename, new ReaderProperties()) {
         }
@@ -174,7 +167,6 @@ namespace iText.Kernel.Pdf {
         /// Close
         /// <see cref="iText.IO.Source.PdfTokenizer"/>.
         /// </summary>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual void Close() {
             tokens.Close();
         }
@@ -259,7 +251,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="decode">true if to get decoded stream bytes, false if to leave it originally encoded.</param>
         /// <returns>byte[] array.</returns>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode) {
             byte[] b = ReadStreamBytesRaw(stream);
             if (decode && b != null) {
@@ -276,7 +267,6 @@ namespace iText.Kernel.Pdf {
         /// Note, this method doesn't store actual bytes in any internal structures.
         /// </remarks>
         /// <returns>byte[] array.</returns>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
             if (!PdfName.XRefStm.Equals(type) && !PdfName.ObjStm.Equals(type)) {
@@ -348,7 +338,6 @@ namespace iText.Kernel.Pdf {
         /// <see langword="null"/>
         /// if reading was failed.
         /// </returns>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual Stream ReadStream(PdfStream stream, bool decode) {
             byte[] bytes = ReadStreamBytes(stream, decode);
             return bytes != null ? new MemoryStream(bytes) : null;
@@ -359,7 +348,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="b">the bytes to decode</param>
         /// <param name="streamDictionary">the dictionary that contains filter information</param>
         /// <returns>the decoded bytes</returns>
-        /// <exception cref="iText.Kernel.PdfException">if there are any problems decoding the bytes</exception>
         public static byte[] DecodeBytes(byte[] b, PdfDictionary streamDictionary) {
             return DecodeBytes(b, streamDictionary, FilterHandlers.GetDefaultFilterHandlers());
         }
@@ -370,7 +358,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="streamDictionary">the dictionary that contains filter information</param>
         /// <param name="filterHandlers">the map used to look up a handler for each type of filter</param>
         /// <returns>the decoded bytes</returns>
-        /// <exception cref="iText.Kernel.PdfException">if there are any problems decoding the bytes</exception>
         public static byte[] DecodeBytes(byte[] b, PdfDictionary streamDictionary, IDictionary<PdfName, IFilterHandler
             > filterHandlers) {
             if (b == null) {
@@ -474,7 +461,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Provides the size of the opened file.</summary>
         /// <returns>The size of the opened file.</returns>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual long GetFileLength() {
             return tokens.GetSafeFile().Length();
         }
@@ -611,7 +597,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Parses the entire PDF</summary>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadPdf() {
             String version = tokens.CheckPdfHeader();
             try {
@@ -632,7 +617,6 @@ namespace iText.Kernel.Pdf {
             ReadDecryptObj();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadObjectStream(PdfStream objectStream) {
             int objectStreamNumber = objectStream.GetIndirectReference().GetObjNumber();
             int first = objectStream.GetAsNumber(PdfName.First).IntValue();
@@ -697,7 +681,6 @@ namespace iText.Kernel.Pdf {
             return ReadObject(reference, true);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfObject ReadObject(bool readAsDirect) {
             return ReadObject(readAsDirect, false);
         }
@@ -744,7 +727,6 @@ namespace iText.Kernel.Pdf {
             return reference;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfObject ReadObject(bool readAsDirect, bool objStm) {
             tokens.NextValidToken();
             PdfTokenizer.TokenType type = tokens.GetTokenType();
@@ -849,7 +831,6 @@ namespace iText.Kernel.Pdf {
             return new PdfName(tokens.GetByteContent());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfDictionary ReadDictionary(bool objStm) {
             PdfDictionary dic = new PdfDictionary();
             while (true) {
@@ -875,7 +856,6 @@ namespace iText.Kernel.Pdf {
             return dic;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfArray ReadArray(bool objStm) {
             PdfArray array = new PdfArray();
             while (true) {
@@ -893,7 +873,6 @@ namespace iText.Kernel.Pdf {
             return array;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadXref() {
             tokens.Seek(tokens.GetStartxref());
             tokens.NextToken();
@@ -942,7 +921,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfDictionary ReadXrefSection() {
             tokens.NextValidToken();
             if (!tokens.TokenValueEqualsTo(PdfTokenizer.Xref)) {
@@ -1039,7 +1017,6 @@ namespace iText.Kernel.Pdf {
             return trailer;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual bool ReadXrefStream(long ptr) {
             tokens.Seek(ptr);
             if (!tokens.NextToken()) {
@@ -1163,7 +1140,6 @@ namespace iText.Kernel.Pdf {
             return prev == -1 || ReadXrefStream(prev);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void FixXref() {
             fixedXref = true;
             PdfXrefTable xref = pdfDocument.GetXref();
@@ -1193,7 +1169,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void RebuildXref() {
             xrefStm = false;
             hybridXref = false;
@@ -1286,7 +1261,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="byteSource">the source to check</param>
         /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
-        /// <exception cref="System.IO.IOException">if there is a problem reading the byte source</exception>
         private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource) {
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
             int offset = tok.GetHeaderOffset();
@@ -1345,7 +1319,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void CheckPdfStreamLength(PdfStream pdfStream) {
             if (!correctStreamLength) {
                 return;
@@ -1459,7 +1432,6 @@ namespace iText.Kernel.Pdf {
                 return buffer.Size();
             }
 
-            /// <exception cref="System.IO.IOException"/>
             public virtual void Close() {
                 buffer = null;
             }

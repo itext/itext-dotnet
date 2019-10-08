@@ -99,7 +99,6 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.AreEqual(rotateTranslate, expected);
         }
 
-        /// <exception cref="Java.Lang.CloneNotSupportedException"/>
         [NUnit.Framework.Test]
         public virtual void CloneTest() {
             AffineTransform original = new AffineTransform();

@@ -65,8 +65,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundImage() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
@@ -77,8 +75,6 @@ namespace iText.Layout {
             BackgroundImageGenericTest("backgroundImage", backgroundImage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatX() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
@@ -89,8 +85,6 @@ namespace iText.Layout {
             BackgroundImageGenericTest("backgroundImageWithoutRepeatX", backgroundImage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatY() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
@@ -101,8 +95,6 @@ namespace iText.Layout {
             BackgroundImageGenericTest("backgroundImageWithoutRepeatY", backgroundImage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatXY() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
@@ -113,8 +105,6 @@ namespace iText.Layout {
             BackgroundImageGenericTest("backgroundImageWithoutRepeatXY", backgroundImage);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundXObject() {
             //TODO DEVSIX-3108
@@ -131,8 +121,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatX() {
             //TODO DEVSIX-3108
@@ -149,8 +137,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatY() {
             //TODO DEVSIX-3108
@@ -167,8 +153,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatXY() {
             //TODO DEVSIX-3108
@@ -185,8 +169,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectAndImage() {
             //TODO DEVSIX-3108
@@ -218,7 +200,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private PdfFormXObject CreateFormXObject(PdfDocument pdfDocument) {
             ImageData image = ImageDataFactory.Create(sourceFolder + "itis.jpg");
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));
@@ -229,8 +210,6 @@ namespace iText.Layout {
             return template;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void BackgroundImageGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
             ) {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
@@ -250,8 +229,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void BackgroundXObjectGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
             , PdfDocument pdfDocument) {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());

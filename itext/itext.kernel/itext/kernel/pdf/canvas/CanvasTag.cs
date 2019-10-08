@@ -104,7 +104,6 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Get the marked content id of the tag.</summary>
         /// <returns>marked content id</returns>
-        /// <exception cref="System.InvalidOperationException">if there is no MCID</exception>
         public virtual int GetMcid() {
             int mcid = -1;
             if (properties != null) {

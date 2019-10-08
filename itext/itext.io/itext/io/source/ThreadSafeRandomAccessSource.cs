@@ -52,14 +52,12 @@ namespace iText.IO.Source {
             this.source = source;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             lock (lockObj) {
                 return source.Get(position);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             lock (lockObj) {
                 return source.Get(position, bytes, off, len);
@@ -72,7 +70,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             lock (lockObj) {
                 source.Close();

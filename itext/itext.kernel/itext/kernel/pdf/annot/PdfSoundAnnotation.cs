@@ -77,7 +77,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="encoding"/>
         /// <param name="channels"/>
         /// <param name="sampleSizeInBits"/>
-        /// <exception cref="System.IO.IOException"/>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
             : base(rect) {

@@ -53,7 +53,6 @@ using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class TableRendererTest : ExtendedITextTest {
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 13)]
         public virtual void CalculateColumnWidthsNotPointValue() {

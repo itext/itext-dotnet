@@ -73,7 +73,6 @@ namespace iText.IO.Codec {
             bitsLeft = 8;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Flush() {
             int numBytes = index + (bitsLeft == 8 ? 0 : 1);
             if (numBytes > 0) {
@@ -87,7 +86,6 @@ namespace iText.IO.Codec {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteBits(int bits, int numbits) {
             int bitsWritten = 0;
             // gif block count

@@ -70,7 +70,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -97,8 +96,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest2() {
             String outPdf = destinationFolder + "pdfA2b_colorCheckTest2.pdf";
@@ -123,7 +120,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -144,8 +140,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest4() {
             NUnit.Framework.Assert.That(() =>  {
@@ -175,7 +169,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest5() {
             NUnit.Framework.Assert.That(() =>  {
@@ -200,8 +193,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest6() {
             NUnit.Framework.Assert.That(() =>  {
@@ -227,8 +218,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest7() {
             NUnit.Framework.Assert.That(() =>  {
@@ -256,7 +245,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -275,7 +263,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -297,8 +284,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -316,8 +301,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -335,8 +318,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -365,8 +346,6 @@ namespace iText.Pdfa {
         /// but there it's stated that "The key ColorSpace is required but missing" but according to spec, jpeg2000 images
         /// can omit ColorSpace entry if color space is defined implicitly in the image itself.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest4() {
             String outPdf = destinationFolder + "pdfA2b_imageCheckTest4.pdf";
@@ -415,8 +394,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest2() {
             String outPdf = destinationFolder + "pdfA2b_transparencyCheckTest2.pdf";
@@ -441,7 +418,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -467,7 +443,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void ColourSpaceTest01() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -490,7 +465,6 @@ namespace iText.Pdfa {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void ColourSpaceTest02() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -513,7 +487,6 @@ namespace iText.Pdfa {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void ColourSpaceTest03() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -543,8 +516,6 @@ namespace iText.Pdfa {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

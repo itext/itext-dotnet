@@ -460,7 +460,6 @@ namespace iText.Kernel.Pdf {
         /// PdfNumbers, if not a PdfException will be thrown.
         /// </remarks>
         /// <returns>Rectangle of the first four values</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the first values isn't a PdfNumber</exception>
         public virtual Rectangle ToRectangle() {
             try {
                 float x1 = GetAsNumber(0).FloatValue();
@@ -486,7 +485,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns this array as an array of floats.</summary>
         /// <remarks>Returns this array as an array of floats. Will throw a PdfException when it encounters an issue.</remarks>
         /// <returns>this array as an array of floats</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
         public virtual float[] ToFloatArray() {
             try {
                 float[] rslt = new float[Size()];
@@ -504,7 +502,6 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Returns this array as an array of doubles. Will throw a PdfException when it encounters an issue.
         ///     </remarks>
         /// <returns>this array as an array of doubles</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
         public virtual double[] ToDoubleArray() {
             try {
                 double[] rslt = new double[Size()];
@@ -521,7 +518,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns this array as an array of longs.</summary>
         /// <remarks>Returns this array as an array of longs. Will throw a PdfException when it encounters an issue.</remarks>
         /// <returns>this array as an array of longs</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
         public virtual long[] ToLongArray() {
             try {
                 long[] rslt = new long[Size()];
@@ -538,7 +534,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Returns this array as an array of ints.</summary>
         /// <remarks>Returns this array as an array of ints. Will throw a PdfException when it encounters an issue.</remarks>
         /// <returns>this array as an array of ints</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a number</exception>
         public virtual int[] ToIntArray() {
             try {
                 int[] rslt = new int[Size()];
@@ -556,7 +551,6 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Returns this array as an array of booleans. Will throw a PdfException when it encounters an issue.
         ///     </remarks>
         /// <returns>this array as an array of booleans</returns>
-        /// <exception cref="iText.Kernel.PdfException">if one of the values isn't a boolean</exception>
         public virtual bool[] ToBooleanArray() {
             bool[] rslt = new bool[Size()];
             PdfBoolean tmp;

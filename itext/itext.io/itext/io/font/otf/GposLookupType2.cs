@@ -51,7 +51,6 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType2 : OpenTableLookup {
         private IList<OpenTableLookup> listRules = new List<OpenTableLookup>();
 
-        /// <exception cref="System.IO.IOException"/>
         public GposLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             ReadSubTables();
@@ -74,7 +73,6 @@ namespace iText.IO.Font.Otf {
             return false;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
             int gposFormat = openReader.rf.ReadShort();
@@ -99,7 +97,6 @@ namespace iText.IO.Font.Otf {
             private IDictionary<int, IDictionary<int, GposLookupType2.PairValueFormat>> gposMap = new Dictionary<int, 
                 IDictionary<int, GposLookupType2.PairValueFormat>>();
 
-            /// <exception cref="System.IO.IOException"/>
             public PairPosAdjustmentFormat1(OpenTypeFontTableReader openReader, int lookupFlag, int subtableLocation)
                 : base(openReader, lookupFlag, null) {
                 ReadFormat(subtableLocation);
@@ -131,7 +128,6 @@ namespace iText.IO.Font.Otf {
                 return changed;
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected internal virtual void ReadFormat(int subTableLocation) {
                 int coverage = openReader.rf.ReadUnsignedShort() + subTableLocation;
                 int valueFormat1 = openReader.rf.ReadUnsignedShort();
@@ -155,7 +151,6 @@ namespace iText.IO.Font.Otf {
                 }
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected internal override void ReadSubTable(int subTableLocation) {
             }
             //never called here
@@ -171,7 +166,6 @@ namespace iText.IO.Font.Otf {
             private IDictionary<int, GposLookupType2.PairValueFormat[]> posSubs = new Dictionary<int, GposLookupType2.PairValueFormat
                 []>();
 
-            /// <exception cref="System.IO.IOException"/>
             public PairPosAdjustmentFormat2(OpenTypeFontTableReader openReader, int lookupFlag, int subtableLocation)
                 : base(openReader, lookupFlag, null) {
                 ReadFormat(subtableLocation);
@@ -209,7 +203,6 @@ namespace iText.IO.Font.Otf {
                 return true;
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected internal virtual void ReadFormat(int subTableLocation) {
                 int coverage = openReader.rf.ReadUnsignedShort() + subTableLocation;
                 int valueFormat1 = openReader.rf.ReadUnsignedShort();
@@ -233,7 +226,6 @@ namespace iText.IO.Font.Otf {
                 classDef2 = openReader.ReadClassDefinition(locationClass2);
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected internal override void ReadSubTable(int subTableLocation) {
             }
             //never called here

@@ -59,10 +59,6 @@ namespace iText.Signatures {
         /// <summary>Gets a CRL from an X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRL from</param>
         /// <returns>CRL or null if there's no CRL available</returns>
-        /// <exception cref="System.IO.IOException">thrown when the URL couldn't be opened properly.</exception>
-        /// <exception cref="Java.Security.Cert.CertificateException">thrown if there's no X509 implementation in the provider.
-        ///     </exception>
-        /// <exception cref="Java.Security.Cert.CRLException">thrown when encountering errors when parsing the CRL.</exception>
         public static X509Crl GetCRL(X509Certificate certificate) {
             return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
         }
@@ -70,7 +66,6 @@ namespace iText.Signatures {
         /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException"/>
         public static String GetCRLURL(X509Certificate certificate) {
             Asn1Object obj;
             try {
@@ -105,10 +100,6 @@ namespace iText.Signatures {
         /// <summary>Gets the CRL object using a CRL URL.</summary>
         /// <param name="url">the URL where the CRL is located</param>
         /// <returns>CRL object</returns>
-        /// <exception cref="System.IO.IOException">thrown when the URL couldn't be opened properly.</exception>
-        /// <exception cref="Java.Security.Cert.CertificateException">thrown if there's no X509 implementation in the provider.
-        ///     </exception>
-        /// <exception cref="Java.Security.Cert.CRLException">thrown when encountering errors when parsing the CRL.</exception>
         public static X509Crl GetCRL(String url) {
             if (url == null) {
                 return null;
@@ -182,7 +173,6 @@ namespace iText.Signatures {
         /// <param name="certificate">the certificate from which we need the ExtensionValue</param>
         /// <param name="oid">the Object Identifier value for the extension.</param>
         /// <returns>the extension value as an ASN1Primitive object</returns>
-        /// <exception cref="System.IO.IOException"/>
         private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid) {
             byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
             if (bytes == null) {
@@ -197,7 +187,6 @@ namespace iText.Signatures {
         /// <summary>Gets a String from an ASN1Primitive</summary>
         /// <param name="names">the ASN1Primitive</param>
         /// <returns>a human-readable String</returns>
-        /// <exception cref="System.IO.IOException"/>
         private static String GetStringFromGeneralName(Asn1Object names) {
             Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
             return iText.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets

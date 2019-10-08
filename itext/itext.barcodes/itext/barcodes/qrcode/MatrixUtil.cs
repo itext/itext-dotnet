@@ -156,7 +156,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="maskPattern">masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void BuildMatrix(BitVector dataBits, ErrorCorrectionLevel ecLevel, int version, int maskPattern
             , ByteMatrix matrix) {
             ClearMatrix(matrix);
@@ -180,7 +179,6 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedBasicPatterns(int version, ByteMatrix matrix) {
             // Let's get started with embedding big squares at corners.
             EmbedPositionDetectionPatternsAndSeparators(matrix);
@@ -196,7 +194,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">The error correction level (L,M,Q,H)</param>
         /// <param name="maskPattern">the masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix matrix) {
             BitVector typeInfoBits = new BitVector();
             MakeTypeInfoBits(ecLevel, maskPattern, typeInfoBits);
@@ -234,8 +231,6 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">QR code version</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
             if (version < 7) {
                 // Version info is necessary if version >= 7.
@@ -268,8 +263,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="dataBits">data bits to embed in the QR code</param>
         /// <param name="maskPattern">masking pattern to apply to the data bits</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix matrix) {
             int bitIndex = 0;
             int direction = -1;
@@ -390,8 +383,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">error correction level of the QR code</param>
         /// <param name="maskPattern">masking pattern to use</param>
         /// <param name="bits">Vactor of bits to contain the result</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern, BitVector bits) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
                 throw new WriterException("Invalid mask pattern");
@@ -418,8 +409,6 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR-code</param>
         /// <param name="bits">Vector of bits to contain the result</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeVersionInfoBits(int version, BitVector bits) {
             bits.AppendBits(version, 6);
             int bchCode = CalculateBCHCode(version, VERSION_INFO_POLY);
@@ -443,7 +432,6 @@ namespace iText.Barcodes.Qrcode {
         // Empty.
         // Light (white).
         // Dark (black).
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedTimingPatterns(ByteMatrix matrix) {
             // -8 is for skipping position detection patterns (size 7), and two horizontal/vertical
             // separation patterns (size 1). Thus, 8 = 7 + 1.
@@ -467,7 +455,6 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedDarkDotAtLeftBottomCorner(ByteMatrix matrix) {
             if (matrix.Get(8, matrix.GetHeight() - 8) == 0) {
                 throw new WriterException();
@@ -475,7 +462,6 @@ namespace iText.Barcodes.Qrcode {
             matrix.Set(8, matrix.GetHeight() - 8, 1);
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedHorizontalSeparationPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (HORIZONTAL_SEPARATION_PATTERN[0].Length != 8 || HORIZONTAL_SEPARATION_PATTERN.Length != 1) {
@@ -489,7 +475,6 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedVerticalSeparationPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (VERTICAL_SEPARATION_PATTERN[0].Length != 1 || VERTICAL_SEPARATION_PATTERN.Length != 7) {
@@ -506,7 +491,6 @@ namespace iText.Barcodes.Qrcode {
         // Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
         // almost identical, since we cannot write a function that takes 2D arrays in different sizes in
         // C/C++. We should live with the fact.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (POSITION_ADJUSTMENT_PATTERN[0].Length != 5 || POSITION_ADJUSTMENT_PATTERN.Length != 5) {
@@ -522,7 +506,6 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionDetectionPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (POSITION_DETECTION_PATTERN[0].Length != 7 || POSITION_DETECTION_PATTERN.Length != 7) {
@@ -539,7 +522,6 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed position detection patterns and surrounding vertical/horizontal separators.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionDetectionPatternsAndSeparators(ByteMatrix matrix) {
             // Embed three big squares at corners.
             int pdpWidth = POSITION_DETECTION_PATTERN[0].Length;
@@ -568,7 +550,6 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed position adjustment patterns if need be.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void MaybeEmbedPositionAdjustmentPatterns(int version, ByteMatrix matrix) {
             if (version < 2) {
                 // The patterns appear if version >= 2

@@ -59,51 +59,33 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_borders_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_borders_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 46)]
         public virtual void Sankey_colored_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_colored_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_fonts_chart() {
             // TODO DEVSIX-2905
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_fonts_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_multilevel_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_multilevel_chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Sankey_nodes_chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "sankey_nodes_chart");

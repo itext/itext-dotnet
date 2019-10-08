@@ -69,8 +69,6 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWidthTest01() {
             String outFileName = destinationFolder + "imageWidthTest01.pdf";
@@ -113,7 +111,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ImageWidthTest02() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(imageFolder + "Desert.jpg"));

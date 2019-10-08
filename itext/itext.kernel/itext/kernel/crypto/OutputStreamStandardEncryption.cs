@@ -122,13 +122,6 @@ namespace iText.Kernel.Crypto {
         /// <param name="b">the data.</param>
         /// <param name="off">the start offset in the data.</param>
         /// <param name="len">the number of bytes to write.</param>
-        /// <exception cref="System.IO.IOException">
-        /// if an I/O error occurs. In particular,
-        /// an
-        /// <c>IOException</c>
-        /// is thrown if the output
-        /// stream is closed.
-        /// </exception>
         public override void Write(byte[] b, int off, int len) {
             byte[] b2 = new byte[Math.Min(len, 4192)];
             while (len > 0) {

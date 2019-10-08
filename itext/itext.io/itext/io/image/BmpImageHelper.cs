@@ -178,7 +178,6 @@ namespace iText.IO.Image {
             RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void Process(BmpImageHelper.BmpParameters bmp, Stream stream) {
             bmp.inputStream = stream;
             if (!bmp.image.IsNoHeader()) {
@@ -644,7 +643,6 @@ namespace iText.IO.Image {
             return np;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static bool GetImage(BmpImageHelper.BmpParameters bmp) {
             // buffer for byte data
             byte[] bdata;
@@ -821,7 +819,6 @@ namespace iText.IO.Image {
             bmp.additional.Put("ColorSpace", colorSpace);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadPalette(int sizeOfPalette, BmpImageHelper.BmpParameters bmp) {
             if (sizeOfPalette == 0) {
                 return;
@@ -839,7 +836,6 @@ namespace iText.IO.Image {
         }
 
         // Deal with 1 Bit images using IndexColorModels
-        /// <exception cref="System.IO.IOException"/>
         private static void Read1Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp) {
             byte[] bdata = new byte[(bmp.width + 7) / 8 * bmp.height];
             int padding = 0;
@@ -872,7 +868,6 @@ namespace iText.IO.Image {
         }
 
         // Method to read a 4 bit BMP image data
-        /// <exception cref="System.IO.IOException"/>
         private static void Read4Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp) {
             byte[] bdata = new byte[(bmp.width + 1) / 2 * bmp.height];
             // Padding bytes at the end of each scanline
@@ -906,7 +901,6 @@ namespace iText.IO.Image {
         }
 
         // Method to read 8 bit BMP image data
-        /// <exception cref="System.IO.IOException"/>
         private static void Read8Bit(int paletteEntries, BmpImageHelper.BmpParameters bmp) {
             byte[] bdata = new byte[bmp.width * bmp.height];
             // Padding bytes at the end of each scanline
@@ -940,7 +934,6 @@ namespace iText.IO.Image {
         }
 
         // Method to read 24 bit BMP image data
-        /// <exception cref="System.IO.IOException"/>
         private static void Read24Bit(byte[] bdata, BmpImageHelper.BmpParameters bmp) {
             // Padding bytes at the end of each scanline
             int padding = 0;
@@ -1013,7 +1006,6 @@ namespace iText.IO.Image {
             return k;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void Read1632Bit(bool is32, BmpImageHelper.BmpParameters bmp) {
             int red_mask = FindMask(bmp.redMask);
             int red_shift = FindShift(bmp.redMask);
@@ -1081,7 +1073,6 @@ namespace iText.IO.Image {
             RawImageHelper.UpdateRawImageParameters(bmp.image, bmp.width, bmp.height, 3, 8, bdata);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadRLE8(BmpImageHelper.BmpParameters bmp) {
             // If imageSize field is not provided, calculate it.
             int imSize = (int)bmp.imageSize;
@@ -1112,7 +1103,6 @@ namespace iText.IO.Image {
             IndexedModel(val, 8, 4, bmp);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadRLE4(BmpImageHelper.BmpParameters bmp) {
             // If imageSize field is not specified, calculate it.
             int imSize = (int)bmp.imageSize;
@@ -1247,13 +1237,11 @@ namespace iText.IO.Image {
 
         // Windows defined data type reading methods - everything is little endian
         // Unsigned 8 bits
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadUnsignedByte(Stream stream) {
             return stream.Read() & 0xff;
         }
 
         // Unsigned 2 bytes
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadUnsignedShort(Stream stream) {
             int b1 = ReadUnsignedByte(stream);
             int b2 = ReadUnsignedByte(stream);
@@ -1261,7 +1249,6 @@ namespace iText.IO.Image {
         }
 
         // Signed 16 bits
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadShort(Stream stream) {
             int b1 = ReadUnsignedByte(stream);
             int b2 = ReadUnsignedByte(stream);
@@ -1269,13 +1256,11 @@ namespace iText.IO.Image {
         }
 
         // Unsigned 16 bits
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadWord(Stream stream) {
             return ReadUnsignedShort(stream);
         }
 
         // Unsigned 4 bytes
-        /// <exception cref="System.IO.IOException"/>
         private static long ReadUnsignedInt(Stream stream) {
             int b1 = ReadUnsignedByte(stream);
             int b2 = ReadUnsignedByte(stream);
@@ -1286,7 +1271,6 @@ namespace iText.IO.Image {
         }
 
         // Signed 4 bytes
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadInt(Stream stream) {
             int b1 = ReadUnsignedByte(stream);
             int b2 = ReadUnsignedByte(stream);
@@ -1296,13 +1280,11 @@ namespace iText.IO.Image {
         }
 
         // Unsigned 4 bytes
-        /// <exception cref="System.IO.IOException"/>
         private static long ReadDWord(Stream stream) {
             return ReadUnsignedInt(stream);
         }
 
         // 32 bit signed value
-        /// <exception cref="System.IO.IOException"/>
         private static int ReadLong(Stream stream) {
             return ReadInt(stream);
         }

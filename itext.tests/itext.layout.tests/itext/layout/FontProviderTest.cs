@@ -89,7 +89,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StandardAndType3Fonts() {
             String fileName = "taggedDocumentWithType3Font";
@@ -118,7 +117,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontProvider() {
             String fileName = "customFontProvider.pdf";
@@ -141,7 +139,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontProvider2() {
             String fileName = "customFontProvider2.pdf";
@@ -167,7 +164,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontProviderNotSetExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {

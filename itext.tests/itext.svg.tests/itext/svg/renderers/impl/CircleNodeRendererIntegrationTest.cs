@@ -57,121 +57,76 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BasicCircleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "basicCircle");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxCyAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCxCyAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCxAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCxNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCxNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCyAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCyAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleCyNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCyNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleRAbsent");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRNegativeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleRNegative");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleTranslatedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleTranslated");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleRotatedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleRotated");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledUpTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledUp");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledDownTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledDown");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleScaledXYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledXY");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleSkewXTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewX");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CircleSkewYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewY");

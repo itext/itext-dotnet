@@ -133,7 +133,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 , TextUtil.StripNewlines(clone.Html()));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLocation() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/yahoo-jp.html");
@@ -377,7 +376,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return doc;
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestShiftJisRoundtrip() {
             String input = "<html>" + "<head>" + "<meta http-equiv=\"content-type\" content=\"text/html; charset=Shift_JIS\" />"

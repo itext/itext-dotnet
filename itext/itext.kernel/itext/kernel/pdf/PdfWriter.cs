@@ -81,7 +81,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
         /// <param name="file">File to write to.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(FileInfo file)
             : this(file.FullName) {
         }
@@ -103,7 +102,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Create a PdfWriter writing to the passed filename and with default writer properties.</summary>
         /// <param name="filename">filename of the resulting pdf.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename)
             : this(filename, new WriterProperties()) {
         }
@@ -111,7 +109,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Create a PdfWriter writing to the passed filename and using the passed writer properties.</summary>
         /// <param name="filename">filename of the resulting pdf.</param>
         /// <param name="properties">writerproperties to use.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename, WriterProperties properties)
             : this(FileUtil.GetBufferedOutputStream(filename), properties) {
         }
@@ -199,7 +196,6 @@ namespace iText.Kernel.Pdf {
         ///     </remarks>
         /// <param name="pdfObject">object to flush.</param>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
             if (IsFullCompression() && canBeInObjStm) {
@@ -292,7 +288,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Writes object to body of PDF document.</summary>
         /// <param name="pdfObj">object to write.</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void WriteToBody(PdfObject pdfObj) {
             if (crypto != null) {
                 crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj.GetIndirectReference()

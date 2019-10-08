@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RelativePositioningTest01() {
             String outFileName = destinationFolder + "relativePositioningTest01.pdf";
@@ -86,8 +84,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RelativePositioningTest02() {
             String outFileName = destinationFolder + "relativePositioningTest02.pdf";
@@ -104,8 +100,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RelativePositioningTable01Test() {
             String outFileName = destinationFolder + "relativePositioningTable01Test.pdf";
@@ -123,8 +117,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
@@ -140,8 +132,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedPositioningTest02() {
             String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
@@ -159,8 +149,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
         public virtual void FixedPositioningTest03() {
@@ -183,8 +171,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
         public virtual void FixedPositioningTest04() {
@@ -207,8 +193,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedTest01() {
             String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
@@ -272,8 +256,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedTest02() {
             String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
@@ -294,8 +276,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedTest03() {
             String outFileName = destinationFolder + "showTextAlignedTest03.pdf";
@@ -314,7 +294,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedOnFlushedPageTest01() {
             NUnit.Framework.Assert.That(() =>  {

@@ -59,8 +59,6 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTestWithAPWithoutSubtype() {
             String filename = "job_application_filled";
@@ -73,8 +71,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY)]
         public virtual void FormFlatteningTestWithoutNEntry() {

@@ -264,12 +264,10 @@ namespace iText.Kernel.Pdf {
             this.xmpMetadata = xmpMetadata;
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
@@ -393,11 +391,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Creates and inserts new page to the document.</summary>
         /// <param name="index">position to addPage page to</param>
         /// <returns>inserted page</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case
-        /// <c>page</c>
-        /// is flushed
-        /// </exception>
         public virtual PdfPage AddNewPage(int index) {
             return AddNewPage(index, GetDefaultPageSize());
         }
@@ -406,11 +399,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="index">position to addPage page to</param>
         /// <param name="pageSize">page size of the new page</param>
         /// <returns>inserted page</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case
-        /// <c>page</c>
-        /// is flushed
-        /// </exception>
         public virtual PdfPage AddNewPage(int index, PageSize pageSize) {
             CheckClosingStatus();
             PdfPage page = new PdfPage(this, pageSize);
@@ -424,11 +412,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds page to the end of document.</summary>
         /// <param name="page">page to add.</param>
         /// <returns>added page.</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case
-        /// <paramref name="page"/>
-        /// is flushed
-        /// </exception>
         public virtual PdfPage AddPage(PdfPage page) {
             CheckClosingStatus();
             CheckAndAddPage(page);
@@ -440,11 +423,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="index">position to addPage page to</param>
         /// <param name="page">page to addPage</param>
         /// <returns>inserted page</returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// in case
-        /// <paramref name="page"/>
-        /// is flushed
-        /// </exception>
         public virtual PdfPage AddPage(int index, PdfPage page) {
             CheckClosingStatus();
             CheckAndAddPage(index, page);
@@ -1869,7 +1847,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flush an object.</summary>
         /// <param name="pdfObject">object to flush.</param>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             writer.FlushObject(pdfObject, canBeInObjStm);
         }
@@ -2090,7 +2067,6 @@ namespace iText.Kernel.Pdf {
         /// Update XMP metadata values from
         /// <see cref="PdfDocumentInfo"/>.
         /// </summary>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);
@@ -2378,7 +2354,6 @@ namespace iText.Kernel.Pdf {
             names.SetModified();
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
         }

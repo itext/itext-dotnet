@@ -64,7 +64,6 @@ namespace iText.Kernel.XMP.Impl {
 
         /// <summary>Loads the stream into a buffer.</summary>
         /// <param name="in">an InputStream</param>
-        /// <exception cref="System.IO.IOException">If the stream cannot be read.</exception>
         public ByteBuffer(Stream @in) {
             // load stream into buffer
             int chunk = 16384;

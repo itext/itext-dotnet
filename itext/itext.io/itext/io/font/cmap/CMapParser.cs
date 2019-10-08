@@ -72,12 +72,10 @@ namespace iText.IO.Font.Cmap {
 
         private const int MAX_LEVEL = 10;
 
-        /// <exception cref="System.IO.IOException"/>
         public static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location) {
             ParseCid(cmapName, cmap, location, 0);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location, int level) {
             if (level >= MAX_LEVEL) {
                 return;

@@ -65,8 +65,6 @@ namespace iText.Layout.Font {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenDifferentFonts() {
             //TODO: update after fix of DEVSIX-2052

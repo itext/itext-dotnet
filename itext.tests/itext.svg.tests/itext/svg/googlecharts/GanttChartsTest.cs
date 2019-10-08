@@ -60,9 +60,6 @@ namespace iText.Svg.Googlecharts {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gantt_chart() {
             PageSize pageSize = PageSize.A4;
@@ -72,9 +69,6 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_gantt_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gantt2_chart() {
             PageSize pageSize = PageSize.A4;
@@ -84,9 +78,6 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_gantt2_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gantt3_chart() {
             PageSize pageSize = PageSize.A4;
@@ -96,9 +87,6 @@ namespace iText.Svg.Googlecharts {
                  + "cmp_gantt3_chart.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Gantt4_chart() {
             PageSize pageSize = PageSize.A4;

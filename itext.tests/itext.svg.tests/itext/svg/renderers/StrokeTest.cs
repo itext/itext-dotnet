@@ -56,29 +56,21 @@ namespace iText.Svg.Renderers {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalLineStrokeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalLineStroke");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStroke");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeWidthTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Advanced_stroke_Test() {
             //TODO: update cmp-file after DEVSIX-2258

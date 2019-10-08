@@ -67,7 +67,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RunTest() {
             //TODO(DEVSIX-2978): Produces non-conforming PDF/A document

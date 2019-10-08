@@ -87,8 +87,6 @@ namespace iText.Kernel.XMP {
         /// suggestedPrefix if the namespace hasn't been registered before,
         /// otherwise the existing prefix.
         /// </returns>
-        /// <exception cref="XMPException">If the parameters are not accordingly set</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         String RegisterNamespace(String namespaceURI, String suggestedPrefix);
 
         /// <summary>Obtain the prefix for a registered namespace URI.</summary>
