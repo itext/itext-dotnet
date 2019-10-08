@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
@@ -66,7 +67,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -343,6 +344,46 @@ namespace iText.Kernel.Pdf {
         }
 
         // exception is not thrown
+        [NUnit.Framework.Test]
+        public virtual void FlushingPageResourcesMadeIndependent() {
+            String inputFile = sourceFolder + "100pagesSharedResDict.pdf";
+            String outputFile = destinationFolder + "flushingPageResourcesMadeIndependent.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
+            int numOfAddedXObjectsPerPage = 10;
+            for (int i = 1; i <= pdf.GetNumberOfPages(); ++i) {
+                PdfPage sourcePage = pdf.GetPage(i);
+                PdfDictionary res = sourcePage.GetPdfObject().GetAsDictionary(PdfName.Resources);
+                PdfDictionary resClone = new PdfDictionary();
+                // clone dictionary manually to ensure this object is direct and is flushed together with the page
+                foreach (KeyValuePair<PdfName, PdfObject> e in res.EntrySet()) {
+                    resClone.Put(e.Key, e.Value.Clone());
+                }
+                sourcePage.GetPdfObject().Put(PdfName.Resources, resClone);
+                PdfCanvas pdfCanvas = new PdfCanvas(sourcePage);
+                pdfCanvas.SaveState();
+                for (int j = 0; j < numOfAddedXObjectsPerPage; ++j) {
+                    PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "simple.jpg"));
+                    pdfCanvas.AddXObject(xObject, new Rectangle(36, 720 - j * 150, 20, 20));
+                    xObject.MakeIndirect(pdf).Flush();
+                }
+                pdfCanvas.RestoreState();
+                pdfCanvas.Release();
+                sourcePage.Flush();
+            }
+            VerifyFlushedObjectsNum(pdf, 1416, 1400, 0);
+            pdf.Close();
+            PrintOutputPdfNameAndDir(outputFile);
+            PdfDocument result = new PdfDocument(new PdfReader(outputFile));
+            PdfObject page15Res = result.GetPage(15).GetPdfObject().Get(PdfName.Resources, false);
+            PdfObject page34Res = result.GetPage(34).GetPdfObject().Get(PdfName.Resources, false);
+            NUnit.Framework.Assert.IsTrue(page15Res.IsDictionary());
+            NUnit.Framework.Assert.AreEqual(numOfAddedXObjectsPerPage, ((PdfDictionary)page15Res).GetAsDictionary(PdfName
+                .XObject).Size());
+            NUnit.Framework.Assert.IsTrue(page34Res.IsDictionary());
+            NUnit.Framework.Assert.AreNotEqual(page15Res, page34Res);
+            result.Close();
+        }
+
         private static void Test(String filename, PageFlushingTest.DocMode docMode, PageFlushingTest.FlushMode flushMode
             , PageFlushingTest.PagesOp pagesOp, int total, int flushedExpected, int notReadExpected) {
             String input = sourceFolder + "100pages.pdf";
