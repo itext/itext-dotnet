@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -417,6 +418,36 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CellRotationDependsOnNeighbourCell() {
+            String outFileName = destinationFolder + "cellRotationDependsOnNeighbourCell.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationDependsOnNeighbourCell.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(300, 180));
+            doc.Add(CreateTable(60));
+            doc.Add(new AreaBreak());
+            doc.Add(CreateTable(80));
+            doc.Add(new AreaBreak());
+            doc.Add(CreateTable(100));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private Table CreateTable(float height) {
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            Cell rotatedCell = new Cell();
+            rotatedCell.Add(new Paragraph("ROTATED"));
+            rotatedCell.SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(rotatedCell);
+            Cell cell = new Cell().Add(new Paragraph("USUAL"));
+            cell.SetHeight(height);
+            table.AddCell(cell);
+            return table;
         }
 
         /// <exception cref="System.IO.IOException"/>
