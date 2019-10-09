@@ -75,7 +75,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         // base fails, but href good, so get that
-        // base fails, only rel href, so return nothing
         [NUnit.Framework.Test]
         public virtual void SetBaseUriIsRecursive() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p></p></div>");
