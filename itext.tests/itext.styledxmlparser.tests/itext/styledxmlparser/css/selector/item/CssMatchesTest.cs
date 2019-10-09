@@ -68,6 +68,16 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MatchesEmptySelectorItemSpaceTest() {
+            CssPseudoClassEmptySelectorItem item = CssPseudoClassEmptySelectorItem.GetInstance();
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<div> </div>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode divNode = bodyNode.ChildNodes()[0];
+            NUnit.Framework.Assert.IsFalse(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MatchesFirstOfTypeSelectorItemTest() {
             CssPseudoClassFirstOfTypeSelectorItem item = CssPseudoClassFirstOfTypeSelectorItem.GetInstance();
             IXmlParser htmlParser = new JsoupHtmlParser();
