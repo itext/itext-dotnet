@@ -180,7 +180,9 @@ namespace iText.Forms {
                 if (field is PdfTextFormField) {
                     String newValue;
                     if (field.IsMultiline()) {
-                        newValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                        newValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                             + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                        field.SetFontSize(0);
                     }
                     else {
                         newValue = "HELLO!";

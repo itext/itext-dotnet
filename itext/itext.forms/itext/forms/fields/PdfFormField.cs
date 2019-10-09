@@ -64,7 +64,9 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 
 namespace iText.Forms.Fields {
     /// <summary>
@@ -74,7 +76,7 @@ namespace iText.Forms.Fields {
     /// <remarks>
     /// This class represents a single field or field group in an
     /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>.
-    /// <br /><br />
+    /// <para />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
@@ -921,7 +923,7 @@ namespace iText.Forms.Fields {
                 value = OptionsArrayToString(options);
             }
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
-            field.DrawMultiLineTextAppearance(rect, field.GetFont(), field.GetFontSize(), value, xObject);
+            field.DrawChoiceAppearance(rect, field.fontSize, value, xObject);
             annot.SetNormalAppearance(xObject.GetPdfObject());
             return (PdfChoiceFormField)field;
         }
@@ -2698,7 +2700,7 @@ namespace iText.Forms.Fields {
                 //Create text appearance
                 if (PdfName.Tx.Equals(type)) {
                     if (IsMultiline()) {
-                        DrawMultiLineTextAppearance(bboxRectangle, this.font, GetFontSize(bBox, value), value, appearance);
+                        DrawMultiLineTextAppearance(bboxRectangle, this.font, value, appearance);
                     }
                     else {
                         DrawTextAppearance(bboxRectangle, this.font, GetFontSize(bBox, value), value, appearance);
@@ -2714,7 +2716,7 @@ namespace iText.Forms.Fields {
                             value = OptionsArrayToString(visibleOptions);
                         }
                     }
-                    DrawMultiLineTextAppearance(bBox.ToRectangle(), this.font, GetFontSize(bBox, value), value, appearance);
+                    DrawChoiceAppearance(bboxRectangle, GetFontSize(bBox, value), value, appearance);
                     GetPdfObject().Remove(PdfName.DA);
                 }
                 PdfDictionary ap = new PdfDictionary();
@@ -3293,11 +3295,56 @@ namespace iText.Forms.Fields {
         /// a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
-        /// <param name="fontSize">The size of the font</param>
+        /// <param name="fontSize">The size of the font, will be ignored</param>
         /// <param name="value">The initial value</param>
         /// <param name="appearance">The appearance</param>
+        [System.ObsoleteAttribute(@"use DrawMultiLineTextAppearance(iText.Kernel.Geom.Rectangle, iText.Kernel.Font.PdfFont, System.String, iText.Kernel.Pdf.Xobject.PdfFormXObject) instead."
+            )]
         protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, float fontSize, 
             String value, PdfFormXObject appearance) {
+            DrawMultiLineTextAppearance(rect, font, value, appearance);
+        }
+
+        protected internal virtual void DrawMultiLineTextAppearance(Rectangle rect, PdfFont font, String value, PdfFormXObject
+             appearance) {
+            PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
+            PdfResources resources = appearance.GetResources();
+            PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
+            float width = rect.GetWidth();
+            float height = rect.GetHeight();
+            DrawBorder(canvas, appearance, width, height);
+            canvas.BeginVariableText();
+            Rectangle areaRect = new Rectangle(0, 0, width, height);
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), areaRect);
+            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            Paragraph paragraph = new Paragraph(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading(1
+                );
+            if (fontSize == 0) {
+                paragraph.SetFontSize(ApproximateFontSizeToFitMultiLine(paragraph, areaRect, modelCanvas.GetRenderer()));
+            }
+            else {
+                paragraph.SetFontSize(fontSize);
+            }
+            paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
+            paragraph.SetTextAlignment(ConvertJustificationToTextAlignment());
+            if (color != null) {
+                paragraph.SetFontColor(color);
+            }
+            // here we subtract an epsilon to make sure that element won't be split but overflown
+            paragraph.SetHeight(height - 0.00001f);
+            paragraph.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+            paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+            modelCanvas.Add(paragraph);
+            canvas.EndVariableText();
+            appearance.GetPdfObject().SetData(stream.GetBytes());
+        }
+
+        /// <summary>Draws the visual appearance of Choice box in a form field.</summary>
+        /// <param name="rect">The location on the page for the list field</param>
+        /// <param name="value">The initial value</param>
+        /// <param name="appearance">The appearance</param>
+        private void DrawChoiceAppearance(Rectangle rect, float fontSize, String value, PdfFormXObject appearance) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
@@ -3704,7 +3751,8 @@ namespace iText.Forms.Fields {
             }
             PdfFont ufont = GetFont();
             if (fontSize <= 0) {
-                fontSize = ApproximateFontSizeToFitBBox(ufont, new Rectangle(width, height), text);
+                // there is no min font size for checkbox, however we can't set 0, because it means auto size.
+                fontSize = ApproximateFontSizeToFitSingleLine(ufont, new Rectangle(width, height), text, 0.1f);
             }
             // PdfFont gets all width in 1000 normalized units
             canvas.BeginText().SetFontAndSize(ufont, fontSize).ResetFillColorRgb().SetTextMatrix((width - ufont.GetWidth
@@ -3849,22 +3897,49 @@ namespace iText.Forms.Fields {
             return value;
         }
 
-        /// <summary>Adjust font in case autosize.</summary>
         private float GetFontSize(PdfArray bBox, String value) {
+            System.Diagnostics.Debug.Assert(!IsMultiline());
             if (this.fontSize == 0) {
-                //We do not support autosize with multiline.
-                if (IsMultiline() || bBox == null || value == null || String.IsNullOrEmpty(value)) {
+                if (bBox == null || value == null || String.IsNullOrEmpty(value)) {
                     return DEFAULT_FONT_SIZE;
                 }
                 else {
-                    return Math.Max(ApproximateFontSizeToFitBBox(this.font, bBox.ToRectangle(), value), MIN_FONT_SIZE);
+                    return ApproximateFontSizeToFitSingleLine(this.font, bBox.ToRectangle(), value, MIN_FONT_SIZE);
                 }
             }
             return this.fontSize;
         }
 
+        private float ApproximateFontSizeToFitMultiLine(Paragraph paragraph, Rectangle rect, IRenderer parentRenderer
+            ) {
+            IRenderer renderer = paragraph.CreateRendererSubTree().SetParent(parentRenderer);
+            LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, rect));
+            float lFontSize = MIN_FONT_SIZE;
+            float rFontSize = DEFAULT_FONT_SIZE;
+            paragraph.SetFontSize(DEFAULT_FONT_SIZE);
+            if (renderer.Layout(layoutContext).GetStatus() != LayoutResult.FULL) {
+                int numberOfIterations = 6;
+                for (int i = 0; i < numberOfIterations; i++) {
+                    float mFontSize = (lFontSize + rFontSize) / 2;
+                    paragraph.SetFontSize(mFontSize);
+                    LayoutResult result = renderer.Layout(layoutContext);
+                    if (result.GetStatus() == LayoutResult.FULL) {
+                        lFontSize = mFontSize;
+                    }
+                    else {
+                        rFontSize = mFontSize;
+                    }
+                }
+            }
+            else {
+                lFontSize = DEFAULT_FONT_SIZE;
+            }
+            return lFontSize;
+        }
+
         // For text field that value shall be min 4, for checkbox there is no min value.
-        private float ApproximateFontSizeToFitBBox(PdfFont localFont, Rectangle bBox, String value) {
+        private float ApproximateFontSizeToFitSingleLine(PdfFont localFont, Rectangle bBox, String value, float minValue
+            ) {
             float fs;
             float height = bBox.GetHeight() - borderWidth * 2;
             int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
@@ -3885,7 +3960,7 @@ namespace iText.Forms.Fields {
                 }
                 fs = Math.Min(fs, availableWidth / baseWidth);
             }
-            return fs;
+            return Math.Max(fs, minValue);
         }
 
         /// <summary>
@@ -4031,6 +4106,7 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Forms.PdfAcroForm.GetAcroForm(iText.Kernel.Pdf.PdfDocument, bool)"/>
         /// and
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>.
+        /// <para />
         /// Note, this method assume that Catalog already has AcroForm object.
         /// <see cref="AddAcroFormToCatalog()"/>
         /// should be called explicitly.

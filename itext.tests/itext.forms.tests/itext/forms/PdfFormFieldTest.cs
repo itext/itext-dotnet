@@ -139,6 +139,28 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MultilineformFieldTest() {
+            String filename = destinationFolder + "multilineformFieldTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField name = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(150, 600, 277, 44), "fieldName"
+                , "", null, 0);
+            name.SetScroll(false);
+            name.SetBorderColor(ColorConstants.GRAY);
+            String itextLicence = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                 + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+            name.SetValue(itextLicence);
+            form.AddField(name);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_multilineformFieldTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void UnicodeFormFieldTest() {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
@@ -1113,6 +1135,105 @@ namespace iText.Forms {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "outfile.pdf", sourceFolder
                  + "cmp_" + "fillUnmergedTextFormField.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotFittingByHeightTest() {
+            String filename = "notFittingByHeightTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            for (int i = 15; i <= 50; i += 15) {
+                PdfFormField[] fields = new PdfFormField[] { PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 800
+                     - i * 4, 150, i), "multi " + i, "MULTI"), PdfFormField.CreateText(pdfDoc, new Rectangle(300, 800 - i 
+                    * 4, 150, i), "single " + i, "SINGLE") };
+                foreach (PdfFormField field in fields) {
+                    field.SetFontSize(40);
+                    field.SetBorderColor(ColorConstants.BLACK);
+                    form.AddField(field);
+                }
+            }
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChoiceFieldAutoSizeTest() {
+            String filename = destinationFolder + "choiceFieldAutoSizeTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String[] options = new String[] { "First Item", "Second Item", "Third Item", "Fourth Item" };
+            PdfFormField[] fields = new PdfFormField[] { PdfFormField.CreateComboBox(pdfDoc, new Rectangle(110, 750, 150
+                , 20), "TestField", "First Item", options), PdfFormField.CreateList(pdfDoc, new Rectangle(310, 650, 150
+                , 90), "TestField1", "Second Item", options) };
+            foreach (PdfFormField field in fields) {
+                field.SetFontSize(0);
+                field.SetBorderColor(ColorConstants.BLACK);
+                form.AddField(field);
+            }
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_choiceFieldAutoSizeTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderWidthIndentMultilineTest() {
+            String filename = destinationFolder + "borderWidthIndentMultilineTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 500, 400, 300), "multi"
+                , "Does this text overlap the border? Well it shouldn't!");
+            field.SetFontSize(30);
+            field.SetBorderColor(ColorConstants.RED);
+            field.SetBorderWidth(50);
+            form.AddField(field);
+            PdfTextFormField field2 = PdfFormField.CreateMultilineText(pdfDoc, new Rectangle(100, 400, 400, 50), "multiAuto"
+                , "Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?");
+            field2.SetFontSize(0);
+            field2.SetBorderColor(ColorConstants.RED);
+            field2.SetBorderWidth(20);
+            form.AddField(field2);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_borderWidthIndentMultilineTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderWidthIndentSingleLineTest() {
+            String filename = destinationFolder + "borderWidthIndentSingleLineTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField field = PdfFormField.CreateText(pdfDoc, new Rectangle(50, 700, 500, 120), "single", "Does this text overlap the border?"
+                );
+            field.SetFontSize(20);
+            field.SetBorderColor(ColorConstants.RED);
+            field.SetBorderWidth(50);
+            form.AddField(field);
+            PdfTextFormField field2 = PdfFormField.CreateText(pdfDoc, new Rectangle(50, 600, 500, 80), "singleAuto", "Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?"
+                );
+            field2.SetFontSize(0);
+            field2.SetBorderColor(ColorConstants.RED);
+            field2.SetBorderWidth(20);
+            form.AddField(field2);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_borderWidthIndentSingleLineTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
         }
     }
 }
