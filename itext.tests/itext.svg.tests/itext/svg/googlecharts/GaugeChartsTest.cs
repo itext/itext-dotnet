@@ -47,10 +47,10 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class GaugeChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/gauge_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GaugeChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/gauge_charts/";
+             + "/test/itext/svg/googlecharts/GaugeChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -58,18 +58,18 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gauge_charts() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "gauge_chart");
+        public virtual void GaugeCharts() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "gaugeChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gauge2_charts() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "gauge2_chart");
+        public virtual void Gauge2Charts() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "gauge2Chart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gauge3_charts() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "gauge3_chart");
+        public virtual void Gauge3Charts() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "gauge3Chart");
         }
     }
 }

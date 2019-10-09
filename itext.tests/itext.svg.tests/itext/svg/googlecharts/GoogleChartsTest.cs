@@ -52,10 +52,10 @@ using iText.Test.Attributes;
 namespace iText.Svg.Googlecharts {
     public class GoogleChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GoogleChartsTests/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GoogleChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/GoogleChartsTests/";
+             + "/test/itext/svg/googlecharts/GoogleChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -64,76 +64,76 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         public virtual void BarChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "bar_chart");
+            ConvertAndCompare(sourceFolder, destinationFolder, "barChart");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Annotation_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "annotation_chart");
+        public virtual void AnnotationChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "annotationChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Area_chart() {
+        public virtual void AreaChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "area_chart.pdf", sourceFolder + "area_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "areaChart.pdf", sourceFolder + "areaChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "area_chart.pdf", sourceFolder
-                 + "cmp_area_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "areaChart.pdf", sourceFolder
+                 + "cmp_areaChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Bubble_chart() {
+        public virtual void BubbleChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "bubble_chart.pdf", sourceFolder + "bubble_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "bubbleChart.pdf", sourceFolder + "bubbleChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "bubble_chart.pdf", sourceFolder
-                 + "cmp_bubble_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "bubbleChart.pdf", sourceFolder
+                 + "cmp_bubbleChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Calendar_chart() {
+        public virtual void CalendarChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "calendar_chart.pdf", sourceFolder + "calendar_chart.svg", 1
-                , pageSize);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "calendar_chart.pdf", 
-                sourceFolder + "cmp_calendar_chart.pdf", destinationFolder, "diff_"));
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "calendarChart.pdf", sourceFolder + "calendarChart.svg", 1, 
+                pageSize);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "calendarChart.pdf", 
+                sourceFolder + "cmp_calendarChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Candlestick_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "candlestick_chart");
+        public virtual void CandlestickChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "candlestickChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Combo_chart() {
+        public virtual void ComboChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "combo_chart.pdf", sourceFolder + "combo_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "comboChart.pdf", sourceFolder + "comboChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "combo_chart.pdf", sourceFolder
-                 + "cmp_combo_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "comboChart.pdf", sourceFolder
+                 + "cmp_comboChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
-        public virtual void Diff_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "diff_chart");
+        public virtual void DiffChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "diffChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Donut_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "donut_chart");
+        public virtual void DonutChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "donutChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Waterfall_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "waterfall_chart");
+        public virtual void WaterfallChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "waterfallChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Histogram_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "histogram_chart");
+        public virtual void HistogramChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "histogramChart");
         }
     }
 }

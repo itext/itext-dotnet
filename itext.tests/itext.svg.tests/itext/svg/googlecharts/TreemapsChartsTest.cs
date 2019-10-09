@@ -49,10 +49,10 @@ using iText.Test.Attributes;
 namespace iText.Svg.Googlecharts {
     public class TreemapsChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/treemaps_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/TreemapsChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/treemaps_charts/";
+             + "/test/itext/svg/googlecharts/TreemapsChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -61,14 +61,14 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        public virtual void Treemaps_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps_chart");
+        public virtual void TreemapsChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "treemapsChart");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        public virtual void Treemaps2_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps2_chart");
+        public virtual void Treemaps2Chart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps2Chart");
         }
     }
 }

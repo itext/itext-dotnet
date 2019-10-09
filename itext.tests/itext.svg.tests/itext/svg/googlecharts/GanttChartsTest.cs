@@ -50,10 +50,10 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class GanttChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/gantt_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GanttChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/gantt_charts/";
+             + "/test/itext/svg/googlecharts/GanttChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -61,39 +61,39 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gantt_chart() {
+        public virtual void GanttChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt_chart.pdf", sourceFolder + "gantt_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "ganttChart.pdf", sourceFolder + "ganttChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt_chart.pdf", sourceFolder
-                 + "cmp_gantt_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "ganttChart.pdf", sourceFolder
+                 + "cmp_ganttChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gantt2_chart() {
+        public virtual void Gantt2Chart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt2_chart.pdf", sourceFolder + "gantt2_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt2Chart.pdf", sourceFolder + "gantt2Chart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt2_chart.pdf", sourceFolder
-                 + "cmp_gantt2_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt2Chart.pdf", sourceFolder
+                 + "cmp_gantt2Chart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gantt3_chart() {
+        public virtual void Gantt3Chart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt3_chart.pdf", sourceFolder + "gantt3_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt3Chart.pdf", sourceFolder + "gantt3Chart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt3_chart.pdf", sourceFolder
-                 + "cmp_gantt3_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt3Chart.pdf", sourceFolder
+                 + "cmp_gantt3Chart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Gantt4_chart() {
+        public virtual void Gantt4Chart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt4_chart.pdf", sourceFolder + "gantt4_chart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "gantt4Chart.pdf", sourceFolder + "gantt4Chart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt4_chart.pdf", sourceFolder
-                 + "cmp_gantt4_chart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "gantt4Chart.pdf", sourceFolder
+                 + "cmp_gantt4Chart.pdf", destinationFolder, "diff_"));
         }
     }
 }

@@ -50,10 +50,10 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class TimelineChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/timeline_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/TimelineChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/timeline_charts/";
+             + "/test/itext/svg/googlecharts/TimelineChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -61,22 +61,22 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Timeline_advanced_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "timeline_advanced_chart");
+        public virtual void TimelineAdvancedChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "timelineAdvancedChart");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Timeline_chart() {
+        public virtual void TimelineChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "timeline_chart.pdf", sourceFolder + "timeline_chart.svg", 1
-                , pageSize);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "timeline_chart.pdf", 
-                sourceFolder + "cmp_timeline_chart.pdf", destinationFolder, "diff_"));
+            TestUtils.ConvertSVGtoPDF(destinationFolder + "timelineChart.pdf", sourceFolder + "timelineChart.svg", 1, 
+                pageSize);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "timelineChart.pdf", 
+                sourceFolder + "cmp_timelineChart.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        public virtual void Timeline_labeled_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "timeline_labeled_chart");
+        public virtual void TimelineLabeledChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "timelineLabeledChart");
         }
     }
 }
