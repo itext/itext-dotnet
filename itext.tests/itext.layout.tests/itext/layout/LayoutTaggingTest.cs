@@ -57,6 +57,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -70,6 +71,9 @@ namespace iText.Layout {
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/LayoutTaggingTest/";
+
+        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -758,6 +762,25 @@ namespace iText.Layout {
             document.Add(new List().Add(li));
             document.Close();
             CompareResult("floatListItemTest.pdf", "cmp_floatListItemTest.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
+        public virtual void NotAsciiCharTest() {
+            //TODO update cmp-file after DEVSIX-3335 fixed
+            PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            pdf.SetTagged();
+            FontProvider sel = new FontProvider();
+            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            sel.AddFont(StandardFonts.TIMES_ROMAN);
+            document.SetFontProvider(sel);
+            Paragraph p = new Paragraph("\u0422\u043E be or not.");
+            p.SetFontFamily("times");
+            document.Add(p);
+            document.Close();
+            CompareResult("notAsciiCharTest.pdf", "cmp_notAsciiCharTest.pdf");
         }
 
         [NUnit.Framework.Test]
