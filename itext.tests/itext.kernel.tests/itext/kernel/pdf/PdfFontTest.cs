@@ -1427,5 +1427,23 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.IsNull(pdfDoc.GetDefaultFont().GetPdfObject().GetIndirectReference());
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MSungLightFontRanges() {
+            //TODO DEVSIX-3348
+            String filename = destinationFolder + "mSungLightFontRanges.pdf";
+            String cmpFilename = sourceFolder + "cmp_mSungLightFontRanges.pdf";
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfFont mSungFont = PdfFontFactory.CreateFont("MSung-Light", "UniCNS-UCS2-H");
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(mSungFont, 40).ShowText("\u98db \u6708 \u9577"
+                ).EndText().RestoreState();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder)
+                );
+        }
     }
 }
