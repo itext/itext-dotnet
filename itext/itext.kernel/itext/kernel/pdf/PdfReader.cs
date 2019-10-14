@@ -656,19 +656,27 @@ namespace iText.Kernel.Pdf {
                     tokens.Seek(address[k]);
                     tokens.NextToken();
                     PdfObject obj;
+                    PdfIndirectReference reference = pdfDocument.GetXref().Get(objNumber[k]);
+                    if (reference.refersTo != null || reference.GetObjStreamNumber() != objectStreamNumber) {
+                        // We skip reading of objects stream's element k if either it is already available in xref
+                        // or if corresponding indirect object reference points to a different object stream.
+                        // The first check prevents from re-initializing objects which are already read. One of the cases
+                        // when this can happen is that some other object from this objects stream was released and requested
+                        // to be re-read.
+                        // Second check ensures that object has no incremental updates and is not freed in append mode.
+                        continue;
+                    }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.Number) {
+                        // This ensure that we don't even try to read as indirect reference token (two numbers and "R")
+                        // which are forbidden in object streams.
                         obj = new PdfNumber(tokens.GetByteContent());
                     }
                     else {
                         tokens.Seek(address[k]);
                         obj = ReadObject(false, true);
                     }
-                    PdfIndirectReference reference = pdfDocument.GetXref().Get(objNumber[k]);
-                    // Check if this object has no incremental updates (e.g. no append mode)
-                    if (reference.GetObjStreamNumber() == objectStreamNumber) {
-                        reference.SetRefersTo(obj);
-                        obj.SetIndirectReference(reference);
-                    }
+                    reference.SetRefersTo(obj);
+                    obj.SetIndirectReference(reference);
                 }
                 objectStream.GetIndirectReference().SetState(PdfObject.ORIGINAL_OBJECT_STREAM);
             }

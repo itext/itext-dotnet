@@ -123,6 +123,54 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ObjectStreamIncrementalUpdateReading() {
+            /*
+            This test ensures that if certain object stored in objects streams
+            has incremental updates, the right object instance is found and initialized
+            even if the object stream with the older object's increment is read as well.
+            
+            One peculiar thing covered by this test is that older object increment contains
+            indirect refernce to the object number 8 which is freed in document incremental
+            update. Such document and particulary this object is perfectly valid.
+            */
+            String filename = sourceFolder + "objectStreamIncrementalUpdate.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDictionary catalogDict = pdfDoc.GetCatalog().GetPdfObject();
+            PdfDictionary customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            PdfDictionary customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.AreEqual(1, customDict1.Size());
+            NUnit.Framework.Assert.AreEqual(1, customDict2.Size());
+            NUnit.Framework.Assert.AreEqual("Hello world updated.", customDict1.GetAsString(new PdfName("Key1")).GetValue
+                ());
+            NUnit.Framework.Assert.AreEqual("Hello world for second dictionary.", customDict2.GetAsString(new PdfName(
+                "Key1")).GetValue());
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
+            pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RereadReleasedObjectFromObjectStream() {
+            String filename = sourceFolder + "twoCustomDictionariesInObjectStream.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDictionary catalogDict = pdfDoc.GetCatalog().GetPdfObject();
+            PdfDictionary customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            PdfDictionary customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.IsTrue(customDict1.ContainsKey(new PdfName("CustomDict1Key1")));
+            NUnit.Framework.Assert.IsTrue(customDict2.ContainsKey(new PdfName("CustomDict2Key1")));
+            customDict2.Clear();
+            customDict1.Release();
+            // reread released dictionary and also modified dictionary
+            customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.IsTrue(customDict1.ContainsKey(new PdfName("CustomDict1Key1")));
+            NUnit.Framework.Assert.IsFalse(customDict2.ContainsKey(new PdfName("CustomDict2Key1")));
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
+            pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
         public virtual void OpenDocWithFlateFilter() {
             String filename = sourceFolder + "100PagesDocumentWithFlateFilter.pdf";
             PdfReader reader = new PdfReader(filename);
