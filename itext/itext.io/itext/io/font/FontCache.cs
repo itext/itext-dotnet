@@ -51,8 +51,8 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontCache {
-        private static readonly IDictionary<String, IDictionary<String, Object>> allCidFonts = new Dictionary<String
-            , IDictionary<String, Object>>();
+        private static readonly IDictionary<String, IDictionary<String, Object>> allCidFonts = new LinkedDictionary
+            <String, IDictionary<String, Object>>();
 
         private static readonly IDictionary<String, ICollection<String>> registryNames = new Dictionary<String, ICollection
             <String>>();
@@ -103,6 +103,9 @@ namespace iText.IO.Font {
             return true;
         }
 
+        /// <summary>Finds a CJK font family which is compatible to the given CMap.</summary>
+        /// <param name="cmap">a name of the CMap for which compatible font is searched.</param>
+        /// <returns>a CJK font name if there's known compatible font for the given cmap name, or null otherwise.</returns>
         public static String GetCompatibleCidFont(String cmap) {
             foreach (KeyValuePair<String, ICollection<String>> e in registryNames) {
                 if (e.Value.Contains(cmap)) {
@@ -117,8 +120,18 @@ namespace iText.IO.Font {
             return null;
         }
 
+        /// <summary>
+        /// Finds all CMap names that belong to the same registry to which a given
+        /// font belongs.
+        /// </summary>
+        /// <param name="fontName">a name of the font for which CMap's are searched.</param>
+        /// <returns>a set of CMap names corresponding to the given font.</returns>
         public static ICollection<String> GetCompatibleCmaps(String fontName) {
-            String registry = (String)FontCache.GetAllPredefinedCidFonts().Get(fontName).Get(REGISTRY_PROP);
+            IDictionary<String, Object> cidFonts = FontCache.GetAllPredefinedCidFonts().Get(fontName);
+            if (cidFonts == null) {
+                return null;
+            }
+            String registry = (String)cidFonts.Get(REGISTRY_PROP);
             return registryNames.Get(registry);
         }
 
@@ -130,6 +143,11 @@ namespace iText.IO.Font {
             return registryNames;
         }
 
+        /// <summary>Parses CMap with a given name producing it in a form of cid to unicode mapping.</summary>
+        /// <param name="uniMap">a CMap name. It is expected that CMap identified by this name defines unicode to cid mapping.
+        ///     </param>
+        /// <returns>an object for convenient mapping from cid to unicode. If no CMap was found for provided name an exception is thrown.
+        ///     </returns>
         public static CMapCidUni GetCid2UniCmap(String uniMap) {
             CMapCidUni cidUni = new CMapCidUni();
             return ParseCmap(uniMap, cidUni);

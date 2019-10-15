@@ -59,15 +59,15 @@ namespace iText.IO.Font.Cmap {
             }
         }
 
-        private IList<char[]> planes = new List<char[]>();
+        private IList<int[]> planes = new List<int[]>();
 
         public CMapByteCid() {
-            planes.Add(new char[256]);
+            planes.Add(new int[256]);
         }
 
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
-                EncodeSequence(DecodeStringToByte(mark), (char)code.GetValue());
+                EncodeSequence(DecodeStringToByte(mark), (int)code.GetValue());
             }
         }
 
@@ -90,7 +90,7 @@ namespace iText.IO.Font.Cmap {
             while (cursor.offset < end) {
                 int one = cidBytes[cursor.offset++] & 0xff;
                 cursor.length--;
-                char[] plane = planes[currentPlane];
+                int[] plane = planes[currentPlane];
                 int cid = plane[one];
                 if ((cid & 0x8000) == 0) {
                     return cid;
@@ -102,26 +102,26 @@ namespace iText.IO.Font.Cmap {
             return -1;
         }
 
-        private void EncodeSequence(byte[] seq, char cid) {
+        private void EncodeSequence(byte[] seq, int cid) {
             int size = seq.Length - 1;
             int nextPlane = 0;
             for (int idx = 0; idx < size; ++idx) {
-                char[] plane = planes[nextPlane];
+                int[] plane = planes[nextPlane];
                 int one = seq[idx] & 0xff;
-                char c = plane[one];
+                int c = plane[one];
                 if (c != 0 && (c & 0x8000) == 0) {
                     throw new iText.IO.IOException("Inconsistent mapping.");
                 }
                 if (c == 0) {
-                    planes.Add(new char[256]);
-                    c = (char)(planes.Count - 1 | 0x8000);
+                    planes.Add(new int[256]);
+                    c = (planes.Count - 1 | 0x8000);
                     plane[one] = c;
                 }
                 nextPlane = c & 0x7fff;
             }
-            char[] plane_1 = planes[nextPlane];
+            int[] plane_1 = planes[nextPlane];
             int one_1 = seq[size] & 0xff;
-            char c_1 = plane_1[one_1];
+            int c_1 = plane_1[one_1];
             if ((c_1 & 0x8000) != 0) {
                 throw new iText.IO.IOException("Inconsistent mapping.");
             }
