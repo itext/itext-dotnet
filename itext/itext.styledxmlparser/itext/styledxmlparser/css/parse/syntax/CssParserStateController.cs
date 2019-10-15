@@ -57,9 +57,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private IParserState currentState;
 
         /// <summary>Indicates if the current rule is supported.</summary>
-        private bool isCurrentRuleSupported = 
-                //Hashed value
-                true;
+        private bool isCurrentRuleSupported = true;
 
         /// <summary>The previous active state (excluding comments).</summary>
         private IParserState previousActiveState;
