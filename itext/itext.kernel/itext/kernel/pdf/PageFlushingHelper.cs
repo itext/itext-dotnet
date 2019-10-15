@@ -149,13 +149,13 @@ namespace iText.Kernel.Pdf {
 
         private bool release;
 
+        // only PdfDictionary/PdfStream or PdfArray can be in this set.
+        // Explicitly using HashSet for as field type for the sake of autoporting.
         private HashSet<PdfObject> currNestedObjParents = new HashSet<PdfObject>();
 
         private ICollection<PdfIndirectReference> layersRefs = new HashSet<PdfIndirectReference>();
 
         public PageFlushingHelper(PdfDocument pdfDoc) {
-            // only PdfDictionary/PdfStream or PdfArray can be in this set.
-            // Explicitly using HashSet for as field type for the sake of autoporting.
             this.pdfDoc = pdfDoc;
         }
 
@@ -512,42 +512,43 @@ namespace iText.Kernel.Pdf {
             IDictionary<PdfName, PageFlushingHelper.DeepFlushingContext> NO_INNER_CONTEXTS = JavaCollectionsUtil.EmptyMap
                 <PdfName, PageFlushingHelper.DeepFlushingContext>();
             // --- action dictionary context ---
-            PageFlushingHelper.DeepFlushingContext actionContext = new PageFlushingHelper.DeepFlushingContext(new LinkedHashSet
-                <PdfName>(JavaUtil.ArraysAsList(PdfName.D, PdfName.SD, PdfName.Dp, PdfName.B, PdfName.Annotation, PdfName
-                .T, PdfName.AN, PdfName.TA)), NO_INNER_CONTEXTS);
-            // actions keys flushing blacklist
-            PageFlushingHelper.DeepFlushingContext aaContext = new PageFlushingHelper.DeepFlushingContext(actionContext
-                );
-            // all inner entries leading to this context
+            PageFlushingHelper.DeepFlushingContext actionContext = new PageFlushingHelper.DeepFlushingContext(
+                        // actions keys flushing blacklist
+                        new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.D, PdfName.SD, PdfName.Dp, PdfName.B, PdfName.Annotation
+                , PdfName.T, PdfName.AN, PdfName.TA)), NO_INNER_CONTEXTS);
+            PageFlushingHelper.DeepFlushingContext aaContext = new PageFlushingHelper.DeepFlushingContext(
+                        // all inner entries leading to this context
+                        actionContext);
             // ---
             // --- annotation dictionary context ---
             LinkedDictionary<PdfName, PageFlushingHelper.DeepFlushingContext> annotInnerContexts = new LinkedDictionary
                 <PdfName, PageFlushingHelper.DeepFlushingContext>();
-            PageFlushingHelper.DeepFlushingContext annotsContext = new PageFlushingHelper.DeepFlushingContext(new LinkedHashSet
-                <PdfName>(JavaUtil.ArraysAsList(PdfName.P, PdfName.Popup, PdfName.Dest, PdfName.Parent, PdfName.V)), annotInnerContexts
-                );
-            // annotations flushing blacklist
-            // keys that belong to form fields which can be merged with widget annotations
+            PageFlushingHelper.DeepFlushingContext annotsContext = new PageFlushingHelper.DeepFlushingContext(
+                        // annotations flushing blacklist
+                        new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.P, PdfName.Popup, PdfName.Dest, PdfName.Parent, PdfName
+                .V)), 
+                        // keys that belong to form fields which can be merged with widget annotations
+                        annotInnerContexts);
             annotInnerContexts.Put(PdfName.A, actionContext);
             annotInnerContexts.Put(PdfName.PA, actionContext);
             annotInnerContexts.Put(PdfName.AA, aaContext);
             // ---
             // --- separation info dictionary context ---
-            PageFlushingHelper.DeepFlushingContext sepInfoContext = new PageFlushingHelper.DeepFlushingContext(new LinkedHashSet
-                <PdfName>(JavaCollectionsUtil.SingletonList(PdfName.Pages)), NO_INNER_CONTEXTS);
-            // separation info dict flushing blacklist
+            PageFlushingHelper.DeepFlushingContext sepInfoContext = new PageFlushingHelper.DeepFlushingContext(
+                        // separation info dict flushing blacklist
+                        new LinkedHashSet<PdfName>(JavaCollectionsUtil.SingletonList(PdfName.Pages)), NO_INNER_CONTEXTS);
             // ---
             // --- bead dictionary context ---
-            PageFlushingHelper.DeepFlushingContext bContext = new PageFlushingHelper.DeepFlushingContext(ALL_KEYS_IN_BLACK_LIST
-                , NO_INNER_CONTEXTS);
-            // bead dict flushing blacklist
+            PageFlushingHelper.DeepFlushingContext bContext = new PageFlushingHelper.DeepFlushingContext(
+                        // bead dict flushing blacklist
+                        ALL_KEYS_IN_BLACK_LIST, NO_INNER_CONTEXTS);
             // ---
             // --- pres steps dictionary context ---
             LinkedDictionary<PdfName, PageFlushingHelper.DeepFlushingContext> presStepsInnerContexts = new LinkedDictionary
                 <PdfName, PageFlushingHelper.DeepFlushingContext>();
-            PageFlushingHelper.DeepFlushingContext presStepsContext = new PageFlushingHelper.DeepFlushingContext(new LinkedHashSet
-                <PdfName>(JavaCollectionsUtil.SingletonList(PdfName.Prev)), presStepsInnerContexts);
-            // pres step dict flushing blacklist
+            PageFlushingHelper.DeepFlushingContext presStepsContext = new PageFlushingHelper.DeepFlushingContext(
+                        // pres step dict flushing blacklist
+                        new LinkedHashSet<PdfName>(JavaCollectionsUtil.SingletonList(PdfName.Prev)), presStepsInnerContexts);
             presStepsInnerContexts.Put(PdfName.NA, actionContext);
             presStepsInnerContexts.Put(PdfName.PA, actionContext);
             // ---
@@ -566,16 +567,16 @@ namespace iText.Kernel.Pdf {
         }
 
         private class DeepFlushingContext {
+            // null stands for every key to be in black list
             internal ICollection<PdfName> blackList;
 
+            // null stands for every key to be taking unconditional context
             internal IDictionary<PdfName, PageFlushingHelper.DeepFlushingContext> innerContexts;
 
             internal PageFlushingHelper.DeepFlushingContext unconditionalInnerContext;
 
             public DeepFlushingContext(ICollection<PdfName> blackList, IDictionary<PdfName, PageFlushingHelper.DeepFlushingContext
                 > innerContexts) {
-                // null stands for every key to be in black list
-                // null stands for every key to be taking unconditional context
                 this.blackList = blackList;
                 this.innerContexts = innerContexts;
             }

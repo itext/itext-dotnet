@@ -55,13 +55,13 @@ using iText.Test;
 
 namespace iText.Svg.Converter {
     public class SvgConverterUnitTest : ExtendedITextTest {
+        // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
         private PdfDocument doc;
 
         private readonly String content = "<svg width=\"10\" height=\"10\"/>";
 
         private Stream @is;
 
-        // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
         [NUnit.Framework.SetUp]
         public virtual void Setup() {
             doc = new PdfDocument(new PdfWriter(new MemoryStream()));

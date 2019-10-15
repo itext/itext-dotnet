@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
     /// clipping path state and changes.
     /// </summary>
     public class ParserGraphicsState : CanvasGraphicsState {
+        // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
         private Path clippingPath;
 
         /// <summary>Internal empty and default constructor.</summary>
@@ -66,7 +67,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <param name="source">the Graphics State to copy from</param>
         internal ParserGraphicsState(iText.Kernel.Pdf.Canvas.Parser.ParserGraphicsState source)
             : base(source) {
-            // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
             if (source.clippingPath != null) {
                 clippingPath = new Path(source.clippingPath);
             }

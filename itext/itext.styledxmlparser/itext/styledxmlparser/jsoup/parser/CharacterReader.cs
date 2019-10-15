@@ -62,8 +62,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private readonly String[] stringCache = new String[512];
 
+        // holds reused strings in this doc, to lessen garbage
         internal CharacterReader(String input) {
-            // holds reused strings in this doc, to lessen garbage
             Validate.NotNull(input);
             this.input = input.ToCharArray();
             this.length = this.input.Length;

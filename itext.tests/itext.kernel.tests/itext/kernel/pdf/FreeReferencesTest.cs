@@ -85,9 +85,10 @@ namespace iText.Kernel.Pdf {
             String[] xrefString = ExtractXrefTableAsStrings(@out);
             String[] expected = new String[] { "xref\n" + "0 5\n" + "0000000010 65535 f \n" + "0000000269 00000 n \n" 
                 + "0000000569 00000 n \n" + "0000000314 00000 n \n" + "0000000000 65535 f \n" + "10 5\n" + "0000000011 00000 f \n"
-                 + "0000000000 00001 f \n" + "0000000133 00000 n \n" + "0000000015 00000 n \n" + "0000000480 00000 n \n"
-                , "xref\n" + "3 1\n" + "0000000995 00000 n \n" };
-            // Append mode, no possibility to fix subsections in first xref
+                 + 
+                        // Append mode, no possibility to fix subsections in first xref
+                        "0000000000 00001 f \n" + "0000000133 00000 n \n" + "0000000015 00000 n \n" + "0000000480 00000 n \n", "xref\n"
+                 + "3 1\n" + "0000000995 00000 n \n" };
             CompareXrefTables(xrefString, expected);
         }
 
@@ -160,9 +161,9 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(@out);
             String[] expected = new String[] { "xref\n" + "0 4\n" + "0000000000 65535 f \n" + "0000000269 00000 n \n" 
-                + "0000000569 00000 n \n" + "0000000314 00000 n \n" + "11 3\n" + "0000000133 00000 n \n" + "0000000015 00000 n \n"
-                 + "0000000480 00000 n \n", "xref\n" + "3 1\n" + "0000000935 00000 n \n" };
-            // Append mode, no possibility to fix subsections in first xref
+                + "0000000569 00000 n \n" + "0000000314 00000 n \n" + "11 3\n" + "0000000133 00000 n \n" + 
+                        // Append mode, no possibility to fix subsections in first xref
+                        "0000000015 00000 n \n" + "0000000480 00000 n \n", "xref\n" + "3 1\n" + "0000000935 00000 n \n" };
             CompareXrefTables(xrefString, expected);
         }
 

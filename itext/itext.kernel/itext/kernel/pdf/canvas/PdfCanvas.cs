@@ -716,11 +716,12 @@ namespace iText.Kernel.Pdf.Canvas {
                                 ().WriteBytes(Td);
                         }
                         if (glyph.HasAdvance()) {
-                            contentStream.GetOutputStream().WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance
-                                ()) * fontSize + charSpacing + GetWordSpacingAddition(glyph)) * scaling, true).WriteSpace().WriteFloat
-                                (glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes(Td);
+                            contentStream.GetOutputStream()
+                                                        // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
+                                                        .WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance()) * fontSize + charSpacing
+                                 + GetWordSpacingAddition(glyph)) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize
+                                , true).WriteSpace().WriteBytes(Td);
                         }
-                        // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
                         sub = i + 1;
                     }
                 }

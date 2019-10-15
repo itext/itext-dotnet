@@ -47,6 +47,7 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class PdfEncodings {
+        //-Encodings--------------------------------------------------------------------------------------------------------
         /// <summary>The Unicode encoding with horizontal writing.</summary>
         public const String IDENTITY_H = "Identity-H";
 
@@ -175,7 +176,6 @@ namespace iText.IO.Font {
             >();
 
         static PdfEncodings() {
-            //-Encodings--------------------------------------------------------------------------------------------------------
             for (int k = 128; k < 161; ++k) {
                 char c = winansiByteToChar[k];
                 if (c != 65533) {

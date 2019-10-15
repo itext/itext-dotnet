@@ -50,6 +50,7 @@ namespace iText.Signatures {
         private OID() {
         }
 
+        // Empty on purpose. Avoiding instantiation of this class.
         /// <summary>Contains all OIDs used by iText in the context of Certificate Extensions.</summary>
         public sealed class X509Extensions {
             /// <summary>One of the standard extensions from https://tools.ietf.org/html/rfc5280</summary>
@@ -159,7 +160,6 @@ namespace iText.Signatures {
                 (new LinkedHashSet<String>(JavaUtil.ArraysAsList(KEY_USAGE, CERTIFICATE_POLICIES, POLICY_MAPPINGS, SUBJECT_ALTERNATIVE_NAME
                 , ISSUER_ALTERNATIVE_NAME, BASIC_CONSTRAINTS, NAME_CONSTRAINTS, POLICY_CONSTRAINTS, EXTENDED_KEY_USAGE
                 , CRL_DISTRIBUTION_POINTS, INHIBIT_ANY_POLICY, ID_PKIX_OCSP_NOCHECK)));
-            // Empty on purpose. Avoiding instantiation of this class.
         }
     }
 }

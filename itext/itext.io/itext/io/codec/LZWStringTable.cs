@@ -58,8 +58,10 @@ namespace iText.IO.Codec {
         /// <summary>codesize + Reserved Codes</summary>
         private const int RES_CODES = 2;
 
+        //0xFFFF
         private const short HASH_FREE = -1;
 
+        //0xFFFF
         private const short NEXT_FIRST = -1;
 
         private const int MAXBITS = 12;
@@ -72,12 +74,16 @@ namespace iText.IO.Codec {
 
         internal byte[] strChr_;
 
+        // after predecessor character
         internal short[] strNxt_;
 
+        // predecessor string
         internal short[] strHsh_;
 
+        // hash table to find  predecessor + char pairs
         internal short numStrings_;
 
+        // next code if adding new prestring + char
         /// <summary>
         /// each entry corresponds to a code and contains the length of data
         /// that the code expands to when decoded.
@@ -86,12 +92,6 @@ namespace iText.IO.Codec {
 
         /// <summary>Constructor allocate memory for string store data</summary>
         public LZWStringTable() {
-            //0xFFFF
-            //0xFFFF
-            // after predecessor character
-            // predecessor string
-            // hash table to find  predecessor + char pairs
-            // next code if adding new prestring + char
             strChr_ = new byte[MAXSTR];
             strNxt_ = new short[MAXSTR];
             strLen_ = new int[MAXSTR];
@@ -214,8 +214,9 @@ namespace iText.IO.Codec {
                 }
             }
             //-1 ~ 0xFFFF
-            if (code == -1 || skipHead == strLen_[code]) {
-                // just in case
+            if (code == -1 || 
+                        // just in case
+                        skipHead == strLen_[code]) {
                 // DONE no more unpacked
                 return 0;
             }

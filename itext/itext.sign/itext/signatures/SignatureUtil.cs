@@ -55,6 +55,7 @@ using iText.Kernel.Pdf;
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
+        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
         private PdfDocument document;
 
         private PdfAcroForm acroForm;
@@ -65,7 +66,6 @@ namespace iText.Signatures {
 
         private int totalRevisions;
 
-        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
         /// <summary>
         /// Converts a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>

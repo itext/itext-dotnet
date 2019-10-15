@@ -250,13 +250,15 @@ namespace iText.Kernel.Geom {
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
-            return !(this.GetX() + this.GetWidth() < rect.GetX() || this.GetY() + this.GetHeight() < rect.GetY() || this
-                .GetX() > rect.GetX() + rect.GetWidth() || this.GetY() > rect.GetY() + rect.GetHeight());
+            return !(this.GetX() + this.GetWidth() < rect.GetX() || 
+                        //1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
+                        this.GetY() + this.GetHeight() < rect.GetY() || 
+                        //2. the lower left corner of the second rectangle is above the upper right corner of the first.
+                        this.GetX() > rect.GetX() + rect.GetWidth() || 
+                        //3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
+                        this.GetY() > rect.GetY() + rect.GetHeight());
         }
 
-        //1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
-        //2. the lower left corner of the second rectangle is above the upper right corner of the first.
-        //3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
         //4. the upper right corner of the second rectangle is below the lower left corner of the first.
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
         /// <remarks>

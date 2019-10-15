@@ -86,6 +86,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfNamespace currentNamespace;
 
+        // '-1' value of this field means that next new kid will be the last element in the kids array
         private int nextNewKidIndex = -1;
 
         /// <summary>
@@ -114,7 +115,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </remarks>
         /// <param name="document">the document, at which tag structure this instance will point.</param>
         public TagTreePointer(PdfDocument document) {
-            // '-1' value of this field means that next new kid will be the last element in the kids array
             tagStructureContext = document.GetTagStructureContext();
             SetCurrentStructElem(tagStructureContext.GetRootTag());
             SetNamespaceForNewTags(tagStructureContext.GetDocumentDefaultNamespace());

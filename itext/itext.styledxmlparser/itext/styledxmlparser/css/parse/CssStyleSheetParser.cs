@@ -49,6 +49,7 @@ using iText.StyledXmlParser.Css.Parse.Syntax;
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse a CSS style sheet.</summary>
     public sealed class CssStyleSheetParser {
+        // TODO refactor into interface
         /// <summary>
         /// Creates a new
         /// <see cref="CssStyleSheetParser"/>.
@@ -56,7 +57,6 @@ namespace iText.StyledXmlParser.Css.Parse {
         private CssStyleSheetParser() {
         }
 
-        // TODO refactor into interface
         /// <summary>
         /// Parses a stream into a
         /// <see cref="CssRuleSetParser"/>.

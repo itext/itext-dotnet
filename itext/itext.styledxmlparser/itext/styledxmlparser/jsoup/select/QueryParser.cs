@@ -435,12 +435,12 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             evals.Add(new Evaluator.IndexEquals(ConsumeIndex()));
         }
 
+        //pseudo selectors :first-child, :last-child, :nth-child, ...
         private static readonly Regex NTH_AB = iText.IO.Util.StringUtil.RegexCompile("((\\+|-)?(\\d+)?)n(\\s*(\\+|-)?\\s*\\d+)?"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
         private static readonly Regex NTH_B = iText.IO.Util.StringUtil.RegexCompile("(\\+|-)?(\\d+)");
 
-        //pseudo selectors :first-child, :last-child, :nth-child, ...
         private void CssNthChild(bool backwards, bool ofType) {
             String argS = tq.ChompTo(")").Trim().ToLowerInvariant();
             Match mAB = iText.IO.Util.StringUtil.Match(NTH_AB, argS);

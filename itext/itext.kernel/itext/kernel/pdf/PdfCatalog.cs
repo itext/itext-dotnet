@@ -65,9 +65,11 @@ namespace iText.Kernel.Pdf {
 
         private PdfOutline outlines;
 
+        //This HashMap contents all pages of the document and outlines associated to them
         private IDictionary<PdfObject, IList<PdfOutline>> pagesWithOutlines = new Dictionary<PdfObject, IList<PdfOutline
             >>();
 
+        //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
         private bool outlineMode;
 
         private static readonly ICollection<PdfName> PAGE_MODES = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
@@ -80,8 +82,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
-            //This HashMap contents all pages of the document and outlines associated to them
-            //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
             if (pdfObject == null) {
                 throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
             }

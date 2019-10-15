@@ -59,6 +59,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     public class Parser {
         private const int DEFAULT_MAX_ERRORS = 0;
 
+        // by default, error tracking is disabled.
         private TreeBuilder treeBuilder;
 
         private int maxErrors = DEFAULT_MAX_ERRORS;
@@ -68,7 +69,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Create a new Parser, using the specified TreeBuilder</summary>
         /// <param name="treeBuilder">TreeBuilder to use to parse input into Documents.</param>
         public Parser(TreeBuilder treeBuilder) {
-            // by default, error tracking is disabled.
             this.treeBuilder = treeBuilder;
         }
 

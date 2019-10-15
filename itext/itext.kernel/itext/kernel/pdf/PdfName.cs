@@ -49,28 +49,40 @@ using iText.IO.Util;
 
 namespace iText.Kernel.Pdf {
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
+        //  ' '
         private static readonly byte[] space = ByteUtils.GetIsoBytes("#20");
 
+        //  '%'
         private static readonly byte[] percent = ByteUtils.GetIsoBytes("#25");
 
+        //  '('
         private static readonly byte[] leftParenthesis = ByteUtils.GetIsoBytes("#28");
 
+        //  ')'
         private static readonly byte[] rightParenthesis = ByteUtils.GetIsoBytes("#29");
 
+        //  '<'
         private static readonly byte[] lessThan = ByteUtils.GetIsoBytes("#3c");
 
+        //  '>'
         private static readonly byte[] greaterThan = ByteUtils.GetIsoBytes("#3e");
 
+        //  '['
         private static readonly byte[] leftSquare = ByteUtils.GetIsoBytes("#5b");
 
+        //  ']'
         private static readonly byte[] rightSquare = ByteUtils.GetIsoBytes("#5d");
 
+        //  '{'
         private static readonly byte[] leftCurlyBracket = ByteUtils.GetIsoBytes("#7b");
 
+        //  '}'
         private static readonly byte[] rightCurlyBracket = ByteUtils.GetIsoBytes("#7d");
 
+        //  '/'
         private static readonly byte[] solidus = ByteUtils.GetIsoBytes("#2f");
 
+        //  '#'
         private static readonly byte[] numberSign = ByteUtils.GetIsoBytes("#23");
 
         public static readonly iText.Kernel.Pdf.PdfName _3D = CreateDirectName("3D");
@@ -1793,18 +1805,6 @@ namespace iText.Kernel.Pdf {
         public static IDictionary<String, iText.Kernel.Pdf.PdfName> staticNames;
 
         static PdfName() {
-            //  ' '
-            //  '%'
-            //  '('
-            //  ')'
-            //  '<'
-            //  '>'
-            //  '['
-            //  ']'
-            //  '{'
-            //  '}'
-            //  '/'
-            //  '#'
             staticNames = PdfNameLoader.LoadNames();
         }
 
@@ -1896,9 +1896,9 @@ namespace iText.Kernel.Pdf {
             char[] chars = value.ToCharArray();
             for (int k = 0; k < length; k++) {
                 c = (char)(chars[k] & 0xff);
+                // Escape special characters
                 switch (c) {
                     case ' ': {
-                        // Escape special characters
                         buf.Append(space);
                         break;
                     }

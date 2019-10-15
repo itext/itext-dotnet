@@ -77,6 +77,7 @@ namespace iText.Layout.Renderer {
     public class TableRenderer : AbstractRenderer {
         protected internal IList<CellRenderer[]> rows = new List<CellRenderer[]>();
 
+        // Row range of the current renderer. For large tables it may contain only a few rows.
         protected internal Table.RowRange rowRange;
 
         protected internal iText.Layout.Renderer.TableRenderer headerRenderer;
@@ -115,7 +116,6 @@ namespace iText.Layout.Renderer {
         /// <param name="rowRange">the table rows to be rendered</param>
         public TableRenderer(Table modelElement, Table.RowRange rowRange)
             : base(modelElement) {
-            // Row range of the current renderer. For large tables it may contain only a few rows.
             SetRowRange(rowRange);
         }
 

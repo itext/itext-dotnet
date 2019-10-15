@@ -159,12 +159,12 @@ namespace iText.IO.Image {
                                 catch (Jpeg2000ImageHelper.ZeroBoxSizeException) {
                                 }
                             }
+                            //Probably we have reached the contiguous codestream box which is the last in jpeg2000 and has no length.
                             while (JP2_COLR == box.type);
                         }
                     }
                 }
                 else {
-                    //Probably we have reached the contiguous codestream box which is the last in jpeg2000 and has no length.
                     if (box.length == unchecked((int)(0xff4fff51))) {
                         StreamUtil.Skip(jpeg2000Stream, 4);
                         int x1 = Cio_read(4, jpeg2000Stream);

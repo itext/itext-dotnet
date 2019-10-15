@@ -82,9 +82,9 @@ namespace iText.Layout {
              + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
              + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
+        // private static final String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t";
         private const String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t65#1094.6177##1128\n\t65.7#463\n\t68750.25121\n\t393#19.6#418#31\n\t7#811";
 
-        // private static final String text3 = "\t0\n\t11#2.35\n\t813.2134#558914423\n\t3.37761#098\n\t#.715\n\t972#5844.18167\n\t";
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);

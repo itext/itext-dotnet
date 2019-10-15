@@ -58,10 +58,10 @@ namespace iText.IO.Image {
 
             internal TiffImageData image;
 
+            //ByteArrayOutputStream stream;
             internal bool jpegProcessing;
 
             internal IDictionary<String, Object> additional;
-            //ByteArrayOutputStream stream;
         }
 
         /// <summary>Processes the ImageData as a TIFF image.</summary>

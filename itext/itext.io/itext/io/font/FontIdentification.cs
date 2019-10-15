@@ -45,18 +45,18 @@ using System;
 
 namespace iText.IO.Font {
     public class FontIdentification {
+        // name ID 5
         private String ttfVersion;
 
+        // name ID 3
         private String ttfUniqueId;
 
+        // /UniqueID
         private int? type1Xuid;
 
+        // OS/2.panose
         private String panose;
 
-        // name ID 5
-        // name ID 3
-        // /UniqueID
-        // OS/2.panose
         public virtual String GetTtfVersion() {
             return ttfVersion;
         }

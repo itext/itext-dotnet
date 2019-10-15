@@ -70,14 +70,18 @@ namespace iText.Kernel.Pdf {
 
         private bool unethicalReading;
 
+        //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
 
+        // For internal usage only
         private String sourcePath;
 
         protected internal PdfTokenizer tokens;
 
         protected internal PdfEncryption decrypt;
 
+        // here we store only the pdfVersion that is written in the document's header,
+        // however it could differ from the actual pdf version that could be written in document's catalog
         protected internal PdfVersion headerPdfVersion;
 
         protected internal long lastXref;
@@ -106,10 +110,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="byteSource">source of bytes for the reader</param>
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(IRandomAccessSource byteSource, ReaderProperties properties) {
-            //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
-            // For internal usage only
-            // here we store only the pdfVersion that is written in the document's header,
-            // however it could differ from the actual pdf version that could be written in document's catalog
             this.properties = properties;
             this.tokens = GetOffsetTokeniser(byteSource);
         }

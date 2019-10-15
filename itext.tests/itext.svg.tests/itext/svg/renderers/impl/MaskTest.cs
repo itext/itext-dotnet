@@ -75,9 +75,9 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        //TODO: update after DEVSIX-2378 implementation
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void MaskWithGradient() {
-            //TODO: update after DEVSIX-2378 implementation
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradient", properties);
         }
     }

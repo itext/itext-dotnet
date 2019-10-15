@@ -191,16 +191,16 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TspanBasicExample() {
-            //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBasicExample");
         }
 
         [NUnit.Framework.Test]
+        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TspanNestedExample() {
-            //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedExample");
         }
 

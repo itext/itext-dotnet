@@ -53,10 +53,10 @@ namespace iText.IO.Font.Otf {
 
         public const int GLYPH_MARK = 3;
 
+        //key is glyph, value is class inside all 2
         private IntHashtable mapClass = new IntHashtable();
 
         private OtfClass(RandomAccessFileOrArray rf, int classLocation) {
-            //key is glyph, value is class inside all 2
             rf.Seek(classLocation);
             int classFormat = rf.ReadUnsignedShort();
             if (classFormat == 1) {

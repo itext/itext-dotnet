@@ -55,6 +55,7 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LineRenderer : AbstractRenderer {
+        // AbstractRenderer.EPS is not enough here
         private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
 
         private static readonly ILog logger = LogManager.GetLogger(typeof(LineRenderer));
@@ -63,6 +64,7 @@ namespace iText.Layout.Renderer {
 
         protected internal float maxDescent;
 
+        // bidi levels
         protected internal byte[] levels;
 
         private float maxTextAscent;
@@ -73,8 +75,6 @@ namespace iText.Layout.Renderer {
 
         private float maxBlockDescent;
 
-        // AbstractRenderer.EPS is not enough here
-        // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();

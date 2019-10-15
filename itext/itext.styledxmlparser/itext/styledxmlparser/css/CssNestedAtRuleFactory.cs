@@ -74,9 +74,9 @@ namespace iText.StyledXmlParser.Css {
             ruleDeclaration = ruleDeclaration.Trim();
             String ruleName = ExtractRuleNameFromDeclaration(ruleDeclaration);
             String ruleParameters = ruleDeclaration.Substring(ruleName.Length).Trim();
+            //TODO (RND-863) consider media rules in SVG
             switch (ruleName) {
                 case CssRuleName.MEDIA: {
-                    //TODO (RND-863) consider media rules in SVG
                     return new CssMediaRule(ruleParameters);
                 }
 

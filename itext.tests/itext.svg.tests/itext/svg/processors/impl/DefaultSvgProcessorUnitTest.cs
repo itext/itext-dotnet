@@ -117,11 +117,11 @@ namespace iText.Svg.Processors.Impl {
 
         //Edge cases
         [NUnit.Framework.Test]
+        /*
+        Invalid input: null
+        */
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE)]
         public virtual void DummyProcessingTestNodeHasNullChild() {
-            /*
-            Invalid input: null
-            */
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag

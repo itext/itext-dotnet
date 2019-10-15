@@ -46,6 +46,10 @@ using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Safety {
+    /*
+    Thank you to Ryan Grove (wonko.com) for the Ruby HTML cleaner http://github.com/rgrove/sanitize/, which inspired
+    this whitelist configuration, and the initial defaults.
+    */
     /// <summary>Whitelists define what HTML (elements and attributes) to allow through the cleaner.</summary>
     /// <remarks>
     /// Whitelists define what HTML (elements and attributes) to allow through the cleaner. Everything else is removed.
@@ -111,23 +115,19 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     public class Whitelist {
         private ICollection<Whitelist.TagName> tagNames;
 
+        // tags allowed, lower case. e.g. [p, br, span]
         private IDictionary<Whitelist.TagName, ICollection<Whitelist.AttributeKey>> attributes;
 
+        // tag -> attribute[]. allowed attributes [href] for a tag.
         private IDictionary<Whitelist.TagName, IDictionary<Whitelist.AttributeKey, Whitelist.AttributeValue>> enforcedAttributes;
 
+        // always set these attribute values
         private IDictionary<Whitelist.TagName, IDictionary<Whitelist.AttributeKey, ICollection<Whitelist.Protocol>
             >> protocols;
 
+        // allowed URL protocols for attributes
         private bool preserveRelativeLinks;
 
-        /*
-        Thank you to Ryan Grove (wonko.com) for the Ruby HTML cleaner http://github.com/rgrove/sanitize/, which inspired
-        this whitelist configuration, and the initial defaults.
-        */
-        // tags allowed, lower case. e.g. [p, br, span]
-        // tag -> attribute[]. allowed attributes [href] for a tag.
-        // always set these attribute values
-        // allowed URL protocols for attributes
         // option to preserve relative links
         /// <summary>This whitelist allows only text nodes: all HTML will be stripped.</summary>
         /// <returns>whitelist</returns>
@@ -599,12 +599,12 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
             return attrs;
         }
 
+        // named types for config. All just hold strings, but here for my sanity.
         internal class TagName : Whitelist.TypedValue {
             internal TagName(String value)
                 : base(value) {
             }
 
-            // named types for config. All just hold strings, but here for my sanity.
             internal static Whitelist.TagName ValueOf(String value) {
                 return new Whitelist.TagName(value);
             }

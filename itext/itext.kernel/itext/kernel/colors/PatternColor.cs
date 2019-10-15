@@ -48,11 +48,11 @@ namespace iText.Kernel.Colors {
     public class PatternColor : Color {
         private PdfPattern pattern;
 
+        // The underlying color for uncolored patterns. Will be null for colored ones.
         private Color underlyingColor;
 
         public PatternColor(PdfPattern coloredPattern)
             : base(new PdfSpecialCs.Pattern(), null) {
-            // The underlying color for uncolored patterns. Will be null for colored ones.
             this.pattern = coloredPattern;
         }
 

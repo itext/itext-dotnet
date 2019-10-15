@@ -356,6 +356,7 @@ namespace iText.IO.Util {
 
             internal int value;
 
+            //ArrayList<Integer> values = new ArrayList<Integer>();
             internal IntHashtable.Entry next;
 
             /// <summary>Create a new entry with the given values.</summary>
@@ -363,7 +364,6 @@ namespace iText.IO.Util {
             /// <param name="value">The value for this key</param>
             /// <param name="next">A reference to the next entry in the table</param>
             internal Entry(int key, int value, IntHashtable.Entry next) {
-                //ArrayList<Integer> values = new ArrayList<Integer>();
                 this.key = key;
                 this.value = value;
                 this.next = next;

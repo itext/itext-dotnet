@@ -118,10 +118,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
 
             internal iText.StyledXmlParser.Jsoup.Nodes.Element destination;
 
+            // current element to append nodes to
             internal CleaningVisitor(Cleaner _enclosing, iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  destination) {
                 this._enclosing = _enclosing;
-                // current element to append nodes to
                 this.root = root;
                 this.destination = destination;
             }

@@ -145,15 +145,15 @@ namespace iText.Barcodes {
 
         private int options;
 
+        // value f[i][j] is the optimal amount of bytes required to encode substring(0, j)
         private int[][] f;
 
+        // switchMode[i][j] = k means that when encoding j-th symbol with mode = i + 1,
+        // we have to encode the previous symbol with mode = k in order to get optimal f[i][j] value
         private int[][] switchMode;
 
         /// <summary>Creates an instance of this class.</summary>
         public BarcodeDataMatrix() {
-            // value f[i][j] is the optimal amount of bytes required to encode substring(0, j)
-            // switchMode[i][j] = k means that when encoding j-th symbol with mode = i + 1,
-            // we have to encode the previous symbol with mode = k in order to get optimal f[i][j] value
             encoding = DEFAULT_DATA_MATRIX_ENCODING;
         }
 

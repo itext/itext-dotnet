@@ -64,6 +64,8 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
         }
 
         public class SubstRuleFormat1 : ContextualSubstRule {
+            // inputGlyphIds array omits the first glyph in the sequence,
+            // the first glyph is defined by corresponding coverage glyph
             private int[] inputGlyphIds;
 
             private int[] backtrackGlyphIds;
@@ -74,8 +76,6 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
 
             public SubstRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds, SubstLookupRecord
                 [] substLookupRecords) {
-                // inputGlyphIds array omits the first glyph in the sequence,
-                // the first glyph is defined by corresponding coverage glyph
                 this.backtrackGlyphIds = backtrackGlyphIds;
                 this.inputGlyphIds = inputGlyphIds;
                 this.lookAheadGlyphIds = lookAheadGlyphIds;

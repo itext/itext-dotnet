@@ -51,37 +51,37 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private static readonly IDictionary<String, iText.StyledXmlParser.Jsoup.Parser.Tag> tags = new Dictionary<
             String, iText.StyledXmlParser.Jsoup.Parser.Tag>();
 
+        // map of known tags
         private String tagName;
 
         private bool isBlock = true;
 
+        // block or inline
         private bool formatAsBlock = true;
 
+        // should be formatted as a block
         private bool canContainBlock = true;
 
+        // Can this tag hold block level tags?
         private bool canContainInline = true;
 
+        // only pcdata if not
         private bool empty = false;
 
+        // can hold nothing; e.g. img
         private bool selfClosing = false;
 
+        // can self close (<foo />). used for unknown tags that self close, without forcing them as empty.
         private bool preserveWhitespace = false;
 
+        // for pre, textarea, script etc
         private bool formList = false;
 
+        // a control that appears in forms: input, textarea, output etc
         private bool formSubmit = false;
 
+        // a control that can be submitted in a form: input etc
         private Tag(String tagName) {
-            // map of known tags
-            // block or inline
-            // should be formatted as a block
-            // Can this tag hold block level tags?
-            // only pcdata if not
-            // can hold nothing; e.g. img
-            // can self close (<foo />). used for unknown tags that self close, without forcing them as empty.
-            // for pre, textarea, script etc
-            // a control that appears in forms: input, textarea, output etc
-            // a control that can be submitted in a form: input etc
             this.tagName = tagName.ToLowerInvariant();
         }
 
@@ -252,6 +252,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return tagName;
         }
 
+        // internal static initialisers:
+        // prepped from http://www.w3.org/TR/REC-html40/sgml/dtd.html and other sources
         private static readonly String[] blockTags = new String[] { "html", "head", "body", "frameset", "script", 
             "noscript", "style", "meta", "link", "title", "frame", "noframes", "section", "nav", "aside", "hgroup"
             , "header", "footer", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "pre", "div", "blockquote", 
@@ -276,6 +278,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private static readonly String[] preserveWhitespaceTags = new String[] { "pre", "plaintext", "title", "textarea"
              };
 
+        // script is not here as it is a data node, which always preserve whitespace
+        // todo: I think we just need submit tags, and can scrub listed
         private static readonly String[] formListedTags = new String[] { "button", "fieldset", "input", "keygen", 
             "object", "output", "select", "textarea" };
 
@@ -283,10 +287,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
              };
 
         static Tag() {
-            // internal static initialisers:
-            // prepped from http://www.w3.org/TR/REC-html40/sgml/dtd.html and other sources
-            // script is not here as it is a data node, which always preserve whitespace
-            // todo: I think we just need submit tags, and can scrub listed
             // creates
             foreach (String tagName in blockTags) {
                 iText.StyledXmlParser.Jsoup.Parser.Tag tag = new iText.StyledXmlParser.Jsoup.Parser.Tag(tagName);

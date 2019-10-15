@@ -87,11 +87,11 @@ namespace iText.Kernel.Pdf {
 
         private int decryptInfoGen;
 
+        // if it's not null: content shall contain encrypted data; value shall be null
         private PdfEncryption decryption;
 
         public PdfString(String value, String encoding)
             : base() {
-            // if it's not null: content shall contain encrypted data; value shall be null
             System.Diagnostics.Debug.Assert(value != null);
             this.value = value;
             this.encoding = encoding;

@@ -1075,8 +1075,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                         break;
                     }
 
+                    // ignore whitespace
                     case '/': {
-                        // ignore whitespace
                         t.Transition(TokeniserState.SelfClosingStartTag);
                         break;
                     }
@@ -1958,11 +1958,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
                     case TokeniserState.eof: {
                         t.EofError(this);
-                        goto case '>';
+                        goto case 
+                                                // note: fall through to > case
+                                                '>';
                     }
 
                     case '>': {
-                        // note: fall through to > case
                         // catch invalid <!DOCTYPE>
                         t.Error(this);
                         t.CreateDoctypePending();

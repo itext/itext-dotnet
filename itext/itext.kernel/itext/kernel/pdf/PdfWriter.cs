@@ -54,6 +54,7 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
+        // For internal usage only
         private PdfOutputStream duplicateStream = null;
 
         protected internal WriterProperties properties;
@@ -77,6 +78,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
         private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
 
+        //forewarned is forearmed
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
@@ -93,8 +95,6 @@ namespace iText.Kernel.Pdf {
 
         public PdfWriter(Stream os, WriterProperties properties)
             : base(FileUtil.WrapWithBufferedOutputStream(os)) {
-            // For internal usage only
-            //forewarned is forearmed
             this.properties = properties;
             if (properties.debugMode) {
             }

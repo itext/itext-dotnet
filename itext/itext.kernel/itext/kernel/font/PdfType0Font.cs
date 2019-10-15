@@ -68,6 +68,7 @@ namespace iText.Kernel.Font {
 
         protected internal CMapEncoding cmapEncoding;
 
+        //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
         protected internal ICollection<int> longTag;
 
         protected internal int cidFontType;
@@ -76,7 +77,6 @@ namespace iText.Kernel.Font {
 
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
-            //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
             if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
                 throw new PdfException(PdfException.OnlyIdentityCMapsSupportsWithTrueType);
             }
@@ -102,12 +102,12 @@ namespace iText.Kernel.Font {
             }
         }
 
+        // Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
+        // be able to create Type0 font based on predefined font.
+        // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
+        // There is no typography features in CJK fonts.
         internal PdfType0Font(CidFont font, String cmap)
             : base() {
-            // Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
-            // be able to create Type0 font based on predefined font.
-            // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
-            // There is no typography features in CJK fonts.
             if (!CidFontProperties.IsCidFont(font.GetFontNames().GetFontName(), cmap)) {
                 throw new PdfException("Font {0} with {1} encoding is not a cjk font.").SetMessageParams(font.GetFontNames
                     ().GetFontName(), cmap);

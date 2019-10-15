@@ -57,15 +57,47 @@ namespace iText.Barcodes {
         private const int START_STOP_IDX = 16;
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0, 1, 1 }, new byte[] { 0, 
-            0, 0, 0, 1, 1, 0 }, new byte[] { 0, 0, 0, 1, 0, 0, 1 }, new byte[] { 1, 1, 0, 0, 0, 0, 0 }, new byte[]
-             { 0, 0, 1, 0, 0, 1, 0 }, new byte[] { 1, 0, 0, 0, 0, 1, 0 }, new byte[] { 0, 1, 0, 0, 0, 0, 1 }, new 
-            byte[] { 0, 1, 0, 0, 1, 0, 0 }, new byte[] { 0, 1, 1, 0, 0, 0, 0 }, new byte[] { 1, 0, 0, 1, 0, 0, 0 }
-            , new byte[] { 0, 0, 0, 1, 1, 0, 0 }, new byte[] { 0, 0, 1, 1, 0, 0, 0 }, new byte[] { 1, 0, 0, 0, 1, 
-            0, 1 }, new byte[] { 1, 0, 1, 0, 0, 0, 1 }, new byte[] { 1, 0, 1, 0, 1, 0, 0 }, new byte[] { 0, 0, 1, 
-            0, 1, 0, 1 }, new byte[] { 0, 0, 1, 1, 0, 1, 0 }, new byte[] { 0, 1, 0, 1, 0, 0, 1 }, new byte[] { 0, 
-            0, 0, 1, 0, 1, 1 }, new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0, 1, 1 }, 
+                // 0
+                new byte[] { 0, 0, 0, 0, 1, 1, 0 }, 
+                // 1
+                new byte[] { 0, 0, 0, 1, 0, 0, 1 }, 
+                // 2
+                new byte[] { 1, 1, 0, 0, 0, 0, 0 }, 
+                // 3
+                new byte[] { 0, 0, 1, 0, 0, 1, 0 }, 
+                // 4
+                new byte[] { 1, 0, 0, 0, 0, 1, 0 }, 
+                // 5
+                new byte[] { 0, 1, 0, 0, 0, 0, 1 }, 
+                // 6
+                new byte[] { 0, 1, 0, 0, 1, 0, 0 }, 
+                // 7
+                new byte[] { 0, 1, 1, 0, 0, 0, 0 }, 
+                // 8
+                new byte[] { 1, 0, 0, 1, 0, 0, 0 }, 
+                // 9
+                new byte[] { 0, 0, 0, 1, 1, 0, 0 }, 
+                // -
+                new byte[] { 0, 0, 1, 1, 0, 0, 0 }, 
+                // $
+                new byte[] { 1, 0, 0, 0, 1, 0, 1 }, 
+                // :
+                new byte[] { 1, 0, 1, 0, 0, 0, 1 }, 
+                // /
+                new byte[] { 1, 0, 1, 0, 1, 0, 0 }, 
+                // .
+                new byte[] { 0, 0, 1, 0, 1, 0, 1 }, 
+                // +
+                new byte[] { 0, 0, 1, 1, 0, 1, 0 }, 
+                // a
+                new byte[] { 0, 1, 0, 1, 0, 0, 1 }, 
+                // b
+                new byte[] { 0, 0, 0, 1, 0, 1, 1 }, 
+                // c
+                new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
 
+        // d
         /// <summary>Creates a new BarcodeCodabar.</summary>
         /// <remarks>
         /// Creates a new BarcodeCodabar.
@@ -85,26 +117,6 @@ namespace iText.Barcodes {
         /// <param name="font">The font to use</param>
         public BarcodeCodabar(PdfDocument document, PdfFont font)
             : base(document) {
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // -
-            // $
-            // :
-            // /
-            // .
-            // +
-            // a
-            // b
-            // c
-            // d
             this.x = 0.8f;
             this.n = 2;
             this.font = font;

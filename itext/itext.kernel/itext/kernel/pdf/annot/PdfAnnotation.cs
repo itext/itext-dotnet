@@ -1619,12 +1619,12 @@ namespace iText.Kernel.Pdf.Annot {
             return true;
         }
 
+        // Created as a private static class in order to facilitate autoport.
         internal class PdfUnknownAnnotation : PdfAnnotation {
             protected internal PdfUnknownAnnotation(PdfDictionary pdfObject)
                 : base(pdfObject) {
             }
 
-            // Created as a private static class in order to facilitate autoport.
             public override PdfName GetSubtype() {
                 return GetPdfObject().GetAsName(PdfName.Subtype);
             }

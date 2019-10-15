@@ -60,24 +60,27 @@ namespace iText.IO.Font {
             , "ROS", "CIDFontVersion", "CIDFontRevision", "CIDFontType", "CIDCount", "UIDBase", "FDArray", "FDSelect"
             , "FontName" };
 
-        internal static readonly String[] standardStrings = new String[] { ".notdef", "space", "exclam", "quotedbl"
-            , "numbersign", "dollar", "percent", "ampersand", "quoteright", "parenleft", "parenright", "asterisk", 
-            "plus", "comma", "hyphen", "period", "slash", "zero", "one", "two", "three", "four", "five", "six", "seven"
-            , "eight", "nine", "colon", "semicolon", "less", "equal", "greater", "question", "at", "A", "B", "C", 
-            "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"
-            , "Y", "Z", "bracketleft", "backslash", "bracketright", "asciicircum", "underscore", "quoteleft", "a", 
-            "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v"
-            , "w", "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "exclamdown", "cent", "sterling"
-            , "fraction", "yen", "florin", "section", "currency", "quotesingle", "quotedblleft", "guillemotleft", 
-            "guilsinglleft", "guilsinglright", "fi", "fl", "endash", "dagger", "daggerdbl", "periodcentered", "paragraph"
-            , "bullet", "quotesinglbase", "quotedblbase", "quotedblright", "guillemotright", "ellipsis", "perthousand"
-            , "questiondown", "grave", "acute", "circumflex", "tilde", "macron", "breve", "dotaccent", "dieresis", 
-            "ring", "cedilla", "hungarumlaut", "ogonek", "caron", "emdash", "AE", "ordfeminine", "Lslash", "Oslash"
-            , "OE", "ordmasculine", "ae", "dotlessi", "lslash", "oslash", "oe", "germandbls", "onesuperior", "logicalnot"
-            , "mu", "trademark", "Eth", "onehalf", "plusminus", "Thorn", "onequarter", "divide", "brokenbar", "degree"
-            , "thorn", "threequarters", "twosuperior", "registered", "minus", "eth", "multiply", "threesuperior", 
-            "copyright", "Aacute", "Acircumflex", "Adieresis", "Agrave", "Aring", "Atilde", "Ccedilla", "Eacute", 
-            "Ecircumflex", "Edieresis", "Egrave", "Iacute", "Icircumflex", "Idieresis", "Igrave", "Ntilde", "Oacute"
+        internal static readonly String[] standardStrings = new String[] { 
+                // Automatically generated from Appendix A of the CFF specification; do
+                
+                // not edit. Size should be 391.
+                ".notdef", "space", "exclam", "quotedbl", "numbersign", "dollar", "percent", "ampersand", "quoteright", "parenleft"
+            , "parenright", "asterisk", "plus", "comma", "hyphen", "period", "slash", "zero", "one", "two", "three"
+            , "four", "five", "six", "seven", "eight", "nine", "colon", "semicolon", "less", "equal", "greater", "question"
+            , "at", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", 
+            "T", "U", "V", "W", "X", "Y", "Z", "bracketleft", "backslash", "bracketright", "asciicircum", "underscore"
+            , "quoteleft", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r"
+            , "s", "t", "u", "v", "w", "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "exclamdown"
+            , "cent", "sterling", "fraction", "yen", "florin", "section", "currency", "quotesingle", "quotedblleft"
+            , "guillemotleft", "guilsinglleft", "guilsinglright", "fi", "fl", "endash", "dagger", "daggerdbl", "periodcentered"
+            , "paragraph", "bullet", "quotesinglbase", "quotedblbase", "quotedblright", "guillemotright", "ellipsis"
+            , "perthousand", "questiondown", "grave", "acute", "circumflex", "tilde", "macron", "breve", "dotaccent"
+            , "dieresis", "ring", "cedilla", "hungarumlaut", "ogonek", "caron", "emdash", "AE", "ordfeminine", "Lslash"
+            , "Oslash", "OE", "ordmasculine", "ae", "dotlessi", "lslash", "oslash", "oe", "germandbls", "onesuperior"
+            , "logicalnot", "mu", "trademark", "Eth", "onehalf", "plusminus", "Thorn", "onequarter", "divide", "brokenbar"
+            , "degree", "thorn", "threequarters", "twosuperior", "registered", "minus", "eth", "multiply", "threesuperior"
+            , "copyright", "Aacute", "Acircumflex", "Adieresis", "Agrave", "Aring", "Atilde", "Ccedilla", "Eacute"
+            , "Ecircumflex", "Edieresis", "Egrave", "Iacute", "Icircumflex", "Idieresis", "Igrave", "Ntilde", "Oacute"
             , "Ocircumflex", "Odieresis", "Ograve", "Otilde", "Scaron", "Uacute", "Ucircumflex", "Udieresis", "Ugrave"
             , "Yacute", "Ydieresis", "Zcaron", "aacute", "acircumflex", "adieresis", "agrave", "aring", "atilde", 
             "ccedilla", "eacute", "ecircumflex", "edieresis", "egrave", "iacute", "icircumflex", "idieresis", "igrave"
@@ -106,8 +109,6 @@ namespace iText.IO.Font {
             , "001.000", "001.001", "001.002", "001.003", "Black", "Bold", "Book", "Light", "Medium", "Regular", "Roman"
             , "Semibold" };
 
-        // Automatically generated from Appendix A of the CFF specification; do
-        // not edit. Size should be 391.
         //private String[] strings;
         public virtual String GetString(char sid) {
             if (sid < standardStrings.Length) {
@@ -213,12 +214,16 @@ namespace iText.IO.Font {
             indexOffSize = GetCard8();
             for (int j = 0; j <= count; j++) {
                 //nextIndexOffset = ofset to relative segment
-                offsets[j] = nextIndexOffset + 2 + 1 + (count + 1) * indexOffSize - 1 + GetOffset(indexOffSize);
+                offsets[j] = nextIndexOffset + 
+                                //2-> count in the index header. 1->offset size in index header
+                                2 + 1 + 
+                                //offset array size * offset size
+                                (count + 1) * indexOffSize - 
+                                //???zero <-> one base
+                                1 + 
+                                // read object offset relative to object array base
+                                GetOffset(indexOffSize);
             }
-            //2-> count in the index header. 1->offset size in index header
-            //offset array size * offset size
-            //???zero <-> one base
-            // read object offset relative to object array base
             //nextIndexOffset = offsets[count];
             return offsets;
         }
@@ -997,8 +1002,10 @@ namespace iText.IO.Font {
 
             public bool isCID = false;
 
+            // only if not CID
             public int privateOffset = -1;
 
+            // only if not CID
             public int privateLength = -1;
 
             public int privateSubrs = -1;
@@ -1009,8 +1016,10 @@ namespace iText.IO.Font {
 
             public int charsetOffset = -1;
 
+            // only if CID
             public int fdarrayOffset = -1;
 
+            // only if CID
             public int fdselectOffset = -1;
 
             public int[] fdprivateOffsets;
@@ -1019,6 +1028,7 @@ namespace iText.IO.Font {
 
             public int[] fdprivateSubrs;
 
+            // Added by Oren & Ygal
             public int nglyphs;
 
             public int nstrings;
@@ -1054,19 +1064,14 @@ namespace iText.IO.Font {
             }
 
             private readonly CFFFont _enclosing;
-            // only if not CID
-            // only if not CID
-            // only if CID
-            // only if CID
-            // Added by Oren & Ygal
         }
 
+        // Changed from private to protected by Ygal&Oren
         protected internal CFFFont.Font[] fonts;
 
         internal RandomAccessSourceFactory rasFactory = new RandomAccessSourceFactory();
 
         public CFFFont(byte[] cff) {
-            // Changed from private to protected by Ygal&Oren
             //System.err.println("CFF: nStdString = "+standardStrings.length);
             buf = new RandomAccessFileOrArray(rasFactory.CreateSource(cff));
             Seek(0);

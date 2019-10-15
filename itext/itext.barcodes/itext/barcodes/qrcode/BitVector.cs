@@ -61,11 +61,11 @@ namespace iText.Barcodes.Qrcode {
 
         private byte[] array;
 
+        // For efficiency, start out with some room to work.
         private const int DEFAULT_SIZE_IN_BYTES = 32;
 
         /// <summary>Create a bitvector usng the default size</summary>
         public BitVector() {
-            // For efficiency, start out with some room to work.
             sizeInBits = 0;
             array = new byte[DEFAULT_SIZE_IN_BYTES];
         }

@@ -90,6 +90,7 @@ namespace iText.Kernel.Crypto {
 
         internal const String pageTextContent = "Hello world!";
 
+        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         internal const String customInfoEntryKey = "Custom";
 
         internal const String customInfoEntryValue = "String";
@@ -102,7 +103,6 @@ namespace iText.Kernel.Crypto {
 
         private ICipherParameters privateKey;
 
-        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);

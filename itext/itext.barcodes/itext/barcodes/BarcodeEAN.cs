@@ -94,11 +94,27 @@ namespace iText.Barcodes {
             , 60.5f };
 
         /// <summary>The basic bar widths.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 3, 2, 1, 1 }, new byte[] { 2, 2, 2, 1 }
-            , new byte[] { 2, 1, 2, 2 }, new byte[] { 1, 4, 1, 1 }, new byte[] { 1, 1, 3, 2 }, new byte[] { 1, 2, 
-            3, 1 }, new byte[] { 1, 1, 1, 4 }, new byte[] { 1, 3, 1, 2 }, new byte[] { 1, 2, 1, 3 }, new byte[] { 
-            3, 1, 1, 2 } };
+        private static readonly byte[][] BARS = new byte[][] { new byte[] { 3, 2, 1, 1 }, 
+                // 0
+                new byte[] { 2, 2, 2, 1 }, 
+                // 1
+                new byte[] { 2, 1, 2, 2 }, 
+                // 2
+                new byte[] { 1, 4, 1, 1 }, 
+                // 3
+                new byte[] { 1, 1, 3, 2 }, 
+                // 4
+                new byte[] { 1, 2, 3, 1 }, 
+                // 5
+                new byte[] { 1, 1, 1, 4 }, 
+                // 6
+                new byte[] { 1, 3, 1, 2 }, 
+                // 7
+                new byte[] { 1, 2, 1, 3 }, 
+                // 8
+                new byte[] { 3, 1, 1, 2 } };
 
+        // 9
         /// <summary>The total number of bars for EAN13.</summary>
         private const int TOTALBARS_EAN13 = 11 + 12 * 4;
 
@@ -121,32 +137,81 @@ namespace iText.Barcodes {
         private const int EVEN = 1;
 
         /// <summary>Sequence of parities to be used with EAN13.</summary>
-        private static readonly byte[][] PARITY13 = new byte[][] { new byte[] { ODD, ODD, ODD, ODD, ODD, ODD }, new 
-            byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, new byte[] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, new byte[]
-             { ODD, ODD, EVEN, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, new byte[] { ODD
-            , EVEN, EVEN, ODD, ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, EVEN
-            , ODD, EVEN, ODD, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, EVEN
-            , ODD, EVEN, ODD } };
+        private static readonly byte[][] PARITY13 = new byte[][] { new byte[] { ODD, ODD, ODD, ODD, ODD, ODD }, 
+                // 0
+                new byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, 
+                // 1
+                new byte[] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, 
+                // 2
+                new byte[] { ODD, ODD, EVEN, EVEN, EVEN, ODD }, 
+                // 3
+                new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, 
+                // 4
+                new byte[] { ODD, EVEN, EVEN, ODD, ODD, EVEN }, 
+                // 5
+                new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, 
+                // 6
+                new byte[] { ODD, EVEN, ODD, EVEN, ODD, EVEN }, 
+                // 7
+                new byte[] { ODD, EVEN, ODD, EVEN, EVEN, ODD }, 
+                // 8
+                new byte[] { ODD, EVEN, EVEN, ODD, EVEN, ODD } };
 
+        // 9
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY2 = new byte[][] { new byte[] { ODD, ODD }, new byte[] { ODD, EVEN }
-            , new byte[] { EVEN, ODD }, new byte[] { EVEN, EVEN } };
+        private static readonly byte[][] PARITY2 = new byte[][] { new byte[] { ODD, ODD }, 
+                // 0
+                new byte[] { ODD, EVEN }, 
+                // 1
+                new byte[] { EVEN, ODD }, 
+                // 2
+                new byte[] { EVEN, EVEN } };
 
+        // 3
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY5 = new byte[][] { new byte[] { EVEN, EVEN, ODD, ODD, ODD }, new byte
-            [] { EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, ODD, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, ODD
-            , ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, ODD, EVEN, EVEN, ODD }, new 
-            byte[] { ODD, ODD, ODD, EVEN, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, ODD }, new byte[] { ODD, EVEN
-            , ODD, ODD, EVEN }, new byte[] { ODD, ODD, EVEN, ODD, EVEN } };
+        private static readonly byte[][] PARITY5 = new byte[][] { new byte[] { EVEN, EVEN, ODD, ODD, ODD }, 
+                // 0
+                new byte[] { EVEN, ODD, EVEN, ODD, ODD }, 
+                // 1
+                new byte[] { EVEN, ODD, ODD, EVEN, ODD }, 
+                // 2
+                new byte[] { EVEN, ODD, ODD, ODD, EVEN }, 
+                // 3
+                new byte[] { ODD, EVEN, EVEN, ODD, ODD }, 
+                // 4
+                new byte[] { ODD, ODD, EVEN, EVEN, ODD }, 
+                // 5
+                new byte[] { ODD, ODD, ODD, EVEN, EVEN }, 
+                // 6
+                new byte[] { ODD, EVEN, ODD, EVEN, ODD }, 
+                // 7
+                new byte[] { ODD, EVEN, ODD, ODD, EVEN }, 
+                // 8
+                new byte[] { ODD, ODD, EVEN, ODD, EVEN } };
 
+        // 9
         /// <summary>Sequence of parities to be used with UPCE.</summary>
         private static readonly byte[][] PARITYE = new byte[][] { new byte[] { EVEN, EVEN, EVEN, ODD, ODD, ODD }, 
-            new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, new byte
-            [] { EVEN, EVEN, ODD, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, new byte[] { EVEN
-            , ODD, ODD, EVEN, EVEN, ODD }, new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }, new byte[] { EVEN, ODD, 
-            EVEN, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, ODD, EVEN
-            , ODD, EVEN } };
+                // 0
+                new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, 
+                // 1
+                new byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, 
+                // 2
+                new byte[] { EVEN, EVEN, ODD, ODD, ODD, EVEN }, 
+                // 3
+                new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, 
+                // 4
+                new byte[] { EVEN, ODD, ODD, EVEN, EVEN, ODD }, 
+                // 5
+                new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }, 
+                // 6
+                new byte[] { EVEN, ODD, EVEN, ODD, EVEN, ODD }, 
+                // 7
+                new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, 
+                // 8
+                new byte[] { EVEN, ODD, ODD, EVEN, ODD, EVEN } };
 
+        // 9
         /// <summary>Creates new BarcodeEAN.</summary>
         /// <remarks>
         /// Creates new BarcodeEAN.
@@ -166,50 +231,6 @@ namespace iText.Barcodes {
         /// <param name="font">The font to use</param>
         public BarcodeEAN(PdfDocument document, PdfFont font)
             : base(document) {
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
             this.x = 0.8f;
             this.font = font;
             this.size = 8;

@@ -67,24 +67,24 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        //TODO: change cmp file after DEVSIX-3123 fixed
         [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentHeight() {
-            //TODO: change cmp file after DEVSIX-3123 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
         }
 
         [NUnit.Framework.Test]
+        //TODO: change cmp file after DEVSIX-3123 fixed
         [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
         public virtual void AbsentWidth() {
-            //TODO: change cmp file after DEVSIX-3123 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
         }
 
         [NUnit.Framework.Test]
+        //TODO: change cmp file after DEVSIX-3123 fixed
         [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
         [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentWidthAndHeight() {
-            //TODO: change cmp file after DEVSIX-3123 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
         }
 

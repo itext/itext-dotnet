@@ -53,12 +53,12 @@ namespace iText.Kernel.XMP.Options {
         public AliasOptions() {
         }
 
+        // EMPTY
         /// <param name="options">the options to init with</param>
         public AliasOptions(int options)
             : base(options) {
         }
 
-        // EMPTY
         /// <returns>Returns if the alias is of the simple form.</returns>
         public bool IsSimple() {
             return GetOptions() == PROP_DIRECT;

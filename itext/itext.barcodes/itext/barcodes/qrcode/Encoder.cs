@@ -48,24 +48,26 @@ namespace iText.Barcodes.Qrcode {
     /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
     /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class Encoder {
+        // The original table is defined in the table 5 of JISX0510:2004 (p.19).
         private static readonly int[] ALPHANUMERIC_TABLE = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 36, -1, -1, -1, 37
-            , 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 44, -1, -1, -1, -1, -1, -1
-            , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 
-            35, -1, -1, -1, -1, -1 };
+            -1, -1, -1, -1, -1, 
+                // 0x00-0x0f
+                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+                // 0x10-0x1f
+                36, -1, -1, -1, 37, 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43, 
+                // 0x20-0x2f
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 44, -1, -1, -1, -1, -1, 
+                // 0x30-0x3f
+                -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 
+                // 0x40-0x4f
+                25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1 };
 
+        // 0x50-0x5f
         internal const String DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
 
         private Encoder() {
         }
 
-        // The original table is defined in the table 5 of JISX0510:2004 (p.19).
-        // 0x00-0x0f
-        // 0x10-0x1f
-        // 0x20-0x2f
-        // 0x30-0x3f
-        // 0x40-0x4f
-        // 0x50-0x5f
         // The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
         // Basically it applies four rules and summate all penalties.
         private static int CalculateMaskPenalty(ByteMatrix matrix) {

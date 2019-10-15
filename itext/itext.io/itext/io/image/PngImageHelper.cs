@@ -104,6 +104,7 @@ namespace iText.IO.Image {
 
             internal int inputBands;
 
+            // number of bytes per input pixel
             internal int bytesPerPixel;
 
             internal byte[] colorTable;
@@ -131,7 +132,6 @@ namespace iText.IO.Image {
             internal String intent;
 
             internal IccProfile iccProfile;
-            // number of bytes per input pixel
         }
 
         /// <summary>Some PNG specific values.</summary>
@@ -725,9 +725,9 @@ namespace iText.IO.Image {
                 }
                 catch (Exception) {
                 }
+                // empty on purpose
                 switch (filter) {
                     case PNG_FILTER_NONE: {
-                        // empty on purpose
                         break;
                     }
 

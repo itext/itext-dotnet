@@ -51,10 +51,10 @@ namespace iText.Kernel.XMP.Options {
         public Options() {
         }
 
+        // EMTPY
         /// <summary>Constructor with the options bit mask.</summary>
         /// <param name="options">the options bit mask</param>
         public Options(int options) {
-            // EMTPY
             AssertOptionsValid(options);
             SetOptions(options);
         }

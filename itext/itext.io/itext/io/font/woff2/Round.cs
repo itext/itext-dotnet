@@ -14,8 +14,8 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+    // Helper for rounding
     internal class Round {
-        // Helper for rounding
         // Round a value up to the nearest multiple of 4. Don't round the value in the
         // case that rounding up overflows.
         public static int Round4(int value) {

@@ -154,17 +154,18 @@ namespace iText.Kernel.Font {
             this.urx = urx;
             this.ury = ury;
             if (isColor) {
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteBytes(d0);
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace()
+                                //wy
+                                .WriteFloat(0).WriteSpace().WriteBytes(d0);
             }
             else {
-                //wy
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteFloat(llx).WriteSpace
-                    ().WriteFloat(lly).WriteSpace().WriteFloat(urx).WriteSpace().WriteFloat(ury).WriteSpace().WriteBytes(d1
-                    );
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace()
+                                //wy
+                                .WriteFloat(0).WriteSpace().WriteFloat(llx).WriteSpace().WriteFloat(lly).WriteSpace().WriteFloat(urx).WriteSpace
+                    ().WriteFloat(ury).WriteSpace().WriteBytes(d1);
             }
         }
 
-        //wy
         /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
         /// <remarks>
         /// Creates Image XObject from image and adds it to canvas. Performs additional checks to make

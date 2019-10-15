@@ -58,6 +58,7 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         protected internal readonly IOperatorConverter copier;
 
+        // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
         protected internal String[] coordinates;
 
         public AbstractPathShape()
@@ -69,7 +70,6 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 
         public AbstractPathShape(bool relative, IOperatorConverter copier) {
-            // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
             this.relative = relative;
             this.copier = copier;
         }

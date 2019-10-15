@@ -54,6 +54,7 @@ namespace iText.Barcodes.Qrcode {
         public static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] { 
             0, 0, 0 }, 0x00, "TERMINATOR");
 
+        // Not really a mode...
         public static readonly iText.Barcodes.Qrcode.Mode NUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] { 10, 
             12, 14 }, 0x01, "NUMERIC");
 
@@ -63,11 +64,13 @@ namespace iText.Barcodes.Qrcode {
         public static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new int
             [] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
 
+        // Not supported
         public static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16, 
             16 }, 0x04, "BYTE");
 
         public static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI");
 
+        // character counts don't apply
         public static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 10
             , 12 }, 0x08, "KANJI");
 
@@ -84,9 +87,6 @@ namespace iText.Barcodes.Qrcode {
         private readonly String name;
 
         private Mode(int[] characterCountBitsForVersions, int bits, String name) {
-            // Not really a mode...
-            // Not supported
-            // character counts don't apply
             this.characterCountBitsForVersions = characterCountBitsForVersions;
             this.bits = bits;
             this.name = name;

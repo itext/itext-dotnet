@@ -50,30 +50,38 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public sealed class GifImageHelper {
+        // max decoder pixel stack size
         internal const int MAX_STACK_SIZE = 4096;
 
         private class GifParameters {
             public GifParameters(GifImageData image) {
-                // max decoder pixel stack size
                 this.image = image;
             }
 
             internal Stream input;
 
+            // global color table used
             internal bool gctFlag;
 
+            // background color index
             internal int bgIndex;
 
+            // background color
             internal int bgColor;
 
+            // pixel aspect ratio
             internal int pixelAspect;
 
+            // local color table flag
             internal bool lctFlag;
 
+            // interlace flag
             internal bool interlace;
 
+            // local color table size
             internal int lctSize;
 
+            // current image rectangle
             internal int ix;
 
             internal int iy;
@@ -82,18 +90,26 @@ namespace iText.IO.Image {
 
             internal int ih;
 
+            // current data block
             internal byte[] block = new byte[256];
 
+            // block size
             internal int blockSize = 0;
 
+            // last graphic control extension info
+            // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
             internal int dispose = 0;
 
+            // use transparent color
             internal bool transparency = false;
 
+            // delay in milliseconds
             internal int delay = 0;
 
+            // transparent color index
             internal int transIndex;
 
+            // LZW decoder working arrays
             internal short[] prefix;
 
             internal byte[] suffix;
@@ -123,22 +139,6 @@ namespace iText.IO.Image {
             internal int currentFrame;
 
             internal GifImageData image;
-            // global color table used
-            // background color index
-            // background color
-            // pixel aspect ratio
-            // local color table flag
-            // interlace flag
-            // local color table size
-            // current image rectangle
-            // current data block
-            // block size
-            // last graphic control extension info
-            // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
-            // use transparent color
-            // delay in milliseconds
-            // transparent color index
-            // LZW decoder working arrays
         }
 
         /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>

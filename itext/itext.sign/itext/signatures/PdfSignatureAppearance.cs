@@ -570,11 +570,11 @@ namespace iText.Signatures {
                             throw new InvalidOperationException("A signature image must be present when rendering mode is graphic. Use setSignatureGraphic()"
                                 );
                         }
-                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight()
-                             - 2 * MARGIN);
+                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, 
+                                                // take all space available
+                                                rotatedRect.GetHeight() - 2 * MARGIN);
                     }
                     else {
-                        // take all space available
                         dataRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight() * (1
                              - TOP_SECTION) - 2 * MARGIN);
                     }

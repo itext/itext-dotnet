@@ -87,6 +87,7 @@ namespace iText.Layout.Renderer {
         /// <summary>The infinity value which is used while layouting</summary>
         protected internal const float INF = 1e6f;
 
+        // TODO linkedList?
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
         protected internal IList<IRenderer> positionedRenderers = new List<IRenderer>();
@@ -110,7 +111,6 @@ namespace iText.Layout.Renderer {
         /// <summary>Creates a renderer for the specified layout element.</summary>
         /// <param name="modelElement">the layout element that will be drawn by this renderer</param>
         protected internal AbstractRenderer(IElement modelElement) {
-            // TODO linkedList?
             this.modelElement = modelElement;
         }
 

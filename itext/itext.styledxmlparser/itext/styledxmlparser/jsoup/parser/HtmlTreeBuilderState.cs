@@ -2430,6 +2430,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             tb.Transition(Text);
         }
 
+        // lists of tags to search through. A little harder to read here, but causes less GC than dynamic varargs.
+        // was contributing around 10% of parse GC load.
         private sealed class Constants {
             internal static readonly String[] InBodyStartToHead = new String[] { "base", "basefont", "bgsound", "command"
                 , "link", "meta", "noframes", "script", "style", "title" };
@@ -2474,8 +2476,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
             internal static readonly String[] InBodyEndTableFosters = new String[] { "table", "tbody", "tfoot", "thead"
                 , "tr" };
-            // lists of tags to search through. A little harder to read here, but causes less GC than dynamic varargs.
-            // was contributing around 10% of parse GC load.
         }
     }
 }

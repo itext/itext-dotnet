@@ -52,6 +52,8 @@ namespace iText.IO.Font {
 
         public const int UNITS_NORMALIZATION = 1000;
 
+        // In case Type1: char code to glyph.
+        // In case TrueType: glyph index to glyph.
         protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph>();
 
         protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph>();
@@ -75,8 +77,6 @@ namespace iText.IO.Font {
 
         protected internal String registry;
 
-        // In case Type1: char code to glyph.
-        // In case TrueType: glyph index to glyph.
         public virtual int CountOfGlyphs() {
             return Math.Max(codeToGlyph.Count, unicodeToGlyph.Count);
         }

@@ -122,27 +122,27 @@ namespace iText.Kernel.Crypto {
                 , "\u964B"));
         }
 
+        /*
+        
+        // Arabic
+        bidirectional check fail:  "\u0627\u0644\u0631\u0651\u064E\u200C\u062D\u0652\u0645\u064E\u0640\u0670\u0646\u0650"
+        bidirectional check fail:  "1\u0627\u0644\u0631\u062D\u064A\u06452"
+        
+        // RFC4013 examples
+        bidirectional check fail:  "\u0627\u0031"
+        prohibited character fail: "\u0007"
+        
+        // unassigned code point for Unicode 3.2
+        "\uD83E\uDD14"
+        "\u038Ba\u038Db\u03A2c\u03CF"
+        
+        */
         private class SaslPreparedString {
             internal String unicodeInputString;
 
             internal String preparedString;
 
             internal SaslPreparedString(String unicodeInputString, String preparedString) {
-                /*
-                
-                // Arabic
-                bidirectional check fail:  "\u0627\u0644\u0631\u0651\u064E\u200C\u062D\u0652\u0645\u064E\u0640\u0670\u0646\u0650"
-                bidirectional check fail:  "1\u0627\u0644\u0631\u062D\u064A\u06452"
-                
-                // RFC4013 examples
-                bidirectional check fail:  "\u0627\u0031"
-                prohibited character fail: "\u0007"
-                
-                // unassigned code point for Unicode 3.2
-                "\uD83E\uDD14"
-                "\u038Ba\u038Db\u03A2c\u03CF"
-                
-                */
                 this.unicodeInputString = unicodeInputString;
                 this.preparedString = preparedString;
             }

@@ -56,6 +56,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private const String SYSTEM_ID = "systemId";
 
+        // todo: quirk mode from publicId and systemId
         /// <summary>Create a new doctype element.</summary>
         /// <param name="name">the doctype's name</param>
         /// <param name="publicId">the doctype's public ID</param>
@@ -63,7 +64,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="baseUri">the doctype's base URI</param>
         public DocumentType(String name, String publicId, String systemId, String baseUri)
             : base(baseUri) {
-            // todo: quirk mode from publicId and systemId
             Attr(NAME, name);
             Attr(PUBLIC_ID, publicId);
             Attr(SYSTEM_ID, systemId);

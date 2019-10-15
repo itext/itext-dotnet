@@ -63,6 +63,7 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R");
 
+        // For internal usage only
         private byte[] duplicateContentBuffer = null;
 
         /// <summary>Document associated with PdfOutputStream.</summary>
@@ -77,7 +78,6 @@ namespace iText.Kernel.Pdf {
             : base(outputStream) {
         }
 
-        // For internal usage only
         /// <summary>Write a PdfObject to the outputstream.</summary>
         /// <param name="pdfObject">PdfObject to write</param>
         /// <returns>this PdfOutPutStream</returns>

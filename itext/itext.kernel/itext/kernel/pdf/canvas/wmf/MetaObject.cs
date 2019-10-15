@@ -59,10 +59,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         public MetaObject() {
         }
 
+        // Empty body
         /// <summary>Creates a MetaObject with a type.</summary>
         /// <param name="type">the type of meta object</param>
         public MetaObject(int type) {
-            // Empty body
             this.type = type;
         }
 

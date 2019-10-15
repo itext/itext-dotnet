@@ -60,9 +60,11 @@ namespace iText.Barcodes.Qrcode {
     internal sealed class GF256 {
         public static readonly iText.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iText.Barcodes.Qrcode.GF256(0x011D);
 
+        // x^8 + x^4 + x^3 + x^2 + 1
         public static readonly iText.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iText.Barcodes.Qrcode.GF256(0x012D
             );
 
+        // x^8 + x^5 + x^3 + x^2 + 1
         private readonly int[] expTable;
 
         private readonly int[] logTable;
@@ -78,8 +80,6 @@ namespace iText.Barcodes.Qrcode {
         /// coefficient
         /// </param>
         private GF256(int primitive) {
-            // x^8 + x^4 + x^3 + x^2 + 1
-            // x^8 + x^5 + x^3 + x^2 + 1
             expTable = new int[256];
             logTable = new int[256];
             int x = 1;

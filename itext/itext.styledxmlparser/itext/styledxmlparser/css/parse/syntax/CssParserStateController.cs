@@ -57,7 +57,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private IParserState currentState;
 
         /// <summary>Indicates if the current rule is supported.</summary>
-        private bool isCurrentRuleSupported = true;
+        private bool isCurrentRuleSupported = 
+                //Hashed value
+                true;
 
         /// <summary>The previous active state (excluding comments).</summary>
         private IParserState previousActiveState;
@@ -132,7 +134,6 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// </summary>
         /// <param name="baseUrl">the base URL</param>
         public CssParserStateController(String baseUrl) {
-            //Hashed value
             if (baseUrl != null && baseUrl.Length > 0) {
                 this.uriResolver = new UriResolver(baseUrl);
             }

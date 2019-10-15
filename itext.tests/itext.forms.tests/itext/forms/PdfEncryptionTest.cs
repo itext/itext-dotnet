@@ -66,11 +66,11 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         internal const String customInfoEntryKey = "Custom";
 
         internal const String customInfoEntryValue = "String";
 
-        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentWithFormFields() {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedDocumentWithFormFields.pdf", new ReaderProperties

@@ -69,12 +69,26 @@ namespace iText.Barcodes {
 
         /// <summary>The bars to generate the code.</summary>
         private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 } };
+                // 0
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, 
+                // 1
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
+                // 2
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, 
+                // 3
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 4
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, 
+                // 5
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
+                // 6
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, 
+                // 7
+                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 8
+                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 } };
 
+        // 9
         /// <summary>The number of individual bars either drawn or not drawn per character of the <c>code</c></summary>
         private const int BARS_PER_CHARACTER = 12;
 
@@ -97,16 +111,6 @@ namespace iText.Barcodes {
         /// <param name="font">The font to use</param>
         public BarcodeMSI(PdfDocument document, PdfFont font)
             : base(document) {
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
             this.x = 0.8f;
             this.n = 2.0f;
             this.font = font;

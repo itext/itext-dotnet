@@ -61,6 +61,7 @@ namespace iText.IO.Image {
 
             internal IDictionary<String, Object> additional;
 
+            // BMP variables
             internal Stream inputStream;
 
             internal long bitmapFileSize;
@@ -94,9 +95,9 @@ namespace iText.IO.Image {
             internal long xPelsPerMeter;
 
             internal long yPelsPerMeter;
-            // BMP variables
         }
 
+        // BMP Image types
         private const int VERSION_2_1_BIT = 0;
 
         private const int VERSION_2_4_BIT = 1;
@@ -129,12 +130,14 @@ namespace iText.IO.Image {
 
         private const int VERSION_4_32_BIT = 15;
 
+        // Color space types
         private const int LCS_CALIBRATED_RGB = 0;
 
         private const int LCS_SRGB = 1;
 
         private const int LCS_CMYK = 2;
 
+        // Compression Types
         private const int BI_RGB = 0;
 
         private const int BI_RLE8 = 1;
@@ -143,9 +146,6 @@ namespace iText.IO.Image {
 
         private const int BI_BITFIELDS = 3;
 
-        // BMP Image types
-        // Color space types
-        // Compression Types
         /// <summary>Process the passed Image data as a BMP image.</summary>
         /// <remarks>
         /// Process the passed Image data as a BMP image.
@@ -299,13 +299,13 @@ namespace iText.IO.Image {
                 bmp.properties.Put("colors_important", colorsImportant);
                 if (size == 40 || size == 52 || size == 56) {
                     int sizeOfPalette;
+                    // Windows 3.x and Windows NT
                     switch ((int)bmp.compression) {
                         case BI_RGB:
+                        // No compression
                         case BI_RLE8:
+                        // 8-bit RLE compression
                         case BI_RLE4: {
-                            // Windows 3.x and Windows NT
-                            // No compression
-                            // 8-bit RLE compression
                             // 4-bit RLE compression
                             if (bmp.bitsPerPixel == 1) {
                                 bmp.imageType = VERSION_3_1_BIT;
@@ -646,15 +646,15 @@ namespace iText.IO.Image {
         private static bool GetImage(BmpImageHelper.BmpParameters bmp) {
             // buffer for byte data
             byte[] bdata;
+            //	if (sampleModel.getDataType() == DataBuffer.TYPE_BYTE)
+            //	    bdata = (byte[])((DataBufferByte)tile.getDataBuffer()).getData();
+            //	else if (sampleModel.getDataType() == DataBuffer.TYPE_USHORT)
+            //	    sdata = (short[])((DataBufferUShort)tile.getDataBuffer()).getData();
+            //	else if (sampleModel.getDataType() == DataBuffer.TYPE_INT)
+            //	    idata = (int[])((DataBufferInt)tile.getDataBuffer()).getData();
+            // There should only be one tile.
             switch (bmp.imageType) {
                 case VERSION_2_1_BIT: {
-                    //	if (sampleModel.getDataType() == DataBuffer.TYPE_BYTE)
-                    //	    bdata = (byte[])((DataBufferByte)tile.getDataBuffer()).getData();
-                    //	else if (sampleModel.getDataType() == DataBuffer.TYPE_USHORT)
-                    //	    sdata = (short[])((DataBufferUShort)tile.getDataBuffer()).getData();
-                    //	else if (sampleModel.getDataType() == DataBuffer.TYPE_INT)
-                    //	    idata = (int[])((DataBufferInt)tile.getDataBuffer()).getData();
-                    // There should only be one tile.
                     // no compression
                     Read1Bit(3, bmp);
                     return true;

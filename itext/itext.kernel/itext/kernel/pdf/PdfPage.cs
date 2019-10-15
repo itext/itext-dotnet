@@ -68,11 +68,11 @@ namespace iText.Kernel.Pdf {
         private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
             .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
 
+        // This key contains reference to all articles, while this articles could reference to lots of pages.
+        // See DEVSIX-191
         private static readonly IList<PdfName> XOBJECT_EXCLUDED_KEYS;
 
         static PdfPage() {
-            // This key contains reference to all articles, while this articles could reference to lots of pages.
-            // See DEVSIX-191
             XOBJECT_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
                 .TrimBox, PdfName.Contents));
             XOBJECT_EXCLUDED_KEYS.AddAll(PAGE_EXCLUDED_KEYS);

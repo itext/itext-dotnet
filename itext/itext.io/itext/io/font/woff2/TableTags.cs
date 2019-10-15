@@ -14,13 +14,14 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+    // Font table tags
     internal class TableTags {
-        // Font table tags
         // Note that the byte order is big-endian
         private static int Tag(char a, char b, char c, char d) {
             return ((a << 24) | (b << 16) | (c << 8) | d);
         }
 
+        // Tags of popular tables.
         public const int kGlyfTableTag = 0x676c7966;
 
         public const int kHeadTableTag = 0x68656164;
@@ -37,85 +38,131 @@ namespace iText.IO.Font.Woff2 {
 
         public const int kMaxpTableTag = 0x6d617870;
 
-        public static int[] kKnownTags = new int[] { Tag('c', 'm', 'a', 'p'), Tag('h', 'e', 'a', 'd'), Tag('h', 'h'
-            , 'e', 'a'), Tag('h', 'm', 't', 'x'), Tag('m', 'a', 'x', 'p'), Tag('n', 'a', 'm', 'e'), Tag('O', 'S', 
-            '/', '2'), Tag('p', 'o', 's', 't'), Tag('c', 'v', 't', ' '), Tag('f', 'p', 'g', 'm'), Tag('g', 'l', 'y'
-            , 'f'), Tag('l', 'o', 'c', 'a'), Tag('p', 'r', 'e', 'p'), Tag('C', 'F', 'F', ' '), Tag('V', 'O', 'R', 
-            'G'), Tag('E', 'B', 'D', 'T'), Tag('E', 'B', 'L', 'C'), Tag('g', 'a', 's', 'p'), Tag('h', 'd', 'm', 'x'
-            ), Tag('k', 'e', 'r', 'n'), Tag('L', 'T', 'S', 'H'), Tag('P', 'C', 'L', 'T'), Tag('V', 'D', 'M', 'X'), 
-            Tag('v', 'h', 'e', 'a'), Tag('v', 'm', 't', 'x'), Tag('B', 'A', 'S', 'E'), Tag('G', 'D', 'E', 'F'), Tag
-            ('G', 'P', 'O', 'S'), Tag('G', 'S', 'U', 'B'), Tag('E', 'B', 'S', 'C'), Tag('J', 'S', 'T', 'F'), Tag('M'
-            , 'A', 'T', 'H'), Tag('C', 'B', 'D', 'T'), Tag('C', 'B', 'L', 'C'), Tag('C', 'O', 'L', 'R'), Tag('C', 
-            'P', 'A', 'L'), Tag('S', 'V', 'G', ' '), Tag('s', 'b', 'i', 'x'), Tag('a', 'c', 'n', 't'), Tag('a', 'v'
-            , 'a', 'r'), Tag('b', 'd', 'a', 't'), Tag('b', 'l', 'o', 'c'), Tag('b', 's', 'l', 'n'), Tag('c', 'v', 
-            'a', 'r'), Tag('f', 'd', 's', 'c'), Tag('f', 'e', 'a', 't'), Tag('f', 'm', 't', 'x'), Tag('f', 'v', 'a'
-            , 'r'), Tag('g', 'v', 'a', 'r'), Tag('h', 's', 't', 'y'), Tag('j', 'u', 's', 't'), Tag('l', 'c', 'a', 
-            'r'), Tag('m', 'o', 'r', 't'), Tag('m', 'o', 'r', 'x'), Tag('o', 'p', 'b', 'd'), Tag('p', 'r', 'o', 'p'
-            ), Tag('t', 'r', 'a', 'k'), Tag('Z', 'a', 'p', 'f'), Tag('S', 'i', 'l', 'f'), Tag('G', 'l', 'a', 't'), 
-            Tag('G', 'l', 'o', 'c'), Tag('F', 'e', 'a', 't'), Tag('S', 'i', 'l', 'l') };
-        // Tags of popular tables.
-        // 0
-        // 1
-        // 2
-        // 3
-        // 4
-        // 5
-        // 6
-        // 7
-        // 8
-        // 9
-        // 10
-        // 11
-        // 12
-        // 13
-        // 14
-        // 15
-        // 16
-        // 17
-        // 18
-        // 19
-        // 20
-        // 21
-        // 22
-        // 23
-        // 24
-        // 25
-        // 26
-        // 27
-        // 28
-        // 29
-        // 30
-        // 31
-        // 32
-        // 33
-        // 34
-        // 35
-        // 36
-        // 37
-        // 38
-        // 39
-        // 40
-        // 41
-        // 42
-        // 43
-        // 44
-        // 45
-        // 46
-        // 47
-        // 48
-        // 49
-        // 50
-        // 51
-        // 52
-        // 53
-        // 54
-        // 55
-        // 56
-        // 57
-        // 58
-        // 59
-        // 60
-        // 61
+        public static int[] kKnownTags = new int[] { Tag('c', 'm', 'a', 'p'), 
+                // 0
+                Tag('h', 'e', 'a', 'd'), 
+                // 1
+                Tag('h', 'h', 'e', 'a'), 
+                // 2
+                Tag('h', 'm', 't', 'x'), 
+                // 3
+                Tag('m', 'a', 'x', 'p'), 
+                // 4
+                Tag('n', 'a', 'm', 'e'), 
+                // 5
+                Tag('O', 'S', '/', '2'), 
+                // 6
+                Tag('p', 'o', 's', 't'), 
+                // 7
+                Tag('c', 'v', 't', ' '), 
+                // 8
+                Tag('f', 'p', 'g', 'm'), 
+                // 9
+                Tag('g', 'l', 'y', 'f'), 
+                // 10
+                Tag('l', 'o', 'c', 'a'), 
+                // 11
+                Tag('p', 'r', 'e', 'p'), 
+                // 12
+                Tag('C', 'F', 'F', ' '), 
+                // 13
+                Tag('V', 'O', 'R', 'G'), 
+                // 14
+                Tag('E', 'B', 'D', 'T'), 
+                // 15
+                Tag('E', 'B', 'L', 'C'), 
+                // 16
+                Tag('g', 'a', 's', 'p'), 
+                // 17
+                Tag('h', 'd', 'm', 'x'), 
+                // 18
+                Tag('k', 'e', 'r', 'n'), 
+                // 19
+                Tag('L', 'T', 'S', 'H'), 
+                // 20
+                Tag('P', 'C', 'L', 'T'), 
+                // 21
+                Tag('V', 'D', 'M', 'X'), 
+                // 22
+                Tag('v', 'h', 'e', 'a'), 
+                // 23
+                Tag('v', 'm', 't', 'x'), 
+                // 24
+                Tag('B', 'A', 'S', 'E'), 
+                // 25
+                Tag('G', 'D', 'E', 'F'), 
+                // 26
+                Tag('G', 'P', 'O', 'S'), 
+                // 27
+                Tag('G', 'S', 'U', 'B'), 
+                // 28
+                Tag('E', 'B', 'S', 'C'), 
+                // 29
+                Tag('J', 'S', 'T', 'F'), 
+                // 30
+                Tag('M', 'A', 'T', 'H'), 
+                // 31
+                Tag('C', 'B', 'D', 'T'), 
+                // 32
+                Tag('C', 'B', 'L', 'C'), 
+                // 33
+                Tag('C', 'O', 'L', 'R'), 
+                // 34
+                Tag('C', 'P', 'A', 'L'), 
+                // 35
+                Tag('S', 'V', 'G', ' '), 
+                // 36
+                Tag('s', 'b', 'i', 'x'), 
+                // 37
+                Tag('a', 'c', 'n', 't'), 
+                // 38
+                Tag('a', 'v', 'a', 'r'), 
+                // 39
+                Tag('b', 'd', 'a', 't'), 
+                // 40
+                Tag('b', 'l', 'o', 'c'), 
+                // 41
+                Tag('b', 's', 'l', 'n'), 
+                // 42
+                Tag('c', 'v', 'a', 'r'), 
+                // 43
+                Tag('f', 'd', 's', 'c'), 
+                // 44
+                Tag('f', 'e', 'a', 't'), 
+                // 45
+                Tag('f', 'm', 't', 'x'), 
+                // 46
+                Tag('f', 'v', 'a', 'r'), 
+                // 47
+                Tag('g', 'v', 'a', 'r'), 
+                // 48
+                Tag('h', 's', 't', 'y'), 
+                // 49
+                Tag('j', 'u', 's', 't'), 
+                // 50
+                Tag('l', 'c', 'a', 'r'), 
+                // 51
+                Tag('m', 'o', 'r', 't'), 
+                // 52
+                Tag('m', 'o', 'r', 'x'), 
+                // 53
+                Tag('o', 'p', 'b', 'd'), 
+                // 54
+                Tag('p', 'r', 'o', 'p'), 
+                // 55
+                Tag('t', 'r', 'a', 'k'), 
+                // 56
+                Tag('Z', 'a', 'p', 'f'), 
+                // 57
+                Tag('S', 'i', 'l', 'f'), 
+                // 58
+                Tag('G', 'l', 'a', 't'), 
+                // 59
+                Tag('G', 'l', 'o', 'c'), 
+                // 60
+                Tag('F', 'e', 'a', 't'), 
+                // 61
+                Tag('S', 'i', 'l', 'l') };
         // 62
     }
 }

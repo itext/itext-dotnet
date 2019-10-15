@@ -152,8 +152,9 @@ namespace iText.Layout.Hyphenation {
         /// <param name="val">a value</param>
         public virtual void Insert(String key, char val) {
             // make sure we have enough room in the arrays
-            int len = key.Length + 1;
-            // maximum number of nodes that may be generated
+            int len = key.Length + 
+                        // maximum number of nodes that may be generated
+                        1;
             if (freenode + len > eq.Length) {
                 RedimNodeArrays(eq.Length + BLOCK_SIZE);
             }
@@ -567,6 +568,8 @@ namespace iText.Layout.Hyphenation {
             return new TernaryTreeIterator(this);
         }
 
+        // PLEASE NOTE that this is a helper class that was added as a result of the file modification
+        // and is not a part of the original file
         private class TreeInsertionParams {
             internal char p;
 
@@ -577,8 +580,6 @@ namespace iText.Layout.Hyphenation {
             internal char val;
 
             public TreeInsertionParams(char p, char[] key, int start, char val) {
-                // PLEASE NOTE that this is a helper class that was added as a result of the file modification
-                // and is not a part of the original file
                 this.p = p;
                 this.key = key;
                 this.start = start;

@@ -91,6 +91,7 @@ namespace iText.Layout.Renderer {
 
         protected internal float yLineOffset;
 
+        // font should be stored only during converting original string to GlyphLine, however now it's not true
         private PdfFont font;
 
         protected internal GlyphLine text;
@@ -130,7 +131,6 @@ namespace iText.Layout.Renderer {
         /// <param name="text">the replacement text</param>
         public TextRenderer(Text textElement, String text)
             : base(textElement) {
-            // font should be stored only during converting original string to GlyphLine, however now it's not true
             this.strToBeConverted = text;
         }
 
@@ -1348,10 +1348,11 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return char.IsLetter((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode();
+            return char.IsLetter((char)g.GetUnicode()) || 
+                        // soft hyphen
+                        '\u00ad' == g.GetUnicode();
         }
 
-        // soft hyphen
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
                 try {
@@ -1405,18 +1406,18 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             switch (glyph.GetUnicode()) {
+                // ensp
                 case '\u2002': {
-                    // ensp
                     return isMonospaceFont ? 0 : 500 - spaceGlyph.GetWidth();
                 }
 
+                // emsp
                 case '\u2003': {
-                    // emsp
                     return isMonospaceFont ? 0 : 1000 - spaceGlyph.GetWidth();
                 }
 
+                // thinsp
                 case '\u2009': {
-                    // thinsp
                     return isMonospaceFont ? 0 : 200 - spaceGlyph.GetWidth();
                 }
 

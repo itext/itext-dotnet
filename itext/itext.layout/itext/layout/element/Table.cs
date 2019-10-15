@@ -95,6 +95,8 @@ namespace iText.Layout.Element {
 
         private IList<Table.RowRange> lastAddedRowGroups;
 
+        // Start number of the row "window" (range) that this table currently contain.
+        // For large tables we might contain only a few rows, not all of them, other ones might have been flushed.
         private int rowWindowStart = 0;
 
         private Document document;
@@ -138,8 +140,6 @@ namespace iText.Layout.Element {
         /// <seealso cref="SetAutoLayout()"/>
         /// <seealso cref="SetFixedLayout()"/>
         public Table(float[] columnWidths, bool largeTable) {
-            // Start number of the row "window" (range) that this table currently contain.
-            // For large tables we might contain only a few rows, not all of them, other ones might have been flushed.
             if (columnWidths == null) {
                 throw new ArgumentException("The widths array in table constructor can not be null.");
             }
@@ -1131,8 +1131,10 @@ namespace iText.Layout.Element {
 
         /// <summary>A simple object which holds the row numbers of a section of a table.</summary>
         public class RowRange {
+            // The start number of the row group, inclusive
             internal int startRow;
 
+            // The finish number of the row group, inclusive
             internal int finishRow;
 
             /// <summary>
@@ -1142,8 +1144,6 @@ namespace iText.Layout.Element {
             /// <param name="startRow">the start number of the row group, inclusive</param>
             /// <param name="finishRow">the finish number of the row group, inclusive</param>
             public RowRange(int startRow, int finishRow) {
-                // The start number of the row group, inclusive
-                // The finish number of the row group, inclusive
                 this.startRow = startRow;
                 this.finishRow = finishRow;
             }

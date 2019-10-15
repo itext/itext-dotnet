@@ -359,9 +359,9 @@ namespace iText.Kernel.XMP.Impl {
             bool needsEscaping = false;
             for (int i = 0; i < value.Length; i++) {
                 char c = value[i];
-                if (c == '<' || c == '>' || c == '&' || (escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r')) || (forAttribute
-                     && c == '"')) {
-                    // XML chars
+                if (c == '<' || c == '>' || c == '&' || 
+                                // XML chars
+                                (escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r')) || (forAttribute && c == '"')) {
                     needsEscaping = true;
                     break;
                 }
@@ -377,9 +377,9 @@ namespace iText.Kernel.XMP.Impl {
                     char c = value[i];
                     if (!(escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r'))) {
                         switch (c) {
+                            // we do what "Canonical XML" expects
+                            // AUDIT: &apos; not serialized as only outer qoutes are used
                             case '<': {
-                                // we do what "Canonical XML" expects
-                                // AUDIT: &apos; not serialized as only outer qoutes are used
                                 buffer.Append("&lt;");
                                 continue;
                             }

@@ -72,13 +72,13 @@ namespace iText.Kernel.XMP.Options {
         public PropertyOptions() {
         }
 
+        // reveal default constructor
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
         public PropertyOptions(int options)
             : base(options) {
         }
 
-        // reveal default constructor
         /// <returns>
         /// Return whether the property value is a URI. It is serialized to RDF using the
         /// <tt>rdf:resource</tt> attribute. Not mandatory for URIs, but considered RDF-savvy.

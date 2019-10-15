@@ -57,6 +57,7 @@ namespace iText.IO.Codec {
 
         internal int index;
 
+        // bits left at current index that are avail.
         internal int bitsLeft;
 
         /// <summary>note this also indicates gif format BITFile.</summary>
@@ -65,7 +66,6 @@ namespace iText.IO.Codec {
         /// <param name="output">destination for output data</param>
         /// <param name="blocks">GIF LZW requires block counts for output data</param>
         public BitFile(Stream output, bool blocks) {
-            // bits left at current index that are avail.
             this.output = output;
             this.blocks = blocks;
             buffer = new byte[256];

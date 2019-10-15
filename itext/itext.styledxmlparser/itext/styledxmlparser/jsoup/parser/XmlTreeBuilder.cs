@@ -71,9 +71,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         }
 
         internal override bool Process(Token token) {
+            // start tag, end tag, doctype, comment, character, eof
             switch (token.type) {
                 case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                    // start tag, end tag, doctype, comment, character, eof
                     Insert(token.AsStartTag());
                     break;
                 }

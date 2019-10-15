@@ -250,13 +250,13 @@ namespace iText.Layout {
             }
         }
 
+        //When 7.2 release is in progress, remove the underlying code. It's here to pass A SQ line coverage quality gate and tests deprecated protected methods
         public class TestDashedBorder : DashedBorder {
             public TestDashedBorder(BorderTest _enclosing, float width)
                 : base(width) {
                 this._enclosing = _enclosing;
             }
 
-            //When 7.2 release is in progress, remove the underlying code. It's here to pass A SQ line coverage quality gate and tests deprecated protected methods
             public virtual float PublicGetDotsGap(double distance, float initialGap) {
                 return this.GetDotsGap(distance, initialGap);
             }

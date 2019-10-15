@@ -58,8 +58,11 @@ namespace iText.Layout.Font {
     /// </remarks>
     /// <seealso cref="FontProvider"/>
     public sealed class FontSet {
+        // FontSet MUST be final to avoid overriding #add(FontInfo) method or remove functionality.
         private static readonly AtomicLong lastId = new AtomicLong();
 
+        // Due to new logic HashSet can be used instead of List.
+        // But FontInfo with or without alias will be the same FontInfo.
         private readonly ICollection<FontInfo> fonts = new LinkedHashSet<FontInfo>();
 
         private readonly IDictionary<FontInfo, FontProgram> fontPrograms = new Dictionary<FontInfo, FontProgram>();
@@ -71,9 +74,6 @@ namespace iText.Layout.Font {
         /// <see cref="FontSet"/>.
         /// </summary>
         public FontSet() {
-            // FontSet MUST be final to avoid overriding #add(FontInfo) method or remove functionality.
-            // Due to new logic HashSet can be used instead of List.
-            // But FontInfo with or without alias will be the same FontInfo.
             this.id = lastId.IncrementAndGet();
         }
 

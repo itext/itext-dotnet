@@ -266,9 +266,9 @@ namespace iText.Svg.Css.Impl {
         }
 
         private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
+            //Style attribute needs to be parsed further
             switch (attr.GetKey()) {
                 case SvgConstants.Attributes.STYLE: {
-                    //Style attribute needs to be parsed further
                     IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
                     foreach (KeyValuePair<String, String> style in parsed) {
                         styles.Put(style.Key, style.Value);

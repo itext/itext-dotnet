@@ -167,6 +167,7 @@ namespace iText.Svg.Processors.Impl.Font {
             this.sources = new List<FontFace.FontFaceSrc>(sources);
         }
 
+        //region Nested types
         /// <summary>Class that defines a font face source.</summary>
         internal class FontFaceSrc {
             /// <summary>The UrlPattern used to compose a source path.</summary>
@@ -191,7 +192,6 @@ namespace iText.Svg.Processors.Impl.Font {
             /// <summary>Indicates if the font is local.</summary>
             internal readonly bool isLocal;
 
-            //region Nested types
             /* (non-Javadoc)
             * @see java.lang.Object#toString()
             */

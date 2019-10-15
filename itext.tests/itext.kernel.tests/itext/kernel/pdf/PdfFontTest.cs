@@ -638,9 +638,9 @@ namespace iText.Kernel.Pdf {
             newGlyph.Stroke();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("A A A A A A E E E E ~ \u00E9 \u00F6"
-                ).EndText().RestoreState();
-            // A A A A A A E E E E ~ é ö
+            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                        // A A A A A A E E E E ~ é ö
+                        .ShowText("A A A A A A E E E E ~ \u00E9 \u00F6").EndText().RestoreState();
             page.Flush();
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
@@ -670,9 +670,9 @@ namespace iText.Kernel.Pdf {
             newGlyph.Stroke();
             PdfPage page = outputPdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800).ShowText("AAAAAA EEEE ~ \u00E9 \u00F6"
-                ).EndText();
-            // AAAAAA EEEE ~ é ö
+            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                        // AAAAAA EEEE ~ é ö
+                        .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
             page.Flush();
             outputPdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
@@ -1195,8 +1195,9 @@ namespace iText.Kernel.Pdf {
             // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
-                .ShowText("\u0BA4").EndText().RestoreState();
-            // there is no such glyph in provided cff
+                .ShowText("\u0BA4")
+                        // there is no such glyph in provided cff
+                        .EndText().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));

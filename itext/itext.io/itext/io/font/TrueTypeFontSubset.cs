@@ -50,9 +50,13 @@ namespace iText.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
     /// <author>Paulo Soares</author>
     internal class TrueTypeFontSubset {
+        // If it's a regular font subset, we should not add `name` and `post`,
+        // because information in these tables maybe irrelevant for a subset.
         private static readonly String[] TABLE_NAMES_SUBSET = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea"
             , "hmtx", "loca", "maxp", "prep", "cmap", "OS/2" };
 
+        // In case ttc file with subset = false (#directoryOffset > 0) `name` and `post` shall be included,
+        // because it's actually a full font.
         private static readonly String[] TABLE_NAMES = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea", "hmtx"
             , "loca", "maxp", "prep", "cmap", "OS/2", "name", "post" };
 
@@ -128,10 +132,6 @@ namespace iText.IO.Font {
         /// <param name="glyphsUsed">the glyphs used</param>
         internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection<int> glyphsUsed, int 
             directoryOffset, bool subset) {
-            // If it's a regular font subset, we should not add `name` and `post`,
-            // because information in these tables maybe irrelevant for a subset.
-            // In case ttc file with subset = false (#directoryOffset > 0) `name` and `post` shall be included,
-            // because it's actually a full font.
             this.fileName = fileName;
             this.rf = rf;
             this.glyphsUsed = new HashSet<int>(glyphsUsed);

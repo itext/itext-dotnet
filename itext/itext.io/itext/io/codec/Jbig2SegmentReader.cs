@@ -64,46 +64,67 @@ namespace iText.IO.Codec {
     /// TODO: the indeterminate-segment-size value of dataLength, else?
     /// </remarks>
     public class Jbig2SegmentReader {
+        //see 7.4.2.
         public const int SYMBOL_DICTIONARY = 0;
 
+        //see 7.4.3.
         public const int INTERMEDIATE_TEXT_REGION = 4;
 
+        //see 7.4.3.//see 7.4.3.
         public const int IMMEDIATE_TEXT_REGION = 6;
 
+        //see 7.4.3.
         public const int IMMEDIATE_LOSSLESS_TEXT_REGION = 7;
 
+        //see 7.4.4.
         public const int PATTERN_DICTIONARY = 16;
 
+        //see 7.4.5.
         public const int INTERMEDIATE_HALFTONE_REGION = 20;
 
+        //see 7.4.5.
         public const int IMMEDIATE_HALFTONE_REGION = 22;
 
+        //see 7.4.5.
         public const int IMMEDIATE_LOSSLESS_HALFTONE_REGION = 23;
 
+        //see 7.4.6.
         public const int INTERMEDIATE_GENERIC_REGION = 36;
 
+        //see 7.4.6.
         public const int IMMEDIATE_GENERIC_REGION = 38;
 
+        //see 7.4.6.
         public const int IMMEDIATE_LOSSLESS_GENERIC_REGION = 39;
 
+        //see 7.4.7.
         public const int INTERMEDIATE_GENERIC_REFINEMENT_REGION = 40;
 
+        //see 7.4.7.
         public const int IMMEDIATE_GENERIC_REFINEMENT_REGION = 42;
 
+        //see 7.4.7.
         public const int IMMEDIATE_LOSSLESS_GENERIC_REFINEMENT_REGION = 43;
 
+        //see 7.4.8.
         public const int PAGE_INFORMATION = 48;
 
+        //see 7.4.9.
         public const int END_OF_PAGE = 49;
 
+        //see 7.4.10.
         public const int END_OF_STRIPE = 50;
 
+        //see 7.4.11.
         public const int END_OF_FILE = 51;
 
+        //see 7.4.12.
         public const int PROFILES = 52;
 
+        //see 7.4.13.
         public const int TABLES = 53;
 
+        //see 7.4.14.
         public const int EXTENSION = 62;
 
         private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segments = new SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment
@@ -152,27 +173,6 @@ namespace iText.IO.Codec {
             public int page_association_offset = -1;
 
             public Jbig2Segment(int segment_number) {
-                //see 7.4.2.
-                //see 7.4.3.
-                //see 7.4.3.//see 7.4.3.
-                //see 7.4.3.
-                //see 7.4.4.
-                //see 7.4.5.
-                //see 7.4.5.
-                //see 7.4.5.
-                //see 7.4.6.
-                //see 7.4.6.
-                //see 7.4.6.
-                //see 7.4.7.
-                //see 7.4.7.
-                //see 7.4.7.
-                //see 7.4.8.
-                //see 7.4.9.
-                //see 7.4.10.
-                //see 7.4.11.
-                //see 7.4.12.
-                //see 7.4.13.
-                //see 7.4.14.
                 this.segmentNumber = segment_number;
             }
 
@@ -265,8 +265,8 @@ namespace iText.IO.Codec {
             ReadFileHeader();
             // Annex D
             if (this.sequential) {
+                // D.1
                 do {
-                    // D.1
                     Jbig2SegmentReader.Jbig2Segment tmp = ReadHeader();
                     ReadSegment(tmp);
                     segments.Put(tmp.segmentNumber, tmp);

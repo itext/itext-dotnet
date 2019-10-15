@@ -56,6 +56,7 @@ using iText.Test;
 using iText.Test.Signutils;
 
 namespace iText.Signatures.Sign {
+    //TODO: add some validation of results in future
     public class SigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/SigningTest/";
@@ -72,7 +73,6 @@ namespace iText.Signatures.Sign {
 
         private ICipherParameters pk;
 
-        //TODO: add some validation of results in future
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);

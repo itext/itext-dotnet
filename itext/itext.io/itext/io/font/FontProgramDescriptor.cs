@@ -71,14 +71,14 @@ namespace iText.IO.Font {
 
         private readonly String familyNameEnglishOpenType;
 
+        // Initially needed for open type fonts only.
+        // The following sequence represents four triplets.
+        // In each triplet items sequentially stand for platformID encodingID languageID (see open type naming table spec).
+        // Each triplet is used further to determine whether the font name item is represented in English
         private static readonly String[] TT_FAMILY_ORDER = new String[] { "3", "1", "1033", "3", "0", "1033", "1", 
             "0", "0", "0", "3", "0" };
 
         internal FontProgramDescriptor(FontNames fontNames, float italicAngle, bool isMonospace) {
-            // Initially needed for open type fonts only.
-            // The following sequence represents four triplets.
-            // In each triplet items sequentially stand for platformID encodingID languageID (see open type naming table spec).
-            // Each triplet is used further to determine whether the font name item is represented in English
             this.fontName = fontNames.GetFontName();
             this.fontNameLowerCase = this.fontName.ToLowerInvariant();
             this.fullNameLowerCase = fontNames.GetFullName()[0][3].ToLowerInvariant();

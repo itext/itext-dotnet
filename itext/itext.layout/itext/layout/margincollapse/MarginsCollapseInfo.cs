@@ -50,10 +50,12 @@ namespace iText.Layout.Margincollapse {
 
         private MarginsCollapse collapseAfter;
 
+        // MarginCollapse instance which contains margin-after of the element without next sibling or parent margins (only element's margin and element's kids)
         private MarginsCollapse ownCollapseAfter;
 
         private bool isSelfCollapsing;
 
+        // when a parent has a fixed height these fields tells kid how much free space parent has for the margin collapsed with kid
         private float bufferSpaceOnTop;
 
         private float bufferSpaceOnBottom;
@@ -65,8 +67,6 @@ namespace iText.Layout.Margincollapse {
         private bool clearanceApplied;
 
         internal MarginsCollapseInfo() {
-            // MarginCollapse instance which contains margin-after of the element without next sibling or parent margins (only element's margin and element's kids)
-            // when a parent has a fixed height these fields tells kid how much free space parent has for the margin collapsed with kid
             this.ignoreOwnMarginTop = false;
             this.ignoreOwnMarginBottom = false;
             this.collapseBefore = new MarginsCollapse();

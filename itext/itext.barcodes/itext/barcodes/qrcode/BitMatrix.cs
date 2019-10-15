@@ -69,12 +69,12 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly int[] bits;
 
+        // A helper to construct a square matrix.
         public BitMatrix(int dimension)
             : this(dimension, dimension) {
         }
 
         public BitMatrix(int width, int height) {
-            // A helper to construct a square matrix.
             if (width < 1 || height < 1) {
                 throw new ArgumentException("Both dimensions must be greater than 0");
             }

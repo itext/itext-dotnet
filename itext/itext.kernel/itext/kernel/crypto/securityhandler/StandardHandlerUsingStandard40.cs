@@ -60,13 +60,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal byte[] documentId;
 
+        // stores key length of the main key
         protected internal int keyLength;
 
         protected internal ARCFOUREncryption arcfour = new ARCFOUREncryption();
 
         public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId) {
-            // stores key length of the main key
             InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
                 embeddedFilesOnly, documentId);
         }

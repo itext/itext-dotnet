@@ -2077,6 +2077,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Class containing results of the comparison of two documents.</summary>
         public class CompareResult {
+            // LinkedHashMap to retain order. HashMap has different order in Java6/7 and Java8
             protected internal IDictionary<CompareTool.ObjectPath, String> differences = new LinkedDictionary<CompareTool.ObjectPath
                 , String>();
 
@@ -2086,7 +2087,6 @@ namespace iText.Kernel.Utils {
             /// <param name="messageLimit">maximum number of difference messages handled by this CompareResult.</param>
             public CompareResult(CompareTool _enclosing, int messageLimit) {
                 this._enclosing = _enclosing;
-                // LinkedHashMap to retain order. HashMap has different order in Java6/7 and Java8
                 this.messageLimit = messageLimit;
             }
 

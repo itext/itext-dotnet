@@ -69,20 +69,20 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         /// <summary>The Constant BACKGROUND_POSITION_OR_SIZE_TYPE.</summary>
         private const int BACKGROUND_POSITION_OR_SIZE_TYPE = 3;
 
+        // might have the same type, but position always precedes size
         /// <summary>The Constant BACKGROUND_REPEAT_TYPE.</summary>
         private const int BACKGROUND_REPEAT_TYPE = 4;
 
         /// <summary>The Constant BACKGROUND_ORIGIN_OR_CLIP_TYPE.</summary>
         private const int BACKGROUND_ORIGIN_OR_CLIP_TYPE = 5;
 
+        // have the same possible values but apparently origin values precedes clip value
         /// <summary>The Constant BACKGROUND_CLIP_TYPE.</summary>
         private const int BACKGROUND_CLIP_TYPE = 6;
 
         /// <summary>The Constant BACKGROUND_ATTACHMENT_TYPE.</summary>
         private const int BACKGROUND_ATTACHMENT_TYPE = 7;
 
-        // might have the same type, but position always precedes size
-        // have the same possible values but apparently origin values precedes clip value
         // With CSS3, you can apply multiple backgrounds to elements. These are layered atop one another
         // with the first background you provide on top and the last background listed in the back. Only
         // the last background can include a background color.

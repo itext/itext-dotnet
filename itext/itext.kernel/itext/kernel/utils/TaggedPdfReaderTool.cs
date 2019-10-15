@@ -62,6 +62,7 @@ namespace iText.Kernel.Utils {
 
         protected internal String rootTag;
 
+        // key - page dictionary; value - a mapping of mcids to text in them
         protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags = new Dictionary<PdfDictionary
             , IDictionary<int, String>>();
 
@@ -73,7 +74,6 @@ namespace iText.Kernel.Utils {
         /// </summary>
         /// <param name="document">the document to read tag structure from</param>
         public TaggedPdfReaderTool(PdfDocument document) {
-            // key - page dictionary; value - a mapping of mcids to text in them
             this.document = document;
         }
 

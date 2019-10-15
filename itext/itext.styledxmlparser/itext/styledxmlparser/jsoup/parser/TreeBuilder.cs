@@ -54,24 +54,24 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         protected internal Document doc;
 
+        // current doc we are building into
         protected internal List<iText.StyledXmlParser.Jsoup.Nodes.Element> stack;
 
+        // the stack of open elements
         protected internal String baseUri;
 
+        // current base uri, for creating new elements
         internal Token currentToken;
 
+        // currentToken is used only for error tracking.
         internal ParseErrorList errors;
 
+        // null when not tracking errors
         private Token.StartTag start = new Token.StartTag();
 
+        // start tag to process
         private Token.EndTag end = new Token.EndTag();
 
-        // current doc we are building into
-        // the stack of open elements
-        // current base uri, for creating new elements
-        // currentToken is used only for error tracking.
-        // null when not tracking errors
-        // start tag to process
         internal virtual void InitialiseParse(String input, String baseUri, ParseErrorList errors) {
             Validate.NotNull(input, "String input must not be null");
             Validate.NotNull(baseUri, "BaseURI must not be null");

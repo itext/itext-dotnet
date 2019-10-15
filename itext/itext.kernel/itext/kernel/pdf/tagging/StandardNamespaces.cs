@@ -61,6 +61,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private static readonly ICollection<String> STD_STRUCT_NAMESPACE_2_0_TYPES;
 
+        // other namespaces
         private const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
@@ -70,7 +71,6 @@ namespace iText.Kernel.Pdf.Tagging {
         public const String PDF_2_0 = "http://iso.org/pdf2/ssn";
 
         static StandardNamespaces() {
-            // other namespaces
             STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<String>(JavaUtil.ArraysAsList(StandardRoles.DOCUMENT, StandardRoles
                 .PART, StandardRoles.DIV, StandardRoles.P, StandardRoles.H, StandardRoles.H1, StandardRoles.H2, StandardRoles
                 .H3, StandardRoles.H4, StandardRoles.H5, StandardRoles.H6, StandardRoles.LBL, StandardRoles.SPAN, StandardRoles

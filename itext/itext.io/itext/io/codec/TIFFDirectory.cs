@@ -183,20 +183,32 @@ namespace iText.IO.Codec {
             stream.Seek(global_save_offset);
         }
 
-        private static readonly int[] sizeOfType = new int[] { 0, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 };
+        private static readonly int[] sizeOfType = new int[] { 0, 
+                //  0 = n/a
+                1, 
+                //  1 = byte
+                1, 
+                //  2 = ascii
+                2, 
+                //  3 = short
+                4, 
+                //  4 = long
+                8, 
+                //  5 = rational
+                1, 
+                //  6 = sbyte
+                1, 
+                //  7 = undefined
+                2, 
+                //  8 = sshort
+                4, 
+                //  9 = slong
+                8, 
+                // 10 = srational
+                4, 
+                // 11 = float
+                8 };
 
-        //  0 = n/a
-        //  1 = byte
-        //  2 = ascii
-        //  3 = short
-        //  4 = long
-        //  5 = rational
-        //  6 = sbyte
-        //  7 = undefined
-        //  8 = sshort
-        //  9 = slong
-        // 10 = srational
-        // 11 = float
         // 12 = double
         private void Initialize(RandomAccessFileOrArray stream) {
             long nextTagOffset = 0L;

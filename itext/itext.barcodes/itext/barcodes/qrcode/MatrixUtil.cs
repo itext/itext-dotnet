@@ -63,81 +63,104 @@ namespace iText.Barcodes.Qrcode {
             int[] { 1, 0, 0, 0, 1 }, new int[] { 1, 0, 1, 0, 1 }, new int[] { 1, 0, 0, 0, 1 }, new int[] { 1, 1, 1
             , 1, 1 } };
 
+        // From Appendix E. Table 1, JIS0510X:2004 (p 71). The table was double-checked by komatsu.
         private static readonly int[][] POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = new int[][] { new int[] { -
-            1, -1, -1, -1, -1, -1, -1 }, new int[] { 6, 18, -1, -1, -1, -1, -1 }, new int[] { 6, 22, -1, -1, -1, -
-            1, -1 }, new int[] { 6, 26, -1, -1, -1, -1, -1 }, new int[] { 6, 30, -1, -1, -1, -1, -1 }, new int[] { 
-            6, 34, -1, -1, -1, -1, -1 }, new int[] { 6, 22, 38, -1, -1, -1, -1 }, new int[] { 6, 24, 42, -1, -1, -
-            1, -1 }, new int[] { 6, 26, 46, -1, -1, -1, -1 }, new int[] { 6, 28, 50, -1, -1, -1, -1 }, new int[] { 
-            6, 30, 54, -1, -1, -1, -1 }, new int[] { 6, 32, 58, -1, -1, -1, -1 }, new int[] { 6, 34, 62, -1, -1, -
-            1, -1 }, new int[] { 6, 26, 46, 66, -1, -1, -1 }, new int[] { 6, 26, 48, 70, -1, -1, -1 }, new int[] { 
-            6, 26, 50, 74, -1, -1, -1 }, new int[] { 6, 30, 54, 78, -1, -1, -1 }, new int[] { 6, 30, 56, 82, -1, -
-            1, -1 }, new int[] { 6, 30, 58, 86, -1, -1, -1 }, new int[] { 6, 34, 62, 90, -1, -1, -1 }, new int[] { 
-            6, 28, 50, 72, 94, -1, -1 }, new int[] { 6, 26, 50, 74, 98, -1, -1 }, new int[] { 6, 30, 54, 78, 102, 
-            -1, -1 }, new int[] { 6, 28, 54, 80, 106, -1, -1 }, new int[] { 6, 32, 58, 84, 110, -1, -1 }, new int[
-            ] { 6, 30, 58, 86, 114, -1, -1 }, new int[] { 6, 34, 62, 90, 118, -1, -1 }, new int[] { 6, 26, 50, 74, 
-            98, 122, -1 }, new int[] { 6, 30, 54, 78, 102, 126, -1 }, new int[] { 6, 26, 52, 78, 104, 130, -1 }, new 
-            int[] { 6, 30, 56, 82, 108, 134, -1 }, new int[] { 6, 34, 60, 86, 112, 138, -1 }, new int[] { 6, 30, 58
-            , 86, 114, 142, -1 }, new int[] { 6, 34, 62, 90, 118, 146, -1 }, new int[] { 6, 30, 54, 78, 102, 126, 
-            150 }, new int[] { 6, 24, 50, 76, 102, 128, 154 }, new int[] { 6, 28, 54, 80, 106, 132, 158 }, new int
-            [] { 6, 32, 58, 84, 110, 136, 162 }, new int[] { 6, 26, 54, 82, 110, 138, 166 }, new int[] { 6, 30, 58
-            , 86, 114, 142, 170 } };
+            1, -1, -1, -1, -1, -1, -1 }, 
+                // Version 1
+                new int[] { 6, 18, -1, -1, -1, -1, -1 }, 
+                // Version 2
+                new int[] { 6, 22, -1, -1, -1, -1, -1 }, 
+                // Version 3
+                new int[] { 6, 26, -1, -1, -1, -1, -1 }, 
+                // Version 4
+                new int[] { 6, 30, -1, -1, -1, -1, -1 }, 
+                // Version 5
+                new int[] { 6, 34, -1, -1, -1, -1, -1 }, 
+                // Version 6
+                new int[] { 6, 22, 38, -1, -1, -1, -1 }, 
+                // Version 7
+                new int[] { 6, 24, 42, -1, -1, -1, -1 }, 
+                // Version 8
+                new int[] { 6, 26, 46, -1, -1, -1, -1 }, 
+                // Version 9
+                new int[] { 6, 28, 50, -1, -1, -1, -1 }, 
+                // Version 10
+                new int[] { 6, 30, 54, -1, -1, -1, -1 }, 
+                // Version 11
+                new int[] { 6, 32, 58, -1, -1, -1, -1 }, 
+                // Version 12
+                new int[] { 6, 34, 62, -1, -1, -1, -1 }, 
+                // Version 13
+                new int[] { 6, 26, 46, 66, -1, -1, -1 }, 
+                // Version 14
+                new int[] { 6, 26, 48, 70, -1, -1, -1 }, 
+                // Version 15
+                new int[] { 6, 26, 50, 74, -1, -1, -1 }, 
+                // Version 16
+                new int[] { 6, 30, 54, 78, -1, -1, -1 }, 
+                // Version 17
+                new int[] { 6, 30, 56, 82, -1, -1, -1 }, 
+                // Version 18
+                new int[] { 6, 30, 58, 86, -1, -1, -1 }, 
+                // Version 19
+                new int[] { 6, 34, 62, 90, -1, -1, -1 }, 
+                // Version 20
+                new int[] { 6, 28, 50, 72, 94, -1, -1 }, 
+                // Version 21
+                new int[] { 6, 26, 50, 74, 98, -1, -1 }, 
+                // Version 22
+                new int[] { 6, 30, 54, 78, 102, -1, -1 }, 
+                // Version 23
+                new int[] { 6, 28, 54, 80, 106, -1, -1 }, 
+                // Version 24
+                new int[] { 6, 32, 58, 84, 110, -1, -1 }, 
+                // Version 25
+                new int[] { 6, 30, 58, 86, 114, -1, -1 }, 
+                // Version 26
+                new int[] { 6, 34, 62, 90, 118, -1, -1 }, 
+                // Version 27
+                new int[] { 6, 26, 50, 74, 98, 122, -1 }, 
+                // Version 28
+                new int[] { 6, 30, 54, 78, 102, 126, -1 }, 
+                // Version 29
+                new int[] { 6, 26, 52, 78, 104, 130, -1 }, 
+                // Version 30
+                new int[] { 6, 30, 56, 82, 108, 134, -1 }, 
+                // Version 31
+                new int[] { 6, 34, 60, 86, 112, 138, -1 }, 
+                // Version 32
+                new int[] { 6, 30, 58, 86, 114, 142, -1 }, 
+                // Version 33
+                new int[] { 6, 34, 62, 90, 118, 146, -1 }, 
+                // Version 34
+                new int[] { 6, 30, 54, 78, 102, 126, 150 }, 
+                // Version 35
+                new int[] { 6, 24, 50, 76, 102, 128, 154 }, 
+                // Version 36
+                new int[] { 6, 28, 54, 80, 106, 132, 158 }, 
+                // Version 37
+                new int[] { 6, 32, 58, 84, 110, 136, 162 }, 
+                // Version 38
+                new int[] { 6, 26, 54, 82, 110, 138, 166 }, 
+                // Version 39
+                new int[] { 6, 30, 58, 86, 114, 142, 170 } };
 
+        // Version 40
+        // Type info cells at the left top corner.
         private static readonly int[][] TYPE_INFO_COORDINATES = new int[][] { new int[] { 8, 0 }, new int[] { 8, 1
              }, new int[] { 8, 2 }, new int[] { 8, 3 }, new int[] { 8, 4 }, new int[] { 8, 5 }, new int[] { 8, 7 }
             , new int[] { 8, 8 }, new int[] { 7, 8 }, new int[] { 5, 8 }, new int[] { 4, 8 }, new int[] { 3, 8 }, 
             new int[] { 2, 8 }, new int[] { 1, 8 }, new int[] { 0, 8 } };
 
+        // From Appendix D in JISX0510:2004 (p. 67)
         private const int VERSION_INFO_POLY = 0x1f25;
 
+        // 1 1111 0010 0101
+        // From Appendix C in JISX0510:2004 (p.65).
         private const int TYPE_INFO_POLY = 0x537;
 
         private const int TYPE_INFO_MASK_PATTERN = 0x5412;
 
-        // From Appendix E. Table 1, JIS0510X:2004 (p 71). The table was double-checked by komatsu.
-        // Version 1
-        // Version 2
-        // Version 3
-        // Version 4
-        // Version 5
-        // Version 6
-        // Version 7
-        // Version 8
-        // Version 9
-        // Version 10
-        // Version 11
-        // Version 12
-        // Version 13
-        // Version 14
-        // Version 15
-        // Version 16
-        // Version 17
-        // Version 18
-        // Version 19
-        // Version 20
-        // Version 21
-        // Version 22
-        // Version 23
-        // Version 24
-        // Version 25
-        // Version 26
-        // Version 27
-        // Version 28
-        // Version 29
-        // Version 30
-        // Version 31
-        // Version 32
-        // Version 33
-        // Version 34
-        // Version 35
-        // Version 36
-        // Version 37
-        // Version 38
-        // Version 39
-        // Version 40
-        // Type info cells at the left top corner.
-        // From Appendix D in JISX0510:2004 (p. 67)
-        // 1 1111 0010 0101
-        // From Appendix C in JISX0510:2004 (p.65).
         // Set all cells to -1.  -1 means that the cell is empty (not set yet).
         //
         // JAVAPORT: We shouldn't need to do this at all. The code should be rewritten to begin encoding
@@ -426,11 +449,13 @@ namespace iText.Barcodes.Qrcode {
 
         // Check if "value" is valid.
         private static bool IsValidValue(byte value) {
-            return (value == (byte)0xff || value == 0 || value == 1);
+            return (value == (byte)0xff || 
+                        // Empty.
+                        value == 0 || 
+                        // Light (white).
+                        value == 1);
         }
 
-        // Empty.
-        // Light (white).
         // Dark (black).
         private static void EmbedTimingPatterns(ByteMatrix matrix) {
             // -8 is for skipping position detection patterns (size 7), and two horizontal/vertical

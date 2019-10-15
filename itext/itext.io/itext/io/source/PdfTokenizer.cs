@@ -488,8 +488,8 @@ namespace iText.IO.Source {
                         bool isReal = false;
                         int numberOfMinuses = 0;
                         if (ch == '-') {
+                            // Take care of number like "--234". If Acrobat can read them so must we.
                             do {
-                                // Take care of number like "--234". If Acrobat can read them so must we.
                                 ++numberOfMinuses;
                                 ch = file.Read();
                             }
@@ -844,9 +844,9 @@ namespace iText.IO.Source {
                     }
 
                     case 9:
+                    //whitespaces
                     case 12:
                     case 32: {
-                        //whitespaces
                         if (prevWasWhitespace) {
                             break;
                         }

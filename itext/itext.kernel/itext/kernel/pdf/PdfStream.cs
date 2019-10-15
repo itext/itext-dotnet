@@ -52,6 +52,7 @@ namespace iText.Kernel.Pdf {
     public class PdfStream : PdfDictionary {
         protected internal int compressionLevel;
 
+        // Output stream associated with PDF stream.
         protected internal PdfOutputStream outputStream;
 
         private Stream inputStream;
@@ -73,7 +74,6 @@ namespace iText.Kernel.Pdf {
         ///     </param>
         public PdfStream(byte[] bytes, int compressionLevel)
             : base() {
-            // Output stream associated with PDF stream.
             SetState(MUST_BE_INDIRECT);
             this.compressionLevel = compressionLevel;
             if (bytes != null && bytes.Length > 0) {
@@ -164,9 +164,9 @@ namespace iText.Kernel.Pdf {
             SetState(MUST_BE_INDIRECT);
         }
 
+        //NOTE This constructor only for PdfReader.
         internal PdfStream(long offset, PdfDictionary keys)
             : base() {
-            //NOTE This constructor only for PdfReader.
             this.compressionLevel = CompressionConstants.UNDEFINED_COMPRESSION;
             this.offset = offset;
             PutAll(keys);

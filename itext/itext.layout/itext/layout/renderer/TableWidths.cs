@@ -813,10 +813,10 @@ namespace iText.Layout.Renderer {
 
             internal bool isPercent = false;
 
+            //true means that this column has cell property based width.
             internal bool isFixed = false;
 
             internal ColumnWidthData(float min, float max) {
-                //true means that this column has cell property based width.
                 System.Diagnostics.Debug.Assert(min >= 0);
                 System.Diagnostics.Debug.Assert(max >= 0);
                 this.min = min > 0 ? min + MinMaxWidthUtils.GetEps() : 0;

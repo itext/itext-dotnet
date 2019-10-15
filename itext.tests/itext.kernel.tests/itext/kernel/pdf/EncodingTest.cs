@@ -85,9 +85,9 @@ namespace iText.Kernel.Pdf {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "# simple 1 0020 041c 0456 0440 044a 0050 0065 0061 0063"
                 , true);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText("\u041C\u0456\u0440\u044A Peace"
-                ).EndText().RestoreState();
-            // Міръ Peace
+            canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12)
+                        // Міръ Peace
+                        .ShowText("\u041C\u0456\u0440\u044A Peace").EndText().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));

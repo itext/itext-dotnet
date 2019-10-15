@@ -57,13 +57,13 @@ namespace iText.Layout.Font {
     /// shall be used.
     /// </remarks>
     public class Range {
+        //ordered sub-ranges
         private Range.SubRange[] ranges;
 
         private Range() {
         }
 
         internal Range(IList<Range.SubRange> ranges) {
-            //ordered sub-ranges
             if (ranges.Count == 0) {
                 throw new ArgumentException("Ranges shall not be empty");
             }

@@ -521,11 +521,11 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        // TODO DEVSIX-2120 ExtraBold subfamily is not processed
+        // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
         [NUnit.Framework.Ignore("DEVSIX-2120: we cannot set a wrong expected string for normal font characteristics because in different contexts iText selects different fonts"
             )]
         public virtual void OpenSansFontSetExtraBoldTest01() {
-            // TODO DEVSIX-2120 ExtraBold subfamily is not processed
-            // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             CheckSelector(set.GetFonts(), "Open Sans ExtraBold", "Times-Bold", "Times-Bold", "Times-BoldItalic", "Times-BoldItalic"
