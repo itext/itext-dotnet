@@ -94,6 +94,7 @@ namespace iText.Svg.Googlecharts {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void CalendarChart() {
+            //TODO update cmp file after DEVSIX-3347  and DEVSIX-2086 will be fixed
             PageSize pageSize = PageSize.A4;
             TestUtils.ConvertSVGtoPDF(destinationFolder + "calendarChart.pdf", sourceFolder + "calendarChart.svg", 1, 
                 pageSize);
