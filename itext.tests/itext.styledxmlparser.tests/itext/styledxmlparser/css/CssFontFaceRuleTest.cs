@@ -6,7 +6,7 @@ namespace iText.StyledXmlParser.Css {
     public class CssFontFaceRuleTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void VerifyThatToStringProducesValidCss() {
-            CssFontFaceRule fontFaceRule = new CssFontFaceRule("");
+            CssFontFaceRule fontFaceRule = new CssFontFaceRule();
             IList<CssDeclaration> declarations = new List<CssDeclaration>();
             declarations.Add(new CssDeclaration(CommonCssConstants.FONT_FAMILY, "test-font-family"));
             declarations.Add(new CssDeclaration(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.BOLD));
