@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>Class to store a CSS font face At rule.</summary>
@@ -75,13 +74,11 @@ namespace iText.StyledXmlParser.Css {
         */
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
-            sb.Append(MessageFormatUtil.Format("@{0} ", ruleName));
-            sb.Append("{");
-            sb.Append("\n");
+            sb.Append("@").Append(GetRuleName()).Append(" {").Append("\n");
             foreach (CssDeclaration declaration in properties) {
                 sb.Append("    ");
                 sb.Append(declaration);
-                sb.Append("\n");
+                sb.Append(";\n");
             }
             sb.Append("}");
             return sb.ToString();
