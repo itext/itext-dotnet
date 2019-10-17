@@ -1488,17 +1488,12 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(exceptionThrown);
         }
 
-        [NUnit.Framework.Ignore("DEVSIX-3048")]
         [NUnit.Framework.Test]
         public virtual void TestManyAppendModeUpdates() {
-            NUnit.Framework.Assert.That(() =>  {
-                String file = sourceFolder + "manyAppendModeUpdates.pdf";
-                PdfReader reader = new PdfReader(file);
-                PdfDocument document = new PdfDocument(reader);
-                document.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<OutOfMemoryException>())
-;
+            String file = sourceFolder + "manyAppendModeUpdates.pdf";
+            PdfReader reader = new PdfReader(file);
+            PdfDocument document = new PdfDocument(reader);
+            document.Close();
         }
 
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {

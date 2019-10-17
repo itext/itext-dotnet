@@ -1026,126 +1026,129 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool ReadXrefStream(long ptr) {
-            tokens.Seek(ptr);
-            if (!tokens.NextToken()) {
-                return false;
-            }
-            if (tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
-                return false;
-            }
-            if (!tokens.NextToken() || tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
-                return false;
-            }
-            if (!tokens.NextToken() || !tokens.TokenValueEqualsTo(PdfTokenizer.Obj)) {
-                return false;
-            }
-            PdfXrefTable xref = pdfDocument.GetXref();
-            PdfObject @object = ReadObject(false);
-            PdfStream xrefStream;
-            if (@object.GetObjectType() == PdfObject.STREAM) {
-                xrefStream = (PdfStream)@object;
-                if (!PdfName.XRef.Equals(xrefStream.Get(PdfName.Type))) {
+            while (ptr != -1) {
+                tokens.Seek(ptr);
+                if (!tokens.NextToken()) {
                     return false;
                 }
-            }
-            else {
-                return false;
-            }
-            if (trailer == null) {
-                trailer = new PdfDictionary();
-                trailer.PutAll(xrefStream);
-                trailer.Remove(PdfName.DecodeParms);
-                trailer.Remove(PdfName.Filter);
-                trailer.Remove(PdfName.Prev);
-                trailer.Remove(PdfName.Length);
-            }
-            int size = ((PdfNumber)xrefStream.Get(PdfName.Size)).IntValue();
-            PdfArray index;
-            PdfObject obj = xrefStream.Get(PdfName.Index);
-            if (obj == null) {
-                index = new PdfArray();
-                index.Add(new PdfNumber(0));
-                index.Add(new PdfNumber(size));
-            }
-            else {
-                index = (PdfArray)obj;
-            }
-            PdfArray w = xrefStream.GetAsArray(PdfName.W);
-            long prev = -1;
-            obj = xrefStream.Get(PdfName.Prev);
-            if (obj != null) {
-                prev = ((PdfNumber)obj).LongValue();
-            }
-            xref.SetCapacity(size);
-            byte[] b = ReadStreamBytes(xrefStream, true);
-            int bptr = 0;
-            int[] wc = new int[3];
-            for (int k = 0; k < 3; ++k) {
-                wc[k] = w.GetAsNumber(k).IntValue();
-            }
-            for (int idx = 0; idx < index.Size(); idx += 2) {
-                int start = index.GetAsNumber(idx).IntValue();
-                int length = index.GetAsNumber(idx + 1).IntValue();
-                xref.SetCapacity(start + length);
-                while (length-- > 0) {
-                    int type = 1;
-                    if (wc[0] > 0) {
-                        type = 0;
-                        for (int k = 0; k < wc[0]; ++k) {
-                            type = (type << 8) + (b[bptr++] & 0xff);
-                        }
-                    }
-                    long field2 = 0;
-                    for (int k = 0; k < wc[1]; ++k) {
-                        field2 = (field2 << 8) + (b[bptr++] & 0xff);
-                    }
-                    int field3 = 0;
-                    for (int k = 0; k < wc[2]; ++k) {
-                        field3 = (field3 << 8) + (b[bptr++] & 0xff);
-                    }
-                    int @base = start;
-                    PdfIndirectReference newReference;
-                    switch (type) {
-                        case 0: {
-                            newReference = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
-                                (PdfObject.FREE);
-                            break;
-                        }
-
-                        case 1: {
-                            newReference = new PdfIndirectReference(pdfDocument, @base, field3, field2);
-                            break;
-                        }
-
-                        case 2: {
-                            newReference = new PdfIndirectReference(pdfDocument, @base, 0, field3);
-                            newReference.SetObjStreamNumber((int)field2);
-                            break;
-                        }
-
-                        default: {
-                            throw new PdfException(PdfException.InvalidXrefStream);
-                        }
-                    }
-                    PdfIndirectReference reference = xref.Get(@base);
-                    bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
-                        () == newReference.GetGenNumber();
-                    // for references that are added by xref table itself (like 0 entry)
-                    bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
-                    if (refFirstEncountered) {
-                        xref.Add(newReference);
-                    }
-                    else {
-                        if (refReadingState) {
-                            reference.SetOffset(newReference.GetOffset());
-                            reference.SetObjStreamNumber(newReference.GetObjStreamNumber());
-                            reference.ClearState(PdfObject.READING);
-                        }
-                    }
-                    ++start;
+                if (tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
+                    return false;
                 }
+                if (!tokens.NextToken() || tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
+                    return false;
+                }
+                if (!tokens.NextToken() || !tokens.TokenValueEqualsTo(PdfTokenizer.Obj)) {
+                    return false;
+                }
+                PdfXrefTable xref = pdfDocument.GetXref();
+                PdfObject @object = ReadObject(false);
+                PdfStream xrefStream;
+                if (@object.GetObjectType() == PdfObject.STREAM) {
+                    xrefStream = (PdfStream)@object;
+                    if (!PdfName.XRef.Equals(xrefStream.Get(PdfName.Type))) {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+                if (trailer == null) {
+                    trailer = new PdfDictionary();
+                    trailer.PutAll(xrefStream);
+                    trailer.Remove(PdfName.DecodeParms);
+                    trailer.Remove(PdfName.Filter);
+                    trailer.Remove(PdfName.Prev);
+                    trailer.Remove(PdfName.Length);
+                }
+                int size = ((PdfNumber)xrefStream.Get(PdfName.Size)).IntValue();
+                PdfArray index;
+                PdfObject obj = xrefStream.Get(PdfName.Index);
+                if (obj == null) {
+                    index = new PdfArray();
+                    index.Add(new PdfNumber(0));
+                    index.Add(new PdfNumber(size));
+                }
+                else {
+                    index = (PdfArray)obj;
+                }
+                PdfArray w = xrefStream.GetAsArray(PdfName.W);
+                long prev = -1;
+                obj = xrefStream.Get(PdfName.Prev);
+                if (obj != null) {
+                    prev = ((PdfNumber)obj).LongValue();
+                }
+                xref.SetCapacity(size);
+                byte[] b = ReadStreamBytes(xrefStream, true);
+                int bptr = 0;
+                int[] wc = new int[3];
+                for (int k = 0; k < 3; ++k) {
+                    wc[k] = w.GetAsNumber(k).IntValue();
+                }
+                for (int idx = 0; idx < index.Size(); idx += 2) {
+                    int start = index.GetAsNumber(idx).IntValue();
+                    int length = index.GetAsNumber(idx + 1).IntValue();
+                    xref.SetCapacity(start + length);
+                    while (length-- > 0) {
+                        int type = 1;
+                        if (wc[0] > 0) {
+                            type = 0;
+                            for (int k = 0; k < wc[0]; ++k) {
+                                type = (type << 8) + (b[bptr++] & 0xff);
+                            }
+                        }
+                        long field2 = 0;
+                        for (int k = 0; k < wc[1]; ++k) {
+                            field2 = (field2 << 8) + (b[bptr++] & 0xff);
+                        }
+                        int field3 = 0;
+                        for (int k = 0; k < wc[2]; ++k) {
+                            field3 = (field3 << 8) + (b[bptr++] & 0xff);
+                        }
+                        int @base = start;
+                        PdfIndirectReference newReference;
+                        switch (type) {
+                            case 0: {
+                                newReference = (PdfIndirectReference)new PdfIndirectReference(pdfDocument, @base, field3, field2).SetState
+                                    (PdfObject.FREE);
+                                break;
+                            }
+
+                            case 1: {
+                                newReference = new PdfIndirectReference(pdfDocument, @base, field3, field2);
+                                break;
+                            }
+
+                            case 2: {
+                                newReference = new PdfIndirectReference(pdfDocument, @base, 0, field3);
+                                newReference.SetObjStreamNumber((int)field2);
+                                break;
+                            }
+
+                            default: {
+                                throw new PdfException(PdfException.InvalidXrefStream);
+                            }
+                        }
+                        PdfIndirectReference reference = xref.Get(@base);
+                        bool refReadingState = reference != null && reference.CheckState(PdfObject.READING) && reference.GetGenNumber
+                            () == newReference.GetGenNumber();
+                        // for references that are added by xref table itself (like 0 entry)
+                        bool refFirstEncountered = reference == null || !refReadingState && reference.GetDocument() == null;
+                        if (refFirstEncountered) {
+                            xref.Add(newReference);
+                        }
+                        else {
+                            if (refReadingState) {
+                                reference.SetOffset(newReference.GetOffset());
+                                reference.SetObjStreamNumber(newReference.GetObjStreamNumber());
+                                reference.ClearState(PdfObject.READING);
+                            }
+                        }
+                        ++start;
+                    }
+                }
+                ptr = prev;
             }
-            return prev == -1 || ReadXrefStream(prev);
+            return true;
         }
 
         protected internal virtual void FixXref() {
