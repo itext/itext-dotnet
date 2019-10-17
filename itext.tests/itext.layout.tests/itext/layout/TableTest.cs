@@ -2421,6 +2421,32 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("Ignored because the test enters an infinite loop when closing a document. Remove ignore after fixing DEVSIX-3356"
+            )]
+        public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
+            // TODO remove ignore after fixing DEVSIX-3356
+            String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
+            String outFileName = destinationFolder + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Table table = new Table(38);
+            table.UseAllAvailableWidth();
+            table.SetFixedLayout();
+            Cell cellNum1 = new Cell(1, 1);
+            table.AddCell(cellNum1);
+            Cell cellNum2 = new Cell(2, 2);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
+                ));
+            cellNum2.Add(img);
+            table.AddCell(cellNum2);
+            Cell cellNum3 = new Cell(2, 36);
+            cellNum3.Add(new Paragraph("text"));
+            table.AddCell(cellNum3);
+            doc.Add(table);
+            doc.Close();
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 
