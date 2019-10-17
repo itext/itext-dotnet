@@ -52,8 +52,10 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -781,6 +783,26 @@ namespace iText.Layout {
             document.Add(p);
             document.Close();
             CompareResult("notAsciiCharTest.pdf", "cmp_notAsciiCharTest.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
+            //TODO update cmp-file after DEVSIX-3351 fixed
+            String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetTagged();
+            PdfPage page1 = pdfDoc.AddNewPage();
+            iText.Layout.Element.Text txt = new iText.Layout.Element.Text("Text from XObject");
+            PdfFormXObject template = new PdfFormXObject(new Rectangle(150, 150));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(template, pdfDoc);
+            canvas.EnableAutoTagging(page1);
+            canvas.Add(new Paragraph(txt));
+            PdfCanvas canvas1 = new PdfCanvas(page1);
+            canvas1.AddXObject(template, 10, 10);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpPdf, destinationFolder, "diff"
+                ));
         }
 
         [NUnit.Framework.Test]
