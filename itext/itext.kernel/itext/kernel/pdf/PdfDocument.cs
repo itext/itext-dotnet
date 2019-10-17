@@ -1460,15 +1460,15 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Adds file attachment at document level.</summary>
-        /// <param name="description">the file description</param>
+        /// <param name="key">name of the destination.</param>
         /// <param name="fs">
         /// 
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
         /// object.
         /// </param>
-        public virtual void AddFileAttachment(String description, PdfFileSpec fs) {
+        public virtual void AddFileAttachment(String key, PdfFileSpec fs) {
             CheckClosingStatus();
-            catalog.AddNameToNameTree(description, fs.GetPdfObject(), PdfName.EmbeddedFiles);
+            catalog.AddNameToNameTree(key, fs.GetPdfObject(), PdfName.EmbeddedFiles);
         }
 
         /// <summary>Adds file associated with PDF document as a whole and identifies the relationship between them.</summary>
