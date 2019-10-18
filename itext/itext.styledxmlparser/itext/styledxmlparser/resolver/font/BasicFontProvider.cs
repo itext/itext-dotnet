@@ -71,7 +71,22 @@ namespace iText.StyledXmlParser.Resolver.Font {
         /// <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
         ///     </param>
         public BasicFontProvider(bool registerStandardPdfFonts, bool registerSystemFonts)
-            : base(DEFAULT_FONT_FAMILY) {
+            : this(registerStandardPdfFonts, registerSystemFonts, DEFAULT_FONT_FAMILY) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BasicFontProvider"/>
+        /// instance.
+        /// </summary>
+        /// <param name="registerStandardPdfFonts">use true if you want to register the standard Type 1 fonts (can't be embedded)
+        ///     </param>
+        /// <param name="registerSystemFonts">use true if you want to register the system fonts (can require quite some resources)
+        ///     </param>
+        /// <param name="defaultFontFamily">default font family</param>
+        public BasicFontProvider(bool registerStandardPdfFonts, bool registerSystemFonts, String defaultFontFamily
+            )
+            : base(defaultFontFamily) {
             if (registerStandardPdfFonts) {
                 AddStandardPdfFonts();
             }
