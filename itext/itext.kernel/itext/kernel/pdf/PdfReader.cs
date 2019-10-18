@@ -1161,8 +1161,8 @@ namespace iText.Kernel.Pdf {
             for (; ; ) {
                 long pos = tokens.GetPosition();
                 buffer.Reset();
+                // added boolean because of mailing list issue (17 Feb. 2014)
                 if (!tokens.ReadLineSegment(buffer, true)) {
-                    // added boolean because of mailing list issue (17 Feb. 2014)
                     break;
                 }
                 if (buffer.Get(0) >= '0' && buffer.Get(0) <= '9') {
@@ -1194,8 +1194,8 @@ namespace iText.Kernel.Pdf {
             for (; ; ) {
                 long pos = tokens.GetPosition();
                 buffer.Reset();
+                // added boolean because of mailing list issue (17 Feb. 2014)
                 if (!tokens.ReadLineSegment(buffer, true)) {
-                    // added boolean because of mailing list issue (17 Feb. 2014)
                     break;
                 }
                 if (buffer.Get(0) == 't') {
@@ -1365,8 +1365,8 @@ namespace iText.Kernel.Pdf {
                 while (true) {
                     pos = tokens.GetPosition();
                     line.Reset();
+                    // added boolean because of mailing list issue (17 Feb. 2014)
                     if (!tokens.ReadLineSegment(line, false)) {
-                        // added boolean because of mailing list issue (17 Feb. 2014)
                         break;
                     }
                     if (line.StartsWith(endstream)) {

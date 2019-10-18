@@ -341,8 +341,9 @@ namespace iText.IO.Source {
                     }
                 }
             }
+            // if the level 1 check returns EOF,
+            // then we are still looking at a number - set the type back to Number
             if (level == 1) {
-                // if the level 1 check returns EOF, then we are still looking at a number - set the type back to Number
                 type = PdfTokenizer.TokenType.Number;
                 outBuf.Reset().Append(n1);
             }
@@ -589,8 +590,8 @@ namespace iText.IO.Source {
         /// </returns>
         protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting) {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
+            // <6954657874ae...>
             if (hexWriting) {
-                // <6954657874ae...>
                 for (int i = from; i <= to; ) {
                     int v1 = ByteBuffer.GetHex(content[i++]);
                     if (i > to) {

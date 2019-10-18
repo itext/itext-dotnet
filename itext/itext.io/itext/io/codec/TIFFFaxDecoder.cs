@@ -81,44 +81,46 @@ namespace iText.IO.Codec {
         // should iText try to recover from images it can't read?
         private bool recoverFromImageError;
 
-        internal static int[] table1 = new int[] { 0x00, 
+        internal static int[] table1 = new int[] { 
                 // 0 bits are left in first byte - SHOULD NOT HAPPEN
-                0x01, 
+                0x00, 
                 // 1 bits are left in first byte
-                0x03, 
+                0x01, 
                 // 2 bits are left in first byte
-                0x07, 
+                0x03, 
                 // 3 bits are left in first byte
-                0x0f, 
+                0x07, 
                 // 4 bits are left in first byte
-                0x1f, 
+                0x0f, 
                 // 5 bits are left in first byte
-                0x3f, 
+                0x1f, 
                 // 6 bits are left in first byte
-                0x7f, 
+                0x3f, 
                 // 7 bits are left in first byte
+                0x7f, 
+                // 8 bits are left in first byte
                 0xff };
 
-        // 8 bits are left in first byte
-        internal static int[] table2 = new int[] { 0x00, 
+        internal static int[] table2 = new int[] { 
                 // 0
-                0x80, 
+                0x00, 
                 // 1
-                0xc0, 
+                0x80, 
                 // 2
-                0xe0, 
+                0xc0, 
                 // 3
-                0xf0, 
+                0xe0, 
                 // 4
-                0xf8, 
+                0xf0, 
                 // 5
-                0xfc, 
+                0xf8, 
                 // 6
-                0xfe, 
+                0xfc, 
                 // 7
+                0xfe, 
+                // 8
                 0xff };
 
-        // 8
         // Table to be used when fillOrder = 2, for flipping bytes.
         public static byte[] flipTable = new byte[] { (byte)0x00, (byte)0x80, (byte)0x40, (byte)0xc0, (byte)0x20, 
             (byte)0xa0, (byte)0x60, (byte)0xe0, (byte)0x10, (byte)0x90, (byte)0x50, (byte)0xd0, (byte)0x30, (byte)
@@ -429,10 +431,9 @@ namespace iText.IO.Codec {
                 // 8 - 15
                 100, 100, 100, 100, 68, 68, 68, 68 };
 
-        //
+        // 0 - 3
         internal static short[] twoBitBlack = new short[] { 292, 260, 226, 226 };
 
-        // 0 - 3
         // Main black run table, using the last 9 bits of possible 13 bit code
         internal static short[] black = new short[] { 
                 // 0 - 7
@@ -651,29 +652,29 @@ namespace iText.IO.Codec {
                     // Get the 3 fields from the entry
                     isT = entry & 0x0001;
                     bits = ((int)(((uint)entry) >> 1)) & 0x0f;
+                    // Additional Make up code
                     if (bits == 12) {
-                        // Additional Make up code
                         // Get the next 2 bits
                         twoBits = NextLesserThan8Bits(2);
                         // Consolidate the 2 new bits and last 2 bits into 4 bits
                         current = ((current << 2) & 0x000c) | twoBits;
                         entry = additionalMakeup[current];
-                        bits = ((int)(((uint)entry) >> 1)) & 0x07;
                         // 3 bits 0000 0111
-                        code = ((int)(((uint)entry) >> 4)) & 0x0fff;
+                        bits = ((int)(((uint)entry) >> 1)) & 0x07;
                         // 12 bits
-                        bitOffset += code;
+                        code = ((int)(((uint)entry) >> 4)) & 0x0fff;
                         // Skip white run
+                        bitOffset += code;
                         UpdatePointer(4 - bits);
                     }
                     else {
+                        // ERROR
                         if (bits == 0) {
-                            // ERROR
                             throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncountered);
                         }
                         else {
+                            // EOL
                             if (bits == 15) {
-                                // EOL
                                 throw new iText.IO.IOException(iText.IO.IOException.EolCodeWordEncounteredInWhiteRun);
                             }
                             else {
@@ -716,10 +717,10 @@ namespace iText.IO.Codec {
                             UpdatePointer(5);
                             current = NextLesserThan8Bits(4);
                             entry = additionalMakeup[current];
-                            bits = ((int)(((uint)entry) >> 1)) & 0x07;
                             // 3 bits 0000 0111
-                            code = ((int)(((uint)entry) >> 4)) & 0x0fff;
+                            bits = ((int)(((uint)entry) >> 1)) & 0x07;
                             // 12 bits
+                            code = ((int)(((uint)entry) >> 4)) & 0x0fff;
                             SetToBlack(buffer, lineOffset, bitOffset, code);
                             bitOffset += code;
                             UpdatePointer(4 - bits);
@@ -985,8 +986,8 @@ namespace iText.IO.Codec {
                         UpdatePointer(7 - bits);
                     }
                     else {
+                        // Horizontal
                         if (code == 1) {
-                            // Horizontal
                             // Set pointer to only consume the correct number of bits.
                             UpdatePointer(7 - bits);
                             // identify the next 2 alternating color codes.
@@ -1014,8 +1015,8 @@ namespace iText.IO.Codec {
                             a0 = bitOffset;
                         }
                         else {
+                            // Vertical
                             if (code <= 8) {
-                                // Vertical
                                 a1 = b1 + (code - 5);
                                 cce[currIndex++] = a1;
                                 // We write the current color till a1 - 1 pos,
@@ -1164,28 +1165,28 @@ escape_break: ;
                 // Get the 3 fields from the entry
                 isT = entry & 0x0001;
                 bits = ((int)(((uint)entry) >> 1)) & 0x0f;
+                // Additional Make up code
                 if (bits == 12) {
-                    // Additional Make up code
                     // Get the next 2 bits
                     twoBits = NextLesserThan8Bits(2);
                     // Consolidate the 2 new bits and last 2 bits into 4 bits
                     current = ((current << 2) & 0x000c) | twoBits;
                     entry = additionalMakeup[current];
-                    bits = ((int)(((uint)entry) >> 1)) & 0x07;
                     // 3 bits 0000 0111
-                    code = ((int)(((uint)entry) >> 4)) & 0x0fff;
+                    bits = ((int)(((uint)entry) >> 1)) & 0x07;
                     // 12 bits
+                    code = ((int)(((uint)entry) >> 4)) & 0x0fff;
                     runLength += code;
                     UpdatePointer(4 - bits);
                 }
                 else {
+                    // ERROR
                     if (bits == 0) {
-                        // ERROR
                         throw new iText.IO.IOException(iText.IO.IOException.InvalidCodeEncountered);
                     }
                     else {
+                        // EOL
                         if (bits == 15) {
-                            // EOL
                             if (runLength == 0) {
                                 isWhite = false;
                             }
@@ -1236,10 +1237,10 @@ escape_break: ;
                         UpdatePointer(5);
                         current = NextLesserThan8Bits(4);
                         entry = additionalMakeup[current];
-                        bits = ((int)(((uint)entry) >> 1)) & 0x07;
                         // 3 bits 0000 0111
-                        code = ((int)(((uint)entry) >> 4)) & 0x0fff;
+                        bits = ((int)(((uint)entry) >> 1)) & 0x07;
                         // 12 bits
+                        code = ((int)(((uint)entry) >> 4)) & 0x0fff;
                         runLength += code;
                         UpdatePointer(4 - bits);
                     }
@@ -1347,13 +1348,13 @@ escape_break: ;
             // int start = lastChangingElement & ~0x1;
             int start = lastChangingElement > 0 ? lastChangingElement - 1 : 0;
             if (isWhite) {
+                // Search even numbered elements
                 start &= ~0x1;
             }
             else {
-                // Search even numbered elements
+                // Search odd numbered elements
                 start |= 0x1;
             }
-            // Search odd numbered elements
             int i = start;
             for (; i < ces; i += 2) {
                 int temp = pce[i];

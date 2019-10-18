@@ -65,8 +65,8 @@ namespace iText.IO.Font.Otf {
             bool changed = false;
             if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 int substCode = substMap.Get(g.GetCode());
+                // there is no need to substitute a symbol with itself
                 if (substCode != 0 && substCode != g.GetCode()) {
-                    // there is no need to substitute a symbol with itself
                     line.SubstituteOneToOne(openReader, substCode);
                     changed = true;
                 }

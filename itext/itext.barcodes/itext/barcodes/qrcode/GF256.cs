@@ -58,13 +58,13 @@ namespace iText.Barcodes.Qrcode {
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class GF256 {
+        // x^8 + x^4 + x^3 + x^2 + 1
         public static readonly iText.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iText.Barcodes.Qrcode.GF256(0x011D);
 
-        // x^8 + x^4 + x^3 + x^2 + 1
+        // x^8 + x^5 + x^3 + x^2 + 1
         public static readonly iText.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iText.Barcodes.Qrcode.GF256(0x012D
             );
 
-        // x^8 + x^5 + x^3 + x^2 + 1
         private readonly int[] expTable;
 
         private readonly int[] logTable;
@@ -85,8 +85,8 @@ namespace iText.Barcodes.Qrcode {
             int x = 1;
             for (int i = 0; i < 256; i++) {
                 expTable[i] = x;
-                x <<= 1;
                 // x = x * 2; we're assuming the generator alpha is 2
+                x <<= 1;
                 if (x >= 0x100) {
                     x ^= primitive;
                 }

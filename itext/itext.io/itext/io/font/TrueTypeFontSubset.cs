@@ -376,8 +376,8 @@ namespace iText.IO.Font {
 
         private void CheckGlyphComposite(int glyph) {
             int start = locaTable[glyph];
+            // no contour
             if (start == locaTable[glyph + 1]) {
-                // no contour
                 return;
             }
             rf.Seek(tableGlyphOffset + start);

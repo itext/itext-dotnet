@@ -1195,9 +1195,8 @@ namespace iText.Kernel.Pdf {
             // font.setSubset(false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.RED).BeginText().MoveText(36, 680).SetFontAndSize(font, 12)
-                .ShowText("\u0BA4")
                         // there is no such glyph in provided cff
-                        .EndText().RestoreState();
+                        .ShowText("\u0BA4").EndText().RestoreState();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));

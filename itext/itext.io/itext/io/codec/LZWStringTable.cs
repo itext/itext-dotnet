@@ -72,18 +72,18 @@ namespace iText.IO.Codec {
 
         private const short HASHSTEP = 2039;
 
+        // after predecessor character
         internal byte[] strChr_;
 
-        // after predecessor character
+        // predecessor string
         internal short[] strNxt_;
 
-        // predecessor string
+        // hash table to find  predecessor + char pairs
         internal short[] strHsh_;
 
-        // hash table to find  predecessor + char pairs
+        // next code if adding new prestring + char
         internal short numStrings_;
 
-        // next code if adding new prestring + char
         /// <summary>
         /// each entry corresponds to a code and contains the length of data
         /// that the code expands to when decoded.
@@ -109,8 +109,8 @@ namespace iText.IO.Codec {
         /// </returns>
         public virtual int AddCharString(short index, byte b) {
             int hshidx;
+            // if used up all codes
             if (numStrings_ >= MAXSTR) {
-                // if used up all codes
                 return 0xFFFF;
             }
             hshidx = Hash(index, b);
@@ -127,10 +127,10 @@ namespace iText.IO.Codec {
                 strNxt_[numStrings_] = index;
                 strLen_[numStrings_] = strLen_[index] + 1;
             }
+            // return the code and inc for next code
             return numStrings_++;
         }
 
-        // return the code and inc for next code
         /// <param name="index">index to prefix string</param>
         /// <param name="b">the character that follws the index prefix</param>
         /// <returns>
@@ -141,12 +141,12 @@ namespace iText.IO.Codec {
             int hshidx;
             int nxtidx;
             if (index == HASH_FREE) {
+                // Rob fixed used to sign extend
                 return (short)(b & 0xFF);
             }
-            // Rob fixed used to sign extend
             hshidx = Hash(index, b);
+            // search
             while ((nxtidx = strHsh_[hshidx]) != HASH_FREE) {
-                // search
                 if (strNxt_[nxtidx] == index && strChr_[nxtidx] == b) {
                     return (short)nxtidx;
                 }
@@ -167,12 +167,11 @@ namespace iText.IO.Codec {
             }
             int w = (1 << codesize) + RES_CODES;
             for (int q = 0; q < w; q++) {
-                //AddCharString((short) 0xFFFF, (byte) q);    // init with no prefix
+                // init with no prefix
                 AddCharString((short)-1, (byte)q);
             }
         }
 
-        // init with no prefix
         public static int Hash(short index, byte lastbyte) {
             return (((short)(lastbyte << 8) ^ index) & 0xFFFF) % HASHSIZE;
         }
@@ -213,50 +212,50 @@ namespace iText.IO.Codec {
                     skipHead = 0;
                 }
             }
+            // code == -1 is checked just in case.
             //-1 ~ 0xFFFF
             if (code == -1 || 
-                        // just in case
+                        // DONE no more unpacked
                         skipHead == strLen_[code]) {
-                // DONE no more unpacked
                 return 0;
             }
-            int expandLen;
             // how much data we are actually expanding
-            int codeLen = strLen_[code] - skipHead;
+            int expandLen;
             // length of expanded code left
-            int bufSpace = buf.Length - offset;
+            int codeLen = strLen_[code] - skipHead;
             // how much space left
+            int bufSpace = buf.Length - offset;
             if (bufSpace > codeLen) {
+                // only got this many to unpack
                 expandLen = codeLen;
             }
             else {
-                // only got this many to unpack
                 expandLen = bufSpace;
             }
-            int skipTail = codeLen - expandLen;
             // only > 0 if codeLen > bufSpace [left overs]
-            int idx = offset + expandLen;
+            int skipTail = codeLen - expandLen;
             // initialise to exclusive end address of buffer area
+            int idx = offset + expandLen;
             // NOTE: data unpacks in reverse direction and we are placing the
             // unpacked data directly into the array in the correct location.
             while ((idx > offset) && (code != -1)) {
+                // skip required of expanded data
                 if (--skipTail < 0) {
-                    // skip required of expanded data
                     buf[--idx] = strChr_[code];
                 }
+                // to predecessor code
                 code = strNxt_[code];
             }
-            // to predecessor code
             if (codeLen > expandLen) {
+                // indicate what part of codeLen used
                 return -expandLen;
             }
             else {
-                // indicate what part of codeLen used
+                // indicate length of dat unpacked
                 return expandLen;
             }
         }
 
-        // indicate length of dat unpacked
         public virtual void Dump(StreamWriter output) {
             int i;
             for (i = 258; i < numStrings_; ++i) {

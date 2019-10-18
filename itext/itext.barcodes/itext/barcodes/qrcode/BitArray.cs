@@ -110,11 +110,11 @@ namespace iText.Barcodes.Qrcode {
                 throw new ArgumentException();
             }
             if (end == start) {
+                // empty range matches
                 return true;
             }
-            // empty range matches
-            end--;
             // will be easier to treat this as the last actually set bit -- inclusive
+            end--;
             int firstInt = start >> 5;
             int lastInt = end >> 5;
             for (int i = firstInt; i <= lastInt; i++) {

@@ -148,8 +148,8 @@ namespace iText.IO.Source {
         /// </summary>
         public virtual int Get(long position) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
+            // if true, we have run out of data to read from
             if (entry == null) {
-                // we have run out of data to read from
                 return -1;
             }
             return entry.source.Get(entry.OffsetN(position));
@@ -158,15 +158,15 @@ namespace iText.IO.Source {
         /// <summary><inheritDoc/></summary>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
+            // if true, we have run out of data to read from
             if (entry == null) {
-                // we have run out of data to read from
                 return -1;
             }
             long offN = entry.OffsetN(position);
             int remaining = len;
             while (remaining > 0) {
+                // if true, we have run out of data to read from
                 if (entry == null) {
-                    // we have run out of data to read from
                     break;
                 }
                 if (offN > entry.source.Length()) {

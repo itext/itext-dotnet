@@ -80,8 +80,8 @@ namespace iText.IO.Codec {
         /// <param name="codeSize">the initial code size for the LZW compressor</param>
         /// <param name="TIFF">flag indicating that TIFF lzw fudge needs to be applied</param>
         public LZWCompressor(Stream outputStream, int codeSize, bool TIFF) {
-            bf_ = new BitFile(outputStream, !TIFF);
             // set flag for GIF as NOT tiff
+            bf_ = new BitFile(outputStream, !TIFF);
             codeSize_ = codeSize;
             tiffFudge_ = TIFF;
             clearCode_ = 1 << codeSize_;

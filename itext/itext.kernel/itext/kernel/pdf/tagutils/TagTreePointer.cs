@@ -743,12 +743,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>
         /// Moves this
         /// <see cref="TagTreePointer"/>
-        /// instance to the first descendant of the current tag which has the given role.
+        /// instance to the nth descendant of the current tag which has the given role.
         /// </summary>
         /// <remarks>
         /// Moves this
         /// <see cref="TagTreePointer"/>
-        /// instance to the first descendant of the current tag which has the given role.
+        /// instance to the nth descendant of the current tag which has the given role.
         /// If there are no direct kids of the tag with such role, further descendants are checked in BFS order.
         /// </remarks>
         /// <param name="n">
@@ -762,8 +762,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, String role) {
+            // MCR literal could be returned in a list of kid names (see #getKidsRoles())
             if (MCR_MARKER.Equals(role)) {
-                // MCR literal could be returned in a list of kid names (see #getKidsRoles())
                 throw new PdfException(PdfException.CannotMoveToMarkedContentReference);
             }
             IList<IStructureNode> descendants = new List<IStructureNode>(GetCurrentStructElem().GetKids());

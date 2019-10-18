@@ -250,16 +250,16 @@ namespace iText.Kernel.Geom {
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
+            // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
             return !(this.GetX() + this.GetWidth() < rect.GetX() || 
-                        //1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
+                        // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
                         this.GetY() + this.GetHeight() < rect.GetY() || 
-                        //2. the lower left corner of the second rectangle is above the upper right corner of the first.
+                        // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
                         this.GetX() > rect.GetX() + rect.GetWidth() || 
-                        //3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
+                        // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
                         this.GetY() > rect.GetY() + rect.GetHeight());
         }
 
-        //4. the upper right corner of the second rectangle is below the lower left corner of the first.
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
         /// <remarks>
         /// Sets the rectangle by the coordinates, specifying its lower left and upper right points. May be used in chain.
@@ -639,6 +639,7 @@ namespace iText.Kernel.Geom {
             float lly = float.MaxValue;
             float urx = -float.MaxValue;
             float ury = -float.MaxValue;
+            // QuadPoints in redact annotations have "Z" order, in spec they're specified
             for (int j = 0; j < 8; j += 2) {
                 float x = quadPoints.GetAsNumber(j).FloatValue();
                 float y = quadPoints.GetAsNumber(j + 1).FloatValue();
@@ -655,7 +656,6 @@ namespace iText.Kernel.Geom {
                     ury = y;
                 }
             }
-            // QuadPoints in redact annotations have "Z" order, in spec they're specified
             return (new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly));
         }
 

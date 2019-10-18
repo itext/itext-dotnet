@@ -57,47 +57,48 @@ namespace iText.Barcodes {
         private const int START_STOP_IDX = 16;
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 0, 0, 1, 1 }, 
+        private static readonly byte[][] BARS = new byte[][] { 
                 // 0
-                new byte[] { 0, 0, 0, 0, 1, 1, 0 }, 
+                new byte[] { 0, 0, 0, 0, 0, 1, 1 }, 
                 // 1
-                new byte[] { 0, 0, 0, 1, 0, 0, 1 }, 
+                new byte[] { 0, 0, 0, 0, 1, 1, 0 }, 
                 // 2
-                new byte[] { 1, 1, 0, 0, 0, 0, 0 }, 
+                new byte[] { 0, 0, 0, 1, 0, 0, 1 }, 
                 // 3
-                new byte[] { 0, 0, 1, 0, 0, 1, 0 }, 
+                new byte[] { 1, 1, 0, 0, 0, 0, 0 }, 
                 // 4
-                new byte[] { 1, 0, 0, 0, 0, 1, 0 }, 
+                new byte[] { 0, 0, 1, 0, 0, 1, 0 }, 
                 // 5
-                new byte[] { 0, 1, 0, 0, 0, 0, 1 }, 
+                new byte[] { 1, 0, 0, 0, 0, 1, 0 }, 
                 // 6
-                new byte[] { 0, 1, 0, 0, 1, 0, 0 }, 
+                new byte[] { 0, 1, 0, 0, 0, 0, 1 }, 
                 // 7
-                new byte[] { 0, 1, 1, 0, 0, 0, 0 }, 
+                new byte[] { 0, 1, 0, 0, 1, 0, 0 }, 
                 // 8
-                new byte[] { 1, 0, 0, 1, 0, 0, 0 }, 
+                new byte[] { 0, 1, 1, 0, 0, 0, 0 }, 
                 // 9
-                new byte[] { 0, 0, 0, 1, 1, 0, 0 }, 
+                new byte[] { 1, 0, 0, 1, 0, 0, 0 }, 
                 // -
-                new byte[] { 0, 0, 1, 1, 0, 0, 0 }, 
+                new byte[] { 0, 0, 0, 1, 1, 0, 0 }, 
                 // $
-                new byte[] { 1, 0, 0, 0, 1, 0, 1 }, 
+                new byte[] { 0, 0, 1, 1, 0, 0, 0 }, 
                 // :
-                new byte[] { 1, 0, 1, 0, 0, 0, 1 }, 
+                new byte[] { 1, 0, 0, 0, 1, 0, 1 }, 
                 // /
-                new byte[] { 1, 0, 1, 0, 1, 0, 0 }, 
+                new byte[] { 1, 0, 1, 0, 0, 0, 1 }, 
                 // .
-                new byte[] { 0, 0, 1, 0, 1, 0, 1 }, 
+                new byte[] { 1, 0, 1, 0, 1, 0, 0 }, 
                 // +
-                new byte[] { 0, 0, 1, 1, 0, 1, 0 }, 
+                new byte[] { 0, 0, 1, 0, 1, 0, 1 }, 
                 // a
-                new byte[] { 0, 1, 0, 1, 0, 0, 1 }, 
+                new byte[] { 0, 0, 1, 1, 0, 1, 0 }, 
                 // b
-                new byte[] { 0, 0, 0, 1, 0, 1, 1 }, 
+                new byte[] { 0, 1, 0, 1, 0, 0, 1 }, 
                 // c
+                new byte[] { 0, 0, 0, 1, 0, 1, 1 }, 
+                // d
                 new byte[] { 0, 0, 0, 1, 1, 1, 0 } };
 
-        // d
         /// <summary>Creates a new BarcodeCodabar.</summary>
         /// <remarks>
         /// Creates a new BarcodeCodabar.

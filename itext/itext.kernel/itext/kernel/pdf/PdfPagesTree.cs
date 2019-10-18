@@ -389,8 +389,8 @@ namespace iText.Kernel.Pdf {
                     PdfDictionary pdfPagesObject = kids.GetAsDictionary(i);
                     if (pdfPagesObject.GetAsArray(PdfName.Kids) == null) {
                         // pdfPagesObject is PdfPage
+                        // possible if only first kid is PdfPage
                         if (lastPdfPages == null) {
-                            // possible if only first kid is PdfPage
                             lastPdfPages = new PdfPages(parent.GetFrom(), document, parent);
                             kids.Set(i, lastPdfPages.GetPdfObject());
                             newParents.Add(lastPdfPages);
@@ -428,8 +428,8 @@ namespace iText.Kernel.Pdf {
                 // NOTE optimization? when we already found needed index
                 for (int i = 0; i < parent.GetCount(); i++) {
                     PdfDictionary kid = kids.GetAsDictionary(i);
+                    // make sure it's a dictionary
                     if (kid != null) {
-                        // make sure it's a dictionary
                         pageRefs[from + i] = kid.GetIndirectReference();
                     }
                 }

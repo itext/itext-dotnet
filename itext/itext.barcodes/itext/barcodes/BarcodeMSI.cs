@@ -68,27 +68,28 @@ namespace iText.Barcodes {
         private static readonly byte[] BARS_END = new byte[] { 1, 0, 0, 1 };
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+        private static readonly byte[][] BARS = new byte[][] { 
                 // 0
-                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, 
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
                 // 1
-                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, 
                 // 2
-                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, 
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
                 // 3
-                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, 
                 // 4
-                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, 
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
                 // 5
-                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, 
                 // 6
-                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, 
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
                 // 7
-                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, 
                 // 8
+                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 9
                 new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 } };
 
-        // 9
         /// <summary>The number of individual bars either drawn or not drawn per character of the <c>code</c></summary>
         private const int BARS_PER_CHARACTER = 12;
 

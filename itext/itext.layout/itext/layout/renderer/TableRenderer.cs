@@ -1911,7 +1911,6 @@ namespace iText.Layout.Renderer {
                 // we will change properties
                 CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
                     ();
-                // we will change properties
                 overflowCell.SetParent(this);
                 overflowCell.DeleteProperty(Property.HEIGHT);
                 overflowCell.DeleteProperty(Property.MIN_HEIGHT);

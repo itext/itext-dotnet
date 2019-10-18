@@ -51,26 +51,26 @@ namespace iText.Barcodes.Qrcode {
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class Mode {
+        // Not really a mode...
         public static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] { 
             0, 0, 0 }, 0x00, "TERMINATOR");
 
-        // Not really a mode...
         public static readonly iText.Barcodes.Qrcode.Mode NUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] { 10, 
             12, 14 }, 0x01, "NUMERIC");
 
         public static readonly iText.Barcodes.Qrcode.Mode ALPHANUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] 
             { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
 
+        // Not supported
         public static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new int
             [] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
 
-        // Not supported
         public static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16, 
             16 }, 0x04, "BYTE");
 
+        // character counts don't apply
         public static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI");
 
-        // character counts don't apply
         public static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 10
             , 12 }, 0x08, "KANJI");
 

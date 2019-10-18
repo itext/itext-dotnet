@@ -64,88 +64,88 @@ namespace iText.Barcodes.Qrcode {
             , 1, 1 } };
 
         // From Appendix E. Table 1, JIS0510X:2004 (p 71). The table was double-checked by komatsu.
-        private static readonly int[][] POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = new int[][] { new int[] { -
-            1, -1, -1, -1, -1, -1, -1 }, 
+        private static readonly int[][] POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = new int[][] { 
                 // Version 1
-                new int[] { 6, 18, -1, -1, -1, -1, -1 }, 
+                new int[] { -1, -1, -1, -1, -1, -1, -1 }, 
                 // Version 2
-                new int[] { 6, 22, -1, -1, -1, -1, -1 }, 
+                new int[] { 6, 18, -1, -1, -1, -1, -1 }, 
                 // Version 3
-                new int[] { 6, 26, -1, -1, -1, -1, -1 }, 
+                new int[] { 6, 22, -1, -1, -1, -1, -1 }, 
                 // Version 4
-                new int[] { 6, 30, -1, -1, -1, -1, -1 }, 
+                new int[] { 6, 26, -1, -1, -1, -1, -1 }, 
                 // Version 5
-                new int[] { 6, 34, -1, -1, -1, -1, -1 }, 
+                new int[] { 6, 30, -1, -1, -1, -1, -1 }, 
                 // Version 6
-                new int[] { 6, 22, 38, -1, -1, -1, -1 }, 
+                new int[] { 6, 34, -1, -1, -1, -1, -1 }, 
                 // Version 7
-                new int[] { 6, 24, 42, -1, -1, -1, -1 }, 
+                new int[] { 6, 22, 38, -1, -1, -1, -1 }, 
                 // Version 8
-                new int[] { 6, 26, 46, -1, -1, -1, -1 }, 
+                new int[] { 6, 24, 42, -1, -1, -1, -1 }, 
                 // Version 9
-                new int[] { 6, 28, 50, -1, -1, -1, -1 }, 
+                new int[] { 6, 26, 46, -1, -1, -1, -1 }, 
                 // Version 10
-                new int[] { 6, 30, 54, -1, -1, -1, -1 }, 
+                new int[] { 6, 28, 50, -1, -1, -1, -1 }, 
                 // Version 11
-                new int[] { 6, 32, 58, -1, -1, -1, -1 }, 
+                new int[] { 6, 30, 54, -1, -1, -1, -1 }, 
                 // Version 12
-                new int[] { 6, 34, 62, -1, -1, -1, -1 }, 
+                new int[] { 6, 32, 58, -1, -1, -1, -1 }, 
                 // Version 13
-                new int[] { 6, 26, 46, 66, -1, -1, -1 }, 
+                new int[] { 6, 34, 62, -1, -1, -1, -1 }, 
                 // Version 14
-                new int[] { 6, 26, 48, 70, -1, -1, -1 }, 
+                new int[] { 6, 26, 46, 66, -1, -1, -1 }, 
                 // Version 15
-                new int[] { 6, 26, 50, 74, -1, -1, -1 }, 
+                new int[] { 6, 26, 48, 70, -1, -1, -1 }, 
                 // Version 16
-                new int[] { 6, 30, 54, 78, -1, -1, -1 }, 
+                new int[] { 6, 26, 50, 74, -1, -1, -1 }, 
                 // Version 17
-                new int[] { 6, 30, 56, 82, -1, -1, -1 }, 
+                new int[] { 6, 30, 54, 78, -1, -1, -1 }, 
                 // Version 18
-                new int[] { 6, 30, 58, 86, -1, -1, -1 }, 
+                new int[] { 6, 30, 56, 82, -1, -1, -1 }, 
                 // Version 19
-                new int[] { 6, 34, 62, 90, -1, -1, -1 }, 
+                new int[] { 6, 30, 58, 86, -1, -1, -1 }, 
                 // Version 20
-                new int[] { 6, 28, 50, 72, 94, -1, -1 }, 
+                new int[] { 6, 34, 62, 90, -1, -1, -1 }, 
                 // Version 21
-                new int[] { 6, 26, 50, 74, 98, -1, -1 }, 
+                new int[] { 6, 28, 50, 72, 94, -1, -1 }, 
                 // Version 22
-                new int[] { 6, 30, 54, 78, 102, -1, -1 }, 
+                new int[] { 6, 26, 50, 74, 98, -1, -1 }, 
                 // Version 23
-                new int[] { 6, 28, 54, 80, 106, -1, -1 }, 
+                new int[] { 6, 30, 54, 78, 102, -1, -1 }, 
                 // Version 24
-                new int[] { 6, 32, 58, 84, 110, -1, -1 }, 
+                new int[] { 6, 28, 54, 80, 106, -1, -1 }, 
                 // Version 25
-                new int[] { 6, 30, 58, 86, 114, -1, -1 }, 
+                new int[] { 6, 32, 58, 84, 110, -1, -1 }, 
                 // Version 26
-                new int[] { 6, 34, 62, 90, 118, -1, -1 }, 
+                new int[] { 6, 30, 58, 86, 114, -1, -1 }, 
                 // Version 27
-                new int[] { 6, 26, 50, 74, 98, 122, -1 }, 
+                new int[] { 6, 34, 62, 90, 118, -1, -1 }, 
                 // Version 28
-                new int[] { 6, 30, 54, 78, 102, 126, -1 }, 
+                new int[] { 6, 26, 50, 74, 98, 122, -1 }, 
                 // Version 29
-                new int[] { 6, 26, 52, 78, 104, 130, -1 }, 
+                new int[] { 6, 30, 54, 78, 102, 126, -1 }, 
                 // Version 30
-                new int[] { 6, 30, 56, 82, 108, 134, -1 }, 
+                new int[] { 6, 26, 52, 78, 104, 130, -1 }, 
                 // Version 31
-                new int[] { 6, 34, 60, 86, 112, 138, -1 }, 
+                new int[] { 6, 30, 56, 82, 108, 134, -1 }, 
                 // Version 32
-                new int[] { 6, 30, 58, 86, 114, 142, -1 }, 
+                new int[] { 6, 34, 60, 86, 112, 138, -1 }, 
                 // Version 33
-                new int[] { 6, 34, 62, 90, 118, 146, -1 }, 
+                new int[] { 6, 30, 58, 86, 114, 142, -1 }, 
                 // Version 34
-                new int[] { 6, 30, 54, 78, 102, 126, 150 }, 
+                new int[] { 6, 34, 62, 90, 118, 146, -1 }, 
                 // Version 35
-                new int[] { 6, 24, 50, 76, 102, 128, 154 }, 
+                new int[] { 6, 30, 54, 78, 102, 126, 150 }, 
                 // Version 36
-                new int[] { 6, 28, 54, 80, 106, 132, 158 }, 
+                new int[] { 6, 24, 50, 76, 102, 128, 154 }, 
                 // Version 37
-                new int[] { 6, 32, 58, 84, 110, 136, 162 }, 
+                new int[] { 6, 28, 54, 80, 106, 132, 158 }, 
                 // Version 38
-                new int[] { 6, 26, 54, 82, 110, 138, 166 }, 
+                new int[] { 6, 32, 58, 84, 110, 136, 162 }, 
                 // Version 39
+                new int[] { 6, 26, 54, 82, 110, 138, 166 }, 
+                // Version 40
                 new int[] { 6, 30, 58, 86, 114, 142, 170 } };
 
-        // Version 40
         // Type info cells at the left top corner.
         private static readonly int[][] TYPE_INFO_COORDINATES = new int[][] { new int[] { 8, 0 }, new int[] { 8, 1
              }, new int[] { 8, 2 }, new int[] { 8, 3 }, new int[] { 8, 4 }, new int[] { 8, 5 }, new int[] { 8, 7 }
@@ -153,9 +153,9 @@ namespace iText.Barcodes.Qrcode {
             new int[] { 2, 8 }, new int[] { 1, 8 }, new int[] { 0, 8 } };
 
         // From Appendix D in JISX0510:2004 (p. 67)
+        // 1 1111 0010 0101
         private const int VERSION_INFO_POLY = 0x1f25;
 
-        // 1 1111 0010 0101
         // From Appendix C in JISX0510:2004 (p.65).
         private const int TYPE_INFO_POLY = 0x537;
 
@@ -255,15 +255,15 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="version">QR code version</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
         public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
+            // Version info is necessary if version >= 7.
             if (version < 7) {
-                // Version info is necessary if version >= 7.
+                // Don't need version info.
                 return;
             }
-            // Don't need version info.
             BitVector versionInfoBits = new BitVector();
             MakeVersionInfoBits(version, versionInfoBits);
-            int bitIndex = 6 * 3 - 1;
             // It will decrease from 17 to 0.
+            int bitIndex = 6 * 3 - 1;
             for (int i = 0; i < 6; ++i) {
                 for (int j = 0; j < 3; ++j) {
                     // Place bits in LSB (least significant bit) to MSB order.
@@ -324,12 +324,12 @@ namespace iText.Barcodes.Qrcode {
                     }
                     y += direction;
                 }
-                direction = -direction;
                 // Reverse the direction.
+                direction = -direction;
                 y += direction;
+                // Move to the left.
                 x -= 2;
             }
-            // Move to the left.
             // All bits should be consumed.
             if (bitIndex != dataBits.Size()) {
                 throw new WriterException("Not all bits consumed: " + bitIndex + '/' + dataBits.Size());
@@ -417,8 +417,8 @@ namespace iText.Barcodes.Qrcode {
             BitVector maskBits = new BitVector();
             maskBits.AppendBits(TYPE_INFO_MASK_PATTERN, 15);
             bits.Xor(maskBits);
+            // Just in case.
             if (bits.Size() != 15) {
-                // Just in case.
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
@@ -436,8 +436,8 @@ namespace iText.Barcodes.Qrcode {
             bits.AppendBits(version, 6);
             int bchCode = CalculateBCHCode(version, VERSION_INFO_POLY);
             bits.AppendBits(bchCode, 12);
+            // Just in case.
             if (bits.Size() != 18) {
-                // Just in case.
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
@@ -449,14 +449,14 @@ namespace iText.Barcodes.Qrcode {
 
         // Check if "value" is valid.
         private static bool IsValidValue(byte value) {
+            // Empty.
             return (value == (byte)0xff || 
-                        // Empty.
-                        value == 0 || 
                         // Light (white).
+                        value == 0 || 
+                        // Dark (black).
                         value == 1);
         }
 
-        // Dark (black).
         private static void EmbedTimingPatterns(ByteMatrix matrix) {
             // -8 is for skipping position detection patterns (size 7), and two horizontal/vertical
             // separation patterns (size 1). Thus, 8 = 7 + 1.
@@ -576,8 +576,8 @@ namespace iText.Barcodes.Qrcode {
 
         // Embed position adjustment patterns if need be.
         private static void MaybeEmbedPositionAdjustmentPatterns(int version, ByteMatrix matrix) {
+            // The patterns appear if version >= 2
             if (version < 2) {
-                // The patterns appear if version >= 2
                 return;
             }
             int index = version - 1;

@@ -795,28 +795,28 @@ namespace iText.IO.Font {
                     arg_count++;
                     continue;
                 }
+                // The byte read is the byte;
                 if (b0 >= 32 && b0 <= 246) {
-                    // The byte read is the byte;
                     args[arg_count] = b0 - 139;
                     arg_count++;
                     continue;
                 }
+                // The byte read and the next byte constitute a short int
                 if (b0 >= 247 && b0 <= 250) {
-                    // The byte read and the next byte constitute a short int
                     int w = GetCard8();
                     args[arg_count] = (b0 - 247) * 256 + w + 108;
                     arg_count++;
                     continue;
                 }
+                // Same as above except negative
                 if (b0 >= 251 && b0 <= 254) {
-                    // Same as above except negative
                     int w = GetCard8();
                     args[arg_count] = -(b0 - 251) * 256 - w - 108;
                     arg_count++;
                     continue;
                 }
+                // The next for bytes represent a double.
                 if (b0 == 255) {
-                    // The next for bytes represent a double.
                     int first = GetCard8();
                     int second = GetCard8();
                     int third = GetCard8();
@@ -825,8 +825,8 @@ namespace iText.IO.Font {
                     arg_count++;
                     continue;
                 }
+                // An operator was found.. Set Key.
                 if (b0 <= 31 && b0 != 28) {
-                    // An operator was found.. Set Key.
                     gotKey = true;
                     // 12 is an escape command therefore the next byte is a part
                     // of this command

@@ -183,33 +183,34 @@ namespace iText.IO.Codec {
             stream.Seek(global_save_offset);
         }
 
-        private static readonly int[] sizeOfType = new int[] { 0, 
+        private static readonly int[] sizeOfType = new int[] { 
                 //  0 = n/a
-                1, 
+                0, 
                 //  1 = byte
                 1, 
                 //  2 = ascii
-                2, 
-                //  3 = short
-                4, 
-                //  4 = long
-                8, 
-                //  5 = rational
                 1, 
+                //  3 = short
+                2, 
+                //  4 = long
+                4, 
+                //  5 = rational
+                8, 
                 //  6 = sbyte
                 1, 
                 //  7 = undefined
-                2, 
+                1, 
                 //  8 = sshort
-                4, 
+                2, 
                 //  9 = slong
-                8, 
-                // 10 = srational
                 4, 
+                // 10 = srational
+                8, 
                 // 11 = float
+                4, 
+                // 12 = double
                 8 };
 
-        // 12 = double
         private void Initialize(RandomAccessFileOrArray stream) {
             long nextTagOffset = 0L;
             long maxOffset = stream.Length();
@@ -647,8 +648,8 @@ namespace iText.IO.Codec {
         /// in a given TIFF file
         /// </returns>
         public static int GetNumDirectories(RandomAccessFileOrArray stream) {
-            long pointer = stream.GetPosition();
             // Save stream pointer
+            long pointer = stream.GetPosition();
             stream.Seek(0L);
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian)) {
@@ -676,8 +677,8 @@ namespace iText.IO.Codec {
                     break;
                 }
             }
-            stream.Seek(pointer);
             // Reset stream pointer
+            stream.Seek(pointer);
             return numDirectories;
         }
 
