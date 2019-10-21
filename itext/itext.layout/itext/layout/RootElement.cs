@@ -57,7 +57,7 @@ using iText.Layout.Tagging;
 
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
-    /// 
+    /// <typeparam name="T">this type</typeparam>
     public abstract class RootElement<T> : ElementPropertyContainer<T>, IDisposable
         where T : IPropertyContainer {
         protected internal bool immediateFlush = true;

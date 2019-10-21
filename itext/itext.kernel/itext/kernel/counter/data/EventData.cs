@@ -54,7 +54,7 @@ namespace iText.Kernel.Counter.Data {
     /// for adding some additional information to the event before processing
     /// and merging same events by increasing count.
     /// </remarks>
-    /// 
+    /// <typeparam name="T">the signature type</typeparam>
     public class EventData<T> {
         private readonly T signature;
 

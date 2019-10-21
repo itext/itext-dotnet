@@ -87,7 +87,7 @@ namespace iText.Layout {
         /// ,
         /// this method can check parent's properties, styles, etc, depending on the origin of the instance
         /// </remarks>
-        /// 
+        /// <typeparam name="T1">the return type associated with the property</typeparam>
         /// <param name="property">the property to be retrieved</param>
         /// <returns>
         /// the value of the given property.
@@ -103,7 +103,7 @@ namespace iText.Layout {
         /// <see langword="null"/>
         /// will be returned.
         /// </remarks>
-        /// 
+        /// <typeparam name="T1">the return type associated with the property</typeparam>
         /// <param name="property">the property to be retrieved</param>
         /// <returns>
         /// the value of the given own property.
@@ -113,7 +113,7 @@ namespace iText.Layout {
         T1 GetOwnProperty<T1>(int property);
 
         /// <summary>Gets the default property from this entity.</summary>
-        /// 
+        /// <typeparam name="T1">the return type associated with the property</typeparam>
         /// <param name="property">the property to be retrieved</param>
         /// <returns>
         /// the default property value. If the default property is not defined,

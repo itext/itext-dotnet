@@ -55,8 +55,8 @@ namespace iText.Kernel.Counter.Data {
     /// Will retrieve the first elements by the time of its signature registration.
     /// Not thread safe.
     /// </remarks>
-    /// 
-    /// 
+    /// <typeparam name="T">the data signature type</typeparam>
+    /// <typeparam name="V">the data type</typeparam>
     public class EventDataCacheQueueBased<T, V> : IEventDataCache<T, V>
         where V : EventData<T> {
         private IDictionary<T, V> map = new Dictionary<T, V>();

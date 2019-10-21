@@ -129,7 +129,7 @@ namespace iText.Layout.Renderer {
         /// <paramref name="defaultValue"/>
         /// will be returned.
         /// </remarks>
-        /// 
+        /// <typeparam name="T1">the return type associated with the property</typeparam>
         /// <param name="property">the property to be retrieved</param>
         /// <param name="defaultValue">a fallback value</param>
         /// <returns>the value of the given property</returns>

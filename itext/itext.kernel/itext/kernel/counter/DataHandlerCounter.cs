@@ -55,8 +55,8 @@ namespace iText.Kernel.Counter {
     /// <see cref="iText.Kernel.Counter.Data.EventDataHandler{T, V}"/>.
     /// Registers shutdown hook and thread for triggering event processing after wait time
     /// </remarks>
-    /// 
-    /// 
+    /// <typeparam name="T">The data signature class</typeparam>
+    /// <typeparam name="V">The event data class</typeparam>
     public class DataHandlerCounter<T, V> : EventCounter
         where V : EventData<T> {
         private readonly EventDataHandler<T, V> dataHandler;

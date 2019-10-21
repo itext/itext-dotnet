@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Also allows registration of custom IContentOperators that can influence
         /// how (and whether or not) the PDF instructions will be parsed.
         /// </remarks>
-        /// 
+        /// <typeparam name="E">the type of the renderListener - this makes it easy to chain calls</typeparam>
         /// <param name="pageNumber">the page number to process</param>
         /// <param name="renderListener">the listener that will receive render callbacks</param>
         /// <param name="additionalContentOperators">an optional map of custom ContentOperators for rendering instructions
@@ -80,7 +80,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Processes content from the specified page number using the specified listener</summary>
-        /// 
+        /// <typeparam name="E">the type of the renderListener - this makes it easy to chain calls</typeparam>
         /// <param name="pageNumber">the page number to process</param>
         /// <param name="renderListener">the listener that will receive render callbacks</param>
         /// <returns>the provided renderListener</returns>

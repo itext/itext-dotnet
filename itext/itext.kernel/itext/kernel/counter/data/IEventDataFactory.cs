@@ -54,8 +54,8 @@ namespace iText.Kernel.Counter.Data {
     /// Used in
     /// <see cref="EventDataHandler{T, V}"/>
     /// </remarks>
-    /// 
-    /// 
+    /// <typeparam name="T">data signature type</typeparam>
+    /// <typeparam name="V">data type</typeparam>
     public interface IEventDataFactory<T, V>
         where V : EventData<T> {
         V Create(IEvent @event, IMetaInfo metaInfo);

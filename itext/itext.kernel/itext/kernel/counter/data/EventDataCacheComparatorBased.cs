@@ -55,8 +55,8 @@ namespace iText.Kernel.Counter.Data {
     /// Retrieve the smallest element based on comparator.
     /// Not thread safe.
     /// </remarks>
-    /// 
-    /// 
+    /// <typeparam name="T">the data signature type</typeparam>
+    /// <typeparam name="V">the data type</typeparam>
     public class EventDataCacheComparatorBased<T, V> : IEventDataCache<T, V>
         where V : EventData<T> {
         private IDictionary<T, V> map = new Dictionary<T, V>();

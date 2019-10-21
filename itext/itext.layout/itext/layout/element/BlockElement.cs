@@ -61,7 +61,7 @@ namespace iText.Layout.Element {
     /// element in HTML. Also like in HTML, the visual representation of the object
     /// can be delimited by padding, a border, and/or a margin.
     /// </remarks>
-    /// 
+    /// <typeparam name="T">the type of the implementation</typeparam>
     public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement, IBlockElement
         where T : IElement {
         /// <summary>Creates a BlockElement.</summary>

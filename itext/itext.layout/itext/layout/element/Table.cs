@@ -460,7 +460,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetSkipFirstHeader(bool)"/>.
         /// </remarks>
         /// <param name="blockElement">an element to be added to a header cell</param>
-        /// 
+        /// <typeparam name="T">any IElement</typeparam>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddHeaderCell<T>(BlockElement<T> blockElement)
             where T : IElement {
@@ -536,7 +536,7 @@ namespace iText.Layout.Element {
         /// <see cref="SetSkipLastFooter(bool)"/>.
         /// </remarks>
         /// <param name="blockElement">an element to be added to a footer cell</param>
-        /// 
+        /// <typeparam name="T">IElement instance</typeparam>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddFooterCell<T>(BlockElement<T> blockElement)
             where T : IElement {
@@ -744,7 +744,7 @@ namespace iText.Layout.Element {
 
         /// <summary>Adds a new cell with received blockElement as a content.</summary>
         /// <param name="blockElement">a blockElement to add to the cell and then to the table</param>
-        /// 
+        /// <typeparam name="T">IElement instance</typeparam>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Table AddCell<T>(BlockElement<T> blockElement)
             where T : IElement {

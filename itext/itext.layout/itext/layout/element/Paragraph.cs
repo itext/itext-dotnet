@@ -119,7 +119,10 @@ namespace iText.Layout.Element {
         /// of layout elements to the Paragraph.
         /// </summary>
         /// <param name="elements">the content to be added</param>
-        /// 
+        /// <typeparam name="T2">
+        /// any
+        /// <see cref="ILeafElement"/>
+        /// </typeparam>
         /// <returns>this Paragraph</returns>
         public virtual iText.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
             where T2 : ILeafElement {

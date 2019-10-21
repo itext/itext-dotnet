@@ -62,7 +62,7 @@ namespace iText.Layout {
     /// <see cref="iText.Layout.Element.IElement">layout object</see>
     /// implementations.
     /// </remarks>
-    /// 
+    /// <typeparam name="T">this type</typeparam>
     public abstract class ElementPropertyContainer<T> : IPropertyContainer
         where T : IPropertyContainer {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();

@@ -438,7 +438,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfObject"/>
         /// , for which the name will be searched.
         /// </param>
-        /// 
+        /// <typeparam name="T">
+        /// the type of the underlined
+        /// <see cref="PdfObject"/>
+        /// in wrapper.
+        /// </typeparam>
         /// <returns>
         /// the mapped resource name or
         /// <see langword="null"/>
