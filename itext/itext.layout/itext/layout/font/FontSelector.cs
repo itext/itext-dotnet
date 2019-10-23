@@ -193,9 +193,9 @@ namespace iText.Layout.Font {
                 }
                 if (!fontFamilySetByCharacteristics) {
                     // if alias is set, fontInfo's descriptor should not be checked
-                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && fontInfo.GetDescriptor().GetFamilyNameLowerCase
-                        ().Equals(fontFamily) || (null != fontInfo.GetAlias() && fontInfo.GetAlias().ToLowerInvariant().Equals
-                        (fontFamily)))) {
+                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && null != fontInfo.GetDescriptor().GetFamilyNameLowerCase
+                        () && fontInfo.GetDescriptor().GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias
+                        () && fontInfo.GetAlias().ToLowerInvariant().Equals(fontFamily)))) {
                         score += FONT_FAMILY_EQUALS_AWARD;
                     }
                     else {
