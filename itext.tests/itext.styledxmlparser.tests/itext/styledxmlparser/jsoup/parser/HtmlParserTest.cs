@@ -49,11 +49,12 @@ using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tests for the Parser</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class HtmlParserTest {
+    public class HtmlParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParsesSimpleDocument() {
             String html = "<html><head><title>First!</title></head><body><p>First post! <img src=\"foo.png\" /></p></body></html>";

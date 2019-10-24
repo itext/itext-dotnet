@@ -43,11 +43,12 @@ address: sales@itextpdf.com
 using System;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Safety {
     /// <summary>Tests for the cleaner.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class CleanerTest {
+    public class CleanerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SimpleBehaviourTest() {
             String h = "<div><p class=foo><a href='http://evil.com'>Hello <b id=bar>there</b>!</a></div>";

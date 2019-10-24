@@ -40,8 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.Layout.Font {
-    public class FontCharacteristicsTest {
+    public class FontCharacteristicsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestDefaultFontCharacteristics() {
             FontCharacteristics fontCharacteristics = new FontCharacteristics();

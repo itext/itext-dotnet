@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.Test;
 
 namespace iText.Layout.Renderer {
-    public class TextFilteringReversedRangesTest {
+    public class TextFilteringReversedRangesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Test01() {
             List<int> removedIds = new List<int>();

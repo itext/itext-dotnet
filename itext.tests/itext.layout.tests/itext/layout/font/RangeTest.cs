@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Layout.Font {
-    public class RangeTest {
+    public class RangeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestWrongRange() {
             NUnit.Framework.Assert.That(() =>  {

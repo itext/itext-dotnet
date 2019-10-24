@@ -41,12 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 using NUnit.Framework;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Element (DOM stuff mostly).</summary>
     /// <author>Jonathan Hedley</author>
-    public class ElementExceptionTest {
+    public class ElementExceptionTest : ExtendedITextTest {
         [Test]
         public virtual void TestThrowsOnAddNullText() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1><p>Hello</p></div>");

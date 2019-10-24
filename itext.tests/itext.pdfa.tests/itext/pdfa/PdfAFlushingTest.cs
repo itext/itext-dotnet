@@ -51,7 +51,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Pdfa {
-    public class PdfAFlushingTest : ITextTest {
+    public class PdfAFlushingTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 

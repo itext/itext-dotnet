@@ -45,11 +45,12 @@ using System.IO;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Integration {
     /// <summary>Integration test: parses from real-world example HTML.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class ParseTest {
+    public class ParseTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestSmhBizArticle() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/smh-biz-article-1.html");

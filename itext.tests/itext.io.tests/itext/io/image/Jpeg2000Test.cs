@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.IO.Image {
-    public class Jpeg2000Test {
+    public class Jpeg2000Test : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 

@@ -318,8 +318,22 @@ namespace iText.IO {
 
         public const String WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS = "Wrong media box size: {0}. The arguments beyond the 4th will be ignored";
 
+        public const String XFDF_ANNOTATION_IS_NOT_SUPPORTED = "Xfdf annotation \"{0}\" is not supported";
+
+        public const String XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT = "Xfdf href attribute and pdf document name are different!";
+
+        public const String XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT = "Xfdf no such field in pdf document!";
+
+        public const String XFDF_NO_F_OBJECT_TO_COMPARE = "Xfdf no f object to compare.";
+
         public const String XFDF_OUTPUT_STREAM_CORRUPTED = "Xfdf output stream is corrupted.";
 
+        public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
+
+        [System.ObsoleteAttribute(@"Use XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT instead. The constant will be removed in 7.2."
+            )]
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
+
+        public const String XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }
 }

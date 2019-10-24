@@ -52,7 +52,7 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Pdfa {
-    public class PdfABarcodeTest : ITextTest {
+    public class PdfABarcodeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 

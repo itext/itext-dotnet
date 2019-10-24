@@ -45,9 +45,10 @@ using System.IO;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
-    public class DataUtilTest {
+    public class DataUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCharset() {
             NUnit.Framework.Assert.AreEqual("utf-8", DataUtil.GetCharsetFromContentType("text/html;charset=utf-8 "));

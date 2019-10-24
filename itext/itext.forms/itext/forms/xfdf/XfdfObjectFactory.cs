@@ -295,7 +295,7 @@ namespace iText.Forms.Xfdf {
                     }
 
                     default: {
-                        logger.Warn(XfdfConstants.UNSUPPORTED_ANNOTATION_ATTRIBUTE);
+                        logger.Warn(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE);
                         break;
                     }
                 }

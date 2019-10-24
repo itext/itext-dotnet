@@ -45,11 +45,12 @@ using System.Collections.Generic;
 using System.Text;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Select;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests Nodes</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class NodeTest {
+    public class NodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void HandlesBaseUri() {
             iText.StyledXmlParser.Jsoup.Parser.Tag tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("a");
@@ -251,12 +252,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").First().Traverse(new _NodeVisitor_264(accum));
+            doc.Select("div").First().Traverse(new _NodeVisitor_265(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div>", accum.ToString());
         }
 
-        private sealed class _NodeVisitor_264 : NodeVisitor {
-            public _NodeVisitor_264(StringBuilder accum) {
+        private sealed class _NodeVisitor_265 : NodeVisitor {
+            public _NodeVisitor_265(StringBuilder accum) {
                 this.accum = accum;
             }
 

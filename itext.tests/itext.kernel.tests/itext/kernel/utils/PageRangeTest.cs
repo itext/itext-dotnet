@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.Kernel.Utils {
-    public class PageRangeTest {
+    public class PageRangeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddSingle() {
             PageRange range = new PageRange();

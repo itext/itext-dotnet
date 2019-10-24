@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.IO.Image {
-    public class GifTest {
+    public class GifTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 

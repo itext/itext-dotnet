@@ -43,9 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Test;
 
 namespace iText.Layout {
-    public class FontFamilySplitterTest {
+    public class FontFamilySplitterTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FontFamilySplitter() {
             String fontFamilies = "'Puritan'\n" + "Puritan\n" + "'Pur itan'\n" + "Pur itan\n" + "'Pur it an'\n" + "Pur it an\n"

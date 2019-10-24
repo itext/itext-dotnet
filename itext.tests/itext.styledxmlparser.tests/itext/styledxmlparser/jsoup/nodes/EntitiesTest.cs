@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
-    public class EntitiesTest {
+    public class EntitiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Escape() {
             String text = "Hello &<> Å å π 新 there ¾ © »";

@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System.Text;
 using iText.Kernel.Numbering;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Numbering {
-    public class GreekAlphabetNumberingTest {
+    public class GreekAlphabetNumberingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestUpperCase() {
             StringBuilder builder = new StringBuilder();

@@ -47,11 +47,12 @@ using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tests XmlTreeBuilder.</summary>
     /// <author>Jonathan Hedley</author>
-    public class XmlTreeBuilderTest {
+    public class XmlTreeBuilderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestSimpleXmlParse() {
             String xml = "<doc id=2 href='/bar'>Foo <br /><link>One</link><link>Two</link></doc>";

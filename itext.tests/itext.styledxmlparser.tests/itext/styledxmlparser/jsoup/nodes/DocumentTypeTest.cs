@@ -40,10 +40,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for the DocumentType node</summary>
     /// <author>Jonathan Hedley, http://jonathanhedley.com/</author>
-    public class DocumentTypeTest {
+    public class DocumentTypeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankName() {
             DocumentType fail = new DocumentType("", "", "", "");

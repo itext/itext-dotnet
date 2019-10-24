@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Kernel.Geom {
-    public class AffineTransformTest {
+    public class AffineTransformTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SelfTest() {
             AffineTransform affineTransform = new AffineTransform();

@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void ContentStreamProcessorTest() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "yaxiststar.pdf"), new PdfWriter(new ByteArrayOutputStream
                 ()));

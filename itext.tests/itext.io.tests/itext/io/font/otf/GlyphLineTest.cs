@@ -45,9 +45,10 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    public class GlyphLineTest {
+    public class GlyphLineTest : ExtendedITextTest {
         private static IList<Glyph> ConstructGlyphListFromString(String text, TrueTypeFont font) {
             IList<Glyph> glyphList = new List<Glyph>();
             char[] chars = text.ToCharArray();

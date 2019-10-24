@@ -44,7 +44,7 @@ using System;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class PdfNameTest : ITextTest {
+    public class PdfNameTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SpecialCharactersTest() {
             String str1 = " %()<>";

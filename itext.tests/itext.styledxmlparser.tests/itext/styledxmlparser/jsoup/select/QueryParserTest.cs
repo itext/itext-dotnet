@@ -40,10 +40,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests for the Selector Query Parser.</summary>
     /// <author>Jonathan Hedley</author>
-    public class QueryParserTest {
+    public class QueryParserTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestOrGetsCorrectPrecedence() {
             // tests that a selector "a b, c d, e f" evals to (a AND b) OR (c AND d) OR (e AND f)"

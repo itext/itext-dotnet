@@ -46,11 +46,12 @@ using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Document.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class DocumentTest {
+    public class DocumentTest : ExtendedITextTest {
         private const String charsetUtf8 = "UTF-8";
 
         private const String charsetIso8859 = "ISO-8859-1";

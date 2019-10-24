@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using iText.IO.Font.Otf;
+using iText.Test;
 
 namespace iText.Layout.Splitting {
-    public class DefaultSplitCharacterTest {
+    public class DefaultSplitCharacterTest : ExtendedITextTest {
         internal static IList<Glyph> glyphs = new List<Glyph>();
 
         [NUnit.Framework.OneTimeSetUp]

@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class MemoryLimitsAwareHandlerTest {
+    public class MemoryLimitsAwareHandlerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void DefaultMemoryHandler() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
