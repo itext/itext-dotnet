@@ -930,6 +930,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Line = CreateDirectName("Line");
 
+        public static readonly iText.Kernel.Pdf.PdfName LineArrow = CreateDirectName("LineArrow");
+
         public static readonly iText.Kernel.Pdf.PdfName LineHeight = CreateDirectName("LineHeight");
 
         public static readonly iText.Kernel.Pdf.PdfName LineNum = CreateDirectName("LineNum");
