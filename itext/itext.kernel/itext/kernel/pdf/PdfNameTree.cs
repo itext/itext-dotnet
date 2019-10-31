@@ -142,6 +142,12 @@ namespace iText.Kernel.Pdf {
             return modified;
         }
 
+        /// <summary>Sets the modified flag to true.</summary>
+        /// <remarks>Sets the modified flag to true. It means that the object has been modified.</remarks>
+        public virtual void SetModified() {
+            modified = true;
+        }
+
         /// <summary>Build a PdfDictionary containing the name tree</summary>
         /// <returns>PdfDictionary containing the name tree</returns>
         public virtual PdfDictionary BuildTree() {
