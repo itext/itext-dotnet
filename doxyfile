@@ -869,7 +869,32 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                =
+EXCLUDE                = itext/itext.io/itext/io/util/ArrayUtil.cs \
+itext/itext.io/itext/io/util/DateTimeUtil.cs \
+itext/itext.io/itext/io/util/DecimalFormatUtil.cs \
+itext/itext.io/itext/io/util/EncodingUtil.cs \
+itext/itext.io/itext/io/util/EnumUtil.cs \
+itext/itext.io/itext/io/util/ExceptionUtil.cs \
+itext/itext.io/itext/io/util/FileUtil.cs \
+itext/itext.io/itext/io/util/FilterUtil.cs \
+itext/itext.io/itext/io/util/GenericArray.cs \
+itext/itext.io/itext/io/util/HashCode.cs \
+itext/itext.io/itext/io/util/IdelOutputStream.cs \
+itext/itext.io/itext/io/util/IntHashtable.cs \
+itext/itext.io/itext/io/util/MessageFormatUtil.cs \
+itext/itext.io/itext/io/util/NumberUtil.cs \
+itext/itext.io/itext/io/util/ResourceUtil.cs \
+itext/itext.io/itext/io/util/StreamUtil.cs \
+itext/itext.io/itext/io/util/SystemUtil.cs \
+itext/itext.io/itext/io/util/TextUtil.cs \
+itext/itext.io/itext/io/util/UrlUtil.cs \
+itext/itext.io/itext/io/codec/brotli/dec/ \
+itext/itext.styledxmlparser/itext/styledxmlparser/PortUtil.cs \
+itext/itext.styledxmlparser/itext/styledxmlparser/jsoup/ \
+itext/itext.kernel/itext/kernel/crypto/CryptoUtil.cs \
+itext/itext.svg/itext/svg/utils/SvgCoordinateUtils.cs \
+itext/itext.svg/itext/svg/utils/SvgRegexUtils.cs
+
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
