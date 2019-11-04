@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     public class StrokeTest : SvgIntegrationTest {
@@ -72,9 +73,16 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Advanced_stroke_Test() {
+        public virtual void AdvancedStrokeTest() {
             //TODO: update cmp-file after DEVSIX-2258
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke_advanced");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeAdvanced");
+        }
+
+        [NUnit.Framework.Test]
+        //TODO: update cmp-file after DEVSIX-3432
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 12)]
+        public virtual void StrokeWidthMeasureUnitsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWidthMeasureUnitsTest");
         }
     }
 }
