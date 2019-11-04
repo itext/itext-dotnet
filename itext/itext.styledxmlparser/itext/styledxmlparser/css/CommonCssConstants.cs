@@ -682,6 +682,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant UPPER_ROMAN.</summary>
         public const String UPPER_ROMAN = "upper-roman";
 
+        /// <summary>The Constant value VISIBLE.</summary>
+        public const String VISIBLE = "visible";
+
         /// <summary>The Constant X_LARGE.</summary>
         public const String X_LARGE = "x-large";
 
