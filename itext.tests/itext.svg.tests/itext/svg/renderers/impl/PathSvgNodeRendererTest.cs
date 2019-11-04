@@ -253,27 +253,22 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathZOperatorTest01() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorTest01");
+        public virtual void PathZOperatorMultipleZTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorMultipleZTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathZOperatorTest02() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorTest02");
+        public virtual void PathZOperatorSingleZTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorSingleZTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathZOperatorTest03() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorTest03");
+        public virtual void PathZOperatorSingleZInstructionsAfterTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorSingleZInstructionsAfterTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathZOperatorTest04() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorTest04");
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void InvalidZOperatorTest01() {
+        public virtual void InvalidZOperatorTest() {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompare(sourceFolder, destinationFolder, "invalidZOperatorTest01");
             }
@@ -282,7 +277,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void InvalidOperatorTest01() {
+        public virtual void InvalidOperatorTest() {
             NUnit.Framework.Assert.That(() =>  {
                 ConvertAndCompare(sourceFolder, destinationFolder, "invalidOperatorTest01");
             }
@@ -290,14 +285,14 @@ namespace iText.Svg.Renderers.Impl {
 ;
         }
 
-        /* This test should fail when RND-1034 is resolved*/
+        //TODO DEVSIX-2242. This test should fail when the ticket is resolved
         [NUnit.Framework.Test]
         public virtual void PathLOperatorMultipleCoordinates() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLOperatorMultipleCoordinates");
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathVOperatorTest01() {
+        public virtual void PathVOperatorTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathVOperatorTest01");
         }
 
@@ -312,13 +307,13 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathHOperatorSimpleTest01() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorSimpleTest01");
+        public virtual void PathHOperatorSimpleTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorSimpleTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void PathHandVOperatorTest01() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHandVOperatorTest01");
+        public virtual void PathHandVOperatorTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathHandVOperatorTest");
         }
 
         [NUnit.Framework.Test]

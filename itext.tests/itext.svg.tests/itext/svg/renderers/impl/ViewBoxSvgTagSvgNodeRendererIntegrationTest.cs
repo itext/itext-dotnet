@@ -57,24 +57,51 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        //Uniform viewboxes
         [NUnit.Framework.Test]
-        public virtual void ViewBox50() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_50");
+        public virtual void ViewBox100x100() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100x100");
         }
 
         [NUnit.Framework.Test]
-        public virtual void ViewBox100() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100");
+        public virtual void ViewBox200x200() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200x200");
         }
 
         [NUnit.Framework.Test]
-        public virtual void ViewBox200() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200");
+        public virtual void ViewBox400x400() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400x400");
+        }
+
+        //Non-uniform viewboxes
+        [NUnit.Framework.Test]
+        public virtual void ViewBox100x200() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100x200");
         }
 
         [NUnit.Framework.Test]
-        public virtual void ViewBox400() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400");
+        public virtual void ViewBox100x400() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_100x400");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBox200x100() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200x100");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBox200x400() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_200x400");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBox400x100() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400x100");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBox400x200() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400x200");
         }
     }
 }
