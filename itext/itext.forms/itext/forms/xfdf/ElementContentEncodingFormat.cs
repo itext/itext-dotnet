@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Forms.Xfdf {
+    /// <summary>Represents encoding attribute of data or resource elements (children of fileattachment and sound elements).
+    ///     </summary>
     public enum ElementContentEncodingFormat {
         ASCII,
         HEX

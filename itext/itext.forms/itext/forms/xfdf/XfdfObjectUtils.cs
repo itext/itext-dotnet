@@ -56,6 +56,17 @@ namespace iText.Forms.Xfdf {
         private XfdfObjectUtils() {
         }
 
+        /// <summary>
+        /// Converts a string containing 2 or 4 float values into a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>.
+        /// </summary>
+        /// <remarks>
+        /// Converts a string containing 2 or 4 float values into a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>.
+        /// If only two coordinates are present, they should represent
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// width and height.
+        /// </remarks>
         internal static Rectangle ConvertRectFromString(String rectString) {
             String delims = ",";
             StringTokenizer st = new StringTokenizer(rectString, delims);
@@ -77,6 +88,11 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
+        /// <summary>Converts a string containing 4 float values into a PdfArray, representing rectangle fringe.</summary>
+        /// <remarks>
+        /// Converts a string containing 4 float values into a PdfArray, representing rectangle fringe.
+        /// If the number of floats in the string is not equal to 4, returns and PdfArray with empty values.
+        /// </remarks>
         internal static PdfArray ConvertFringeFromString(String fringeString) {
             String delims = ",";
             StringTokenizer st = new StringTokenizer(fringeString, delims);
@@ -93,15 +109,22 @@ namespace iText.Forms.Xfdf {
             return new PdfArray(fringe);
         }
 
+        /// <summary>Converts a Rectangle to a string containing 4 float values.</summary>
         internal static String ConvertRectToString(Rectangle rect) {
             return ConvertFloatToString(rect.GetX()) + ", " + ConvertFloatToString(rect.GetY()) + ", " + ConvertFloatToString
                 ((rect.GetX() + rect.GetWidth())) + ", " + ConvertFloatToString((rect.GetY() + rect.GetHeight()));
         }
 
+        /// <summary>Converts float value to string with UTF-8 encoding.</summary>
         internal static String ConvertFloatToString(float coord) {
             return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord), System.Text.Encoding.UTF8);
         }
 
+        /// <summary>Converts a string containing 4 float values into a float array, representing quadPoints.</summary>
+        /// <remarks>
+        /// Converts a string containing 4 float values into a float array, representing quadPoints.
+        /// If the number of floats in the string is not equal to 8, returns an empty float array.
+        /// </remarks>
         internal static float[] ConvertQuadPointsFromCoordsString(String coordsString) {
             String delims = ",";
             StringTokenizer st = new StringTokenizer(coordsString, delims);
@@ -119,6 +142,7 @@ namespace iText.Forms.Xfdf {
             return new float[0];
         }
 
+        /// <summary>Converts a float array, representing quadPoints into a string containing 8 float values.</summary>
         internal static String ConvertQuadPointsToCoordsString(float[] quadPoints) {
             StringBuilder stb = new StringBuilder(FloatToPaddedString(quadPoints[0]));
             for (int i = 1; i < 8; i++) {
@@ -131,6 +155,10 @@ namespace iText.Forms.Xfdf {
             return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(number), System.Text.Encoding.UTF8);
         }
 
+        /// <summary>
+        /// Converts a string containing a comma separated list of names of the flags into an integer representation
+        /// of the flags.
+        /// </summary>
         internal static int ConvertFlagsFromString(String flagsString) {
             int result = 0;
             String delims = ",";
@@ -158,6 +186,8 @@ namespace iText.Forms.Xfdf {
             return result;
         }
 
+        /// <summary>Converts an integer representation of the flags into a string with a comma separated list of names of the flags.
+        ///     </summary>
         internal static String ConvertFlagsToString(PdfAnnotation pdfAnnotation) {
             IList<String> flagsList = new List<String>();
             StringBuilder stb = new StringBuilder();
@@ -195,6 +225,7 @@ namespace iText.Forms.Xfdf {
             return result.Length > 0 ? result.JSubstring(0, result.Length - 1) : null;
         }
 
+        /// <summary>Converts an array of 3 floats into a hex string representing the rgb color.</summary>
         internal static String ConvertColorToString(float[] colors) {
             if (colors.Length == 3) {
                 return "#" + ConvertColorFloatToHex(colors[0]) + ConvertColorFloatToHex(colors[1]) + ConvertColorFloatToHex
@@ -203,6 +234,7 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
+        /// <summary>Converts a Color object into a hex string representing the rgb color.</summary>
         internal static String ConvertColorToString(Color color) {
             float[] colors = color.GetColorValue();
             if (colors != null && colors.Length == 3) {
@@ -212,24 +244,29 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
+        /// <summary>Converts float representation of the rgb color into a hex string representing the rgb color.</summary>
         private static String ConvertColorFloatToHex(float colorFloat) {
             String result = "0" + JavaUtil.IntegerToHexString(((int)(colorFloat * 255 + 0.5))).ToUpperInvariant();
             return result.Substring(result.Length - 2);
         }
 
-        internal static String ConvertIdToHexString(String stringId) {
+        /// <summary>Converts string containing id from decimal to hexadecimal format.</summary>
+        internal static String ConvertIdToHexString(String idString) {
             StringBuilder stb = new StringBuilder();
-            char[] stringSymbols = stringId.ToCharArray();
+            char[] stringSymbols = idString.ToCharArray();
             foreach (char ch in stringSymbols) {
                 stb.Append(JavaUtil.IntegerToHexString((int)ch).ToUpperInvariant());
             }
             return stb.ToString();
         }
 
+        /// <summary>Converts string containing hex color code to Color object.</summary>
         internal static Color ConvertColorFromString(String hexColor) {
             return Color.MakeColor(new PdfDeviceCs.Rgb(), ConvertColorFloatsFromString(hexColor));
         }
 
+        /// <summary>Converts string containing hex color code into an array of 3 integer values representing rgb color.
+        ///     </summary>
         internal static float[] ConvertColorFloatsFromString(String colorHexString) {
             float[] result = new float[3];
             String colorString = colorHexString.Substring(colorHexString.IndexOf('#') + 1);
@@ -241,45 +278,7 @@ namespace iText.Forms.Xfdf {
             return result;
         }
 
-        //    public static Map<Stream, Stream>  preprocessXfdf(String destFolder, String outPdf, String cmpFolder, String cmpPdf, String outTag, String cmpTag) throws ParserConfigurationException, IOException, SAXException, TransformerException {
-        //
-        //        InputStream outXfdfStream = new FileInputStream(destFolder + outPdf);
-        //        Document outDoc = XfdfFileUtils.createXfdfDocumentFromStream(outXfdfStream);
-        //
-        //        InputStream cmpXfdfStream = new FileInputStream(cmpFolder + cmpPdf);
-        //        Document cmpDoc = XfdfFileUtils.createXfdfDocumentFromStream(cmpXfdfStream);
-        //
-        //        NodeList excludedNodes = cmpDoc.getElementsByTagName(cmpTag);
-        //        int length = excludedNodes.getLength();
-        //        List<Node> parentNodes = new ArrayList<>();
-        //
-        //        for (int i = length - 1; i >= 0; i--) {
-        //            Node parentNode = excludedNodes.item(i).getParentNode();
-        //            parentNodes.add(parentNode);
-        //            parentNode.removeChild(excludedNodes.item(i));
-        //        }
-        //
-        //        //can just implement contents-richtext and forget about this piece of code
-        //        NodeList nodesToRemove = outDoc.getElementsByTagName(outTag);
-        //
-        //        for (int i = nodesToRemove.getLength() - 1; i >= 0; i--) {
-        //            Node parentNode = nodesToRemove.item(i).getParentNode();
-        //            for (Node node : parentNodes) {
-        //                if (node.getNodeName().equalsIgnoreCase(parentNode.getNodeName())) {
-        //                    parentNode.removeChild(nodesToRemove.item(i));
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //
-        //        //write xmls
-        //        Map<OutputStream, OutputStream> cmpMap = new HashMap<>();
-        //        cmpMap.put(new FileOutputStream(destFolder + outPdf.substring(0, outPdf.indexOf('.')) + "_preprocessed.xfdf"),
-        //                new FileOutputStream(cmpFolder + cmpPdf.substring(0, cmpPdf.indexOf('.')) + "_preprocessed.xfdf"));
-        //        XfdfFileUtils.saveXfdfDocumentToFile(outDoc, );
-        //        XfdfFileUtils.saveXfdfDocumentToFile(cmpDoc, );
-        //        return cmpMap;
-        //    }
+        /// <summary>Converts an array of float vertices to string.</summary>
         internal static String ConvertVerticesToString(float[] vertices) {
             if (vertices.Length <= 0) {
                 return null;
@@ -292,6 +291,11 @@ namespace iText.Forms.Xfdf {
             return stb.ToString();
         }
 
+        /// <summary>Converts to string an array of floats representing the fringe.</summary>
+        /// <remarks>
+        /// Converts to string an array of floats representing the fringe.
+        /// If the number of floats doesn't equal 4, an empty string is returned.
+        /// </remarks>
         internal static String ConvertFringeToString(float[] fringeArray) {
             if (fringeArray.Length != 4) {
                 return null;
@@ -304,6 +308,7 @@ namespace iText.Forms.Xfdf {
             return stb.ToString();
         }
 
+        /// <summary>Converts a string into an array of floats representing vertices.</summary>
         internal static float[] ConvertVerticesFromString(String verticesString) {
             String delims = ",;";
             StringTokenizer st = new StringTokenizer(verticesString, delims);
@@ -318,6 +323,13 @@ namespace iText.Forms.Xfdf {
             return vertices;
         }
 
+        /// <summary>Returns a string representation of the start point of the line (x_1, y_1) based on given line array.
+        ///     </summary>
+        /// <remarks>
+        /// Returns a string representation of the start point of the line (x_1, y_1) based on given line array.
+        /// If the line array doesn't contain 4 floats, returns an empty string.
+        /// </remarks>
+        /// <param name="line">an array of 4 floats representing the line (x_1, y_1, x_2, y_2)</param>
         internal static String ConvertLineStartToString(float[] line) {
             if (line.Length == 4) {
                 return line[0] + "," + line[1];
@@ -325,36 +337,18 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
+        /// <summary>Returns a string representation of the end point of the line (x_2, y_2) based on given line array.
+        ///     </summary>
+        /// <remarks>
+        /// Returns a string representation of the end point of the line (x_2, y_2) based on given line array.
+        /// If the line array doesn't contain 4 floats, returns an empty string.
+        /// </remarks>
+        /// <param name="line">an array of 4 floats representing the line (x_1, y_1, x_2, y_2)</param>
         internal static String ConvertLineEndToString(float[] line) {
             if (line.Length == 4) {
                 return line[2] + "," + line[3];
             }
             return null;
         }
-        //    static float [] convertLineFromStrings(String start, String end) {
-        //        if (start == null || end == null) {
-        //           return new float[0];
-        //        }
-        //        float [] resultLine = new float [4];
-        //        String delims = ",";
-        //        List<String> verticesList = new ArrayList<>();
-        //        StringTokenizer stStart = new StringTokenizer(start, delims);
-        //        StringTokenizer stEnd = new StringTokenizer(end, delims);
-        //
-        //        while (stStart.hasMoreTokens()) {
-        //            verticesList.add(stStart.nextToken());
-        //        }
-        //        while (stEnd.hasMoreTokens()) {
-        //            verticesList.add(stEnd.nextToken());
-        //        }
-        //        if (verticesList.size() != 4) {
-        //            return new float[0];
-        //        } else {
-        //            for(int i = 0; i < 4; i++) {
-        //                resultLine[i] = Float.parseFloat(verticesList.get(i));
-        //            }
-        //            return resultLine;
-        //        }
-        //    }
     }
 }

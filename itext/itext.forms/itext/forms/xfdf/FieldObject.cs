@@ -52,14 +52,46 @@ namespace iText.Forms.Xfdf {
     /// For more details see paragraph 6.3.2 in Xfdf document specification.
     /// </remarks>
     public class FieldObject {
+        /// <summary>Represents the name attribute of the field element.</summary>
+        /// <remarks>
+        /// Represents the name attribute of the field element.
+        /// Corresponds to the T key in the field dictionary.
+        /// In a hierarchical form field, the name is the partial field name.
+        /// For more details see paragraph 6.3.2.2 in Xfdf document specification.
+        /// </remarks>
         private String name;
 
+        /// <summary>
+        /// Represents the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// </summary>
+        /// <remarks>
+        /// Represents the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// Corresponds to the V key in the FDF field dictionary.
+        /// Content model: text string.
+        /// For more details see paragraph 6.3.3 in Xfdf document specification.
+        /// </remarks>
         private String value;
 
+        /// <summary>
+        /// Represents the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// </summary>
+        /// <remarks>
+        /// Represents the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// Corresponds to the RV key in the variable text field dictionary.
+        /// Content model: text strign or rich text string.
+        /// Attributes: none.
+        /// For more details see paragraph 6.3.4 in Xfdf document specification.
+        /// </remarks>
         private String richTextValue;
 
+        /// <summary>Indicates if a value-richtext element is present inside the field.</summary>
         private bool containsRichText;
 
+        /// <summary>Parent field of current field.</summary>
         private iText.Forms.Xfdf.FieldObject parent;
 
         public FieldObject() {
@@ -76,42 +108,99 @@ namespace iText.Forms.Xfdf {
             }
         }
 
+        /// <summary>Gets the string value of the name attribute of the field element.</summary>
+        /// <remarks>
+        /// Gets the string value of the name attribute of the field element.
+        /// Corresponds to the T key in the field dictionary.
+        /// In a hierarchical form field, the name is the partial field name.
+        /// For more details see paragraph 6.3.2.2 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetName() {
             return name;
         }
 
+        /// <summary>Sets the string value of the name attribute of the field element.</summary>
+        /// <remarks>
+        /// Sets the string value of the name attribute of the field element.
+        /// Corresponds to the T key in the field dictionary.
+        /// In a hierarchical form field, the name is the partial field name.
+        /// </remarks>
         public virtual void SetName(String name) {
             this.name = name;
         }
 
+        /// <summary>
+        /// Gets the string representation of the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// </summary>
+        /// <remarks>
+        /// Gets the string representation of the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// Corresponds to the V key in the FDF field dictionary.
+        /// For more details see paragraph 6.3.3 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetValue() {
             return value;
         }
 
+        /// <summary>
+        /// Sets the string representation of the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// </summary>
+        /// <remarks>
+        /// Sets the string representation of the value element, a child of the field element and contains the field's value, whose format may
+        /// vary depending on the field type.
+        /// Corresponds to the V key in the FDF field dictionary.
+        /// </remarks>
         public virtual void SetValue(String value) {
             this.value = value;
         }
 
+        /// <summary>
+        /// Gets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// </summary>
+        /// <remarks>
+        /// Gets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// Corresponds to the RV key in the variable text field dictionary.
+        /// Content model: text strign or rich text string.
+        /// For more details see paragraph 6.3.4 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetRichTextValue() {
             return richTextValue;
         }
 
+        /// <summary>
+        /// Sets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// </summary>
+        /// <remarks>
+        /// Sets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
+        /// rich text string.
+        /// Corresponds to the RV key in the variable text field dictionary.
+        /// Content model: text strign or rich text string.
+        /// </remarks>
         public virtual void SetRichTextValue(String richTextValue) {
             this.richTextValue = richTextValue;
         }
 
+        /// <summary>Gets a boolean indicating if a value-richtext element is present inside the field.</summary>
         public virtual bool IsContainsRichText() {
             return containsRichText;
         }
 
+        /// <summary>Sets a boolean indicating if a value-richtext element is present inside the field.</summary>
         public virtual void SetContainsRichText(bool containsRichText) {
             this.containsRichText = containsRichText;
         }
 
+        /// <summary>Gets a parent field of current field.</summary>
         public virtual iText.Forms.Xfdf.FieldObject GetParent() {
             return parent;
         }
 
+        /// <summary>Sets a parent field of current field.</summary>
         public virtual void SetParent(iText.Forms.Xfdf.FieldObject parent) {
             this.parent = parent;
         }

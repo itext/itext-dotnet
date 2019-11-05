@@ -54,8 +54,8 @@ namespace iText.Forms.Xfdf {
     internal class XfdfReader {
         private static ILog logger = LogManager.GetLogger(typeof(XfdfReader));
 
-        /// <summary>The method merges existing XfdfObject into pdf document associated with it.</summary>
-        /// <param name="xfdfObject">The object ot be merged.</param>
+        /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
+        /// <param name="xfdfObject">The object to be merged.</param>
         /// <param name="pdfDocument">The associated pdf document.</param>
         /// <param name="pdfDocumentName">The name of the associated pdf document.</param>
         internal virtual void MergeXfdfIntoPdf(XfdfObject xfdfObject, PdfDocument pdfDocument, String pdfDocumentName
@@ -79,6 +79,12 @@ namespace iText.Forms.Xfdf {
             }
         }
 
+        /// <summary>
+        /// Merges existing FieldsObject and children FieldObject entities into the form of the pdf document
+        /// associated with it.
+        /// </summary>
+        /// <param name="fieldsObject">object containing acroform fields data to be merged.</param>
+        /// <param name="form">acroform to be filled with xfdf data.</param>
         private void MergeFields(FieldsObject fieldsObject, PdfAcroForm form) {
             if (fieldsObject != null && fieldsObject.GetFieldList() != null && !fieldsObject.GetFieldList().IsEmpty()) {
                 IDictionary<String, PdfFormField> formFields = form.GetFormFields();
@@ -94,6 +100,10 @@ namespace iText.Forms.Xfdf {
             }
         }
 
+        /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
+        /// <param name="annotsObject">The AnnotsObject with children AnnotObject entities to be mapped into PdfAnnotations.
+        ///     </param>
+        /// <param name="pdfDocument">The associated pdf document.</param>
         private void MergeAnnotations(AnnotsObject annotsObject, PdfDocument pdfDocument) {
             IList<AnnotObject> annotList = null;
             if (annotsObject != null) {

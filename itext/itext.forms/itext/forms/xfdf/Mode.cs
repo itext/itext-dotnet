@@ -41,6 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Forms.Xfdf {
+    /// <summary>Represents the mode attribute of data and resource elements.</summary>
+    /// <remarks>
+    /// Represents the mode attribute of data and resource elements.
+    /// Does not correspond to a PDF key.
+    /// </remarks>
     public enum Mode {
         FILTERED,
         RAW

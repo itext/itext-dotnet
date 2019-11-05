@@ -60,7 +60,16 @@ namespace iText.Forms.Xfdf {
             this.outputStream = outputStream;
         }
 
-        /// <summary>The method writes data from XfdfObject into a xfdf data file.</summary>
+        /// <summary>
+        /// Writes data from
+        /// <see cref="XfdfObject"/>
+        /// into a xfdf data file.
+        /// </summary>
+        /// <param name="xfdfObject">
+        /// 
+        /// <see cref="XfdfObject"/>
+        /// containing the data.
+        /// </param>
         internal virtual void Write(XfdfObject xfdfObject) {
             this.WriteDom(xfdfObject);
         }
@@ -134,7 +143,7 @@ namespace iText.Forms.Xfdf {
             return childrenFields;
         }
 
-        internal static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
+        private static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
             <FieldObject> fieldList) {
             IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
             XmlElement field = document.CreateElement("field");

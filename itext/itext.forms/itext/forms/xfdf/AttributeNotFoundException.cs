@@ -44,6 +44,9 @@ using System;
 
 namespace iText.Forms.Xfdf {
     public class AttributeNotFoundException : Exception {
+        /// <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
+        ///     </summary>
+        /// <param name="attribute">the name of missing attribute.</param>
         public AttributeNotFoundException(String attribute)
             : base("Required attribute " + attribute + " is not found") {
         }

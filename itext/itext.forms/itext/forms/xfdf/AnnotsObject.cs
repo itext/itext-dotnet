@@ -43,17 +43,38 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>Represent annots tag in xfdf document structure.</summary>
+    /// <remarks>
+    /// Represent annots tag in xfdf document structure.
+    /// Content model: ( text | caret | freetext | fileattachment | highlight | ink | line | link
+    /// | circle | square | polygon | polyline | sound | squiggly | stamp |
+    /// strikeout | underline )*.
+    /// Attributes: none.
+    /// For more details see paragraph 6.4.1 in Xfdf specification.
+    /// </remarks>
     public class AnnotsObject {
+        /// <summary>Represents a list of children annotations.</summary>
         private IList<AnnotObject> annotsList;
 
         public AnnotsObject() {
             annotsList = new List<AnnotObject>();
         }
 
+        /// <summary>Gets a list of children annotations.</summary>
         public virtual IList<AnnotObject> GetAnnotsList() {
             return annotsList;
         }
 
+        /// <summary>
+        /// Adds a new
+        /// <see cref="AnnotObject"/>
+        /// to the list of children annotations.
+        /// </summary>
+        /// <param name="annot">
+        /// 
+        /// <see cref="AnnotObject"/>
+        /// containing info about pdf document annotation.
+        /// </param>
         public virtual iText.Forms.Xfdf.AnnotsObject AddAnnot(AnnotObject annot) {
             this.annotsList.Add(annot);
             return this;

@@ -52,20 +52,51 @@ namespace iText.Forms.Xfdf {
     public class AnnotObject {
         /// <summary>Represents the type of annotation.</summary>
         /// <remarks>
-        /// Represents the type of annotation. Possible values: caret, circle, fileattachment, freetext,
-        /// highlight, ink, line, polygon, polyline, sound, square, squiggly, stamp, strikeout, text, underline.
+        /// Represents the type of annotation. Possible values:
+        /// <see cref="XfdfConstants.CARET"/>
+        /// ,
+        /// <see cref="XfdfConstants.CIRCLE"/>
+        /// ,
+        /// <see cref="XfdfConstants.FILEATTACHMENT"/>
+        /// ,
+        /// <see cref="XfdfConstants.FREETEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.HIGHLIGHT"/>
+        /// ,
+        /// <see cref="XfdfConstants.INK"/>
+        /// ,
+        /// <see cref="XfdfConstants.LINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYGON"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYLINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SOUND"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUARE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUIGGLY"/>
+        /// ,
+        /// <see cref="XfdfConstants.STAMP"/>
+        /// ,
+        /// <see cref="XfdfConstants.STRIKEOUT"/>
+        /// ,
+        /// <see cref="XfdfConstants.TEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.UNDERLINE"/>.
         /// </remarks>
         private String name;
 
         /// <summary>Represents a list of attributes of the annotation.</summary>
         private IList<AttributeObject> attributes;
 
-        /// <summary>Represents contents-richtext tag in Xfdf document structure.</summary>
+        /// <summary>Represents contents tag in Xfdf document structure.</summary>
         /// <remarks>
-        /// Represents contents-richtext tag in Xfdf document structure. Is a child of caret, circle, fileattachment, freetext,
+        /// Represents contents tag in Xfdf document structure. Is a child of caret, circle, fileattachment, freetext,
         /// highlight, ink, line, polygon, polyline, sound, square, squiggly, stamp, strikeout, text, and
-        /// underline elements. corresponds to RC key in annotation dictionary.
-        /// Content model: text string.
+        /// underline elements.
+        /// Corresponds to Contents key in annotation dictionary.
+        /// Content model: a string or a rich text string.
         /// For more details see paragraph 6.5.4 in Xfdf document specification.
         /// </remarks>
         private PdfString contents;
@@ -74,8 +105,9 @@ namespace iText.Forms.Xfdf {
         /// <remarks>
         /// Represents contents-richtext tag in Xfdf document structure. Is a child of caret, circle, fileattachment, freetext,
         /// highlight, ink, line, polygon, polyline, sound, square, squiggly, stamp, strikeout, text, and
-        /// underline elements. corresponds to Contents key in annotation dictionary.
-        /// Content model: a string or a rich text string.
+        /// underline elements.
+        /// Corresponds to RC key in annotation dictionary.
+        /// Content model: text string.
         /// For more details see paragraph 6.5.5 in Xfdf document specification.
         /// </remarks>
         private PdfString contentsRichText;
@@ -159,20 +191,91 @@ namespace iText.Forms.Xfdf {
             this.attributes = new List<AttributeObject>();
         }
 
+        /// <summary>Gets the string value of the type of annotation.</summary>
+        /// <remarks>
+        /// Gets the string value of the type of annotation. Possible values:
+        /// <see cref="XfdfConstants.CARET"/>
+        /// ,
+        /// <see cref="XfdfConstants.CIRCLE"/>
+        /// ,
+        /// <see cref="XfdfConstants.FILEATTACHMENT"/>
+        /// ,
+        /// <see cref="XfdfConstants.FREETEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.HIGHLIGHT"/>
+        /// ,
+        /// <see cref="XfdfConstants.INK"/>
+        /// ,
+        /// <see cref="XfdfConstants.LINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYGON"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYLINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SOUND"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUARE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUIGGLY"/>
+        /// ,
+        /// <see cref="XfdfConstants.STAMP"/>
+        /// ,
+        /// <see cref="XfdfConstants.STRIKEOUT"/>
+        /// ,
+        /// <see cref="XfdfConstants.TEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.UNDERLINE"/>.
+        /// </remarks>
         public virtual String GetName() {
             return name;
         }
 
+        /// <summary>Sets the string value of the type of annotation.</summary>
+        /// <remarks>
+        /// Sets the string value of the type of annotation. Possible values:
+        /// <see cref="XfdfConstants.CARET"/>
+        /// ,
+        /// <see cref="XfdfConstants.CIRCLE"/>
+        /// ,
+        /// <see cref="XfdfConstants.FILEATTACHMENT"/>
+        /// ,
+        /// <see cref="XfdfConstants.FREETEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.HIGHLIGHT"/>
+        /// ,
+        /// <see cref="XfdfConstants.INK"/>
+        /// ,
+        /// <see cref="XfdfConstants.LINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYGON"/>
+        /// ,
+        /// <see cref="XfdfConstants.POLYLINE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SOUND"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUARE"/>
+        /// ,
+        /// <see cref="XfdfConstants.SQUIGGLY"/>
+        /// ,
+        /// <see cref="XfdfConstants.STAMP"/>
+        /// ,
+        /// <see cref="XfdfConstants.STRIKEOUT"/>
+        /// ,
+        /// <see cref="XfdfConstants.TEXT"/>
+        /// ,
+        /// <see cref="XfdfConstants.UNDERLINE"/>.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetName(String name) {
             this.name = name;
             return this;
         }
 
+        /// <summary>Gets a list of all attributes of the annotation.</summary>
         public virtual IList<AttributeObject> GetAttributes() {
             return attributes;
         }
 
-        /// <summary>The method finds the attribute by name in attributes list.</summary>
+        /// <summary>Finds the attribute by name in attributes list.</summary>
         /// <param name="name">The name of the attribute to look for.</param>
         /// <returns>
         /// 
@@ -188,7 +291,7 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
-        /// <summary>The method finds the attribute by name in attributes list and return its strign value.</summary>
+        /// <summary>Finds the attribute by name in attributes list and return its string value.</summary>
         /// <param name="name">The name of the attribute to look for.</param>
         /// <returns>
         /// the value of the
@@ -204,55 +307,96 @@ namespace iText.Forms.Xfdf {
             return null;
         }
 
+        /// <summary>Gets the popup annotation, an inner element of the annotation element.</summary>
         public virtual iText.Forms.Xfdf.AnnotObject GetPopup() {
             return popup;
         }
 
+        /// <summary>Sets the popup annotation, an inner element of the annotation element.</summary>
         public virtual iText.Forms.Xfdf.AnnotObject SetPopup(iText.Forms.Xfdf.AnnotObject popup) {
             this.popup = popup;
             return this;
         }
 
+        /// <summary>Gets the boolean, indicating if annotation has inner popup element.</summary>
         public virtual bool IsHasPopup() {
             return hasPopup;
         }
 
+        /// <summary>Sets the boolean, indicating if annotation has inner popup element.</summary>
         public virtual iText.Forms.Xfdf.AnnotObject SetHasPopup(bool hasPopup) {
             this.hasPopup = hasPopup;
             return this;
         }
 
+        /// <summary>Gets the string value of contents tag in Xfdf document structure.</summary>
+        /// <remarks>
+        /// Gets the string value of contents tag in Xfdf document structure. Contents is a child of caret, circle,
+        /// fileattachment, freetext, highlight, ink, line, polygon, polyline, sound, square, squiggly, stamp, strikeout,
+        /// text, and underline elements.
+        /// Corresponds to Contents key in annotation dictionary.
+        /// Content model: a string or a rich text string.
+        /// For more details see paragraph 6.5.4 in Xfdf document specification.
+        /// </remarks>
         public virtual PdfString GetContents() {
             return contents;
         }
 
+        /// <summary>Sets the string value of contents tag in Xfdf document structure.</summary>
         public virtual iText.Forms.Xfdf.AnnotObject SetContents(PdfString contents) {
             this.contents = contents;
             return this;
         }
 
+        /// <summary>Gets the string value of contents-richtext tag in Xfdf document structure.</summary>
+        /// <remarks>
+        /// Gets the string value of contents-richtext tag in Xfdf document structure. It is a child of caret, circle, fileattachment,
+        /// freetext, highlight, ink, line, polygon, polyline, sound, square, squiggly, stamp, strikeout, text, and
+        /// underline elements.
+        /// Corresponds to RC key in annotation dictionary.
+        /// Content model: text string.
+        /// For more details see paragraph 6.5.5 in Xfdf document specification.
+        /// </remarks>
         public virtual PdfString GetContentsRichText() {
             return contentsRichText;
         }
 
+        /// <summary>Gets the string value of contents-richtext tag in xfdf document structure.</summary>
         public virtual iText.Forms.Xfdf.AnnotObject SetContentsRichText(PdfString contentsRichRext) {
             this.contentsRichText = contentsRichRext;
             return this;
         }
 
+        /// <summary>Gets Action element, a child of OnActivation element of the link annotation.</summary>
+        /// <remarks>
+        /// Gets Action element, a child of OnActivation element of the link annotation.
+        /// Corresponds to the A key in the link annotation dictionary.
+        /// </remarks>
         public virtual ActionObject GetAction() {
             return action;
         }
 
+        /// <summary>Sets Action element, a child of OnActivation element of the link annotation.</summary>
+        /// <remarks>
+        /// Sets Action element, a child of OnActivation element of the link annotation.
+        /// Corresponds to the A key in the link annotation dictionary.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetAction(ActionObject action) {
             this.action = action;
             return this;
         }
 
+        /// <summary>
+        /// Adds new
+        /// <see cref="AttributeObject"/>
+        /// to the list of annotation attributes.
+        /// </summary>
+        /// <param name="attr">attribute to be added.</param>
         public virtual void AddAttribute(AttributeObject attr) {
             attributes.Add(attr);
         }
 
+        /// <summary>Adds new attribute with given name and boolean value converted to string.</summary>
         internal virtual void AddAttribute(String name, bool value) {
             String valueString = value ? "yes" : "no";
             attributes.Add(new AttributeObject(name, valueString));
@@ -267,6 +411,12 @@ namespace iText.Forms.Xfdf {
             attributes.Add(new AttributeObject(name, stringValue));
         }
 
+        /// <summary>Adds new attribute by given name and value.</summary>
+        /// <remarks>Adds new attribute by given name and value. If required attribute is present, value of the attribute can't be null.
+        ///     </remarks>
+        /// <param name="name"/>
+        /// <param name="valueObject"/>
+        /// <param name="required"/>
         internal virtual void AddAttribute(String name, PdfObject valueObject, bool required) {
             if (valueObject == null) {
                 if (required) {
@@ -300,68 +450,160 @@ namespace iText.Forms.Xfdf {
             AddAttribute(name, valueObject, false);
         }
 
+        /// <summary>Adds page, required attribute of every annotation.</summary>
         internal virtual void AddFdfAttributes(int pageNumber) {
             this.AddAttribute(new AttributeObject(XfdfConstants.PAGE, pageNumber.ToString()));
         }
 
+        /// <summary>Gets Dest element, a child element of link, GoTo, GoToR elements.</summary>
+        /// <remarks>
+        /// Gets Dest element, a child element of link, GoTo, GoToR elements.
+        /// Corresponds to the Dest key in link annotation dictionary.
+        /// </remarks>
         public virtual DestObject GetDestination() {
             return destination;
         }
 
+        /// <summary>Sets Dest element, a child element of link, GoTo, GoToR elements.</summary>
+        /// <remarks>
+        /// Sets Dest element, a child element of link, GoTo, GoToR elements.
+        /// Corresponds to the Dest key in link annotation dictionary.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetDestination(DestObject destination) {
             this.destination = destination;
             return this;
         }
 
+        /// <summary>Gets the string value of the appearance element, a child element of stamp element.</summary>
+        /// <remarks>
+        /// Gets the string value of the appearance element, a child element of stamp element.
+        /// Corresponds to the AP key in the annotation dictionary.
+        /// Content model: Base64 encoded string.
+        /// For more details see paragraph 6.5.1 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetAppearance() {
             return appearance;
         }
 
+        /// <summary>Gets the string value of the appearance element,  a child element of stamp element.</summary>
+        /// <remarks>
+        /// Gets the string value of the appearance element,  a child element of stamp element.
+        /// Corresponds to the AP key in the annotation dictionary.
+        /// Content model: Base64 encoded string.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetAppearance(String appearance) {
             this.appearance = appearance;
             return this;
         }
 
+        /// <summary>Gets the string value of the defaultappearance element, a child of the caret and freetext elements.
+        ///     </summary>
+        /// <remarks>
+        /// Gets the string value of the defaultappearance element, a child of the caret and freetext elements.
+        /// Corresponds to the DA key in the free text annotation dictionary.
+        /// Content model: text string.
+        /// For more details see paragraph 6.5.7 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetDefaultAppearance() {
             return defaultAppearance;
         }
 
+        /// <summary>Sets the string value of the defaultappearance element, a child of the caret and freetext elements.
+        ///     </summary>
+        /// <remarks>
+        /// Sets the string value of the defaultappearance element, a child of the caret and freetext elements.
+        /// Corresponds to the DA key in the free text annotation dictionary.
+        /// Content model: text string.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetDefaultAppearance(String defaultAppearance) {
             this.defaultAppearance = defaultAppearance;
             return this;
         }
 
+        /// <summary>Gets the string value of the defaultstyle element, a child of the freetext element.</summary>
+        /// <remarks>
+        /// Gets the string value of the defaultstyle element, a child of the freetext element.
+        /// Corresponds to the DS key in the free text annotation dictionary.
+        /// Content model : a text string.
+        /// For more details see paragraph 6.5.9 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetDefaultStyle() {
             return defaultStyle;
         }
 
+        /// <summary>Sets the string value of the defaultstyle element, a child of the freetext element.</summary>
+        /// <remarks>
+        /// Sets the string value of the defaultstyle element, a child of the freetext element.
+        /// Corresponds to the DS key in the free text annotation dictionary.
+        /// Content model : a text string.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetDefaultStyle(String defaultStyle) {
             this.defaultStyle = defaultStyle;
             return this;
         }
 
+        /// <summary>Gets the BorderStyleAlt element, a child of the link element.</summary>
+        /// <remarks>
+        /// Gets the BorderStyleAlt element, a child of the link element.
+        /// Corresponds to the Border key in the common annotation dictionary.
+        /// For more details see paragraph 6.5.3 in Xfdf document specification.
+        /// </remarks>
         public virtual BorderStyleAltObject GetBorderStyleAlt() {
             return borderStyleAlt;
         }
 
+        /// <summary>Sets the BorderStyleAlt element, a child of the link element.</summary>
+        /// <remarks>
+        /// Sets the BorderStyleAlt element, a child of the link element.
+        /// Corresponds to the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetBorderStyleAlt(BorderStyleAltObject borderStyleAlt) {
             this.borderStyleAlt = borderStyleAlt;
             return this;
         }
 
+        /// <summary>Gets the string, containing vertices element, a child of the polygon and polyline elements.</summary>
+        /// <remarks>
+        /// Gets the string, containing vertices element, a child of the polygon and polyline elements.
+        /// Corresponds to the Vertices key in the polygon or polyline annotation dictionary.
+        /// For more details see paragraph 6.5.31 in Xfdf document specification.
+        /// </remarks>
         public virtual String GetVertices() {
             return vertices;
         }
 
+        /// <summary>Sets the string, containing vertices element, a child of the polygon and polyline elements.</summary>
+        /// <remarks>
+        /// Sets the string, containing vertices element, a child of the polygon and polyline elements.
+        /// Corresponds to the Vertices key in the polygon or polyline annotation dictionary.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetVertices(String vertices) {
             this.vertices = vertices;
             return this;
         }
 
+        /// <summary>
+        /// Gets the reference to the source
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the reference to the source
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// . Used for attaching popups in case of reading data from pdf file.
+        /// </remarks>
         public virtual PdfIndirectReference GetRef() {
             return @ref;
         }
 
+        /// <summary>
+        /// Sets the reference to the source
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>.
+        /// </summary>
+        /// <remarks>
+        /// Sets the reference to the source
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// . Used for attaching popups in case of reading data from pdf file.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.AnnotObject SetRef(PdfIndirectReference @ref) {
             this.@ref = @ref;
             return this;

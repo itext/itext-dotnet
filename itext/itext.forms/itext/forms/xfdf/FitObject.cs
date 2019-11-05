@@ -43,17 +43,38 @@ address: sales@itextpdf.com
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>Represent Fit, a child of the Dest element.</summary>
+    /// <remarks>
+    /// Represent Fit, a child of the Dest element.
+    /// Content model: none.
+    /// Attributes: depends of type of Fit (FitH, FitB, FitV etc.).
+    /// For more details see paragraphs 6.5.13-6.5.19, 6.6.23 in Xfdf specification.
+    /// </remarks>
     public class FitObject {
+        /// <summary>Represents the page displayed by current Fit element.</summary>
+        /// <remarks>
+        /// Represents the page displayed by current Fit element.
+        /// Attribute of Fit, FitB, FitBH, FitBV, FitH, FitR, FitV, XYZ elements.
+        /// </remarks>
         private PdfObject page;
 
+        /// <summary>Vertical coordinate positioned at the top edge of the window.</summary>
         private float top;
 
+        /// <summary>Vertical coordinate positioned at the bottom edge of the window.</summary>
         private float bottom;
 
+        /// <summary>Horizontal coordinate positioned at the left edge of the window.</summary>
         private float left;
 
+        /// <summary>Horizontal coordinate positioned at the right edge of the window.</summary>
         private float right;
 
+        /// <summary>Corresponds to the zoom object in the destination syntax.</summary>
+        /// <remarks>
+        /// Corresponds to the zoom object in the destination syntax.
+        /// Attribute of XYZ object.
+        /// </remarks>
         private float zoom;
 
         public FitObject(PdfObject page) {
@@ -63,50 +84,73 @@ namespace iText.Forms.Xfdf {
             this.page = page;
         }
 
+        /// <summary>Gets the PdfObject representing the page displayed by current Fit element.</summary>
+        /// <remarks>
+        /// Gets the PdfObject representing the page displayed by current Fit element.
+        /// Attribute of Fit, FitB, FitBH, FitBV, FitH, FitR, FitV, XYZ elements.
+        /// </remarks>
         public virtual PdfObject GetPage() {
             return page;
         }
 
+        /// <summary>Gets a float vertical coordinate positioned at the top edge of the window.</summary>
         public virtual float GetTop() {
             return top;
         }
 
+        /// <summary>Sets a float vertical coordinate positioned at the top edge of the window.</summary>
         public virtual iText.Forms.Xfdf.FitObject SetTop(float top) {
             this.top = top;
             return this;
         }
 
+        /// <summary>Gets a float horizontal coordinate positioned at the left edge of the window.</summary>
         public virtual float GetLeft() {
             return left;
         }
 
+        /// <summary>Sets a float horizontal coordinate positioned at the left edge of the window.</summary>
         public virtual iText.Forms.Xfdf.FitObject SetLeft(float left) {
             this.left = left;
             return this;
         }
 
+        /// <summary>Gets a float vertical coordinate positioned at the bottom edge of the window.</summary>
         public virtual float GetBottom() {
             return bottom;
         }
 
+        /// <summary>Sets a float vertical coordinate positioned at the bottom edge of the window.</summary>
         public virtual iText.Forms.Xfdf.FitObject SetBottom(float bottom) {
             this.bottom = bottom;
             return this;
         }
 
+        /// <summary>Gets a float horizontal coordinate positioned at the right edge of the window.</summary>
         public virtual float GetRight() {
             return right;
         }
 
+        /// <summary>Sets a float horizontal coordinate positioned at the right edge of the window.</summary>
         public virtual iText.Forms.Xfdf.FitObject SetRight(float right) {
             this.right = right;
             return this;
         }
 
+        /// <summary>Gets a float representing the zoom ratio.</summary>
+        /// <remarks>
+        /// Gets a float representing the zoom ratio.
+        /// Attribute of XYZ object.
+        /// </remarks>
         public virtual float GetZoom() {
             return zoom;
         }
 
+        /// <summary>Sets a float representing the zoom ratio.</summary>
+        /// <remarks>
+        /// Sets a float representing the zoom ratio.
+        /// Attribute of XYZ object.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.FitObject SetZoom(float zoom) {
             this.zoom = zoom;
             return this;

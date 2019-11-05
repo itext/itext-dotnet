@@ -54,9 +54,9 @@ namespace iText.Forms.Xfdf {
     public class XfdfObjectFactory {
         private static ILog logger = LogManager.GetLogger(typeof(XfdfObjectFactory));
 
-        /// <summary>The method extracts data from pdf document acroform and annotations into XfdfObject.</summary>
+        /// <summary>Extracts data from pdf document acroform and annotations into XfdfObject.</summary>
         /// <remarks>
-        /// The method extracts data from pdf document acroform and annotations into XfdfObject.
+        /// Extracts data from pdf document acroform and annotations into XfdfObject.
         /// *
         /// </remarks>
         /// <param name="document">Pdf document for data extraction.</param>
@@ -96,6 +96,10 @@ namespace iText.Forms.Xfdf {
             return resultXfdf;
         }
 
+        /// <summary>Extracts data from input stream into XfdfObject.</summary>
+        /// <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file</remarks>
+        /// <param name="xfdfInputStream">The input stream containing xml-styled xfdf data.</param>
+        /// <returns>XfdfObject containing original xfdf data.</returns>
         public virtual XfdfObject CreateXfdfObject(Stream xfdfInputStream) {
             XfdfObject xfdfObject = new XfdfObject();
             XmlDocument document = XfdfFileUtils.CreateXfdfDocumentFromStream(xfdfInputStream);
