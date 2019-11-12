@@ -282,8 +282,12 @@ namespace iText.Forms.Xfdf {
 
         public const String DEFAULT_STYLE = "defaultstyle";
 
+        [System.ObsoleteAttribute(@"Use XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING instead. The constant will be removed in 7.2."
+            )]
         public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
 
+        [System.ObsoleteAttribute(@"Use XfdfException.PAGE_IS_MISSING instead. The constant will be removed in 7.2."
+            )]
         public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
 
         [System.ObsoleteAttribute(@"Use LogMessageConstant#UNSUPPORTED_ANNOTATION_ATTRIBUTE instead. The constant will be removed in 7.2."

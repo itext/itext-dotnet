@@ -47,5 +47,11 @@ namespace iText.Forms.Xfdf {
         public XfdfException(String message)
             : base(message) {
         }
+
+        /// <summary>Message in case one tries to add attribute with null name or value</summary>
+        public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
+
+        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
+        public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
     }
 }

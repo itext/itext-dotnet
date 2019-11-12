@@ -968,7 +968,7 @@ namespace iText.Forms {
                 annot.AddAttribute(new AttributeObject(nameAbsent, valuePresent));
                 annot.AddAttribute(new AttributeObject(namePresent, valueAbsent));
             }
-            , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfConstants.ATTRIBUTE_NAME_OR_VALUE_MISSING))
+            , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING))
 ;
         }
 

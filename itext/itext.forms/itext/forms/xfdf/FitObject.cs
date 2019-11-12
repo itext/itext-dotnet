@@ -79,7 +79,7 @@ namespace iText.Forms.Xfdf {
 
         public FitObject(PdfObject page) {
             if (page == null) {
-                throw new XfdfException(XfdfConstants.PAGE_IS_MISSING);
+                throw new XfdfException(XfdfException.PAGE_IS_MISSING);
             }
             this.page = page;
         }
