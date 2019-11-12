@@ -165,7 +165,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ElementDimensionExceedsViewboxBoundaryTest() {
-            // TODO update cmp-file after DEVSIX-2240 fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "elementDimensionExceedsViewboxBoundary");
         }
     }

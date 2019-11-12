@@ -128,7 +128,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-2240")]
         public virtual void DifferentDimensionsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "differentDimensions", properties);
         }
