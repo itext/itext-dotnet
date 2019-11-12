@@ -211,28 +211,30 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
         }
 
-        /// <summary>
-        /// Gets the ascentline for the text (i.e. the line that represents the topmost extent that a string of the current font could have)
+        /// <summary>Gets the ascent line for the text (i.e. the line that represents the topmost extent that a string of the current font could have).
+        ///     </summary>
+        /// <remarks>
+        /// Gets the ascent line for the text (i.e. the line that represents the topmost extent that a string of the current font could have).
         /// This value includes the Rise of the draw operation - see
         /// <see cref="GetRise()"/>
-        /// for the amount added by Rise
-        /// </summary>
-        /// <returns>the ascentline line segment</returns>
+        /// for the amount added by Rise.
+        /// </remarks>
+        /// <returns>a LineSegment instance</returns>
         public virtual LineSegment GetAscentLine() {
             CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(GetAscentDescent()[0] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
         }
 
-        /// <summary>Gets the descentline for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
+        /// <summary>Gets the descent line for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
         ///     </summary>
         /// <remarks>
-        /// Gets the descentline for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
+        /// Gets the descent line for the text (i.e. the line that represents the bottom most extent that a string of the current font could have).
         /// This value includes the Rise of the draw operation - see
         /// <see cref="GetRise()"/>
-        /// for the amount added by Rise
+        /// for the amount added by Rise.
         /// </remarks>
-        /// <returns>the descentline line segment</returns>
+        /// <returns>a LineSegment instance</returns>
         public virtual LineSegment GetDescentLine() {
             CheckGraphicsState();
             return GetUnscaledBaselineWithOffset(GetAscentDescent()[1] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
