@@ -71,7 +71,8 @@ namespace iText.Layout.Font {
         }
 
         /// <summary>Binary search over ordered segments.</summary>
-        /// <param name="n"/>
+        /// <param name="n">numeric character reference based on the character's Unicode code point</param>
+        /// <returns>true if this Range contains the specified code point, otherwise false</returns>
         public virtual bool Contains(int n) {
             int low = 0;
             int high = ranges.Length - 1;

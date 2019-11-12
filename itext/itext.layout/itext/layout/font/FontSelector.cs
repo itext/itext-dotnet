@@ -64,9 +64,12 @@ namespace iText.Layout.Font {
         private const int FONT_FAMILY_EQUALS_AWARD = 13;
 
         /// <summary>Create new FontSelector instance.</summary>
-        /// <param name="allFonts">Unsorted set of all available fonts.</param>
-        /// <param name="fontFamilies">Sorted list of preferred font families.</param>
-        /// <param name="fc"/>
+        /// <param name="allFonts">unsorted set of all available fonts.</param>
+        /// <param name="fontFamilies">sorted list of preferred font families.</param>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristics"/>.
+        /// </param>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual protected member in constructor.
@@ -157,11 +160,13 @@ namespace iText.Layout.Font {
             /// This method is used to compare two fonts (the required one which is described by fontInfo and
             /// the one to be examined which is described by fc and fontFamily) and measure their similarity.
             /// The more the fonts are similar the higher the score is.
+            /// <para />
             /// Firstly we check if the font-family described by fontInfo equals to the required one.
             /// If it's not true the examination fails, it continues otherwise.
             /// If the required font-family is monospace, serif or sans serif we check whether
             /// the font under examination is monospace, serif or sans serif resp. Its font-family is not
             /// taking into considerations.
+            /// <para />
             /// If font-family is respected, we consider the next font-style characteristics to select the required font
             /// of the respected font-family:
             /// a) bold

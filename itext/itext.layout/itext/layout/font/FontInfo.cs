@@ -68,7 +68,7 @@ namespace iText.Layout.Font {
     /// <see cref="GetAlias()"/>
     /// and
     /// <see cref="GetDescriptor()"/>
-    /// do not taken into account in
+    /// are not taken into account in
     /// <see cref="Equals(System.Object)"/>
     /// ,
     /// the same font with different aliases will have equal FontInfo's,
@@ -181,6 +181,7 @@ namespace iText.Layout.Font {
         /// was created with
         /// <c>byte[]</c>.
         /// </summary>
+        /// <returns>font data</returns>
         public byte[] GetFontData() {
             return fontData;
         }
