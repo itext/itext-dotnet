@@ -88,8 +88,7 @@ namespace iText.Kernel.Font {
         /// 
         /// <see cref="iText.IO.Font.Otf.Glyph"/>
         /// if it exists or .NOTDEF if supported, otherwise
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </returns>
         public abstract Glyph GetGlyph(int unicode);
 
@@ -237,9 +236,14 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Gets the descent of a
         /// <c>String</c>
+        /// in points.
+        /// </summary>
+        /// <remarks>
+        /// Gets the descent of a
+        /// <c>String</c>
         /// in points. The descent will always be
         /// less than or equal to zero even if all the characters have an higher descent.
-        /// </summary>
+        /// </remarks>
         /// <param name="text">
         /// the
         /// <c>String</c>
@@ -303,9 +307,14 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Gets the ascent of a
         /// <c>String</c>
+        /// in points.
+        /// </summary>
+        /// <remarks>
+        /// Gets the ascent of a
+        /// <c>String</c>
         /// in points. The ascent will always be
         /// greater than or equal to zero even if all the characters have a lower ascent.
-        /// </summary>
+        /// </remarks>
         /// <param name="text">
         /// the
         /// <c>String</c>
@@ -378,7 +387,7 @@ namespace iText.Kernel.Font {
         /// Indicates if all the glyphs and widths for that particular
         /// encoding should be included in the document.
         /// </summary>
-        /// <returns><CODE>false</CODE> to include all the glyphs and widths.</returns>
+        /// <returns><c>false</c> to include all the glyphs and widths.</returns>
         public virtual bool IsSubset() {
             return subset;
         }
@@ -403,7 +412,7 @@ namespace iText.Kernel.Font {
 
         /// <summary>Adds a character range when subsetting.</summary>
         /// <remarks>
-        /// Adds a character range when subsetting. The range is an <CODE>int</CODE> array
+        /// Adds a character range when subsetting. The range is an <c>int</c> array
         /// where the first element is the start range inclusive and the second element is the
         /// end range inclusive. Several ranges are allowed in the same array.
         /// Note, #setSubset(true) will be called implicitly
@@ -461,8 +470,13 @@ namespace iText.Kernel.Font {
         /// Checks whether the
         /// <see cref="PdfFont"/>
         /// was built with corresponding fontProgram and encoding or CMAP.
-        /// Default value is false unless overridden.
         /// </summary>
+        /// <remarks>
+        /// Checks whether the
+        /// <see cref="PdfFont"/>
+        /// was built with corresponding fontProgram and encoding or CMAP.
+        /// Default value is false unless overridden.
+        /// </remarks>
         /// <param name="fontProgram">a font name or path to a font program</param>
         /// <param name="encoding">an encoding or CMAP</param>
         /// <returns>true, if the PdfFont was built with the fontProgram and encoding. Otherwise false.</returns>
@@ -479,12 +493,17 @@ namespace iText.Kernel.Font {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }
@@ -495,11 +514,16 @@ namespace iText.Kernel.Font {
             return true;
         }
 
-        /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subset.</summary>
-        /// <param name="fontName"/>
-        /// <param name="isSubset"/>
-        /// <param name="isEmbedded"/>
-        /// <returns>the font name with subset prefix if isSubset and isEmbedded are true.s</returns>
+        /// <summary>Adds a unique subset prefix to be added to the font name when the font is embedded and subsetted.
+        ///     </summary>
+        /// <param name="fontName">the original font name.</param>
+        /// <param name="isSubset">denotes whether font in question is subsetted, i.e. only used symbols are kept in it.
+        ///     </param>
+        /// <param name="isEmbedded">denotes whether font in question is embedded into the PDF document.</param>
+        /// <returns>
+        /// the font name prefixed with subset if isSubset and isEmbedded are true,
+        /// otherwise original font name is returned intact.
+        /// </returns>
         protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
             if (isSubset && isEmbedded) {
                 StringBuilder s = new StringBuilder(fontName.Length + 7);
@@ -515,8 +539,7 @@ namespace iText.Kernel.Font {
         /// Create
         /// <c>PdfStream</c>
         /// based on
-        /// <paramref name="fontStreamBytes"/>
-        /// .
+        /// <paramref name="fontStreamBytes"/>.
         /// </summary>
         /// <param name="fontStreamBytes">original font data, must be not null.</param>
         /// <param name="fontStreamLengths">
@@ -529,13 +552,6 @@ namespace iText.Kernel.Font {
         /// <see langword="null"/>
         /// , if there is an error reading the font.
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException">
-        /// Method will throw exception if
-        /// <paramref name="fontStreamBytes"/>
-        /// is
-        /// <see langword="null"/>
-        /// .
-        /// </exception>
         protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
             if (fontStreamBytes == null) {
                 throw new PdfException(PdfException.FontEmbeddingIssue);
@@ -548,6 +564,17 @@ namespace iText.Kernel.Font {
             return fontStream;
         }
 
+        /// <summary>
+        /// Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
+        /// ranges in one.
+        /// </summary>
+        /// <param name="ranges">
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of integer arrays, which are constituted by pairs of ints that denote
+        /// each range limits. Each integer array size shall be a multiple of two.
+        /// </param>
+        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
         [System.ObsoleteAttribute(@"The logic has been moved to iText.IO.Font.TrueTypeFont .")]
         protected internal static int[] CompactRanges(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
@@ -583,8 +610,7 @@ namespace iText.Kernel.Font {
         /// Helper method for making an object indirect, if the object already is indirect.
         /// Useful for FontDescriptor and FontFile to make possible immediate flushing.
         /// If there is no PdfDocument, mark the object as
-        /// <c>MUST_BE_INDIRECT</c>
-        /// .
+        /// <c>MUST_BE_INDIRECT</c>.
         /// </remarks>
         /// <param name="obj">an object to make indirect.</param>
         /// <returns>

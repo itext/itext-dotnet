@@ -69,10 +69,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">
-		/// An exception is only thrown if an error occurred, not if a
-		/// node was not found.
-		/// </exception>
 		internal static XMPNode FindSchemaNode(XMPNode tree, String namespaceURI, bool createNodes
 			)
 		{
@@ -93,10 +89,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Note: If <code>createNodes</code> is <code>true</code>, it is <b>always</b>
 		/// returned a valid node.
 		/// </returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">
-		/// An exception is only thrown if an error occurred, not if a
-		/// node was not found.
-		/// </exception>
 		internal static XMPNode FindSchemaNode(XMPNode tree, String namespaceURI, String 
 			suggestedPrefix, bool createNodes)
 		{
@@ -137,7 +129,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="childName">the node name to find</param>
 		/// <param name="createNodes">flag, if new nodes shall be created.</param>
 		/// <returns>Returns the found or created node or <code>null</code>.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if</exception>
 		internal static XMPNode FindChildNode(XMPNode parent, String childName, bool createNodes
 			)
 		{
@@ -188,10 +179,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <code>createNodes == true</code>).
 		/// </param>
 		/// <returns>Returns the node if found or created or <code>null</code>.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">
-		/// An exception is only thrown if an error occurred,
-		/// not if a node was not found.
-		/// </exception>
 		internal static XMPNode FindNode(XMPNode xmpTree, XMPPath xpath, bool createNodes
 			, PropertyOptions leafOptions)
 		{
@@ -336,8 +323,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="options">the <code>PropertyOptions</code></param>
 		/// <param name="itemValue">the node value to set</param>
 		/// <returns>Returns the updated options.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If the options are not consistant.
-		/// 	</exception>
 		internal static PropertyOptions VerifySetOptions(PropertyOptions options, Object 
 			itemValue)
 		{
@@ -458,7 +443,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="nextStep">the xpath segment</param>
 		/// <param name="createNodes"></param>
 		/// <returns>returns the found or created XMPPath node</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"></exception>
 		private static XMPNode FollowXPathStep(XMPNode parentNode, XMPPathSegment nextStep
 			, bool createNodes)
 		{
@@ -543,7 +527,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="createNodes">flag if nodes shall be created</param>
 		/// <returns>Returns the qualifier node if found or created, <code>null</code> otherwise.
 		/// 	</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"></exception>
 		private static XMPNode FindQualifierNode(XMPNode parent, String qualName, bool createNodes
 			)
 		{
@@ -562,7 +545,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="segment">the segment containing the array index</param>
 		/// <param name="createNodes">flag if new nodes are allowed to be created.</param>
 		/// <returns>Returns the index or index = -1 if not found</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Throws Exceptions</exception>
 		private static int FindIndexedItem(XMPNode arrayNode, String segment, bool createNodes
 			)
 		{
@@ -603,7 +585,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="fieldName"/>
 		/// <param name="fieldValue"/>
 		/// <returns>Returns the index of the field if found, otherwise -1.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"></exception>
 		private static int LookupFieldSelector(XMPNode arrayNode, String fieldName, String
 			 fieldValue)
 		{
@@ -651,7 +632,6 @@ namespace iText.Kernel.XMP.Impl
 		/// an x-default node is created if there has not been one.
 		/// </param>
 		/// <returns>Returns the index of th</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"></exception>
 		private static int LookupQualSelector(XMPNode arrayNode, String qualName, String 
 			qualValue, int aliasForm)
 		{
@@ -764,8 +744,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="arrayNode">the language array</param>
 		/// <param name="itemLang">the language of the item</param>
 		/// <param name="itemValue">the content of the item</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if a duplicate property is added
-		/// 	</exception>
 		internal static void AppendLangItem(XMPNode arrayNode, String itemLang, String itemValue
 			)
 		{
@@ -800,7 +778,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Returns the kind of match as an Integer and the found node in an
 		/// array.
 		/// </returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		internal static Object[] ChooseLocalizedText(XMPNode arrayNode, String genericLang
 			, String specificLang)
 		{
@@ -895,7 +872,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="arrayNode">an array node</param>
 		/// <param name="language">the requested language</param>
 		/// <returns>Returns the index if the language has been found, -1 otherwise.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		internal static int LookupLanguageItem(XMPNode arrayNode, String language)
 		{
 			if (!arrayNode.GetOptions().IsArray())

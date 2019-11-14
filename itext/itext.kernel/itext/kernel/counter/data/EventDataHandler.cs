@@ -77,8 +77,8 @@ namespace iText.Kernel.Counter.Data {
     /// custom cache) and the processing is started asynchronously
     /// This class can be considered thread-safe if the cache and factory instances aren't used anywhere else in the code.
     /// </remarks>
-    /// 
-    /// 
+    /// <typeparam name="T">data signature type</typeparam>
+    /// <typeparam name="V">data type</typeparam>
     public abstract class EventDataHandler<T, V>
         where V : EventData<T> {
         private readonly Object processLock = new Object();

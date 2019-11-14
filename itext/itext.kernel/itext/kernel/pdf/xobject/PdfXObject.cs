@@ -63,8 +63,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// or
         /// <see cref="PdfImageXObject"/>
         /// by
-        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
         /// </summary>
         /// <param name="stream">
         /// 
@@ -80,8 +79,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// either
         /// <see cref="PdfFormXObject"/>
         /// or
-        /// <see cref="PdfImageXObject"/>
-        /// .
+        /// <see cref="PdfImageXObject"/>.
         /// </returns>
         public static iText.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream) {
             if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype))) {

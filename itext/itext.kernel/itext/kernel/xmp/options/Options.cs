@@ -51,11 +51,10 @@ namespace iText.Kernel.XMP.Options {
         public Options() {
         }
 
+        // EMTPY
         /// <summary>Constructor with the options bit mask.</summary>
         /// <param name="options">the options bit mask</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not correct</exception>
         public Options(int options) {
-            // EMTPY
             AssertOptionsValid(options);
             SetOptions(options);
         }
@@ -102,7 +101,6 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <param name="options">The options to set.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException"></exception>
         public virtual void SetOptions(int options) {
             AssertOptionsValid(options);
             this.options = options;
@@ -124,7 +122,7 @@ namespace iText.Kernel.XMP.Options {
         /// expensive and should only be used within tests or as
         /// </remarks>
         /// <returns>
-        /// Returns a String listing all options that are set to <code>true</code> by their name,
+        /// Returns a String listing all options that are set to <c>true</c> by their name,
         /// like &quot;option1 | option4&quot;.
         /// </returns>
         public virtual String GetOptionsString() {
@@ -133,7 +131,6 @@ namespace iText.Kernel.XMP.Options {
                 int theBits = options;
                 while (theBits != 0) {
                     int oneLessBit = theBits & (theBits - 1);
-                    // clear rightmost one bit
                     int singleBit = theBits ^ oneLessBit;
                     String bitName = GetOptionName(singleBit);
                     sb.Append(bitName);
@@ -173,7 +170,6 @@ namespace iText.Kernel.XMP.Options {
         /// (it has to be made public therefore).
         /// </remarks>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal virtual void AssertConsistency(int options) {
         }
 
@@ -187,7 +183,6 @@ namespace iText.Kernel.XMP.Options {
         /// -method is called.
         /// </remarks>
         /// <param name="options">the options to check</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are invalid.</exception>
         private void AssertOptionsValid(int options) {
             int invalidOptions = options & ~GetValidOptions();
             if (invalidOptions == 0) {

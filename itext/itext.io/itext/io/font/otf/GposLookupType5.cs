@@ -51,7 +51,6 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType5 : OpenTableLookup {
         private readonly IList<GposLookupType5.MarkToLigature> marksligatures;
 
-        /// <exception cref="System.IO.IOException"/>
         public GposLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             marksligatures = new List<GposLookupType5.MarkToLigature>();
@@ -116,11 +115,10 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
+            // skip format, always 1
             openReader.rf.ReadUnsignedShort();
-            //skip format, always 1
             int markCoverageLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int ligatureCoverageLocation = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int classCount = openReader.rf.ReadUnsignedShort();

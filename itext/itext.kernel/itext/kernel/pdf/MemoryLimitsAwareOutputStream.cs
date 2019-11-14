@@ -77,7 +77,6 @@ namespace iText.Kernel.Pdf {
         /// the specified size, in bytes.
         /// </summary>
         /// <param name="size">the initial size.</param>
-        /// <exception cref="System.ArgumentException">if size is negative.</exception>
         public MemoryLimitsAwareOutputStream(int size)
             : base(size) {
         }

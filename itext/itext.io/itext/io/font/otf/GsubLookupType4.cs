@@ -54,7 +54,6 @@ namespace iText.IO.Font.Otf {
         /// </remarks>
         private IDictionary<int, IList<int[]>> ligatures;
 
-        /// <exception cref="System.IO.IOException"/>
         public GsubLookupType4(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             ligatures = new Dictionary<int, IList<int[]>>();
@@ -96,11 +95,10 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
+            // subformat - always 1
             openReader.rf.ReadShort();
-            //subformat - always 1
             int coverage = openReader.rf.ReadUnsignedShort() + subTableLocation;
             int ligSetCount = openReader.rf.ReadUnsignedShort();
             int[] ligatureSet = new int[ligSetCount];

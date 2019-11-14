@@ -61,12 +61,13 @@ namespace iText.Layout.Renderer {
     /// the most part to return the value the most suitable and handy for the purposes of accessibility properties applying.
     /// <para />
     /// Here are the main reasons to leave these types as is for now, even after introducing of PDF 2.0:
-    /// <ul>
-    /// <li>Standard structure types for pdf 1.7 and 2.0 are very alike. There are some differences, like new/removed roles
+    /// <list type="bullet">
+    /// <item><description>Standard structure types for pdf 1.7 and 2.0 are very alike. There are some differences, like new/removed roles
     /// and attributes, however they are not used in current layout auto tagging mechanism.
-    /// </li>
-    /// <li>Differentiating  possible types for the same role based on the context is not supported at the moment.</li>
-    /// </ul>
+    /// </description></item>
+    /// <item><description>Differentiating  possible types for the same role based on the context is not supported at the moment.
+    /// </description></item>
+    /// </list>
     /// In general, the correct way to handle role types would be to have separate classes for every namespace that define type
     /// and apply attributes. However I believe, that for now it is not feasible at the moment to implement this approach.
     /// The right time to improve and replace this class might be when new roles and attributes (specific to the different standard structure namespaces)
@@ -160,23 +161,23 @@ namespace iText.Layout.Renderer {
         /// <summary>Identifies standard structure role type based only on it's name.</summary>
         /// <remarks>
         /// Identifies standard structure role type based only on it's name. The return types might be one of the constants:
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="Unknown"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="Grouping"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="BlockLevel"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="InlineLevel"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="Illustration"/>
-        /// </li>
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// See also remarks in the
         /// <see cref="AccessibleTypes"/>
         /// class documentation.

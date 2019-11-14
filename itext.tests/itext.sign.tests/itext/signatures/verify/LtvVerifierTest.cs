@@ -65,8 +65,6 @@ namespace iText.Signatures.Verify {
         public static void After() {
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void ValidLtvDocTest01() {
             String ltvTsFileName = sourceFolder + "ltvDoc.pdf";
@@ -77,8 +75,6 @@ namespace iText.Signatures.Verify {
             NUnit.Framework.Assert.AreEqual(7, verificationMessages.Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void ValidLtvDocTest02() {
             String ltvTsFileName = sourceFolder + "ltvDoc.pdf";

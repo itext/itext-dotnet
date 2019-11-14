@@ -57,8 +57,7 @@ namespace iText.StyledXmlParser.Css.Media {
 
         /// <summary>
         /// Creates a
-        /// <see cref="CssMediaRule"/>
-        /// .
+        /// <see cref="CssMediaRule"/>.
         /// </summary>
         /// <param name="ruleParameters">the rule parameters</param>
         public CssMediaRule(String ruleParameters)

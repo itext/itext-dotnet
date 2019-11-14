@@ -66,8 +66,6 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PolylineRendererTest() {
             String filename = "polylineRendererTest.pdf";
@@ -122,8 +120,6 @@ namespace iText.Svg.Renderers.Impl {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PolyLineEmptyPointsListTest() {
             String filename = "polyLineEmptyPointsListTest.pdf";
@@ -165,6 +161,12 @@ namespace iText.Svg.Renderers.Impl {
             for (int x = 0; x < attributePoints.Count; x++) {
                 NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementDimensionExceedsViewboxBoundaryTest() {
+            // TODO update cmp-file after DEVSIX-2240 fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "elementDimensionExceedsViewboxBoundary");
         }
     }
 }

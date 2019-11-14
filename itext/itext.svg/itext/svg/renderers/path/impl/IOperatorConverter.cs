@@ -65,14 +65,18 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>
     /// Implementation of
     /// <see cref="IOperatorConverter"/>
+    /// specifically for smooth curves.
+    /// </summary>
+    /// <remarks>
+    /// Implementation of
+    /// <see cref="IOperatorConverter"/>
     /// specifically for smooth curves. It will convert all operators from
     /// relative to absolute coordinates except the first coordinate pair.
     /// This implementation is used by the Smooth (Shorthand) Bézier curve commands, because the conversion of the first
     /// coordinate pair is calculated in
     /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer.GetShapeCoordinates(iText.Svg.Renderers.Path.IPathShape, iText.Svg.Renderers.Path.IPathShape, System.String[])
-    ///     "/>
-    /// .
-    /// </summary>
+    ///     "/>.
+    /// </remarks>
     internal class SmoothOperatorConverter : IOperatorConverter {
         public virtual String[] MakeCoordinatesAbsolute(String[] relativeCoordinates, double[] initialPoint) {
             String[] result = new String[relativeCoordinates.Length];
@@ -90,8 +94,13 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// Default implementation of
     /// <see cref="IOperatorConverter"/>
     /// used by the regular (not-smooth) curves and other path commands.
-    /// It will convert all operators from relative to absolute coordinates.
     /// </summary>
+    /// <remarks>
+    /// Default implementation of
+    /// <see cref="IOperatorConverter"/>
+    /// used by the regular (not-smooth) curves and other path commands.
+    /// It will convert all operators from relative to absolute coordinates.
+    /// </remarks>
     internal class DefaultOperatorConverter : IOperatorConverter {
         public virtual String[] MakeCoordinatesAbsolute(String[] relativeCoordinates, double[] initialPoint) {
             return SvgCoordinateUtils.MakeRelativeOperatorCoordinatesAbsolute(relativeCoordinates, initialPoint);

@@ -60,8 +60,6 @@ namespace iText.Kernel.Pdf.Xobject {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddFlushedImageXObjectToCanvas() {
             String filename = destinationFolder + "addFlushedImageXObjectToCanvas.pdf";

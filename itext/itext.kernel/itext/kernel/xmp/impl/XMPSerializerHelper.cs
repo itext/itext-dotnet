@@ -51,7 +51,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="out">the output stream to serialize to</param>
 		/// <param name="options">serialization options, can be <code>null</code> for default.
 		/// 	</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public static void Serialize(XMPMetaImpl xmp, Stream output, SerializeOptions options
 			)
 		{
@@ -77,7 +76,6 @@ namespace iText.Kernel.XMP.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a string containing the serialized RDF.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">on serializsation errors.</exception>
 		public static String SerializeToString(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			// forces the encoding to be UTF-16 to get the correct string length
@@ -105,7 +103,6 @@ namespace iText.Kernel.XMP.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a byte buffer containing the serialized RDF.</returns>
-		/// <exception cref="iText.Kernel.XMP.XMPException">on serializsation errors.</exception>
 		public static byte[] SerializeToBuffer(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			MemoryStream output = new MemoryStream(2048);

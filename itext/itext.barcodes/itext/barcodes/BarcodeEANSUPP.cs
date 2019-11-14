@@ -59,8 +59,8 @@ namespace iText.Barcodes {
         /// <param name="supp">the supplemental barcode</param>
         public BarcodeEANSUPP(Barcode1D ean, Barcode1D supp)
             : base(ean.document) {
-            n = 8;
             // horizontal distance between the two barcodes
+            n = 8;
             this.ean = ean;
             this.supp = supp;
         }
@@ -80,44 +80,44 @@ namespace iText.Barcodes {
             return rect;
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
-        /// <TABLE BORDER="1" SUMMARY="barcode properties">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="barcode properties">
+        /// <tr>
+        /// <th><c>barColor</c></th>
+        /// <th><c>textColor</c></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with <c>barColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with current color<br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with <c>barColor</c><br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <c>null</c></param>
+        /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             if (supp.GetFont() != null) {

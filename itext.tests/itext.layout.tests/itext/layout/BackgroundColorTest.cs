@@ -69,8 +69,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ShouldAddBackgroundColorAttributeToAccessiblityWhenBackgroundColorIsSet() {
             fileName = "simpleBackgroundColorTest.pdf";
@@ -85,8 +83,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CloseDocumentAndCompareOutputs(Document document) {
             document.Close();
             String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"

@@ -47,8 +47,7 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Layout {
     /// <summary>
     /// Represents the result of a line
-    /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
+    /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>.
     /// </summary>
     public class LineLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
@@ -62,10 +61,17 @@ namespace iText.Layout.Layout {
         /// result of
         /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
         /// }.
+        /// </summary>
+        /// <remarks>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
         /// The
         /// <see cref="LayoutResult.causeOfNothing"/>
         /// will be set as null.
-        /// </summary>
+        /// </remarks>
         /// <param name="status">
         /// the status of
         /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>

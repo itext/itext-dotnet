@@ -45,8 +45,6 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="allowCommas">Option flag to control the catenation.</param>
         /// <returns>Returns the string containing the catenated array items.</returns>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String separator, 
             String quotes, bool allowCommas) {
             return XMPUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes, allowCommas);
@@ -66,8 +64,6 @@ namespace iText.Kernel.XMP {
         /// <param name="catedStr">The string to be separated into the array items.</param>
         /// <param name="arrayOptions">Option flags to control the separation.</param>
         /// <param name="preserveCommas">Flag if commas shall be preserved</param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String catedStr, PropertyOptions
              arrayOptions, bool preserveCommas) {
             XMPUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, preserveCommas);
@@ -80,22 +76,25 @@ namespace iText.Kernel.XMP {
         /// button, and has been been generalized somewhat from those specific needs.
         /// It operates in one of three main modes depending on the schemaNS and
         /// propName parameters:
-        /// <ul>
-        /// <li> Non-empty <code>schemaNS</code> and <code>propName</code> - The named property is
+        /// <list type="bullet">
+        /// <item><description> Non-empty <c>schemaNS</c> and <c>propName</c> - The named property is
         /// removed if it is an external property, or if the
-        /// flag <code>doAllProperties</code> option is true. It does not matter whether the
+        /// flag <c>doAllProperties</c> option is true. It does not matter whether the
         /// named property is an actual property or an alias.
-        /// <li> Non-empty <code>schemaNS</code> and empty <code>propName</code> - The all external
+        /// </description></item>
+        /// <item><description> Non-empty <c>schemaNS</c> and empty <c>propName</c> - The all external
         /// properties in the named schema are removed. Internal properties are also
-        /// removed if the flag <code>doAllProperties</code> option is set. In addition,
-        /// aliases from the named schema will be removed if the flag <code>includeAliases</code>
+        /// removed if the flag <c>doAllProperties</c> option is set. In addition,
+        /// aliases from the named schema will be removed if the flag <c>includeAliases</c>
         /// option is set.
-        /// <li> Empty <code>schemaNS</code> and empty <code>propName</code> - All external properties in
+        /// </description></item>
+        /// <item><description> Empty <c>schemaNS</c> and empty <c>propName</c> - All external properties in
         /// all schema are removed. Internal properties are also removed if the
-        /// flag <code>doAllProperties</code> option is passed. Aliases are implicitly handled
+        /// flag <c>doAllProperties</c> option is passed. Aliases are implicitly handled
         /// because the associated actuals are internal if the alias is.
-        /// </ul>
-        /// It is an error to pass an empty <code>schemaNS</code> and non-empty <code>propName</code>.
+        /// </description></item>
+        /// </list>
+        /// It is an error to pass an empty <c>schemaNS</c> and non-empty <c>propName</c>.
         /// </remarks>
         /// <param name="xmp">The XMP object containing the properties to be removed.</param>
         /// <param name="schemaNS">
@@ -112,20 +111,16 @@ namespace iText.Kernel.XMP {
         /// Include aliases in the "named schema" case above.
         /// <em>Note:</em> Currently not supported.
         /// </param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName, bool doAllProperties, bool
              includeAliases) {
             XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases);
         }
 
-        /// <summary>Alias without the new option <code>deleteEmptyValues</code>.</summary>
+        /// <summary>Alias without the new option <c>deleteEmptyValues</c>.</summary>
         /// <param name="source">The source XMP object.</param>
         /// <param name="dest">The destination XMP object.</param>
         /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
             ) {
             AppendProperties(source, dest, doAllProperties, replaceOldValues, false);
@@ -138,26 +133,29 @@ namespace iText.Kernel.XMP {
         /// has been been generalized somewhat from those specific needs. It appends information from one
         /// XMP object (source) to another (dest). The default operation is to append only external
         /// properties that do not already exist in the destination. The flag
-        /// <code>doAllProperties</code> can be used to operate on all properties, external and internal.
-        /// The flag <code>replaceOldValues</code> option can be used to replace the values
+        /// <c>doAllProperties</c> can be used to operate on all properties, external and internal.
+        /// The flag <c>replaceOldValues</c> option can be used to replace the values
         /// of existing properties. The notion of external
         /// versus internal applies only to top level properties. The keep-or-replace-old notion applies
         /// within structs and arrays as described below.
-        /// <ul>
-        /// <li>If <code>replaceOldValues</code> is true then the processing is restricted to the top
+        /// <list type="bullet">
+        /// <item><description>If <c>replaceOldValues</c> is true then the processing is restricted to the top
         /// level properties. The processed properties from the source (according to
-        /// <code>doAllProperties</code>) are propagated to the destination,
+        /// <c>doAllProperties</c>) are propagated to the destination,
         /// replacing any existing values.Properties in the destination that are not in the source
         /// are left alone.
-        /// <li>If <code>replaceOldValues</code> is not passed then the processing is more complicated.
+        /// </description></item>
+        /// <item><description>If <c>replaceOldValues</c> is not passed then the processing is more complicated.
         /// Top level properties are added to the destination if they do not already exist.
         /// If they do exist but differ in form (simple/struct/array) then the destination is left alone.
         /// If the forms match, simple properties are left unchanged while structs and arrays are merged.
-        /// <li>If <code>deleteEmptyValues</code> is passed then an empty value in the source XMP causes
+        /// </description></item>
+        /// <item><description>If <c>deleteEmptyValues</c> is passed then an empty value in the source XMP causes
         /// the corresponding destination XMP property to be deleted. The default is to treat empty
         /// values the same as non-empty values. An empty value is any of a simple empty string, an array
         /// with no items, or a struct with no fields. Qualifiers are ignored.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// <para />The detailed behavior is defined by the following pseudo-code:
         /// <blockquote>
         /// <pre>
@@ -201,8 +199,6 @@ namespace iText.Kernel.XMP {
         /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
         /// <param name="deleteEmptyValues">Delete destination values if source property is empty.</param>
-        /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
             , bool deleteEmptyValues) {
             XMPUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues);
@@ -212,20 +208,23 @@ namespace iText.Kernel.XMP {
         /// <param name="value">The string representation of the Boolean.</param>
         /// <returns>
         /// The appropriate boolean value for the string. The checked values
-        /// for <code>true</code> and <code>false</code> are:
-        /// <ul>
-        /// <li>
+        /// for <c>true</c> and <c>false</c> are:
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="XMPConst.TRUESTR"/>
         /// and
         /// <see cref="XMPConst.FALSESTR"/>
-        /// <li>&quot;t&quot; and &quot;f&quot;
-        /// <li>&quot;on&quot; and &quot;off&quot;
-        /// <li>&quot;yes&quot; and &quot;no&quot;
-        /// <li>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
-        /// </ul>
+        /// </description></item>
+        /// <item><description>&quot;t&quot; and &quot;f&quot;
+        /// </description></item>
+        /// <item><description>&quot;on&quot; and &quot;off&quot;
+        /// </description></item>
+        /// <item><description>&quot;yes&quot; and &quot;no&quot;
+        /// </description></item>
+        /// <item><description>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
+        /// </description></item>
+        /// </list>
         /// </returns>
-        /// <exception cref="XMPException">If an empty string is passed.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static bool ConvertToBoolean(String value) {
             if (value == null || value.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
@@ -247,21 +246,15 @@ namespace iText.Kernel.XMP {
         /// given by the constnts
         /// <see cref="XMPConst.TRUESTR"/>
         /// and
-        /// <see cref="XMPConst.FALSESTR"/>
-        /// .
+        /// <see cref="XMPConst.FALSESTR"/>.
         /// </returns>
         public static String ConvertFromBoolean(bool value) {
             return value ? XMPConst.TRUESTR : XMPConst.FALSESTR;
         }
 
-        /// <summary>Converts a string value to an <code>int</code>.</summary>
+        /// <summary>Converts a string value to an <c>int</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns an int.</returns>
-        /// <exception cref="XMPException">
-        /// If the <code>rawValue</code> is <code>null</code> or empty or the
-        /// conversion fails.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static int ConvertToInteger(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -286,14 +279,9 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to a <code>long</code>.</summary>
+        /// <summary>Converts a string value to a <c>long</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns a long.</returns>
-        /// <exception cref="XMPException">
-        /// If the <code>rawValue</code> is <code>null</code> or empty or the
-        /// conversion fails.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static long ConvertToLong(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -318,14 +306,9 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to a <code>double</code>.</summary>
+        /// <summary>Converts a string value to a <c>double</c>.</summary>
         /// <param name="rawValue">the string value</param>
         /// <returns>Returns a double.</returns>
-        /// <exception cref="XMPException">
-        /// If the <code>rawValue</code> is <code>null</code> or empty or the
-        /// conversion fails.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static double ConvertToDouble(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -347,14 +330,9 @@ namespace iText.Kernel.XMP {
             return value.ToString();
         }
 
-        /// <summary>Converts a string value to an <code>XMPDateTime</code>.</summary>
+        /// <summary>Converts a string value to an <c>XMPDateTime</c>.</summary>
         /// <param name="rawValue">the string value</param>
-        /// <returns>Returns an <code>XMPDateTime</code>-object.</returns>
-        /// <exception cref="XMPException">
-        /// If the <code>rawValue</code> is <code>null</code> or empty or the
-        /// conversion fails.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <returns>Returns an <c>XMPDateTime</c>-object.</returns>
         public static XMPDateTime ConvertToDate(String rawValue) {
             if (rawValue == null || rawValue.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
@@ -364,8 +342,8 @@ namespace iText.Kernel.XMP {
             }
         }
 
-        /// <summary>Convert from <code>XMPDateTime</code> to string.</summary>
-        /// <param name="value">an <code>XMPDateTime</code></param>
+        /// <summary>Convert from <c>XMPDateTime</c> to string.</summary>
+        /// <param name="value">an <c>XMPDateTime</c></param>
         /// <returns>The string representation of the long.</returns>
         public static String ConvertFromDate(XMPDateTime value) {
             return ISO8601Converter.Render(value);
@@ -381,8 +359,6 @@ namespace iText.Kernel.XMP {
         /// <summary>Decode from Base64 encoded string to raw data.</summary>
         /// <param name="base64String">a base64 encoded string</param>
         /// <returns>Returns a byte array containg the decoded string.</returns>
-        /// <exception cref="XMPException">Thrown if the given string is not property base64 encoded</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static byte[] DecodeBase64(String base64String) {
             try {
                 return Base64.Decode(base64String.GetBytes());

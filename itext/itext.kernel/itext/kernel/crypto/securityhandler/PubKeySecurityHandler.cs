@@ -177,8 +177,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return recipients.Count;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private byte[] GetEncodedRecipient(int index) {
             //Certificate certificate = recipient.getX509();
             PublicKeyRecipient recipient = recipients[index];
@@ -202,8 +200,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte two = (byte)(permission >> 8);
             byte three = (byte)(permission >> 16);
             byte four = (byte)(permission >> 24);
-            Array.Copy(seed, 0, pkcs7input, 0, 20);
             // put this seed in the pkcs7 input
+            Array.Copy(seed, 0, pkcs7input, 0, 20);
             pkcs7input[20] = four;
             pkcs7input[21] = three;
             pkcs7input[22] = two;
@@ -217,8 +215,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return cms;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private PdfArray GetEncodedRecipients() {
             PdfArray EncodedRecipients = new PdfArray();
             byte[] cms;
@@ -241,8 +237,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return EncodedRecipients;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private Asn1Object CreateDERForRecipient(byte[] @in, X509Certificate cert) {
             EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
             KeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
@@ -256,8 +250,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return contentinfo.ToAsn1Object();
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate, byte[] abyte0) {
             Asn1InputStream asn1inputstream = new Asn1InputStream(new MemoryStream(x509certificate.GetTbsCertificate()
                 ));

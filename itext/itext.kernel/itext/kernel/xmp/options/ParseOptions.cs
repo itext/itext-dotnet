@@ -32,8 +32,7 @@ using System;
 namespace iText.Kernel.XMP.Options {
     /// <summary>
     /// Options for
-    /// <see cref="iText.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)"/>
-    /// .
+    /// <see cref="iText.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)"/>.
     /// </summary>
     /// <since>24.01.2006</since>
     public sealed class ParseOptions : iText.Kernel.XMP.Options.Options {

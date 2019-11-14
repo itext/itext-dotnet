@@ -60,8 +60,6 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
             String outFileName = destinationFolder + "emptyNestedTableTest.pdf";

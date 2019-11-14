@@ -123,23 +123,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Setter for the annotation's highlighting mode.</summary>
         /// <remarks>
         /// Setter for the annotation's highlighting mode. Possible values are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_NONE"/>
         /// - No highlighting.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_INVERT"/>
         /// - Invert the contents of the annotation rectangle.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_OUTLINE"/>
         /// - Invert the annotation's border.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_PUSH"/>
         /// - Display the annotation?s down appearance, if any.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.HIGHLIGHT_TOGGLE"/>
         /// - Same as P.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="mode">The new value for the annotation's highlighting mode.</param>
         /// <returns>The widget annotation which this method was called on.</returns>
@@ -243,8 +248,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </remarks>
         /// <returns>
         /// an additional actions
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// </returns>
         /// <seealso cref="GetAction()"/>
         public virtual PdfDictionary GetAdditionalAction() {
@@ -256,9 +260,16 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
         /// to this annotation which will be performed in response to
         /// the specific trigger event defined by
+        /// <paramref name="key"/>.
+        /// </summary>
+        /// <remarks>
+        /// Sets an additional
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to this annotation which will be performed in response to
+        /// the specific trigger event defined by
         /// <paramref name="key"/>
         /// . See ISO-320001 12.6.3, "Trigger Events".
-        /// </summary>
+        /// </remarks>
         /// <param name="key">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -342,10 +353,15 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets border style dictionary that has more settings than the array specified for the Border entry (
         /// <see cref="PdfAnnotation.GetBorder()"/>
         /// ).
+        /// </summary>
+        /// <remarks>
+        /// Sets border style dictionary that has more settings than the array specified for the Border entry (
+        /// <see cref="PdfAnnotation.GetBorder()"/>
+        /// ).
         /// See ISO-320001, Table 166 and
         /// <see cref="GetBorderStyle()"/>
         /// for more info.
-        /// </summary>
+        /// </remarks>
         /// <param name="borderStyle">
         /// a border style dictionary specifying the line width and dash pattern that shall be used
         /// in drawing the annotation’s border.
@@ -362,23 +378,28 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Setter for the annotation's preset border style.</summary>
         /// <remarks>
         /// Setter for the annotation's preset border style. Possible values are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_SOLID"/>
         /// - A solid rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
         /// - A dashed rectangle surrounding the annotation.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_BEVELED"/>
         /// - A simulated embossed rectangle that appears to be raised above the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_INSET"/>
         /// - A simulated engraved rectangle that appears to be recessed below the surface of the page.
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="PdfAnnotation.STYLE_UNDERLINE"/>
         /// - A single line along the bottom of the annotation rectangle.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// See also ISO-320001, Table 166.
         /// </remarks>
         /// <param name="style">The new value for the annotation's border style.</param>
@@ -397,8 +418,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Setter for the annotation's preset dashed border style. This property has affect only if
         /// <see cref="PdfAnnotation.STYLE_DASHED"/>
         /// style was used for the annotation border style (see
-        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetBorderStyle(iText.Kernel.Pdf.PdfName)"/>.
         /// See ISO-320001 8.4.3.6, "Line Dash Pattern" for the format in which dash pattern shall be specified.
         /// </remarks>
         /// <param name="dashPattern">

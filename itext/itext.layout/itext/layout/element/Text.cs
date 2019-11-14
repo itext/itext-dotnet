@@ -52,11 +52,16 @@ namespace iText.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Text"/>
+    /// is a piece of text of any length.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="Text"/>
     /// is a piece of text of any length. As a
     /// <see cref="ILeafElement">leaf element</see>
     /// ,
     /// it is the smallest piece of content that may bear specific layout attributes.
-    /// </summary>
+    /// </remarks>
     public class Text : AbstractElement<iText.Layout.Element.Text>, ILeafElement, IAccessibleElement {
         protected internal String text;
 
@@ -104,19 +109,19 @@ namespace iText.Layout.Element {
         /// Gets the horizontal scaling property, which determines how wide the text
         /// should be stretched.
         /// </summary>
-        /// <returns>the horizontal spacing, as a <code>float</code></returns>
+        /// <returns>the horizontal spacing, as a <c>float</c></returns>
         public virtual float? GetHorizontalScaling() {
             return this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
         }
 
         /// <summary>Skews the text to simulate italic and other effects.</summary>
         /// <remarks>
-        /// Skews the text to simulate italic and other effects. Try <CODE>alpha=0
-        /// </CODE> and <CODE>beta=12</CODE>.
+        /// Skews the text to simulate italic and other effects. Try <c>alpha=0
+        /// </c> and <c>beta=12</c>.
         /// </remarks>
         /// <param name="alpha">the first angle in degrees</param>
         /// <param name="beta">the second angle in degrees</param>
-        /// <returns>this <CODE>Text</CODE></returns>
+        /// <returns>this <c>Text</c></returns>
         public virtual iText.Layout.Element.Text SetSkew(float alpha, float beta) {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);

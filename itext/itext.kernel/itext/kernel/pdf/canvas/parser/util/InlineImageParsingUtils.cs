@@ -80,7 +80,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         private static readonly IDictionary<PdfName, PdfName> inlineImageFilterAbbreviationMap;
 
         static InlineImageParsingUtils() {
-            // static initializer
             // Map between key abbreviations allowed in dictionary of inline images and their
             // equivalent image dictionary keys
             inlineImageEntryAbbreviationMap = new Dictionary<PdfName, PdfName>();
@@ -130,9 +129,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="ps">the content parser to use for reading the image.</param>
         /// <param name="colorSpaceDic">a color space dictionary</param>
         /// <returns>the parsed image</returns>
-        /// <exception cref="System.IO.IOException">if anything goes wring with the parsing</exception>
-        /// <exception cref="InlineImageParseException">if parsing of the inline image failed due to issues specific to inline image processing
-        ///     </exception>
         public static PdfStream Parse(PdfCanvasParser ps, PdfDictionary colorSpaceDic) {
             PdfDictionary inlineImageDict = ParseDictionary(ps);
             byte[] samples = ParseSamples(inlineImageDict, colorSpaceDic, ps);
@@ -149,7 +145,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="ps">the parser to extract the embedded image information from</param>
         /// <returns>the dictionary for the inline image, with any abbreviations converted to regular image dictionary keys and values
         ///     </returns>
-        /// <exception cref="System.IO.IOException">if the parse fails</exception>
         private static PdfDictionary ParseDictionary(PdfCanvasParser ps) {
             // by the time we get to here, we have already parsed the BI operator
             PdfDictionary dict = new PdfDictionary();
@@ -266,7 +261,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
-        /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseUnfilteredSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
              ps) {
             // special case:  when no filter is specified, we just read the number of bits
@@ -278,8 +272,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             int bytesToRead = ComputeBytesPerRow(imageDictionary, colorSpaceDic) * h.IntValue();
             byte[] bytes = new byte[bytesToRead];
             PdfTokenizer tokeniser = ps.GetTokeniser();
-            int shouldBeWhiteSpace = tokeniser.Read();
             // skip next character (which better be a whitespace character - I suppose we could check for this)
+            int shouldBeWhiteSpace = tokeniser.Read();
             // from the PDF spec:  Unless the image uses ASCIIHexDecode or ASCII85Decode as one of its filters, the ID operator shall be followed by a single white-space character, and the next character shall be interpreted as the first byte of image data.
             // unfortunately, we've seen some PDFs where there is no space following the ID, so we have to capture this case and handle it
             int startIndex = 0;
@@ -297,11 +291,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 bytes[i] = (byte)ch;
             }
             PdfObject ei = ps.ReadObject();
-            if (!ei.ToString().Equals("EI")) {
+            if (!"EI".Equals(ei.ToString())) {
                 // Some PDF producers seem to add another non-whitespace character after the image data.
                 // Let's try to handle that case here.
                 PdfObject ei2 = ps.ReadObject();
-                if (!ei2.ToString().Equals("EI")) {
+                if (!"EI".Equals(ei2.ToString())) {
                     throw new InlineImageParsingUtils.InlineImageParseException(PdfException.OperatorEINotFoundAfterEndOfImageData
                         );
                 }
@@ -322,7 +316,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <param name="ps">the content parser</param>
         /// <returns>the samples of the image</returns>
-        /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
              ps) {
             // by the time we get to here, we have already parsed the ID operator
@@ -338,25 +331,25 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             PdfTokenizer tokeniser = ps.GetTokeniser();
             while ((ch = tokeniser.Read()) != -1) {
                 if (ch == 'E') {
-                    baos.Write(EI, 0, found);
                     // probably some bytes were preserved so write them
+                    baos.Write(EI, 0, found);
+                    // just preserve 'E' and do not write it immediately
                     found = 1;
                 }
                 else {
-                    // just preserve 'E' and do not write it immediately
                     if (found == 1 && ch == 'I') {
+                        // just preserve 'EI' and do not write it immediately
                         found = 2;
                     }
                     else {
-                        // just preserve 'EI' and do not write it immediately
                         if (found == 2 && PdfTokenizer.IsWhitespace(ch)) {
                             byte[] tmp = baos.ToArray();
                             if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
                                 return tmp;
                             }
                         }
-                        baos.Write(EI, 0, found);
                         // probably some bytes were preserved so write them
+                        baos.Write(EI, 0, found);
                         baos.Write(ch);
                         found = 0;
                     }

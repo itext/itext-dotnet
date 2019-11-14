@@ -145,7 +145,6 @@ namespace iText.Signatures {
         /// <param name="reader">PdfReader that reads the PDF file</param>
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
-        /// <exception cref="System.IO.IOException"/>
         [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, iText.Kernel.Pdf.StampingProperties) instead."
             )]
         public PdfSigner(PdfReader reader, Stream outputStream, bool append)
@@ -162,7 +161,6 @@ namespace iText.Signatures {
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="path">File to which the output is temporarily written</param>
         /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
-        /// <exception cref="System.IO.IOException"/>
         [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, System.String, iText.Kernel.Pdf.StampingProperties) instead."
             )]
         public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
@@ -183,7 +181,6 @@ namespace iText.Signatures {
         /// for the signing document. Note that encryption will be
         /// preserved regardless of what is set in properties.
         /// </param>
-        /// <exception cref="System.IO.IOException"/>
         public PdfSigner(PdfReader reader, Stream outputStream, StampingProperties properties)
             : this(reader, outputStream, null, properties) {
         }
@@ -203,7 +200,6 @@ namespace iText.Signatures {
         /// for the signing document. Note that encryption will be
         /// preserved regardless of what is set in properties.
         /// </param>
-        /// <exception cref="System.IO.IOException"/>
         public PdfSigner(PdfReader reader, Stream outputStream, String path, StampingProperties properties) {
             StampingProperties localProps = new StampingProperties(properties).PreserveEncryption();
             if (path == null) {
@@ -252,19 +248,21 @@ namespace iText.Signatures {
         /// customize the appearance of the signature.
         /// <para />
         /// Be aware:
-        /// <ul>
-        /// <li>If you create new signature field (either use
+        /// <list type="bullet">
+        /// <item><description>If you create new signature field (either use
         /// <see cref="SetFieldName(System.String)"/>
         /// with
         /// the name that doesn't exist in the document or don't specify it at all) then
-        /// the signature is invisible by default.</li>
-        /// <li>If you sign already existing field, then the signature appearance object
+        /// the signature is invisible by default.
+        /// </description></item>
+        /// <item><description>If you sign already existing field, then the signature appearance object
         /// is modified to have all the properties (page num., rect etc.) consistent with
         /// the state of the field (<strong>if you customized the appearance object
         /// before the
         /// <see cref="SetFieldName(System.String)"/>
-        /// call you'll have to do it again</strong>)</li>
-        /// </ul>
+        /// call you'll have to do it again</strong>)
+        /// </description></item>
+        /// </list>
         /// <para />
         /// </remarks>
         /// <returns>
@@ -280,8 +278,7 @@ namespace iText.Signatures {
         /// <remarks>
         /// Returns the document's certification level.
         /// For possible values see
-        /// <see cref="SetCertificationLevel(int)"/>
-        /// .
+        /// <see cref="SetCertificationLevel(int)"/>.
         /// </remarks>
         /// <returns>The certified status.</returns>
         public virtual int GetCertificationLevel() {
@@ -291,20 +288,20 @@ namespace iText.Signatures {
         /// <summary>Sets the document's certification level.</summary>
         /// <param name="certificationLevel">
         /// a new certification level for a document.
-        /// Possible values are: <ul>
-        /// <li>
+        /// Possible values are: <list type="bullet">
+        /// <item><description>
         /// <see cref="NOT_CERTIFIED"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_NO_CHANGES_ALLOWED"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING"/>
-        /// </li>
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="CERTIFIED_FORM_FILLING_AND_ANNOTATIONS"/>
-        /// </li>
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </param>
         public virtual void SetCertificationLevel(int certificationLevel) {
             this.certificationLevel = certificationLevel;
@@ -430,11 +427,8 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype) {
@@ -454,12 +448,9 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyInfo signaturePolicy) {
@@ -479,12 +470,9 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
-        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void SignDetached(IExternalSignature externalSignature, X509Certificate[] chain, ICollection
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyIdentifier signaturePolicy) {
@@ -574,8 +562,6 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="externalSignatureContainer">the interface providing the actual signing</param>
         /// <param name="estimatedSize">the reserved size for the signature</param>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer, int estimatedSize
             ) {
             if (closed) {
@@ -619,8 +605,6 @@ namespace iText.Signatures {
         /// the signature name or null to have a name generated
         /// automatically
         /// </param>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void Timestamp(ITSAClient tsa, String signatureName) {
             if (closed) {
                 throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
@@ -670,8 +654,6 @@ namespace iText.Signatures {
         /// the signature container doing the actual signing. Only the
         /// method ExternalSignatureContainer.sign is used
         /// </param>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
@@ -757,15 +739,14 @@ namespace iText.Signatures {
         /// This is the first method to be called when using external signatures. The general sequence is:
         /// preClose(), getDocumentBytes() and close().
         /// <para />
-        /// <CODE>exclusionSizes</CODE> must contain at least
-        /// the <CODE>PdfName.CONTENTS</CODE> key with the size that it will take in the
+        /// <c>exclusionSizes</c> must contain at least
+        /// the <c>PdfName.CONTENTS</c> key with the size that it will take in the
         /// document. Note that due to the hex string coding this size should be byte_size*2+2.
         /// </remarks>
         /// <param name="exclusionSizes">
         /// Map with names and sizes to be excluded in the signature
         /// calculation. The key is a PdfName and the value an Integer. At least the /Contents must be present
         /// </param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes) {
             if (preClosed) {
                 throw new PdfException(PdfException.DocumentAlreadyPreClosed);
@@ -927,15 +908,13 @@ namespace iText.Signatures {
         /// ,
         /// <see cref="GetRangeStream()"/>
         /// and
-        /// <see cref="Close(iText.Kernel.Pdf.PdfDictionary)"/>
-        /// .
+        /// <see cref="Close(iText.Kernel.Pdf.PdfDictionary)"/>.
         /// </remarks>
         /// <returns>
         /// The
         /// <see cref="System.IO.Stream"/>
         /// of bytes to be signed.
         /// </returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual Stream GetRangeStream() {
             RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
             return new RASInputStream(fac.CreateRanged(GetUnderlyingSource(), range));
@@ -948,15 +927,13 @@ namespace iText.Signatures {
         /// <para />
         /// update is a PdfDictionary that must have exactly the
         /// same keys as the ones provided in
-        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>
-        /// .
+        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>.
         /// </remarks>
         /// <param name="update">
         /// a PdfDictionary with the key/value that will fill the holes defined
         /// in
         /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>
         /// </param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         protected internal virtual void Close(PdfDictionary update) {
             try {
                 if (!preClosed) {
@@ -1024,7 +1001,6 @@ namespace iText.Signatures {
 
         /// <summary>Returns the underlying source.</summary>
         /// <returns>The underlying source</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual IRandomAccessSource GetUnderlyingSource() {
             RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
             return raf == null ? fac.CreateSource(bout) : fac.CreateSource(raf);
@@ -1156,7 +1132,7 @@ namespace iText.Signatures {
                         reference.Put(PdfName.DigestMethod, digestMethod);
                     }
                     else {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Signatures.PdfSigner));
+                        ILog logger = LogManager.GetLogger(typeof(PdfSigner));
                         logger.Error(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
                     }
                 }

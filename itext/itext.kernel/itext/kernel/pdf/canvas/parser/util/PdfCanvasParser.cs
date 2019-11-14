@@ -85,11 +85,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// encapsulated in PdfStream object as first element and EI command as second element.
         /// </remarks>
         /// <param name="ls">
-        /// an <CODE>ArrayList</CODE> to use. It will be cleared before using. If it's
-        /// <CODE>null</CODE> will create a new <CODE>ArrayList</CODE>
+        /// an <c>ArrayList</c> to use. It will be cleared before using. If it's
+        /// <c>null</c> will create a new <c>ArrayList</c>
         /// </param>
-        /// <returns>the same <CODE>ArrayList</CODE> given as argument or a new one</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
+        /// <returns>the same <c>ArrayList</c> given as argument or a new one</returns>
         public virtual IList<PdfObject> Parse(IList<PdfObject> ls) {
             if (ls == null) {
                 ls = new List<PdfObject>();
@@ -101,7 +100,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             while ((ob = ReadObject()) != null) {
                 ls.Add(ob);
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Other) {
-                    if (ob.ToString().Equals("BI")) {
+                    if ("BI".Equals(ob.ToString())) {
                         PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, currentResources.GetResource(PdfName.ColorSpace
                             ));
                         ls.Clear();
@@ -129,7 +128,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <summary>Reads a dictionary.</summary>
         /// <remarks>Reads a dictionary. The tokeniser must be positioned past the "&lt;&lt;" token.</remarks>
         /// <returns>the dictionary</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfDictionary ReadDictionary() {
             PdfDictionary dic = new PdfDictionary();
             while (true) {
@@ -152,7 +150,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// <summary>Reads an array.</summary>
         /// <remarks>Reads an array. The tokeniser must be positioned past the "[" token.</remarks>
         /// <returns>an array</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfArray ReadArray() {
             PdfArray array = new PdfArray();
             while (true) {
@@ -171,7 +168,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
 
         /// <summary>Reads a pdf object.</summary>
         /// <returns>the pdf object</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public virtual PdfObject ReadObject() {
             if (!NextValidToken()) {
                 return null;
@@ -208,8 +204,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         }
 
         /// <summary>Reads the next token skipping over the comments.</summary>
-        /// <returns><CODE>true</CODE> if a token was read, <CODE>false</CODE> if the end of content was reached</returns>
-        /// <exception cref="System.IO.IOException">on error</exception>
+        /// <returns><c>true</c> if a token was read, <c>false</c> if the end of content was reached</returns>
         public virtual bool NextValidToken() {
             while (tokeniser.NextToken()) {
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Comment) {

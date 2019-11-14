@@ -73,8 +73,8 @@ namespace iText.Kernel.Numbering {
         /// <summary>Returns a roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>
         /// <param name="upperCase">
-        /// <code>true</code> for upper case representation,
-        /// <code>false</code> for lower case one.
+        /// <c>true</c> for upper case representation,
+        /// <c>false</c> for lower case one.
         /// </param>
         public static String ToRoman(int number, bool upperCase) {
             return upperCase ? ToRomanUpperCase(number) : ToRomanLowerCase(number);

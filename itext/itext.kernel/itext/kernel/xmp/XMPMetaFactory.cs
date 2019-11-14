@@ -33,12 +33,12 @@ using iText.Kernel.XMP.Impl;
 using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.XMP {
-    /// <summary>Creates <code>XMPMeta</code>-instances from an <code>InputStream</code></summary>
+    /// <summary>Creates <c>XMPMeta</c>-instances from an <c>InputStream</c></summary>
     /// <since>30.01.2006</since>
     public sealed class XMPMetaFactory {
         private static readonly Object staticLock = new Object();
 
-        /// <summary>The singleton instance of the <code>XMPSchemaRegistry</code>.</summary>
+        /// <summary>The singleton instance of the <c>XMPSchemaRegistry</c>.</summary>
         private static XMPSchemaRegistry schema = new XMPSchemaRegistryImpl();
 
         /// <summary>cache for version info</summary>
@@ -49,22 +49,20 @@ namespace iText.Kernel.XMP {
         }
 
         // EMPTY
-        /// <returns>Returns the singleton instance of the <code>XMPSchemaRegistry</code>.</returns>
+        /// <returns>Returns the singleton instance of the <c>XMPSchemaRegistry</c>.</returns>
         public static XMPSchemaRegistry GetSchemaRegistry() {
             return schema;
         }
 
-        /// <returns>Returns an empty <code>XMPMeta</code>-object.</returns>
+        /// <returns>Returns an empty <c>XMPMeta</c>-object.</returns>
         public static XMPMeta Create() {
             return new XMPMetaImpl();
         }
 
         /// <summary>Parsing with default options.</summary>
-        /// <param name="in">an <code>InputStream</code></param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <param name="in">an <c>InputStream</c></param>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         /// <seealso cref="Parse(System.IO.Stream, iText.Kernel.XMP.Options.ParseOptions)"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPMeta Parse(Stream @in) {
             return Parse(@in, null);
         }
@@ -79,97 +77,85 @@ namespace iText.Kernel.XMP {
         /// encoding. ISO Latin-1 is also recognized, but its use is strongly discouraged. Serialization
         /// is always as UTF-8.
         /// <br />
-        /// <code>parseFromBuffer()</code> parses RDF from an <code>InputStream</code>. The encoding
+        /// <c>parseFromBuffer()</c> parses RDF from an <c>InputStream</c>. The encoding
         /// is recognized automatically.
         /// </remarks>
-        /// <param name="in">an <code>InputStream</code></param>
+        /// <param name="in">an <c>InputStream</c></param>
         /// <param name="options">
         /// Options controlling the parsing.<br />
         /// The available options are:
-        /// <ul>
-        /// <li> XMP_REQUIRE_XMPMETA - The &lt;x:xmpmeta&gt; XML element is required around
+        /// <list type="bullet">
+        /// <item><description> XMP_REQUIRE_XMPMETA - The &lt;x:xmpmeta&gt; XML element is required around
         /// <tt>&lt;rdf:RDF&gt;</tt>.
-        /// <li> XMP_STRICT_ALIASING - Do not reconcile alias differences, throw an exception.
-        /// </ul>
+        /// </description></item>
+        /// <item><description> XMP_STRICT_ALIASING - Do not reconcile alias differences, throw an exception.
+        /// </description></item>
+        /// </list>
         /// <em>Note:</em>The XMP_STRICT_ALIASING option is not yet implemented.
         /// </param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         public static XMPMeta Parse(Stream @in, ParseOptions options) {
             return XMPMetaParser.Parse(@in, options);
         }
 
         /// <summary>Parsing with default options.</summary>
         /// <param name="packet">a String contain an XMP-file.</param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         /// <seealso cref="Parse(System.IO.Stream)"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromString(String packet) {
             return ParseFromString(packet, null);
         }
 
-        /// <summary>Creates an <code>XMPMeta</code>-object from a string.</summary>
+        /// <summary>Creates an <c>XMPMeta</c>-object from a string.</summary>
         /// <param name="packet">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         /// <seealso cref="ParseFromString(System.String, iText.Kernel.XMP.Options.ParseOptions)"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromString(String packet, ParseOptions options) {
             return XMPMetaParser.Parse(packet, options);
         }
 
         /// <summary>Parsing with default options.</summary>
         /// <param name="buffer">a String contain an XMP-file.</param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         /// <seealso cref="ParseFromBuffer(byte[], iText.Kernel.XMP.Options.ParseOptions)"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromBuffer(byte[] buffer) {
             return ParseFromBuffer(buffer, null);
         }
 
-        /// <summary>Creates an <code>XMPMeta</code>-object from a byte-buffer.</summary>
+        /// <summary>Creates an <c>XMPMeta</c>-object from a byte-buffer.</summary>
         /// <param name="buffer">a String contain an XMP-file.</param>
         /// <param name="options">Options controlling the parsing.</param>
-        /// <returns>Returns the <code>XMPMeta</code>-object created from the input.</returns>
-        /// <exception cref="XMPException">If the file is not well-formed XML or if the parsing fails.</exception>
+        /// <returns>Returns the <c>XMPMeta</c>-object created from the input.</returns>
         /// <seealso cref="Parse(System.IO.Stream, iText.Kernel.XMP.Options.ParseOptions)"/>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPMeta ParseFromBuffer(byte[] buffer, ParseOptions options) {
             return XMPMetaParser.Parse(buffer, options);
         }
 
         /// <summary>
-        /// Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>
+        /// Serializes an <c>XMPMeta</c>-object as RDF into an <c>OutputStream</c>
         /// with default options.
         /// </summary>
         /// <param name="xmp">a metadata object</param>
-        /// <param name="out">an <code>OutputStream</code> to write the serialized RDF to.</param>
-        /// <exception cref="XMPException">on serializsation errors.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="out">an <c>OutputStream</c> to write the serialized RDF to.</param>
         public static void Serialize(XMPMeta xmp, Stream @out) {
             Serialize(xmp, @out, null);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into an <code>OutputStream</code>.</summary>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into an <c>OutputStream</c>.</summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="options">
         /// Options to control the serialization (see
         /// <see cref="iText.Kernel.XMP.Options.SerializeOptions"/>
         /// ).
         /// </param>
-        /// <param name="out">an <code>OutputStream</code> to write the serialized RDF to.</param>
-        /// <exception cref="XMPException">on serializsation errors.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="out">an <c>OutputStream</c> to write the serialized RDF to.</param>
         public static void Serialize(XMPMeta xmp, Stream @out, SerializeOptions options) {
             AssertImplementation(xmp);
             XMPSerializerHelper.Serialize((XMPMetaImpl)xmp, @out, options);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a byte buffer.</summary>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into a byte buffer.</summary>
         /// <param name="xmp">a metadata object</param>
         /// <param name="options">
         /// Options to control the serialization (see
@@ -177,16 +163,14 @@ namespace iText.Kernel.XMP {
         /// ).
         /// </param>
         /// <returns>Returns a byte buffer containing the serialized RDF.</returns>
-        /// <exception cref="XMPException">on serializsation errors.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static byte[] SerializeToBuffer(XMPMeta xmp, SerializeOptions options) {
             AssertImplementation(xmp);
             return XMPSerializerHelper.SerializeToBuffer((XMPMetaImpl)xmp, options);
         }
 
-        /// <summary>Serializes an <code>XMPMeta</code>-object as RDF into a string.</summary>
+        /// <summary>Serializes an <c>XMPMeta</c>-object as RDF into a string.</summary>
         /// <remarks>
-        /// Serializes an <code>XMPMeta</code>-object as RDF into a string. <em>Note:</em> Encoding
+        /// Serializes an <c>XMPMeta</c>-object as RDF into a string. <em>Note:</em> Encoding
         /// is ignored when serializing to a string.
         /// </remarks>
         /// <param name="xmp">a metadata object</param>
@@ -196,14 +180,12 @@ namespace iText.Kernel.XMP {
         /// ).
         /// </param>
         /// <returns>Returns a string containing the serialized RDF.</returns>
-        /// <exception cref="XMPException">on serializsation errors.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String SerializeToString(XMPMeta xmp, SerializeOptions options) {
             AssertImplementation(xmp);
             return XMPSerializerHelper.SerializeToString((XMPMetaImpl)xmp, options);
         }
 
-        /// <param name="xmp">Asserts that xmp is compatible to <code>XMPMetaImpl</code>.s</param>
+        /// <param name="xmp">Asserts that xmp is compatible to <c>XMPMetaImpl</c>.s</param>
         private static void AssertImplementation(XMPMeta xmp) {
             if (!(xmp is XMPMetaImpl)) {
                 throw new NotSupportedException("The serializing service works only" + "with the XMPMeta implementation of this library"

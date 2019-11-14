@@ -69,7 +69,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenSimpleDoc() {
             String filename = destinationFolder + "openSimpleDoc.pdf";
@@ -98,7 +97,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenSimpleDocWithFullCompression() {
             String filename = sourceFolder + "simpleCanvasWithFullCompression.pdf";
@@ -124,7 +122,54 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ObjectStreamIncrementalUpdateReading() {
+            /*
+            This test ensures that if certain object stored in objects streams
+            has incremental updates, the right object instance is found and initialized
+            even if the object stream with the older object's increment is read as well.
+            
+            One peculiar thing covered by this test is that older object increment contains
+            indirect refernce to the object number 8 which is freed in document incremental
+            update. Such document and particulary this object is perfectly valid.
+            */
+            String filename = sourceFolder + "objectStreamIncrementalUpdate.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDictionary catalogDict = pdfDoc.GetCatalog().GetPdfObject();
+            PdfDictionary customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            PdfDictionary customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.AreEqual(1, customDict1.Size());
+            NUnit.Framework.Assert.AreEqual(1, customDict2.Size());
+            NUnit.Framework.Assert.AreEqual("Hello world updated.", customDict1.GetAsString(new PdfName("Key1")).GetValue
+                ());
+            NUnit.Framework.Assert.AreEqual("Hello world for second dictionary.", customDict2.GetAsString(new PdfName(
+                "Key1")).GetValue());
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
+            pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RereadReleasedObjectFromObjectStream() {
+            String filename = sourceFolder + "twoCustomDictionariesInObjectStream.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDictionary catalogDict = pdfDoc.GetCatalog().GetPdfObject();
+            PdfDictionary customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            PdfDictionary customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.IsTrue(customDict1.ContainsKey(new PdfName("CustomDict1Key1")));
+            NUnit.Framework.Assert.IsTrue(customDict2.ContainsKey(new PdfName("CustomDict2Key1")));
+            customDict2.Clear();
+            customDict1.Release();
+            // reread released dictionary and also modified dictionary
+            customDict1 = catalogDict.GetAsDictionary(new PdfName("CustomDict1"));
+            customDict2 = catalogDict.GetAsDictionary(new PdfName("CustomDict2"));
+            NUnit.Framework.Assert.IsTrue(customDict1.ContainsKey(new PdfName("CustomDict1Key1")));
+            NUnit.Framework.Assert.IsFalse(customDict2.ContainsKey(new PdfName("CustomDict2Key1")));
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "No need in rebuildXref()");
+            pdfDoc.Close();
+        }
+
         [NUnit.Framework.Test]
         public virtual void OpenDocWithFlateFilter() {
             String filename = sourceFolder + "100PagesDocumentWithFlateFilter.pdf";
@@ -144,7 +189,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesRead() {
             String filename = destinationFolder + "primitivesRead.pdf";
@@ -174,7 +218,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IndirectsChain1() {
             String filename = destinationFolder + "indirectsChain1.pdf";
@@ -209,7 +252,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IndirectsChain2() {
             String filename = destinationFolder + "indirectsChain2.pdf";
@@ -248,7 +290,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IndirectsChain3() {
             String filename = sourceFolder + "indirectsChain3.pdf";
@@ -276,7 +317,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void InvalidIndirect() {
@@ -304,7 +344,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest01() {
             String filename = sourceFolder + "1000PagesDocument.pdf";
@@ -342,7 +381,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest02() {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
@@ -375,7 +413,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest03() {
             String filename = sourceFolder + "10PagesDocumentWithLeafs.pdf";
@@ -409,7 +446,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest04() {
             String filename = sourceFolder + "PagesDocument.pdf";
@@ -443,7 +479,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest05() {
             String filename = sourceFolder + "PagesDocument05.pdf";
@@ -477,7 +512,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest06() {
             String filename = sourceFolder + "PagesDocument06.pdf";
@@ -507,7 +541,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest07() {
             String filename = sourceFolder + "PagesDocument07.pdf";
@@ -527,7 +560,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest08() {
             String filename = sourceFolder + "PagesDocument08.pdf";
@@ -547,7 +579,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest09() {
             String filename = sourceFolder + "PagesDocument09.pdf";
@@ -566,7 +597,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest10() {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompression.pdf";
@@ -597,7 +627,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PagesTest11() {
             String filename = sourceFolder + "hello.pdf";
@@ -628,9 +657,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
         public virtual void CorrectSimpleDoc1() {
             String filename = sourceFolder + "correctSimpleDoc1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -643,7 +671,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CorrectSimpleDoc2() {
             String filename = sourceFolder + "correctSimpleDoc2.pdf";
@@ -657,9 +684,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
         public virtual void CorrectSimpleDoc3() {
             String filename = sourceFolder + "correctSimpleDoc3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -672,9 +698,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorrectSimpleDoc4() {
             String filename = sourceFolder + "correctSimpleDoc4.pdf";
@@ -692,9 +717,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest01() {
             String filename = sourceFolder + "OnlyTrailer.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -710,7 +734,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FixPdfTest02() {
             String filename = sourceFolder + "CompressionShift1.pdf";
@@ -728,7 +751,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FixPdfTest03() {
             String filename = sourceFolder + "CompressionShift2.pdf";
@@ -746,7 +768,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FixPdfTest04() {
             String filename = sourceFolder + "CompressionWrongObjStm.pdf";
@@ -762,9 +783,8 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest05() {
             String filename = sourceFolder + "CompressionWrongShift.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -779,7 +799,6 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FixPdfTest06() {
             String filename = sourceFolder + "InvalidOffsets.pdf";
@@ -796,7 +815,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 2)]
         public virtual void FixPdfTest07() {
@@ -813,9 +831,8 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest08() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -834,9 +851,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest09() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -855,7 +871,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
         public virtual void FixPdfTest10() {
@@ -877,9 +892,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest11() {
             String filename = sourceFolder + "XRefSectionWithoutSize.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -895,9 +909,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest12() {
             String filename = sourceFolder + "XRefWithBreaks.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -913,7 +926,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest13() {
@@ -956,7 +968,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest14() {
@@ -973,9 +984,8 @@ namespace iText.Kernel.Pdf {
             reader.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest15() {
             String filename = sourceFolder + "XRefWithInvalidGenerations3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -991,7 +1001,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FixPdfTest16() {
             String filename = sourceFolder + "XrefWithInvalidOffsets.pdf";
@@ -1009,9 +1018,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest17() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1027,9 +1035,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void FixPdfTest18() {
             String filename = sourceFolder + "noXrefAndTrailerWithInfo.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1042,7 +1049,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeWith1000Pages() {
             String filename = sourceFolder + "1000PagesDocumentAppended.pdf";
@@ -1063,7 +1069,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeWith1000PagesWithCompression() {
             String filename = sourceFolder + "1000PagesDocumentWithFullCompressionAppended.pdf";
@@ -1084,7 +1089,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeWith10Pages() {
             String filename = sourceFolder + "10PagesDocumentAppended.pdf";
@@ -1105,7 +1109,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AppendModeWith10PagesWithCompression() {
             String filename = sourceFolder + "10PagesDocumentWithFullCompressionAppended.pdf";
@@ -1126,9 +1129,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void AppendModeWith10PagesFix1() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1149,9 +1151,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void AppendModeWith10PagesFix2() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1172,7 +1173,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IncorrectXrefSizeInTrailer() {
             String filename = sourceFolder + "HelloWorldIncorrectXRefSizeInTrailer.pdf";
@@ -1183,7 +1183,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IncorrectXrefSizeInTrailerAppend() {
             String filename = sourceFolder + "10PagesDocumentAppendedIncorrectXRefSize.pdf";
@@ -1194,7 +1193,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1215,7 +1213,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1233,7 +1230,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1251,7 +1247,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1269,7 +1264,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1287,7 +1281,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1305,7 +1298,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1323,7 +1315,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1341,7 +1332,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
 #if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(1000)]
 #endif
@@ -1363,7 +1353,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FreeReferencesTest() {
@@ -1375,8 +1364,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FreeReferencesTest02() {
             String cmpFile = sourceFolder + "cmp_freeReferences02.pdf";
@@ -1394,7 +1381,6 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdfVersionTest() {
             String filename = sourceFolder + "hello.pdf";
@@ -1403,7 +1389,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ZeroUpdateTest() {
             String filename = sourceFolder + "stationery.pdf";
@@ -1421,7 +1406,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void IncrementalUpdateWithOnlyZeroObjectUpdate() {
             String filename = sourceFolder + "pdfReferenceUpdated.pdf";
@@ -1434,10 +1418,9 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void WrongTagStructureFlushingTest() {
             //wrong /Pg number
@@ -1450,11 +1433,10 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-2649")]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void WrongStructureFlushingTest() {
             //TODO: update after DEVSIX-2649 fix
             //wrong /key number
@@ -1464,7 +1446,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReaderReuseTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -1477,7 +1458,6 @@ namespace iText.Kernel.Pdf {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void HugeInvalidIndRefObjNumberTest() {
@@ -1490,7 +1470,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-2133")]
         public virtual void TestFileIsNotLockedOnException() {
@@ -1507,6 +1486,14 @@ namespace iText.Kernel.Pdf {
                 stream.Write(new byte[] { 0 });
             }
             NUnit.Framework.Assert.IsTrue(exceptionThrown);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestManyAppendModeUpdates() {
+            String file = sourceFolder + "manyAppendModeUpdates.pdf";
+            PdfReader reader = new PdfReader(file);
+            PdfDocument document = new PdfDocument(reader);
+            document.Close();
         }
 
         private bool ObjectTypeEqualTo(PdfObject @object, PdfName type) {

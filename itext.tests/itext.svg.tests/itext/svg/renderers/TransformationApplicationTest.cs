@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
@@ -54,7 +53,7 @@ namespace iText.Svg.Renderers {
     public class TransformationApplicationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalDrawTest() {
-            byte[] expected = "1 0 0 1 7.5 0 cm\n0 0 0 rg\nf\n".GetBytes(Encoding.UTF8);
+            byte[] expected = "1 0 0 1 7.5 0 cm\n0 0 0 rg\nf\n".GetBytes(System.Text.Encoding.UTF8);
             ISvgNodeRenderer nodeRenderer = new _AbstractSvgNodeRenderer_69();
             // do nothing
             IDictionary<String, String> attributeMap = new Dictionary<String, String>();

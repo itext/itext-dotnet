@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.IO {
-    public class UtilitiesTest {
+    public class UtilitiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestShortener() {
             byte[] src = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };

@@ -44,11 +44,12 @@ using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.StyledXmlParser.Jsoup.Select;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Test suite for attribute parser.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class AttributeParseTest {
+    public class AttributeParseTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ParsesRoughAttributeString() {
             String html = "<a id=\"123\" class=\"baz = 'bar'\" style = 'border: 2px'qux zim foo = 12 mux=18 />";

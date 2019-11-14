@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest01() {
             FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest01.pdf", FileMode.Create);
@@ -100,7 +99,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest01.pdf", "cmp_tagTreePointerTest01.pdf", "diff01_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest02() {
             FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest02.pdf", FileMode.Create);
@@ -127,7 +125,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest02.pdf", "cmp_tagTreePointerTest02.pdf", "diff02_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -171,7 +168,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -188,7 +184,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest04.pdf", "cmp_tagTreePointerTest04.pdf", "diff04_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest05() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -209,7 +204,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest05.pdf", "cmp_tagTreePointerTest05.pdf", "diff05_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest06() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -237,7 +231,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest06.pdf", "cmp_tagTreePointerTest06.pdf", "diff06_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest07() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest07.pdf").SetCompressionLevel(CompressionConstants
@@ -259,7 +252,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest07.pdf", "cmp_tagTreePointerTest07.pdf", "diff07_");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest08() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest08.pdf").SetCompressionLevel(CompressionConstants
@@ -275,10 +267,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest08.pdf", "cmp_tagTreePointerTest08.pdf", "diff08_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -302,10 +290,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest01.pdf", "taggedDocument.pdf", "diffFlushing01_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -323,10 +307,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest02.pdf", "taggedDocument.pdf", "diffFlushing02_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -342,10 +322,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest03.pdf", "taggedDocument.pdf", "diffFlushing03_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -366,10 +342,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest04.pdf", "taggedDocument.pdf", "diffFlushing04_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest05() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest05.pdf");
@@ -420,10 +392,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest05.pdf", "cmp_tagStructureFlushingTest05.pdf", "diffFlushing05_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest06() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest06.pdf");
@@ -457,10 +425,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureFlushingTest06.pdf", "cmp_tagStructureFlushingTest06.pdf", "diffFlushing06_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -472,10 +436,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureRemovingTest01.pdf", "cmp_tagStructureRemovingTest01.pdf", "diffRemoving01_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
@@ -501,10 +461,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureRemovingTest02.pdf", "cmp_tagStructureRemovingTest02.pdf", "diffRemoving02_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest03() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest03.pdf");
@@ -538,10 +494,6 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureRemovingTest03.pdf", "cmp_tagStructureRemovingTest03.pdf", "diffRemoving03_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAnnots.pdf");
@@ -553,18 +505,14 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagStructureRemovingTest04.pdf", "cmp_tagStructureRemovingTest04.pdf", "diffRemoving04_");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
-            AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
             // 2 attributes
+            AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
             PdfStructureAttributes testAttr = new PdfStructureAttributes("test");
             testAttr.AddIntAttribute("N", 4);
             properties.AddAttributes(testAttr);
@@ -589,10 +537,6 @@ namespace iText.Kernel.Pdf {
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
@@ -600,27 +544,23 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfStructureAttributes testAttrDict = new PdfStructureAttributes("test");
-            pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (testAttrDict);
-            // 1 attribute dictionary
+            // no attributes
             pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(testAttrDict
                 );
-            // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest02.pdf", "cmp_accessibleAttributesInsertionTest02.pdf", "diffAttributes02_"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
@@ -628,27 +568,23 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(0, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (0, new PdfStructureAttributes(testAttrDict));
-            // 1 attribute dictionary
+            // no attributes
             pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(0, new PdfStructureAttributes
                 (testAttrDict));
-            // no attributes
             document.Close();
             CompareResult("accessibleAttributesInsertionTest03.pdf", "cmp_accessibleAttributesInsertionTest03.pdf", "diffAttributes03_"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
@@ -656,24 +592,20 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
-            pointer.MoveToKid(1).GetProperties().AddAttributes(1, new PdfStructureAttributes(testAttrDict));
             // 1 attribute array
+            pointer.MoveToKid(1).GetProperties().AddAttributes(1, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
-            pointer.MoveToKid(2).GetProperties().AddAttributes(3, new PdfStructureAttributes(testAttrDict));
             // 3 attributes
+            pointer.MoveToKid(2).GetProperties().AddAttributes(3, new PdfStructureAttributes(testAttrDict));
             pointer.MoveToRoot();
+            // 1 attribute dictionary
             pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                 (1, new PdfStructureAttributes(testAttrDict));
-            // 1 attribute dictionary
             document.Close();
             CompareResult("accessibleAttributesInsertionTest04.pdf", "cmp_accessibleAttributesInsertionTest04.pdf", "diffAttributes04_"
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest05() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
@@ -682,8 +614,8 @@ namespace iText.Kernel.Pdf {
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
             try {
-                pointer.MoveToKid(1).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 1 attribute array
+                pointer.MoveToKid(1).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -691,8 +623,8 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
-                pointer.MoveToKid(2).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 // 3 attributes
+                pointer.MoveToKid(2).GetProperties().AddAttributes(5, new PdfStructureAttributes(testAttrDict));
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -700,18 +632,18 @@ namespace iText.Kernel.Pdf {
             }
             pointer.MoveToRoot();
             try {
+                // 1 attribute dictionary
                 pointer.MoveToKid(0).MoveToKid(StandardRoles.LI).MoveToKid(StandardRoles.LBODY).GetProperties().AddAttributes
                     (5, new PdfStructureAttributes(testAttrDict));
-                // 1 attribute dictionary
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
                 NUnit.Framework.Assert.IsTrue(ExceptionUtil.IsOutOfRange(e));
             }
             try {
+                // no attributes
                 pointer.MoveToKid(StandardRoles.P).MoveToKid(StandardRoles.SPAN).GetProperties().AddAttributes(5, new PdfStructureAttributes
                     (testAttrDict));
-                // no attributes
                 NUnit.Framework.Assert.Fail();
             }
             catch (Exception e) {
@@ -722,10 +654,6 @@ namespace iText.Kernel.Pdf {
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;

@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Forms.Xfdf {
+    /// <summary>To be removed in 7.2</summary>
+    [System.ObsoleteAttribute(@"use ElementContentEncodingFormat instead")]
     public enum Encoding {
         ASCII,
         HEX

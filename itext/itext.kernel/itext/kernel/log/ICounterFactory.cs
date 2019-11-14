@@ -48,9 +48,14 @@ namespace iText.Kernel.Log {
     /// Factory that can be registered in
     /// <see cref="CounterManager"/>
     /// and creates a counter for every reader or writer class.
+    /// </summary>
+    /// <remarks>
+    /// Factory that can be registered in
+    /// <see cref="CounterManager"/>
+    /// and creates a counter for every reader or writer class.
     /// <para />
     /// You can implement your own counter factory and register it like this:
-    /// <code>CounterManager.getInstance().registerCounter(new SystemOutCounterFactory());</code>
+    /// <c>CounterManager.getInstance().register(new SystemOutCounterFactory());</c>
     /// <para />
     /// <see cref="SystemOutCounterFactory"/>
     /// is just an example of
@@ -62,7 +67,7 @@ namespace iText.Kernel.Log {
     /// <see cref="System.Console.Out"/>
     /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
-    /// </summary>
+    /// </remarks>
     [System.ObsoleteAttribute(@"will be removed in next major release, please use iText.Kernel.Counter.IEventCounterFactory instead."
         )]
     public interface ICounterFactory {

@@ -57,8 +57,13 @@ namespace iText.Barcodes.Qrcode {
         /// Creates a SolomonEncoder object based on a
         /// <see cref="GF256"/>
         /// object.
-        /// Only QR codes are supported at the moment.
         /// </summary>
+        /// <remarks>
+        /// Creates a SolomonEncoder object based on a
+        /// <see cref="GF256"/>
+        /// object.
+        /// Only QR codes are supported at the moment.
+        /// </remarks>
         /// <param name="field">the galois field</param>
         public ReedSolomonEncoder(GF256 field) {
             if (!GF256.QR_CODE_FIELD.Equals(field)) {

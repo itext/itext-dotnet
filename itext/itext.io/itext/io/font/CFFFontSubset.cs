@@ -134,8 +134,9 @@ namespace iText.IO.Font {
         /// <param name="cff">- The font file</param>
         /// <param name="GlyphsUsed">- a Map that contains the glyph used in the subset</param>
         public CFFFontSubset(byte[] cff, ICollection<int> GlyphsUsed)
-            : base(cff) {
-            // Use CFFFont c'tor in order to parse the font file.
+            : base(
+                        // Use CFFFont c'tor in order to parse the font file.
+                        cff) {
             this.GlyphsUsed = GlyphsUsed;
             //Put the glyphs into a list
             glyphsInList = new List<int>(GlyphsUsed);
@@ -174,9 +175,9 @@ namespace iText.IO.Font {
             Seek(Offset);
             // Read the format
             format = GetCard8();
+            // Calc according to format
             switch (format) {
                 case 0: {
-                    // Calc according to format
                     Length = 1 + 2 * NumofGlyphs;
                     break;
                 }
@@ -232,9 +233,9 @@ namespace iText.IO.Font {
             // Read the FDSelect's format
             fonts[Font].FDSelectFormat = GetCard8();
             switch (fonts[Font].FDSelectFormat) {
+                // Format==0 means each glyph has an entry that indicated
+                // its FD.
                 case 0: {
-                    // Format==0 means each glyph has an entry that indicated
-                    // its FD.
                     for (int i = 0; i < NumOfGlyphs; i++) {
                         FDSelect[i] = GetCard8();
                     }
@@ -390,7 +391,6 @@ namespace iText.IO.Font {
 
         /// <summary>Function uses BuildNewIndex to create the new index of the subset charstrings</summary>
         /// <param name="FontIndex">the font</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void BuildNewCharString(int FontIndex) {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
         }
@@ -401,7 +401,6 @@ namespace iText.IO.Font {
         /// the FD Array lsubrs will be subsetted.
         /// </remarks>
         /// <param name="Font">the font</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void BuildNewLGSubrs(int Font) {
             // If the font is CID then the lsubrs are divided into FontDicts.
             // for each FD array the lsubrs will be subsetted.
@@ -619,10 +618,10 @@ namespace iText.IO.Font {
                 // Check the modification needed on the Argument Stack according to key;
                 HandelStack();
                 if (null != key) {
+                    // a call to a Lsubr
                     switch (key) {
+                        // a call to a Gsubr
                         case "callsubr": {
-                            // a call to a Lsubr
-                            // a call to a Gsubr
                             // Verify that arguments are passed
                             if (NumOfArgs > 0) {
                                 // Calc the index of the Subrs
@@ -638,8 +637,8 @@ namespace iText.IO.Font {
                             break;
                         }
 
+                        // A call to "stem"
                         case "callgsubr": {
-                            // A call to "stem"
                             // Verify that arguments are passed
                             if (NumOfArgs > 0) {
                                 // Calc the index of the Subrs
@@ -796,28 +795,28 @@ namespace iText.IO.Font {
                     arg_count++;
                     continue;
                 }
+                // The byte read is the byte;
                 if (b0 >= 32 && b0 <= 246) {
-                    // The byte read is the byte;
                     args[arg_count] = b0 - 139;
                     arg_count++;
                     continue;
                 }
+                // The byte read and the next byte constitute a short int
                 if (b0 >= 247 && b0 <= 250) {
-                    // The byte read and the next byte constitute a short int
                     int w = GetCard8();
                     args[arg_count] = (b0 - 247) * 256 + w + 108;
                     arg_count++;
                     continue;
                 }
+                // Same as above except negative
                 if (b0 >= 251 && b0 <= 254) {
-                    // Same as above except negative
                     int w = GetCard8();
                     args[arg_count] = -(b0 - 251) * 256 - w - 108;
                     arg_count++;
                     continue;
                 }
+                // The next for bytes represent a double.
                 if (b0 == 255) {
-                    // The next for bytes represent a double.
                     int first = GetCard8();
                     int second = GetCard8();
                     int third = GetCard8();
@@ -826,8 +825,8 @@ namespace iText.IO.Font {
                     arg_count++;
                     continue;
                 }
+                // An operator was found.. Set Key.
                 if (b0 <= 31 && b0 != 28) {
-                    // An operator was found.. Set Key.
                     gotKey = true;
                     // 12 is an escape command therefore the next byte is a part
                     // of this command
@@ -871,10 +870,10 @@ namespace iText.IO.Font {
                 int NumOfArgs = arg_count;
                 //Check the modification needed on the Argument Stack according to key;
                 HandelStack();
+                // a call to a Lsubr
                 switch (key) {
+                    // a call to a Gsubr
                     case "callsubr": {
-                        // a call to a Lsubr
-                        // a call to a Gsubr
                         if (NumOfArgs > 0) {
                             System.Diagnostics.Debug.Assert(TopElement is int?);
                             int Subr = (int)((int?)TopElement) + LBias;
@@ -884,8 +883,8 @@ namespace iText.IO.Font {
                         break;
                     }
 
+                    // A call to "stem"
                     case "callgsubr": {
-                        // A call to "stem"
                         if (NumOfArgs > 0) {
                             System.Diagnostics.Debug.Assert(TopElement is int?);
                             int Subr = (int)((int?)TopElement) + GBias;
@@ -931,7 +930,6 @@ namespace iText.IO.Font {
         /// <param name="Used">the Map of the used objects</param>
         /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
         /// <returns>the new index subset version</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual byte[] BuildNewIndex(int[] Offsets, ICollection<int> Used, byte OperatorForUnusedEntries
             ) {
             int unusedCount = 0;
@@ -985,7 +983,6 @@ namespace iText.IO.Font {
         /// <param name="Offsets">the offset array of the original index</param>
         /// <param name="OperatorForUnusedEntries">the operator inserted into the data stream for unused entries</param>
         /// <returns>the new index subset version</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual byte[] BuildNewIndexAndCopyAllGSubrs(int[] Offsets, byte OperatorForUnusedEntries
             ) {
             int unusedCount = 0;
@@ -1135,11 +1132,12 @@ namespace iText.IO.Font {
                 GetDictItem();
                 int p2 = GetPosition();
                 // The encoding key is disregarded since CID has no encoding
-                if ("Encoding".Equals(key) || "Private".Equals(key) || "FDSelect".Equals(key) || "FDArray".Equals(key) || 
-                    "charset".Equals(key) || "CharStrings".Equals(key)) {
+                if ("Encoding".Equals(key) || 
+                                // These keys will be added manually by the process.
+                                "Private".Equals(key) || "FDSelect".Equals(key) || "FDArray".Equals(key) || "charset".Equals(key) || "CharStrings"
+                    .Equals(key)) {
                 }
                 else {
-                    // These keys will be added manually by the process.
                     //OtherWise copy key "as is" to the output list
                     OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                 }
@@ -1258,33 +1256,31 @@ namespace iText.IO.Font {
         protected internal virtual void BuildIndexHeader(int Count, int Offsize, int First) {
             // Add the count field
             OutputList.AddLast(new CFFFont.UInt16Item((char)Count));
-            // count
             // Add the offsize field
             OutputList.AddLast(new CFFFont.UInt8Item((char)Offsize));
+            // Add the first offset according to the offsize
             switch (Offsize) {
                 case 1: {
-                    // offSize
-                    // Add the first offset according to the offsize
-                    OutputList.AddLast(new CFFFont.UInt8Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt8Item((char)First));
                     break;
                 }
 
                 case 2: {
-                    OutputList.AddLast(new CFFFont.UInt16Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt16Item((char)First));
                     break;
                 }
 
                 case 3: {
-                    OutputList.AddLast(new CFFFont.UInt24Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt24Item((char)First));
                     break;
                 }
 
                 case 4: {
-                    OutputList.AddLast(new CFFFont.UInt32Item((char)First));
                     // first offset
+                    OutputList.AddLast(new CFFFont.UInt32Item((char)First));
                     break;
                 }
 
@@ -1347,15 +1343,15 @@ namespace iText.IO.Font {
                     }
                 }
             }
-            OutputList.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
             // count
-            OutputList.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)(stringOffsets.Length - 1 + 3)));
             // offSize
+            OutputList.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
             foreach (int stringOffset in stringOffsets) {
                 OutputList.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, stringOffset - stringsBaseOffset));
             }
             int currentStringsOffset = stringOffsets[stringOffsets.Length - 1] - stringsBaseOffset;
-            //l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
+            // l.addLast(new IndexOffsetItem(stringsIndexOffSize,currentStringsOffset));
             currentStringsOffset += "Adobe".Length;
             OutputList.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, currentStringsOffset));
             currentStringsOffset += "Identity".Length;
@@ -1375,18 +1371,18 @@ namespace iText.IO.Font {
         /// <param name="nglyphs">the number of glyphs in the font</param>
         protected internal virtual void CreateFDSelect(CFFFont.OffsetItem fdselectRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(fdselectRef));
-            OutputList.AddLast(new CFFFont.UInt8Item((char)3));
             // format identifier
-            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            OutputList.AddLast(new CFFFont.UInt8Item((char)3));
             // nRanges
-            OutputList.AddLast(new CFFFont.UInt16Item((char)0));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
             // Range[0].firstGlyph
-            OutputList.AddLast(new CFFFont.UInt8Item((char)0));
+            OutputList.AddLast(new CFFFont.UInt16Item((char)0));
             // Range[0].fd
+            OutputList.AddLast(new CFFFont.UInt8Item((char)0));
+            // sentinel
             OutputList.AddLast(new CFFFont.UInt16Item((char)nglyphs));
         }
 
-        // sentinel
         /// <summary>Function creates new CharSet for non-CID fonts.</summary>
         /// <remarks>
         /// Function creates new CharSet for non-CID fonts.
@@ -1396,14 +1392,14 @@ namespace iText.IO.Font {
         /// <param name="nglyphs">the number of glyphs in the font</param>
         protected internal virtual void CreateCharset(CFFFont.OffsetItem charsetRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(charsetRef));
-            OutputList.AddLast(new CFFFont.UInt8Item((char)2));
             // format identifier
-            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            OutputList.AddLast(new CFFFont.UInt8Item((char)2));
             // first glyph in range (ignore .notdef)
+            OutputList.AddLast(new CFFFont.UInt16Item((char)1));
+            // nLeft
             OutputList.AddLast(new CFFFont.UInt16Item((char)(nglyphs - 1)));
         }
 
-        // nLeft
         /// <summary>Function creates new FDArray for non-CID fonts.</summary>
         /// <remarks>
         /// Function creates new FDArray for non-CID fonts.
@@ -1435,8 +1431,8 @@ namespace iText.IO.Font {
             }
             OutputList.AddLast(new CFFFont.DictNumberItem(NewSize));
             OutputList.AddLast(privateRef);
-            OutputList.AddLast(new CFFFont.UInt8Item((char)18));
             // Private
+            OutputList.AddLast(new CFFFont.UInt8Item((char)18));
             OutputList.AddLast(new CFFFont.IndexMarkerItem(privateIndex1Ref, privateBase));
         }
 
@@ -1497,8 +1493,8 @@ namespace iText.IO.Font {
                         OutputList.AddLast(new CFFFont.DictNumberItem(NewSize));
                         fdPrivate[k] = new CFFFont.DictOffsetItem();
                         OutputList.AddLast(fdPrivate[k]);
-                        OutputList.AddLast(new CFFFont.UInt8Item((char)18));
                         // Private
+                        OutputList.AddLast(new CFFFont.UInt8Item((char)18));
                         // Go back to place
                         Seek(p2);
                     }
@@ -1542,10 +1538,10 @@ namespace iText.IO.Font {
                     if ("Subrs".Equals(key)) {
                         fdSubrs[i] = new CFFFont.DictOffsetItem();
                         OutputList.AddLast(fdSubrs[i]);
+                        // Subrs
                         OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                     }
                     else {
-                        // Subrs
                         // Else copy the entire range
                         OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                     }
@@ -1643,10 +1639,10 @@ namespace iText.IO.Font {
                 // use marker for offset and write operator number
                 if ("Subrs".Equals(key)) {
                     OutputList.AddLast(Subr);
+                    // Subrs
                     OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                 }
                 else {
-                    // Subrs
                     // Else copy the entire range
                     OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                 }

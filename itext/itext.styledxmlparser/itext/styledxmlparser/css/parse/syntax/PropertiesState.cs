@@ -46,6 +46,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
     /// implementation for the block state.
     /// </summary>
     internal class PropertiesState : IParserState {
+        // TODO rename to BLOCK
         /// <summary>The state machine that parses the CSS.</summary>
         private CssParserStateController controller;
 
@@ -56,7 +57,6 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// </summary>
         /// <param name="controller">the state machine that parses the CSS</param>
         internal PropertiesState(CssParserStateController controller) {
-            // TODO rename to BLOCK
             this.controller = controller;
         }
 

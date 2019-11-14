@@ -69,10 +69,6 @@ namespace iText.Signatures.Testutils.Builder {
             this.tsaPrivateKey = tsaPrivateKey;
         }
 
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public virtual byte[] CreateTimeStampToken(TimeStampRequest request) {
             // just a more or less random oid of timestamp policy
             String policy = "1.3.6.1.4.1.45794.1.1";

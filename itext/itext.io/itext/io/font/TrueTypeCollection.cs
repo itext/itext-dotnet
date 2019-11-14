@@ -64,7 +64,6 @@ namespace iText.IO.Font {
         /// instance by its bytes.
         /// </summary>
         /// <param name="ttc">the byte contents of the collection</param>
-        /// <exception cref="System.IO.IOException">in case the input in mal-formatted</exception>
         public TrueTypeCollection(byte[] ttc) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             this.ttc = ttc;
@@ -77,7 +76,6 @@ namespace iText.IO.Font {
         /// instance by its file path.
         /// </summary>
         /// <param name="ttcPath">the path of the collection</param>
-        /// <exception cref="System.IO.IOException">in case the input in mal-formatted</exception>
         public TrueTypeCollection(String ttcPath) {
             if (!FileUtil.FileExists(ttcPath)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
@@ -90,7 +88,6 @@ namespace iText.IO.Font {
         /// <summary>method return TrueTypeFont by ttc index</summary>
         /// <param name="ttcIndex">the index for the TTC font</param>
         /// <returns>TrueTypeFont</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
                 throw new iText.IO.IOException(iText.IO.IOException.TtcIndexDoesNotExistInThisTtcFile);
@@ -114,7 +111,7 @@ namespace iText.IO.Font {
         /// <see cref="GetFontByTccIndex(int)"/>
         /// will be cached or not.
         /// </summary>
-        /// <returns><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the created fonts will be cached, <c>false</c> otherwise</returns>
         public virtual bool IsCached() {
             return cached;
         }
@@ -124,12 +121,11 @@ namespace iText.IO.Font {
         /// <see cref="GetFontByTccIndex(int)"/>
         /// will be cached or not.
         /// </summary>
-        /// <param name="cached"><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</param>
+        /// <param name="cached"><c>true</c> if the created fonts will be cached, <c>false</c> otherwise</param>
         public virtual void SetCached(bool cached) {
             this.cached = cached;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void InitFontSize() {
             String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
             if (!mainTag.Equals("ttcf")) {

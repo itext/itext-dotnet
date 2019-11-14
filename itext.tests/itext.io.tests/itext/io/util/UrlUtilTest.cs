@@ -55,7 +55,6 @@ namespace iText.IO.Util {
         }
 
         // Tests that after invocation of the getFinalURL method for local files, no handles are left open and the file is free to be removed
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetFinalURLDoesNotLockFileTest() {
             FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);

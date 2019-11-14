@@ -68,10 +68,11 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
-        /// <summary>Create PdfPages tree.</summary>
+        /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
-        /// 
-        /// <seealso>PdfCatalog</seealso>
+        /// a
+        /// <see cref="PdfCatalog"/>
+        /// which will be used to create the tree
         /// </param>
         public PdfPagesTree(PdfCatalog pdfCatalog) {
             this.document = pdfCatalog.GetDocument();
@@ -100,13 +101,13 @@ namespace iText.Kernel.Pdf {
         // and reserve null indexes for pageRefs and pages.
         /// <summary>
         /// Returns the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// at the specified position in this list.
         /// </summary>
         /// <param name="pageNum">one-based index of the element to return</param>
         /// <returns>
         /// the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// at the specified position in this list
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
@@ -134,7 +135,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Returns the
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// by page's PdfDictionary.
         /// </summary>
         /// <param name="pageDictionary">page's PdfDictionary</param>
@@ -142,8 +143,7 @@ namespace iText.Kernel.Pdf {
         /// the
         /// <c>PdfPage</c>
         /// object, that wraps
-        /// <paramref name="pageDictionary"/>
-        /// .
+        /// <paramref name="pageDictionary"/>.
         /// </returns>
         public virtual PdfPage GetPage(PdfDictionary pageDictionary) {
             int pageNum = GetPageNumber(pageDictionary);
@@ -189,12 +189,13 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Appends the specified
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
         /// to the end of this tree.
         /// </summary>
         /// <param name="pdfPage">
-        /// 
-        /// <seealso>PdfPage</seealso>
+        /// a
+        /// <see cref="PdfPage"/>
+        /// to be added
         /// </param>
         public virtual void AddPage(PdfPage pdfPage) {
             PdfPages pdfPages;
@@ -223,8 +224,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Insert
-        /// <seealso>PdfPage</seealso>
+        /// Inserts
+        /// <see cref="PdfPage"/>
         /// into specific one-based position.
         /// </summary>
         /// <param name="index">one-base index of the page</param>
@@ -289,7 +290,6 @@ namespace iText.Kernel.Pdf {
         /// root
         /// <see cref="PdfPages"/>
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException">in case empty document</exception>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
                 throw new PdfException(PdfException.DocumentHasNoPages);
@@ -365,8 +365,8 @@ namespace iText.Kernel.Pdf {
             // NOTE optimization? when we already found needed index
             for (int i = 0; i < kids.Size(); i++) {
                 PdfDictionary page = kids.GetAsDictionary(i);
+                // null values not allowed in pages tree.
                 if (page == null) {
-                    // null values not allowed in pages tree.
                     throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);
@@ -389,8 +389,8 @@ namespace iText.Kernel.Pdf {
                     PdfDictionary pdfPagesObject = kids.GetAsDictionary(i);
                     if (pdfPagesObject.GetAsArray(PdfName.Kids) == null) {
                         // pdfPagesObject is PdfPage
+                        // possible if only first kid is PdfPage
                         if (lastPdfPages == null) {
-                            // possible if only first kid is PdfPage
                             lastPdfPages = new PdfPages(parent.GetFrom(), document, parent);
                             kids.Set(i, lastPdfPages.GetPdfObject());
                             newParents.Add(lastPdfPages);
@@ -428,8 +428,8 @@ namespace iText.Kernel.Pdf {
                 // NOTE optimization? when we already found needed index
                 for (int i = 0; i < parent.GetCount(); i++) {
                     PdfDictionary kid = kids.GetAsDictionary(i);
+                    // make sure it's a dictionary
                     if (kid != null) {
-                        // make sure it's a dictionary
                         pageRefs[from + i] = kid.GetIndirectReference();
                     }
                 }

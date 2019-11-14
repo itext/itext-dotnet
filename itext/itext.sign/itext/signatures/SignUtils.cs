@@ -95,8 +95,6 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="input">The input Stream holding the unparsed CRL.</param>
         /// <returns>The parsed CRL object.</returns>
-        /// <exception cref="CertificateException"/>
-        /// <exception cref="CrlException"/>
         internal static X509Crl ParseCrlFromStream(Stream input) {
             return new X509CrlParser().ReadCrl(input);
         }
@@ -248,7 +246,6 @@ namespace iText.Signatures {
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
         [Obsolete]
         internal static bool HasUnsupportedCriticalExtension(X509Certificate cert) {
             if ( cert == null ) {

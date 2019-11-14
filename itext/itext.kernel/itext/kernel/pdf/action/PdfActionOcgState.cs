@@ -49,8 +49,7 @@ namespace iText.Kernel.Pdf.Action {
     /// <remarks>
     /// This is a helper class for optional content states use in Set-OCG-State actions.
     /// See
-    /// <see cref="PdfAction.CreateSetOcgState(System.Collections.Generic.IList{E})"/>
-    /// .
+    /// <see cref="PdfAction.CreateSetOcgState(System.Collections.Generic.IList{E})"/>.
     /// </remarks>
     public class PdfActionOcgState {
         /// <summary>

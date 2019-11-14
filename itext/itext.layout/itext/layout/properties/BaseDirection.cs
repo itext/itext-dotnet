@@ -41,7 +41,27 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Layout;
+using iText.Layout.Element;
+
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// A specialized enum holding the possible values
+    /// for a text
+    /// <see cref="IElement"/>
+    /// 's base direction.
+    /// </summary>
+    /// <remarks>
+    /// A specialized enum holding the possible values
+    /// for a text
+    /// <see cref="IElement"/>
+    /// 's base direction.
+    /// This class is meant to be used as the value
+    /// for the
+    /// <see cref="Property.BASE_DIRECTION"/>
+    /// key in an
+    /// <see cref="IPropertyContainer"/>.
+    /// </remarks>
     public enum BaseDirection {
         NO_BIDI,
         DEFAULT_BIDI,

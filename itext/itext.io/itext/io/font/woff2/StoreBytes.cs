@@ -14,9 +14,9 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+    // Helper functions for storing integer values into byte streams.
+    // No bounds checking is performed, that is the responsibility of the caller.
     internal class StoreBytes {
-        // Helper functions for storing integer values into byte streams.
-        // No bounds checking is performed, that is the responsibility of the caller.
         public static int StoreU32(byte[] dst, int offset, int x) {
             dst[offset] = JavaUnsignedUtil.ToU8(x >> 24);
             dst[offset + 1] = JavaUnsignedUtil.ToU8(x >> 16);

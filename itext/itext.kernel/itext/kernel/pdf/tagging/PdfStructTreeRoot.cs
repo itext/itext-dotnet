@@ -72,10 +72,10 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             SetForbidRelease();
             parentTreeHandler = new ParentTreeHandler(this);
+            // TODO may be remove?
             GetRoleMap();
         }
 
-        // TODO may be remove?
         public static PdfName ConvertRoleToPdfName(String role) {
             PdfName name = PdfName.staticNames.Get(role);
             if (name != null) {
@@ -207,9 +207,14 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Adds a
         /// <see cref="PdfNamespace"/>
         /// to the list of the namespaces used within the document.
+        /// </summary>
+        /// <remarks>
+        /// Adds a
+        /// <see cref="PdfNamespace"/>
+        /// to the list of the namespaces used within the document.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <param name="namespace">
         /// a
         /// <see cref="PdfNamespace"/>
@@ -250,18 +255,25 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
         /// objects, where each specified file
         /// is a pronunciation lexicon, which is an XML file conforming to the Pronunciation Lexicon Specification (PLS) Version 1.0.
+        /// </summary>
+        /// <remarks>
+        /// A
+        /// <see cref="System.Collections.IList{E}"/>
+        /// containing one or more
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// objects, where each specified file
+        /// is a pronunciation lexicon, which is an XML file conforming to the Pronunciation Lexicon Specification (PLS) Version 1.0.
         /// These pronunciation lexicons may be used as pronunciation hints when the document’s content is presented via
         /// text-to-speech. Where two or more pronunciation lexicons apply to the same text, the first match – as defined by
         /// the order of entries in the array and the order of entries inside the pronunciation lexicon file – should be used.
         /// <para />
         /// See ISO 32000-2 14.9.6, "Pronunciation hints".
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// A
         /// <see cref="System.Collections.IList{E}"/>
         /// containing one or more
-        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>.
         /// </returns>
         public virtual IList<PdfFileSpec> GetPronunciationLexiconsList() {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
@@ -281,12 +293,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Adds a single
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
         /// object, which specifies XML file conforming to PLS.
+        /// </summary>
+        /// <remarks>
+        /// Adds a single
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// object, which specifies XML file conforming to PLS.
         /// For more info see
-        /// <see cref="GetPronunciationLexiconsList()"/>
-        /// .
+        /// <see cref="GetPronunciationLexiconsList()"/>.
         /// <para />
         /// This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.
-        /// </summary>
+        /// </remarks>
         /// <param name="pronunciationLexiconFileSpec">
         /// a
         /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
@@ -361,13 +377,16 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Copies structure to a
-        /// <paramref name="destDocument"/>
-        /// .
+        /// <paramref name="destDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Copies structure to a
+        /// <paramref name="destDocument"/>.
         /// NOTE: Works only for
         /// <see cref="PdfStructTreeRoot"/>
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
-        /// </summary>
+        /// </remarks>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page) {
@@ -378,11 +397,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Copies structure to a
         /// <paramref name="destDocument"/>
         /// and insert it in a specified position in the document.
+        /// </summary>
+        /// <remarks>
+        /// Copies structure to a
+        /// <paramref name="destDocument"/>
+        /// and insert it in a specified position in the document.
         /// NOTE: Works only for
         /// <see cref="PdfStructTreeRoot"/>
         /// that is read from the document opened in reading mode,
         /// otherwise an exception is thrown.
-        /// </summary>
+        /// </remarks>
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>

@@ -50,7 +50,6 @@ namespace iText.IO.Font.Otf {
     public class GsubLookupType5 : OpenTableLookup {
         protected internal IList<ContextualSubTable> subTables;
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal GsubLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             )
             : base(openReader, lookupFlag, subTableLocations) {
@@ -93,7 +92,6 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
             int substFormat = openReader.rf.ReadShort();
@@ -115,7 +113,6 @@ namespace iText.IO.Font.Otf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadSubTableFormat1(int subTableLocation) {
             IDictionary<int, IList<ContextualSubstRule>> substMap = new Dictionary<int, IList<ContextualSubstRule>>();
             int coverageOffset = openReader.rf.ReadUnsignedShort();
@@ -140,7 +137,6 @@ namespace iText.IO.Font.Otf {
             subTables.Add(new SubTableLookup5Format1(openReader, lookupFlag, substMap));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadSubTableFormat2(int subTableLocation) {
             int coverageOffset = openReader.rf.ReadUnsignedShort();
             int classDefOffset = openReader.rf.ReadUnsignedShort();
@@ -176,7 +172,6 @@ namespace iText.IO.Font.Otf {
             subTables.Add(t);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadSubTableFormat3(int subTableLocation) {
             int glyphCount = openReader.rf.ReadUnsignedShort();
             int substCount = openReader.rf.ReadUnsignedShort();

@@ -35,6 +35,7 @@ namespace iText.Kernel.XMP.Impl.XPath {
     /// <summary>Representates an XMP XMPPath with segment accessor methods.</summary>
     /// <since>28.02.2006</since>
     public class XMPPath {
+        // Bits for XPathStepInfo options.
         /// <summary>Marks a struct field step , also for top level nodes (schema "fields").</summary>
         public const int STRUCT_FIELD_STEP = 0x01;
 
@@ -45,6 +46,7 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// </remarks>
         public const int QUALIFIER_STEP = 0x02;
 
+        // 
         /// <summary>Marks an array index step</summary>
         public const int ARRAY_INDEX_STEP = 0x03;
 
@@ -63,8 +65,6 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// <summary>stores the segments of an XMPPath</summary>
         private IList segments = new ArrayList(5);
 
-        // Bits for XPathStepInfo options.
-        // 
         /// <summary>Append a path segment</summary>
         /// <param name="segment">the segment to add</param>
         public virtual void Add(XMPPathSegment segment) {

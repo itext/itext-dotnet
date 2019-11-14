@@ -60,18 +60,6 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        public virtual void SimpleDocWithoutFormTest() {
-            String fileName = "simpleDocWithoutForm.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + fileName));
-            XfdfObjectFactory factory = new XfdfObjectFactory();
-            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDoc, fileName);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleFormWithOneFieldTest() {
             String pdfDocumentName = "simpleFormWithOneField.pdf";
@@ -88,11 +76,7 @@ namespace iText.Forms {
             }
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleFormWithMultipleFieldsTest() {
             String pdfDocumentName = "simpleFormWithMultipleFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open
@@ -108,109 +92,25 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    public void simpleDocSquareCircleAnnotationsTest() throws IOException {
-        //        PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "simpleDocSquareCircleAnnotations.pdf"));
-        //
-        //        XfdfWriter writer = new XfdfWriter();
-        //        XfdfObject xfdfObject = writer.generateAnnotationsXfdfObjectFromPdfDocument(pdfDoc);
-        //
-        //        //TODO add support for button?
-        //        //TODO add support for radioButton - the same as form hierarchy fields?
-        //        //TODO use xfdfwriter to create xfdf file and compare it with the one made by acrobat
-        //
-        //        /*Assert.assertTrue(fields.size() == 6);
-        //        Assert.assertTrue(field.getFieldName().toUnicodeString().equals("Text1"));
-        //        Assert.assertTrue(field.getValue().toString().equals("TestField"));*/
-        //    }
-        //    @Test
-        //    public void generateCircleAndSquareAnnotationsPdf() throws FileNotFoundException {
-        //        PdfDocument document = new PdfDocument(new PdfWriter(new FileOutputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations.pdf")));
-        //
-        //        PdfPage page = document.addNewPage();
-        //
-        //        PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
-        //        square.setInteriorColor(new float[]{1, 0, 0}).setColor(new float[]{0, 1, 0}).setContents("RED Square");
-        //        page.addAnnotation(square);
-        //        PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 100));
-        //        circle.setInteriorColor(new float[]{0, 1, 0}).setColor(new float[]{0, 0, 1}).setContents(new PdfString("GREEN Circle"));
-        //        page.addAnnotation(circle);
-        //        page.flush();
-        //
-        //        document.close();
-        //    }
-        //    @Test
-        //    public void generateCircleAndSquareAnnotationsXfdf() throws IOException{
-        //        PdfDocument document = new PdfDocument(new PdfReader(new FileInputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations.pdf")),
-        //                new PdfWriter(new FileOutputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations1.pdf")));
-        //
-        ///*
-        //        PdfPage page = document.getPage(0);
-        //        List<PdfAnnotation> annotationList = page.getAnnotations();
-        //
-        //
-        //*/
-        //        PdfPage page = document.addNewPage();
-        //
-        //        PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
-        //        square.setInteriorColor(new float[]{1, 0, 0}).setColor(new float[]{0, 1, 0}).setContents("RED Square");
-        //        page.addAnnotation(square);
-        //        PdfCircleAnnotation circle = new PdfCircleAnnotation(new Rectangle(300, 700, 100, 100));
-        //        circle.setInteriorColor(new float[]{0, 1, 0}).setColor(new float[]{0, 0, 1}).setContents(new PdfString("GREEN Circle"));
-        //        page.addAnnotation(circle);
-        //        page.flush();
-        //
-        //        XfdfWriter writer = new XfdfWriter();
-        //        XfdfObject xfdfObject = writer.generateAnnotationsXfdfObjectFromPdfDocument(document);
-        //        document.close();
-        //    }
-        //
-        //    @Test
-        //    public void generateSimpleTextAnnotationsPdf() throws IOException{
-        //        PdfDocument document = new PdfDocument(new PdfReader(new FileInputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations.pdf")),
-        //                new PdfWriter(new FileOutputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations1.pdf")));
-        //
-        //        PdfPage page = document.getPage(0);
-        //        List<PdfAnnotation> annotationList = page.getAnnotations();
-        //
-        //        XfdfWriter writer = new XfdfWriter();
-        //        XfdfObject xfdfObject = writer.generateAnnotationsXfdfObjectFromPdfDocument(document);
-        //        document.close();
-        //    }
-        //
-        //    @Test
-        //    public void generateSimpleTextAnnotationsXfdf() throws IOException{
-        //        PdfDocument document = new PdfDocument(new PdfReader(new FileInputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations.pdf")),
-        //                new PdfWriter(new FileOutputStream("C:\\Users\\User\\itext7\\java\\itextcore\\forms\\target\\test\\com\\itextpdf\\forms\\PdfFormFieldTest\\squareandcircleannotations1.pdf")));
-        //
-        //        PdfPage page = document.getPage(0);
-        //        List<PdfAnnotation> annotationList = page.getAnnotations();
-        //
-        //        XfdfWriter writer = new XfdfWriter();
-        //        XfdfObject xfdfObject = writer.generateAnnotationsXfdfObjectFromPdfDocument(document);
-        //        document.close();
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfPdfRichText() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfValueRichText.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfValueRichText.xfdf";
-        //        XfdfWriter writer = new XfdfWriter(xfdfFilename);
-        //        writer.write(pdfDocument, "xfdfValueRichText.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if(!new CompareTool().compareXmls(destinationFolder + "xfdfValueRichText.xfdf",
-        //                sourceFolder + "cmp_xfdfValueRichText.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfValueRichText() {
+            //TODO DEVSIX-3215
+            String pdfDocumentName = "xfdfValueRichText.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfValueRichText.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDoc, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDoc.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfValueRichText.xfdf", sourceFolder + "cmp_xfdfValueRichText.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
         [NUnit.Framework.Test]
         public virtual void XfdfHierarchyFields() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHierarchyFields.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfHierarchyFields.xfdf";
@@ -225,13 +125,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfFreeText() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFreeText.pdf", 
                 FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfFreeText.xfdf";
@@ -246,13 +141,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfHighlightedText() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHighlightedText.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfHighlightedText.xfdf";
@@ -261,25 +151,14 @@ namespace iText.Forms {
             XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
             xfdfObject.WriteToFile(xfdfFilename);
             pdfDocument.Close();
-            //        XfdfObjectUtils.preprocessXfdf(destinationFolder, "xfdfHighlightedText.xfdf",
-            //                sourceFolder,"cmp_xfdfHighlightedText.xfdf", "contents", "contents-richtext");
-            //
-            //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfHighlightedText_preprocessed.xfdf",
-            //                sourceFolder + "cmp_xfdfHighlightedText_preprocessed.xfdf"))
-            //            Assert.fail("Xfdf files are not equal");
             if (!new CompareTool().CompareXmls(destinationFolder + "xfdfHighlightedText.xfdf", sourceFolder + "cmp_xfdfHighlightedText.xfdf"
                 )) {
                 NUnit.Framework.Assert.Fail("Xfdf files are not equal");
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfUnderlineText() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfUnderlineText.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfUnderlineText.xfdf";
@@ -294,13 +173,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfPopupNewFlags() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPopupNewFlags.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfPopupNewFlags.xfdf";
@@ -315,13 +189,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfStrikeout() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStrikeout.pdf", 
                 FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfStrikeout.xfdf";
@@ -336,13 +205,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquigglyText() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquigglyText.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfSquigglyText.xfdf";
@@ -357,13 +221,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLine() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLine.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLine.xfdf";
@@ -378,13 +237,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfCircle() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCircle.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfCircle.xfdf";
@@ -399,13 +253,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquare() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquare.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfSquare.xfdf";
@@ -420,13 +269,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfSquareAndCircleInteriorColor() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquareAndCircleInteriorColor.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfSquareAndCircleInteriorColor.xfdf";
@@ -441,58 +285,59 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfCaret() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfCaret.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfCaret.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //       XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfCaret.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfCaret.xfdf",
-        //                sourceFolder + "cmp_xfdfCaret.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfPolygon() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfPolygon.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfPolygon.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfPolygon.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfPolygon.xfdf",
-        //                sourceFolder + "cmp_xfdfPolygon.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfPolyline() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfPolyline.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfPolyline.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfPolyline.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfPolyline.xfdf",
-        //                sourceFolder + "cmp_xfdfPolyline.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfCaret() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCaret.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfCaret.xfdf";
+            String pdfDocumentName = "xfdfCaret.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfCaret.xfdf", sourceFolder + "cmp_xfdfCaret.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfPolygon() {
+            //TODO DEVSIX-3215 Support annots
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPolygon.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfPolygon.xfdf";
+            String pdfDocumentName = "xfdfPolygon.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfPolygon.xfdf", sourceFolder + "cmp_xfdfPolygon.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfPolyline() {
+            //TODO DEVSIX-3215 Support annots
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPolyline.pdf", 
+                FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfPolyline.xfdf";
+            String pdfDocumentName = "xfdfPolyline.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfPolyline.xfdf", sourceFolder + "cmp_xfdfPolyline.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
         [NUnit.Framework.Test]
         public virtual void XfdfStamp() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStamp.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfStamp.xfdf";
@@ -507,13 +352,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfStampWithAppearance() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStampWithAppearance.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfStampWithAppearance.xfdf";
@@ -528,58 +368,58 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfInk() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfInk.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfInk.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfInk.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfInk.xfdf",
-        //                sourceFolder + "cmp_xfdfInk.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfFileAttachment() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfFileAttachment.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfFileAttachment.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfFileAttachment.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfFileAttachment.xfdf",
-        //                sourceFolder + "cmp_xfdfFileAttachment.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfSound() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfSound.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfSound.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfSound.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfSound.xfdf",
-        //                sourceFolder + "cmp_xfdfSound.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfInk() {
+            //TODO DEVSIX-3215 Support annots
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfInk.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfInk.xfdf";
+            String pdfDocumentName = "xfdfInk.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfInk.xfdf", sourceFolder + "cmp_xfdfInk.xfdf")) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfFileAttachment() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFileAttachment.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfFileAttachment.xfdf";
+            String pdfDocumentName = "xfdfFileAttachment.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfFileAttachment.xfdf", sourceFolder + "cmp_xfdfFileAttachment.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfSound() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSound.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfSound.xfdf";
+            String pdfDocumentName = "xfdfSound.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfSound.xfdf", sourceFolder + "cmp_xfdfSound.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
         [NUnit.Framework.Test]
         public virtual void XfdfLink() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLink.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLink.xfdf";
@@ -594,13 +434,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkBorderStyle() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkBorderStyle.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkBorderStyle.xfdf";
@@ -615,13 +450,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDest() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDest.pdf", 
                 FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDest.xfdf";
@@ -636,13 +466,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFit() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFit.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFit.xfdf";
@@ -657,13 +482,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitB() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitB.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitB.xfdf";
@@ -678,13 +498,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitR() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitR.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitR.xfdf";
@@ -699,13 +514,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitH() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitH.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitH.xfdf";
@@ -720,13 +530,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBH() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBH.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitBH.xfdf";
@@ -741,13 +546,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBV() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBV.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitBV.xfdf";
@@ -762,13 +562,8 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitV() {
-            //TODO some tags and attributes are missed. Check after fix. Replace cmp file.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitV.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitV.xfdf";
@@ -783,43 +578,42 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfRedact() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfRedact.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfRedact.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfRedact.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfRedact.xfdf",
-        //                sourceFolder + "cmp_xfdfRedact.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO Null pointer exception. Check after fix.
-        //    public void xfdfProjection() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfProjection.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfProjection.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfProjection.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfProjection.xfdf",
-        //                sourceFolder + "cmp_xfdfProjection.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfRedact() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfRedact.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfRedact.xfdf";
+            String pdfDocumentName = "xfdfRedact.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfRedact.xfdf", sourceFolder + "cmp_xfdfRedact.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfProjection() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfProjection.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfProjection.xfdf";
+            String pdfDocumentName = "xfdfProjection.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfProjection.xfdf", sourceFolder + "cmp_xfdfProjection.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
         [NUnit.Framework.Test]
         public virtual void XfdfLinkAllParams() {
-            //TODO some tags and attributes are missed. Check after fix.
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkAllParams.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfLinkAllParams.xfdf";
@@ -834,29 +628,26 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO check after caret annotation is implemented
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfReplaceText() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfReplaceText.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfReplaceText.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //       XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfReplaceText.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfReplaceText.xfdf",
-        //                sourceFolder + "cmp_xfdfReplaceText.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfReplaceText() {
+            //TODO DEVSIX-3215 Support caret annontation
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReplaceText.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfReplaceText.xfdf";
+            String pdfDocumentName = "xfdfReplaceText.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfReplaceText.xfdf", sourceFolder + "cmp_xfdfReplaceText.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void XfdfArrow() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfArrow.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfArrow.xfdf";
@@ -871,13 +662,9 @@ namespace iText.Forms {
             }
         }
 
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
         public virtual void XfdfCallout() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCallout.pdf", FileMode.Open
                 , FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfCallout.xfdf";
@@ -892,43 +679,43 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfCloud() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfCloud.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfCloud.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfCloud.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfCloud.xfdf",
-        //                sourceFolder + "cmp_xfdfCloud.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfCloudNested() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfCloudNested.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfCloudNested.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfCloudNested.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfCloudNested.xfdf",
-        //                sourceFolder + "cmp_xfdfCloudNested.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfCloud() {
+            //TODO DEVSIX-3215 Support annots
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCloud.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfCloud.xfdf";
+            String pdfDocumentName = "xfdfCloud.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfCloud.xfdf", sourceFolder + "cmp_xfdfCloud.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfCloudNested() {
+            //TODO DEVSIX-3215 Support annots
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCloudNested.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfCloudNested.xfdf";
+            String pdfDocumentName = "xfdfCloudNested.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfCloudNested.xfdf", sourceFolder + "cmp_xfdfCloudNested.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void XfdfTextBoxAllParams() {
+            //TODO DEVSIX-3215 Support richtext
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfTextBoxAllParams.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfTextBoxAllParams.xfdf";
@@ -943,46 +730,26 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfJavaScriptForms() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfJavaScriptForms.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfJavaScriptForms.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfJavaScriptForms.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfJavaScriptForms.xfdf",
-        //                sourceFolder + "cmp_xfdfJavaScriptForms.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //Widget annotation is not supported in 2014 spec version
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfFormsFieldParams() throws IOException, ParserConfigurationException, SAXException, TransformerException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfFormsFieldParams.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfFormsFieldParams.xfdf";
-        //        String pdfDocumentName = "xfdfFormsFieldParams.pdf";
-        //        XfdfObjectFactory factory = new XfdfObjectFactory();
-        //        XfdfObject xfdfObject = factory.createXfdfObject(pdfDocument, pdfDocumentName);
-        //        XfdfWriter writer = new XfdfWriter(xfdfFilename);
-        //        writer.write(xfdfObject);
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfFormsFieldParams.xfdf",
-        //                sourceFolder + "cmp_xfdfFormsFieldParams.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfJavaScriptForms() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfJavaScriptForms.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfJavaScriptForms.xfdf";
+            String pdfDocumentName = "xfdfJavaScriptForms.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfJavaScriptForms.xfdf", sourceFolder + "cmp_xfdfJavaScriptForms.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void XfdfAttrColor() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrColor.pdf", 
                 FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfAttrColor.xfdf";
@@ -997,13 +764,9 @@ namespace iText.Forms {
             }
         }
 
-        //@Test
-        //TODO Null pointer exception. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
         public virtual void XfdfAttrFlagsOpacity() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrFlagsOpacity.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfAttrFlagsOpacity.xfdf";
@@ -1018,13 +781,9 @@ namespace iText.Forms {
             }
         }
 
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
         public virtual void XfdfAttrTitle() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrTitle.pdf", 
                 FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfAttrTitle.xfdf";
@@ -1039,59 +798,59 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfReferenceFor3DMeasurement() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfReferenceFor3DMeasurement.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //       XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfReferenceFor3DMeasurement.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfReferenceFor3DMeasurement.xfdf",
-        //                sourceFolder + "cmp_xfdfReferenceFor3DMeasurement.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfReferenceFor3DAngular() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfReferenceFor3DAngular.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //       XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfReferenceFor3DAngular.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfReferenceFor3DAngular.xfdf",
-        //                sourceFolder + "cmp_xfdfReferenceFor3DAngular.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfReferenceFor3DRadial() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfReferenceFor3DRadial.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfReferenceFor3DRadial.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfReferenceFor3DRadial.xfdf",
-        //                sourceFolder + "cmp_xfdfReferenceFor3DRadial.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //@Test
-        //TODO some tags and attributes are missed. Check after fix.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DMeasurement() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfReferenceFor3DMeasurement.xfdf";
+            String pdfDocumentName = "xfdfReferenceFor3DMeasurement.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfReferenceFor3DMeasurement.xfdf", sourceFolder 
+                + "cmp_xfdfReferenceFor3DMeasurement.xfdf")) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DAngular() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfReferenceFor3DAngular.xfdf";
+            String pdfDocumentName = "xfdfReferenceFor3DAngular.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfReferenceFor3DAngular.xfdf", sourceFolder + "cmp_xfdfReferenceFor3DAngular.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfReferenceFor3DRadial() {
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfReferenceFor3DRadial.xfdf";
+            String pdfDocumentName = "xfdfReferenceFor3DRadial.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfReferenceFor3DRadial.xfdf", sourceFolder + "cmp_xfdfReferenceFor3DRadial.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void XfdfSubelementContents() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementContents.pdf"
                 , FileMode.Open, FileAccess.Read)));
             String xfdfFilename = destinationFolder + "xfdfSubelementContents.xfdf";
@@ -1106,88 +865,96 @@ namespace iText.Forms {
             }
         }
 
-        //    @Test
-        //    //check when Redact annotation is implemented
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfSubelementOverlayAppearance() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfSubelementOverlayAppearance.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfSubelementOverlayAppearance.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfSubelementOverlayAppearance.xfdf",
-        //                sourceFolder + "cmp_xfdfSubelementOverlayAppearance.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //Widget annotation is not supported in xfdf 2014 spec version
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfButton() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfButton.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfButton.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfButton.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfButton.xfdf",
-        //                sourceFolder + "cmp_xfdfButton.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //Widget annotation is not supported in xfdf 2014 spec version
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfCheckBox() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfCheckBox.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfCheckBox.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //       XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfCheckBox.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfCheckBox.xfdf",
-        //                sourceFolder + "cmp_xfdfCheckBox.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //    @Test
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfList() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfList.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfList.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfList.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfList.xfdf",
-        //                sourceFolder + "cmp_xfdfList.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
-        //
-        //    @Test
-        //    //Widget annotation is not supported in 2014 spec version
-        //    //TODO some tags and attributes are missed. Check after fix.
-        //    public void xfdfDropDown() throws IOException, ParserConfigurationException, SAXException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfDropDown.pdf")));
-        //        String xfdfFilename = destinationFolder + "xfdfDropDown.xfdf";
-        //         OutputStream out = new FileOutputStream(xfdfFilename);
-        //        XfdfWriter writer = new XfdfWriter(out);
-        //        writer.write(pdfDocument, "xfdfDropDown.pdf");
-        //
-        //        pdfDocument.close();
-        //
-        //        if (!new CompareTool().compareXmls(destinationFolder + "xfdfDropDown.xfdf",
-        //                sourceFolder + "cmp_xfdfDropDown.xfdf"))
-        //            Assert.fail("Xfdf files are not equal");
-        //    }
         [NUnit.Framework.Test]
-        public virtual void XfdfEmptyAttributeTst() {
+        public virtual void XfdfSubelementOverlayAppearance() {
+            //check when Redact annotation is implemented
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
+                , FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfSubelementOverlayAppearance.xfdf";
+            String pdfDocumentName = "xfdfSubelementOverlayAppearance.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfSubelementOverlayAppearance.xfdf", sourceFolder
+                 + "cmp_xfdfSubelementOverlayAppearance.xfdf")) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfButton() {
+            //Widget annotation is not supported in xfdf 2014 spec version
+            //TODO  DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfButton.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfButton.xfdf";
+            String pdfDocumentName = "xfdfButton.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfButton.xfdf", sourceFolder + "cmp_xfdfButton.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfCheckBox() {
+            //Widget annotation is not supported in xfdf 2014 spec version
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCheckBox.pdf", 
+                FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfCheckBox.xfdf";
+            String pdfDocumentName = "xfdfCheckBox.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfCheckBox.xfdf", sourceFolder + "cmp_xfdfCheckBox.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfList() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
+                , FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfList.xfdf";
+            String pdfDocumentName = "xfdfList.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfList.xfdf", sourceFolder + "cmp_xfdfList.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfDropDown() {
+            //Widget annotation is not supported in 2014 spec version
+            //TODO DEVSIX-3215
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfDropDown.pdf", 
+                FileMode.Open, FileAccess.Read)));
+            String xfdfFilename = destinationFolder + "xfdfDropDown.xfdf";
+            String pdfDocumentName = "xfdfDropDown.pdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
+            xfdfObject.WriteToFile(xfdfFilename);
+            pdfDocument.Close();
+            if (!new CompareTool().CompareXmls(destinationFolder + "xfdfDropDown.xfdf", sourceFolder + "cmp_xfdfDropDown.xfdf"
+                )) {
+                NUnit.Framework.Assert.Fail("Xfdf files are not equal");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XfdfEmptyAttributeTest() {
             NUnit.Framework.Assert.That(() =>  {
                 XfdfObject xfdfObject = new XfdfObject();
                 AnnotsObject annots = new AnnotsObject();
@@ -1203,6 +970,52 @@ namespace iText.Forms {
             }
             , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfConstants.ATTRIBUTE_NAME_OR_VALUE_MISSING))
 ;
+        }
+
+        //TODO how to define test as unit test inside this whole class? is it even possible
+        [NUnit.Framework.Test]
+        public virtual void FieldEmptyValueTest() {
+            XfdfObject xfdfObject = new XfdfObject();
+            FieldsObject fieldsObject = new FieldsObject();
+            FieldObject fieldObject = new FieldObject();
+            fieldObject.SetName("testname");
+            fieldObject.SetValue("");
+            fieldsObject.AddField(fieldObject);
+            xfdfObject.SetFields(fieldsObject);
+            String xfdfFilename = destinationFolder + "fieldEmptyValueTest.xfdf";
+            xfdfObject.WriteToFile(xfdfFilename);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldEmptyValueTest.xfdf"
+                , sourceFolder + "cmp_fieldEmptyValueTest.xfdf"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldNullValueTest() {
+            XfdfObject xfdfObject = new XfdfObject();
+            FieldsObject fieldsObject = new FieldsObject();
+            FieldObject fieldObject = new FieldObject();
+            fieldObject.SetName("testname");
+            fieldsObject.AddField(fieldObject);
+            xfdfObject.SetFields(fieldsObject);
+            String xfdfFilename = destinationFolder + "fieldNullValueTest.xfdf";
+            xfdfObject.WriteToFile(xfdfFilename);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldNullValueTest.xfdf", 
+                sourceFolder + "cmp_fieldNullValueTest.xfdf"));
+        }
+
+        //TODO how to define test as unit test inside this whole class? is it even possible
+        [NUnit.Framework.Test]
+        public virtual void FieldValueTest() {
+            XfdfObject xfdfObject = new XfdfObject();
+            FieldsObject fieldsObject = new FieldsObject();
+            FieldObject fieldObject = new FieldObject();
+            fieldObject.SetName("testname");
+            fieldObject.SetValue("testvalue");
+            fieldsObject.AddField(fieldObject);
+            xfdfObject.SetFields(fieldsObject);
+            String xfdfFilename = destinationFolder + "fieldValueTest.xfdf";
+            xfdfObject.WriteToFile(xfdfFilename);
+            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldValueTest.xfdf", sourceFolder
+                 + "cmp_fieldValueTest.xfdf"));
         }
     }
 }

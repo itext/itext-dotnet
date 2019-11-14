@@ -130,20 +130,14 @@ namespace iText.Signatures {
 
         /// <summary>Get a digest algorithm.</summary>
         /// <param name="digestOid">oid of the digest algorithm</param>
-        /// <param name="provider">the provider you want to use to create the hash</param>
         /// <returns>MessageDigest object</returns>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
         public static IDigest GetMessageDigestFromOid(String digestOid) {
             return GetMessageDigest(GetDigest(digestOid));
         }
 
         /// <summary>Creates a MessageDigest object that can be used to create a hash.</summary>
         /// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
-        /// <param name="provider">the provider you want to use to create the hash</param>
         /// <returns>a MessageDigest object</returns>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
         public static IDigest GetMessageDigest(String hashAlgorithm) {
             return SignUtils.GetMessageDigest(hashAlgorithm);
         }
@@ -151,10 +145,7 @@ namespace iText.Signatures {
         /// <summary>Creates a hash using a specific digest algorithm and a provider.</summary>
         /// <param name="data">the message of which you want to create a hash</param>
         /// <param name="hashAlgorithm">the algorithm used to create the hash</param>
-        /// <param name="provider">the provider used to create the hash</param>
         /// <returns>the hash</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public static byte[] Digest(Stream data, String hashAlgorithm) {
             IDigest messageDigest = GetMessageDigest(hashAlgorithm);
             return Digest(data, messageDigest);
@@ -164,8 +155,6 @@ namespace iText.Signatures {
         /// <param name="data">data to be digested</param>
         /// <param name="messageDigest">algorithm to be used</param>
         /// <returns>digest of the data</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public static byte[] Digest(Stream data, IDigest messageDigest) {
             byte[] buf = new byte[8192];
             int n;

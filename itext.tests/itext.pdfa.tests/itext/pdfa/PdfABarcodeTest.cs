@@ -52,7 +52,7 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Pdfa {
-    public class PdfABarcodeTest : ITextTest {
+    public class PdfABarcodeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
@@ -66,8 +66,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BarcodeMSITest() {
             String outPdf = destinationFolder + "barcodeMSITest.pdf";
@@ -85,8 +83,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BarcodeInter25Test() {
             String outPdf = destinationFolder + "barcodeInter25Test.pdf";
@@ -104,8 +100,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BarcodeEANTest() {
             String outPdf = destinationFolder + "barcodeEANTest.pdf";
@@ -123,8 +117,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BarcodeCodabarTest() {
             String outPdf = destinationFolder + "barcodeCodabarTest.pdf";
@@ -142,8 +134,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode39Test() {
             String outPdf = destinationFolder + "barcode39Test.pdf";
@@ -161,8 +151,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode128Test() {
             String outPdf = destinationFolder + "barcode128Test.pdf";
@@ -192,7 +180,6 @@ namespace iText.Pdfa {
             barcode1D.SetChecksumText(false);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private Document CreatePdfATaggedDocument(String outPdf) {
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
@@ -203,8 +190,6 @@ namespace iText.Pdfa {
             return doc;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outFile, String cmpFile) {
             String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_");
             if (differences != null) {

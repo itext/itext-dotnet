@@ -51,21 +51,23 @@ namespace iText.Forms.Xfdf {
         private XfdfFileUtils() {
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationExcep tion"/>
+        /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
+        /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
         internal static XmlDocument CreateNewXfdfDocument() {
             return new XmlDocument();
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <summary>Creates a new xfdf document based on given input stream.</summary>
+        /// <param name="inputStream"> the stream containing xfdf info.</param>
         internal static XmlDocument CreateXfdfDocumentFromStream(Stream  inputStream) {
             XmlDocument doc = new XmlDocument();
             doc.Load(createSafeReader(inputStream));
             return doc;
         }
 
-        /// <exception cref="Transform.TransformerException"/>
+        /// <summary>Saves the info from output stream to xml-styled document.</summary>
+        /// <param name="document"> the document to save info to.</param>
+        /// <param name=" outputStream"> the stream containing xfdf info.</param>
         internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream) {
            document.Save(outputStream);
            outputStream.Dispose();

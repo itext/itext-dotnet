@@ -55,8 +55,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class for the WmfImage implementation.</summary>
     /// <remarks>
     /// Helper class for the WmfImage implementation. Assists in the creation of a
-    /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-    /// .
+    /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
     /// </remarks>
     public class WmfImageHelper {
         /// <summary>Scales the WMF font size.</summary>

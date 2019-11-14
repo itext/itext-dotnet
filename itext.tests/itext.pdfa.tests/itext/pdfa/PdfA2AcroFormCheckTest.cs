@@ -62,7 +62,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck01() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -81,8 +80,6 @@ namespace iText.Pdfa {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck02() {
             String outPdf = destinationFolder + "pdfA2b_acroFormCheck02.pdf";
@@ -99,8 +96,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck03() {
             String outPdf = destinationFolder + "pdfA2b_acroFormCheck03.pdf";
@@ -116,7 +111,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck04() {
             NUnit.Framework.Assert.That(() =>  {
@@ -134,8 +128,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

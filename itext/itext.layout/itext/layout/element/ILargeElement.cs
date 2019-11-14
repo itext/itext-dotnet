@@ -49,12 +49,18 @@ namespace iText.Layout.Element {
     /// <see cref="ILargeElement"/>
     /// is a layout element which may get added to
     /// indefinitely, making the object prohibitively large.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="ILargeElement"/>
+    /// is a layout element which may get added to
+    /// indefinitely, making the object prohibitively large.
     /// In order to avoid consuming and holding on to undesirable amounts of
     /// resources, the contents of a
     /// <see cref="ILargeElement"/>
     /// can be flushed regularly
     /// by client code, e.g. at page boundaries or after a certain amount of additions.
-    /// </summary>
+    /// </remarks>
     public interface ILargeElement : IElement {
         /// <summary>Checks whether an element has already been marked as complete.</summary>
         /// <returns>the completion marker boolean</returns>

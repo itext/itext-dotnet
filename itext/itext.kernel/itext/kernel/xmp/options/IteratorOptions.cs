@@ -30,7 +30,7 @@
 using System;
 
 namespace iText.Kernel.XMP.Options {
-    /// <summary>Options for <code>XMPIterator</code> construction.</summary>
+    /// <summary>Options for <c>XMPIterator</c> construction.</summary>
     /// <since>24.01.2006</since>
     public sealed class IteratorOptions : iText.Kernel.XMP.Options.Options {
         /// <summary>Just do the immediate children of the root, default is subtree.</summary>
@@ -47,12 +47,12 @@ namespace iText.Kernel.XMP.Options {
         /// <summary>Return just the leaf part of the path, default is the full path.</summary>
         public const int JUST_LEAFNAME = 0x0400;
 
-        /// <summary>Omit all qualifiers.</summary>
-        public const int OMIT_QUALIFIERS = 0x1000;
-
         //	/** Include aliases, default is just actual properties. <em>Note:</em> Not supported. 
         //	 *  @deprecated it is commonly preferred to work with the base properties */
         //	public static final int INCLUDE_ALIASES = 0x0800;
+        /// <summary>Omit all qualifiers.</summary>
+        public const int OMIT_QUALIFIERS = 0x1000;
+
         /// <returns>Returns whether the option is set.</returns>
         public bool IsJustChildren() {
             return GetOption(JUST_CHILDREN);

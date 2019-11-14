@@ -73,9 +73,9 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         public virtual bool CurrentRoleIsStandard() {
             String roleStrVal = currRole.GetValue();
-            bool stdRole17 = currNamespace.GetNamespaceName().Equals(StandardNamespaces.PDF_1_7) && StandardNamespaces
+            bool stdRole17 = StandardNamespaces.PDF_1_7.Equals(currNamespace.GetNamespaceName()) && StandardNamespaces
                 .RoleBelongsToStandardNamespace(roleStrVal, StandardNamespaces.PDF_1_7);
-            bool stdRole20 = currNamespace.GetNamespaceName().Equals(StandardNamespaces.PDF_2_0) && StandardNamespaces
+            bool stdRole20 = StandardNamespaces.PDF_2_0.Equals(currNamespace.GetNamespaceName()) && StandardNamespaces
                 .RoleBelongsToStandardNamespace(roleStrVal, StandardNamespaces.PDF_2_0);
             return stdRole17 || stdRole20;
         }

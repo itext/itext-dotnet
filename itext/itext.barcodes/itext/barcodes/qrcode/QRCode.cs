@@ -166,17 +166,20 @@ namespace iText.Barcodes.Qrcode {
         /// <summary>Check the validity of all member variables</summary>
         /// <returns>true if all variables are valid, false otherwise</returns>
         public bool IsValid() {
-            return mode != null && ecLevel != null && version != -1 && matrixWidth != -1 && maskPattern != -1 && numTotalBytes
-                 != -1 && numDataBytes != -1 && numECBytes != -1 && numRSBlocks != -1 && IsValidMaskPattern(maskPattern
-                ) && numTotalBytes == numDataBytes + numECBytes && matrix != null && matrixWidth == matrix.GetWidth() 
-                && matrix.GetWidth() == matrix.GetHeight();
+            return 
+                        // First check if all version are not uninitialized.
+                        mode != null && ecLevel != null && version != -1 && matrixWidth != -1 && maskPattern != -1 && numTotalBytes
+                 != -1 && numDataBytes != -1 && numECBytes != -1 && numRSBlocks != -1 && 
+                        // Then check them in other ways..
+                        IsValidMaskPattern(maskPattern) && numTotalBytes == numDataBytes + numECBytes && 
+                        // ByteMatrix stuff.
+                        matrix != null && matrixWidth == matrix.GetWidth() && 
+                        // Must be square.
+                        
+                        // See 7.3.1 of JISX0510:2004 (p.5).
+                        matrix.GetWidth() == matrix.GetHeight();
         }
 
-        // First check if all version are not uninitialized.
-        // Then check them in other ways..
-        // ByteMatrix stuff.
-        // See 7.3.1 of JISX0510:2004 (p.5).
-        // Must be square.
         /// <summary>Prints all parameters</summary>
         /// <returns>string containing all parameters</returns>
         public override String ToString() {

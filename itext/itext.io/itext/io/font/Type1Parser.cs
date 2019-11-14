@@ -65,12 +65,10 @@ namespace iText.IO.Font {
         private RandomAccessSourceFactory sourceFactory = new RandomAccessSourceFactory();
 
         /// <summary>Creates a new Type1 font file.</summary>
-        /// <param name="afm">the AFM file if the input is made with a <CODE>byte</CODE> array</param>
-        /// <param name="pfb">the PFB file if the input is made with a <CODE>byte</CODE> array</param>
+        /// <param name="afm">the AFM file if the input is made with a <c>byte</c> array</param>
+        /// <param name="pfb">the PFB file if the input is made with a <c>byte</c> array</param>
         /// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
         ///     </param>
-        /// <the>AFM file is invalid</the>
-        /// <exception cref="System.IO.IOException">the AFM file could not be read</exception>
         public Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
             this.afmData = afm;
             this.pfbData = pfb;
@@ -78,7 +76,6 @@ namespace iText.IO.Font {
             this.pfbPath = binaryPath;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
             if (StandardFonts.IsStandardFont(afmPath)) {
@@ -154,7 +151,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual RandomAccessFileOrArray GetPostscriptBinary() {
             if (pfbData != null) {
                 return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
@@ -178,7 +174,6 @@ namespace iText.IO.Font {
             return afmPath;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool IsAfmFile(RandomAccessFileOrArray raf) {
             StringBuilder builder = new StringBuilder(AFM_HEADER.Length);
             for (int i = 0; i < AFM_HEADER.Length; i++) {

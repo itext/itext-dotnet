@@ -88,9 +88,6 @@ namespace iText.Signatures.Testutils.Cert {
         }
 
         // TODO generalize
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="CertificateException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         public virtual X509Certificate BuildAuthorizedOCSPResponderCert() {        
             X509Name subjectDnName = new X509Name(subjectDN);
             BigInteger certSerialNumber = new BigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
@@ -129,7 +126,6 @@ namespace iText.Signatures.Testutils.Cert {
             return certBuilder.Generate(contentSigner);
         }
 
-        /// <exception cref="Org.BouncyCastle.Cert.CertIOException"/>
         private static void AddExtension(DerObjectIdentifier extensionOID, bool critical, Asn1Encodable extensionValue, 
             X509V3CertificateGenerator certBuilder) {
             certBuilder.AddExtension(extensionOID, critical, extensionValue);

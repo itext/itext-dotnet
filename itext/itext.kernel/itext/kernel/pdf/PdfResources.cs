@@ -196,8 +196,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Adds the given Form XObject to the current instance of
-        /// <see cref="PdfResources"/>
-        /// .
+        /// <see cref="PdfResources"/>.
         /// </summary>
         /// <param name="form">Form XObject.</param>
         /// <param name="name">Preferred name for the given Form XObject.</param>
@@ -425,16 +424,25 @@ namespace iText.Kernel.Pdf {
         /// Gets the mapped resource name of the
         /// <see cref="PdfObject"/>
         /// under the given wrapper.
+        /// </summary>
+        /// <remarks>
+        /// Gets the mapped resource name of the
+        /// <see cref="PdfObject"/>
+        /// under the given wrapper.
         /// <br />
         /// <br />
         /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
-        /// </summary>
+        /// </remarks>
         /// <param name="resource">
         /// the wrapper of the
         /// <see cref="PdfObject"/>
         /// , for which the name will be searched.
         /// </param>
-        /// 
+        /// <typeparam name="T">
+        /// the type of the underlined
+        /// <see cref="PdfObject"/>
+        /// in wrapper.
+        /// </typeparam>
         /// <returns>
         /// the mapped resource name or
         /// <see langword="null"/>
@@ -447,12 +455,15 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Gets the mapped resource name of the given
-        /// <see cref="PdfObject"/>
-        /// .
+        /// <see cref="PdfObject"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the mapped resource name of the given
+        /// <see cref="PdfObject"/>.
         /// <br />
         /// <br />
         /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
-        /// </summary>
+        /// </remarks>
         /// <param name="resource">the object, for which the name will be searched.</param>
         /// <returns>
         /// the mapped resource name or
@@ -470,8 +481,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets the names of all the added resources.</summary>
         /// <returns>the name of all the added resources.</returns>
         public virtual ICollection<PdfName> GetResourceNames() {
-            ICollection<PdfName> names = new SortedSet<PdfName>();
             // TODO: isn't it better to use HashSet? Do we really need certain order?
+            ICollection<PdfName> names = new SortedSet<PdfName>();
             foreach (PdfName resType in GetPdfObject().KeySet()) {
                 names.AddAll(GetResourceNames(resType));
             }
@@ -511,8 +522,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="PdfName.XObject"/>
         /// ,
-        /// <see cref="PdfName.Font"/>
-        /// .
+        /// <see cref="PdfName.Font"/>.
         /// </param>
         /// <returns>
         /// set of resources name of corresponding type. May be empty.
@@ -520,10 +530,10 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual ICollection<PdfName> GetResourceNames(PdfName resType) {
             PdfDictionary resourceCategory = GetPdfObject().GetAsDictionary(resType);
+            // TODO: TreeSet or HashSet enough?
             return resourceCategory == null ? new SortedSet<PdfName>() : resourceCategory.KeySet();
         }
 
-        // TODO: TreeSet or HashSet enough?
         /// <summary>
         /// Get the
         /// <see cref="PdfDictionary"/>
@@ -541,8 +551,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="PdfName.XObject"/>
         /// ,
-        /// <see cref="PdfName.Font"/>
-        /// .
+        /// <see cref="PdfName.Font"/>.
         /// </param>
         /// <returns>
         /// the
@@ -573,8 +582,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <see cref="PdfName.XObject"/>
         /// ,
-        /// <see cref="PdfName.Font"/>
-        /// .
+        /// <see cref="PdfName.Font"/>.
         /// </param>
         /// <param name="resName">the name of the resource object.</param>
         /// <returns>
@@ -700,8 +708,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PdfName.XObject"/>
             /// ,
-            /// <see cref="PdfName.Font"/>
-            /// .
+            /// <see cref="PdfName.Font"/>.
             /// </param>
             /// <param name="prefix">Prefix used for generating names.</param>
             /// <param name="seed">
@@ -731,8 +738,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PdfName.XObject"/>
             /// ,
-            /// <see cref="PdfName.Font"/>
-            /// .
+            /// <see cref="PdfName.Font"/>.
             /// </param>
             /// <param name="prefix">Prefix used for generating names.</param>
             public ResourceNameGenerator(PdfName resourceType, String prefix)
@@ -752,8 +758,7 @@ namespace iText.Kernel.Pdf {
             /// ,
             /// <see cref="PdfName.XObject"/>
             /// ,
-            /// <see cref="PdfName.Font"/>
-            /// .
+            /// <see cref="PdfName.Font"/>.
             /// </returns>
             public virtual PdfName GetResourceType() {
                 return resourceType;

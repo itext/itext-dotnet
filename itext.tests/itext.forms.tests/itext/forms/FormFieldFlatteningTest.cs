@@ -62,7 +62,6 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetFieldsForFlatteningTest() {
             String outPdfName = destinationFolder + "flattenedFormField.pdf";
@@ -85,8 +84,6 @@ namespace iText.Forms {
             outPdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest01() {
             String srcFilename = "formFlatteningSource.pdf";
@@ -94,8 +91,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningChoiceFieldTest01() {
             String srcFilename = "formFlatteningSourceChoiceField.pdf";
@@ -103,8 +98,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultiLineFormFieldClippingTest() {
             String src = sourceFolder + "multiLineFormFieldClippingTest.pdf";
@@ -118,8 +111,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotatedFieldAppearanceTest01() {
             String srcFilename = "src_rotatedFieldAppearanceTest01.pdf";
@@ -127,8 +118,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotatedFieldAppearanceTest02() {
             String srcFilename = "src_rotatedFieldAppearanceTest02.pdf";
@@ -136,8 +125,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DegeneratedRectTest01() {
             String srcFilename = "src_degeneratedRectTest01.pdf";
@@ -145,8 +132,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DegeneratedRectTest02() {
             String srcFilename = "src_degeneratedRectTest02.pdf";
@@ -154,8 +139,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ScaledRectTest01() {
             String srcFilename = "src_scaledRectTest01.pdf";
@@ -163,8 +146,6 @@ namespace iText.Forms {
             FlattenFieldsAndCompare(srcFilename, filename);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private static void FlattenFieldsAndCompare(String srcFile, String outFile) {
             PdfReader reader = new PdfReader(sourceFolder + srcFile);
             PdfWriter writer = new PdfWriter(destinationFolder + outFile);
@@ -179,22 +160,16 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FieldsJustificationTest01() {
             FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest01");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FieldsJustificationTest02() {
             FillTextFieldsThenFlattenThenCompare("fieldsJustificationTest02");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private static void FillTextFieldsThenFlattenThenCompare(String testName) {
             String src = sourceFolder + "src_" + testName + ".pdf";
             String dest = destinationFolder + testName + ".pdf";
@@ -205,28 +180,30 @@ namespace iText.Forms {
                 if (field is PdfTextFormField) {
                     String newValue;
                     if (field.IsMultiline()) {
-                        newValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                        newValue = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                             + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                        field.SetFontSize(0);
                     }
                     else {
                         newValue = "HELLO!";
                     }
                     int? justification = field.GetJustification();
                     if (null == justification || 0 == (int)justification) {
+                        // reddish
                         field.SetBackgroundColor(new DeviceRgb(255, 200, 200));
                     }
                     else {
-                        // reddish
                         if (1 == (int)justification) {
+                            // greenish
                             field.SetBackgroundColor(new DeviceRgb(200, 255, 200));
                         }
                         else {
-                            // greenish
                             if (2 == (int)justification) {
+                                // blueish
                                 field.SetBackgroundColor(new DeviceRgb(200, 200, 255));
                             }
                         }
                     }
-                    // blueish
                     field.SetValue(newValue);
                 }
             }
@@ -235,7 +212,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 3)]
         public virtual void FlattenReadOnly() {
@@ -260,8 +236,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsFalse(isReadOnly);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FieldsRegeneratePushButtonWithoutCaption() {
             FillTextFieldsThenFlattenThenCompare("pushbutton_without_caption");

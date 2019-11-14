@@ -98,7 +98,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberTest() {
             String filename = "primitivesFloatNumberTest.pdf";
@@ -113,7 +112,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberTest() {
             String filename = "primitivesIntNumberTest.pdf";
@@ -128,7 +126,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameTest() {
             String filename = "primitivesNameTest.pdf";
@@ -143,7 +140,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringTest() {
             String filename = "primitivesStringTest.pdf";
@@ -158,7 +154,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanTest() {
             String filename = "primitivesBooleanTest.pdf";
@@ -171,7 +166,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberIndirectTest() {
             String filename = "primitivesFloatNumberIndirectTest.pdf";
@@ -184,7 +178,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberIndirectTest() {
             String filename = "primitivesIntNumberIndirectTest.pdf";
@@ -197,7 +190,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringIndirectTest() {
             String filename = "primitivesStringIndirectTest.pdf";
@@ -210,7 +202,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameIndirectTest() {
             String filename = "primitivesNameIndirectTest.pdf";
@@ -223,7 +214,6 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanIndirectTest() {
             String filename = "primitivesBooleanIndirectTest.pdf";
@@ -244,7 +234,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT)]
         public virtual void MakeIndirectDirectOnlyPdfBoolean() {
@@ -257,7 +246,7 @@ namespace iText.Kernel.Pdf {
         public virtual void EqualStrings() {
             PdfString a = (PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
                 ())));
-            PdfString b = new PdfString("abcd".GetBytes(Encoding.ASCII));
+            PdfString b = new PdfString("abcd".GetBytes(System.Text.Encoding.ASCII));
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
             PdfString c = new PdfString("abcd", "UTF-8");
             NUnit.Framework.Assert.IsFalse(c.Equals(a));
@@ -304,7 +293,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void EqualLiterals() {
             PdfLiteral a = new PdfLiteral("abcd");
-            PdfLiteral b = new PdfLiteral("abcd".GetBytes(Encoding.ASCII));
+            PdfLiteral b = new PdfLiteral("abcd".GetBytes(System.Text.Encoding.ASCII));
             NUnit.Framework.Assert.IsTrue(a.Equals(b));
         }
 

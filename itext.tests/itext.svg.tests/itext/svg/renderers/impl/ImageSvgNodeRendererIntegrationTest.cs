@@ -66,101 +66,73 @@ namespace iText.Svg.Renderers.Impl {
             properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImage", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithRectangleTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithRectangle", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithMultipleShapesTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithMultipleShapes", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageXYTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageXY", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleImagesTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "multipleImages", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonSquareImageTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "nonSquareImage", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageTranslateTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageTranslate", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageRotateTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageRotate", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleUpTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageScaleUp", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleDownTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageScaleDown", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleImageMultipleTransformationsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageMultipleTransformations", properties
                 );
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoImagesWithTransformationsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "twoImagesWithTransformations", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-2240")]
         public virtual void DifferentDimensionsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "differentDimensions", properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageWithTransparencyTest() {
             //TODO: update cmp_ when DEVSIX-2250, DEVSIX-2258 fixed

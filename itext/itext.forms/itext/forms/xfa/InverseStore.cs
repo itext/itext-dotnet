@@ -78,7 +78,7 @@ namespace iText.Forms.Xfa {
         /// correspond to out of bounds records.
         /// </remarks>
         /// <param name="name">the name to search</param>
-        /// <returns><CODE>true</CODE> if a similitude was found</returns>
+        /// <returns><c>true</c> if a similitude was found</returns>
         public virtual bool IsSimilar(String name) {
             int idx = name.IndexOf('[');
             name = name.JSubstring(0, idx + 1);

@@ -78,6 +78,8 @@ namespace iText.Kernel.XMP.Options {
         /// <summary>Sort the struct properties and qualifier before serializing</summary>
         public const int SORT = 0x2000;
 
+        // ---------------------------------------------------------------------------------------------
+        // encoding bit constants
         /// <summary>Bit indicating little endian encoding, unset is big endian</summary>
         private const int LITTLEENDIAN_BIT = 0x0001;
 
@@ -136,16 +138,13 @@ namespace iText.Kernel.XMP.Options {
         public SerializeOptions() {
         }
 
+        // reveal default constructor
         /// <summary>Constructor using inital options</summary>
         /// <param name="options">the inital options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if options are not consistant.</exception>
         public SerializeOptions(int options)
             : base(options) {
         }
 
-        // ---------------------------------------------------------------------------------------------
-        // encoding bit constants
-        // reveal default constructor
         /// <returns>Returns the option.</returns>
         public bool GetOmitPacketWrapper() {
             return GetOption(OMIT_PACKET_WRAPPER);
@@ -342,7 +341,6 @@ namespace iText.Kernel.XMP.Options {
         }
 
         /// <returns>Returns clone of this SerializeOptions-object with the same options set.</returns>
-        /// <exception cref="Java.Lang.CloneNotSupportedException">Cannot happen in this place.</exception>
         public Object Clone() {
             iText.Kernel.XMP.Options.SerializeOptions clone;
             try {
@@ -374,8 +372,8 @@ namespace iText.Kernel.XMP.Options {
                     return "USE_COMPACT_FORMAT";
                 }
 
+                //			case USE_CANONICAL_FORMAT :		return "USE_CANONICAL_FORMAT";
                 case INCLUDE_THUMBNAIL_PAD: {
-                    //			case USE_CANONICAL_FORMAT :		return "USE_CANONICAL_FORMAT";
                     return "INCLUDE_THUMBNAIL_PAD";
                 }
 
@@ -399,9 +397,9 @@ namespace iText.Kernel.XMP.Options {
 
         /// <seealso cref="Options.GetValidOptions()"/>
         protected internal override int GetValidOptions() {
-            return OMIT_PACKET_WRAPPER | READONLY_PACKET | USE_COMPACT_FORMAT | INCLUDE_THUMBNAIL_PAD | OMIT_XMPMETA_ELEMENT
-                 | EXACT_PACKET_LENGTH | SORT;
+            return OMIT_PACKET_WRAPPER | READONLY_PACKET | USE_COMPACT_FORMAT | 
+                        //		USE_CANONICAL_FORMAT |
+                        INCLUDE_THUMBNAIL_PAD | OMIT_XMPMETA_ELEMENT | EXACT_PACKET_LENGTH | SORT;
         }
-        //		USE_CANONICAL_FORMAT |
     }
 }

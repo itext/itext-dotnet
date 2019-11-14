@@ -63,8 +63,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(outputDir);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_01() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_01.pdf";
@@ -82,7 +80,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -101,8 +98,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_03() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_03.pdf";
@@ -121,7 +116,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_04() {
             NUnit.Framework.Assert.That(() =>  {
@@ -140,8 +134,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_05() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_05.pdf";
@@ -160,8 +152,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA2_01() {
             String outPdf = outputDir + "pdfA2b_fontCheckPdfA2_01.pdf";
@@ -180,8 +170,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA3_01() {
             String outPdf = outputDir + "pdfA3b_fontCheckPdfA3_01.pdf";
@@ -200,8 +188,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CidFontCheckTest1() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest1.pdf";
@@ -220,8 +206,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CidFontCheckTest2() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest2.pdf";
@@ -240,8 +224,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CidFontCheckTest3() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest3.pdf";
@@ -260,8 +242,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test01() {
             // encoding must not be specified
@@ -269,8 +249,6 @@ namespace iText.Pdfa {
                 .PDF_A_1B);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test02() {
             // if you specify encoding, symbolic font is treated as non-symbolic
@@ -278,8 +256,6 @@ namespace iText.Pdfa {
                 .PDF_A_1B);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test03() {
             NUnit.Framework.Assert.That(() =>  {
@@ -291,8 +267,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonSymbolicTtfCharEncodingsPdfA1Test01() {
             // encoding must be either winansi or macroman, by default winansi is used
@@ -300,8 +274,6 @@ namespace iText.Pdfa {
                 PdfAConformanceLevel.PDF_A_1B);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonSymbolicTtfCharEncodingsPdfA1Test02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -313,8 +285,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CreateDocumentWithFont(String outFileName, String fontFileName, String encoding, PdfAConformanceLevel
              conformanceLevel) {
             String outPdf = outputDir + outFileName;
@@ -332,8 +302,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, outputDir, "diff_");
             if (result != null) {

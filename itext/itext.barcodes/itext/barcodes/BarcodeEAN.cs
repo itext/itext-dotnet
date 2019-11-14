@@ -94,10 +94,27 @@ namespace iText.Barcodes {
             , 60.5f };
 
         /// <summary>The basic bar widths.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 3, 2, 1, 1 }, new byte[] { 2, 2, 2, 1 }
-            , new byte[] { 2, 1, 2, 2 }, new byte[] { 1, 4, 1, 1 }, new byte[] { 1, 1, 3, 2 }, new byte[] { 1, 2, 
-            3, 1 }, new byte[] { 1, 1, 1, 4 }, new byte[] { 1, 3, 1, 2 }, new byte[] { 1, 2, 1, 3 }, new byte[] { 
-            3, 1, 1, 2 } };
+        private static readonly byte[][] BARS = new byte[][] { 
+                // 0
+                new byte[] { 3, 2, 1, 1 }, 
+                // 1
+                new byte[] { 2, 2, 2, 1 }, 
+                // 2
+                new byte[] { 2, 1, 2, 2 }, 
+                // 3
+                new byte[] { 1, 4, 1, 1 }, 
+                // 4
+                new byte[] { 1, 1, 3, 2 }, 
+                // 5
+                new byte[] { 1, 2, 3, 1 }, 
+                // 6
+                new byte[] { 1, 1, 1, 4 }, 
+                // 7
+                new byte[] { 1, 3, 1, 2 }, 
+                // 8
+                new byte[] { 1, 2, 1, 3 }, 
+                // 9
+                new byte[] { 3, 1, 1, 2 } };
 
         /// <summary>The total number of bars for EAN13.</summary>
         private const int TOTALBARS_EAN13 = 11 + 12 * 4;
@@ -121,31 +138,84 @@ namespace iText.Barcodes {
         private const int EVEN = 1;
 
         /// <summary>Sequence of parities to be used with EAN13.</summary>
-        private static readonly byte[][] PARITY13 = new byte[][] { new byte[] { ODD, ODD, ODD, ODD, ODD, ODD }, new 
-            byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, new byte[] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, new byte[]
-             { ODD, ODD, EVEN, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, new byte[] { ODD
-            , EVEN, EVEN, ODD, ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, EVEN
-            , ODD, EVEN, ODD, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, EVEN, ODD }, new byte[] { ODD, EVEN, EVEN
-            , ODD, EVEN, ODD } };
+        private static readonly byte[][] PARITY13 = new byte[][] { 
+                // 0
+                new byte[] { ODD, ODD, ODD, ODD, ODD, ODD }, 
+                // 1
+                new byte[] { ODD, ODD, EVEN, ODD, EVEN, EVEN }, 
+                // 2
+                new byte[] { ODD, ODD, EVEN, EVEN, ODD, EVEN }, 
+                // 3
+                new byte[] { ODD, ODD, EVEN, EVEN, EVEN, ODD }, 
+                // 4
+                new byte[] { ODD, EVEN, ODD, ODD, EVEN, EVEN }, 
+                // 5
+                new byte[] { ODD, EVEN, EVEN, ODD, ODD, EVEN }, 
+                // 6
+                new byte[] { ODD, EVEN, EVEN, EVEN, ODD, ODD }, 
+                // 7
+                new byte[] { ODD, EVEN, ODD, EVEN, ODD, EVEN }, 
+                // 8
+                new byte[] { ODD, EVEN, ODD, EVEN, EVEN, ODD }, 
+                // 9
+                new byte[] { ODD, EVEN, EVEN, ODD, EVEN, ODD } };
 
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY2 = new byte[][] { new byte[] { ODD, ODD }, new byte[] { ODD, EVEN }
-            , new byte[] { EVEN, ODD }, new byte[] { EVEN, EVEN } };
+        private static readonly byte[][] PARITY2 = new byte[][] { 
+                // 0
+                new byte[] { ODD, ODD }, 
+                // 1
+                new byte[] { ODD, EVEN }, 
+                // 2
+                new byte[] { EVEN, ODD }, 
+                // 3
+                new byte[] { EVEN, EVEN } };
 
         /// <summary>Sequence of parities to be used with supplemental 2.</summary>
-        private static readonly byte[][] PARITY5 = new byte[][] { new byte[] { EVEN, EVEN, ODD, ODD, ODD }, new byte
-            [] { EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, ODD, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, ODD
-            , ODD, EVEN }, new byte[] { ODD, EVEN, EVEN, ODD, ODD }, new byte[] { ODD, ODD, EVEN, EVEN, ODD }, new 
-            byte[] { ODD, ODD, ODD, EVEN, EVEN }, new byte[] { ODD, EVEN, ODD, EVEN, ODD }, new byte[] { ODD, EVEN
-            , ODD, ODD, EVEN }, new byte[] { ODD, ODD, EVEN, ODD, EVEN } };
+        private static readonly byte[][] PARITY5 = new byte[][] { 
+                // 0
+                new byte[] { EVEN, EVEN, ODD, ODD, ODD }, 
+                // 1
+                new byte[] { EVEN, ODD, EVEN, ODD, ODD }, 
+                // 2
+                new byte[] { EVEN, ODD, ODD, EVEN, ODD }, 
+                // 3
+                new byte[] { EVEN, ODD, ODD, ODD, EVEN }, 
+                // 4
+                new byte[] { ODD, EVEN, EVEN, ODD, ODD }, 
+                // 5
+                new byte[] { ODD, ODD, EVEN, EVEN, ODD }, 
+                // 6
+                new byte[] { ODD, ODD, ODD, EVEN, EVEN }, 
+                // 7
+                new byte[] { ODD, EVEN, ODD, EVEN, ODD }, 
+                // 8
+                new byte[] { ODD, EVEN, ODD, ODD, EVEN }, 
+                // 9
+                new byte[] { ODD, ODD, EVEN, ODD, EVEN } };
 
         /// <summary>Sequence of parities to be used with UPCE.</summary>
-        private static readonly byte[][] PARITYE = new byte[][] { new byte[] { EVEN, EVEN, EVEN, ODD, ODD, ODD }, 
-            new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, new byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, new byte
-            [] { EVEN, EVEN, ODD, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, new byte[] { EVEN
-            , ODD, ODD, EVEN, EVEN, ODD }, new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }, new byte[] { EVEN, ODD, 
-            EVEN, ODD, EVEN, ODD }, new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, new byte[] { EVEN, ODD, ODD, EVEN
-            , ODD, EVEN } };
+        private static readonly byte[][] PARITYE = new byte[][] { 
+                // 0
+                new byte[] { EVEN, EVEN, EVEN, ODD, ODD, ODD }, 
+                // 1
+                new byte[] { EVEN, EVEN, ODD, EVEN, ODD, ODD }, 
+                // 2
+                new byte[] { EVEN, EVEN, ODD, ODD, EVEN, ODD }, 
+                // 3
+                new byte[] { EVEN, EVEN, ODD, ODD, ODD, EVEN }, 
+                // 4
+                new byte[] { EVEN, ODD, EVEN, EVEN, ODD, ODD }, 
+                // 5
+                new byte[] { EVEN, ODD, ODD, EVEN, EVEN, ODD }, 
+                // 6
+                new byte[] { EVEN, ODD, ODD, ODD, EVEN, EVEN }, 
+                // 7
+                new byte[] { EVEN, ODD, EVEN, ODD, EVEN, ODD }, 
+                // 8
+                new byte[] { EVEN, ODD, EVEN, ODD, ODD, EVEN }, 
+                // 9
+                new byte[] { EVEN, ODD, ODD, EVEN, ODD, EVEN } };
 
         /// <summary>Creates new BarcodeEAN.</summary>
         /// <remarks>
@@ -154,8 +224,7 @@ namespace iText.Barcodes {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
         /// will be implicitly called.
         /// If you want to use this barcode in PDF/A documents, please consider using
-        /// <see cref="BarcodeEAN(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
-        /// .
+        /// <see cref="BarcodeEAN(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>.
         /// </remarks>
         /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeEAN(PdfDocument document)
@@ -167,50 +236,6 @@ namespace iText.Barcodes {
         /// <param name="font">The font to use</param>
         public BarcodeEAN(PdfDocument document, PdfFont font)
             : base(document) {
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
             this.x = 0.8f;
             this.font = font;
             this.size = 8;
@@ -238,11 +263,11 @@ namespace iText.Barcodes {
         /// <summary>Converts an UPCA code into an UPCE code.</summary>
         /// <remarks>
         /// Converts an UPCA code into an UPCE code. If the code can not
-        /// be converted a <CODE>null</CODE> is returned.
+        /// be converted a <c>null</c> is returned.
         /// </remarks>
         /// <param name="text">the code to convert. It must have 12 numeric characters</param>
         /// <returns>
-        /// the 8 converted digits or <CODE>null</CODE> if the
+        /// the 8 converted digits or <c>null</c> if the
         /// code could not be converted
         /// </returns>
         public static String ConvertUPCAtoUPCE(String text) {
@@ -552,44 +577,44 @@ namespace iText.Barcodes {
             return new Rectangle(width, height);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
-        /// <TABLE BORDER="1" SUMMARY="barcode properties">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="barcode properties">
+        /// <tr>
+        /// <th><c>barColor</c></th>
+        /// <th><c>textColor</c></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with <c>barColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with current color<br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with <c>barColor</c><br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <c>null</c></param>
+        /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             Rectangle rect = GetBarcodeSize();

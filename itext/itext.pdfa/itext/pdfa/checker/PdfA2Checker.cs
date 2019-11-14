@@ -62,11 +62,15 @@ namespace iText.Pdfa.Checker {
     /// <summary>
     /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
     /// number of methods that override the implementations of its superclass
-    /// <see cref="PdfA1Checker"/>
-    /// .
+    /// <see cref="PdfA1Checker"/>.
+    /// </summary>
+    /// <remarks>
+    /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
+    /// number of methods that override the implementations of its superclass
+    /// <see cref="PdfA1Checker"/>.
     /// <para />
     /// The specification implemented by this class is ISO 19005-2
-    /// </summary>
+    /// </remarks>
     public class PdfA2Checker : PdfA1Checker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
@@ -96,8 +100,8 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
-        /// the required conformance level, <code>a</code> or
-        /// <code>u</code> or <code>b</code>
+        /// the required conformance level, <c>a</c> or
+        /// <c>u</c> or <c>b</c>
         /// </param>
         public PdfA2Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
@@ -312,7 +316,7 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
-            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN)) {
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !PdfEncodings.MACROMAN.Equals(encoding)) {
                 throw new PdfAConformanceException(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
                     , trueTypeFont);
             }

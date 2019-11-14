@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Kernel.Geom {
-    public class AffineTransformTest {
+    public class AffineTransformTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SelfTest() {
             AffineTransform affineTransform = new AffineTransform();
@@ -97,6 +98,14 @@ namespace iText.Kernel.Geom {
             AffineTransform rotateTranslate = AffineTransform.GetRotateInstance(Math.PI / 2, 10, 5);
             AffineTransform expected = new AffineTransform(0, 1, -1, 0, 15, -5);
             NUnit.Framework.Assert.AreEqual(rotateTranslate, expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CloneTest() {
+            AffineTransform original = new AffineTransform();
+            AffineTransform clone = original.Clone();
+            NUnit.Framework.Assert.IsTrue(original != clone);
+            NUnit.Framework.Assert.IsTrue(original.Equals(clone));
         }
     }
 }

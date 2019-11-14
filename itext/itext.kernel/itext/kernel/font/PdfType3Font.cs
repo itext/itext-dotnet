@@ -93,7 +93,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
-        /// <param name="fontDictionary">a dictionary of type <code>/Font</code>, must have an indirect reference.</param>
+        /// <param name="fontDictionary">a dictionary of type <c>/Font</c>, must have an indirect reference.</param>
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             subset = true;
@@ -125,7 +125,7 @@ namespace iText.Kernel.Font {
                 for (int i = 0; i < 256; i++) {
                     int unicode = fontEncoding.GetUnicode(i);
                     PdfName glyphName = new PdfName(fontEncoding.GetDifference(i));
-                    if (unicode != -1 && !glyphName.GetValue().Equals(FontEncoding.NOTDEF) && charProcsDic.ContainsKey(glyphName
+                    if (unicode != -1 && !FontEncoding.NOTDEF.Equals(glyphName.GetValue()) && charProcsDic.ContainsKey(glyphName
                         )) {
                         ((Type3Font)GetFontProgram()).AddGlyph(i, unicode, widths[i], null, new Type3Glyph(charProcsDic.GetAsStream
                             (glyphName), GetDocument()));
@@ -174,8 +174,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="fontWeight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         public virtual void SetFontWeight(int fontWeight) {
             ((Type3Font)fontProgram).SetFontWeight(fontWeight);
@@ -195,8 +194,7 @@ namespace iText.Kernel.Font {
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         public virtual void SetFontStretch(String fontWidth) {
             ((Type3Font)fontProgram).SetFontStretch(fontWidth);
@@ -240,20 +238,20 @@ namespace iText.Kernel.Font {
         /// <param name="c">the character to match this glyph.</param>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
-        /// the X lower left corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X lower left corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="lly">
-        /// the Y lower left corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y lower left corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="urx">
-        /// the X upper right corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X upper right corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="ury">
-        /// the Y upper right corner of the glyph bounding box. If the <CODE>colorize</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y upper right corner of the glyph bounding box. If the <c>colorize</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <returns>a content where the glyph can be defined</returns>
         public virtual Type3Glyph AddGlyph(char c, int wx, int llx, int lly, int urx, int ury) {
@@ -344,10 +342,10 @@ namespace iText.Kernel.Font {
                     fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
                 }
                 int flags = fontProgram.GetPdfFontFlags();
-                flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
                 // reset both flags
+                flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+                // set fontSpecific based on font encoding
                 flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
-                // set based on font encoding
                 fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
                 return fontDescriptor;
             }
@@ -369,8 +367,8 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>
-        /// Gets first empty code, that could use with
-        /// <seealso>addSymbol()</seealso>
+        /// Gets the first empty code that could be passed to
+        /// <see cref="iText.IO.Font.FontEncoding.AddSymbol(int, int)"/>
         /// </summary>
         /// <returns>code from 1 to 255 or -1 if all slots are busy.</returns>
         private int GetFirstEmptyCode() {

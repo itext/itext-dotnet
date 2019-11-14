@@ -58,31 +58,23 @@ namespace iText.Svg.Css {
         }
 
         //Css inheritance
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleGroupInheritanceTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "simpleGroupInheritance");
         }
 
         //Inheritance in use tags
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UseFillInheritanceTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "useFillInheritance");
         }
 
         //Inheritance and g-tags
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void GroupInheritanceTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "groupInheritance");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UseInheritanceNotOverridingTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "useInheritanceNotOverriding");

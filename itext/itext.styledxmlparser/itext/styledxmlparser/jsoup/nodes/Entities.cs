@@ -51,7 +51,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>HTML entities, and escape routines.</summary>
     /// <remarks>
     /// HTML entities, and escape routines.
-    /// Source: <a href="http://www.w3.org/TR/html5/named-character-references.html#named-character-references">W3C HTML
+    /// Source: <a href="http://www.w3.org/tr/html5/named-character-references.html#named-character-references">W3C HTML
     /// named character references</a>.
     /// </remarks>
     public class Entities {
@@ -128,7 +128,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="name">named entity (e.g. "lt" or "amp")</param>
         /// <returns>
         /// the Character value of the named entity (e.g. '
-        /// <literal>&lt;</literal>
+        /// <literal></literal>
         /// ' or '
         /// <literal>&</literal>
         /// ')
@@ -150,13 +150,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         // this method is ugly, and does a lot. but other breakups cause rescanning and stringbuilder generations
-        /// <exception cref="System.IO.IOException"/>
         internal static void Escape(StringBuilder accum, String str, OutputSettings outputSettings, bool inAttribute
             , bool normaliseWhite, bool stripLeadingWhite) {
             bool lastWasWhite = false;
             bool reachedNonWhite = false;
             Entities.EscapeMode escapeMode = outputSettings.EscapeMode();
-            Encoding encoder = outputSettings.Charset();
+            System.Text.Encoding encoder = outputSettings.Charset();
             Entities.CoreCharset coreCharset = GetCoreCharsetByName(outputSettings.Charset().Name());
             IDictionary<char, String> map = escapeMode.GetMap();
             int length = str.Length;
@@ -180,9 +179,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 // surrogate pairs, split implementation for efficiency on single char common case (saves creating strings, char[]):
                 if (codePoint < iText.IO.Util.TextUtil.CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT) {
                     char c = (char)codePoint;
+                    // html specific and required escapes:
                     switch (c) {
                         case '&': {
-                            // html specific and required escapes:
                             accum.Append("&amp;");
                             break;
                         }
@@ -282,10 +281,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         * Alterslash: 3013, 28
         * Jsoup: 167, 2
         */
-        private static bool CanEncode(Entities.CoreCharset charset, char c, Encoding fallback) {
+        private static bool CanEncode(Entities.CoreCharset charset, char c, System.Text.Encoding fallback) {
+            // todo add more charset tests if impacted by Android's bad perf in canEncode
             switch (charset) {
                 case Entities.CoreCharset.ascii: {
-                    // todo add more charset tests if impacted by Android's bad perf in canEncode
                     return c < 0x80;
                 }
 
@@ -317,11 +316,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return Entities.CoreCharset.fallback;
         }
 
+        // xhtml has restricted entities
         private static readonly Object[][] xhtmlArray = new Object[][] { new Object[] { "quot", 0x00022 }, new Object
             [] { "amp", 0x00026 }, new Object[] { "lt", 0x0003C }, new Object[] { "gt", 0x0003E } };
 
         static Entities() {
-            // xhtml has restricted entities
             xhtmlByVal = new Dictionary<char, String>();
             @base = LoadEntities("entities-base.properties");
             // most common / default

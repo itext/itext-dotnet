@@ -117,11 +117,11 @@ namespace iText.Svg.Processors.Impl {
 
         //Edge cases
         [NUnit.Framework.Test]
+        /*
+        Invalid input: null
+        */
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_ADDING_CHILD_NODE)]
         public virtual void DummyProcessingTestNodeHasNullChild() {
-            /*
-            Invalid input: null
-            */
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
@@ -283,7 +283,6 @@ namespace iText.Svg.Processors.Impl {
             dsp.ExecuteDepthFirstTraversal(root);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void XLinkAttributeBaseDirDoesNotExistTest() {
             INode root = CreateSvgContainingImage();
@@ -299,7 +298,6 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.AreEqual(expectedURL, url);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void XLinkAttributeResolveNonEmptyBaseUrlTest() {
             INode root = CreateSvgContainingImage();

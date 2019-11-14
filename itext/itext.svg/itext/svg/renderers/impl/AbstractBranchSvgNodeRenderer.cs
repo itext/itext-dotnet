@@ -80,7 +80,8 @@ namespace iText.Svg.Renderers.Impl {
                 //Bounding box needs to be written after viewbox calculations to account for pdf syntax interaction
                 stream.Put(PdfName.BBox, new PdfArray(context.GetCurrentViewPort()));
                 context.PushCanvas(newCanvas);
-                ApplyViewport(context);
+                ApplyViewportClip(context);
+                ApplyViewportTranslationCorrection(context);
                 foreach (ISvgNodeRenderer child in GetChildren()) {
                     newCanvas.SaveState();
                     child.Draw(context);
@@ -94,136 +95,178 @@ namespace iText.Svg.Renderers.Impl {
         // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
-        private void ApplyViewBox(SvgDrawContext context) {
-            if (this.attributesAndStyles != null) {
-                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
-                    //Parse aspect ratio related stuff
-                    String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
-                    IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
-                    float[] values = new float[valueStrings.Count];
-                    for (int i = 0; i < values.Length; i++) {
-                        values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
-                    }
-                    Rectangle currentViewPort = context.GetCurrentViewPort();
-                    float scaleWidth = currentViewPort.GetWidth() / values[2];
-                    float scaleHeight = currentViewPort.GetHeight() / values[3];
-                    AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
-                    if (!scale.IsIdentity()) {
-                        context.GetCurrentCanvas().ConcatMatrix(scale);
-                        //Inverse scaling needs to be applied to viewport dimensions
-                        context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth);
-                        context.GetCurrentViewPort().SetX(currentViewPort.GetX() / scaleWidth);
-                        context.GetCurrentViewPort().SetHeight(currentViewPort.GetHeight() / scaleHeight);
-                        context.GetCurrentViewPort().SetY(currentViewPort.GetY() / scaleHeight);
-                    }
-                    AffineTransform transform = ProcessAspectRatio(context, values);
-                    if (!transform.IsIdentity()) {
-                        //TODO (RND-876)
-                        context.GetCurrentCanvas().WriteLiteral("% applying viewbox aspect ratio correction (not correct) \n");
-                    }
+        internal virtual void ApplyViewBox(SvgDrawContext context) {
+            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX
+                )) {
+                //Parse aspect ratio related stuff
+                String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
+                IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
+                float[] values = new float[valueStrings.Count];
+                for (int i = 0; i < values.Length; i++) {
+                    values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
                 }
-            }
-        }
-
-        //context.getCurrentCanvas().concatMatrix(transform);
-        /// <summary>Applies a clipping operation based on the view port.</summary>
-        /// <param name="context">the svg draw context</param>
-        private void ApplyViewport(SvgDrawContext context) {
-            if (GetParent() != null && GetParent() is AbstractSvgNodeRenderer) {
-                AbstractSvgNodeRenderer parent = (AbstractSvgNodeRenderer)GetParent();
-                PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                currentCanvas.Rectangle(context.GetCurrentViewPort());
-                currentCanvas.Clip();
-                currentCanvas.EndPath();
-                if (parent.CanConstructViewPort()) {
-                    currentCanvas.ConcatMatrix(parent.CalculateViewPortTranslation(context));
-                }
-            }
-        }
-
-        /// <summary>If present, process the preserveAspectRatio.</summary>
-        /// <param name="context">the svg draw context</param>
-        /// <param name="viewBoxValues">the four values depicting the viewbox [min-x min-y width height]</param>
-        /// <returns>the transformation based on the preserveAspectRatio value</returns>
-        private AffineTransform ProcessAspectRatio(SvgDrawContext context, float[] viewBoxValues) {
-            AffineTransform transform = new AffineTransform();
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
                 Rectangle currentViewPort = context.GetCurrentViewPort();
+                String[] alignAndMeet = RetrieveAlignAndMeet();
+                String align = alignAndMeet[0];
+                String meetOrSlice = alignAndMeet[1];
+                float scaleWidth = currentViewPort.GetWidth() / values[2];
+                float scaleHeight = currentViewPort.GetHeight() / values[3];
+                bool forceUniformScaling = !(SvgConstants.Values.NONE.Equals(align));
+                if (forceUniformScaling) {
+                    //Scaling should preserve aspect ratio
+                    if (SvgConstants.Values.MEET.Equals(meetOrSlice)) {
+                        scaleWidth = Math.Min(scaleWidth, scaleHeight);
+                    }
+                    else {
+                        scaleWidth = Math.Max(scaleWidth, scaleHeight);
+                    }
+                    scaleHeight = scaleWidth;
+                }
+                AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
+                float[] scaledViewBoxValues = ScaleViewBoxValues(values, scaleWidth, scaleHeight);
+                AffineTransform transform = ProcessAspectRatioPosition(context, scaledViewBoxValues, align, scaleWidth, scaleHeight
+                    );
+                if (!scale.IsIdentity()) {
+                    context.GetCurrentCanvas().ConcatMatrix(scale);
+                    //Inverse scaling needs to be applied to viewport dimensions
+                    context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth).SetX(currentViewPort.GetX()
+                         / scaleWidth).SetHeight(currentViewPort.GetHeight() / scaleHeight).SetY(currentViewPort.GetY() / scaleHeight
+                        );
+                }
+                if (!transform.IsIdentity()) {
+                    context.GetCurrentCanvas().ConcatMatrix(transform);
+                    //Apply inverse translation to viewport to make it line up nicely
+                    context.GetCurrentViewPort().SetX(currentViewPort.GetX() + -1 * (float)transform.GetTranslateX()).SetY(currentViewPort
+                        .GetY() + -1 * (float)transform.GetTranslateY());
+                }
+            }
+        }
+
+        internal virtual String[] RetrieveAlignAndMeet() {
+            String meetOrSlice = SvgConstants.Values.MEET;
+            String align = SvgConstants.Values.DEFAULT_ASPECT_RATIO;
+            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
                 String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
                     );
-                IList<String> values = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
-                if (SvgConstants.Values.DEFER.EqualsIgnoreCase(values[0])) {
-                    values.JRemoveAt(0);
+                IList<String> aspectRatioValuesSplitValues = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
+                align = aspectRatioValuesSplitValues[0].ToLowerInvariant();
+                if (aspectRatioValuesSplitValues.Count > 1) {
+                    meetOrSlice = aspectRatioValuesSplitValues[1].ToLowerInvariant();
                 }
-                String align = values[0];
-                float x = 0f;
-                float y = 0f;
-                float midXBox = viewBoxValues[0] + (viewBoxValues[2] / 2);
-                float midYBox = viewBoxValues[1] + (viewBoxValues[3] / 2);
-                float midXPort = currentViewPort.GetX() + (currentViewPort.GetWidth() / 2);
-                float midYPort = currentViewPort.GetY() + (currentViewPort.GetHeight() / 2);
-                switch (align.ToLowerInvariant()) {
-                    case SvgConstants.Values.NONE: {
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMIN_YMIN: {
-                        x = -viewBoxValues[0];
-                        y = -viewBoxValues[1];
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMIN_YMID: {
-                        x = -viewBoxValues[0];
-                        y = midYPort - midYBox;
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMIN_YMAX: {
-                        x = -viewBoxValues[0];
-                        y = currentViewPort.GetHeight() - viewBoxValues[3];
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMID_YMIN: {
-                        x = midXPort - midXBox;
-                        y = -viewBoxValues[1];
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMID_YMAX: {
-                        x = midXPort - midXBox;
-                        y = currentViewPort.GetHeight() - viewBoxValues[3];
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMIN: {
-                        x = currentViewPort.GetWidth() - viewBoxValues[2];
-                        y = -viewBoxValues[1];
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMID: {
-                        x = currentViewPort.GetWidth() - viewBoxValues[2];
-                        y = midYPort - midYBox;
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMAX: {
-                        x = currentViewPort.GetWidth() - viewBoxValues[2];
-                        y = currentViewPort.GetHeight() - viewBoxValues[3];
-                        break;
-                    }
-
-                    case SvgConstants.Values.DEFAULT_ASPECT_RATIO:
-                    default: {
-                        x = midXPort - midXBox;
-                        y = midYPort - midYBox;
-                        break;
-                    }
-                }
-                transform.Translate(x, y);
             }
+            return new String[] { align, meetOrSlice };
+        }
+
+        /// <summary>Applies a clipping operation based on the view port.</summary>
+        /// <param name="context">the svg draw context</param>
+        private void ApplyViewportClip(SvgDrawContext context) {
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            currentCanvas.Rectangle(context.GetCurrentViewPort());
+            currentCanvas.Clip();
+            currentCanvas.EndPath();
+        }
+
+        private void ApplyViewportTranslationCorrection(SvgDrawContext context) {
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            AffineTransform tf = this.CalculateViewPortTranslation(context);
+            if (!tf.IsIdentity() && SvgConstants.Values.NONE.Equals(this.GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
+                ))) {
+                currentCanvas.ConcatMatrix(tf);
+            }
+        }
+
+        /// <summary>If present, process the preserveAspectRatio position.</summary>
+        /// <param name="context">the svg draw context</param>
+        /// <param name="viewBoxValues">the four values depicting the viewbox [min-x min-y width height]</param>
+        /// <param name="align">alignment method to use</param>
+        /// <param name="scaleWidth">the multiplier for scaling width</param>
+        /// <param name="scaleHeight">the multiplier for scaling height</param>
+        /// <returns>the transformation based on the preserveAspectRatio value</returns>
+        internal virtual AffineTransform ProcessAspectRatioPosition(SvgDrawContext context, float[] viewBoxValues, 
+            String align, float scaleWidth, float scaleHeight) {
+            AffineTransform transform = new AffineTransform();
+            Rectangle currentViewPort = context.GetCurrentViewPort();
+            float midXBox = viewBoxValues[0] + (viewBoxValues[2] / 2);
+            float midYBox = viewBoxValues[1] + (viewBoxValues[3] / 2);
+            float midXPort = currentViewPort.GetX() + (currentViewPort.GetWidth() / 2);
+            float midYPort = currentViewPort.GetY() + (currentViewPort.GetHeight() / 2);
+            float x = 0f;
+            float y = 0f;
+            // if x attribute of svg is present, then x value of current viewport should be set according to it
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
+                x = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+            }
+            // if y attribute of svg is present, then y value of current viewport should be set according to it
+            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
+                y = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+            }
+            // need to consider previous (parent) translation before applying the current one
+            x -= currentViewPort.GetX();
+            y -= currentViewPort.GetY();
+            switch (align.ToLowerInvariant()) {
+                case SvgConstants.Values.NONE: {
+                    break;
+                }
+
+                case SvgConstants.Values.XMIN_YMIN: {
+                    x -= viewBoxValues[0];
+                    y -= viewBoxValues[1];
+                    break;
+                }
+
+                case SvgConstants.Values.XMIN_YMID: {
+                    x -= viewBoxValues[0];
+                    y += (midYPort - midYBox);
+                    break;
+                }
+
+                case SvgConstants.Values.XMIN_YMAX: {
+                    x -= viewBoxValues[0];
+                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
+                    break;
+                }
+
+                case SvgConstants.Values.XMID_YMIN: {
+                    x += (midXPort - midXBox);
+                    y -= viewBoxValues[1];
+                    break;
+                }
+
+                case SvgConstants.Values.XMID_YMAX: {
+                    x += (midXPort - midXBox);
+                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
+                    break;
+                }
+
+                case SvgConstants.Values.XMAX_YMIN: {
+                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
+                    y -= viewBoxValues[1];
+                    break;
+                }
+
+                case SvgConstants.Values.XMAX_YMID: {
+                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
+                    y += (midYPort - midYBox);
+                    break;
+                }
+
+                case SvgConstants.Values.XMAX_YMAX: {
+                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
+                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
+                    break;
+                }
+
+                case SvgConstants.Values.DEFAULT_ASPECT_RATIO:
+                default: {
+                    x += (midXPort - midXBox);
+                    y += (midYPort - midYBox);
+                    break;
+                }
+            }
+            //Rescale x and y
+            x /= scaleWidth;
+            y /= scaleHeight;
+            transform.Translate(x, y);
             return transform;
         }
 
@@ -273,6 +316,15 @@ namespace iText.Svg.Renderers.Impl {
                     ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(isPart);
                 }
             }
+        }
+
+        private static float[] ScaleViewBoxValues(float[] values, float scaleWidth, float scaleHeight) {
+            float[] scaledViewBoxValues = new float[values.Length];
+            scaledViewBoxValues[0] = values[0] * scaleWidth;
+            scaledViewBoxValues[1] = values[1] * scaleHeight;
+            scaledViewBoxValues[2] = values[2] * scaleWidth;
+            scaledViewBoxValues[3] = values[3] * scaleHeight;
+            return scaledViewBoxValues;
         }
     }
 }

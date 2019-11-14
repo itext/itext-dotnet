@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.IO.Source {
-    public class WriteStringsTest {
+    public class WriteStringsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void WriteStringTest() {
             String str = "SomeString";

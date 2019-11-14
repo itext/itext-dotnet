@@ -40,30 +40,53 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using Common.Logging;
 using iText.Kernel.Counter.Event;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Kernel.Counter {
     public class EventCounterHandlerTest : ExtendedITextTest {
-        private const int COUNT = 100;
-
         [NUnit.Framework.Test]
-        [LogMessage("Process event: core-process", Count = COUNT)]
         public virtual void TestCoreEvent() {
+            int EVENTS_COUNT = 100;
             IEventCounterFactory counterFactory = new SimpleEventCounterFactory(new EventCounterHandlerTest.ToLogCounter
                 ());
             EventCounterHandler.GetInstance().Register(counterFactory);
-            for (int i = 0; i < COUNT; ++i) {
-                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, null, GetType());
+            EventCounterHandlerTest.MetaInfoCounter counter = new EventCounterHandlerTest.MetaInfoCounter();
+            for (int i = 0; i < EVENTS_COUNT; ++i) {
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, counter, GetType());
             }
             EventCounterHandler.GetInstance().Unregister(counterFactory);
+            NUnit.Framework.Assert.AreEqual(counter.events_count, EVENTS_COUNT);
         }
 
         private class ToLogCounter : EventCounter {
             protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
-                LogManager.GetLogger(GetType()).Warn("Process event: " + @event.GetEventType());
+                ((EventCounterHandlerTest.MetaInfoCounter)metaInfo).events_count++;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestDefaultCoreEvent() {
+            int EVENTS_COUNT = 10001;
+            IEventCounterFactory counterFactory = new SimpleEventCounterFactory(new EventCounterHandlerTest.ToLogDefaultCounter
+                ());
+            EventCounterHandler.GetInstance().Register(counterFactory);
+            EventCounterHandlerTest.MetaInfoCounter counter = new EventCounterHandlerTest.MetaInfoCounter();
+            for (int i = 0; i < EVENTS_COUNT; ++i) {
+                EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, counter, GetType());
+            }
+            EventCounterHandler.GetInstance().Unregister(counterFactory);
+            NUnit.Framework.Assert.AreEqual(counter.events_count, EVENTS_COUNT);
+        }
+
+        private class MetaInfoCounter : IMetaInfo {
+            internal int events_count = 0;
+        }
+
+        private class ToLogDefaultCounter : DefaultEventCounter {
+            protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
+                base.OnEvent(@event, metaInfo);
+                ((EventCounterHandlerTest.MetaInfoCounter)metaInfo).events_count++;
             }
         }
     }

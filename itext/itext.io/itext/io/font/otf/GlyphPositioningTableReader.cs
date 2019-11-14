@@ -54,14 +54,12 @@ namespace iText.IO.Font.Otf {
     /// </remarks>
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public class GlyphPositioningTableReader : OpenTypeFontTableReader {
-        /// <exception cref="System.IO.IOException"/>
         public GlyphPositioningTableReader(RandomAccessFileOrArray rf, int gposTableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
             : base(rf, gposTableLocation, gdef, indexGlyphMap, unitsPerEm) {
             StartReadingTable();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
             ) {
             if (lookupType == 9) {

@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// under the same title heading.
         /// </remarks>
         /// <param name="title">the title text</param>
-        /// <param name="document">the <CODE>PdfDocument</CODE></param>
+        /// <param name="document">the <c>PdfDocument</c></param>
         /// <returns>the title layer</returns>
         public static iText.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document) {
             iText.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// in the array should be ON at a time: if one group is turned
         /// ON, all others must be turned OFF.
         /// </remarks>
-        /// <param name="document">the <CODE>PdfDocument</CODE></param>
+        /// <param name="document">the <c>PdfDocument</c></param>
         /// <param name="group">the radio group</param>
         public static void AddOCGRadioGroup(PdfDocument document, IList<iText.Kernel.Pdf.Layer.PdfLayer> group) {
             document.GetCatalog().GetOCProperties(true).AddOCGRadioGroup(group);
@@ -205,7 +205,7 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Sets the visibility of the layer in Acrobat's layer panel.</summary>
         /// <remarks>
-        /// Sets the visibility of the layer in Acrobat's layer panel. If <CODE>false</CODE>
+        /// Sets the visibility of the layer in Acrobat's layer panel. If <c>false</c>
         /// the layer cannot be directly manipulated by the user. Note that any children layers will
         /// also be absent from the panel.
         /// </remarks>
@@ -275,8 +275,8 @@ namespace iText.Kernel.Pdf.Layer {
         /// <param name="creator">a text string specifying the application that created the group</param>
         /// <param name="subtype">
         /// a string defining the type of content controlled by the group. Suggested
-        /// values include but are not limited to <B>Artwork</B>, for graphic-design or publishing
-        /// applications, and <B>Technical</B>, for technical designs such as building plans or
+        /// values include but are not limited to <b>Artwork</b>, for graphic-design or publishing
+        /// applications, and <b>Technical</b>, for technical designs such as building plans or
         /// schematics
         /// </param>
         public virtual void SetCreatorInfo(String creator, String subtype) {
@@ -294,7 +294,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// </summary>
         /// <param name="lang">
         /// a language string which specifies a language and possibly a locale
-        /// (for example, <B>es-MX</B> represents Mexican Spanish)
+        /// (for example, <b>es-MX</b> represents Mexican Spanish)
         /// </param>
         /// <param name="preferred">
         /// used by viewer applications when there is a partial match but no exact
@@ -361,7 +361,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// </summary>
         /// <param name="subtype">
         /// a name specifying the kind of content controlled by the group;
-        /// for example, <B>Trapping</B>, <B>PrintersMarks</B> and <B>Watermark</B>
+        /// for example, <b>Trapping</b>, <b>PrintersMarks</b> and <b>Watermark</b>
         /// </param>
         /// <param name="printState">
         /// indicates that the group should be
@@ -399,7 +399,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// the name(s) of the individual, position or organization
         /// </param>
         public virtual void SetUser(String type, params String[] names) {
-            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org")) {
+            if (type == null || !"Ind".Equals(type) && !"Ttl".Equals(type) && !"Org".Equals(type)) {
                 throw new ArgumentException("Illegal type argument");
             }
             if (names == null || names.Length == 0) {

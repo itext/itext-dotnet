@@ -52,7 +52,6 @@ namespace iText.IO.Font.Woff2 {
             return DEBUG;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal void RunTest(String fileName, String sourceFolder, String targetFolder, bool isFontValid
             ) {
             String inFile = fileName + ".woff2";
@@ -85,7 +84,6 @@ namespace iText.IO.Font.Woff2 {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal void SaveFile(byte[] content, String fileName) {
             if (content != null) {
                 Stream os = new FileStream(fileName, FileMode.Create);

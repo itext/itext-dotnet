@@ -74,8 +74,6 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatMaxWidthTest01() {
             /* This test illustrate behaviour of images with different width and mas_width properties, that have
@@ -119,27 +117,25 @@ namespace iText.Layout.Renderer {
             AddContent(document, true, 0, null, 0, null, ClearPropertyValue.BOTH, firstImage, lastImage);
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\n"));
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.WIDTH, new 
                 UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
-            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Max width < actual width.\n"));
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 30f), ClearPropertyValue.BOTH, firstImage, lastImage);
-            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Add(new AreaBreak());
             document.Add(new Paragraph("Bug: Non-floating text width is parent width (limited by max).\nMax width > actual width.\n"
                 ));
+            // 100% would require forced placement, since border box has width and is not included in 100% width
             AddContent(document, true, Property.MAX_WIDTH, new UnitValue(UnitValue.PERCENT, 80f), Property.MAX_WIDTH, 
                 new UnitValue(UnitValue.PERCENT, 60f), ClearPropertyValue.BOTH, firstImage, lastImage);
-            // 100% would require forced placement, since border box has width and is not included in 100% width
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatMaxWidthTest02() {
             /* This test illustrate behaviour of images, wrapped in Div containers, that have paragraph below image
@@ -167,7 +163,6 @@ namespace iText.Layout.Renderer {
                 "diff01_"));
         }
 
-        /// <exception cref="System.UriFormatException"/>
         private void AddContent(Document document, bool wrapImages, int imageWidthProperty, UnitValue imageWidth, 
             int divWidthProperty, UnitValue divWidth, ClearPropertyValue? clearValue, int firstImage, int lastImage
             ) {

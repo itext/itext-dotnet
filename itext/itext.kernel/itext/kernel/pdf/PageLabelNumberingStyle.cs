@@ -41,7 +41,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Page label numbering style constants for
+    /// <see cref="PdfPage.SetPageLabel(PageLabelNumberingStyle, String)"/>.
+    /// </summary>
     public enum PageLabelNumberingStyle {
         /// <summary>1, 2, 3, 4...</summary>
         DECIMAL_ARABIC_NUMERALS,

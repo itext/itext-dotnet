@@ -69,7 +69,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfAButtonFieldTest() {
             PdfDocument pdf;

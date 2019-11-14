@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Font;
+using iText.Test;
 
 namespace iText.IO {
-    public class AdobeGlyphListTest {
+    public class AdobeGlyphListTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestGlyphListCount() {
             NUnit.Framework.Assert.AreEqual(4200, AdobeGlyphList.GetNameToUnicodeLength());

@@ -66,8 +66,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bCheckFieldOffAppearanceTest() {
             String name = "pdfA1b_checkFieldOffAppearance";
@@ -90,8 +88,6 @@ namespace iText.Pdfa {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1bCheckFieldOnAppearanceTest() {
             String name = "pdfA1b_checkFieldOnAppearance";

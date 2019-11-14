@@ -51,7 +51,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/TextMarginFinderTest/";
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test() {
             TextMarginFinder finder = new TextMarginFinder();

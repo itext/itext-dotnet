@@ -58,7 +58,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocument() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "emptyDocument.pdf"));
@@ -79,7 +78,6 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes1() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes1.pdf"));
@@ -93,7 +91,6 @@ namespace iText.Kernel.Pdf {
             ValidateUseObjectForMultipleTimesTest(destinationFolder + "useObjectForMultipleTimes1.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes2() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes2.pdf"));
@@ -108,7 +105,6 @@ namespace iText.Kernel.Pdf {
             ValidateUseObjectForMultipleTimesTest(destinationFolder + "useObjectForMultipleTimes2.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes3() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes3.pdf"));
@@ -123,7 +119,6 @@ namespace iText.Kernel.Pdf {
             ValidateUseObjectForMultipleTimesTest(destinationFolder + "useObjectForMultipleTimes3.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UseObjectForMultipleTimes4() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "useObjectForMultipleTimes4.pdf"));
@@ -138,7 +133,6 @@ namespace iText.Kernel.Pdf {
             ValidateUseObjectForMultipleTimesTest(destinationFolder + "useObjectForMultipleTimes4.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void ValidateUseObjectForMultipleTimesTest(String filename) {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -158,7 +152,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Copying direct objects.</summary>
         /// <remarks>Copying direct objects. Objects of all types are added into document catalog.</remarks>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject1() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject1_1.pdf"));
@@ -210,7 +203,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copying objects, some of those are indirect.</summary>
         /// <remarks>Copying objects, some of those are indirect. Objects of all types are added into document catalog.
         ///     </remarks>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject2() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject2_1.pdf"));
@@ -263,7 +255,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Copy objects recursively.</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject3() {
  {
@@ -307,7 +298,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Copies stream.</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject4() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject4_1.pdf"));
@@ -342,7 +332,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Copies page.</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject5() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject5_1.pdf"));
@@ -375,7 +364,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Copies object with different method overloads.</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject6() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_1.pdf"));
@@ -413,7 +401,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Attempts to copy from the document that is being written.</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject7() {
             String exceptionMessage = null;
@@ -441,7 +428,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Attempts to copy to copy with null document</summary>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject8() {
             String exceptionMessage = null;
@@ -463,7 +449,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentForCopyToCannotBeNull);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CloseStream1() {
             FileStream fos = new FileStream(destinationFolder + "closeStream1.pdf", FileMode.Create);
@@ -479,7 +464,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CloseStream2() {
             FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.Create);
@@ -491,7 +475,6 @@ namespace iText.Kernel.Pdf {
             fos.Write(1);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DirectInIndirectChain() {
             String filename = destinationFolder + "directInIndirectChain.pdf";
@@ -520,7 +503,6 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void CreatePdfStreamByInputStream() {
             String filename = destinationFolder + "createPdfStreamByInputStream.pdf";

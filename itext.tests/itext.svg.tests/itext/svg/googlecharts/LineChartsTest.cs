@@ -47,46 +47,34 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class LineChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/line_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/LineChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/line_charts/";
+             + "/test/itext/svg/googlecharts/LineChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Line_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "line_chart");
+        public virtual void LineChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "lineChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Line_classic_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "line_classic_chart");
+        public virtual void LineClassicChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "lineClassicChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Line_material_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "line_material_chart");
+        public virtual void LineMaterialChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "lineMaterialChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Line_topX_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "line_topX_chart");
+        public virtual void LineTopXChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "lineTopXChart");
         }
     }
 }

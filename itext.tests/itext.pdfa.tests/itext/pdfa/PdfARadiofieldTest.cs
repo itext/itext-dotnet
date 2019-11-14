@@ -66,8 +66,6 @@ namespace iText.Pdfa {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfA1aRadioFieldOffAppearanceTest() {
             String name = "pdfA1a_radioFieldOffAppearance";

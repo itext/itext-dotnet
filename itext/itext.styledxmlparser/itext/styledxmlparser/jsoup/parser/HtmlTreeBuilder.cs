@@ -49,6 +49,7 @@ using iText.StyledXmlParser.Jsoup.Select;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>HTML Tree Builder; creates a DOM from Tokens.</summary>
     public class HtmlTreeBuilder : TreeBuilder {
+        // tag searches
         public static readonly String[] TagsSearchInScope = new String[] { "applet", "caption", "html", "table", "td"
             , "th", "marquee", "object" };
 
@@ -74,44 +75,43 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private HtmlTreeBuilderState state;
 
+        // the current state
         private HtmlTreeBuilderState originalState;
 
+        // original / marked state
         private bool baseUriSetFromDoc = false;
 
         private iText.StyledXmlParser.Jsoup.Nodes.Element headElement;
 
+        // the current head element
         private FormElement formElement;
 
+        // the current form element
         private iText.StyledXmlParser.Jsoup.Nodes.Element contextElement;
 
+        // fragment parse context -- could be null even if fragment parsing
         private List<iText.StyledXmlParser.Jsoup.Nodes.Element> formattingElements = new List<iText.StyledXmlParser.Jsoup.Nodes.Element
             >();
 
+        // active (open) formatting elements
         private IList<String> pendingTableCharacters = new List<String>();
 
+        // chars in table to be shifted out
         private Token.EndTag emptyEnd = new Token.EndTag();
 
+        // reused empty end tag
         private bool framesetOk = true;
 
+        // if ok to go into frameset
         private bool fosterInserts = false;
 
+        // if next inserts should be fostered
         private bool fragmentParsing = false;
 
+        // if parsing a fragment of html
         internal HtmlTreeBuilder() {
         }
 
-        // tag searches
-        // the current state
-        // original / marked state
-        // the current head element
-        // the current form element
-        // fragment parse context -- could be null even if fragment parsing
-        // active (open) formatting elements
-        // chars in table to be shifted out
-        // reused empty end tag
-        // if ok to go into frameset
-        // if next inserts should be fostered
-        // if parsing a fragment of html
         internal override Document Parse(String input, String baseUri, ParseErrorList errors) {
             state = HtmlTreeBuilderState.Initial;
             baseUriSetFromDoc = false;
@@ -585,10 +585,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        private String[] specificScopeTarget = new String[] { null };
-
         // frag
         // todo: tidy up in specific scope methods
+        private String[] specificScopeTarget = new String[] { null };
+
         private bool InSpecificScope(String targetName, String[] baseTypes, String[] extraTypes) {
             specificScopeTarget[0] = targetName;
             return InSpecificScope(specificScopeTarget, baseTypes, extraTypes);
@@ -690,12 +690,14 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             this.pendingTableCharacters = pendingTableCharacters;
         }
 
-        /// <summary>
-        /// 11.2.5.2 Closing elements that have implied end tags<p/>
+        /// <summary>11.2.5.2 Closing elements that have implied end tags</summary>
+        /// <remarks>
+        /// 11.2.5.2 Closing elements that have implied end tags
+        /// <para />
         /// When the steps below require the UA to generate implied end tags, then, while the current node is a dd element, a
         /// dt element, an li element, an option element, an optgroup element, a p element, an rp element, or an rt element,
         /// the UA must pop the current node off the stack of open elements.
-        /// </summary>
+        /// </remarks>
         /// <param name="excludeTag">
         /// If a step requires the UA to generate implied end tags but lists an element to exclude from the
         /// process, then the UA must perform the above steps as if that element was not in the above list.
@@ -755,10 +757,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         private bool IsSameFormattingElement(iText.StyledXmlParser.Jsoup.Nodes.Element a, iText.StyledXmlParser.Jsoup.Nodes.Element
              b) {
             // same if: same namespace, tag, and attributes. Element.equals only checks tag, might in future check children
-            return a.NodeName().Equals(b.NodeName()) && a.Attributes().Equals(b.Attributes());
+            return a.NodeName().Equals(b.NodeName()) && 
+                        // a.namespace().equals(b.namespace()) &&
+                        a.Attributes().Equals(b.Attributes());
         }
 
-        // a.namespace().equals(b.namespace()) &&
         // todo: namespaces
         internal virtual void ReconstructFormattingElements() {
             iText.StyledXmlParser.Jsoup.Nodes.Element last = LastFormattingElement();

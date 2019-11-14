@@ -109,8 +109,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="xmp">the metadata object to be serialized</param>
 		/// <param name="output">outputStream the output stream to serialize to</param>
 		/// <param name="options">the serialization options</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If case of wrong options or any other serialization error.
-		/// 	</exception>
 		public virtual void Serialize(XMPMeta xmp, Stream output, SerializeOptions options)
 		{
 			try
@@ -141,9 +139,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Calculates the padding according to the options and write it to the stream.
 		/// 	</summary>
 		/// <param name="tailLength">the length of the tail string</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">thrown if packet size is to small to fit the padding
-		/// 	</exception>
-		/// <exception cref="System.IO.IOException">forwards writer errors</exception>
 		private void AddPadding(int tailLength)
 		{
 			if (options.GetExactPacketLength())
@@ -181,8 +176,6 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>Checks if the supplied options are consistent.</summary>
-		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if options are conflicting
-		/// 	</exception>
 		protected internal virtual void CheckOptionsConsistence()
 		{
 			if (options.GetEncodeUTF16BE() | options.GetEncodeUTF16LE())
@@ -245,8 +238,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Writes the (optional) packet header and the outer rdf-tags.</summary>
 		/// <returns>Returns the packet end processing instraction to be written after the padding.
 		/// 	</returns>
-		/// <exception cref="System.IO.IOException">Forwarded writer exceptions.</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private String SerializeAsRDF()
 		{
 			int level = 0;
@@ -313,8 +304,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Serializes the metadata in pretty-printed manner.</summary>
 		/// <param name="level">indent level</param>
-		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCanonicalRDFSchemas(int level)
 		{
 			if (xmp.GetRoot().GetChildrenLength() > 0)
@@ -338,7 +327,6 @@ namespace iText.Kernel.XMP.Impl
 			}
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		private void WriteTreeName()
 		{
 			Write('"');
@@ -352,8 +340,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Serializes the metadata in compact manner.</summary>
 		/// <param name="level">indent level to start with</param>
-		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCompactRDFSchemas(int level)
 		{
 			// Begin the rdf:Description start tag.
@@ -409,7 +395,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="parentNode">the parent property node</param>
 		/// <param name="indent">the current indent level</param>
 		/// <returns>Returns true if all properties can be rendered as RDF attribute.</returns>
-		/// <exception cref="System.IO.IOException"/>
 		private bool SerializeCompactRDFAttrProps(XMPNode parentNode, int indent)
 		{
 			bool allAreAttrs = true;
@@ -475,9 +460,6 @@ namespace iText.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="parentNode">the parent node</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards writer exceptions</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
-		/// 	</exception>
 		private void SerializeCompactRDFElementProps(XMPNode parentNode, int indent)
 		{
 			for (IEnumerator it = parentNode.IterateChildren(); it.MoveNext(); )
@@ -563,7 +545,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Serializes a simple property.</summary>
 		/// <param name="node">an XMPNode</param>
 		/// <returns>Returns an array containing the flags emitEndTag and indentEndTag.</returns>
-		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
 		private bool[] SerializeCompactRDFSimpleProp(XMPNode node)
 		{
 			// This is a simple property.
@@ -598,9 +579,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Serializes an array property.</summary>
 		/// <param name="node">an XMPNode</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
-		/// 	</exception>
 		private void SerializeCompactRDFArrayProp(XMPNode node, int indent)
 		{
 			// This is an array.
@@ -620,9 +598,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="indent">the current indent level</param>
 		/// <param name="hasRDFResourceQual">Flag if the element has resource qualifier</param>
 		/// <returns>Returns true if an end flag shall be emitted.</returns>
-		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
-		/// 	</exception>
 		private bool SerializeCompactRDFStructProp(XMPNode node, int indent, bool hasRDFResourceQual
 			)
 		{
@@ -706,9 +681,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Serializes the general qualifier.</summary>
 		/// <param name="node">the root node of the subtree</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
-		/// 	</exception>
 		private void SerializeCompactRDFGeneralQualifier(int indent, XMPNode node)
 		{
 			// The node has general qualifiers, ones that can't be
@@ -752,8 +724,6 @@ namespace iText.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="schemaNode">a schema node</param>
 		/// <param name="level"/>
-		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCanonicalRDFSchema(XMPNode schemaNode, int level)
 		{
 			// Write each of the schema's actual properties.
@@ -773,7 +743,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="node">the root node of the subtree</param>
 		/// <param name="usedPrefixes">a set containing currently used prefixes</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
 		private void DeclareUsedNamespaces(XMPNode node, ICollection<String> usedPrefixes
 			, int indent)
 		{
@@ -813,7 +782,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="namespace">the a namespace</param>
 		/// <param name="usedPrefixes">a set containing currently used prefixes</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
 		private void DeclareNamespace(String prefix, String @namespace, ICollection<String
 			> usedPrefixes, int indent)
 		{
@@ -853,7 +821,6 @@ namespace iText.Kernel.XMP.Impl
 		/// Start the outer rdf:Description element, including all needed xmlns attributes.
 		/// Leave the element open so that the compact form can add property attributes.
 		/// </remarks>
-		/// <exception cref="System.IO.IOException">If the writing to</exception>
 		private void StartOuterRDFDescription(XMPNode schemaNode, int level)
 		{
 			WriteIndent(level + 1);
@@ -868,7 +835,6 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>Write the &lt;/rdf:Description&gt; end tag.</summary>
-		/// <exception cref="System.IO.IOException"/>
 		private void EndOuterRDFDescription(int level)
 		{
 			WriteIndent(level + 1);
@@ -919,9 +885,6 @@ namespace iText.Kernel.XMP.Impl
 		/// the compact form with rdf:ParseType=&quot;resource&quot; attribute.
 		/// </param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If &quot;rdf:resource&quot; and general qualifiers are mixed.
-		/// 	</exception>
 		private void SerializeCanonicalRDFProperty(XMPNode node, bool useCanonicalRDF, bool
 			 emitAsRDFValue, int indent)
 		{
@@ -1160,7 +1123,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="arrayNode">an array node</param>
 		/// <param name="isStartTag">flag if its the start or end tag</param>
 		/// <param name="indent">the current indent level</param>
-		/// <exception cref="System.IO.IOException">forwards writer exceptions</exception>
 		private void EmitRDFArrayTag(XMPNode arrayNode, bool isStartTag, int indent)
 		{
 			if (isStartTag || arrayNode.HasChildren())
@@ -1204,7 +1166,6 @@ namespace iText.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="value">the value of the node</param>
 		/// <param name="forAttribute">flag if value is an attribute value</param>
-		/// <exception cref="System.IO.IOException"/>
 		private void AppendNodeValue(String value, bool forAttribute)
 		{
 			if (value == null)
@@ -1235,7 +1196,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Writes indents and automatically includes the baseindend from the options.
 		/// 	</summary>
 		/// <param name="times">number of indents to write</param>
-		/// <exception cref="System.IO.IOException">forwards exception</exception>
 		private void WriteIndent(int times)
 		{
 			for (int i = options.GetBaseIndent() + times; i > 0; i--)
@@ -1246,7 +1206,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Writes a char to the output.</summary>
 		/// <param name="c">a char</param>
-		/// <exception cref="System.IO.IOException">forwards writer exceptions</exception>
 		private void Write(char c)
 		{
 			writer.Write(c);
@@ -1254,7 +1213,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Writes a String to the output.</summary>
 		/// <param name="str">a String</param>
-		/// <exception cref="System.IO.IOException">forwards writer exceptions</exception>
 		private void Write(String str)
 		{
 			writer.Write(str);
@@ -1263,7 +1221,6 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>Writes an amount of chars, mostly spaces</summary>
 		/// <param name="number">number of chars</param>
 		/// <param name="c">a char</param>
-		/// <exception cref="System.IO.IOException"/>
 		private void WriteChars(int number, char c)
 		{
 			for (; number > 0; number--)
@@ -1273,7 +1230,6 @@ namespace iText.Kernel.XMP.Impl
 		}
 
 		/// <summary>Writes a newline according to the options.</summary>
-		/// <exception cref="System.IO.IOException">Forwards exception</exception>
 		private void WriteNewline()
 		{
 			writer.Write(options.GetNewline());

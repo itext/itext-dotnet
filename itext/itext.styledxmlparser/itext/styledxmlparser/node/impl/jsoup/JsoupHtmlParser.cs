@@ -58,7 +58,6 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
         */
-        /// <exception cref="System.IO.IOException"/>
         public virtual IDocumentNode Parse(Stream htmlStream, String charset) {
             // Based on some brief investigations, it seems that Jsoup uses baseUri for resolving relative uri's into absolute
             // on user demand. We perform such resolving in ResourceResolver class, therefore it is not needed here.

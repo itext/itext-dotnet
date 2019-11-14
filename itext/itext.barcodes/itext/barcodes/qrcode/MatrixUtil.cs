@@ -63,81 +63,104 @@ namespace iText.Barcodes.Qrcode {
             int[] { 1, 0, 0, 0, 1 }, new int[] { 1, 0, 1, 0, 1 }, new int[] { 1, 0, 0, 0, 1 }, new int[] { 1, 1, 1
             , 1, 1 } };
 
-        private static readonly int[][] POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = new int[][] { new int[] { -
-            1, -1, -1, -1, -1, -1, -1 }, new int[] { 6, 18, -1, -1, -1, -1, -1 }, new int[] { 6, 22, -1, -1, -1, -
-            1, -1 }, new int[] { 6, 26, -1, -1, -1, -1, -1 }, new int[] { 6, 30, -1, -1, -1, -1, -1 }, new int[] { 
-            6, 34, -1, -1, -1, -1, -1 }, new int[] { 6, 22, 38, -1, -1, -1, -1 }, new int[] { 6, 24, 42, -1, -1, -
-            1, -1 }, new int[] { 6, 26, 46, -1, -1, -1, -1 }, new int[] { 6, 28, 50, -1, -1, -1, -1 }, new int[] { 
-            6, 30, 54, -1, -1, -1, -1 }, new int[] { 6, 32, 58, -1, -1, -1, -1 }, new int[] { 6, 34, 62, -1, -1, -
-            1, -1 }, new int[] { 6, 26, 46, 66, -1, -1, -1 }, new int[] { 6, 26, 48, 70, -1, -1, -1 }, new int[] { 
-            6, 26, 50, 74, -1, -1, -1 }, new int[] { 6, 30, 54, 78, -1, -1, -1 }, new int[] { 6, 30, 56, 82, -1, -
-            1, -1 }, new int[] { 6, 30, 58, 86, -1, -1, -1 }, new int[] { 6, 34, 62, 90, -1, -1, -1 }, new int[] { 
-            6, 28, 50, 72, 94, -1, -1 }, new int[] { 6, 26, 50, 74, 98, -1, -1 }, new int[] { 6, 30, 54, 78, 102, 
-            -1, -1 }, new int[] { 6, 28, 54, 80, 106, -1, -1 }, new int[] { 6, 32, 58, 84, 110, -1, -1 }, new int[
-            ] { 6, 30, 58, 86, 114, -1, -1 }, new int[] { 6, 34, 62, 90, 118, -1, -1 }, new int[] { 6, 26, 50, 74, 
-            98, 122, -1 }, new int[] { 6, 30, 54, 78, 102, 126, -1 }, new int[] { 6, 26, 52, 78, 104, 130, -1 }, new 
-            int[] { 6, 30, 56, 82, 108, 134, -1 }, new int[] { 6, 34, 60, 86, 112, 138, -1 }, new int[] { 6, 30, 58
-            , 86, 114, 142, -1 }, new int[] { 6, 34, 62, 90, 118, 146, -1 }, new int[] { 6, 30, 54, 78, 102, 126, 
-            150 }, new int[] { 6, 24, 50, 76, 102, 128, 154 }, new int[] { 6, 28, 54, 80, 106, 132, 158 }, new int
-            [] { 6, 32, 58, 84, 110, 136, 162 }, new int[] { 6, 26, 54, 82, 110, 138, 166 }, new int[] { 6, 30, 58
-            , 86, 114, 142, 170 } };
+        // From Appendix E. Table 1, JIS0510X:2004 (p 71). The table was double-checked by komatsu.
+        private static readonly int[][] POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = new int[][] { 
+                // Version 1
+                new int[] { -1, -1, -1, -1, -1, -1, -1 }, 
+                // Version 2
+                new int[] { 6, 18, -1, -1, -1, -1, -1 }, 
+                // Version 3
+                new int[] { 6, 22, -1, -1, -1, -1, -1 }, 
+                // Version 4
+                new int[] { 6, 26, -1, -1, -1, -1, -1 }, 
+                // Version 5
+                new int[] { 6, 30, -1, -1, -1, -1, -1 }, 
+                // Version 6
+                new int[] { 6, 34, -1, -1, -1, -1, -1 }, 
+                // Version 7
+                new int[] { 6, 22, 38, -1, -1, -1, -1 }, 
+                // Version 8
+                new int[] { 6, 24, 42, -1, -1, -1, -1 }, 
+                // Version 9
+                new int[] { 6, 26, 46, -1, -1, -1, -1 }, 
+                // Version 10
+                new int[] { 6, 28, 50, -1, -1, -1, -1 }, 
+                // Version 11
+                new int[] { 6, 30, 54, -1, -1, -1, -1 }, 
+                // Version 12
+                new int[] { 6, 32, 58, -1, -1, -1, -1 }, 
+                // Version 13
+                new int[] { 6, 34, 62, -1, -1, -1, -1 }, 
+                // Version 14
+                new int[] { 6, 26, 46, 66, -1, -1, -1 }, 
+                // Version 15
+                new int[] { 6, 26, 48, 70, -1, -1, -1 }, 
+                // Version 16
+                new int[] { 6, 26, 50, 74, -1, -1, -1 }, 
+                // Version 17
+                new int[] { 6, 30, 54, 78, -1, -1, -1 }, 
+                // Version 18
+                new int[] { 6, 30, 56, 82, -1, -1, -1 }, 
+                // Version 19
+                new int[] { 6, 30, 58, 86, -1, -1, -1 }, 
+                // Version 20
+                new int[] { 6, 34, 62, 90, -1, -1, -1 }, 
+                // Version 21
+                new int[] { 6, 28, 50, 72, 94, -1, -1 }, 
+                // Version 22
+                new int[] { 6, 26, 50, 74, 98, -1, -1 }, 
+                // Version 23
+                new int[] { 6, 30, 54, 78, 102, -1, -1 }, 
+                // Version 24
+                new int[] { 6, 28, 54, 80, 106, -1, -1 }, 
+                // Version 25
+                new int[] { 6, 32, 58, 84, 110, -1, -1 }, 
+                // Version 26
+                new int[] { 6, 30, 58, 86, 114, -1, -1 }, 
+                // Version 27
+                new int[] { 6, 34, 62, 90, 118, -1, -1 }, 
+                // Version 28
+                new int[] { 6, 26, 50, 74, 98, 122, -1 }, 
+                // Version 29
+                new int[] { 6, 30, 54, 78, 102, 126, -1 }, 
+                // Version 30
+                new int[] { 6, 26, 52, 78, 104, 130, -1 }, 
+                // Version 31
+                new int[] { 6, 30, 56, 82, 108, 134, -1 }, 
+                // Version 32
+                new int[] { 6, 34, 60, 86, 112, 138, -1 }, 
+                // Version 33
+                new int[] { 6, 30, 58, 86, 114, 142, -1 }, 
+                // Version 34
+                new int[] { 6, 34, 62, 90, 118, 146, -1 }, 
+                // Version 35
+                new int[] { 6, 30, 54, 78, 102, 126, 150 }, 
+                // Version 36
+                new int[] { 6, 24, 50, 76, 102, 128, 154 }, 
+                // Version 37
+                new int[] { 6, 28, 54, 80, 106, 132, 158 }, 
+                // Version 38
+                new int[] { 6, 32, 58, 84, 110, 136, 162 }, 
+                // Version 39
+                new int[] { 6, 26, 54, 82, 110, 138, 166 }, 
+                // Version 40
+                new int[] { 6, 30, 58, 86, 114, 142, 170 } };
 
+        // Type info cells at the left top corner.
         private static readonly int[][] TYPE_INFO_COORDINATES = new int[][] { new int[] { 8, 0 }, new int[] { 8, 1
              }, new int[] { 8, 2 }, new int[] { 8, 3 }, new int[] { 8, 4 }, new int[] { 8, 5 }, new int[] { 8, 7 }
             , new int[] { 8, 8 }, new int[] { 7, 8 }, new int[] { 5, 8 }, new int[] { 4, 8 }, new int[] { 3, 8 }, 
             new int[] { 2, 8 }, new int[] { 1, 8 }, new int[] { 0, 8 } };
 
+        // From Appendix D in JISX0510:2004 (p. 67)
+        // 1 1111 0010 0101
         private const int VERSION_INFO_POLY = 0x1f25;
 
+        // From Appendix C in JISX0510:2004 (p.65).
         private const int TYPE_INFO_POLY = 0x537;
 
         private const int TYPE_INFO_MASK_PATTERN = 0x5412;
 
-        // From Appendix E. Table 1, JIS0510X:2004 (p 71). The table was double-checked by komatsu.
-        // Version 1
-        // Version 2
-        // Version 3
-        // Version 4
-        // Version 5
-        // Version 6
-        // Version 7
-        // Version 8
-        // Version 9
-        // Version 10
-        // Version 11
-        // Version 12
-        // Version 13
-        // Version 14
-        // Version 15
-        // Version 16
-        // Version 17
-        // Version 18
-        // Version 19
-        // Version 20
-        // Version 21
-        // Version 22
-        // Version 23
-        // Version 24
-        // Version 25
-        // Version 26
-        // Version 27
-        // Version 28
-        // Version 29
-        // Version 30
-        // Version 31
-        // Version 32
-        // Version 33
-        // Version 34
-        // Version 35
-        // Version 36
-        // Version 37
-        // Version 38
-        // Version 39
-        // Version 40
-        // Type info cells at the left top corner.
-        // From Appendix D in JISX0510:2004 (p. 67)
-        // 1 1111 0010 0101
-        // From Appendix C in JISX0510:2004 (p.65).
         // Set all cells to -1.  -1 means that the cell is empty (not set yet).
         //
         // JAVAPORT: We shouldn't need to do this at all. The code should be rewritten to begin encoding
@@ -156,7 +179,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="maskPattern">masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void BuildMatrix(BitVector dataBits, ErrorCorrectionLevel ecLevel, int version, int maskPattern
             , ByteMatrix matrix) {
             ClearMatrix(matrix);
@@ -180,7 +202,6 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedBasicPatterns(int version, ByteMatrix matrix) {
             // Let's get started with embedding big squares at corners.
             EmbedPositionDetectionPatternsAndSeparators(matrix);
@@ -196,7 +217,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">The error correction level (L,M,Q,H)</param>
         /// <param name="maskPattern">the masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix matrix) {
             BitVector typeInfoBits = new BitVector();
             MakeTypeInfoBits(ecLevel, maskPattern, typeInfoBits);
@@ -234,18 +254,16 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">QR code version</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
+            // Version info is necessary if version >= 7.
             if (version < 7) {
-                // Version info is necessary if version >= 7.
+                // Don't need version info.
                 return;
             }
-            // Don't need version info.
             BitVector versionInfoBits = new BitVector();
             MakeVersionInfoBits(version, versionInfoBits);
-            int bitIndex = 6 * 3 - 1;
             // It will decrease from 17 to 0.
+            int bitIndex = 6 * 3 - 1;
             for (int i = 0; i < 6; ++i) {
                 for (int j = 0; j < 3; ++j) {
                     // Place bits in LSB (least significant bit) to MSB order.
@@ -268,8 +286,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="dataBits">data bits to embed in the QR code</param>
         /// <param name="maskPattern">masking pattern to apply to the data bits</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix matrix) {
             int bitIndex = 0;
             int direction = -1;
@@ -308,12 +324,12 @@ namespace iText.Barcodes.Qrcode {
                     }
                     y += direction;
                 }
-                direction = -direction;
                 // Reverse the direction.
+                direction = -direction;
                 y += direction;
+                // Move to the left.
                 x -= 2;
             }
-            // Move to the left.
             // All bits should be consumed.
             if (bitIndex != dataBits.Size()) {
                 throw new WriterException("Not all bits consumed: " + bitIndex + '/' + dataBits.Size());
@@ -390,8 +406,6 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">error correction level of the QR code</param>
         /// <param name="maskPattern">masking pattern to use</param>
         /// <param name="bits">Vactor of bits to contain the result</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern, BitVector bits) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
                 throw new WriterException("Invalid mask pattern");
@@ -403,8 +417,8 @@ namespace iText.Barcodes.Qrcode {
             BitVector maskBits = new BitVector();
             maskBits.AppendBits(TYPE_INFO_MASK_PATTERN, 15);
             bits.Xor(maskBits);
+            // Just in case.
             if (bits.Size() != 15) {
-                // Just in case.
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
@@ -418,14 +432,12 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR-code</param>
         /// <param name="bits">Vector of bits to contain the result</param>
-        /// <exception cref="WriterException"/>
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeVersionInfoBits(int version, BitVector bits) {
             bits.AppendBits(version, 6);
             int bchCode = CalculateBCHCode(version, VERSION_INFO_POLY);
             bits.AppendBits(bchCode, 12);
+            // Just in case.
             if (bits.Size() != 18) {
-                // Just in case.
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
@@ -437,13 +449,14 @@ namespace iText.Barcodes.Qrcode {
 
         // Check if "value" is valid.
         private static bool IsValidValue(byte value) {
-            return (value == (byte)0xff || value == 0 || value == 1);
+            // Empty.
+            return (value == (byte)0xff || 
+                        // Light (white).
+                        value == 0 || 
+                        // Dark (black).
+                        value == 1);
         }
 
-        // Empty.
-        // Light (white).
-        // Dark (black).
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedTimingPatterns(ByteMatrix matrix) {
             // -8 is for skipping position detection patterns (size 7), and two horizontal/vertical
             // separation patterns (size 1). Thus, 8 = 7 + 1.
@@ -467,7 +480,6 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed the lonely dark dot at left bottom corner. JISX0510:2004 (p.46)
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedDarkDotAtLeftBottomCorner(ByteMatrix matrix) {
             if (matrix.Get(8, matrix.GetHeight() - 8) == 0) {
                 throw new WriterException();
@@ -475,7 +487,6 @@ namespace iText.Barcodes.Qrcode {
             matrix.Set(8, matrix.GetHeight() - 8, 1);
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedHorizontalSeparationPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (HORIZONTAL_SEPARATION_PATTERN[0].Length != 8 || HORIZONTAL_SEPARATION_PATTERN.Length != 1) {
@@ -489,7 +500,6 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedVerticalSeparationPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (VERTICAL_SEPARATION_PATTERN[0].Length != 1 || VERTICAL_SEPARATION_PATTERN.Length != 7) {
@@ -506,7 +516,6 @@ namespace iText.Barcodes.Qrcode {
         // Note that we cannot unify the function with embedPositionDetectionPattern() despite they are
         // almost identical, since we cannot write a function that takes 2D arrays in different sizes in
         // C/C++. We should live with the fact.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionAdjustmentPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (POSITION_ADJUSTMENT_PATTERN[0].Length != 5 || POSITION_ADJUSTMENT_PATTERN.Length != 5) {
@@ -522,7 +531,6 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionDetectionPattern(int xStart, int yStart, ByteMatrix matrix) {
             // We know the width and height.
             if (POSITION_DETECTION_PATTERN[0].Length != 7 || POSITION_DETECTION_PATTERN.Length != 7) {
@@ -539,7 +547,6 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed position detection patterns and surrounding vertical/horizontal separators.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void EmbedPositionDetectionPatternsAndSeparators(ByteMatrix matrix) {
             // Embed three big squares at corners.
             int pdpWidth = POSITION_DETECTION_PATTERN[0].Length;
@@ -568,10 +575,9 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Embed position adjustment patterns if need be.
-        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void MaybeEmbedPositionAdjustmentPatterns(int version, ByteMatrix matrix) {
+            // The patterns appear if version >= 2
             if (version < 2) {
-                // The patterns appear if version >= 2
                 return;
             }
             int index = version - 1;

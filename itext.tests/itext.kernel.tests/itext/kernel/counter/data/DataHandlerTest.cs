@@ -51,7 +51,6 @@ namespace iText.Kernel.Counter.Data {
     public class DataHandlerTest : ExtendedITextTest {
         private const int SUCCESS_LIMIT = 3;
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage("Process event with signature: type1, and count: 1")]
         [LogMessage("Process event with signature: type1, and count: 2", Count = 2)]

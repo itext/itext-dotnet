@@ -50,10 +50,14 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Element {
     /// <summary>
     /// A list item is a layout element that is one entry in a
+    /// <see cref="List"/>.
+    /// </summary>
+    /// <remarks>
+    /// A list item is a layout element that is one entry in a
     /// <see cref="List"/>
     /// . The list
     /// object controls the prefix, postfix, and numbering of the list items.
-    /// </summary>
+    /// </remarks>
     public class ListItem : Div {
         /// <summary>Creates a ListItem.</summary>
         public ListItem()
@@ -130,8 +134,7 @@ namespace iText.Layout.Element {
         /// the
         /// <see cref="iText.Layout.Properties.ListNumberingType"/>
         /// that will generate appropriate prefixes for the
-        /// <see cref="ListItem"/>
-        /// .
+        /// <see cref="ListItem"/>.
         /// </param>
         /// <returns>this list item.</returns>
         public virtual iText.Layout.Element.ListItem SetListSymbol(ListNumberingType listNumberingType) {

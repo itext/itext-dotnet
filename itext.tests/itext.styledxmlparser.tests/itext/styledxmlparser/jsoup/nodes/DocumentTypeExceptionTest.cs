@@ -41,12 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 using NUnit.Framework;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for the DocumentType node</summary>
     /// <author>Jonathan Hedley, http://jonathanhedley.com/</author>
-    public class DocumentTypeExceptionTest {
+    public class DocumentTypeExceptionTest : ExtendedITextTest {
         [Test]
         public virtual void ConstructorValidationThrowsExceptionOnNulls() {
             Assert.Throws(typeof(ArgumentException), () => new DocumentType("html", null, null, ""));

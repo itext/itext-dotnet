@@ -42,9 +42,11 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using System.IO;
+using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    public class PdfObjectTest {
+    public class PdfObjectTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IndirectsChain1() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -145,7 +147,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, !reference.IsFree(), "Not IsInUse");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing1() {
             MemoryStream baos = new MemoryStream();
@@ -168,8 +169,10 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT)]
+        [LogMessage(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void PdtIndirectReferenceLateInitializing2() {
             MemoryStream baos = new MemoryStream();
             PdfDocument document = new PdfDocument(new PdfWriter(baos));
@@ -192,8 +195,9 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(object2 is PdfArray);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT)]
+        [LogMessage(iText.IO.LogMessageConstant.INDIRECT_REFERENCE_USED_IN_FLUSHED_OBJECT_MADE_FREE)]
         public virtual void PdtIndirectReferenceLateInitializing3() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();

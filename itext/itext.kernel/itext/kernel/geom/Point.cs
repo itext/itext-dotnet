@@ -59,10 +59,10 @@ namespace iText.Kernel.Geom {
         }
 
         public override String ToString() {
+            //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             return MessageFormatUtil.Format("Point: [x={0},y={1}]", x, y);
         }
 
-        //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         public virtual double GetX() {
             return x;
         }

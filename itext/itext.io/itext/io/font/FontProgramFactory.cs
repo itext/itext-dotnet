@@ -51,7 +51,7 @@ using iText.IO.Util;
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
     public sealed class FontProgramFactory {
-        /// <summary>This is the default value of the <VAR>cached</VAR> variable.</summary>
+        /// <summary>This is the default value of the <var>cached</var> variable.</summary>
         private static bool DEFAULT_CACHED = true;
 
         private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider();
@@ -65,8 +65,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// object with Helvetica font description
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont() {
             return CreateFont(StandardFonts.HELVETICA);
         }
@@ -89,8 +87,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(String fontProgram) {
             return CreateFont(fontProgram, null, DEFAULT_CACHED);
         }
@@ -114,8 +110,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(String fontProgram, bool cached) {
             return CreateFont(fontProgram, null, cached);
         }
@@ -138,8 +132,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(byte[] fontProgram) {
             return CreateFont(null, fontProgram, DEFAULT_CACHED);
         }
@@ -163,13 +155,10 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// . This font program may come from the cache
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(byte[] fontProgram, bool cached) {
             return CreateFont(null, fontProgram, cached);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
@@ -259,10 +248,10 @@ namespace iText.IO.Font {
                                 int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
                                 if (ttcSplit > 0) {
                                     try {
-                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                         // count(.ttc) = 4
-                                        int ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                        String ttcName = baseName.JSubstring(0, ttcSplit + 4);
                                         // count(.ttc,) = 5)
+                                        int ttcIndex = Convert.ToInt32(baseName.Substring(ttcSplit + 5));
                                         fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
                                     }
                                     catch (FormatException nfe) {
@@ -293,8 +282,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb) {
             return CreateType1Font(afm, pfb, DEFAULT_CACHED);
         }
@@ -312,8 +299,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb, bool cached) {
             return CreateType1Font(null, null, afm, pfb, cached);
         }
@@ -326,8 +311,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath) {
             return CreateType1Font(metricsPath, binaryPath, DEFAULT_CACHED);
         }
@@ -345,8 +328,6 @@ namespace iText.IO.Font {
         /// <see cref="FontProgram"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached) {
             return CreateType1Font(metricsPath, binaryPath, null, null, cached);
         }
@@ -364,8 +345,6 @@ namespace iText.IO.Font {
         /// instance. This font may come from the cache but only if cached
         /// is true, otherwise it will always be created new
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(String ttc, int ttcIndex, bool cached) {
             FontCacheKey fontCacheKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
@@ -391,8 +370,6 @@ namespace iText.IO.Font {
         /// instance. This font may come from the cache but only if cached
         /// is true, otherwise it will always be created new
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateFont(byte[] ttc, int ttcIndex, bool cached) {
             FontCacheKey fontKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
@@ -412,8 +389,7 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// See
         /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
@@ -430,8 +406,6 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached) {
             return fontRegisterProvider.GetFont(fontName, style, cached);
         }
@@ -443,8 +417,7 @@ namespace iText.IO.Font {
         /// </param>
         /// <param name="style">
         /// the style of the font to look for. Possible values are listed in
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// See
         /// <see cref="iText.IO.Font.Constants.FontStyles.BOLD"/>
         /// ,
@@ -460,8 +433,6 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName, int style) {
             return fontRegisterProvider.GetFont(fontName, style);
         }
@@ -475,8 +446,6 @@ namespace iText.IO.Font {
         /// created
         /// <see cref="FontProgram"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file2
-        ///     </exception>
         public static FontProgram CreateRegisteredFont(String fontName) {
             return fontRegisterProvider.GetFont(fontName, FontStyles.UNDEFINED);
         }
@@ -543,7 +512,6 @@ namespace iText.IO.Font {
             return fontRegisterProvider.IsRegisteredFont(fontName);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static FontProgram CreateType1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, 
             bool cached) {
             FontProgram fontProgram;
@@ -579,7 +547,6 @@ namespace iText.IO.Font {
             fontRegisterProvider.ClearRegisteredFontFamilies();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal static byte[] ReadFontBytesFromPath(String path) {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (path));

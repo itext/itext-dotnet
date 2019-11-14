@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf.Canvas {
     /// <summary>This class is designed for internal usage.</summary>
     /// <remarks>
     /// This class is designed for internal usage. <br />
-    /// Use <code>PdfExtGState</code> class and <code>PdfCanvas#setExtGState()</code> method for setting extended graphics properties.
+    /// Use <c>PdfExtGState</c> class and <c>PdfCanvas#setExtGState()</c> method for setting extended graphics properties.
     /// </remarks>
     public class CanvasGraphicsState {
         /// <summary>The current transformation matrix, which maps positions from user coordinates to device coordinates.
@@ -65,14 +65,17 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </remarks>
         private Matrix ctm = new Matrix();
 
+        // color
         private Color strokeColor = DeviceGray.BLACK;
 
         private Color fillColor = DeviceGray.BLACK;
 
+        // text state
         private float charSpacing = 0f;
 
         private float wordSpacing = 0f;
 
+        // horizontal scaling
         private float scale = 100f;
 
         private float leading = 0f;
@@ -116,10 +119,12 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private PdfObject softMask = PdfName.None;
 
+        // alpha constant
         private float strokeAlpha = 1f;
 
         private float fillAlpha = 1f;
 
+        // alpha source
         private bool alphaIsShape = false;
 
         private bool strokeOverprint = false;
@@ -155,11 +160,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
         public CanvasGraphicsState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
-            // color
-            // text state
-            // horizontal scaling
-            // alpha constant
-            // alpha source
             CopyFrom(source);
         }
 

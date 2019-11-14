@@ -67,7 +67,6 @@ namespace iText.Signatures.Testutils.Builder {
 
         private DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
 
-        /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         public TestOcspResponseBuilder(X509Certificate issuerCert, ICipherParameters issuerPrivateKey) {
             this.issuerCert = issuerCert;
             this.issuerPrivateKey = issuerPrivateKey;
@@ -93,10 +92,6 @@ namespace iText.Signatures.Testutils.Builder {
             this.nextUpdate = nextUpdate;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="CertificateException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
-        /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         public virtual byte[] MakeOcspResponse(byte[] requestBytes) {
             OcspReq ocspRequest = new OcspReq(requestBytes);
             Req[] requestList = ocspRequest.GetRequestList();

@@ -96,8 +96,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <see langword="true"/>
         /// ,
         /// /ActualText marked content property will be used instead of raw decoded bytes.
-        /// Beware: the logic is not stable yet.
         /// </summary>
+        /// <remarks>
+        /// Changes the behavior of text extraction so that if the parameter is set to
+        /// <see langword="true"/>
+        /// ,
+        /// /ActualText marked content property will be used instead of raw decoded bytes.
+        /// Beware: the logic is not stable yet.
+        /// </remarks>
         /// <param name="useActualText">true to use /ActualText, false otherwise</param>
         /// <returns>this object</returns>
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetUseActualText(bool
@@ -109,7 +115,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>Sets if text flows from left to right or from right to left.</summary>
         /// <remarks>
         /// Sets if text flows from left to right or from right to left.
-        /// Call this method with <code>true</code> argument for extracting Arabic, Hebrew or other
+        /// Call this method with <c>true</c> argument for extracting Arabic, Hebrew or other
         /// text with right-to-left writing direction.
         /// </remarks>
         /// <param name="rightToLeftRunDirection">value specifying whether the direction should be right to left</param>

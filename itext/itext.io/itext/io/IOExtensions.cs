@@ -165,11 +165,14 @@ namespace iText.IO {
             return dictionary.ContainsKey(key);
         }
 
-        public static bool EqualsIgnoreCase(this String str, String anotherString)
-        {
+        public static bool IsEmpty<T>(this ICollection<T> collection) {
+            return 0 == collection.Count;
+        }
+
+        public static bool EqualsIgnoreCase(this String str, String anotherString) {
             return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
         }
-        
+
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
             T[] r;
             int colSize = col.Count;

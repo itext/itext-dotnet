@@ -71,7 +71,6 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"));
@@ -83,8 +82,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsTrue(field.GetValue().ToString().Equals("TestField"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest02() {
             String filename = destinationFolder + "formFieldTest02.pdf";
@@ -102,8 +99,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest03() {
             String filename = destinationFolder + "formFieldTest03.pdf";
@@ -123,8 +118,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest04() {
             String filename = destinationFolder + "formFieldTest04.pdf";
@@ -145,31 +138,37 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnicodeFormFieldTest() {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> formFields = form.GetFormFields();
-            String fieldName = "\u5E10\u53F71";
             // 帐号1: account number 1
+            String fieldName = "\u5E10\u53F71";
             NUnit.Framework.Assert.AreEqual(fieldName, formFields.Keys.ToArray(new String[1])[0]);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void UnicodeFormFieldTest2() {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            String fieldName = "\u5E10\u53F71";
             // 帐号1: account number 1
+            String fieldName = "\u5E10\u53F71";
             NUnit.Framework.Assert.IsNotNull(form.GetField(fieldName));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TextFieldValueInStreamTest() {
+            String filename = sourceFolder + "textFieldValueInStream.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String fieldValue = form.GetField("fieldName").GetValueAsString();
+            // Trailing newline is not trimmed which seems to match Acrobat's behavior on copy-paste
+            NUnit.Framework.Assert.AreEqual("some value\n", fieldValue);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ChoiceFieldTest01() {
             String filename = destinationFolder + "choiceFieldTest01.pdf";
@@ -192,8 +191,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ButtonFieldTest01() {
             String filename = destinationFolder + "buttonFieldTest01.pdf";
@@ -220,8 +217,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefaultRadiobuttonFieldTest() {
             String file = "defaultRadiobuttonFieldTest.pdf";
@@ -239,8 +234,6 @@ namespace iText.Forms {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomizedRadiobuttonFieldTest() {
             String file = "customizedRadiobuttonFieldTest.pdf";
@@ -260,8 +253,6 @@ namespace iText.Forms {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomizedRadiobuttonWithGroupRegeneratingFieldTest() {
             String file = "customizedRadiobuttonWithGroupRegeneratingFieldTest.pdf";
@@ -282,8 +273,6 @@ namespace iText.Forms {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ButtonFieldTest02() {
             String filename = destinationFolder + "buttonFieldTest02.pdf";
@@ -300,8 +289,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RealFontSizeRegenerateAppearanceTest() {
             String sourceFilename = sourceFolder + "defaultAppearanceRealFontSize.pdf";
@@ -334,8 +321,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.AreEqual(3, form.GetFormFields().Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFormWithDefaultResources() {
             String outPdf = destinationFolder + "fillFormWithDefaultResources.pdf";
@@ -355,8 +340,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFormTwiceWithoutResources() {
             String outPdf = destinationFolder + "fillFormWithoutResources.pdf";
@@ -376,8 +359,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AutoScaleFontSizeInFormFields() {
             String outPdf = destinationFolder + "autoScaleFontSizeInFormFields.pdf";
@@ -396,8 +377,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.NO_FIELDS_IN_ACROFORM)]
         public virtual void AcroFieldDictionaryNoFields() {
@@ -415,8 +394,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RegenerateAppearance() {
             String input = "regenerateAppearance.pdf";
@@ -436,8 +413,6 @@ namespace iText.Forms {
                 + "cmp_" + output, destinationFolder, "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RegenerateAppearance2() {
             String input = "regenerateAppearance2.pdf";
@@ -453,29 +428,6 @@ namespace iText.Forms {
                 + "cmp_" + output, destinationFolder, "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void MultilineTextFieldWithAlignmentTest() {
-            String outPdf = destinationFolder + "multilineTextFieldWithAlignment.pdf";
-            String cmpPdf = sourceFolder + "cmp_multilineTextFieldWithAlignment.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            Rectangle rect = new Rectangle(210, 600, 150, 100);
-            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "fieldName", "some value\nsecond line\nthird"
-                );
-            field.SetJustification(PdfTextFormField.ALIGN_RIGHT);
-            form.AddField(field);
-            pdfDoc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushedPagesTest() {
             String filename = destinationFolder + "flushedPagesTest.pdf";
@@ -495,8 +447,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFormWithDefaultResourcesUpdateFont() {
             String outPdf = destinationFolder + "fillFormWithDefaultResourcesUpdateFont.pdf";
@@ -507,7 +457,6 @@ namespace iText.Forms {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             IDictionary<String, PdfFormField> fields = form.GetFormFields();
             PdfFormField field = fields.Get("Text1");
-            // TODO DEVSIX-2016: the font in /DR of AcroForm dict is not updated, even though /DA field is updated.
             field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
             field.SetValue("New value size must be 8, but with different font.");
             new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph
@@ -520,8 +469,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormRegenerateWithInvalidDefaultAppearance01() {
             String testName = "formRegenerateWithInvalidDefaultAppearance01";
@@ -544,8 +491,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase1() {
             //Create a document with formfields and paragraphs in both fonts, and fill them before closing the document
@@ -571,8 +516,6 @@ namespace iText.Forms {
                  + testName + "_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase2() {
             //Create a document with formfields and paragraphs in both fonts, and fill them after closing and reopening the document
@@ -603,8 +546,6 @@ namespace iText.Forms {
                  + testName + "_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase3() {
             //Create a document with formfields in both fonts, and fill them before closing the document
@@ -627,8 +568,6 @@ namespace iText.Forms {
                  + testName + "_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFieldWithHebrewCase4() {
             //Create a document with formfields in both fonts, and fill them after closing and reopening the document
@@ -656,52 +595,6 @@ namespace iText.Forms {
                  + testName + "_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void MultilineFormFieldNewLineTest() {
-            String testName = "multilineFormFieldNewLineTest";
-            String outPdf = destinationFolder + testName + ".pdf";
-            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-            String srcPdf = sourceFolder + testName + ".pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            PdfReader reader = new PdfReader(srcPdf);
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            IDictionary<String, PdfFormField> fields = form.GetFormFields();
-            fields.Get("BEMERKUNGEN").SetValue("First line\n\n\nFourth line");
-            pdfDoc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void MultilineFormFieldNewLineFontType3Test() {
-            String testName = "multilineFormFieldNewLineFontType3Test";
-            String outPdf = destinationFolder + testName + ".pdf";
-            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
-            String srcPdf = sourceFolder + testName + ".pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
-            PdfReader reader = new PdfReader(srcPdf);
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
-            PdfTextFormField info = (PdfTextFormField)form.GetField("info");
-            info.SetValue("A\n\nE");
-            pdfDoc.Close();
-            CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (errorMessage != null) {
-                NUnit.Framework.Assert.Fail(errorMessage);
-            }
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FillFormWithSameEmptyObjsForAppearance() {
             String outPdf = destinationFolder + "fillFormWithSameEmptyObjsForAppearance.pdf";
@@ -722,8 +615,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DashedBorderAppearanceTest() {
             String outPdf = destinationFolder + "dashedBorderAppearanceTest.pdf";
@@ -759,8 +650,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
         public virtual void NoMaxLenWithSetCombFlagTest() {
@@ -782,8 +671,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MaxLenWithSetCombFlagAppearanceTest() {
             String srcPdf = sourceFolder + "maxLenFields.pdf";
@@ -804,8 +691,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PreserveFontPropsTest() {
             String srcPdf = sourceFolder + "preserveFontPropsTest.pdf";
@@ -825,8 +710,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FontAutoSizeButtonFieldTest() {
             String outPdf = destinationFolder + "fontAutoSizeButtonFieldTest.pdf";
@@ -846,8 +729,6 @@ namespace iText.Forms {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MaxLenInheritanceTest() {
             String srcPdf = sourceFolder + "maxLenInheritanceTest.pdf";
@@ -864,8 +745,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MaxLenDeepInheritanceTest() {
             String srcFilename = sourceFolder + "maxLenDeepInheritanceTest.pdf";
@@ -879,8 +758,6 @@ namespace iText.Forms {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MaxLenColoredTest() {
             String srcPdf = sourceFolder + "maxLenColoredTest.pdf";
@@ -897,8 +774,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
         public virtual void RegenerateMaxLenCombTest() {
@@ -924,8 +799,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WrapPrecedingContentOnFlattenTest() {
             String filename = destinationFolder + "wrapPrecedingContentOnFlattenTest.pdf";
@@ -956,8 +829,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfWithDifferentFieldsTest() {
             String fileName = destinationFolder + "pdfWithDifferentFieldsTest.pdf";
@@ -1001,8 +872,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TextFieldWithWideUnicodeRange() {
             String filename = "textFieldWithWideUnicodeRange.pdf";
@@ -1031,8 +900,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(PdfFormField.MakeFormField(new PdfArray(), null));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestDaInAppendMode() {
             String testName = "testDaInAppendMode.pdf";
@@ -1051,7 +918,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.AreEqual("/F1 25 Tf", da.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SetPageNewField() {
             String filename = destinationFolder + "setPageNewField.pdf";
@@ -1087,6 +953,25 @@ namespace iText.Forms {
             NUnit.Framework.Assert.AreEqual(field, thirdPageAnnots.Get(0));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CreateFieldInAppendModeTest() {
+            //TODO update cmp-file after DEVSIX-3077 fixed
+            String file = destinationFolder + "blank.pdf";
+            PdfDocument document = new PdfDocument(new PdfWriter(file));
+            document.AddNewPage();
+            PdfAcroForm.GetAcroForm(document, true);
+            document.Close();
+            PdfReader reader = new PdfReader(file);
+            PdfWriter writer1 = new PdfWriter(destinationFolder + "createFieldInAppendModeTest.pdf");
+            PdfDocument doc = new PdfDocument(reader, writer1, new StampingProperties().UseAppendMode());
+            PdfFormField field = PdfFormField.CreateCheckBox(doc, new Rectangle(10, 10, 24, 24), "checkboxname", "On", 
+                PdfFormField.TYPE_CHECK);
+            PdfAcroForm.GetAcroForm(doc, true).AddField(field);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "createFieldInAppendModeTest.pdf"
+                , sourceFolder + "cmp_" + "createFieldInAppendModeTest.pdf", destinationFolder, "diff_"));
+        }
+
         private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
             for (int x = offSet; x < (offSet + 3); x++) {
                 Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);
@@ -1110,8 +995,6 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SetFont3Ways() {
             String filename = destinationFolder + "setFont3Ways.pdf";
@@ -1135,6 +1018,113 @@ namespace iText.Forms {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AppendModeAppearance() {
+            //TODO DEVSIX-2822
+            String inputFile = "appendModeAppearance.pdf";
+            String outputFile = "appendModeAppearance.pdf";
+            String line1 = "ABC";
+            // borders in with or without append mode are different
+            //PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile),
+            //          new PdfWriter(destinationFolder + outputFile));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile), new PdfWriter(destinationFolder
+                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            form.SetNeedAppearances(true);
+            PdfFormField field;
+            foreach (KeyValuePair<String, PdfFormField> entry in form.GetFormFields()) {
+                field = entry.Value;
+                field.SetValue(line1);
+            }
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + outputFile, sourceFolder
+                 + "cmp_" + outputFile, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillUnmergedTextFormField() {
+            // TODO update cmp-file after DEVSIX-2622 fixed
+            String file = sourceFolder + "fillUnmergedTextFormField.pdf";
+            String outfile = destinationFolder + "outfile.pdf";
+            String text = "John";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(file), new PdfWriter(outfile));
+            FillAcroForm(pdfDocument, text);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "outfile.pdf", sourceFolder
+                 + "cmp_" + "fillUnmergedTextFormField.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChoiceFieldAutoSize01Test() {
+            String filename = destinationFolder + "choiceFieldAutoSize01Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            String[] options = new String[] { "First Item", "Second Item", "Third Item", "Fourth Item" };
+            PdfFormField[] fields = new PdfFormField[] { PdfFormField.CreateComboBox(pdfDoc, new Rectangle(110, 750, 150
+                , 20), "TestField", "First Item", options), PdfFormField.CreateList(pdfDoc, new Rectangle(310, 650, 150
+                , 90), "TestField1", "Second Item", options) };
+            foreach (PdfFormField field in fields) {
+                field.SetFontSize(0);
+                field.SetBorderColor(ColorConstants.BLACK);
+                form.AddField(field);
+            }
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_choiceFieldAutoSize01Test.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChoiceFieldAutoSize02Test() {
+            String filename = destinationFolder + "choiceFieldAutoSize02Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfArray options = new PdfArray();
+            options.Add(new PdfString("First Item", PdfEncodings.UNICODE_BIG));
+            options.Add(new PdfString("Second Item", PdfEncodings.UNICODE_BIG));
+            options.Add(new PdfString("Third Item", PdfEncodings.UNICODE_BIG));
+            form.AddField(PdfFormField.CreateChoice(pdfDoc, new Rectangle(110, 750, 150, 20), "TestField", "First Item"
+                , null, 0, options, PdfChoiceFormField.FF_COMBO, null));
+            form.AddField(PdfFormField.CreateChoice(pdfDoc, new Rectangle(310, 650, 150, 90), "TestField1", "Second Item"
+                , null, 0, options, 0, null));
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_choiceFieldAutoSize02Test.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderWidthIndentSingleLineTest() {
+            String filename = destinationFolder + "borderWidthIndentSingleLineTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField field = PdfFormField.CreateText(pdfDoc, new Rectangle(50, 700, 500, 120), "single", "Does this text overlap the border?"
+                );
+            field.SetFontSize(20);
+            field.SetBorderColor(ColorConstants.RED);
+            field.SetBorderWidth(50);
+            form.AddField(field);
+            PdfTextFormField field2 = PdfFormField.CreateText(pdfDoc, new Rectangle(50, 600, 500, 80), "singleAuto", "Does this autosize text overlap the border? Well it shouldn't! Does it fit accurately though?"
+                );
+            field2.SetFontSize(0);
+            field2.SetBorderColor(ColorConstants.RED);
+            field2.SetBorderWidth(20);
+            form.AddField(field2);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_borderWidthIndentSingleLineTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
         }
     }
 }

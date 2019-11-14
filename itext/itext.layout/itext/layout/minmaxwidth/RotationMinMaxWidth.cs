@@ -149,8 +149,7 @@ namespace iText.Layout.Minmaxwidth {
         /// <remarks>
         /// This method use derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
         /// It also calculate other handy values needed for the creation of
-        /// <see cref="RotationMinMaxWidth"/>
-        /// .
+        /// <see cref="RotationMinMaxWidth"/>.
         /// </remarks>
         /// <param name="func">
         /// the
@@ -291,6 +290,11 @@ namespace iText.Layout.Minmaxwidth {
             /// Gets the argument of
             /// <see cref="GetRotatedWidth(double)"/>
             /// that results in zero derivative.
+            /// </summary>
+            /// <remarks>
+            /// Gets the argument of
+            /// <see cref="GetRotatedWidth(double)"/>
+            /// that results in zero derivative.
             /// In case we have
             /// <see cref="sin"/>
             /// <c>== 0</c>
@@ -299,7 +303,7 @@ namespace iText.Layout.Minmaxwidth {
             /// <c>== 0</c>
             /// the function doesn't have
             /// zero derivative on defined interval, but value returned by this method fits well in the calculations above.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the argument of
             /// <see cref="GetRotatedWidth(double)"/>

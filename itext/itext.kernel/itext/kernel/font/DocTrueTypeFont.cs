@@ -216,14 +216,14 @@ namespace iText.Kernel.Font {
             PdfArray bboxValue = fontDesc.GetAsArray(PdfName.FontBBox);
             if (bboxValue != null) {
                 int[] bbox = new int[4];
-                bbox[0] = bboxValue.GetAsNumber(0).IntValue();
                 //llx
-                bbox[1] = bboxValue.GetAsNumber(1).IntValue();
+                bbox[0] = bboxValue.GetAsNumber(0).IntValue();
                 //lly
-                bbox[2] = bboxValue.GetAsNumber(2).IntValue();
+                bbox[1] = bboxValue.GetAsNumber(1).IntValue();
                 //urx
-                bbox[3] = bboxValue.GetAsNumber(3).IntValue();
+                bbox[2] = bboxValue.GetAsNumber(2).IntValue();
                 //ury
+                bbox[3] = bboxValue.GetAsNumber(3).IntValue();
                 if (bbox[0] > bbox[2]) {
                     int t = bbox[0];
                     bbox[0] = bbox[2];

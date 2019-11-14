@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -82,8 +83,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest01() {
             String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
@@ -111,8 +110,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest02() {
             String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
@@ -129,8 +126,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest03() {
             String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
@@ -151,8 +146,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest04() {
             String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
@@ -172,8 +165,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest01() {
@@ -193,8 +184,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest02() {
@@ -212,8 +201,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest03() {
@@ -231,8 +218,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest04() {
             String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
@@ -248,8 +233,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest01() {
             String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
@@ -266,8 +249,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest02() {
@@ -289,8 +270,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest01() {
             String fileName = "rotationInfiniteLoopTest01.pdf";
@@ -305,8 +284,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest02() {
@@ -322,8 +299,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest02() {
@@ -343,8 +318,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest03() {
@@ -365,8 +338,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CellRotationTest01() {
             String outFileName = destinationFolder + "cellRotationTest01.pdf";
@@ -383,8 +354,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CellRotationTest02() {
             String outFileName = destinationFolder + "cellRotationTest02.pdf";
@@ -401,8 +370,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CellRotationTest03() {
             String outFileName = destinationFolder + "cellRotationTest03.pdf";
@@ -419,8 +386,34 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CellRotationDependsOnNeighbourCell() {
+            String outFileName = destinationFolder + "cellRotationDependsOnNeighbourCell.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationDependsOnNeighbourCell.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(300, 180));
+            doc.Add(CreateTable(60));
+            doc.Add(new AreaBreak());
+            doc.Add(CreateTable(80));
+            doc.Add(new AreaBreak());
+            doc.Add(CreateTable(100));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private Table CreateTable(float height) {
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            Cell rotatedCell = new Cell();
+            rotatedCell.Add(new Paragraph("ROTATED"));
+            rotatedCell.SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(rotatedCell);
+            Cell cell = new Cell().Add(new Paragraph("USUAL"));
+            cell.SetHeight(height);
+            table.AddCell(cell);
+            return table;
+        }
+
         [NUnit.Framework.Test]
         public virtual void DivRotationTest01() {
             String outFileName = destinationFolder + "divRotationTest01.pdf";
@@ -438,8 +431,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void DivRotationTest02() {
@@ -461,8 +452,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListRotationTest01() {
             String outFileName = destinationFolder + "listRotationTest01.pdf";
@@ -481,8 +470,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void ListRotationTest02() {
@@ -505,8 +492,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AlignedTextRotationTest01() {
             String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
@@ -525,8 +510,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest01() {
             String outFileName = destinationFolder + "innerRotationTest01.pdf";
@@ -541,8 +524,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest02() {
@@ -561,8 +542,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest01() {
             String outFileName = destinationFolder + "fixedWidthRotationTest01.pdf";
@@ -579,8 +558,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest02() {
             String outFileName = destinationFolder + "fixedWidthRotationTest02.pdf";
@@ -597,8 +574,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest03() {
             String outFileName = destinationFolder + "fixedWidthRotationTest03.pdf";
@@ -615,8 +590,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageInRotatedBlockTest01() {
             String outFileName = destinationFolder + "imageInRotatedBlockTest01.pdf";
@@ -636,8 +609,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         [LogMessage(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, Count = 2)]
@@ -661,8 +632,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlockWithBorderBoxSizingTest01() {
             String outFileName = destinationFolder + "blockWithBorderBoxSizingTest01.pdf";
@@ -683,8 +652,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MarginsRotatedTest01() {
             //TODO: currently is incorrect. See DEVSIX-989
@@ -702,8 +669,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MarginsRotatedTest02() {
             //TODO: currently is incorrect. See DEVSIX-989

@@ -45,8 +45,7 @@ namespace iText.Kernel.Pdf {
     /// <summary>
     /// This interface defines logic which can be used to perform a custom copying
     /// operation of a
-    /// <see cref="PdfPage"/>
-    /// .
+    /// <see cref="PdfPage"/>.
     /// </summary>
     public interface IPdfPageExtraCopier {
         /// <summary>Copies a page.</summary>

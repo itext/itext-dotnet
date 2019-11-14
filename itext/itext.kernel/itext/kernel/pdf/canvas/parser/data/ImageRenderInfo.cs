@@ -91,20 +91,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <remarks>
         /// Gets an image wrapped in ImageXObject.
         /// You can:
-        /// <ul>
-        /// <li>get image bytes with
+        /// <list type="bullet">
+        /// <item><description>get image bytes with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
         /// , these image bytes
         /// represent native image, i.e you can write these bytes to disk and get just an usual image;
-        /// <li>obtain PdfStream object which contains image dictionary with
+        /// </description></item>
+        /// <item><description>obtain PdfStream object which contains image dictionary with
         /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
         /// method;
-        /// <li>convert image to
+        /// </description></item>
+        /// <item><description>convert image to
         /// <see cref="Java.Awt.Image.BufferedImage"/>
         /// with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
         /// ;
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         public virtual PdfImageXObject GetImage() {
             return image;

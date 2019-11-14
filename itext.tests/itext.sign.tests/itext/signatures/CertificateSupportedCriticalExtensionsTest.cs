@@ -47,10 +47,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using iText.Test;
 
 namespace iText.Signatures
 {
-    class CertificateSupportedCriticalExtensionsTest
+    class CertificateSupportedCriticalExtensionsTest : ExtendedITextTest
     {
         [NUnit.Framework.Test]
         public void SupportedCriticalOIDsTest()

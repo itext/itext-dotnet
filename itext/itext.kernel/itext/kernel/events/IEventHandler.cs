@@ -45,8 +45,7 @@ namespace iText.Kernel.Events {
     /// <summary>Interface for handling events.</summary>
     /// <remarks>
     /// Interface for handling events. EventHandlers are added to the
-    /// <see cref="EventDispatcher"/>
-    /// .
+    /// <see cref="EventDispatcher"/>.
     /// </remarks>
     public interface IEventHandler {
         /// <summary>Hook for handling events.</summary>

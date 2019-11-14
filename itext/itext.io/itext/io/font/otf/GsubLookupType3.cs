@@ -49,7 +49,6 @@ namespace iText.IO.Font.Otf {
     public class GsubLookupType3 : OpenTableLookup {
         private IDictionary<int, int[]> substMap;
 
-        /// <exception cref="System.IO.IOException"/>
         public GsubLookupType3(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             substMap = new Dictionary<int, int[]>();
@@ -64,8 +63,8 @@ namespace iText.IO.Font.Otf {
             bool changed = false;
             if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 int[] substCode = substMap.Get(g.GetCode());
+                // there is no need to substitute a symbol with itself
                 if (substCode != null && substCode[0] != g.GetCode()) {
-                    // there is no need to substitute a symbol with itself
                     line.SubstituteOneToOne(openReader, substCode[0]);
                     changed = true;
                 }
@@ -74,7 +73,6 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
             int substFormat = openReader.rf.ReadShort();

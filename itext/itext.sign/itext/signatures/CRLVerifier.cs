@@ -78,13 +78,11 @@ namespace iText.Signatures {
         /// <param name="signCert">the certificate that needs to be checked</param>
         /// <param name="issuerCert">its issuer</param>
         /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
+        /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
         /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
         ///     "/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             IList<VerificationOK> result = new List<VerificationOK>();
@@ -124,7 +122,6 @@ namespace iText.Signatures {
         /// <param name="issuerCert">its issuer</param>
         /// <param name="signDate">the sign date</param>
         /// <returns>true if the verification succeeded</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate issuerCert, DateTime signDate
             ) {
             if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE) {

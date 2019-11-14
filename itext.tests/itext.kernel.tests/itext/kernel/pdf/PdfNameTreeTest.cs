@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmbeddedFileAndJavascriptTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "FileWithSingleAttachment.pdf"));
@@ -79,7 +78,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1, objs2.Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmbeddedFileAddedInAppendModeTest() {
             //Create input document
@@ -115,7 +113,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(embeddedFilesMap.ContainsKey("Test File"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationAppearanceTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "AnnotationAppearanceTest.pdf"
@@ -138,6 +135,50 @@ namespace iText.Kernel.Pdf {
             IDictionary<String, PdfObject> objs = appearance.GetNames();
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(1, objs.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetModifiedFlagTest() {
+            TestSetModified(false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetModifiedFlagAppendModeTest() {
+            TestSetModified(true);
+        }
+
+        private static void TestSetModified(bool isAppendMode) {
+            String[] expectedKeys = new String[] { "new_key1", "new_key2", "new_key3" };
+            MemoryStream sourceFile = CreateDocumentInMemory();
+            MemoryStream modifiedFile = new MemoryStream();
+            PdfReader reader = new PdfReader(new MemoryStream(sourceFile.ToArray()));
+            PdfDocument pdfDoc = isAppendMode ? new PdfDocument(reader, new PdfWriter(modifiedFile), new StampingProperties
+                ().UseAppendMode()) : new PdfDocument(reader, new PdfWriter(modifiedFile));
+            PdfNameTree nameTree = pdfDoc.GetCatalog().GetNameTree(PdfName.Dests);
+            IDictionary<String, PdfObject> names = nameTree.GetNames();
+            List<String> keys = new List<String>(names.Keys);
+            for (int i = 0; i < keys.Count; i++) {
+                names.Put(expectedKeys[i], names.Get(keys[i]));
+                names.JRemove(keys[i]);
+            }
+            nameTree.SetModified();
+            pdfDoc.Close();
+            reader = new PdfReader(new MemoryStream(modifiedFile.ToArray()));
+            pdfDoc = new PdfDocument(reader);
+            nameTree = pdfDoc.GetCatalog().GetNameTree(PdfName.Dests);
+            ICollection<String> actualKeys = nameTree.GetNames().Keys;
+            NUnit.Framework.Assert.AreEqual(expectedKeys, actualKeys.ToArray());
+        }
+
+        private static MemoryStream CreateDocumentInMemory() {
+            MemoryStream boas = new MemoryStream();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(boas));
+            pdfDoc.AddNewPage();
+            pdfDoc.GetCatalog().GetNameTree(PdfName.Dests).AddEntry("key1", new PdfArray(new float[] { 0, 0, 0, 0 }));
+            pdfDoc.GetCatalog().GetNameTree(PdfName.Dests).AddEntry("key2", new PdfArray(new float[] { 1, 1, 1, 1 }));
+            pdfDoc.GetCatalog().GetNameTree(PdfName.Dests).AddEntry("key3", new PdfArray(new float[] { 2, 2, 2, 2 }));
+            pdfDoc.Close();
+            return boas;
         }
     }
 }

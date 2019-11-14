@@ -87,8 +87,7 @@ namespace iText.StyledXmlParser.Css.Media {
 
         /// <summary>
         /// Tries to match a
-        /// <see cref="MediaDeviceDescription"/>
-        /// .
+        /// <see cref="MediaDeviceDescription"/>.
         /// </summary>
         /// <param name="deviceDescription">the device description</param>
         /// <returns>true, if successful</returns>

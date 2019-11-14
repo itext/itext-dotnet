@@ -60,7 +60,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         public const int FIRST_ELEMENT_INDEX = 0;
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestCharacterRenderInfos() {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(new TextRenderInfoTest.CharacterPositionEventListener()
@@ -77,7 +76,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Test introduced to exclude a bug related to a Unicode quirk for
         /// Japanese. TextRenderInfo threw an AIOOBE for some characters.
         /// </remarks>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 2)]
         public virtual void TestUnicodeEmptyString() {
@@ -92,7 +90,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(origText, result);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestType3FontWidth() {
             String inFile = "type3font_text.pdf";

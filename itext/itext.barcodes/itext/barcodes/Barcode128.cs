@@ -155,8 +155,7 @@ namespace iText.Barcodes {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
         /// will be implicitly called.
         /// If you want to use this barcode in PDF/A documents, please consider using
-        /// <see cref="Barcode128(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
-        /// .
+        /// <see cref="Barcode128(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>.
         /// </remarks>
         /// <param name="document">The document to which the barcode will be added</param>
         public Barcode128(PdfDocument document)
@@ -265,7 +264,7 @@ namespace iText.Barcodes {
         /// </summary>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <CODE>true</CODE> if it is an UCC/EAN-128. In this case
+        /// <c>true</c> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <param name="codeSet">forced code set, or AUTO for optimized barcode.</param>
@@ -433,7 +432,7 @@ namespace iText.Barcodes {
         /// </remarks>
         /// <param name="text">the text to convert</param>
         /// <param name="ucc">
-        /// <CODE>true</CODE> if it is an UCC/EAN-128. In this case
+        /// <c>true</c> if it is an UCC/EAN-128. In this case
         /// the character FNC1 is added
         /// </param>
         /// <returns>the code ready to be fed to getBarsCode128Raw()</returns>
@@ -526,44 +525,44 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.<para />
         /// The bars and text are written in the following colors:
         /// <br />
-        /// <TABLE BORDER="1" SUMMARY="barcode properties">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="barcode properties">
+        /// <tr>
+        /// <th><c>barColor</c></th>
+        /// <th><c>textColor</c></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with <c>barColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with current color<br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with <c>barColor</c><br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <c>null</c></param>
+        /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             String fullCode;
@@ -673,11 +672,11 @@ namespace iText.Barcodes {
         /// Sets the code to generate. If it's an UCC code and starts with '(' it will
         /// be split by the AI. This code in UCC mode is valid:
         /// <br />
-        /// <code>(01)00000090311314(10)ABC123(15)060916</code>
+        /// <c>(01)00000090311314(10)ABC123(15)060916</c>
         /// </remarks>
         /// <param name="code">the code to generate</param>
         public override void SetCode(String code) {
-            if (GetCodeType() == iText.Barcodes.Barcode128.CODE128_UCC && code.StartsWith("(")) {
+            if (GetCodeType() == Barcode128.CODE128_UCC && code.StartsWith("(")) {
                 int idx = 0;
                 StringBuilder ret = new StringBuilder("");
                 while (idx >= 0) {
@@ -804,8 +803,8 @@ namespace iText.Barcodes {
         }
 
         /// <summary>
-        /// Returns <CODE>true</CODE> if the next <CODE>numDigits</CODE>
-        /// starting from index <CODE>textIndex</CODE> are numeric skipping any FNC1.
+        /// Returns <c>true</c> if the next <c>numDigits</c>
+        /// starting from index <c>textIndex</c> are numeric skipping any FNC1.
         /// </summary>
         /// <param name="text">the text to check</param>
         /// <param name="textIndex">where to check from</param>

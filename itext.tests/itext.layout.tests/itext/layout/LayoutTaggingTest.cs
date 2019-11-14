@@ -52,11 +52,14 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -71,15 +74,14 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/LayoutTaggingTest/";
 
+        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTest01.pdf"));
@@ -94,10 +96,6 @@ namespace iText.Layout {
             CompareResult("textInParagraphTest01.pdf", "cmp_textInParagraphTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
@@ -110,10 +108,6 @@ namespace iText.Layout {
             CompareResult("imageTest01.pdf", "cmp_imageTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest02.pdf"));
@@ -133,10 +127,6 @@ namespace iText.Layout {
             CompareResult("imageTest02.pdf", "cmp_imageTest02.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DivTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "divTest01.pdf"));
@@ -156,10 +146,6 @@ namespace iText.Layout {
             CompareResult("divTest01.pdf", "cmp_divTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
@@ -184,10 +170,6 @@ namespace iText.Layout {
             CompareResult("tableTest01.pdf", "cmp_tableTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
@@ -204,10 +186,6 @@ namespace iText.Layout {
             CompareResult("tableTest02.pdf", "cmp_tableTest02.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
@@ -237,10 +215,6 @@ namespace iText.Layout {
             CompareResult("tableTest03.pdf", "cmp_tableTest03.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest04() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
@@ -265,10 +239,6 @@ namespace iText.Layout {
             CompareResult("tableTest04.pdf", "cmp_tableTest04.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
@@ -296,10 +266,6 @@ namespace iText.Layout {
             CompareResult("tableTest05.pdf", "cmp_tableTest05.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest06() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest06.pdf"));
@@ -327,10 +293,6 @@ namespace iText.Layout {
             CompareResult("tableTest06.pdf", "cmp_tableTest06.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest07() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest07.pdf"));
@@ -348,10 +310,6 @@ namespace iText.Layout {
             CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void LinkInsideTable() {
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
@@ -368,10 +326,6 @@ namespace iText.Layout {
             CompareResult("linkInsideTable.pdf", "cmp_linkInsideTable.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest08() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
@@ -399,10 +353,6 @@ namespace iText.Layout {
             CompareResult("tableTest08.pdf", "cmp_tableTest08.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
@@ -417,10 +367,6 @@ namespace iText.Layout {
             CompareResult("listTest01.pdf", "cmp_listTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ListTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest02.pdf"));
@@ -439,8 +385,8 @@ namespace iText.Layout {
             String discSymbol = "\u2022";
             String squareSymbol = "\u25AA";
             String circleSymbol = "\u25E6";
-            List list = new List(ListNumberingType.ROMAN_UPPER);
             // setting numbering type for now
+            List list = new List(ListNumberingType.ROMAN_UPPER);
             list.Add("item 1");
             ListItem listItem = new ListItem("item 2");
  {
@@ -464,20 +410,16 @@ namespace iText.Layout {
             list.Add("item 3");
             doc.Add(list);
             doc.Add(new LineSeparator(new SolidLine()));
-            doc.Add(list.SetListSymbol(circleSymbol));
             // setting circle symbol, not setting attributes
+            doc.Add(list.SetListSymbol(circleSymbol));
             doc.Add(new LineSeparator(new SolidLine()));
             list.GetAccessibilityProperties().AddAttributes(attributesCircle);
-            doc.Add(list);
             // circle symbol set, setting attributes
+            doc.Add(list);
             doc.Close();
             CompareResult("listTest02.pdf", "cmp_listTest02.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ListTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest03.pdf"));
@@ -497,10 +439,6 @@ namespace iText.Layout {
             CompareResult("listTest03.pdf", "cmp_listTest03.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ListTest04() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest04.pdf"));
@@ -517,10 +455,6 @@ namespace iText.Layout {
             CompareResult("listTest04.pdf", "cmp_listTest04.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
@@ -535,10 +469,6 @@ namespace iText.Layout {
             CompareResult("linkTest01.pdf", "cmp_linkTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ArtifactTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest01.pdf"));
@@ -557,10 +487,6 @@ namespace iText.Layout {
             CompareResult("artifactTest01.pdf", "cmp_artifactTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ArtifactTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest02.pdf"));
@@ -585,10 +511,6 @@ namespace iText.Layout {
         /// Document generation and result is the same in this test as in the textInParagraphTest01, except the partial flushing of
         /// tag structure. So you can check the result by comparing resultant document with the one in textInParagraphTest01.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest01.pdf"));
@@ -615,10 +537,6 @@ namespace iText.Layout {
         /// Document generation and result is the same in this test as in the tableTest05, except the partial flushing of
         /// tag structure. So you can check the result by comparing resultant document with the one in tableTest05.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
@@ -654,10 +572,6 @@ namespace iText.Layout {
         /// Document generation and result is the same in this test as in the tableTest04, except the partial flushing of
         /// tag structure. So you can check the result by comparing resultant document with the one in tableTest04.
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
@@ -683,10 +597,6 @@ namespace iText.Layout {
             CompareResult("flushingTest03.pdf", "cmp_tableTest04.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest01.pdf"
@@ -705,10 +615,6 @@ namespace iText.Layout {
             CompareResult("wordBreaksLineEndingsTest01.pdf", "cmp_wordBreaksLineEndingsTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest02.pdf"
@@ -723,10 +629,6 @@ namespace iText.Layout {
             CompareResult("wordBreaksLineEndingsTest02.pdf", "cmp_wordBreaksLineEndingsTest02.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest03.pdf"
@@ -750,10 +652,6 @@ namespace iText.Layout {
             CompareResult("wordBreaksLineEndingsTest03.pdf", "cmp_wordBreaksLineEndingsTest03.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest04() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest04.pdf"
@@ -771,10 +669,6 @@ namespace iText.Layout {
             CompareResult("wordBreaksLineEndingsTest04.pdf", "cmp_wordBreaksLineEndingsTest04.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest05() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest05.pdf"
@@ -792,10 +686,6 @@ namespace iText.Layout {
             CompareResult("wordBreaksLineEndingsTest05.pdf", "cmp_wordBreaksLineEndingsTest05.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageAndTextNoRole01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageAndTextNoRole01.pdf", new 
@@ -827,10 +717,6 @@ namespace iText.Layout {
             CompareResult("imageAndTextNoRole01.pdf", "cmp_imageAndTextNoRole01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithCaption01() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tableWithCaption01.pdf");
@@ -852,10 +738,6 @@ namespace iText.Layout {
             CompareResult("tableWithCaption01.pdf", "cmp_tableWithCaption01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         public virtual void EmptyDivTest() {
@@ -871,10 +753,6 @@ namespace iText.Layout {
             CompareResult("emptyDivTest.pdf", "cmp_emptyDivTest.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatListItemTest() {
             PdfWriter writer = new PdfWriter(destinationFolder + "floatListItemTest.pdf");
@@ -888,10 +766,45 @@ namespace iText.Layout {
             CompareResult("floatListItemTest.pdf", "cmp_floatListItemTest.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
+        public virtual void NotAsciiCharTest() {
+            //TODO update cmp-file after DEVSIX-3335 fixed
+            PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            pdf.SetTagged();
+            FontProvider sel = new FontProvider();
+            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            sel.AddFont(StandardFonts.TIMES_ROMAN);
+            document.SetFontProvider(sel);
+            Paragraph p = new Paragraph("\u0422\u043E be or not.");
+            p.SetFontFamily("times");
+            document.Add(p);
+            document.Close();
+            CompareResult("notAsciiCharTest.pdf", "cmp_notAsciiCharTest.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
+            //TODO update cmp-file after DEVSIX-3351 fixed
+            String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            pdfDoc.SetTagged();
+            PdfPage page1 = pdfDoc.AddNewPage();
+            iText.Layout.Element.Text txt = new iText.Layout.Element.Text("Text from XObject");
+            PdfFormXObject template = new PdfFormXObject(new Rectangle(150, 150));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(template, pdfDoc);
+            canvas.EnableAutoTagging(page1);
+            canvas.Add(new Paragraph(txt));
+            PdfCanvas canvas1 = new PdfCanvas(page1);
+            canvas1.AddXObject(template, 10, 10);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateTaggedVersionOneDotFourTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "createTaggedVersionOneDotFourTest01.pdf"
@@ -922,7 +835,6 @@ namespace iText.Layout {
             CompareResult("createTaggedVersionOneDotFourTest01.pdf", "cmp_createTaggedVersionOneDotFourTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
@@ -972,10 +884,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         private void CompareResult(String outFileName, String cmpFileName) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;

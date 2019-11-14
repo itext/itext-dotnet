@@ -111,11 +111,11 @@ namespace iText.Layout.Font {
         public iText.Layout.Font.FontCharacteristics SetFontStyle(String fs) {
             if (fs != null && fs.Length > 0) {
                 fs = fs.Trim().ToLowerInvariant();
-                if (fs.Equals("normal")) {
+                if ("normal".Equals(fs)) {
                     isItalic = false;
                 }
                 else {
-                    if (fs.Equals("italic") || fs.Equals("oblique")) {
+                    if ("italic".Equals(fs) || "oblique".Equals(fs)) {
                         isItalic = true;
                     }
                 }

@@ -43,17 +43,29 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>Represents f element, child of the xfdf element.</summary>
+    /// <remarks>
+    /// Represents f element, child of the xfdf element.
+    /// Corresponds to the F key in the file dictionary.
+    /// Specifies the source file or target file: the PDF document that this XFDF file was exported from or is intended to be
+    /// imported into.
+    /// Attributes: href.
+    /// For more details see paragraph 6.2.2 in Xfdf document specification.
+    /// </remarks>
     public class FObject {
+        /// <summary>The name of the source or target file.</summary>
         private String href;
 
         public FObject(String href) {
             this.href = href;
         }
 
+        /// <summary>Gets the name of the source or target file.</summary>
         public virtual String GetHref() {
             return href;
         }
 
+        /// <summary>Sets the name of the source or target file.</summary>
         public virtual iText.Forms.Xfdf.FObject SetHref(String href) {
             this.href = href;
             return this;

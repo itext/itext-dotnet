@@ -60,8 +60,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
     /// Rather than interacting directly with a Cleaner object, generally see the
     /// <c>clean</c>
     /// methods in
-    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>
-    /// .
+    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
     /// </remarks>
     public class Cleaner {
         private Whitelist whitelist;
@@ -77,7 +76,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         ///     </summary>
         /// <remarks>
         /// Creates a new, clean document, from the original dirty document, containing only elements allowed by the whitelist.
-        /// The original document is not modified. Only elements from the dirt document's <code>body</code> are used.
+        /// The original document is not modified. Only elements from the dirt document's <c>body</c> are used.
         /// </remarks>
         /// <param name="dirtyDocument">Untrusted base document to clean.</param>
         /// <returns>cleaned document.</returns>
@@ -119,10 +118,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
 
             internal iText.StyledXmlParser.Jsoup.Nodes.Element destination;
 
+            // current element to append nodes to
             internal CleaningVisitor(Cleaner _enclosing, iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  destination) {
                 this._enclosing = _enclosing;
-                // current element to append nodes to
                 this.root = root;
                 this.destination = destination;
             }

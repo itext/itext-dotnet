@@ -95,11 +95,16 @@ namespace iText.Pdfa.Checker {
         /// <summary>The Monitor device class</summary>
         public const String ICC_DEVICE_CLASS_MONITOR_PROFILE = "mntr";
 
-        /// <summary>The maximum Graphics State stack depth in PDF/A documents, i.e.</summary>
+        /// <summary>
+        /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
+        /// maximum number of graphics state operators with code <c>q</c> that
+        /// may be opened (i.e. not yet closed by a corresponding <c>Q</c>) at
+        /// any point in a content stream sequence.
+        /// </summary>
         /// <remarks>
         /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
-        /// maximum number of graphics state operators with code <code>q</code> that
-        /// may be opened (i.e. not yet closed by a corresponding <code>Q</code>) at
+        /// maximum number of graphics state operators with code <c>q</c> that
+        /// may be opened (i.e. not yet closed by a corresponding <c>Q</c>) at
         /// any point in a content stream sequence.
         /// Defined as 28 by PDF/A-1 section 6.1.12, by referring to the PDF spec
         /// Appendix C table 1 "architectural limits".
@@ -238,8 +243,7 @@ namespace iText.Pdfa.Checker {
         /// <summary>
         /// This method checks compliance with the graphics state architectural
         /// limitation, explained by
-        /// <see cref="maxGsStackDepth"/>
-        /// .
+        /// <see cref="maxGsStackDepth"/>.
         /// </summary>
         /// <param name="stackOperation">the operation to check the graphics state counter for</param>
         public abstract void CheckCanvasStack(char stackOperation);

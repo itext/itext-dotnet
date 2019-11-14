@@ -78,7 +78,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private const String release = "7.1.8";
+        private const String release = "7.1.9";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -107,9 +107,14 @@ namespace iText.Kernel {
         /// <summary>Gets an instance of the iText version that is currently used.</summary>
         /// <remarks>
         /// Gets an instance of the iText version that is currently used.
+        /// <para />
         /// Note that iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
+        /// <returns>
+        /// an instance of
+        /// <see cref="Version"/>.
+        /// </returns>
         public static iText.Kernel.Version GetInstance() {
             lock (staticLock) {
                 if (version != null) {
@@ -299,8 +304,8 @@ namespace iText.Kernel {
             //Desired Format: X.Y.Z-....
             //Also catch X, X.Y-...
             String major = split[0];
-            String minor = "0";
             //If no minor version is present, default to 0
+            String minor = "0";
             if (split.Length > 1) {
                 minor = split[1].Substring(0);
             }
@@ -314,11 +319,6 @@ namespace iText.Kernel {
             return new String[] { major, minor };
         }
 
-        /// <exception cref="System.TypeLoadException"/>
-        /// <exception cref="System.MissingMethodException"/>
-        /// <exception cref="System.MemberAccessException"/>
-        /// <exception cref="Java.Lang.InstantiationException"/>
-        /// <exception cref="System.Reflection.TargetInvocationException"/>
         private static String[] GetLicenseeInfoFromLicenseKey(String validatorKey) {
             String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
             Type klass = GetLicenseKeyClass();

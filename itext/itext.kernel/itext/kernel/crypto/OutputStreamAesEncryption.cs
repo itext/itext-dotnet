@@ -98,6 +98,14 @@ namespace iText.Kernel.Crypto {
         /// starting at offset
         /// <paramref name="off"/>
         /// to this output stream.
+        /// </summary>
+        /// <remarks>
+        /// Writes
+        /// <paramref name="len"/>
+        /// bytes from the specified byte array
+        /// starting at offset
+        /// <paramref name="off"/>
+        /// to this output stream.
         /// The general contract for
         /// <c>write(b, off, len)</c>
         /// is that
@@ -138,17 +146,10 @@ namespace iText.Kernel.Crypto {
         /// is greater than the length of the array
         /// <paramref name="b"/>
         /// , then an <tt>IndexOutOfBoundsException</tt> is thrown.
-        /// </summary>
+        /// </remarks>
         /// <param name="b">the data.</param>
         /// <param name="off">the start offset in the data.</param>
         /// <param name="len">the number of bytes to write.</param>
-        /// <exception cref="System.IO.IOException">
-        /// if an I/O error occurs. In particular,
-        /// an
-        /// <c>IOException</c>
-        /// is thrown if the output
-        /// stream is closed.
-        /// </exception>
         public override void Write(byte[] b, int off, int len) {
             byte[] b2 = cipher.Update(b, off, len);
             if (b2 == null || b2.Length == 0) {

@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
         /// <param name="mimeType">mime-type of the file</param>
         /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
@@ -123,7 +123,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
         /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
         /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="doc">PdfDocument to add the file to</param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
@@ -162,7 +162,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="description">file description</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
         ///     </param>
         /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
@@ -178,7 +178,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="mimeType"/>
         /// <param name="fileParameter"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
@@ -201,7 +200,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="fileDisplay"/>
         /// <param name="mimeType"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, mimeType, null, afRelationshipValue
@@ -214,7 +212,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="description"/>
         /// <param name="fileDisplay"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, null, null, afRelationshipValue);
@@ -225,7 +222,6 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <param name="filePath"/>
         /// <param name="fileDisplay"/>
         /// <param name="afRelationshipValue"/>
-        /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, null, fileDisplay, null, null, afRelationshipValue);
@@ -347,7 +343,7 @@ namespace iText.Kernel.Pdf.Filespec {
 
         /// <summary>PDF 2.0.</summary>
         /// <remarks>PDF 2.0. Gets a stream object defining the thumbnail image for the file specification.</remarks>
-        /// <returns>image used as a thumbnail, or <code>null</code> if it is not set</returns>
+        /// <returns>image used as a thumbnail, or <c>null</c> if it is not set</returns>
         public virtual PdfImageXObject GetThumbnailImage() {
             PdfStream thumbnailStream = ((PdfDictionary)GetPdfObject()).GetAsStream(PdfName.Thumb);
             return thumbnailStream != null ? new PdfImageXObject(thumbnailStream) : null;

@@ -66,7 +66,6 @@ namespace iText.Layout {
             return new SimpleTextExtractionStrategy();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestCoLinnearText() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 0);
@@ -74,7 +73,6 @@ namespace iText.Layout {
                 (new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestCoLinnearTextWithSpace() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, false, 2);
@@ -83,7 +81,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestCoLinnearTextEndingWithSpaceCharacter() {
             // in this case, we shouldn't be inserting an extra space
@@ -93,7 +90,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestUnRotatedText() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 0, true, -20);
@@ -101,7 +97,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedText() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, -90, true, -20);
@@ -109,7 +104,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedText2() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 90, true, -20);
@@ -118,7 +112,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestPartiallyRotatedText() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, TEXT2, 33, true, -20);
@@ -126,7 +119,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestWordSpacingCausedByExplicitGlyphPositioning() {
             byte[] bytes = CreatePdfWithArrayText(TEXT1, TEXT2, 250);
@@ -134,7 +126,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestWordSpacingCausedByExplicitGlyphPositioning2() {
             PdfTextArray textArray = new PdfTextArray();
@@ -166,7 +157,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestTrailingSpace() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1 + " ", TEXT2, 0, false, 6);
@@ -174,7 +164,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestLeadingSpace() {
             byte[] bytes = CreatePdfWithRotatedText(TEXT1, " " + TEXT2, 0, false, 6);
@@ -182,7 +171,6 @@ namespace iText.Layout {
                 PdfReader(new MemoryStream(bytes))).GetPage(1), CreateRenderListenerForTest()));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestExtractXObjectText() {
             String text1 = "X";
@@ -193,7 +181,6 @@ namespace iText.Layout {
                  + "'");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExtractFromPage229() {
             if (this.GetType() != typeof(SimpleTextExtractionStrategyTest)) {
@@ -208,7 +195,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(text1, text2);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExtractFromIsoTc171() {
             if (this.GetType() != typeof(SimpleTextExtractionStrategyTest)) {
@@ -226,7 +212,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(text1, text2);
         }
 
-        /// <exception cref="System.Exception"/>
         internal virtual byte[] CreatePdfWithXObject(String xobjectText) {
             MemoryStream byteStream = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(byteStream).SetCompressionLevel(0));
@@ -242,7 +227,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private static byte[] CreatePdfWithArrayText(PdfTextArray textArray) {
             MemoryStream byteStream = new MemoryStream();
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
@@ -256,7 +240,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private static byte[] CreatePdfWithArrayText(String text1, String text2, int spaceInPoints) {
             PdfTextArray textArray = new PdfTextArray();
             textArray.Add(new PdfString(text1));
@@ -265,7 +248,6 @@ namespace iText.Layout {
             return CreatePdfWithArrayText(textArray);
         }
 
-        /// <exception cref="System.Exception"/>
         private static byte[] CreatePdfWithRotatedText(String text1, String text2, float rotation, bool moveTextToNextLine
             , float moveTextDelta) {
             MemoryStream byteStream = new MemoryStream();

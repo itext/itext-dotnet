@@ -16,11 +16,16 @@
 using System;
 
 namespace iText.IO.Font.Woff2 {
+    // Common definition for WOFF2 encoding/decoding
+    // Helpers common across multiple parts of woff2
     internal class Woff2Common {
         public const int kWoff2Signature = 0x774f4632;
 
+        // "wOF2"
+        // Leave the first byte open to store flag_byte
         public const int kWoff2FlagsTransform = 1 << 8;
 
+        // TrueType Collection ID string: 'ttcf'
         public const int kTtcFontFlavor = 0x74746366;
 
         public const int kSfntHeaderSize = 12;
@@ -35,11 +40,6 @@ namespace iText.IO.Font.Woff2 {
             public bool on_curve;
 
             public Point(int x, int y, bool on_curve) {
-                // Common definition for WOFF2 encoding/decoding
-                // Helpers common across multiple parts of woff2
-                // "wOF2"
-                // Leave the first byte open to store flag_byte
-                // TrueType Collection ID string: 'ttcf'
                 this.x = x;
                 this.y = y;
                 this.on_curve = on_curve;
@@ -76,9 +76,10 @@ namespace iText.IO.Font.Woff2 {
             }
             // ulDsig{Tag,Length,Offset}
             if (header_version == 0x00010000 || header_version == 0x00020000) {
-                size += 12 + 4 * num_fonts;
+                size += 12 + 
+                                // TTCTag, Version, numFonts
+                                4 * num_fonts;
             }
-            // TTCTag, Version, numFonts
             // OffsetTable[numFonts]
             return size;
         }

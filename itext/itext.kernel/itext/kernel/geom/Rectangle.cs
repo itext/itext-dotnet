@@ -250,14 +250,16 @@ namespace iText.Kernel.Geom {
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
-            return !(this.GetX() + this.GetWidth() < rect.GetX() || this.GetY() + this.GetHeight() < rect.GetY() || this
-                .GetX() > rect.GetX() + rect.GetWidth() || this.GetY() > rect.GetY() + rect.GetHeight());
+            // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
+            return !(this.GetX() + this.GetWidth() < rect.GetX() || 
+                        // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
+                        this.GetY() + this.GetHeight() < rect.GetY() || 
+                        // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
+                        this.GetX() > rect.GetX() + rect.GetWidth() || 
+                        // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
+                        this.GetY() > rect.GetY() + rect.GetHeight());
         }
 
-        //1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
-        //2. the lower left corner of the second rectangle is above the upper right corner of the first.
-        //3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
-        //4. the upper right corner of the second rectangle is below the lower left corner of the first.
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
         /// <remarks>
         /// Sets the rectangle by the coordinates, specifying its lower left and upper right points. May be used in chain.
@@ -400,8 +402,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the X coordinate of the left edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the X coordinate of the left edge of the rectangle. Same as:
-        /// <c>getX()</c>
-        /// .
+        /// <c>getX()</c>.
         /// </remarks>
         /// <returns>the X coordinate of the left edge of the rectangle.</returns>
         public virtual float GetLeft() {
@@ -411,8 +412,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the X coordinate of the right edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the X coordinate of the right edge of the rectangle. Same as:
-        /// <c>getX() + getWidth()</c>
-        /// .
+        /// <c>getX() + getWidth()</c>.
         /// </remarks>
         /// <returns>the X coordinate of the right edge of the rectangle.</returns>
         public virtual float GetRight() {
@@ -422,8 +422,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the Y coordinate of the upper edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the Y coordinate of the upper edge of the rectangle. Same as:
-        /// <c>getY() + getHeight()</c>
-        /// .
+        /// <c>getY() + getHeight()</c>.
         /// </remarks>
         /// <returns>the Y coordinate of the upper edge of the rectangle.</returns>
         public virtual float GetTop() {
@@ -433,8 +432,7 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets the Y coordinate of the lower edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the Y coordinate of the lower edge of the rectangle. Same as:
-        /// <c>getY()</c>
-        /// .
+        /// <c>getY()</c>.
         /// </remarks>
         /// <returns>the Y coordinate of the lower edge of the rectangle.</returns>
         public virtual float GetBottom() {
@@ -537,12 +535,6 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
-        /// <summary>Gets the copy of this rectangle.</summary>
-        /// <returns>the copied rectangle.</returns>
-        public virtual iText.Kernel.Geom.Rectangle Clone() {
-            return new iText.Kernel.Geom.Rectangle(x, y, width, height);
-        }
-
         /// <summary>Compares instance of this rectangle with given deviation equals to 0.0001</summary>
         /// <param name="that">
         /// the
@@ -593,14 +585,14 @@ namespace iText.Kernel.Geom {
             * DxE = (C-B)x(-B) = BxB-CxB = BxC DxF = (C-B)x(A-B) = CxA-CxB-BxA+BxB =
             * AxB+BxC-AxC
             */
-            x2 -= x1;
             // A
+            x2 -= x1;
             y2 -= y1;
-            x3 -= x1;
             // B
+            x3 -= x1;
             y3 -= y1;
-            x4 -= x1;
             // C
+            x4 -= x1;
             y4 -= y1;
             double AvB = x2 * y3 - x3 * y2;
             double AvC = x2 * y4 - x4 * y2;
@@ -621,7 +613,6 @@ namespace iText.Kernel.Geom {
         /// <summary>Create a list of bounding rectangles from an 8 x n array of Quadpoints.</summary>
         /// <param name="quadPoints">8xn array of numbers representing 4 points</param>
         /// <returns>a list of bounding rectangles for the passed quadpoints</returns>
-        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
         public static IList<iText.Kernel.Geom.Rectangle> CreateBoundingRectanglesFromQuadPoint(PdfArray quadPoints
             ) {
             IList<iText.Kernel.Geom.Rectangle> boundingRectangles = new List<iText.Kernel.Geom.Rectangle>();
@@ -639,7 +630,6 @@ namespace iText.Kernel.Geom {
         /// <summary>Create the bounding rectangle for the given array of quadpoints.</summary>
         /// <param name="quadPoints">an array containing 8 numbers that correspond to 4 points.</param>
         /// <returns>The smallest orthogonal rectangle containing the quadpoints.</returns>
-        /// <exception cref="iText.Kernel.PdfException">if the passed array's size is not a multiple of 8.</exception>
         public static iText.Kernel.Geom.Rectangle CreateBoundingRectangleFromQuadPoint(PdfArray quadPoints) {
             //Check if array length is a multiple of 8
             if (quadPoints.Size() % 8 != 0) {
@@ -649,6 +639,7 @@ namespace iText.Kernel.Geom {
             float lly = float.MaxValue;
             float urx = -float.MaxValue;
             float ury = -float.MaxValue;
+            // QuadPoints in redact annotations have "Z" order, in spec they're specified
             for (int j = 0; j < 8; j += 2) {
                 float x = quadPoints.GetAsNumber(j).FloatValue();
                 float y = quadPoints.GetAsNumber(j + 1).FloatValue();
@@ -665,8 +656,16 @@ namespace iText.Kernel.Geom {
                     ury = y;
                 }
             }
-            // QuadPoints in redact annotations have "Z" order, in spec they're specified
             return (new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly));
+        }
+
+        /// <summary>
+        /// Creates a "deep copy" of this rectangle, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <returns>the copied rectangle.</returns>
+        public virtual iText.Kernel.Geom.Rectangle Clone() {
+            return (iText.Kernel.Geom.Rectangle) MemberwiseClone();
         }
     }
 }

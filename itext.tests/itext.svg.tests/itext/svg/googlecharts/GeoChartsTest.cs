@@ -49,59 +49,44 @@ using iText.Test.Attributes;
 namespace iText.Svg.Googlecharts {
     public class GeoChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/geo_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GeoChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/geo_charts/";
+             + "/test/itext/svg/googlecharts/GeoChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Geo_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geo_chart");
+        public virtual void GeoChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "geoChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        public virtual void Geo_colored_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geo_colored_chart");
+        public virtual void GeoColoredChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "geoColoredChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Geo_marker_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geo_marker_chart");
+        public virtual void GeoMarkerChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "geoMarkerChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Geo_propontional_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geo_propontional_chart");
+        public virtual void GeoPropontionalChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "geoPropontionalChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void Geo_text_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geo_text_chart");
+        public virtual void GeoTextChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "geoTextChart");
         }
     }
 }

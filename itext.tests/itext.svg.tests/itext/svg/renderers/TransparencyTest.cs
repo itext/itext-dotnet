@@ -47,9 +47,10 @@ using iText.Layout.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Renderers.Impl;
+using iText.Test;
 
 namespace iText.Svg.Renderers {
-    public class TransparencyTest {
+    public class TransparencyTest : ExtendedITextTest {
         private static readonly PdfName DEFAULT_RESOURCE_NAME = new PdfName("Gs1");
 
         private static readonly PdfName FILL_OPAC = new PdfName("ca");

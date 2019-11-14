@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     public class FillTest : SvgIntegrationTest {
@@ -57,88 +58,64 @@ namespace iText.Svg.Renderers {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NormalRectangleFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normalRectangleFill");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleNormalRectangleFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleNormalRectangleFill");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoRectangleFillColorTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noRectangleFillColor");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
         }
 
         /* This test should fail when RND-910 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillTest01() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill01");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillTest02() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill02");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillTest03() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill03");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleObjectsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleObjectsTest");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EoFillStrokeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
         }
 
         /* This test should fail when RND-1031 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NonZeroFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nonzerofill");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OpacityFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityfill");
         }
 
         /* This test should fail when RND-1108 is resolved*/
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EofillUnsuportedAtributeTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -148,18 +125,21 @@ namespace iText.Svg.Renderers {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathVerticalLineFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathVerticalLineFillTest");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PathHorizontalLineFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHorizontalLineFillTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
+        public virtual void InvalidUrlFillTest() {
+            //TODO update cmp file after DEVSIX-3365 will be fixed
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidUrlFillTest");
         }
     }
 }

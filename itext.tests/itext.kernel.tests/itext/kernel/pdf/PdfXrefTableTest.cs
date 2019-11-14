@@ -62,15 +62,14 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateXMP() {
             String created = destinationFolder + "testCreateAndUpdateXMP_create.pdf";
             String updated = destinationFolder + "testCreateAndUpdateXMP_update.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
             pdfDocument.AddNewPage();
-            pdfDocument.GetXmpMetadata(true);
             // create XMP metadata
+            pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
             PdfXrefTable xref = pdfDocument.GetXref();
@@ -97,7 +96,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1, freeRef.genNr);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateTwiceXMP() {
             String created = destinationFolder + "testCreateAndUpdateTwiceXMP_create.pdf";
@@ -105,8 +103,8 @@ namespace iText.Kernel.Pdf {
             String updatedAgain = destinationFolder + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
             pdfDocument.AddNewPage();
-            pdfDocument.GetXmpMetadata(true);
             // create XMP metadata
+            pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
             pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();

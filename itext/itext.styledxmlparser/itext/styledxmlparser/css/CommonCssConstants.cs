@@ -62,6 +62,7 @@ namespace iText.StyledXmlParser.Css {
             FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES = JavaCollectionsUtil.UnmodifiableMap(keywordValues);
         }
 
+        // properties
         /// <summary>The Constant BACKGROUND.</summary>
         public const String BACKGROUND = "background";
 
@@ -404,6 +405,7 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant WRITING_MODE.</summary>
         public const String WRITING_MODE = "writing-mode";
 
+        // property values
         /// <summary>The Constant ALWAYS.</summary>
         public const String ALWAYS = "always";
 
@@ -680,6 +682,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant UPPER_ROMAN.</summary>
         public const String UPPER_ROMAN = "upper-roman";
 
+        /// <summary>The Constant value VISIBLE.</summary>
+        public const String VISIBLE = "visible";
+
         /// <summary>The Constant X_LARGE.</summary>
         public const String X_LARGE = "x-large";
 
@@ -692,6 +697,7 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant XX_SMALL.</summary>
         public const String XX_SMALL = "xx-small";
 
+        // properties possible values
         /// <summary>The Constant BACKGROUND_SIZE_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_SIZE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new 
             HashSet<String>(JavaUtil.ArraysAsList(AUTO, COVER, CONTAIN)));
@@ -724,6 +730,7 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
         public static readonly IDictionary<String, String> FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES;
 
+        // pseudo-classes
         /// <summary>The Constant ACTIVE.</summary>
         public const String ACTIVE = "active";
 
@@ -817,6 +824,7 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant VISITED.</summary>
         public const String VISITED = "visited";
 
+        // units of measurement
         /// <summary>The Constant CM.</summary>
         public const String CM = "cm";
 
@@ -850,16 +858,11 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant Q.</summary>
         public const String Q = "q";
 
+        // units of resolution
         /// <summary>The Constant DPCM.</summary>
         public const String DPCM = "dpcm";
 
         /// <summary>The Constant DPPX.</summary>
         public const String DPPX = "dppx";
-        // properties
-        // property values
-        // properties possible values
-        // pseudo-classes
-        // units of measurement
-        // units of resolution
     }
 }

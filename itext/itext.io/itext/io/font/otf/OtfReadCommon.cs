@@ -48,7 +48,6 @@ using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class OtfReadCommon {
-        /// <exception cref="System.IO.IOException"/>
         public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size, int location) {
             int[] ret = new int[size];
             for (int k = 0; k < size; ++k) {
@@ -58,12 +57,10 @@ namespace iText.IO.Font.Otf {
             return ret;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size) {
             return ReadUShortArray(rf, size, 0);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void ReadCoverages(RandomAccessFileOrArray rf, int[] locations, IList<ICollection<int>> coverage
             ) {
             foreach (int location in locations) {
@@ -71,7 +68,6 @@ namespace iText.IO.Font.Otf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static IList<int> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation) {
             rf.Seek(coverageLocation);
             int coverageFormat = rf.ReadShort();
@@ -99,7 +95,6 @@ namespace iText.IO.Font.Otf {
             return JavaCollectionsUtil.UnmodifiableList(glyphIds);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int> glyphIds) {
             int startGlyphId = rf.ReadShort();
             int endGlyphId = rf.ReadShort();
@@ -109,7 +104,6 @@ namespace iText.IO.Font.Otf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader, int mask) {
             GposValueRecord vr = new GposValueRecord();
             if ((mask & 0x0001) != 0) {
@@ -139,7 +133,6 @@ namespace iText.IO.Font.Otf {
             return vr;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static GposAnchor ReadGposAnchor(OpenTypeFontTableReader tableReader, int location) {
             if (location == 0) {
                 return null;
@@ -158,7 +151,6 @@ namespace iText.IO.Font.Otf {
             return t;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static IList<OtfMarkRecord> ReadMarkArray(OpenTypeFontTableReader tableReader, int location) {
             tableReader.rf.Seek(location);
             int markCount = tableReader.rf.ReadUnsignedShort();
@@ -179,7 +171,6 @@ namespace iText.IO.Font.Otf {
             return marks;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static SubstLookupRecord[] ReadSubstLookupRecords(RandomAccessFileOrArray rf, int substCount) {
             SubstLookupRecord[] substPosLookUpRecords = new SubstLookupRecord[substCount];
             for (int i = 0; i < substCount; ++i) {
@@ -191,7 +182,6 @@ namespace iText.IO.Font.Otf {
             return substPosLookUpRecords;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static GposAnchor[] ReadAnchorArray(OpenTypeFontTableReader tableReader, int[] locations, int left, 
             int right) {
             GposAnchor[] anchors = new GposAnchor[right - left];
@@ -201,7 +191,6 @@ namespace iText.IO.Font.Otf {
             return anchors;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static IList<GposAnchor[]> ReadBaseArray(OpenTypeFontTableReader tableReader, int classCount, int location
             ) {
             IList<GposAnchor[]> baseArray = new List<GposAnchor[]>();
@@ -216,7 +205,6 @@ namespace iText.IO.Font.Otf {
             return baseArray;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static IList<IList<GposAnchor[]>> ReadLigatureArray(OpenTypeFontTableReader tableReader, int classCount
             , int location) {
             IList<IList<GposAnchor[]>> ligatureArray = new List<IList<GposAnchor[]>>();

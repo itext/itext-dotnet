@@ -41,13 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.IO.Image {
-    public class JpegTest {
+    public class JpegTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg1() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.jpg");
@@ -56,7 +56,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_gray.jpg");
@@ -65,7 +64,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg3() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_monochrome.jpg");
@@ -74,7 +72,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg4() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_negate.jpg");
@@ -83,7 +80,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg5() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_year1900.jpg");
@@ -92,7 +88,6 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void OpenJpeg6() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_year1980.jpg");

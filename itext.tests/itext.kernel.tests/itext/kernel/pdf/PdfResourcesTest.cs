@@ -45,10 +45,10 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class PdfResourcesTest {
-        /// <exception cref="System.Exception"/>
+    public class PdfResourcesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ResourcesTest1() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -65,7 +65,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ResourcesTest2() {
             MemoryStream baos = new MemoryStream();

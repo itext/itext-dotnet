@@ -96,16 +96,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.</param>
         /// <param name="clipRule">
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             , int rule, bool isClip, int clipRule)
@@ -126,12 +124,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// otherwise
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
+        /// </summary>
+        /// <remarks>
+        /// If the operation is
+        /// <see cref="NO_OP"/>
+        /// then the rule is ignored,
+        /// otherwise
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
         /// <para />
         /// See
         /// <see cref="PathRenderInfo(System.Collections.Generic.Stack{E}, iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Geom.Path, int, int, bool, int)
         ///     "/>
-        /// </summary>
+        /// </remarks>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             )
             : this(canvasTagHierarchy, gs, path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule
@@ -148,7 +154,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <returns>
-        /// <CODE>int</CODE> value which is either
+        /// <c>int</c> value which is either
         /// <see cref="NO_OP"/>
         /// or one of possible
         /// combinations of
@@ -164,8 +170,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </returns>
         public virtual int GetRule() {
             return rule;
@@ -180,8 +185,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </returns>
         public virtual int GetClippingRule() {
             return clippingRule;

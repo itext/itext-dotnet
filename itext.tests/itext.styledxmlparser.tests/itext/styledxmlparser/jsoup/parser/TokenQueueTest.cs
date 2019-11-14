@@ -41,10 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Token queue tests.</summary>
-    public class TokenQueueTest {
+    public class TokenQueueTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ChompBalanced() {
             TokenQueue tq = new TokenQueue(":contains(one (two) three) four");

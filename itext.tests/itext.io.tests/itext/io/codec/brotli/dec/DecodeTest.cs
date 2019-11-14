@@ -15,7 +15,6 @@ namespace iText.IO.Codec.Brotli.Dec
 	/// </summary>
 	public class DecodeTest : ExtendedITextTest
 	{
-		/// <exception cref="System.IO.IOException"/>
 		private byte[] Decompress(byte[] data, bool byByte)
 		{
 			byte[] buffer = new byte[65536];
@@ -52,7 +51,6 @@ namespace iText.IO.Codec.Brotli.Dec
 			return output.ToArray();
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		private byte[] DecompressWithDictionary(byte[] data, byte[] dictionary)
 		{
 			byte[] buffer = new byte[65536];
@@ -72,7 +70,6 @@ namespace iText.IO.Codec.Brotli.Dec
 			return output.ToArray();
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		private void CheckDecodeResourceWithDictionary(string expected, string compressed, string dictionary)
 		{
 			byte[] expectedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(expected);
@@ -82,7 +79,6 @@ namespace iText.IO.Codec.Brotli.Dec
 			NUnit.Framework.Assert.AreEqual(expectedBytes, actual);
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		private void CheckDecodeResource(string expected, string compressed)
 		{
 			byte[] expectedBytes = iText.IO.Codec.Brotli.Dec.Transform.ReadUniBytes(expected);
@@ -93,35 +89,30 @@ namespace iText.IO.Codec.Brotli.Dec
 			NUnit.Framework.Assert.AreEqual(expectedBytes, actualByByte);
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestEmpty()
 		{
 			CheckDecodeResource(string.Empty, "\u0006");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestX()
 		{
 			CheckDecodeResource("X", "\u000B\u0000\u0080X\u0003");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestX10Y10()
 		{
 			CheckDecodeResource("XXXXXXXXXXYYYYYYYYYY", "\u001B\u0013\u0000\u0000\u00A4\u00B0\u00B2\u00EA\u0081G\u0002\u008A");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestX64()
 		{
 			CheckDecodeResource("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "\u001B\u003F\u0000\u0000$\u00B0\u00E2\u0099\u0080\u0012");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestUkkonooa()
 		{
@@ -129,7 +120,6 @@ namespace iText.IO.Codec.Brotli.Dec
 				 + "\u00A0\u00C2\u00DAf6\u00DC\u00CD\u0080\u008D.!\u00D7n\u00E3\u00EAL\u00B8\u00F0\u00D2" + "\u00B8\u00C7\u00C2pM:\u00F0i~\u00A1\u00B8Es\u00AB\u00C4W\u001E");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestMonkey()
 		{
@@ -146,7 +136,6 @@ namespace iText.IO.Codec.Brotli.Dec
 				);
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestFox()
 		{
@@ -154,7 +143,6 @@ namespace iText.IO.Codec.Brotli.Dec
 				 + "\u0091\u00FF\u0087\u00E9\u001E");
 		}
 
-		/// <exception cref="System.IO.IOException"/>
 		[NUnit.Framework.Test]
 		public virtual void TestFoxFox()
 		{

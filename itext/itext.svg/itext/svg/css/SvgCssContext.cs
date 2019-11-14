@@ -45,12 +45,8 @@ using iText.StyledXmlParser.Css.Resolve;
 namespace iText.Svg.Css {
     /// <summary>
     /// Context necessary for evaluating certain Css statements whose final values depends on other statements
-    /// e.g.
-    /// </summary>
-    /// <remarks>
-    /// Context necessary for evaluating certain Css statements whose final values depends on other statements
     /// e.g. relative font-size statements.
-    /// </remarks>
+    /// </summary>
     public class SvgCssContext : AbstractCssContext {
     }
 }

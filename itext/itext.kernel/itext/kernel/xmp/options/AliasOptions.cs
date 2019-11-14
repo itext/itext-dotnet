@@ -53,13 +53,12 @@ namespace iText.Kernel.XMP.Options {
         public AliasOptions() {
         }
 
+        // EMPTY
         /// <param name="options">the options to init with</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If options are not consistant</exception>
         public AliasOptions(int options)
             : base(options) {
         }
 
-        // EMPTY
         /// <returns>Returns if the alias is of the simple form.</returns>
         public bool IsSimple() {
             return GetOptions() == PROP_DIRECT;
@@ -118,7 +117,6 @@ namespace iText.Kernel.XMP.Options {
         /// <see cref="PropertyOptions"/>
         /// s object
         /// </returns>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not consistant.</exception>
         public PropertyOptions ToPropertyOptions() {
             return new PropertyOptions(GetOptions());
         }

@@ -81,7 +81,6 @@ namespace iText.Svg.Css.Impl {
         /// with a given default CSS.
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
-        /// <exception cref="System.IO.IOException"/>
         public SvgStyleResolver(Stream defaultCssStream) {
             this.css = CssStyleSheetParser.Parse(defaultCssStream);
         }
@@ -250,8 +249,7 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>
         /// Collects fonts from a
-        /// <see cref="iText.StyledXmlParser.Css.CssStatement"/>
-        /// .
+        /// <see cref="iText.StyledXmlParser.Css.CssStatement"/>.
         /// </summary>
         /// <param name="cssStatement">the CSS statement</param>
         private void CollectFonts(CssStatement cssStatement) {
@@ -268,9 +266,9 @@ namespace iText.Svg.Css.Impl {
         }
 
         private void ProcessAttribute(IAttribute attr, IDictionary<String, String> styles) {
+            //Style attribute needs to be parsed further
             switch (attr.GetKey()) {
                 case SvgConstants.Attributes.STYLE: {
-                    //Style attribute needs to be parsed further
                     IDictionary<String, String> parsed = ParseStylesFromStyleAttribute(attr.GetValue());
                     foreach (KeyValuePair<String, String> style in parsed) {
                         styles.Put(style.Key, style.Value);

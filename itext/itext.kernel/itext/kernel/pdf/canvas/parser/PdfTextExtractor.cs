@@ -91,8 +91,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Node: the default strategy is subject to change. If using a specific strategy
         /// is important, please use
         /// <see cref="GetTextFromPage(iText.Kernel.Pdf.PdfPage, iText.Kernel.Pdf.Canvas.Parser.Listener.ITextExtractionStrategy)
-        ///     "/>
-        /// .
+        ///     "/>.
         /// </remarks>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <returns>the extracted text</returns>

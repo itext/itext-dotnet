@@ -78,6 +78,11 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>
         /// Creates a new
         /// <see cref="PdfTarget"/>
+        /// object given its type.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="PdfTarget"/>
         /// object given its type. The type must be either
         /// <see cref="iText.Kernel.Pdf.PdfName.P"/>
         /// , or
@@ -86,7 +91,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <see cref="iText.Kernel.Pdf.PdfName.C"/>
         /// , additional entries must be specified
         /// according to the spec.
-        /// </summary>
+        /// </remarks>
         /// <param name="r">the relationship between the current document and the target</param>
         private static iText.Kernel.Pdf.Action.PdfTarget Create(PdfName r) {
             iText.Kernel.Pdf.Action.PdfTarget pdfTarget = new iText.Kernel.Pdf.Action.PdfTarget(new PdfDictionary());
@@ -189,10 +194,10 @@ namespace iText.Kernel.Pdf.Action {
             PdfObject pValue = GetPdfObject().Get(PdfName.P);
             PdfPage page = null;
             if (pValue is PdfNumber) {
+                // zero-based index is used
                 page = pdfDocument.GetPage(((PdfNumber)pValue).IntValue() + 1);
             }
             else {
-                // zero-based index is used
                 if (pValue is PdfString) {
                     PdfNameTree destsTree = pdfDocument.GetCatalog().GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();
@@ -249,7 +254,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <summary>Get a target dictionary specifying additional path information to the target document.</summary>
         /// <remarks>
         /// Get a target dictionary specifying additional path information to the target document.
-        /// If the current target object is the final node in the target path, <code>null</code> is returned.
+        /// If the current target object is the final node in the target path, <c>null</c> is returned.
         /// </remarks>
         /// <returns>a target dictionary specifying additional path information to the target document</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTarget GetTarget() {
@@ -259,8 +264,7 @@ namespace iText.Kernel.Pdf.Action {
 
         /// <summary>
         /// This is a convenient method to put key-value pairs to the underlying
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>.
         /// </summary>
         /// <param name="key">
         /// the key, a

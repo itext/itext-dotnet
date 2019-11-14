@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
             String outFileName = destinationFolder + "linkTest01.pdf";
@@ -84,8 +82,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LinkTest02() {
             String outFileName = destinationFolder + "linkTest02.pdf";
@@ -102,8 +98,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION)]
         public virtual void LinkTest03() {
@@ -126,8 +120,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderedLinkTest() {
             String outFileName = destinationFolder + "borderedLinkTest.pdf";
@@ -154,11 +146,9 @@ namespace iText.Layout {
         /// <para />
         /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
         /// in the question.
-        /// </p>
-        /// Author: mkl.
+        /// <para />
         /// </remarks>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        /// <author>mkl</author>
         [NUnit.Framework.Test]
         public virtual void TestCreateLocalLinkInRotatedCell() {
             String outFileName = destinationFolder + "linkInRotatedCell.pdf";
@@ -176,8 +166,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RotatedLinkAtFixedPosition() {
             String outFileName = destinationFolder + "rotatedLinkAtFixedPosition.pdf";
@@ -191,8 +179,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void RotatedLinkInnerRotation() {
@@ -209,8 +195,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleMarginsTest01() {
             String outFileName = destinationFolder + "simpleMarginsTest01.pdf";
@@ -228,8 +212,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultiLineLinkTest01() {
             String outFileName = destinationFolder + "multiLineLinkTest01.pdf";
@@ -248,8 +230,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableHeaderLinkTest01() {
             String outFileName = destinationFolder + "tableHeaderLinkTest01.pdf";
@@ -277,8 +257,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LinkWithCustomRectangleTest01() {
             String outFileName = destinationFolder + "linkWithCustomRectangleTest01.pdf";

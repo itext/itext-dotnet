@@ -176,19 +176,22 @@ namespace iText.IO.Source {
         /// Fill
         /// <c>ByteBuffer</c>
         /// from the end.
+        /// </summary>
+        /// <remarks>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
         /// Set byte at
         /// <c>capacity() - size() - 1</c>
         /// position.
-        /// </summary>
+        /// </remarks>
         /// <param name="b">
         /// 
-        /// <c>byte</c>
-        /// .
+        /// <c>byte</c>.
         /// </param>
         /// <returns>
         /// 
-        /// <c>ByteBuffer</c>
-        /// .
+        /// <c>ByteBuffer</c>.
         /// </returns>
         internal virtual iText.IO.Source.ByteBuffer Prepend(byte b) {
             buffer[buffer.Length - count - 1] = b;
@@ -200,19 +203,22 @@ namespace iText.IO.Source {
         /// Fill
         /// <c>ByteBuffer</c>
         /// from the end.
+        /// </summary>
+        /// <remarks>
+        /// Fill
+        /// <c>ByteBuffer</c>
+        /// from the end.
         /// Set bytes from
         /// <c>capacity() - size() - b.length</c>
         /// position.
-        /// </summary>
+        /// </remarks>
         /// <param name="b">
         /// 
-        /// <c>byte</c>
-        /// .
+        /// <c>byte</c>.
         /// </param>
         /// <returns>
         /// 
-        /// <c>ByteBuffer</c>
-        /// .
+        /// <c>ByteBuffer</c>.
         /// </returns>
         internal virtual iText.IO.Source.ByteBuffer Prepend(byte[] b) {
             Array.Copy(b, 0, buffer, buffer.Length - count - b.Length, b.Length);

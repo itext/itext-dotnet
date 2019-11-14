@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -53,8 +54,8 @@ namespace iText.Forms.Xfdf {
     internal class XfdfReader {
         private static ILog logger = LogManager.GetLogger(typeof(XfdfReader));
 
-        /// <summary>The method merges existing XfdfObject into pdf document associated with it.</summary>
-        /// <param name="xfdfObject">The object ot be merged.</param>
+        /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
+        /// <param name="xfdfObject">The object to be merged.</param>
         /// <param name="pdfDocument">The associated pdf document.</param>
         /// <param name="pdfDocumentName">The name of the associated pdf document.</param>
         internal virtual void MergeXfdfIntoPdf(XfdfObject xfdfObject, PdfDocument pdfDocument, String pdfDocumentName
@@ -64,11 +65,11 @@ namespace iText.Forms.Xfdf {
                     logger.Info("Xfdf href and pdf name are equal. Continue merge");
                 }
                 else {
-                    logger.Warn("Xfdf href attribute and pdfDocument name are different!");
+                    logger.Warn(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT);
                 }
             }
             else {
-                logger.Warn("No f object to compare.");
+                logger.Warn(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
             }
             //TODO check for ids original/modified compatability with those in pdf document
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
@@ -78,6 +79,12 @@ namespace iText.Forms.Xfdf {
             }
         }
 
+        /// <summary>
+        /// Merges existing FieldsObject and children FieldObject entities into the form of the pdf document
+        /// associated with it.
+        /// </summary>
+        /// <param name="fieldsObject">object containing acroform fields data to be merged.</param>
+        /// <param name="form">acroform to be filled with xfdf data.</param>
         private void MergeFields(FieldsObject fieldsObject, PdfAcroForm form) {
             if (fieldsObject != null && fieldsObject.GetFieldList() != null && !fieldsObject.GetFieldList().IsEmpty()) {
                 IDictionary<String, PdfFormField> formFields = form.GetFormFields();
@@ -87,12 +94,16 @@ namespace iText.Forms.Xfdf {
                         formFields.Get(name).SetValue(xfdfField.GetValue());
                     }
                     else {
-                        logger.Error("No such field in pdf document!");
+                        logger.Error(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT);
                     }
                 }
             }
         }
 
+        /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
+        /// <param name="annotsObject">The AnnotsObject with children AnnotObject entities to be mapped into PdfAnnotations.
+        ///     </param>
+        /// <param name="pdfDocument">The associated pdf document.</param>
         private void MergeAnnotations(AnnotsObject annotsObject, PdfDocument pdfDocument) {
             IList<AnnotObject> annotList = null;
             if (annotsObject != null) {
@@ -131,8 +142,12 @@ namespace iText.Forms.Xfdf {
                         AddCommonAnnotationAttributes(pdfTextAnnotation, annotObject);
                         AddMarkupAnnotationAttributes(pdfTextAnnotation, annotObject);
                         pdfTextAnnotation.SetIconName(new PdfName(annotObject.GetAttributeValue(XfdfConstants.ICON)));
-                        pdfTextAnnotation.SetState(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE)));
-                        pdfTextAnnotation.SetStateModel(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL)));
+                        if (annotObject.GetAttributeValue(XfdfConstants.STATE) != null) {
+                            pdfTextAnnotation.SetState(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE)));
+                        }
+                        if (annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL) != null) {
+                            pdfTextAnnotation.SetStateModel(new PdfString(annotObject.GetAttributeValue(XfdfConstants.STATE_MODEL)));
+                        }
                         pdfDocument.GetPage(Convert.ToInt32(annotObject.GetAttributeValue(XfdfConstants.PAGE))).AddAnnotation(pdfTextAnnotation
                             );
                         break;
@@ -256,7 +271,8 @@ namespace iText.Forms.Xfdf {
                         //XfdfConstants.LINK
                         //XfdfConstants.REDACT
                         //XfdfConstants.PROJECTION
-                        logger.Warn("Annotation " + annotName + " is not supported.");
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED, annotName
+                            ));
                         break;
                     }
                 }

@@ -286,6 +286,8 @@ namespace iText.Forms.Xfdf {
 
         public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
 
+        [System.ObsoleteAttribute(@"Use LogMessageConstant#UNSUPPORTED_ANNOTATION_ATTRIBUTE instead. The constant will be removed in 7.2."
+            )]
         public const String UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Unsupported attribute type";
     }
 }

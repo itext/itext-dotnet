@@ -83,8 +83,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return envelopedData;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier) {
             IBufferedCipher cipher = CipherUtilities.GetCipher(algorithmidentifier.ObjectID);
             cipher.Init(true, x509Certificate.GetPublicKey());
@@ -116,15 +114,24 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return locale;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in) {
+            /*
+             According to ISO 32000-2 (7.6.5.3 Public-key encryption algorithms) RC-2 algorithm is outdated
+             and should be replaced with a safer one 256-bit AES-CBC:
+                 The algorithms that shall be used to encrypt the enveloped data in the CMS object are:
+                 - RC4 with key lengths up to 256-bits (deprecated);
+                 - DES, Triple DES, RC2 with key lengths up to 128 bits (deprecated);
+                 - 128-bit AES in Cipher Block Chaining (CBC) mode (deprecated);
+                 - 192-bit AES in CBC mode (deprecated);
+                 - 256-bit AES in CBC mode.
+             */
             String s = "1.2.840.113549.3.2";
             DERForRecipientParams parameters = new DERForRecipientParams();
 
             byte[] outp = new byte[100];
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
-            byte[] abyte0 = IVGenerator.GetIV(16); // keyp
+            // keyp
+            byte[] abyte0 = IVGenerator.GetIV(16);
             IBufferedCipher cf = CipherUtilities.GetCipher(derob);
             KeyParameter kp = new KeyParameter(abyte0);
             byte[] iv = IVGenerator.GetIV(cf.GetBlockSize());

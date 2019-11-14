@@ -57,7 +57,7 @@ using iText.Layout.Tagging;
 
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
-    /// 
+    /// <typeparam name="T">this type</typeparam>
     public abstract class RootElement<T> : ElementPropertyContainer<T>, IDisposable
         where T : IPropertyContainer {
         protected internal bool immediateFlush = true;
@@ -124,14 +124,16 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
-        /// Note, font provider is inherited property.
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// Note, font provider is inherited property.
+        /// </remarks>
         /// <param name="fontProvider">
         /// instance of
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// </param>
         public virtual void SetFontProvider(FontProvider fontProvider) {
             SetProperty(Property.FONT_PROVIDER, fontProvider);

@@ -65,7 +65,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest01() {
             NUnit.Framework.Assert.That(() =>  {
@@ -83,7 +82,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest02() {
             NUnit.Framework.Assert.That(() =>  {
@@ -103,7 +101,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest03() {
             NUnit.Framework.Assert.That(() =>  {
@@ -122,7 +119,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest04() {
             NUnit.Framework.Assert.That(() =>  {
@@ -142,7 +138,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest05() {
             NUnit.Framework.Assert.That(() =>  {
@@ -164,7 +159,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest06() {
             NUnit.Framework.Assert.That(() =>  {
@@ -184,8 +178,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest07() {
             String outPdf = destinationFolder + "pdfA1b_annotationCheckTest07.pdf";
@@ -203,7 +195,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest08() {
             NUnit.Framework.Assert.That(() =>  {
@@ -224,8 +215,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest09() {
             String outPdf = destinationFolder + "pdfA1a_annotationCheckTest09.pdf";
@@ -246,8 +235,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

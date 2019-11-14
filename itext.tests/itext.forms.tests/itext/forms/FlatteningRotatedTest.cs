@@ -60,8 +60,6 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot() {
             String srcFilePatternPattern = "FormFlatteningDefaultAppearance_{0}_";

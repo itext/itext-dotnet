@@ -49,16 +49,20 @@ namespace iText.Layout.Element {
     /// A TabStop is the closest location on a line of text that the text will jump
     /// to if a
     /// <see cref="Tab"/>
+    /// is inserted.
+    /// </summary>
+    /// <remarks>
+    /// A TabStop is the closest location on a line of text that the text will jump
+    /// to if a
+    /// <see cref="Tab"/>
     /// is inserted. At least one TabStop must be defined on an
     /// element if you want to use
-    /// <see cref="Tab">Tabs</see>
-    /// .
+    /// <see cref="Tab">Tabs</see>.
     /// This object can be added to a
     /// <see cref="Paragraph"/>
     /// with the method
-    /// <see cref="Paragraph.AddTabStops(TabStop[])"/>
-    /// .
-    /// </summary>
+    /// <see cref="Paragraph.AddTabStops(TabStop[])"/>.
+    /// </remarks>
     public class TabStop {
         private float tabPosition;
 
@@ -69,7 +73,7 @@ namespace iText.Layout.Element {
         private ILineDrawer tabLeader;
 
         /// <summary>Creates a TabStop at the appropriate position.</summary>
-        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
         public TabStop(float tabPosition)
             : this(tabPosition, TabAlignment.LEFT) {
         }
@@ -83,7 +87,7 @@ namespace iText.Layout.Element {
         /// alignment. A tab alignment defines the way the textual content should be
         /// positioned with regards to this tab stop.
         /// </remarks>
-        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
         /// <param name="tabAlignment">
         /// a
         /// <see cref="iText.Layout.Properties.TabAlignment"/>
@@ -105,7 +109,7 @@ namespace iText.Layout.Element {
         /// the TabStop is reached. If null, the space leading up to the TabStop will
         /// be empty.
         /// </remarks>
-        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
         /// <param name="tabAlignment">
         /// a
         /// <see cref="iText.Layout.Properties.TabAlignment"/>

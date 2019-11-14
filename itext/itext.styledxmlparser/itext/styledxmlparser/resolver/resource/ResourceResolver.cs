@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>Utilities class to resolve resources.</summary>
     public class ResourceResolver {
+        // TODO handle <base href=".."> tag?
         /// <summary>Identifier string used when loading in base64 images</summary>
         public const String BASE64IDENTIFIER = "base64";
 
@@ -73,7 +74,13 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </summary>
         private SimpleImageCache imageCache;
 
+        // TODO provide a way to configure capacity, manually reset or disable the image cache?
         /// <summary>
+        /// Creates
+        /// <see cref="ResourceResolver"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
         /// Creates
         /// <see cref="ResourceResolver"/>
         /// instance. If
@@ -84,11 +91,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <para />
         /// If empty string or relative URI string is passed as base URI, then it will be resolved against current working
         /// directory of this application instance.
-        /// </summary>
+        /// </remarks>
         /// <param name="baseUri">base URI against which all relative resource URIs will be resolved.</param>
         public ResourceResolver(String baseUri) {
-            // TODO handle <base href=".."> tag?
-            // TODO provide a way to configure capacity, manually reset or disable the image cache?
             if (baseUri == null) {
                 baseUri = "";
             }
@@ -98,8 +103,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         /// <summary>
         /// Retrieve
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>PdfImageXObject on success, otherwise null.</returns>
@@ -118,8 +122,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// Retrieve image as either
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// , or
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>PdfImageXObject on success, otherwise null.</returns>
@@ -151,7 +154,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// the
         /// <see cref="System.IO.Stream"/>
         /// </returns>
-        /// <exception cref="System.IO.IOException">Signals that an I/O exception has occurred.</exception>
         public virtual Stream RetrieveStyleSheet(String uri) {
             return UrlUtil.OpenStream(uriResolver.ResolveAgainstBaseUri(uri));
         }
@@ -166,8 +168,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <para />
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </remarks>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>
@@ -193,8 +194,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>
         /// Retrieve a resource as a byte array from a source that
         /// can either be a link to a file, or a base64 encoded
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </summary>
         /// <param name="src">either link to file or base64 encoded stream.</param>
         /// <returns>byte[] on success, otherwise null.</returns>
@@ -248,7 +248,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Resolves a given URI against the base URI.</summary>
         /// <param name="uri">the uri</param>
         /// <returns>the url</returns>
-        /// <exception cref="System.UriFormatException">the malformed URL exception</exception>
         public virtual Uri ResolveAgainstBaseUri(String uri) {
             return uriResolver.ResolveAgainstBaseUri(uri);
         }
@@ -315,7 +314,6 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// containing the Image loaded in
         /// </returns>
-        /// <exception cref="System.Exception">thrown if error occurred during fetching or constructing the image</exception>
         protected internal virtual PdfXObject CreateImageByUrl(Uri url) {
             return new PdfImageXObject(ImageDataFactory.Create(url));
         }

@@ -33,7 +33,7 @@ namespace iText.Kernel.XMP.Properties {
     /// <summary>This interface is used to return a property together with its path and namespace.</summary>
     /// <remarks>
     /// This interface is used to return a property together with its path and namespace.
-    /// It is returned when properties are iterated with the <code>XMPIterator</code>.
+    /// It is returned when properties are iterated with the <c>XMPIterator</c>.
     /// </remarks>
     /// <since>06.07.2006</since>
     public interface XMPPropertyInfo : XMPProperty {

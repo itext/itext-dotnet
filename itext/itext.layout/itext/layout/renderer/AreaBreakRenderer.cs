@@ -51,9 +51,14 @@ namespace iText.Layout.Renderer {
     /// <summary>
     /// Renderer object for the
     /// <see cref="iText.Layout.Element.AreaBreak"/>
+    /// layout element.
+    /// </summary>
+    /// <remarks>
+    /// Renderer object for the
+    /// <see cref="iText.Layout.Element.AreaBreak"/>
     /// layout element. Will terminate the
     /// current content area and initialize a new one.
-    /// </summary>
+    /// </remarks>
     public class AreaBreakRenderer : IRenderer {
         protected internal AreaBreak areaBreak;
 

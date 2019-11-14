@@ -51,8 +51,7 @@ namespace iText.Layout.Borders {
     /// <remarks>
     /// Draws a dotted border around the element it has been set to. Do note that this border draw square dots,
     /// if you want to draw round dots, see
-    /// <see cref="RoundDotsBorder"/>
-    /// .
+    /// <see cref="RoundDotsBorder"/>.
     /// </remarks>
     public class DottedBorder : Border {
         /// <summary>The modifier to be applied on the width to have the initial gap size</summary>

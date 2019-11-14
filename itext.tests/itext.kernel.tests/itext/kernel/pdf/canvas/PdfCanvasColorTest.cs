@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -66,7 +65,6 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest01() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "colorTest01.pdf"));
@@ -86,7 +84,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest01.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest02() {
             PdfWriter writer = new PdfWriter(destinationFolder + "colorTest02.pdf");
@@ -117,7 +114,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest02.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest03() {
             PdfWriter writer = new PdfWriter(destinationFolder + "colorTest03.pdf");
@@ -144,7 +140,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest03.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest04() {
             //Create document with 3 colored rectangles in memory.
@@ -179,7 +174,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest04.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest05() {
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "colorTest05.pdf"));
@@ -204,7 +198,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest05.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest06() {
             byte[] bytes = new byte[256 * 3];
@@ -230,7 +223,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest06.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest07() {
             PdfWriter writer = new PdfWriter(destinationFolder + "colorTest07.pdf");
@@ -250,7 +242,6 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest07.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorTest08() {
             PdfWriter writer = new PdfWriter(destinationFolder + "colorTest08.pdf");
@@ -273,22 +264,16 @@ namespace iText.Kernel.Pdf.Canvas {
                  + "cmp_colorTest08.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SetColorsSameColorSpaces() {
             SetColorSameColorSpacesTest("setColorsSameColorSpaces.pdf", false);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SetColorsSameColorSpacesPattern() {
             SetColorSameColorSpacesTest("setColorsSameColorSpacesPattern.pdf", true);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void SetColorSameColorSpacesTest(String pdfName, bool pattern) {
             String cmpFile = sourceFolder + "cmp_" + pdfName;
             String destFile = destinationFolder + pdfName;
@@ -318,7 +303,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredAxialPatternTest() {
             String name = "patternColorColoredAxialPatternTest.pdf";
@@ -337,7 +321,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 "cmp_" + name, destinationFolder));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredRadialPatternTest() {
             String name = "patternColorColoredRadialPatternTest.pdf";
@@ -356,7 +339,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 "cmp_" + name, destinationFolder));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredCircleRgbTest() {
             String name = "patternColorUncoloredCircleRgbTest.pdf";
@@ -378,7 +360,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 "cmp_" + name, destinationFolder));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredLineGrayTest() {
             String name = "patternColorUncoloredLineGrayTest.pdf";
@@ -397,7 +378,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 "cmp_" + name, destinationFolder));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredSetTwiceTest() {
             String name = "patternColorColoredSetTwiceTest.pdf";
@@ -421,8 +401,8 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
-                );
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+                .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(1, p1Count);
@@ -431,7 +411,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 "cmp_" + name, destinationFolder));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredSetTwiceTest() {
             String name = "patternColorUncoloredSetTwiceTest.pdf";
@@ -466,8 +445,8 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] pageContentStreamBytes = canvas.GetContentStream().GetBytes();
             canvas.Release();
             document.Close();
-            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, Encoding.ASCII
-                );
+            String contentStreamString = iText.IO.Util.JavaUtil.GetStringForBytes(pageContentStreamBytes, System.Text.Encoding
+                .ASCII);
             int p1Count = CountSubstringOccurrences(contentStreamString, "/P1 scn");
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(3, p1Count);

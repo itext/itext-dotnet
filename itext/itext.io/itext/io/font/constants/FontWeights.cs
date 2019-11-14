@@ -47,33 +47,33 @@ namespace iText.IO.Font.Constants {
         private FontWeights() {
         }
 
+        // Font weight Thin
         public const int THIN = 100;
 
+        // Font weight Extra-light (Ultra-light)
         public const int EXTRA_LIGHT = 200;
 
+        // Font weight Light
         public const int LIGHT = 300;
 
+        // Font weight Normal
         public const int NORMAL = 400;
 
+        // Font weight Medium
         public const int MEDIUM = 500;
 
+        // Font weight Semi-bold
         public const int SEMI_BOLD = 600;
 
+        // Font weight Bold
         public const int BOLD = 700;
 
+        // Font weight Extra-bold (Ultra-bold)
         public const int EXTRA_BOLD = 800;
 
+        // Font weight Black (Heavy)
         public const int BLACK = 900;
 
-        // Font weight Thin
-        // Font weight Extra-light (Ultra-light)
-        // Font weight Light
-        // Font weight Normal
-        // Font weight Medium
-        // Font weight Semi-bold
-        // Font weight Bold
-        // Font weight Extra-bold (Ultra-bold)
-        // Font weight Black (Heavy)
         public static int FromType1FontWeight(String weight) {
             int fontWeight = NORMAL;
             switch (weight.ToLowerInvariant()) {

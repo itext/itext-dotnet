@@ -119,7 +119,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Initializes the MetaFont instance.</summary>
         /// <param name="in">InputMeta containing the WMF data</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Init(InputMeta @in) {
             height = Math.Abs(@in.ReadShort());
             @in.Skip(2);
@@ -152,7 +151,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Returns the Font.</summary>
         /// <returns>the font</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual FontProgram GetFont() {
             if (font != null) {
                 return font;

@@ -165,10 +165,10 @@ namespace iText.Kernel.Colors {
                     }
                     else {
                         if (colorSpace is PdfSpecialCs.Pattern) {
+                            // TODO review this. at least log a warning
                             c = new iText.Kernel.Colors.Color(colorSpace, colorValue);
                         }
                         else {
-                            // TODO review this. at least log a warning
                             unknownColorSpace = true;
                         }
                     }

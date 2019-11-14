@@ -45,10 +45,13 @@ using System;
 namespace iText.IO.Font.Constants {
     /// <summary>
     /// Class containing families for
-    /// <see cref="StandardFonts"/>
-    /// .
-    /// This class was made for com.itextpdf.io.font.FontRegisterProvider.
+    /// <see cref="StandardFonts"/>.
     /// </summary>
+    /// <remarks>
+    /// Class containing families for
+    /// <see cref="StandardFonts"/>.
+    /// This class was made for com.itextpdf.io.font.FontRegisterProvider.
+    /// </remarks>
     public sealed class StandardFontFamilies {
         private StandardFontFamilies() {
         }
@@ -61,8 +64,7 @@ namespace iText.IO.Font.Constants {
         /// ,
         /// <see cref="StandardFonts.COURIER_OBLIQUE"/>
         /// and
-        /// <see cref="StandardFonts.COURIER_BOLDOBLIQUE"/>
-        /// .
+        /// <see cref="StandardFonts.COURIER_BOLDOBLIQUE"/>.
         /// </summary>
         public const String COURIER = "Courier";
 
@@ -74,22 +76,19 @@ namespace iText.IO.Font.Constants {
         /// ,
         /// <see cref="StandardFonts.HELVETICA_OBLIQUE"/>
         /// and
-        /// <see cref="StandardFonts.HELVETICA_BOLDOBLIQUE"/>
-        /// .
+        /// <see cref="StandardFonts.HELVETICA_BOLDOBLIQUE"/>.
         /// </summary>
         public const String HELVETICA = "Helvetica";
 
         /// <summary>
         /// Font family for
-        /// <see cref="StandardFonts.SYMBOL"/>
-        /// .
+        /// <see cref="StandardFonts.SYMBOL"/>.
         /// </summary>
         public const String SYMBOL = "Symbol";
 
         /// <summary>
         /// Font family for
-        /// <see cref="StandardFonts.ZAPFDINGBATS"/>
-        /// .
+        /// <see cref="StandardFonts.ZAPFDINGBATS"/>.
         /// </summary>
         public const String ZAPFDINGBATS = "ZapfDingbats";
 
@@ -101,8 +100,7 @@ namespace iText.IO.Font.Constants {
         /// ,
         /// <see cref="StandardFonts.TIMES_ITALIC"/>
         /// and
-        /// <see cref="StandardFonts.TIMES_BOLDITALIC"/>
-        /// .
+        /// <see cref="StandardFonts.TIMES_BOLDITALIC"/>.
         /// </summary>
         public const String TIMES = "Times";
     }

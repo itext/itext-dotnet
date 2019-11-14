@@ -143,8 +143,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// (which is often safe to do).
         /// </param>
         /// <param name="baseUri">The URL where the HTML was retrieved from, to resolve relative links against.</param>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         /// <returns>sane XML</returns>
         public static Document ParseXML(Stream @in, String charsetName, String baseUri) {
             return Parse(@in, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
@@ -164,8 +162,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// <c>UTF-8</c>
         /// (which is often safe to do).
         /// </param>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         /// <returns>sane XML</returns>
         public static Document ParseXML(Stream @in, String charsetName) {
             return ParseXML(@in, charsetName, "");
@@ -185,8 +181,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// </param>
         /// <param name="baseUri">The URL where the HTML was retrieved from, to resolve relative links against.</param>
         /// <returns>sane HTML</returns>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         public static Document Parse(FileInfo @in, String charsetName, String baseUri) {
             return DataUtil.Load(@in, charsetName, baseUri);
         }
@@ -206,8 +200,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// (which is often safe to do).
         /// </param>
         /// <returns>sane HTML</returns>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         /// <seealso cref="Parse(System.IO.FileInfo, System.String, System.String)"/>
         public static Document Parse(FileInfo @in, String charsetName) {
             return DataUtil.Load(@in, charsetName, @in.FullName);
@@ -227,8 +219,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// </param>
         /// <param name="baseUri">The URL where the HTML was retrieved from, to resolve relative links against.</param>
         /// <returns>sane HTML</returns>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         public static Document Parse(Stream @in, String charsetName, String baseUri) {
             return DataUtil.Load(@in, charsetName, baseUri);
         }
@@ -256,8 +246,6 @@ namespace iText.StyledXmlParser.Jsoup {
         /// to use.
         /// </param>
         /// <returns>sane HTML</returns>
-        /// <exception cref="System.IO.IOException">if the file could not be found, or read, or if the charsetName is invalid.
-        ///     </exception>
         public static Document Parse(Stream @in, String charsetName, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
             return DataUtil.Load(@in, charsetName, baseUri, parser);

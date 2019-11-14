@@ -75,9 +75,9 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         private float width;
 
-        /// <summary>Comma-separated list of numbers specifying the pattern of dashes and gaps of the border.</summary>
+        /// <summary>An array of numbers specifying the pattern of dashes and gaps of the border.</summary>
         /// <remarks>
-        /// Comma-separated list of numbers specifying the pattern of dashes and gaps of the border.
+        /// An array of numbers specifying the pattern of dashes and gaps of the border.
         /// Corresponds to array index 3 in the Border key in the common annotation dictionary.
         /// </remarks>
         private float[] dashPattern;
@@ -91,31 +91,58 @@ namespace iText.Forms.Xfdf {
             this.width = width;
         }
 
+        /// <summary>Gets a float value specifying the horizontal corner radius of the rectangular border.</summary>
+        /// <remarks>
+        /// Gets a float value specifying the horizontal corner radius of the rectangular border.
+        /// Corresponds to array index 0 in the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual float GetHCornerRadius() {
             return hCornerRadius;
         }
 
+        /// <summary>Gets a float value specifying the vertical corner radius of the rectangular border.</summary>
+        /// <remarks>
+        /// Gets a float value specifying the vertical corner radius of the rectangular border.
+        /// Corresponds to array index 1 in the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual float GetVCornerRadius() {
             return vCornerRadius;
         }
 
+        /// <summary>Gets a float value specifying the width of the rectangular border.</summary>
+        /// <remarks>
+        /// Gets a float value specifying the width of the rectangular border.
+        /// Corresponds to array index 2 in the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual float GetWidth() {
             return width;
         }
 
+        /// <summary>Gets a array of numbers specifying the pattern of dashes and gaps of the border.</summary>
+        /// <remarks>
+        /// Gets a array of numbers specifying the pattern of dashes and gaps of the border.
+        /// Corresponds to array index 3 in the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual float[] GetDashPattern() {
             return dashPattern;
         }
 
+        /// <summary>Sets a array of numbers specifying the pattern of dashes and gaps of the border.</summary>
+        /// <remarks>
+        /// Sets a array of numbers specifying the pattern of dashes and gaps of the border.
+        /// Corresponds to array index 3 in the Border key in the common annotation dictionary.
+        /// </remarks>
         public virtual iText.Forms.Xfdf.BorderStyleAltObject SetDashPattern(float[] dashPattern) {
             this.dashPattern = dashPattern;
             return this;
         }
 
+        /// <summary>Gets an encoded border style string.</summary>
         public virtual String GetContent() {
             return content;
         }
 
+        /// <summary>Sets an encoded border style string.</summary>
         public virtual iText.Forms.Xfdf.BorderStyleAltObject SetContent(String content) {
             this.content = content;
             return this;

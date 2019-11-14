@@ -41,11 +41,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Test suite for character reader.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class CharacterReaderTest {
+    public class CharacterReaderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Consume() {
             CharacterReader r = new CharacterReader("one");

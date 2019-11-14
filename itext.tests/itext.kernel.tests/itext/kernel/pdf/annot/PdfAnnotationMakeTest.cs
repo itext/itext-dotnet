@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System.IO;
 using iText.Kernel.Pdf;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Annot {
-    public class PdfAnnotationMakeTest {
+    public class PdfAnnotationMakeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void MakePdfAnnotationTest() {
             PdfDictionary @object = new PdfDictionary();

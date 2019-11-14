@@ -232,6 +232,11 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets n quadrilaterals in default user space by passing an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers.
+        /// </summary>
+        /// <remarks>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
         /// Quadrilaterals are used to define a word or group of contiguous words in the text
         /// underlying the text markup annotation.
         /// <para />
@@ -242,7 +247,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
         /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
         /// just as Acrobat and probably most other viewers expect.
-        /// </summary>
+        /// </remarks>
         /// <param name="quadPoints">
         /// an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>

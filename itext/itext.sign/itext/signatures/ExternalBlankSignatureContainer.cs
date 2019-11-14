@@ -52,13 +52,13 @@ namespace iText.Signatures {
     /// </remarks>
     /// <author>Paulo Soares</author>
     public class ExternalBlankSignatureContainer : IExternalSignatureContainer {
+        /* The Signature dictionary. Should contain values for /Filter and /SubFilter at minimum. */
         private PdfDictionary sigDic;
 
         /// <summary>Creates an ExternalBlankSignatureContainer.</summary>
         /// <param name="sigDic">PdfDictionary containing signature iformation. /SubFilter and /Filter aren't set in this constructor.
         ///     </param>
         public ExternalBlankSignatureContainer(PdfDictionary sigDic) {
-            /* The Signature dictionary. Should contain values for /Filter and /SubFilter at minimum. */
             this.sigDic = sigDic;
         }
 
@@ -75,7 +75,6 @@ namespace iText.Signatures {
             sigDic.Put(PdfName.SubFilter, subFilter);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual byte[] Sign(Stream data) {
             return new byte[0];
         }

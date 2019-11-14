@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 namespace iText.Kernel.Pdf {
     /// <summary>
     /// Encryption constants for
-    /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>
-    /// .
+    /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>.
     /// </summary>
     public class EncryptionConstants {
         /// <summary>Type of encryption.</summary>

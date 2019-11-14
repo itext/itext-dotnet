@@ -62,8 +62,7 @@ namespace iText.Layout {
     /// 's rendering behavior can be modified by extending
     /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
     /// and setting an instance of this newly created with
-    /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>
-    /// .
+    /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>.
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
         [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_LEFT instead."
@@ -84,14 +83,17 @@ namespace iText.Layout {
 
         /// <summary>
         /// Creates a document from a
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . Initializes the first page
         /// with the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// 's current default
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
-        /// </summary>
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
+        /// </remarks>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         public Document(PdfDocument pdfDoc)
             : this(pdfDoc, pdfDoc.GetDefaultPageSize()) {
@@ -101,8 +103,7 @@ namespace iText.Layout {
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         /// <param name="pageSize">the page size</param>
@@ -114,8 +115,7 @@ namespace iText.Layout {
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iText.Kernel.Geom.PageSize"/>
-        /// .
+        /// <see cref="iText.Kernel.Geom.PageSize"/>.
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         /// <param name="pageSize">the page size</param>
@@ -180,11 +180,16 @@ namespace iText.Layout {
         /// <summary>
         /// Changes the
         /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
+        /// at runtime.
+        /// </summary>
+        /// <remarks>
+        /// Changes the
+        /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
         /// at runtime. Use this to customize
         /// the Document's
         /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// behavior.
-        /// </summary>
+        /// </remarks>
         /// <param name="documentRenderer">the DocumentRenderer to set</param>
         public virtual void SetRenderer(DocumentRenderer documentRenderer) {
             this.rootRenderer = documentRenderer;
@@ -209,7 +214,7 @@ namespace iText.Layout {
         /// <para />
         /// Do not use when you have set
         /// <see cref="RootElement{T}.immediateFlush"/>
-        /// to <code>true</code>.
+        /// to <c>true</c>.
         /// </remarks>
         public virtual void Relayout() {
             if (immediateFlush) {
@@ -229,56 +234,56 @@ namespace iText.Layout {
         }
 
         /// <summary>Gets the left margin, measured in points</summary>
-        /// <returns>a <code>float</code> containing the left margin value</returns>
+        /// <returns>a <c>float</c> containing the left margin value</returns>
         public virtual float GetLeftMargin() {
             float? property = this.GetProperty<float?>(Property.MARGIN_LEFT);
             return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_LEFT));
         }
 
         /// <summary>Sets the left margin, measured in points</summary>
-        /// <param name="leftMargin">a <code>float</code> containing the new left margin value</param>
+        /// <param name="leftMargin">a <c>float</c> containing the new left margin value</param>
         public virtual void SetLeftMargin(float leftMargin) {
             SetProperty(Property.MARGIN_LEFT, leftMargin);
             this.leftMargin = leftMargin;
         }
 
         /// <summary>Gets the right margin, measured in points</summary>
-        /// <returns>a <code>float</code> containing the right margin value</returns>
+        /// <returns>a <c>float</c> containing the right margin value</returns>
         public virtual float GetRightMargin() {
             float? property = this.GetProperty<float?>(Property.MARGIN_RIGHT);
             return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_RIGHT));
         }
 
         /// <summary>Sets the right margin, measured in points</summary>
-        /// <param name="rightMargin">a <code>float</code> containing the new right margin value</param>
+        /// <param name="rightMargin">a <c>float</c> containing the new right margin value</param>
         public virtual void SetRightMargin(float rightMargin) {
             SetProperty(Property.MARGIN_RIGHT, rightMargin);
             this.rightMargin = rightMargin;
         }
 
         /// <summary>Gets the top margin, measured in points</summary>
-        /// <returns>a <code>float</code> containing the top margin value</returns>
+        /// <returns>a <c>float</c> containing the top margin value</returns>
         public virtual float GetTopMargin() {
             float? property = this.GetProperty<float?>(Property.MARGIN_TOP);
             return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_TOP));
         }
 
         /// <summary>Sets the top margin, measured in points</summary>
-        /// <param name="topMargin">a <code>float</code> containing the new top margin value</param>
+        /// <param name="topMargin">a <c>float</c> containing the new top margin value</param>
         public virtual void SetTopMargin(float topMargin) {
             SetProperty(Property.MARGIN_TOP, topMargin);
             this.topMargin = topMargin;
         }
 
         /// <summary>Gets the bottom margin, measured in points</summary>
-        /// <returns>a <code>float</code> containing the bottom margin value</returns>
+        /// <returns>a <c>float</c> containing the bottom margin value</returns>
         public virtual float GetBottomMargin() {
             float? property = this.GetProperty<float?>(Property.MARGIN_BOTTOM);
             return (float)(property != null ? property : this.GetDefaultProperty<float>(Property.MARGIN_BOTTOM));
         }
 
         /// <summary>Sets the bottom margin, measured in points</summary>
-        /// <param name="bottomMargin">a <code>float</code> containing the new bottom margin value</param>
+        /// <param name="bottomMargin">a <c>float</c> containing the new bottom margin value</param>
         public virtual void SetBottomMargin(float bottomMargin) {
             SetProperty(Property.MARGIN_BOTTOM, bottomMargin);
             this.bottomMargin = bottomMargin;

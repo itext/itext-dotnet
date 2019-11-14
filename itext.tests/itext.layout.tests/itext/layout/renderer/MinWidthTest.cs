@@ -67,8 +67,6 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ParagraphTest() {
             String outFileName = destinationFolder + "paragraphTest01.pdf";
@@ -87,8 +85,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivTest() {
             String outFileName = destinationFolder + "divTest01.pdf";
@@ -109,8 +105,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivWithSmallRotatedParagraph() {
             String outFileName = destinationFolder + "divSmallRotatedParagraphTest01.pdf";
@@ -133,8 +127,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithBigRotatedParagraph() {
@@ -157,8 +149,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivWithSmallRotatedDiv() {
             String outFileName = destinationFolder + "divSmallRotatedDivTest01.pdf";
@@ -181,8 +171,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivWithBigRotatedDiv() {
             String outFileName = destinationFolder + "divBigRotatedDivTest01.pdf";
@@ -205,8 +193,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivWithPercentImage() {
             String outFileName = destinationFolder + "divPercentImage.pdf";
@@ -232,8 +218,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivWithRotatedPercentImage() {
             String outFileName = destinationFolder + "divRotatedPercentImage.pdf";
@@ -260,8 +244,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MultipleDivTest() {
             String outFileName = destinationFolder + "multipleDivTest01.pdf";
@@ -290,8 +272,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void SimpleTableTest() {
@@ -319,8 +299,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void ColspanTableTest() {
@@ -348,8 +326,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void ColspanRowspanTableTest() {
@@ -381,8 +357,6 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void HeaderFooterTableTest() {

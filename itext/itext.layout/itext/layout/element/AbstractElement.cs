@@ -56,7 +56,7 @@ namespace iText.Layout.Element {
     /// implementations
     /// share.
     /// </summary>
-    /// 
+    /// <typeparam name="T">the type of the implementation</typeparam>
     public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
         where T : IElement {
         protected internal IRenderer nextRenderer;
@@ -133,8 +133,8 @@ namespace iText.Layout.Element {
             return childElements;
         }
 
-        /// <summary>Returns <code>true</code> if this list contains no elements.</summary>
-        /// <returns><code>true</code> if this list contains no elements</returns>
+        /// <summary>Returns <c>true</c> if this list contains no elements.</summary>
+        /// <returns><c>true</c> if this list contains no elements</returns>
         public virtual bool IsEmpty() {
             return 0 == childElements.Count;
         }

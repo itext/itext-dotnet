@@ -46,14 +46,17 @@ using System.Collections.Generic;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Queue-based implementation of
-    /// <see cref="IEventDataCache{T, V}"/>
-    /// .
+    /// <see cref="IEventDataCache{T, V}"/>.
+    /// </summary>
+    /// <remarks>
+    /// Queue-based implementation of
+    /// <see cref="IEventDataCache{T, V}"/>.
     /// Merges data with the same signature by increasing its count.
     /// Will retrieve the first elements by the time of its signature registration.
     /// Not thread safe.
-    /// </summary>
-    /// 
-    /// 
+    /// </remarks>
+    /// <typeparam name="T">the data signature type</typeparam>
+    /// <typeparam name="V">the data type</typeparam>
     public class EventDataCacheQueueBased<T, V> : IEventDataCache<T, V>
         where V : EventData<T> {
         private IDictionary<T, V> map = new Dictionary<T, V>();

@@ -53,7 +53,6 @@ namespace iText.IO.Image {
         /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
         /// 	</param>
         /// <returns>RawImage</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static ImageData GetImage(System.Drawing.Image image, Color? color) {
             return GetImage(image, color, false);
         }

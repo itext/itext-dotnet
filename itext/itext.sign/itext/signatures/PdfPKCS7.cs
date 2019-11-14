@@ -70,6 +70,8 @@ namespace iText.Signatures {
     public class PdfPKCS7 {
         private SignaturePolicyIdentifier signaturePolicyIdentifier;
 
+        // Encryption provider
+        // Signature info
         /// <summary>Holds value of property signName.</summary>
         private String signName;
 
@@ -82,21 +84,16 @@ namespace iText.Signatures {
         /// <summary>Holds value of property signDate.</summary>
         private DateTime signDate;
 
+        // Constructors for creating new signatures
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
         /// <param name="privKey">the private key</param>
         /// <param name="certChain">the certificate chain</param>
         /// <param name="interfaceDigest">the interface digest</param>
         /// <param name="hashAlgorithm">the hash algorithm</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
-        /// <param name="hasRSAdata"><CODE>true</CODE> if the sub-filter is adbe.pkcs7.sha1</param>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException">on error</exception>
-        /// <exception cref="Java.Security.NoSuchProviderException">on error</exception>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
+        /// <param name="hasRSAdata"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
         public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm, bool hasRSAdata
             ) {
-            // Encryption provider
-            // Signature info
-            // Constructors for creating new signatures
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             if (digestAlgorithmOid == null) {
@@ -137,12 +134,12 @@ namespace iText.Signatures {
             }
         }
 
+        // Constructors for validating existing signatures
         /// <summary>Use this constructor if you want to verify a signature using the sub-filter adbe.x509.rsa_sha1.</summary>
         /// <param name="contentsKey">the /Contents key</param>
         /// <param name="certsKey">the /Cert key</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         public PdfPKCS7(byte[] contentsKey, byte[] certsKey) {
-            // Constructors for validating existing signatures
             try {
                 certs = SignUtils.ReadAllCerts(certsKey);
                 signCerts = certs;
@@ -164,7 +161,7 @@ namespace iText.Signatures {
         /// <summary>Use this constructor if you want to verify a signature.</summary>
         /// <param name="contentsKey">the /Contents key</param>
         /// <param name="filterSubtype">the filtersubtype</param>
-        /// <param name="provider">the provider or <code>null</code> for the default provider</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         public PdfPKCS7(byte[] contentsKey, PdfName filterSubtype) {
             this.filterSubtype = filterSubtype;
             isTsp = PdfName.ETSI_RFC3161.Equals(filterSubtype);
@@ -463,13 +460,13 @@ namespace iText.Signatures {
             this.signDate = signDate;
         }
 
+        // version info
         /// <summary>Version of the PKCS#7 object</summary>
         private int version = 1;
 
         /// <summary>Version of the PKCS#7 "SignerInfo" object.</summary>
         private int signerversion = 1;
 
-        // version info
         /// <summary>Get the version of the PKCS#7 object.</summary>
         /// <returns>the version of the PKCS#7 object.</returns>
         public virtual int GetVersion() {
@@ -482,8 +479,8 @@ namespace iText.Signatures {
             return signerversion;
         }
 
-        /// <summary>The ID of the digest algorithm, e.g.</summary>
-        /// <remarks>The ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</remarks>
+        // Message digest algorithm
+        /// <summary>The ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
         private String digestAlgorithmOid;
 
         /// <summary>The object that will create the digest</summary>
@@ -497,52 +494,48 @@ namespace iText.Signatures {
 
         private PdfName filterSubtype;
 
-        // Message digest algorithm
-        /// <summary>Getter for the ID of the digest algorithm, e.g.</summary>
-        /// <remarks>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1"</remarks>
+        /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1"</summary>
         public virtual String GetDigestAlgorithmOid() {
             return digestAlgorithmOid;
         }
 
-        /// <summary>Returns the name of the digest algorithm, e.g.</summary>
-        /// <remarks>Returns the name of the digest algorithm, e.g. "SHA256".</remarks>
+        /// <summary>Returns the name of the digest algorithm, e.g. "SHA256".</summary>
         /// <returns>the digest algorithm name, e.g. "SHA256"</returns>
         public virtual String GetHashAlgorithm() {
             return DigestAlgorithms.GetDigest(digestAlgorithmOid);
         }
 
+        // Encryption algorithm
         /// <summary>The encryption algorithm.</summary>
         private String digestEncryptionAlgorithmOid;
 
-        // Encryption algorithm
         /// <summary>Getter for the digest encryption algorithm</summary>
         public virtual String GetDigestEncryptionAlgorithmOid() {
             return digestEncryptionAlgorithmOid;
         }
 
-        /// <summary>Get the algorithm used to calculate the message digest, e.g.</summary>
-        /// <remarks>Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".</remarks>
+        /// <summary>Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".</summary>
         /// <returns>the algorithm used to calculate the message digest</returns>
         public virtual String GetDigestAlgorithm() {
             return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
         }
 
+        /*
+        *	DIGITAL SIGNATURE CREATION
+        */
+        // The signature is created externally
         /// <summary>The signed digest if created outside this class</summary>
         private byte[] externalDigest;
 
         /// <summary>External RSA data</summary>
         private byte[] externalRsaData;
 
-        /*
-        *	DIGITAL SIGNATURE CREATION
-        */
-        // The signature is created externally
         /// <summary>Sets the digest/signature to an external calculated value.</summary>
         /// <param name="digest">the digest. This is the actual signature</param>
         /// <param name="rsaData">the extra data that goes into the data tag in PKCS#7</param>
         /// <param name="digestEncryptionAlgorithm">
-        /// the encryption algorithm. It may must be <CODE>null</CODE> if the <CODE>digest</CODE>
-        /// is also <CODE>null</CODE>. If the <CODE>digest</CODE> is not <CODE>null</CODE>
+        /// the encryption algorithm. It may must be <c>null</c> if the <c>digest</c>
+        /// is also <c>null</c>. If the <c>digest</c> is not <c>null</c>
         /// then it may be "RSA" or "DSA"
         /// </param>
         public virtual void SetExternalDigest(byte[] digest, byte[] rsaData, String digestEncryptionAlgorithm) {
@@ -568,6 +561,7 @@ namespace iText.Signatures {
             }
         }
 
+        // The signature is created internally
         /// <summary>Class from the Java SDK that provides the functionality of a digital signature algorithm.</summary>
         private ISigner sig;
 
@@ -577,20 +571,13 @@ namespace iText.Signatures {
         /// <summary>The RSA data</summary>
         private byte[] rsaData;
 
-        // The signature is created internally
         // Signing functionality.
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
         private ISigner InitSignature(ICipherParameters key) {
             ISigner signature = SignUtils.GetSignatureHelper(GetDigestAlgorithm());
             signature.InitSign(key);
             return signature;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.NoSuchProviderException"/>
-        /// <exception cref="Org.BouncyCastle.Security.InvalidKeyException"/>
         private ISigner InitSignature(AsymmetricKeyParameter key) {
             String digestAlgorithm = GetDigestAlgorithm();
             if (PdfName.Adbe_x509_rsa_sha1.Equals(GetFilterSubtype())) {
@@ -609,7 +596,6 @@ namespace iText.Signatures {
         /// <param name="buf">the data buffer</param>
         /// <param name="off">the offset in the data buffer</param>
         /// <param name="len">the data length</param>
-        /// <exception cref="Java.Security.SignatureException">on error</exception>
         public virtual void Update(byte[] buf, int off, int len) {
             if (rsaData != null || digestAttr != null || isTsp) {
                 messageDigest.Update(buf, off, len);
@@ -651,7 +637,7 @@ namespace iText.Signatures {
         /// <summary>Gets the bytes for the PKCS7SignedData object.</summary>
         /// <remarks>
         /// Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
-        /// in the signerInfo can also be set. If either of the parameters is <CODE>null</CODE>, none will be used.
+        /// in the signerInfo can also be set. If either of the parameters is <c>null</c>, none will be used.
         /// </remarks>
         /// <param name="secondDigest">the digest in the authenticatedAttributes</param>
         /// <returns>the bytes for the PKCS7SignedData object</returns>
@@ -821,7 +807,6 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="timeStampToken">byte[] - time stamp token, DER encoded signedData</param>
         /// <returns>ASN1EncodableVector</returns>
-        /// <exception cref="System.IO.IOException"/>
         private Asn1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken) {
             if (timeStampToken == null) {
                 return null;
@@ -847,8 +832,7 @@ namespace iText.Signatures {
         /// The document digest is generated and put inside the attribute. The signing is done over the DER encoded
         /// authenticatedAttributes. This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
         /// <para />
@@ -890,8 +874,7 @@ namespace iText.Signatures {
         /// The document digest is generated and put inside the attribute. The signing is done over the DER encoded
         /// authenticatedAttributes. This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
         /// <para />
@@ -933,8 +916,7 @@ namespace iText.Signatures {
         /// <summary>
         /// This method provides that encoding and the parameters must be
         /// exactly the same as in
-        /// <see cref="GetEncodedPKCS7(byte[])"/>
-        /// .
+        /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// </summary>
         /// <param name="secondDigest">the content digest</param>
         /// <returns>the byte array representation of the authenticatedAttributes ready to be signed</returns>
@@ -1015,6 +997,9 @@ namespace iText.Signatures {
             }
         }
 
+        /*
+        *	DIGITAL SIGNATURE VERIFICATION
+        */
         /// <summary>Signature attributes</summary>
         private byte[] sigAttr;
 
@@ -1024,25 +1009,16 @@ namespace iText.Signatures {
         /// <summary>encrypted digest</summary>
         private IDigest encContDigest;
 
+        // Stefan Santesson
         /// <summary>Indicates if a signature has already been verified</summary>
         private bool verified;
 
         /// <summary>The result of the verification</summary>
         private bool verifyResult;
 
-        /*
-        *	DIGITAL SIGNATURE VERIFICATION
-        */
-        // Stefan Santesson
         // verification
         /// <summary>Verify the digest.</summary>
-        /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
-        /// if this signature object is not initialized properly,
-        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
-        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
-        /// are not recognized, etc.
-        /// </exception>
+        /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
         [System.ObsoleteAttribute(@"This method will be removed in future versions. Please use VerifySignatureIntegrityAndAuthenticity() instead."
             )]
         public virtual bool Verify() {
@@ -1067,13 +1043,7 @@ namespace iText.Signatures {
         /// <see cref="SignatureUtil.SignatureCoversWholeDocument(System.String)"/>
         /// method.
         /// </remarks>
-        /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">
-        /// if this signature object is not initialized properly,
-        /// the passed-in signature is improperly encoded or of the wrong type, if this signature algorithm is unable to
-        /// process the input data provided, if the public key is invalid or if security provider or signature algorithm
-        /// are not recognized, etc.
-        /// </exception>
+        /// <returns><c>true</c> if the signature checks out, <c>false</c> otherwise</returns>
         public virtual bool VerifySignatureIntegrityAndAuthenticity() {
             if (verified) {
                 return verifyResult;
@@ -1112,7 +1082,6 @@ namespace iText.Signatures {
             return verifyResult;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private bool VerifySigAttributes(byte[] attr) {
             ISigner signature = InitSignature(signCert.GetPublicKey());
             signature.Update(attr);
@@ -1121,7 +1090,6 @@ namespace iText.Signatures {
 
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException">on error</exception>
         public virtual bool VerifyTimestampImprint() {
             // TODO ensure this method works correctly
             if (timeStampToken == null) {
@@ -1135,6 +1103,7 @@ namespace iText.Signatures {
             return JavaUtil.ArraysEquals(md, imphashed);
         }
 
+        // Certificates
         /// <summary>All the X.509 certificates in no particular order.</summary>
         private ICollection<X509Certificate> certs;
 
@@ -1144,7 +1113,6 @@ namespace iText.Signatures {
         /// <summary>The X.509 certificate that is used to sign the digest.</summary>
         private X509Certificate signCert;
 
-        // Certificates
         /// <summary>Get all the X.509 certificates associated with this PKCS#7 object in no particular order.</summary>
         /// <remarks>
         /// Get all the X.509 certificates associated with this PKCS#7 object in no particular order.
@@ -1204,9 +1172,9 @@ namespace iText.Signatures {
             signCerts = cc;
         }
 
+        // Certificate Revocation Lists
         private ICollection<X509Crl> crls;
 
-        // Certificate Revocation Lists
         /// <summary>Get the X.509 certificate revocation lists associated with this PKCS#7 object</summary>
         /// <returns>the X.509 certificate revocation lists associated with this PKCS#7 object</returns>
         public virtual ICollection<X509Crl> GetCRLs() {
@@ -1228,11 +1196,11 @@ namespace iText.Signatures {
             }
         }
 
+        // ignore
+        // Online Certificate Status Protocol
         /// <summary>BouncyCastle BasicOCSPResp</summary>
         private BasicOcspResp basicResp;
 
-        // ignore
-        // Online Certificate Status Protocol
         /// <summary>Gets the OCSP basic response if there is one.</summary>
         /// <returns>the OCSP basic response or null</returns>
         public virtual BasicOcspResp GetOcsp() {
@@ -1264,7 +1232,6 @@ namespace iText.Signatures {
 
         /// <summary>Helper method that creates the BasicOCSPResp object.</summary>
         /// <param name="seq"/>
-        /// <exception cref="System.IO.IOException"/>
         private void FindOcsp(Asn1Sequence seq) {
             basicResp = (BasicOcspResp)null;
             bool ret = false;
@@ -1302,6 +1269,7 @@ namespace iText.Signatures {
             basicResp = new BasicOcspResp(resp);
         }
 
+        // Time Stamps
         /// <summary>True if there's a PAdES LTV time stamp.</summary>
         private bool isTsp;
 
@@ -1311,7 +1279,6 @@ namespace iText.Signatures {
         /// <summary>BouncyCastle TimeStampToken.</summary>
         private TimeStampToken timeStampToken;
 
-        // Time Stamps
         /// <summary>Check if it's a PAdES-LTV time stamp.</summary>
         /// <returns>true if it's a PAdES-LTV time stamp, false otherwise</returns>
         public virtual bool IsTsp() {

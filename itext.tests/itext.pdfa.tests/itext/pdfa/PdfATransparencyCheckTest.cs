@@ -70,7 +70,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TextTransparencyNoOutputIntentTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -96,8 +95,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TransparentTextWithGroupColorSpaceTest() {
             String outPdf = destinationFolder + "transparencyAndCS.pdf";
@@ -126,7 +123,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ImageTransparencyTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -180,8 +176,6 @@ namespace iText.Pdfa {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestTransparencyObjectsAbsence() {
             String outPdf = destinationFolder + "transparencyObjectsAbsence.pdf";
@@ -200,8 +194,6 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

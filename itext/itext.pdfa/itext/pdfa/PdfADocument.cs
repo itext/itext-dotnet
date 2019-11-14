@@ -58,6 +58,12 @@ namespace iText.Pdfa {
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
     /// and is in charge of creating files
     /// that comply with the PDF/A standard.
+    /// </summary>
+    /// <remarks>
+    /// This class extends
+    /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+    /// and is in charge of creating files
+    /// that comply with the PDF/A standard.
     /// Client code is still responsible for making sure the file is actually PDF/A
     /// compliant: multiple steps must be undertaken (depending on the
     /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
@@ -67,13 +73,12 @@ namespace iText.Pdfa {
     /// ,
     /// and thus refuse to output a PDF/A file if at any point the document does not
     /// adhere to the PDF/A guidelines specified by the
-    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
-    /// .
-    /// </summary>
+    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>.
+    /// </remarks>
     public class PdfADocument : PdfDocument {
         protected internal PdfAChecker checker;
 
-        /// <summary>Constructs a new PdfADocument for writing purposes, i.e.</summary>
+        /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
         /// PDF/A file has a conformance level, and must have an explicit output
@@ -93,7 +98,7 @@ namespace iText.Pdfa {
             : this(writer, conformanceLevel, outputIntent, new DocumentProperties()) {
         }
 
-        /// <summary>Constructs a new PdfADocument for writing purposes, i.e.</summary>
+        /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
         /// PDF/A file has a conformance level, and must have an explicit output
@@ -229,8 +234,7 @@ namespace iText.Pdfa {
         /// <summary>
         /// Gets the PdfAConformanceLevel set in the constructor or in the metadata
         /// of the
-        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>.
         /// </summary>
         /// <returns>
         /// a
@@ -274,7 +278,6 @@ namespace iText.Pdfa {
             checker.CheckDocument(catalog);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             MarkObjectAsMustBeFlushed(pdfObject);
             if (isClosing || checker.ObjectIsChecked(pdfObject)) {

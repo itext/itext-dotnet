@@ -54,6 +54,8 @@ namespace iText.Kernel.Pdf.Filters {
     /// via a lookup.
     /// </remarks>
     public sealed class FilterHandlers {
+        // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
+        // it may also be better to split the sub-classes out into a separate package
         /// <summary>
         /// The default
         /// <see cref="IFilterHandler"/>
@@ -62,8 +64,6 @@ namespace iText.Kernel.Pdf.Filters {
         private static readonly IDictionary<PdfName, IFilterHandler> defaults;
 
         static FilterHandlers() {
-            // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
-            // it may also be better to split the sub-classes out into a separate package
             IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler>();
             map.Put(PdfName.FlateDecode, new FlateDecodeFilter());
             map.Put(PdfName.Fl, new FlateDecodeFilter());

@@ -71,12 +71,17 @@ namespace iText.Svg.Renderers.Impl {
         /// Parses a string of space separated x,y pairs into individual
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects and appends them to
-        /// <see cref="points"/>
-        /// .
+        /// <see cref="points"/>.
+        /// </summary>
+        /// <remarks>
+        /// Parses a string of space separated x,y pairs into individual
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// objects and appends them to
+        /// <see cref="points"/>.
         /// Throws an
         /// <see cref="iText.Svg.Exceptions.SvgProcessingException"/>
         /// if pointsAttribute does not have a valid list of numerical x,y pairs.
-        /// </summary>
+        /// </remarks>
         /// <param name="pointsAttribute">A string of space separated x,y value pairs</param>
         protected internal virtual void SetPoints(String pointsAttribute) {
             if (pointsAttribute == null) {

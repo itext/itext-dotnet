@@ -70,8 +70,6 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PadesSignatureLevelTTest01() {
             String outFileName = destinationFolder + "padesSignatureLevelTTest01.pdf";
@@ -93,8 +91,6 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PadesSignatureLevelLTTest01() {
             String outFileName = destinationFolder + "padesSignatureLevelLTTest01.pdf";
@@ -118,8 +114,6 @@ namespace iText.Signatures.Sign {
             BasicCheckDssDict("padesSignatureLevelLTTest01.pdf");
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PadesSignatureLevelLTATest01() {
             String outFileName = destinationFolder + "padesSignatureLevelLTATest01.pdf";
@@ -134,7 +128,6 @@ namespace iText.Signatures.Sign {
             PadesSigTest.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelLTATest01.pdf", "timestampSig1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void BasicCheckDssDict(String fileName) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(destinationFolder + fileName));
             PdfDictionary dssDict = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);

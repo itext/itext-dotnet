@@ -71,15 +71,13 @@ namespace iText.IO.Util {
         /// This method is an alternative for the
         /// <c>InputStream.skip()</c>
         /// -method that doesn't seem to work properly for big values of
-        /// <paramref name="size"/>
-        /// .
+        /// <paramref name="size"/>.
         /// </summary>
         /// <param name="stream">
         /// the
         /// <c>InputStream</c>
         /// </param>
         /// <param name="size">the number of bytes to skip</param>
-        /// <exception cref="System.IO.IOException"/>
         public static void Skip(Stream stream, long size) {
             long n;
             while (size > 0) {
@@ -214,7 +212,6 @@ namespace iText.IO.Util {
             return buf;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void TransferBytes(Stream input, Stream output) {
             byte[] buffer = new byte[TRANSFER_SIZE];
             for (; ; ) {
@@ -228,7 +225,6 @@ namespace iText.IO.Util {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void TransferBytes(RandomAccessFileOrArray input, Stream output) {
             byte[] buffer = new byte[TRANSFER_SIZE];
             for (; ; ) {
@@ -245,7 +241,6 @@ namespace iText.IO.Util {
         /// <summary>Reads the full content of a stream and returns them in a byte array</summary>
         /// <param name="stream">the stream to read</param>
         /// <returns>a byte array containing all of the bytes from the stream</returns>
-        /// <exception cref="System.IO.IOException">if there is a problem reading from the input stream</exception>
         public static byte[] InputStreamToArray(Stream stream) {
             byte[] b = new byte[8192];
             MemoryStream output = new MemoryStream();
@@ -264,8 +259,7 @@ namespace iText.IO.Util {
         /// Copy bytes from the
         /// <c>RandomAccessSource</c>
         /// to
-        /// <c>OutputStream</c>
-        /// .
+        /// <c>OutputStream</c>.
         /// </summary>
         /// <param name="source">
         /// the
@@ -279,7 +273,6 @@ namespace iText.IO.Util {
         /// <c>OutputStream</c>
         /// copy to.
         /// </param>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         public static void CopyBytes(IRandomAccessSource source, long start, long length, Stream output) {
             if (length <= 0) {
                 return;
@@ -305,15 +298,6 @@ namespace iText.IO.Util {
         /// <param name="b">the buffer into which the data is read.</param>
         /// <param name="off">an int specifying the offset into the data.</param>
         /// <param name="len">an int specifying the number of bytes to read.</param>
-        /// <exception>
-        /// EOFException
-        /// if this stream reaches the end before reading all the bytes.
-        /// </exception>
-        /// <exception>
-        /// IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
         public static void ReadFully(Stream input, byte[] b, int off, int len) {
             if (len < 0) {
                 throw new IndexOutOfRangeException();

@@ -48,7 +48,7 @@ using Org.BouncyCastle.X509;
 
 namespace iText.Signatures {
     /// <summary>
-    /// Verifies a certificate against a <code>KeyStore</code>
+    /// Verifies a certificate against a <c>KeyStore</c>
     /// containing trusted anchors.
     /// </summary>
     public class RootStoreVerifier : CertificateVerifier {
@@ -72,11 +72,9 @@ namespace iText.Signatures {
         /// <param name="issuerCert">the issuer certificate</param>
         /// <param name="signDate">the date the certificate needs to be valid</param>
         /// <returns>
-        /// a list of <code>VerificationOK</code> objects.
+        /// a list of <c>VerificationOK</c> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
              signDate) {
             // verify using the CertificateVerifier if root store is missing

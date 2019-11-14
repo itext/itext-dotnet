@@ -96,7 +96,6 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual("12px", resolvedStyles.Get(SvgConstants.Attributes.FONT_SIZE));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmptyStreamTest() {
             ICssResolver styleResolver = new SvgStyleResolver(new MemoryStream(new byte[] {  }));
@@ -107,7 +106,6 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual(0, resolvedStyles.Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EmptyStylesFallbackTest() {
             NUnit.Framework.Assert.That(() =>  {

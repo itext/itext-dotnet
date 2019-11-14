@@ -60,8 +60,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
-        /// <param name="document">a document the indirect reference will belong to.</param>
-        /// <param name="reference"/>
+        /// <param name="document">a document the indirect reference belongs to.</param>
+        /// <param name="reference">a reference which will be assigned for the object behind wrapper.</param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
              reference) {
@@ -142,6 +142,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Some wrappers use object's indirect reference to obtain the
         /// <c>PdfDocument</c>
+        /// to which the object belongs to.
+        /// </summary>
+        /// <remarks>
+        /// Some wrappers use object's indirect reference to obtain the
+        /// <c>PdfDocument</c>
         /// to which the object belongs to. For this matter, for these wrappers it is implicitly defined
         /// that they work with indirect objects only. Commonly these wrappers have two constructors: one with
         /// <c>PdfDocument</c>
@@ -152,7 +157,7 @@ namespace iText.Kernel.Pdf {
         /// type of constructors to ensure that wrapper will able to obtain the
         /// <c>PdfDocument</c>
         /// instance.
-        /// </summary>
+        /// </remarks>
         /// <param name="object">
         /// the
         /// <c>PdfObject</c>

@@ -46,11 +46,12 @@ using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Document.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class DocumentTest {
+    public class DocumentTest : ExtendedITextTest {
         private const String charsetUtf8 = "UTF-8";
 
         private const String charsetIso8859 = "ISO-8859-1";
@@ -133,7 +134,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 , TextUtil.StripNewlines(clone.Html()));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestLocation() {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/yahoo-jp.html");
@@ -157,10 +157,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void TestHtmlAndXmlSyntax() {
             String h = "<!DOCTYPE html><body><img async checked='checked' src='&<>\"'>&lt;&gt;&amp;&quot;<foo />bar";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
-            doc.OutputSettings().Syntax(Syntax.html);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.html);
             NUnit.Framework.Assert.AreEqual("<!doctype html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async checked src=\"&amp;<>&quot;\">&lt;&gt;&amp;\"\n"
                  + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             NUnit.Framework.Assert.AreEqual("<!DOCTYPE html>\n" + "<html>\n" + " <head></head>\n" + " <body>\n" + "  <img async=\"\" checked=\"checked\" src=\"&amp;<>&quot;\" />&lt;&gt;&amp;\"\n"
                  + "  <foo />bar\n" + " </body>\n" + "</html>", doc.Html());
         }
@@ -168,7 +168,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void HtmlParseDefaultsToHtmlOutputSyntax() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("x");
-            NUnit.Framework.Assert.AreEqual(Syntax.html, doc.OutputSettings().Syntax());
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Nodes.Syntax.html, doc.OutputSettings().Syntax
+                ());
         }
 
         [NUnit.Framework.Test]
@@ -193,7 +194,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             doc.Clone();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DocumentsWithSameContentAreEqual() {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
@@ -205,7 +205,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.IsFalse(docA.GetHashCode() == docC.GetHashCode());
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DocumentsWithSameContentAreVerifialbe() {
             Document docA = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div/>One");
@@ -368,7 +367,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private Document CreateXmlDocument(String version, String charset, bool addDecl) {
             Document doc = new Document("");
             doc.AppendElement("root").Text("node");
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             if (addDecl == true) {
                 XmlDeclaration decl = new XmlDeclaration("xml", "", false);
                 decl.Attr("version", version);
@@ -378,7 +377,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return doc;
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestShiftJisRoundtrip() {
             String input = "<html>" + "<head>" + "<meta http-equiv=\"content-type\" content=\"text/html; charset=Shift_JIS\" />"

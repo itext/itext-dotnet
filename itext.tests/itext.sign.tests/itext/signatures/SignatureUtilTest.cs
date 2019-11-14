@@ -50,7 +50,6 @@ namespace iText.Signatures {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/SignatureUtilTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetSignaturesTest01() {
             String inPdf = sourceFolder + "simpleSignature.pdf";
@@ -61,7 +60,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual("Signature1", signatureNames[0]);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetSignaturesTest02() {
             String inPdf = sourceFolder + "simpleDocument.pdf";
@@ -71,7 +69,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(0, signatureNames.Count);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FirstBytesNotCoveredTest01() {
             String inPdf = sourceFolder + "firstBytesNotCoveredTest01.pdf";
@@ -80,7 +77,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void LastBytesNotCoveredTest01() {
             String inPdf = sourceFolder + "lastBytesNotCoveredTest01.pdf";
@@ -89,7 +85,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void LastBytesNotCoveredTest02() {
             String inPdf = sourceFolder + "lastBytesNotCoveredTest02.pdf";
@@ -98,7 +93,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BytesAreNotCoveredTest01() {
             String inPdf = sourceFolder + "bytesAreNotCoveredTest01.pdf";
@@ -107,7 +101,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BytesAreCoveredTest01() {
             String inPdf = sourceFolder + "bytesAreCoveredTest01.pdf";
@@ -116,7 +109,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BytesAreCoveredTest02() {
             String inPdf = sourceFolder + "bytesAreCoveredTest02.pdf";
@@ -125,7 +117,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("sig"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TwoContentsTest01() {
             String inPdf = sourceFolder + "twoContentsTest01.pdf";
@@ -134,7 +125,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SpacesBeforeContentsTest01() {
             String inPdf = sourceFolder + "spacesBeforeContentsTest01.pdf";
@@ -143,7 +133,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SpacesBeforeContentsTest02() {
             String inPdf = sourceFolder + "spacesBeforeContentsTest02.pdf";
@@ -152,7 +141,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void NotIndirectSigDictionaryTest() {
             String inPdf = sourceFolder + "notIndirectSigDictionaryTest.pdf";

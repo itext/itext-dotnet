@@ -283,8 +283,8 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[] substGlyphIds) {
-            int substCode = substGlyphIds[0];
             //sequence length shall be at least 1
+            int substCode = substGlyphIds[0];
             Glyph glyph = tableReader.GetGlyph(substCode);
             glyphs[idx] = glyph;
             if (substGlyphIds.Length > 1) {
@@ -414,6 +414,7 @@ namespace iText.IO.Font.Otf {
 
             public int end;
 
+            // Might be null if it's not necessary
             public String actualText;
 
             public bool reversed;
@@ -423,7 +424,6 @@ namespace iText.IO.Font.Otf {
             }
 
             public GlyphLinePart(int start, int end, String actualText) {
-                // Might be null if it's not necessary
                 this.start = start;
                 this.end = end;
                 this.actualText = actualText;

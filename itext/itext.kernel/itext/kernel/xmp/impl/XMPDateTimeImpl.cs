@@ -120,8 +120,6 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>Creates an <code>XMPDateTime</code>-instance from an ISO 8601 string.</summary>
 		/// <param name="strValue">an ISO 8601 string</param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
-		/// 	</exception>
 		public XMPDateTimeImpl(String strValue)
 		{
 			ISO8601Converter.Parse(strValue, this);

@@ -42,11 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests that the selector selects correctly.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class SelectorTest {
+    public class SelectorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestByTag() {
             Elements els = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1><div id=2><p>Hello</p></div></div><div id=3>"

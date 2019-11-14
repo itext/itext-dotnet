@@ -46,14 +46,12 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Layout {
     /// <summary>
     /// Represents the result of a text
-    /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
-    /// .
+    /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>.
     /// </summary>
     public class TextLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>
         /// Indicates whether some word was splitted during
-        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>.
         /// </summary>
         protected internal bool wordHasBeenSplit;
 
@@ -66,10 +64,17 @@ namespace iText.Layout.Layout {
         /// result of
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layouting</see>
         /// }.
+        /// </summary>
+        /// <remarks>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
         /// The
         /// <see cref="LayoutResult.causeOfNothing"/>
         /// will be set as null.
-        /// </summary>
+        /// </remarks>
         /// <param name="status">
         /// the status of
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)"/>
@@ -107,10 +112,13 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Indicates whether some word in a rendered text was splitted during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>
-        /// .
-        /// The value will be set as true if, for example, the rendered words width is bigger than the width of layout area.
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// </summary>
+        /// <remarks>
+        /// Indicates whether some word in a rendered text was splitted during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
+        /// The value will be set as true if, for example, the rendered words width is bigger than the width of layout area.
+        /// </remarks>
         /// <returns>whether some word was splitted or not.</returns>
         public virtual bool IsWordHasBeenSplit() {
             return wordHasBeenSplit;
@@ -122,8 +130,7 @@ namespace iText.Layout.Layout {
         /// </summary>
         /// <param name="wordHasBeenSplit">
         /// indicates that some word was splitted during
-        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>
-        /// .
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// </param>
         /// <returns>
         /// 

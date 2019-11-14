@@ -101,7 +101,7 @@ namespace iText.Svg.Utils {
         /// <param name="headChildElement">the head child element</param>
         /// <returns>true, if the element node represents a style sheet link</returns>
         public static bool IsStyleSheetLink(IElementNode headChildElement) {
-            return headChildElement.Name().Equals(SvgConstants.Tags.LINK) && SvgConstants.Attributes.STYLESHEET.Equals(headChildElement
+            return SvgConstants.Tags.LINK.Equals(headChildElement.Name()) && SvgConstants.Attributes.STYLESHEET.Equals(headChildElement
                 .GetAttribute(SvgConstants.Attributes.REL));
         }
     }

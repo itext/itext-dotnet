@@ -123,7 +123,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return accum.ToString();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Html(StringBuilder accum, OutputSettings @out) {
             accum.Append(key);
             if (!ShouldCollapseAttribute(@out)) {

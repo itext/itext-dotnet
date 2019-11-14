@@ -46,13 +46,16 @@ using iText.Kernel.Counter.Event;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Interface that is responsible for creating new instance of
-    /// <see cref="EventData{T}"/>
-    /// .
+    /// <see cref="EventData{T}"/>.
+    /// </summary>
+    /// <remarks>
+    /// Interface that is responsible for creating new instance of
+    /// <see cref="EventData{T}"/>.
     /// Used in
     /// <see cref="EventDataHandler{T, V}"/>
-    /// </summary>
-    /// 
-    /// 
+    /// </remarks>
+    /// <typeparam name="T">data signature type</typeparam>
+    /// <typeparam name="V">data type</typeparam>
     public interface IEventDataFactory<T, V>
         where V : EventData<T> {
         V Create(IEvent @event, IMetaInfo metaInfo);

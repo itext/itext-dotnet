@@ -73,7 +73,7 @@ namespace iText.Forms.Fields {
             : base(pdfObject) {
         }
 
-        /// <summary>Returns <code>Btn</code>, the form type for choice form fields.</summary>
+        /// <summary>Returns <c>Btn</c>, the form type for choice form fields.</summary>
         /// <returns>
         /// the form type, as a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -192,7 +192,6 @@ namespace iText.Forms.Fields {
             return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON, radiosInUnison);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual iText.Forms.Fields.PdfButtonFormField SetImage(String image) {
             Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
             String str = Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));

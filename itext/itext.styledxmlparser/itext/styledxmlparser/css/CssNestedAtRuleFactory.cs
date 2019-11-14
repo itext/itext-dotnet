@@ -74,9 +74,9 @@ namespace iText.StyledXmlParser.Css {
             ruleDeclaration = ruleDeclaration.Trim();
             String ruleName = ExtractRuleNameFromDeclaration(ruleDeclaration);
             String ruleParameters = ruleDeclaration.Substring(ruleName.Length).Trim();
+            //TODO (RND-863) consider media rules in SVG
             switch (ruleName) {
                 case CssRuleName.MEDIA: {
-                    //TODO (RND-863) consider media rules in SVG
                     return new CssMediaRule(ruleParameters);
                 }
 
@@ -100,11 +100,11 @@ namespace iText.StyledXmlParser.Css {
                 case CssRuleName.BOTTOM_CENTER:
                 case CssRuleName.BOTTOM_RIGHT:
                 case CssRuleName.BOTTOM_RIGHT_CORNER: {
-                    return new CssMarginRule(ruleName, ruleParameters);
+                    return new CssMarginRule(ruleName);
                 }
 
                 case CssRuleName.FONT_FACE: {
-                    return new CssFontFaceRule(ruleParameters);
+                    return new CssFontFaceRule();
                 }
 
                 default: {

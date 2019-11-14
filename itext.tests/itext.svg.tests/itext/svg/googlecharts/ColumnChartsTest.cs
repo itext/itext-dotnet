@@ -47,38 +47,29 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class ColumnChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/column_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/ColumnChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/column_charts/";
+             + "/test/itext/svg/googlecharts/ColumnChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Column_dualY_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "column_dualY_chart");
+        public virtual void ColumnDualYChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "columnDualYChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Column_material_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "column_material_chart");
+        public virtual void ColumnMaterialChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "columnMaterialChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Column_topX_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "column_topX_chart");
+        public virtual void ColumnTopXChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "columnTopXChart");
         }
     }
 }

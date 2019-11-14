@@ -29,6 +29,9 @@
 namespace iText.IO.Codec {
     /// <summary>A list of constants used in class TIFFImage.</summary>
     public class TIFFConstants {
+        /*
+        * TIFF Tag Definitions (from tifflib).
+        */
         /// <summary>subfile data descriptor</summary>
         public const int TIFFTAG_SUBFILETYPE = 254;
 
@@ -98,6 +101,7 @@ namespace iText.IO.Codec {
         /// <summary>ThunderScan RLE</summary>
         public const int COMPRESSION_THUNDERSCAN = 32809;
 
+        /* codes 32895-32898 are reserved for ANSI IT8 TIFF/IT <dkelly@etsinc.com) */
         /// <summary>IT8 CT w/padding</summary>
         public const int COMPRESSION_IT8CTPAD = 32895;
 
@@ -110,6 +114,7 @@ namespace iText.IO.Codec {
         /// <summary>IT8 Binary line art</summary>
         public const int COMPRESSION_IT8BL = 32898;
 
+        /* compression codes 32908-32911 are reserved for Pixar */
         /// <summary>Pixar companded 10bit LZW</summary>
         public const int COMPRESSION_PIXARFILM = 32908;
 
@@ -122,6 +127,7 @@ namespace iText.IO.Codec {
         /// <summary>Deflate compression, as recognized by Adobe</summary>
         public const int COMPRESSION_ADOBE_DEFLATE = 8;
 
+        /* compression code 32947 is reserved for Oceana Matrix <dev@oceana.com> */
         /// <summary>Kodak DCS encoding</summary>
         public const int COMPRESSION_DCS = 32947;
 
@@ -486,6 +492,10 @@ namespace iText.IO.Codec {
         /// <summary>%JPEG table stream</summary>
         public const int TIFFTAG_JPEGTABLES = 347;
 
+        /*
+        * Tags 512-521 are obsoleted by Technical Note #2
+        * which specifies a revised JPEG-in-TIFF scheme.
+        */
         /// <summary>!JPEG processing algorithm</summary>
         public const int TIFFTAG_JPEGPROC = 512;
 
@@ -537,6 +547,7 @@ namespace iText.IO.Codec {
         /// <summary>!colorimetry info</summary>
         public const int TIFFTAG_REFERENCEBLACKWHITE = 532;
 
+        /* tags 32952-32956 are private tags registered to Island Graphics */
         /// <summary>image reference points</summary>
         public const int TIFFTAG_REFPTS = 32953;
 
@@ -549,6 +560,7 @@ namespace iText.IO.Codec {
         /// <summary>affine transformation mat</summary>
         public const int TIFFTAG_REGIONAFFINE = 32956;
 
+        /* tags 32995-32999 are private tags registered to SGI */
         /// <summary>$use ExtraSamples</summary>
         public const int TIFFTAG_MATTEING = 32995;
 
@@ -561,12 +573,20 @@ namespace iText.IO.Codec {
         /// <summary>z depth/data tile</summary>
         public const int TIFFTAG_TILEDEPTH = 32998;
 
+        /* tags 33300-33309 are private tags registered to Pixar
+        * TIFFTAG_PIXAR_IMAGEFULLWIDTH and TIFFTAG_PIXAR_IMAGEFULLLENGTH
+        * are set when an image has been cropped out of a larger image.
+        * They reflect the size of the original uncropped image.
+        * The TIFFTAG_XPOSITION and TIFFTAG_YPOSITION can be used
+        * to determine the position of the smaller image in the larger one.
+        */
         /// <summary>full image size in x</summary>
         public const int TIFFTAG_PIXAR_IMAGEFULLWIDTH = 33300;
 
         /// <summary>full image size in y</summary>
         public const int TIFFTAG_PIXAR_IMAGEFULLLENGTH = 33301;
 
+        /* Tags 33302-33306 are used to identify special image modes and data used by Pixar's texture formats. */
         /// <summary>texture map format</summary>
         public const int TIFFTAG_PIXAR_TEXTUREFORMAT = 33302;
 
@@ -592,9 +612,11 @@ namespace iText.IO.Codec {
         /// <summary>tag 33432 is listed in the 6.0 spec w/ unknown ownership</summary>
         public const int TIFFTAG_COPYRIGHT = 33432;
 
+        /* copyright string */
         /// <summary>IPTC TAG from RichTIFF specifications</summary>
         public const int TIFFTAG_RICHTIFFIPTC = 33723;
 
+        /* 34016-34029 are reserved for ANSI IT8 TIFF/IT <dkelly@etsinc.com) */
         /// <summary>site name</summary>
         public const int TIFFTAG_IT8SITE = 34016;
 
@@ -639,6 +661,7 @@ namespace iText.IO.Codec {
         /// <remarks>color character. table</remarks>
         public const int TIFFTAG_IT8COLORCHARACTERIZATION = 34029;
 
+        /* tags 34232-34236 are private tags registered to Texas Instruments */
         /// <summary>Sequence Frame Count</summary>
         public const int TIFFTAG_FRAMECOUNT = 34232;
 
@@ -657,6 +680,7 @@ namespace iText.IO.Codec {
         /// </summary>
         public const int TIFFTAG_JBIGOPTIONS = 34750;
 
+        /* tags 34908-34914 are private tags registered to SGI */
         /// <summary>encoded Class 2 ses.</summary>
         /// <remarks>encoded Class 2 ses. parms</remarks>
         public const int TIFFTAG_FAXRECVPARAMS = 34908;
@@ -667,6 +691,7 @@ namespace iText.IO.Codec {
         /// <summary>receive time (secs)</summary>
         public const int TIFFTAG_FAXRECVTIME = 34910;
 
+        /* tags 37439-37443 are registered to SGI <gregl@sgi.com> */
         /// <summary>Sample value to Nits</summary>
         public const int TIFFTAG_STONITS = 37439;
 
@@ -681,30 +706,5 @@ namespace iText.IO.Codec {
         /// tag 65535 is an undefined tag used by Eastman Kodak
         /// </summary>
         public const int TIFFTAG_DCSHUESHIFTVALUES = 65535;
-        /*
-        * TIFF Tag Definitions (from tifflib).
-        */
-        /* codes 32895-32898 are reserved for ANSI IT8 TIFF/IT <dkelly@etsinc.com) */
-        /* compression codes 32908-32911 are reserved for Pixar */
-        /* compression code 32947 is reserved for Oceana Matrix <dev@oceana.com> */
-        /*
-        * Tags 512-521 are obsoleted by Technical Note #2
-        * which specifies a revised JPEG-in-TIFF scheme.
-        */
-        /* tags 32952-32956 are private tags registered to Island Graphics */
-        /* tags 32995-32999 are private tags registered to SGI */
-        /* tags 33300-33309 are private tags registered to Pixar
-        * TIFFTAG_PIXAR_IMAGEFULLWIDTH and TIFFTAG_PIXAR_IMAGEFULLLENGTH
-        * are set when an image has been cropped out of a larger image.
-        * They reflect the size of the original uncropped image.
-        * The TIFFTAG_XPOSITION and TIFFTAG_YPOSITION can be used
-        * to determine the position of the smaller image in the larger one.
-        */
-        /* Tags 33302-33306 are used to identify special image modes and data used by Pixar's texture formats. */
-        /* copyright string */
-        /* 34016-34029 are reserved for ANSI IT8 TIFF/IT <dkelly@etsinc.com) */
-        /* tags 34232-34236 are private tags registered to Texas Instruments */
-        /* tags 34908-34914 are private tags registered to SGI */
-        /* tags 37439-37443 are registered to SGI <gregl@sgi.com> */
     }
 }

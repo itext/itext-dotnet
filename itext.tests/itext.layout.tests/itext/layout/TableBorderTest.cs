@@ -73,8 +73,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1124")]
@@ -103,8 +101,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1124")]
         public virtual void IncompleteTableTest02() {
@@ -130,8 +126,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void IncompleteTableTest03() {
@@ -147,8 +141,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void IncompleteTableTest04() {
@@ -168,8 +160,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
             fileName = "simpleBorderTest02.pdf";
@@ -193,8 +183,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest03() {
             fileName = "simpleBorderTest03.pdf";
@@ -210,8 +198,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest04() {
             fileName = "simpleBorderTest04.pdf";
@@ -235,8 +221,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoVerticalBorderTest() {
             fileName = "noVerticalBorderTest.pdf";
@@ -253,8 +237,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WideBorderTest01() {
             fileName = "wideBorderTest01.pdf";
@@ -284,8 +266,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
@@ -386,8 +366,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WideBorderTest03() {
             fileName = "wideBorderTest03.pdf";
@@ -418,8 +396,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WideBorderTest04() {
             fileName = "wideBorderTest04.pdf";
@@ -444,8 +420,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest01() {
             fileName = "borderCollapseTest01.pdf";
@@ -464,8 +438,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest02() {
             fileName = "borderCollapseTest02.pdf";
@@ -498,8 +470,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest03() {
             fileName = "borderCollapseTest03.pdf";
@@ -533,8 +503,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01A() {
             fileName = "separatedBorderTest01A.pdf";
@@ -553,8 +521,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01B() {
             fileName = "separatedBorderTest01B.pdf";
@@ -573,8 +539,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01C() {
             fileName = "separatedBorderTest01C.pdf";
@@ -592,8 +556,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
@@ -627,8 +589,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest01() {
             fileName = "splitCellsTest01.pdf";
@@ -689,8 +649,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest02() {
             fileName = "splitCellsTest02.pdf";
@@ -723,8 +681,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitCellsTest03() {
@@ -746,8 +702,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest04() {
             // TODO (DEVSIX-1734 Run commented snippet to produce a bug.)
@@ -772,8 +726,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1734")]
         public virtual void SplitCellsTest04A() {
@@ -795,8 +747,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest05() {
             fileName = "splitCellsTest05.pdf";
@@ -821,8 +771,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest06() {
             fileName = "splitCellsTest06.pdf";
@@ -860,8 +808,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest07() {
             fileName = "splitCellsTest07.pdf";
@@ -886,8 +832,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest08() {
             fileName = "splitCellsTest08.pdf";
@@ -913,8 +857,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest09() {
             // TODO DEVSIX-1735: uncomment snippet with separated borders to produce a NPE
@@ -939,8 +881,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10() {
             fileName = "splitCellsTest10.pdf";
@@ -965,8 +905,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10A() {
             // TODO DEVSIX-1735
@@ -988,8 +926,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1736")]
         public virtual void SplitCellsTest10B() {
@@ -1016,8 +952,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10C() {
             fileName = "splitCellsTest10C.pdf";
@@ -1048,8 +982,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest01() {
             fileName = "tableWithHeaderFooterTest01.pdf";
@@ -1083,8 +1015,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest02() {
             fileName = "tableWithHeaderFooterTest02.pdf";
@@ -1122,8 +1052,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest03() {
             fileName = "tableWithHeaderFooterTest03.pdf";
@@ -1160,8 +1088,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest04() {
             fileName = "tableWithHeaderFooterTest04.pdf";
@@ -1186,8 +1112,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest05() {
             fileName = "tableWithHeaderFooterTest05.pdf";
@@ -1221,8 +1145,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06() {
@@ -1255,8 +1177,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06A() {
@@ -1291,8 +1211,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06B() {
@@ -1327,8 +1245,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest07() {
             fileName = "tableWithHeaderFooterTest07.pdf";
@@ -1353,8 +1269,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest08() {
             fileName = "tableWithHeaderFooterTest08.pdf";
@@ -1381,8 +1295,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest09() {
             fileName = "tableWithHeaderFooterTest09.pdf";
@@ -1432,8 +1344,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest10() {
             fileName = "tableWithHeaderFooterTest10.pdf";
@@ -1468,8 +1378,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest11() {
             fileName = "tableWithHeaderFooterTest11.pdf";
@@ -1501,8 +1409,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest11A() {
             String testName = "tableWithHeaderFooterTest11A.pdf";
@@ -1539,8 +1445,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest12() {
             fileName = "tableWithHeaderFooterTest12.pdf";
@@ -1567,8 +1471,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Ignore("DEVSIX-1219")]
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest13() {
@@ -1597,8 +1499,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest14() {
             fileName = "tableWithHeaderFooterTest14.pdf";
@@ -1634,8 +1534,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest15() {
             fileName = "tableWithHeaderFooterTest15.pdf";
@@ -1659,8 +1557,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest16() {
             fileName = "tableWithHeaderFooterTest16.pdf";
@@ -1688,8 +1584,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest17() {
             fileName = "tableWithHeaderFooterTest17.pdf";
@@ -1714,8 +1608,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest18() {
             fileName = "tableWithHeaderFooterTest18.pdf";
@@ -1756,8 +1648,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest19() {
             fileName = "tableWithHeaderFooterTest19.pdf";
@@ -1796,8 +1686,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableWithHeaderFooterTest20() {
@@ -1816,8 +1704,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitRowspanKeepTogetherTest() {
@@ -1845,8 +1731,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 4)]
         [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, Count = 2)]
@@ -1872,8 +1756,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NoHorizontalBorderTest() {
             fileName = "noHorizontalBorderTest.pdf";
@@ -1892,8 +1774,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest01() {
             fileName = "bordersWithSpansTest01.pdf";
@@ -1914,8 +1794,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest02() {
             fileName = "bordersWithSpansTest02.pdf";
@@ -1938,8 +1816,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest03() {
             fileName = "bordersWithSpansTest03.pdf";
@@ -1964,8 +1840,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HeaderTopBorderTest01() {
             fileName = "headerTopBorderTest01.pdf";
@@ -1985,7 +1859,6 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         private Document CreateDocument() {
             outFileName = destinationFolder + fileName;
             cmpFileName = sourceFolder + cmpPrefix + fileName;
@@ -1993,8 +1866,6 @@ namespace iText.Layout {
             return new Document(pdfDocument);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         private void CloseDocumentAndCompareOutputs(Document document) {
             document.Close();
             String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"

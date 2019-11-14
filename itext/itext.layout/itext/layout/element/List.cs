@@ -130,7 +130,7 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>Customizes the index of the first item in the list.</summary>
-        /// <param name="start">the custom index, as an <code>int</code></param>
+        /// <param name="start">the custom index, as an <c>int</c></param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetItemStartIndex(int start) {
             SetProperty(Property.LIST_START, start);
@@ -238,7 +238,7 @@ namespace iText.Layout.Element {
         /// <see cref="ListItem"/>
         /// symbols.
         /// </summary>
-        /// <returns>the indent offset as a <code>float</code>.</returns>
+        /// <returns>the indent offset as a <c>float</c>.</returns>
         public virtual float? GetSymbolIndent() {
             return this.GetProperty<float?>(Property.LIST_SYMBOL_INDENT);
         }

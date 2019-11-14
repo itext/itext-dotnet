@@ -64,7 +64,6 @@ namespace iText.Kernel.XMP.Impl {
         }
 
         /// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
-        /// <exception cref="System.IO.IOException"/>
         public override int Read(char[] cbuf, int off, int len) {
             int readAhead = 0;
             int read = 0;

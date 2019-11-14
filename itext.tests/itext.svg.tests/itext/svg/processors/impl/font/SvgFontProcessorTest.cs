@@ -50,7 +50,6 @@ using iText.Test;
 
 namespace iText.Svg.Processors.Impl.Font {
     public class SvgFontProcessorTest : ExtendedITextTest {
-        /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.Test]
         public virtual void AddFontFaceFontsTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag

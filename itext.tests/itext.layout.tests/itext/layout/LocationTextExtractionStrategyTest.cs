@@ -64,7 +64,6 @@ namespace iText.Layout {
             return new LocationTextExtractionStrategy();
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestYPosition() {
             PdfDocument doc = CreatePdfWithOverlappingTextVertical(new String[] { "A", "B", "C", "D" }, new String[] { 
@@ -73,7 +72,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A\nAA\nB\nBB\nC\nCC\nD\nDD", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestXPosition() {
             byte[] content = CreatePdfWithOverlappingTextHorizontal(new String[] { "A", "B", "C", "D" }, new String[] 
@@ -85,7 +83,6 @@ namespace iText.Layout {
         }
 
         //        Assert.assertEquals("A\tAA\tB\tBB\tC\tCC\tD\tDD", text);
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedPage() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -94,7 +91,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedPage2() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -104,7 +100,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestRotatedPage3() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
@@ -114,7 +109,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestExtractXObjectTextWithRotation() {
             //LocationAwareTextExtractingPdfContentRenderListener.DUMP_STATE = true;
@@ -126,7 +120,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A\nB\nX\nC", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestNegativeCharacterSpacing() {
             byte[] content = CreatePdfWithNegativeCharSpacing("W", 200, "A");
@@ -148,7 +141,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(0.1f, rsltParallel, 0.0001);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestSuperscript() {
             byte[] content = CreatePdfWithSupescript("Hel", "lo");
@@ -158,7 +150,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("Hello", text);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"));
@@ -171,7 +162,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(expectedText, text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestFontSpacingEqualsCharSpacing() {
             byte[] content = CreatePdfWithFontSpacingEqualsCharSpacing();
@@ -180,7 +170,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("Preface", text);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestLittleFontSize() {
             byte[] content = CreatePdfWithLittleFontSize();
@@ -214,7 +203,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(928, pdfType3Font.GetFontProgram().GetGlyphByCode(210).GetUnicode());
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String str2) {
             MemoryStream baos = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
@@ -232,7 +220,6 @@ namespace iText.Layout {
             return baos.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreatePdfWithRotatedXObject(String xobjectText) {
             MemoryStream baos = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
@@ -253,7 +240,6 @@ namespace iText.Layout {
             return baos.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreateSimplePdf(Rectangle pageSize, params String[] text) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)), new PageSize(pageSize));
@@ -265,7 +251,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[] text1, String[] text2) {
             MemoryStream baos = new MemoryStream();
             Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
@@ -287,7 +272,6 @@ namespace iText.Layout {
             return baos.ToArray();
         }
 
-        /// <exception cref="System.Exception"/>
         private PdfDocument CreatePdfWithOverlappingTextVertical(String[] text1, String[] text2) {
             MemoryStream baos = new MemoryStream();
             Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
@@ -307,7 +291,6 @@ namespace iText.Layout {
             return new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
         }
 
-        /// <exception cref="System.Exception"/>
         private byte[] CreatePdfWithSupescript(String regularText, String superscriptText) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
@@ -316,7 +299,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private byte[] CreatePdfWithFontSpacingEqualsCharSpacing() {
             MemoryStream byteStream = new MemoryStream();
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));
@@ -345,7 +327,6 @@ namespace iText.Layout {
             return byteStream.ToArray();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private byte[] CreatePdfWithLittleFontSize() {
             MemoryStream byteStream = new MemoryStream();
             PdfDocument document = new PdfDocument(new PdfWriter(byteStream));

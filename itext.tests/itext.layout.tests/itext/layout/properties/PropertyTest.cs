@@ -48,7 +48,6 @@ using iText.Test;
 
 namespace iText.Layout.Properties {
     public class PropertyTest : ExtendedITextTest {
-        /// <exception cref="System.MemberAccessException"/>
         [NUnit.Framework.Test]
         public virtual void PropertyUniquenessTest() {
             ICollection<int> fieldValues = new HashSet<int>();

@@ -52,20 +52,24 @@ namespace iText.Kernel.Font {
     /// <summary>
     /// This class provides helpful methods for creating fonts ready to be used in a
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+    /// </summary>
+    /// <remarks>
+    /// This class provides helpful methods for creating fonts ready to be used in a
+    /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
     /// <para />
     /// Note, just created
     /// <see cref="PdfFont"/>
     /// is almost empty until it will be flushed,
     /// because it is impossible to fulfill font data until flush.
-    /// </summary>
+    /// </remarks>
     public sealed class PdfFontFactory {
         /// <summary>This is the default encoding to use.</summary>
         private static String DEFAULT_ENCODING = "";
 
-        /// <summary>This is the default value of the <VAR>embedded</VAR> variable.</summary>
+        /// <summary>This is the default value of the <var>embedded</var> variable.</summary>
         private static bool DEFAULT_EMBEDDING = false;
 
-        /// <summary>This is the default value of the <VAR>cached</VAR> variable.</summary>
+        /// <summary>This is the default value of the <var>cached</var> variable.</summary>
         private static bool DEFAULT_CACHED = true;
 
         /// <summary>
@@ -75,13 +79,18 @@ namespace iText.Kernel.Font {
         /// with
         /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
         /// encoding.
-        /// Note, if you want to reuse the same instance of default font, you may use
-        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
-        /// .
         /// </summary>
+        /// <remarks>
+        /// Creates a new instance of default font, namely
+        /// <see cref="iText.IO.Font.Constants.StandardFonts.HELVETICA"/>
+        /// standard font
+        /// with
+        /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
+        /// encoding.
+        /// Note, if you want to reuse the same instance of default font, you may use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>.
+        /// </remarks>
         /// <returns>created font</returns>
-        /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
-        ///     </exception>
         public static PdfFont CreateFont() {
             return CreateFont(StandardFonts.HELVETICA, DEFAULT_ENCODING);
         }
@@ -90,11 +99,15 @@ namespace iText.Kernel.Font {
         /// Creates a
         /// <see cref="PdfFont"/>
         /// by already existing font dictionary.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="PdfFont"/>
+        /// by already existing font dictionary.
         /// <para />
         /// Note, the font won't be added to any document,
         /// until you add it to
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
         /// While adding to
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// , or to
@@ -104,7 +117,7 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetFont(iText.Kernel.Pdf.PdfDictionary)"/>
         /// method is strongly recommended if you want to get PdfFont by both
         /// existing font dictionary, or just created and hasn't flushed yet.
-        /// </summary>
+        /// </remarks>
         /// <param name="fontDictionary">the font dictionary to create the font from</param>
         /// <returns>
         /// created
@@ -139,7 +152,6 @@ namespace iText.Kernel.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateFont(String fontProgram, String encoding, PdfDocument cacheTo) {
             PdfFont pdfFont;
             if (cacheTo != null) {
@@ -166,8 +178,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram) {
             return CreateFont(fontProgram, DEFAULT_ENCODING);
         }
@@ -187,8 +197,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -211,8 +219,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the contents of the TrueType Collection is mal-formed or an error occurred during reading the font
-        ///     </exception>
         public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
             return CreateFont(fontProgram, encoding, embedded);
@@ -236,10 +242,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">
-        /// in case the file is not found, contents of the TrueType Collection is mal-formed
-        /// or an error occurred during reading the font
-        /// </exception>
         public static PdfFont CreateTtcFont(String ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
             return CreateFont(fontProgram, encoding, embedded);
@@ -257,8 +259,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, bool embedded) {
             return CreateFont(fontProgram, DEFAULT_ENCODING, embedded);
         }
@@ -279,8 +279,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -302,8 +300,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the file is not found or the contents of the font file is mal-formed
-        ///     </exception>
         public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
@@ -426,7 +422,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding) {
             return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
@@ -443,7 +438,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, bool embedded) {
             return CreateFont(fontProgram, null, embedded);
         }
@@ -464,7 +458,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded) {
             return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
@@ -486,7 +479,6 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">signals that an I/O exception has occurred.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
             FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
@@ -524,21 +516,31 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
         /// <param name="encoding">
         /// Font encoding from
-        /// <see cref="iText.IO.Font.PdfEncodings"/>
-        /// .
+        /// <see cref="iText.IO.Font.PdfEncodings"/>.
         /// </param>
         /// <param name="embedded">if true font will be embedded. Note, standard font won't be embedded in any case.</param>
         /// <param name="style">
         /// Font style from
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// </param>
         /// <param name="cached">If true font will be cached for another PdfDocument</param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -559,16 +561,27 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
         /// <param name="encoding">
         /// Font encoding from
-        /// <see cref="iText.IO.Font.PdfEncodings"/>
-        /// .
+        /// <see cref="iText.IO.Font.PdfEncodings"/>.
         /// </param>
         /// <param name="embedded">if true font will be embedded. Note, standard font won't be embedded in any case.</param>
         /// <param name="cached">If true font will be cached for another PdfDocument</param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -587,15 +600,26 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
         /// <param name="encoding">
         /// Font encoding from
-        /// <see cref="iText.IO.Font.PdfEncodings"/>
-        /// .
+        /// <see cref="iText.IO.Font.PdfEncodings"/>.
         /// </param>
         /// <param name="embedded">if true font will be embedded. Note, standard font won't be embedded in any case.</param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -614,20 +638,30 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
         /// <param name="encoding">
         /// Font encoding from
-        /// <see cref="iText.IO.Font.PdfEncodings"/>
-        /// .
+        /// <see cref="iText.IO.Font.PdfEncodings"/>.
         /// </param>
         /// <param name="embedded">if true font will be embedded. Note, standard font won't be embedded in any case.</param>
         /// <param name="style">
         /// Font style from
-        /// <see cref="iText.IO.Font.Constants.FontStyles"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStyles"/>.
         /// </param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -646,14 +680,25 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
         /// <param name="encoding">
         /// Font encoding from
-        /// <see cref="iText.IO.Font.PdfEncodings"/>
-        /// .
+        /// <see cref="iText.IO.Font.PdfEncodings"/>.
         /// </param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -672,9 +717,21 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.FontProgram"/>
         /// 's.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's. Required font program is expected to be
+        /// previously registered by one of the register method from
+        /// <see cref="PdfFontFactory"/>.
+        /// </remarks>
         /// <param name="fontName">Path to font file or Standard font name</param>
-        /// <exception cref="System.IO.IOException">exception is thrown in case an I/O error occurs when reading the file
-        ///     </exception>
+        /// <returns>
+        /// created font if required
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// was found among registered, otherwise null.
+        /// </returns>
         /// <seealso cref="Register(System.String)"/>
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
@@ -743,13 +800,13 @@ namespace iText.Kernel.Font {
 
         /// <summary>Checks if a certain font is registered.</summary>
         /// <param name="fontName">the name of the font that has to be checked.</param>
-        /// <returns><code>true</code> if the font is found, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the font is found, <c>false</c> otherwise</returns>
         public static bool IsRegistered(String fontName) {
             return FontProgramFactory.IsRegisteredFont(fontName);
         }
 
         /// <summary>Checks if the provided dictionary is a valid font dictionary of the provided font type.</summary>
-        /// <returns><code>true</code> if the passed dictionary is a valid dictionary, <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if the passed dictionary is a valid dictionary, <c>false</c> otherwise</returns>
         private static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {

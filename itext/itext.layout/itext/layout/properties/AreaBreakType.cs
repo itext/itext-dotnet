@@ -41,7 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Layout.Element;
+
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// The possible values for the type of break
+    /// that is executed by an
+    /// <see cref="AreaBreak"/>.
+    /// </summary>
     public enum AreaBreakType {
         NEXT_AREA,
         NEXT_PAGE,

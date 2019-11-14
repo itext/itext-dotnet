@@ -66,8 +66,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest01() {
             String outFileName = destinationFolder + "collapsingMarginsTest01.pdf";
@@ -101,8 +99,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest02() {
             String outFileName = destinationFolder + "collapsingMarginsTest02.pdf";
@@ -139,8 +135,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest03() {
             String outFileName = destinationFolder + "collapsingMarginsTest03.pdf";
@@ -175,8 +169,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest04() {
             String outFileName = destinationFolder + "collapsingMarginsTest04.pdf";
@@ -214,8 +206,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest05() {
             String outFileName = destinationFolder + "collapsingMarginsTest05.pdf";
@@ -256,8 +246,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColumnRendererTest() {
             NUnit.Framework.Assert.That(() =>  {

@@ -45,11 +45,12 @@ using System.Collections.Generic;
 using System.Text;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     /// <summary>Tests for ElementList.</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class ElementsTest {
+    public class ElementsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Filter() {
             String h = "<p>Excl</p><div class=headline><p>Hello</p><p>There</p></div><div class=headline><h1>Headline</h1></div>";
@@ -315,13 +316,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").Traverse(new _NodeVisitor_302(accum));
+            doc.Select("div").Traverse(new _NodeVisitor_303(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div><div><#text></#text></div>", accum.ToString
                 ());
         }
 
-        private sealed class _NodeVisitor_302 : NodeVisitor {
-            public _NodeVisitor_302(StringBuilder accum) {
+        private sealed class _NodeVisitor_303 : NodeVisitor {
+            public _NodeVisitor_303(StringBuilder accum) {
                 this.accum = accum;
             }
 

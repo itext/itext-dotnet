@@ -127,24 +127,24 @@ namespace iText.Kernel.Font {
         /// <summary>Writes the width and optionally the bounding box parameters for a glyph</summary>
         /// <param name="wx">the advance this character will have</param>
         /// <param name="llx">
-        /// the X lower left corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X lower left corner of the glyph bounding box. If the <c>isColor</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="lly">
-        /// the Y lower left corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y lower left corner of the glyph bounding box. If the <c>isColor</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="urx">
-        /// the X upper right corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the X upper right corner of the glyph bounding box. If the <c>isColor</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="ury">
-        /// the Y upper right corner of the glyph bounding box. If the <CODE>isColor</CODE> option is
-        /// <CODE>true</CODE> the value is ignored
+        /// the Y upper right corner of the glyph bounding box. If the <c>isColor</c> option is
+        /// <c>true</c> the value is ignored
         /// </param>
         /// <param name="isColor">
         /// defines whether the glyph color is specified in the glyph description in the font.
-        /// The consequence of value <CODE>true</CODE> is that the bounding box parameters are ignored.
+        /// The consequence of value <c>true</c> is that the bounding box parameters are ignored.
         /// </param>
         private void WriteMetrics(float wx, float llx, float lly, float urx, float ury, bool isColor) {
             this.isColor = isColor;
@@ -154,17 +154,18 @@ namespace iText.Kernel.Font {
             this.urx = urx;
             this.ury = ury;
             if (isColor) {
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteBytes(d0);
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace()
+                                //wy
+                                .WriteFloat(0).WriteSpace().WriteBytes(d0);
             }
             else {
-                //wy
-                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace().WriteFloat(0).WriteSpace().WriteFloat(llx).WriteSpace
-                    ().WriteFloat(lly).WriteSpace().WriteFloat(urx).WriteSpace().WriteFloat(ury).WriteSpace().WriteBytes(d1
-                    );
+                contentStream.GetOutputStream().WriteFloat(wx).WriteSpace()
+                                //wy
+                                .WriteFloat(0).WriteSpace().WriteFloat(llx).WriteSpace().WriteFloat(lly).WriteSpace().WriteFloat(urx).WriteSpace
+                    ().WriteFloat(ury).WriteSpace().WriteBytes(d1);
             }
         }
 
-        //wy
         /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
         /// <remarks>
         /// Creates Image XObject from image and adds it to canvas. Performs additional checks to make
@@ -192,7 +193,7 @@ namespace iText.Kernel.Font {
         }
 
         private void FillBBFromBytes(byte[] bytes) {
-            String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
+            String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes, iText.IO.Util.EncodingUtil.ISO_8859_1);
             int d0Pos = str.IndexOf(D_0_STR, StringComparison.Ordinal);
             int d1Pos = str.IndexOf(D_1_STR, StringComparison.Ordinal);
             if (d0Pos != -1) {

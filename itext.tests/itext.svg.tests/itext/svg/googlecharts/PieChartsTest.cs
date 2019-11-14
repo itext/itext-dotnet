@@ -47,54 +47,39 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     public class PieChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/pie_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/PieChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/pie_charts/";
+             + "/test/itext/svg/googlecharts/PieChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void Pie_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pie_chart");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void Pie3D_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pie3D_chart");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void PieHole_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pieHole_chart");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        [NUnit.Framework.Test]
-        public virtual void Rotating_pie_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rotating_pie_chart");
-        }
-
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PieChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pieChart");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Pie3DChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pie3DChart");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PieHoleChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pieHoleChart");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RotatingPieChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "rotatingPieChart");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Pie1Chart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pie1Chart");
         }
     }
 }

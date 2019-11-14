@@ -132,7 +132,6 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// </summary>
         /// <param name="baseUrl">the base URL</param>
         public CssParserStateController(String baseUrl) {
-            //Hashed value
             if (baseUrl != null && baseUrl.Length > 0) {
                 this.uriResolver = new UriResolver(baseUrl);
             }

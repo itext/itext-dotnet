@@ -87,8 +87,6 @@ namespace iText.Kernel.XMP {
         /// suggestedPrefix if the namespace hasn't been registered before,
         /// otherwise the existing prefix.
         /// </returns>
-        /// <exception cref="XMPException">If the parameters are not accordingly set</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         String RegisterNamespace(String namespaceURI, String suggestedPrefix);
 
         /// <summary>Obtain the prefix for a registered namespace URI.</summary>
@@ -145,16 +143,16 @@ namespace iText.Kernel.XMP {
         // Alias Functions
         /// <summary>Determines if a name is an alias, and what it is aliased to.</summary>
         /// <param name="aliasNS">
-        /// The namespace URI of the alias. Must not be <code>null</code> or the empty
+        /// The namespace URI of the alias. Must not be <c>null</c> or the empty
         /// string.
         /// </param>
         /// <param name="aliasProp">
         /// The name of the alias. May be an arbitrary path expression
-        /// path, must not be <code>null</code> or the empty string.
+        /// path, must not be <c>null</c> or the empty string.
         /// </param>
         /// <returns>
-        /// Returns the <code>XMPAliasInfo</code> for the given alias namespace and property or
-        /// <code>null</code> if there is no such alias.
+        /// Returns the <c>XMPAliasInfo</c> for the given alias namespace and property or
+        /// <c>null</c> if there is no such alias.
         /// </returns>
         XMPAliasInfo ResolveAlias(String aliasNS, String aliasProp);
 
@@ -177,7 +175,7 @@ namespace iText.Kernel.XMP {
 
         /// <returns>
         /// Returns the registered aliases as map, where the key is the "qname" (prefix and name)
-        /// and the value an <code>XMPAliasInfo</code>-object.
+        /// and the value an <c>XMPAliasInfo</c>-object.
         /// </returns>
         IDictionary GetAliases();
     }

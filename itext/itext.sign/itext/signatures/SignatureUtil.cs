@@ -55,6 +55,7 @@ using iText.Kernel.Pdf;
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
+        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
         private PdfDocument document;
 
         private PdfAcroForm acroForm;
@@ -65,7 +66,6 @@ namespace iText.Signatures {
 
         private int totalRevisions;
 
-        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
         /// <summary>
         /// Converts a
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -98,6 +98,11 @@ namespace iText.Signatures {
         /// Prepares an
         /// <see cref="PdfPKCS7"/>
         /// instance for the given signature.
+        /// </summary>
+        /// <remarks>
+        /// Prepares an
+        /// <see cref="PdfPKCS7"/>
+        /// instance for the given signature.
         /// This method handles signature parsing and might throw an exception if
         /// signature is malformed.
         /// <para />
@@ -110,9 +115,8 @@ namespace iText.Signatures {
         /// use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <param name="name">the signature field name</param>
-        /// <param name="provider">the security provider or null for the default provider</param>
         /// <returns>
         /// a
         /// <see cref="PdfPKCS7"/>
@@ -126,6 +130,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>
+        /// Prepares an
+        /// <see cref="PdfPKCS7"/>
+        /// instance for the given signature.
+        /// </summary>
+        /// <remarks>
         /// Prepares an
         /// <see cref="PdfPKCS7"/>
         /// instance for the given signature.
@@ -144,9 +153,8 @@ namespace iText.Signatures {
         /// revision please use
         /// <see cref="SignatureCoversWholeDocument(System.String)"/>
         /// method.
-        /// </summary>
+        /// </remarks>
         /// <param name="signatureFieldName">the signature field name</param>
-        /// <param name="securityProvider">the security provider or null for the default provider</param>
         /// <returns>
         /// a
         /// <see cref="PdfPKCS7"/>
@@ -202,7 +210,7 @@ namespace iText.Signatures {
         /// <summary>Gets the signature dictionary, the one keyed by /V.</summary>
         /// <param name="name">the field name</param>
         /// <returns>
-        /// the signature dictionary keyed by /V or <CODE>null</CODE> if the field is not
+        /// the signature dictionary keyed by /V or <c>null</c> if the field is not
         /// a signature
         /// </returns>
         public virtual PdfDictionary GetSignatureDictionary(String name) {
@@ -305,7 +313,6 @@ namespace iText.Signatures {
         /// <summary>Extracts a revision from the document.</summary>
         /// <param name="field">the signature field name</param>
         /// <returns>an InputStream covering the revision. Returns null if it's not a signature field</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual Stream ExtractRevision(String field) {
             GetSignatureNames();
             if (!sigNames.ContainsKey(field)) {
@@ -434,7 +441,6 @@ namespace iText.Signatures {
 
             private bool rangeIsCorrect = false;
 
-            /// <exception cref="System.IO.IOException"/>
             public ContentsChecker(IRandomAccessSource byteSource)
                 : base(byteSource, null) {
             }
@@ -477,7 +483,6 @@ namespace iText.Signatures {
                 return rangeIsCorrect;
             }
 
-            /// <exception cref="System.IO.IOException"/>
             protected override PdfDictionary ReadDictionary(bool objStm) {
                 // The method copies the logic of PdfReader's method.
                 // Only Contents related checks have been introduced.

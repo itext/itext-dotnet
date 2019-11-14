@@ -156,8 +156,8 @@ namespace iText.Layout.Renderer {
             UnitValue[] margins = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.MARGIN_TOP), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_BOTTOM), renderer.GetPropertyAsUnitValue(Property.MARGIN_LEFT), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_RIGHT) };
-            int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             //TODO set depending on writing direction
+            int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             UnitValue spaceBefore = margins[marginsOrder[0]];
             if (spaceBefore != null) {
                 if (!spaceBefore.IsPointValue()) {
@@ -207,8 +207,9 @@ namespace iText.Layout.Renderer {
                 attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
             }
             TextAlignment? textAlignment = renderer.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT);
-            if (textAlignment != null && (!role.Equals(StandardRoles.TH) && !role.Equals(StandardRoles.TD))) {
-                //for table cells there is an InlineAlign attribute (see below)
+            if (textAlignment != null && 
+                        //for table cells there is an InlineAlign attribute (see below)
+                        (!StandardRoles.TH.Equals(role) && !StandardRoles.TD.Equals(role))) {
                 attributes.Put(PdfName.TextAlign, TransformTextAlignmentValueToName(textAlignment));
             }
             // attributes are applied only on the first renderer
@@ -216,7 +217,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bbox = renderer.GetOccupiedArea().GetBBox();
                 attributes.Put(PdfName.BBox, new PdfArray(bbox));
             }
-            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD) || role.Equals(StandardRoles.TABLE)) {
+            if (StandardRoles.TH.Equals(role) || StandardRoles.TD.Equals(role) || StandardRoles.TABLE.Equals(role)) {
                 // For large tables the width can be changed from flush to flush so the Width attribute shouldn't be applied.
                 // There are also technical issues with large tables widths being explicitly set as property on element during layouting
                 // (even if user didn't explcitly specfied it). This is required due to specificity of large elements implementation,
@@ -232,15 +233,15 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.Height, new PdfNumber(height.GetValue()));
                 }
             }
-            if (role.Equals(StandardRoles.TH) || role.Equals(StandardRoles.TD)) {
+            if (StandardRoles.TH.Equals(role) || StandardRoles.TD.Equals(role)) {
                 HorizontalAlignment? horizontalAlignment = renderer.GetProperty<HorizontalAlignment?>(Property.HORIZONTAL_ALIGNMENT
                     );
                 if (horizontalAlignment != null) {
                     attributes.Put(PdfName.BlockAlign, TransformBlockAlignToName(horizontalAlignment));
                 }
-                if (textAlignment != null && (textAlignment != TextAlignment.JUSTIFIED && textAlignment != TextAlignment.JUSTIFIED_ALL
-                    )) {
-                    //there is no justified alignment for InlineAlign attribute
+                if (textAlignment != null && 
+                                //there is no justified alignment for InlineAlign attribute
+                                (textAlignment != TextAlignment.JUSTIFIED && textAlignment != TextAlignment.JUSTIFIED_ALL)) {
                     attributes.Put(PdfName.InlineAlign, TransformTextAlignmentValueToName(textAlignment));
                 }
             }
@@ -334,8 +335,8 @@ namespace iText.Layout.Renderer {
             }
             else {
                 PdfArray paddingArray = new PdfArray();
-                int[] paddingsOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
+                int[] paddingsOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in paddingsOrder) {
                     paddingArray.Add(new PdfNumber(paddings[i]));
                 }
@@ -386,8 +387,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
+                int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in borderOrder) {
                     if (borders[i] != null) {
                         if (borders[i].GetColor() is DeviceRgb) {

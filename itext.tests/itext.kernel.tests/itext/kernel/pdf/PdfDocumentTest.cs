@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -70,7 +69,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void WritingVersionTest01() {
             // There is a possibility to override version in stamping mode
@@ -87,8 +85,6 @@ namespace iText.Kernel.Pdf {
 
         //We have this test in PdfOutlineTest as well, because we had some issues with outlines before. One test worked
         // fine, while another one failed.
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01() {
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
@@ -127,7 +123,6 @@ namespace iText.Kernel.Pdf {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FreeReferencesInObjectStream() {
             PdfReader reader = new PdfReader(sourceFolder + "styledLineArts_Redacted.pdf");
@@ -138,8 +133,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(dict.GetIndirectReference().GetObjNumber() > 0);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RemoveUnusedObjectsInWriterModeTest() {
             String filename = "removeUnusedObjectsInWriter.pdf";
@@ -158,8 +151,6 @@ namespace iText.Kernel.Pdf {
             testerDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void RemoveUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_1.pdf";
@@ -182,8 +173,6 @@ namespace iText.Kernel.Pdf {
             testerDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedObjectsInWriterModeTest() {
             String filename = "addUnusedObjectsInWriter.pdf";
@@ -202,8 +191,6 @@ namespace iText.Kernel.Pdf {
             testerDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_2.pdf";
@@ -226,8 +213,6 @@ namespace iText.Kernel.Pdf {
             testerDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddUnusedStreamObjectsTest() {
             String filenameIn = "docWithUnusedObjects_3.pdf";
@@ -247,7 +232,6 @@ namespace iText.Kernel.Pdf {
             testerDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestImageCompressLevel() {
             byte[] b = ImageDataFactory.Create(sourceFolder + "berlin2013.jpg").GetData();
@@ -264,8 +248,6 @@ namespace iText.Kernel.Pdf {
             zip2.Dispose();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE)]
         public virtual void TestFreeReference() {
@@ -283,8 +265,6 @@ namespace iText.Kernel.Pdf {
                 sourceFolder + "cmp_freeReference.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FullCompressionAppendMode() {
             PdfWriter writer = new PdfWriter(destinationFolder + "fullCompressionAppendMode.pdf", new WriterProperties
@@ -294,8 +274,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDocument.GetPage(1);
             PdfStream contentStream = new PdfStream();
             String contentStr = iText.IO.Util.JavaUtil.GetStringForBytes(pdfDocument.GetPage(1).GetFirstContentStream(
-                ).GetBytes(), Encoding.ASCII);
-            contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(Encoding.ASCII));
+                ).GetBytes(), System.Text.Encoding.ASCII);
+            contentStream.SetData(contentStr.Replace("/F1 16", "/F1 24").GetBytes(System.Text.Encoding.ASCII));
             page.GetPdfObject().Put(PdfName.Contents, contentStream);
             page.SetModified();
             pdfDocument.Close();
@@ -308,8 +288,6 @@ namespace iText.Kernel.Pdf {
                 ());
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckAndResolveCircularReferences() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "datasheet.pdf"), new PdfWriter(destinationFolder
@@ -321,7 +299,6 @@ namespace iText.Kernel.Pdf {
                 sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadEncryptedDocumentWithFullCompression() {
             PdfReader reader = new PdfReader(sourceFolder + "source.pdf", new ReaderProperties().SetPassword("123".GetBytes
@@ -337,8 +314,6 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddAssociatedFilesTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "add_associated_files01.pdf", 
@@ -363,8 +338,6 @@ namespace iText.Kernel.Pdf {
                 , sourceFolder + "cmp_add_associated_files01.pdf", "d:/", "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddAssociatedFilesTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "add_associated_files02.pdf", 

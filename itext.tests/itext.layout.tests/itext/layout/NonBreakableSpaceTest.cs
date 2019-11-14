@@ -61,8 +61,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleParagraphTest() {
             String outFileName = destinationFolder + "simpleParagraphTest.pdf";
@@ -80,8 +78,6 @@ namespace iText.Layout {
                 , diffPrefix));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ConsecutiveSpacesTest() {
             String outFileName = destinationFolder + "consecutiveSpacesTest.pdf";

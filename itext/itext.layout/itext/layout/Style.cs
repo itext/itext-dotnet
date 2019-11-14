@@ -306,7 +306,7 @@ namespace iText.Layout {
         }
 
         /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="radAngle">the new rotation radAngle, as a <code>float</code></param>
+        /// <param name="radAngle">the new rotation radAngle, as a <c>float</c></param>
         /// <returns>this element</returns>
         public virtual Style SetRotationAngle(float radAngle) {
             SetProperty(Property.ROTATION_ANGLE, radAngle);
@@ -314,7 +314,7 @@ namespace iText.Layout {
         }
 
         /// <summary>Sets the rotation angle.</summary>
-        /// <param name="angle">the new rotation angle, as a <code>double</code></param>
+        /// <param name="angle">the new rotation angle, as a <c>double</c></param>
         /// <returns>this element</returns>
         public virtual Style SetRotationAngle(double angle) {
             SetProperty(Property.ROTATION_ANGLE, (float)angle);
@@ -331,8 +331,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="width">
         /// a
@@ -354,8 +353,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="height">
         /// a
@@ -394,8 +392,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the max-height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxHeight">
         /// a
@@ -410,8 +407,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the min-height property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minHeight">
         /// a
@@ -435,8 +431,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the max-width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxWidth">
         /// a
@@ -459,8 +454,7 @@ namespace iText.Layout {
 
         /// <summary>
         /// Sets the min-width property of the element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minWidth">
         /// a

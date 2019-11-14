@@ -177,8 +177,7 @@ namespace iText.Layout.Properties {
                 this.ty = ty;
             }
 
-            /// <summary>Gets an array of values corresponding to transformation, i.e.</summary>
-            /// <remarks>Gets an array of values corresponding to transformation, i.e. scaling and skewing.</remarks>
+            /// <summary>Gets an array of values corresponding to transformation, i.e. scaling and skewing.</summary>
             /// <returns>an array of floats</returns>
             public virtual float[] GetFloats() {
                 return new float[] { a, b, c, d };

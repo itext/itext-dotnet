@@ -71,6 +71,12 @@ namespace iText.Kernel.Utils {
         /// Constructs a
         /// <see cref="PageRange"/>
         /// instance from a range in a string form,
+        /// for example: "1-12, 15, 45-66".
+        /// </summary>
+        /// <remarks>
+        /// Constructs a
+        /// <see cref="PageRange"/>
+        /// instance from a range in a string form,
         /// for example: "1-12, 15, 45-66". More advanced forms are also available,
         /// for example:
         /// - "3-" to indicate from page 3 to the last page
@@ -79,7 +85,7 @@ namespace iText.Kernel.Utils {
         /// - "3- &amp; odd" for all odd pages starting from page 3
         /// A complete example for pages 1 to 5, page 8 then odd pages starting from
         /// page 9: "1-5, 8, odd &amp; 9-".
-        /// </summary>
+        /// </remarks>
         /// <param name="pageRange">a String of page ranges</param>
         public PageRange(String pageRange) {
             pageRange = iText.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
@@ -188,8 +194,8 @@ namespace iText.Kernel.Utils {
         /// <summary>Checks if a given page is present in the range built so far.</summary>
         /// <param name="pageNumber">the page number to check</param>
         /// <returns>
-        /// <code>true</code> if the page is present in this range,
-        /// <code>false</code> otherwise
+        /// <c>true</c> if the page is present in this range,
+        /// <c>false</c> otherwise
         /// </returns>
         public virtual bool IsPageInRange(int pageNumber) {
             foreach (PageRange.IPageRangePart sequence in sequences) {

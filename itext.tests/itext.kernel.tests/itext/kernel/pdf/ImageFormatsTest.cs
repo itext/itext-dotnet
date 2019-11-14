@@ -63,8 +63,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImagesWithDifferentDepth() {
             String outFileName = destinationFolder + "transparencyTest01.pdf";
@@ -104,8 +102,6 @@ namespace iText.Kernel.Pdf {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Png_imageTransparancy_8bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_8bitDepthImage.pdf";
@@ -127,8 +123,6 @@ namespace iText.Kernel.Pdf {
                 , "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Png_imageTransparancy_24bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_24bitDepthImage.pdf";

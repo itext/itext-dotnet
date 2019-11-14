@@ -81,8 +81,8 @@ namespace iText.Barcodes.Qrcode {
         }
 
         internal static int NumBitsDiffering(int a, int b) {
-            a ^= b;
             // a now has a 1 bit exactly where its bit differs with b's
+            a ^= b;
             // Count bits set quickly with a series of lookups:
             return BITS_SET_IN_HALF_BYTE[a & 0x0F] + BITS_SET_IN_HALF_BYTE[((int)(((uint)a) >> 4) & 0x0F)] + BITS_SET_IN_HALF_BYTE
                 [((int)(((uint)a) >> 8) & 0x0F)] + BITS_SET_IN_HALF_BYTE[((int)(((uint)a) >> 12) & 0x0F)] + BITS_SET_IN_HALF_BYTE
@@ -96,7 +96,7 @@ namespace iText.Barcodes.Qrcode {
         /// to establish best match
         /// </param>
         /// <returns>
-        /// information about the format it specifies, or <code>null</code>
+        /// information about the format it specifies, or <c>null</c>
         /// if doesn't seem to match any known pattern
         /// </returns>
         internal static iText.Barcodes.Qrcode.FormatInformation DecodeFormatInformation(int maskedFormatInfo1, int

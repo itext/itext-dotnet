@@ -43,16 +43,16 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>Tests XmlTreeBuilder.</summary>
     /// <author>Jonathan Hedley</author>
-    public class XmlTreeBuilderTest {
+    public class XmlTreeBuilderTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestSimpleXmlParse() {
             String xml = "<doc id=2 href='/bar'>Foo <br /><link>One</link><link>Two</link></doc>";
@@ -91,8 +91,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 .Html()));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Net.URISyntaxException"/>
         [NUnit.Framework.Test]
         public virtual void TestSupplyParserToDataStream() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-test.xml");
@@ -139,7 +137,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public virtual void XmlParseDefaultsToHtmlOutputSyntax() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("x", "", iText.StyledXmlParser.Jsoup.Parser.Parser.
                 XmlParser());
-            NUnit.Framework.Assert.AreEqual(Syntax.xml, doc.OutputSettings().Syntax());
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml, doc.OutputSettings().Syntax(
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -150,8 +149,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("<img src=\"asdf\" onerror=\"alert(1)\" x=\"\" />", xmlDoc.Html());
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Net.URISyntaxException"/>
         [NUnit.Framework.Test]
         public virtual void TestDetectCharsetEncodingDeclaration() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-charset.xml");
@@ -181,7 +178,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void TestCreatesValidProlog() {
             Document document = Document.CreateShell("");
-            document.OutputSettings().Syntax(Syntax.xml);
+            document.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
             document.Charset(EncodingUtil.GetEncoding("utf-8"));
             NUnit.Framework.Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<html>\n" + " <head></head>\n"
                  + " <body></body>\n" + "</html>", document.OuterHtml());

@@ -159,7 +159,7 @@ namespace iText.Svg.Utils {
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimLeadingWhitespace(trimmedText);
             //Trim trailing whitespace
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimTrailingWhitespace(trimmedText);
-            return trimmedText.Equals("");
+            return "".Equals(trimmedText);
         }
 
         /// <summary>Resolve the font size stored inside the passed renderer</summary>
@@ -175,7 +175,6 @@ namespace iText.Svg.Utils {
             if (null != elementFontSize && !String.IsNullOrEmpty(elementFontSize)) {
                 if (CssUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize) || CommonCssConstants
                     .SMALLER.Equals(elementFontSize)) {
-                    // TODO DEVSIX-2866 Support rem value for svgs
                     fontSize = CssUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
                 }
                 else {

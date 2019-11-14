@@ -43,13 +43,14 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    public class PdfTokenizerTest {
+    public class PdfTokenizerTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfTokeniserTest/";
 
-        /// <exception cref="System.Exception"/>
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
@@ -61,7 +62,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.Exception"/>
         private void CheckTokenValues(String data, params byte[][] expectedValues) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
@@ -73,21 +73,18 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestOneNumber() {
             CheckTokenTypes("/Name1 70", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
                 .EndOfFile);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestTwoNumbers() {
             CheckTokenTypes("/Name1 70/Name 2", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
                 .Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType.EndOfFile);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TokenTypesTest() {
             CheckTokenTypes("<</Size 70/Root 46 0 R/Info 44 0 R/ID[<8C2547D58D4BD2C6F3D32B830BE3259D><8F69587888569A458EB681A4285D5879>]/Prev 116 >>"
@@ -98,14 +95,12 @@ namespace iText.Kernel.Pdf {
                 .EndDic, PdfTokenizer.TokenType.EndOfFile);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NumberValueInTheEndTest() {
             CheckTokenValues("123", new byte[] { 49, 50, 51 }, new byte[] {  });
         }
 
         //EndOfFile buffer
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EncodingTest() {
             RandomAccessSourceFactory factory;
@@ -152,8 +147,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(b), pdfString.GetValue());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void ReadPdfStringTest() {
             String author = "This string9078 contains \u00A5two octal characters\u00C7";
             String creator = "iText\r 6\n";
@@ -172,7 +167,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(d.GetDocumentInfo().GetSubject(), subject);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PrimitivesTest() {
             String data = "<</Size 70." + "/Value#20 .1" + "/Root 46 0 R" + "/Info 44 0 R" + "/ID[<736f6d652068657820737472696e672>(some simple string )<8C2547D58D4BD2C6F3D32B830BE3259D2>-70.1--0.2]"
@@ -264,7 +258,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("-116.23", num.ToString());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TokenValueEqualsToTest() {
             String data = "SomeString";

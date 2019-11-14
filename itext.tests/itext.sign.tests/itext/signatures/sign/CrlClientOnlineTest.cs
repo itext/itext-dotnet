@@ -42,13 +42,13 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Signatures;
+using iText.Test;
 
 namespace iText.Signatures.Sign {
-    public class CrlClientOnlineTest {
+    public class CrlClientOnlineTest : ExtendedITextTest {
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/";
 
-        /// <exception cref="System.UriFormatException"/>
         [NUnit.Framework.Test]
         public virtual void CrlClientOnlineURLConstructorTest() {
             String PROTOCOL = "file://";

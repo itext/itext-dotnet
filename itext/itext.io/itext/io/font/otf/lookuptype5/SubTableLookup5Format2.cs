@@ -74,6 +74,8 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
         }
 
         public class SubstRuleFormat2 : ContextualSubstRule {
+            // inputClassIds array omits the first class in the sequence,
+            // the first class is defined by corresponding index of subClassSet array
             private int[] inputClassIds;
 
             private SubstLookupRecord[] substLookupRecords;
@@ -82,8 +84,6 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
 
             public SubstRuleFormat2(SubTableLookup5Format2 subTable, int[] inputClassIds, SubstLookupRecord[] substLookupRecords
                 ) {
-                // inputClassIds array omits the first class in the sequence,
-                // the first class is defined by corresponding index of subClassSet array
                 this.inputClassIds = inputClassIds;
                 this.substLookupRecords = substLookupRecords;
                 this.classDefinition = subTable.classDefinition;

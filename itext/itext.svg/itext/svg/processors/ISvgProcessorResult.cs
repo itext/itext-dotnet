@@ -66,8 +66,7 @@ namespace iText.Svg.Processors {
 
         /// <summary>
         /// Obtains the
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
         /// </summary>
         /// <returns>FontProvider</returns>
         FontProvider GetFontProvider();

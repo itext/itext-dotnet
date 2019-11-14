@@ -56,10 +56,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         }
 
         public virtual int Compare(ITextChunkLocation first, ITextChunkLocation second) {
+            // not really needed, but just in case
             if (first == second) {
                 return 0;
             }
-            // not really needed, but just in case
             int result;
             result = JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude());
             if (result != 0) {

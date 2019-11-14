@@ -62,8 +62,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CannotPlaceABigChunkOnALineTest01() {
             String outFileName = destinationFolder + "cannotPlaceABigChunkOnALineTest01.pdf";
@@ -80,8 +78,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CannotPlaceABigChunkOnALineTest02() {
             String outFileName = destinationFolder + "cannotPlaceABigChunkOnALineTest02.pdf";
@@ -99,8 +95,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WordWasSplitAndItWillFitOntoNextLineTest01() {
             String outFileName = destinationFolder + "wordWasSplitAndItWillFitOntoNextLineTest01.pdf";

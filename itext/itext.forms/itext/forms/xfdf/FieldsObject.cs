@@ -43,17 +43,29 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>Represents the fields element, a child of the xfdf element and is the container for form field elements.
+    ///     </summary>
+    /// <remarks>
+    /// Represents the fields element, a child of the xfdf element and is the container for form field elements.
+    /// Content model: ( field* ).
+    /// Attributes: none.
+    /// For more details see paragraph 6.3.1 in Xfdf specification.
+    /// </remarks>
     public class FieldsObject {
+        /// <summary>Represents a list of children fields</summary>
         private IList<FieldObject> fieldList;
 
         public FieldsObject() {
             this.fieldList = new List<FieldObject>();
         }
 
+        /// <summary>Gets a list of children fields</summary>
         public virtual IList<FieldObject> GetFieldList() {
             return fieldList;
         }
 
+        /// <summary>Adds a new field to the list.</summary>
+        /// <param name="field">FieldObject containing the info about the form field.</param>
         public virtual iText.Forms.Xfdf.FieldsObject AddField(FieldObject field) {
             this.fieldList.Add(field);
             return this;

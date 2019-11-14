@@ -77,7 +77,6 @@ namespace iText.Kernel.Pdf.Layer {
             return pdfLayer;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal static void CompareLayers(String outPdf, String cmpPdf) {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             System.Console.Out.WriteLine();

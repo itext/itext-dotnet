@@ -51,6 +51,7 @@ namespace iText.Barcodes.Qrcode {
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class Mode {
+        // Not really a mode...
         public static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] { 
             0, 0, 0 }, 0x00, "TERMINATOR");
 
@@ -60,12 +61,14 @@ namespace iText.Barcodes.Qrcode {
         public static readonly iText.Barcodes.Qrcode.Mode ALPHANUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] 
             { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
 
+        // Not supported
         public static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new int
             [] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
 
         public static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16, 
             16 }, 0x04, "BYTE");
 
+        // character counts don't apply
         public static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI");
 
         public static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 10
@@ -84,9 +87,6 @@ namespace iText.Barcodes.Qrcode {
         private readonly String name;
 
         private Mode(int[] characterCountBitsForVersions, int bits, String name) {
-            // Not really a mode...
-            // Not supported
-            // character counts don't apply
             this.characterCountBitsForVersions = characterCountBitsForVersions;
             this.bits = bits;
             this.name = name;
@@ -98,7 +98,6 @@ namespace iText.Barcodes.Qrcode {
         /// <see cref="Mode"/>
         /// encoded by these bits
         /// </returns>
-        /// <exception cref="System.ArgumentException">if bits do not correspond to a known mode</exception>
         public static iText.Barcodes.Qrcode.Mode ForBits(int bits) {
             switch (bits) {
                 case 0x0: {

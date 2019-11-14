@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace iText.IO.Codec {
     /// <summary>Exports images as TIFF.</summary>
@@ -60,7 +59,6 @@ namespace iText.IO.Codec {
             return 6 + ifd.Count * 12;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void WriteFile(Stream stream) {
             stream.Write(0x4d);
             stream.Write(0x4d);
@@ -113,7 +111,6 @@ namespace iText.IO.Codec {
                 this.offset = offset;
             }
 
-            /// <exception cref="System.IO.IOException"/>
             public virtual void WriteField(Stream stream) {
                 WriteShort(tag, stream);
                 WriteShort(fieldType, stream);
@@ -129,7 +126,6 @@ namespace iText.IO.Codec {
                 }
             }
 
-            /// <exception cref="System.IO.IOException"/>
             public virtual void WriteValue(Stream stream) {
                 if (data.Length <= 4) {
                     return;
@@ -235,20 +231,18 @@ namespace iText.IO.Codec {
         /// <summary>Inner class containing info about an ASCII field.</summary>
         public class FieldAscii : TiffWriter.FieldBase {
             public FieldAscii(int tag, String values)
-                : base(tag, 2, values.GetBytes(Encoding.ASCII).Length + 1) {
-                byte[] b = values.GetBytes(Encoding.ASCII);
+                : base(tag, 2, values.GetBytes(System.Text.Encoding.ASCII).Length + 1) {
+                byte[] b = values.GetBytes(System.Text.Encoding.ASCII);
                 data = new byte[b.Length + 1];
                 Array.Copy(b, 0, data, 0, b.Length);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void WriteShort(int v, Stream stream) {
             stream.Write((v >> 8) & 0xff);
             stream.Write(v & 0xff);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void WriteLong(int v, Stream stream) {
             stream.Write((v >> 24) & 0xff);
             stream.Write((v >> 16) & 0xff);
@@ -256,7 +250,6 @@ namespace iText.IO.Codec {
             stream.Write(v & 0xff);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static void CompressLZW(Stream stream, int predictor, byte[] b, int height, int samplesPerPixel, int
              stride) {
             LZWCompressor lzwCompressor = new LZWCompressor(stream, 8, true);

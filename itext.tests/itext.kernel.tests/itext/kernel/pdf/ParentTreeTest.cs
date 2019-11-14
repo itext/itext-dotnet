@@ -63,8 +63,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             String outFile = destinationFolder + "parentTreeTest01.pdf";
@@ -92,8 +90,20 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("works in non-deterministic way because of the bug in iText code, DEVSIX-3322")]
+        [NUnit.Framework.Test]
+        public virtual void StampingFormXobjectInnerContentTaggedTest() {
+            //TODO update cmp-file after DEVSIX-3322 fixed
+            String pdf = sourceFolder + "alreadyTaggedFormXObjectInnerContent.pdf";
+            String outPdf = destinationFolder + "stampingFormXobjectInnerContentTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_stampingFormXobjectInnerContentTaggedTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.SetTagged();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
         [NUnit.Framework.Test]
         public virtual void Test02() {
             String outFile = destinationFolder + "parentTreeTest02.pdf";
@@ -121,8 +131,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test03() {
             String outFile = destinationFolder + "parentTreeTest03.pdf";
@@ -152,8 +160,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test04() {
             String outFile = destinationFolder + "parentTreeTest04.pdf";
@@ -182,8 +188,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test05() {
             String outFile = destinationFolder + "parentTreeTest05.pdf";
@@ -226,8 +230,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Test06() {
             String outFile = destinationFolder + "parentTreeTest06.pdf";
@@ -257,7 +259,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CheckParentTree(String outFileName, String cmpFileName) {
             PdfReader outReader = new PdfReader(outFileName);
             PdfDocument outDocument = new PdfDocument(outReader);

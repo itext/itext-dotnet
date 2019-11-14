@@ -168,9 +168,9 @@ namespace iText.Kernel.XMP.Impl {
             try {
                 if (c >= 0x80) {
                     if (c == 0x81 || c == 0x8D || c == 0x8F || c == 0x90 || c == 0x9D) {
+                        // space for undefined
                         return new byte[] { 0x20 };
                     }
-                    // space for undefined 
                     // interpret byte as Windows Cp1252 char
                     return iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
                 }

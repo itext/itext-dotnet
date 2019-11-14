@@ -60,15 +60,20 @@ namespace iText.Forms.Xfdf {
             this.outputStream = outputStream;
         }
 
-        /// <summary>The method writes data from XfdfObject into a xfdf data file.</summary>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <summary>
+        /// Writes data from
+        /// <see cref="XfdfObject"/>
+        /// into a xfdf data file.
+        /// </summary>
+        /// <param name="xfdfObject">
+        /// 
+        /// <see cref="XfdfObject"/>
+        /// containing the data.
+        /// </param>
         internal virtual void Write(XfdfObject xfdfObject) {
             this.WriteDom(xfdfObject);
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
         private void WriteDom(XfdfObject xfdfObject) {
             XmlDocument document = XfdfFileUtils.CreateNewXfdfDocument();
             // root xfdf element
@@ -149,7 +154,7 @@ namespace iText.Forms.Xfdf {
                 }
             }
             else {
-                if (fieldObject.GetValue() != null) {
+                if (fieldObject.GetValue() != null && !String.IsNullOrEmpty(fieldObject.GetValue())) {
                     XmlElement value = document.CreateElement("value");
                     value.InnerText = fieldObject.GetValue();
                     field.AppendChild(value);
@@ -175,7 +180,7 @@ namespace iText.Forms.Xfdf {
             }
             if (annotObject.GetContents() != null) {
                 XmlElement contents = document.CreateElement("contents");
-                contents.InnerText = annotObject.GetContents().ToString();
+                contents.InnerText = annotObject.GetContents().ToString().Replace('\r', '\n');
                 annot.AppendChild(contents);
             }
             if (annotObject.GetAppearance() != null) {

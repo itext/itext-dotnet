@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NestedListTest01() {
             String outFileName = destinationFolder + "nestedListTest01.pdf";
@@ -89,8 +87,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NestedListTest02() {
             String outFileName = destinationFolder + "nestedListTest02.pdf";
@@ -106,8 +102,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListNestedInTableTest01() {
             String outFileName = destinationFolder + "listNestedInTableTest01.pdf";
@@ -124,8 +118,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListNumberingTest01() {
             String outFileName = destinationFolder + "listNumberingTest01.pdf";
@@ -153,8 +145,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
         public virtual void AddListOnShortPage1() {
@@ -181,8 +171,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         [LogMessage(iText.IO.LogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT, Count = 6)]
@@ -211,8 +199,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DivInListItemTest01() {
             String outFileName = destinationFolder + "divInListItemTest01.pdf";
@@ -227,8 +213,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListOverflowTest01() {
             String outFileName = destinationFolder + "listOverflowTest01.pdf";
@@ -247,8 +231,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListOverflowTest02() {
             String outFileName = destinationFolder + "listOverflowTest02.pdf";
@@ -268,8 +250,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListOverflowTest03() {
             String outFileName = destinationFolder + "listOverflowTest03.pdf";
@@ -288,8 +268,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListEmptyItemTest01() {
             String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
@@ -305,8 +283,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageInListTest01() {
             String outFileName = destinationFolder + "imageInListTest01.pdf";
@@ -324,8 +300,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListItemAlignmentTest01() {
             String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
@@ -342,8 +316,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListItemTest01() {
             String outFileName = destinationFolder + "listItemTest01.pdf";
@@ -361,8 +333,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListItemTest02() {
             String outFileName = destinationFolder + "listItemTest02.pdf";
@@ -384,8 +354,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 4)]
         [NUnit.Framework.Test]
         public virtual void ListWithSetHeightProperties01() {
@@ -462,12 +430,10 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListSetSymbol() {
             List list = new List();
-            //Assert.assertEquals("- ", ((Text) list.getProperty(Property.LIST_SYMBOL)).getText());
-            NUnit.Framework.Assert.AreEqual(null, list.GetProperty<Object>(Property.LIST_SYMBOL));
+            NUnit.Framework.Assert.IsNull(list.GetProperty<Object>(Property.LIST_SYMBOL));
             list.SetListSymbol("* ");
             NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
             list = new List();
@@ -477,7 +443,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ListItemNullSymbol() {
             String outFileName = destinationFolder + "listItemNullSymbol.pdf";
@@ -499,7 +464,6 @@ namespace iText.Layout {
                 , "diff_"));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ListSymbolForcedPlacement01() {
@@ -517,7 +481,7 @@ namespace iText.Layout {
             document.Add(l);
             document.Add(new Paragraph("After list."));
             document.Close();
-            // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
+            // TODO DEVSIX-1655: partially not fitting list symbol not shown at all, however this might be improved
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
         }

@@ -63,10 +63,7 @@ namespace iText.Kernel.Pdf.Annot {
             Put(PdfName.Sound, sound);
         }
 
-        /// <summary>
-        /// see
-        /// <see cref="PdfAnnotation#makeAnnotation(PdfObject)"/>
-        /// </summary>
+        /// <seealso cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         protected internal PdfSoundAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -80,7 +77,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="encoding"/>
         /// <param name="channels"/>
         /// <param name="sampleSizeInBits"/>
-        /// <exception cref="System.IO.IOException"/>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
             : base(rect) {
@@ -104,8 +100,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// The name of an icon that is used in displaying the annotation. Possible values are different for different
         /// annotation types. See
-        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// a
@@ -122,10 +117,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are different
         /// for different annotation types:
-        /// <ul>
-        /// <li>Speaker
-        /// <li>Mic
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>Speaker
+        /// </description></item>
+        /// <item><description>Mic
+        /// </description></item>
+        /// </list>
         /// Additional names may be supported as well.
         /// </param>
         /// <returns>

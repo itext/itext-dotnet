@@ -116,7 +116,6 @@ namespace iText.IO.Util {
             return null;
         }
 
-        /// <exception cref="System.ArgumentException"/>
         public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
             return new StreamWriter(output, EncodingUtil.GetEncoding(encoding));
         }

@@ -74,8 +74,6 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void PrepareDocForSignDeferredTest() {
             String input = sourceFolder + "helloWorldDoc.pdf";
@@ -97,9 +95,6 @@ namespace iText.Signatures.Sign {
             ValidateTemplateForSignedDeferredResult(output, sigFieldName, filter, subFilter, estimatedSize);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DeferredHashCalcAndSignTest01() {
             String srcFileName = sourceFolder + "templateForSignCMSDeferred.pdf";
@@ -122,9 +117,6 @@ namespace iText.Signatures.Sign {
                 , null));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CalcHashOnDocCreationThenDeferredSignTest01() {
             String input = sourceFolder + "helloWorldDoc.pdf";
@@ -167,7 +159,6 @@ namespace iText.Signatures.Sign {
                 , null));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal static void ValidateTemplateForSignedDeferredResult(String output, String sigFieldName, PdfName filter
             , PdfName subFilter, int estimatedSize) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(output));

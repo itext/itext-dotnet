@@ -79,20 +79,12 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="Java.Security.KeyStoreException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Java.Security.Cert.CertificateException"/>
-        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
-        /// <exception cref="Java.Security.UnrecoverableKeyException"/>
         [NUnit.Framework.SetUp]
         public virtual void Init() {
             pk = Pkcs12FileHelper.ReadFirstKey(keystorePath, password, password);
             chain = Pkcs12FileHelper.ReadFirstChain(keystorePath, password);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleSigningTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
@@ -110,8 +102,6 @@ namespace iText.Signatures.Sign {
                 , "diff_", GetTestMap(new Rectangle(67, 575, 155, 15))));
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
@@ -119,8 +109,6 @@ namespace iText.Signatures.Sign {
                 , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate[] chain, ICipherParameters
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize

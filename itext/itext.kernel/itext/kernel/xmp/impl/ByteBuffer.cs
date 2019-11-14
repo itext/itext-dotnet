@@ -46,13 +46,13 @@ namespace iText.Kernel.XMP.Impl {
             this.length = 0;
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
+        /// <param name="buffer">a byte array that will be wrapped with <c>ByteBuffer</c>.</param>
         public ByteBuffer(byte[] buffer) {
             this.buffer = buffer;
             this.length = buffer.Length;
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
+        /// <param name="buffer">a byte array that will be wrapped with <c>ByteBuffer</c>.</param>
         /// <param name="length">the length of valid bytes in the array</param>
         public ByteBuffer(byte[] buffer, int length) {
             if (length > buffer.Length) {
@@ -64,7 +64,6 @@ namespace iText.Kernel.XMP.Impl {
 
         /// <summary>Loads the stream into a buffer.</summary>
         /// <param name="in">an InputStream</param>
-        /// <exception cref="System.IO.IOException">If the stream cannot be read.</exception>
         public ByteBuffer(Stream @in) {
             // load stream into buffer
             int chunk = 16384;
@@ -82,7 +81,7 @@ namespace iText.Kernel.XMP.Impl {
             }
         }
 
-        /// <param name="buffer">a byte array that will be wrapped with <code>ByteBuffer</code>.</param>
+        /// <param name="buffer">a byte array that will be wrapped with <c>ByteBuffer</c>.</param>
         /// <param name="offset">the offset of the provided buffer.</param>
         /// <param name="length">the length of valid bytes in the array</param>
         public ByteBuffer(byte[] buffer, int offset, int length) {
@@ -161,7 +160,7 @@ namespace iText.Kernel.XMP.Impl {
         }
 
         /// <summary>Append another buffer to this buffer.</summary>
-        /// <param name="anotherBuffer">another <code>ByteBuffer</code></param>
+        /// <param name="anotherBuffer">another <c>ByteBuffer</c></param>
         public virtual void Append(iText.Kernel.XMP.Impl.ByteBuffer anotherBuffer) {
             Append(anotherBuffer.buffer, 0, anotherBuffer.length);
         }

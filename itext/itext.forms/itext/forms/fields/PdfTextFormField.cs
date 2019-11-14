@@ -69,7 +69,7 @@ namespace iText.Forms.Fields {
             : base(pdfObject) {
         }
 
-        /// <summary>Returns <code>Tx</code>, the form type for textual form fields.</summary>
+        /// <summary>Returns <c>Tx</c>, the form type for textual form fields.</summary>
         /// <returns>
         /// the form type, as a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

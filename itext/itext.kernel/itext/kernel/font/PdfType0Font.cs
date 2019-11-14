@@ -68,6 +68,7 @@ namespace iText.Kernel.Font {
 
         protected internal CMapEncoding cmapEncoding;
 
+        //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
         protected internal ICollection<int> longTag;
 
         protected internal int cidFontType;
@@ -76,8 +77,7 @@ namespace iText.Kernel.Font {
 
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
-            //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
-            if (!cmap.Equals(PdfEncodings.IDENTITY_H) && !cmap.Equals(PdfEncodings.IDENTITY_V)) {
+            if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
                 throw new PdfException(PdfException.OnlyIdentityCMapsSupportsWithTrueType);
             }
             if (!ttf.GetFontNames().AllowEmbedding()) {
@@ -102,12 +102,12 @@ namespace iText.Kernel.Font {
             }
         }
 
+        // Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
+        // be able to create Type0 font based on predefined font.
+        // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
+        // There is no typography features in CJK fonts.
         internal PdfType0Font(CidFont font, String cmap)
             : base() {
-            // Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
-            // be able to create Type0 font based on predefined font.
-            // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
-            // There is no typography features in CJK fonts.
             if (!CidFontProperties.IsCidFont(font.GetFontNames().GetFontName(), cmap)) {
                 throw new PdfException("Font {0} with {1} encoding is not a cjk font.").SetMessageParams(font.GetFontNames
                     ().GetFontName(), cmap);
@@ -617,7 +617,7 @@ namespace iText.Kernel.Font {
         /// metrics[0] contains the glyph index and metrics[2]
         /// contains the Unicode code
         /// </param>
-        /// <returns>the stream representing this CMap or <CODE>null</CODE></returns>
+        /// <returns>the stream representing this CMap or <c>null</c></returns>
         [System.ObsoleteAttribute(@"will be removed in 7.2. Use GetToUnicode() instead")]
         public virtual PdfStream GetToUnicode(Object[] metrics) {
             return GetToUnicode();
@@ -644,9 +644,9 @@ namespace iText.Kernel.Font {
             return fontDescriptor;
         }
 
-        /// <summary>Generates the CIDFontTyte2 dictionary.</summary>
-        /// <param name="ttf"/>
-        /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
+        /// <summary>Generates the CIDFontType2 dictionary.</summary>
+        /// <param name="ttf">a font program of this font instance</param>
+        /// <param name="fontDescriptor">the font descriptor dictionary</param>
         /// <param name="fontName">a name of the font</param>
         /// <param name="metrics">the horizontal width metrics</param>
         /// <returns>fully initialized CIDFont</returns>
@@ -656,7 +656,22 @@ namespace iText.Kernel.Font {
             return GetCidFont(fontDescriptor, fontName, ttf != null && !ttf.IsCff());
         }
 
-        [Obsolete]
+        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        ///     </summary>
+        /// <remarks>
+        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
+        /// </remarks>
+        /// <param name="ttf">a font program of this font instance.</param>
+        /// <param name="longTag">
+        /// a set of integers, which are glyph ids that denote used glyphs.
+        /// This set is updated inside of the method if needed.
+        /// </param>
+        /// <param name="includeMetrics">
+        /// used to define whether longTag map is populated with glyph metrics.
+        /// Deprecated and is not used right now.
+        /// </param>
+        [System.ObsoleteAttribute(@"will be removed in 7.2")]
         protected internal virtual void AddRangeUni(TrueTypeFont ttf, IDictionary<int, int[]> longTag, bool includeMetrics
             ) {
             AddRangeUni(ttf, longTag.Keys);
@@ -776,11 +791,8 @@ namespace iText.Kernel.Font {
             }
         }
 
-        /// <summary>Generates the CIDFontTyte2 dictionary.</summary>
-        /// <param name="ttf">
-        /// 
-        /// <see cref="PdfFont.fontProgram"/>
-        /// </param>
+        /// <summary>Generates the CIDFontType2 dictionary.</summary>
+        /// <param name="ttf">a font program of this font instance</param>
         /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
         /// <param name="fontName">a name of the font</param>
         /// <param name="glyphIds">glyph ids used in from the font</param>
@@ -791,8 +803,8 @@ namespace iText.Kernel.Font {
             return GetCidFont(fontDescriptor, fontName, ttf != null && !ttf.IsCff());
         }
 
-        /// <summary>Generates the CIDFontTyte2 dictionary.</summary>
-        /// <param name="fontDescriptor">the indirect reference to the font descriptor</param>
+        /// <summary>Generates the CIDFontType2 dictionary.</summary>
+        /// <param name="fontDescriptor">the font descriptor dictionary</param>
         /// <param name="fontName">a name of the font</param>
         /// <param name="isType2">
         /// true, if the font is CIDFontType2 (TrueType glyphs),
@@ -867,7 +879,7 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary>Creates a ToUnicode CMap to allow copy and paste from Acrobat.</summary>
-        /// <returns>the stream representing this CMap or <CODE>null</CODE></returns>
+        /// <returns>the stream representing this CMap or <c>null</c></returns>
         public virtual PdfStream GetToUnicode() {
             OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(new ByteArrayOutputStream
                 ());
@@ -922,6 +934,17 @@ namespace iText.Kernel.Font {
             return s.Substring(s.Length - 4);
         }
 
+        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        ///     </summary>
+        /// <remarks>
+        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
+        /// </remarks>
+        /// <param name="ttf">a font program of this font instance.</param>
+        /// <param name="longTag">
+        /// a set of integers, which are glyph ids that denote used glyphs.
+        /// This set is updated inside of the method if needed.
+        /// </param>
         [System.ObsoleteAttribute(@"use iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(Java.Util.SortedSet{E}, bool, System.Collections.Generic.IList{E}) instead."
             )]
         protected internal virtual void AddRangeUni(TrueTypeFont ttf, ICollection<int> longTag) {

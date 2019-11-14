@@ -56,10 +56,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReaderTurnsCorrectlyNotWellFormattedValueInDictionary_01() {
             String inPath = sourceFolder + "documentWithMalformedNumberOnDictionary.pdf";
@@ -85,10 +81,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(EXPECTED, result);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReaderTurnsCorrectlyNotWellFormattedValueInDictionary_02() {
             String inPath = sourceFolder + "documentWithMalformedNumberOnDictionary2.pdf";
@@ -114,7 +106,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(EXPECTED, result);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private String GetItalicAngleValue(String inPath) {
             String result = "";
             PdfReader pdfR = new PdfReader(inPath);

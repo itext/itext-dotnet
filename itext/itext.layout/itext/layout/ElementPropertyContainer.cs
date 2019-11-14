@@ -62,7 +62,7 @@ namespace iText.Layout {
     /// <see cref="iText.Layout.Element.IElement">layout object</see>
     /// implementations.
     /// </remarks>
-    /// 
+    /// <typeparam name="T">this type</typeparam>
     public abstract class ElementPropertyContainer<T> : IPropertyContainer
         where T : IPropertyContainer {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
@@ -116,13 +116,12 @@ namespace iText.Layout {
         /// side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.RELATIVE">relative</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.RELATIVE">relative</see>.
         /// The default implementation in
         /// <see cref="iText.Layout.Renderer.AbstractRenderer"/>
         /// treats
-        /// <code>left</code> and <code>top</code> as the most important values. Only
-        /// if <code>left == 0</code> will <code>right</code> be used for the
+        /// <c>left</c> and <c>top</c> as the most important values. Only
+        /// if <c>left == 0</c> will <c>right</c> be used for the
         /// calculation; ditto for top vs. bottom.
         /// </remarks>
         /// <param name="left">movement to the left</param>
@@ -148,8 +147,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
         /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
@@ -168,8 +166,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
         /// <param name="bottom">vertical position of the bottom-left corner on the page</param>
@@ -194,8 +191,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
@@ -216,8 +212,7 @@ namespace iText.Layout {
         /// Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="left">horizontal position of the bottom-left corner on the page</param>
@@ -634,7 +629,7 @@ namespace iText.Layout {
         /// text causes glyph outlines to be stroked, filled, used as a clipping
         /// boundary, or some combination of the three.
         /// </summary>
-        /// <param name="textRenderingMode">an <code>int</code> value</param>
+        /// <param name="textRenderingMode">an <c>int</c> value</param>
         /// <returns>this Element.</returns>
         /// <seealso cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
         public virtual T SetTextRenderingMode(int textRenderingMode) {
@@ -752,14 +747,12 @@ namespace iText.Layout {
         /// Multiple call to this method will produce multiple lines.
         /// <para />
         /// The thickness of the line will be
-        /// <c>thickness + thicknessMul * fontSize</c>
-        /// .
+        /// <c>thickness + thicknessMul * fontSize</c>.
         /// The position of the line will be
-        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>
-        /// .
+        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>.
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <CODE>null</CODE> to follow the
+        /// the color of the line or <c>null</c> to follow the
         /// text color
         /// </param>
         /// <param name="thickness">the absolute thickness of the line</param>
@@ -783,14 +776,12 @@ namespace iText.Layout {
         /// Multiple call to this method will produce multiple lines.
         /// <para />
         /// The thickness of the line will be
-        /// <c>thickness + thicknessMul * fontSize</c>
-        /// .
+        /// <c>thickness + thicknessMul * fontSize</c>.
         /// The position of the line will be
-        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>
-        /// .
+        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>.
         /// </remarks>
         /// <param name="color">
-        /// the color of the line or <CODE>null</CODE> to follow the
+        /// the color of the line or <c>null</c> to follow the
         /// text color
         /// </param>
         /// <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent

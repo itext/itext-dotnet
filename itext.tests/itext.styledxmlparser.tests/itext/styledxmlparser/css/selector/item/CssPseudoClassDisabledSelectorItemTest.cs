@@ -53,7 +53,6 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/css/selector/item/CssPseudoClassDisabledSelectorItemTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestDisabledSelector() {
             String filename = sourceFolder + "disabled.html";

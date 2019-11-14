@@ -81,7 +81,6 @@ namespace iText.Svg.Renderers {
 ;
         }
 
-        /// <exception cref="System.MissingMethodException"/>
         [NUnit.Framework.Test]
         public virtual void ProtectedConstructorInnerTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -111,7 +110,6 @@ namespace iText.Svg.Renderers {
 ;
         }
 
-        /// <exception cref="System.MissingMethodException"/>
         [NUnit.Framework.Test]
         public virtual void ArgumentedConstructorInnerTest() {
             NUnit.Framework.Assert.That(() =>  {

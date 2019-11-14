@@ -55,7 +55,6 @@ namespace iText.IO.Font {
         private StreamWriter output;
 
         /// <summary>Creates a new instance of Pfm2afm</summary>
-        /// <exception cref="System.IO.IOException"/>
         private Pfm2afm(RandomAccessFileOrArray input, Stream output) {
             this.input = input;
             this.output = FileUtil.CreatePrintWriter(output, "ISO-8859-1");
@@ -64,7 +63,6 @@ namespace iText.IO.Font {
         /// <summary>Converts a PFM file into an AFM file.</summary>
         /// <param name="input">the PFM file</param>
         /// <param name="output">the AFM file</param>
-        /// <exception cref="System.IO.IOException">on error</exception>
         public static void Convert(RandomAccessFileOrArray input, Stream output) {
             iText.IO.Font.Pfm2afm p = new iText.IO.Font.Pfm2afm(input, output);
             p.Openpfm();
@@ -75,7 +73,6 @@ namespace iText.IO.Font {
             p.output.Flush();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private String ReadString(int n) {
             byte[] b = new byte[n];
             input.ReadFully(b);
@@ -88,7 +85,6 @@ namespace iText.IO.Font {
             return iText.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private String ReadString() {
             StringBuilder buf = new StringBuilder();
             while (true) {
@@ -121,7 +117,6 @@ namespace iText.IO.Font {
             output.Write(" ;\n");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Openpfm() {
             input.Seek(0);
             vers = input.ReadShortLE();
@@ -170,7 +165,6 @@ namespace iText.IO.Font {
             descender = input.ReadShortLE();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putheader() {
             output.Write("StartFontMetrics 2.0\n");
             if (copyright.Length > 0) {
@@ -228,8 +222,7 @@ namespace iText.IO.Font {
             *  table of font widths, not if they are all the same.
             */
             output.Write("\nIsFixedPitch ");
-            if ((kind & 1) == 0 || avgwidth == maxwidth) {
-                /* Flag for mono */
+            if ((kind & 1) == 0 || /* Flag for mono */ avgwidth == maxwidth) {
                 /* Avg width = max width */
                 output.Write("true");
                 isMono = true;
@@ -269,7 +262,6 @@ namespace iText.IO.Font {
             output.Write('\n');
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putchartab() {
             int count = lastchar - firstchar + 1;
             int[] ctabs = new int[count];
@@ -320,7 +312,6 @@ namespace iText.IO.Font {
             output.Write("EndCharMetrics\n");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void Putkerntab() {
             if (kernpairs == 0) {
                 return;
@@ -364,8 +355,10 @@ namespace iText.IO.Font {
 
         private int h_len;
 
+        /* Total length of .pfm file */
         private String copyright;
 
+        /* Copyright string [60]*/
         private short type;
 
         private short points;
@@ -390,20 +383,27 @@ namespace iText.IO.Font {
 
         private byte charset;
 
+        /* 0=windows, otherwise nomap */
         private short pixwidth;
 
+        /* Width for mono fonts */
         private short pixheight;
 
         private byte kind;
 
+        /* Lower bit off in mono */
         private short avgwidth;
 
+        /* Mono if avg=max width */
         private short maxwidth;
 
+        /* Use to compute bounding box */
         private int firstchar;
 
+        /* First char in table */
         private int lastchar;
 
+        /* Last char in table */
         private byte defchar;
 
         private byte brkchar;
@@ -414,6 +414,7 @@ namespace iText.IO.Font {
 
         private int face;
 
+        /* Face name */
         private int bits;
 
         private int bitoff;
@@ -422,24 +423,35 @@ namespace iText.IO.Font {
 
         private int psext;
 
+        /* PostScript extension */
         private int chartab;
 
+        /* Character width tables */
         private int res1;
 
         private int kernpairs;
 
+        /* Kerning pairs */
         private int res2;
 
         private int fontname;
 
+        /* Font name */
+        /*
+        *  Some metrics from the PostScript extension
+        */
         private short capheight;
 
+        /* Cap height */
         private short xheight;
 
+        /* X height */
         private short ascender;
 
+        /* Ascender */
         private short descender;
 
+        /* Descender (positive) */
         private bool isMono;
 
         /// <summary>Translate table from 1004 to psstd.</summary>
@@ -447,82 +459,38 @@ namespace iText.IO.Font {
         /// Translate table from 1004 to psstd.  1004 is an extension of the
         /// Windows translate table used in PM.
         /// </remarks>
-        private int[] Win2PSStd = new int[] { 0, 0, 0, 0, 197, 198, 199, 0, 202, 0, 205, 206, 207, 0, 0, 0, 0, 0, 
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 169, 40, 41, 42, 43, 44, 45, 46, 
-            47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72
-            , 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 193, 97, 
-            98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 
-            119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 0, 184, 166, 185, 188, 178, 179, 195, 189, 0, 172, 234
-            , 0, 0, 0, 0, 96, 0, 170, 186, 183, 177, 208, 196, 0, 0, 173, 250, 0, 0, 0, 0, 161, 162, 163, 168, 165
-            , 0, 167, 200, 0, 227, 171, 0, 0, 0, 197, 0, 0, 0, 0, 194, 0, 182, 180, 203, 0, 235, 187, 0, 0, 0, 191
-            , 0, 0, 0, 0, 0, 0, 225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 251
-            , 0, 0, 0, 0, 0, 0, 241, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 249, 0, 0, 0, 0, 0, 0, 0 };
+        private int[] Win2PSStd = new int[] { 0, 0, 0, 0, 197, 198, 199, 0, 202, 0, 205, 206, 207, 0, 0, 0, 
+                // 00
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                // 10
+                32, 33, 34, 35, 36, 37, 38, 169, 40, 41, 42, 43, 44, 45, 46, 47, 
+                // 20
+                48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 
+                // 30
+                64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 
+                // 40
+                80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 
+                // 50
+                193, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 
+                // 60
+                112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 
+                // 70
+                128, 0, 184, 166, 185, 188, 178, 179, 195, 189, 0, 172, 234, 0, 0, 0, 
+                // 80
+                0, 96, 0, 170, 186, 183, 177, 208, 196, 0, 0, 173, 250, 0, 0, 0, 
+                // 90
+                0, 161, 162, 163, 168, 165, 0, 167, 200, 0, 227, 171, 0, 0, 0, 197, 
+                // A0
+                0, 0, 0, 0, 194, 0, 182, 180, 203, 0, 235, 187, 0, 0, 0, 191, 
+                // B0
+                0, 0, 0, 0, 0, 0, 225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                // C0
+                0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 251, 
+                // D0
+                0, 0, 0, 0, 0, 0, 241, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                // E0
+                0, 0, 0, 0, 0, 0, 0, 0, 249, 0, 0, 0, 0, 0, 0, 0 };
 
-        /// <summary>Windows character names.</summary>
-        /// <remarks>
-        /// Windows character names.  Give a name to the used locations
-        /// for when the all flag is specified.
-        /// </remarks>
-        private String[] WinChars = new String[] { "W00", "W01", "W02", "W03", "macron", "breve", "dotaccent", "W07"
-            , "ring", "W09", "W0a", "W0b", "W0c", "W0d", "W0e", "W0f", "hungarumlaut", "ogonek", "caron", "W13", "W14"
-            , "W15", "W16", "W17", "W18", "W19", "W1a", "W1b", "W1c", "W1d", "W1e", "W1f", "space", "exclam", "quotedbl"
-            , "numbersign", "dollar", "percent", "ampersand", "quotesingle", "parenleft", "parenright", "asterisk"
-            , "plus", "comma", "hyphen", "period", "slash", "zero", "one", "two", "three", "four", "five", "six", 
-            "seven", "eight", "nine", "colon", "semicolon", "less", "equal", "greater", "question", "at", "A", "B"
-            , "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
-            "W", "X", "Y", "Z", "bracketleft", "backslash", "bracketright", "asciicircum", "underscore", "grave", 
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"
-            , "v", "w", "x", "y", "z", "braceleft", "bar", "braceright", "asciitilde", "W7f", "euro", "W81", "quotesinglbase"
-            , "florin", "quotedblbase", "ellipsis", "dagger", "daggerdbl", "circumflex", "perthousand", "Scaron", 
-            "guilsinglleft", "OE", "W8d", "Zcaron", "W8f", "W90", "quoteleft", "quoteright", "quotedblleft", "quotedblright"
-            , "bullet", "endash", "emdash", "tilde", "trademark", "scaron", "guilsinglright", "oe", "W9d", "zcaron"
-            , "Ydieresis", "reqspace", "exclamdown", "cent", "sterling", "currency", "yen", "brokenbar", "section"
-            , "dieresis", "copyright", "ordfeminine", "guillemotleft", "logicalnot", "syllable", "registered", "macron"
-            , "degree", "plusminus", "twosuperior", "threesuperior", "acute", "mu", "paragraph", "periodcentered", 
-            "cedilla", "onesuperior", "ordmasculine", "guillemotright", "onequarter", "onehalf", "threequarters", 
-            "questiondown", "Agrave", "Aacute", "Acircumflex", "Atilde", "Adieresis", "Aring", "AE", "Ccedilla", "Egrave"
-            , "Eacute", "Ecircumflex", "Edieresis", "Igrave", "Iacute", "Icircumflex", "Idieresis", "Eth", "Ntilde"
-            , "Ograve", "Oacute", "Ocircumflex", "Otilde", "Odieresis", "multiply", "Oslash", "Ugrave", "Uacute", 
-            "Ucircumflex", "Udieresis", "Yacute", "Thorn", "germandbls", "agrave", "aacute", "acircumflex", "atilde"
-            , "adieresis", "aring", "ae", "ccedilla", "egrave", "eacute", "ecircumflex", "edieresis", "igrave", "iacute"
-            , "icircumflex", "idieresis", "eth", "ntilde", "ograve", "oacute", "ocircumflex", "otilde", "odieresis"
-            , "divide", "oslash", "ugrave", "uacute", "ucircumflex", "udieresis", "yacute", "thorn", "ydieresis" };
-        /* Total length of .pfm file */
-        /* Copyright string [60]*/
-        /* 0=windows, otherwise nomap */
-        /* Width for mono fonts */
-        /* Lower bit off in mono */
-        /* Mono if avg=max width */
-        /* Use to compute bounding box */
-        /* First char in table */
-        /* Last char in table */
-        /* Face name */
-        /* PostScript extension */
-        /* Character width tables */
-        /* Kerning pairs */
-        /* Font name */
-        /*
-        *  Some metrics from the PostScript extension
-        */
-        /* Cap height */
-        /* X height */
-        /* Ascender */
-        /* Descender (positive) */
-        // 00
-        // 10
-        // 20
-        // 30
-        // 40
-        // 50
-        // 60
-        // 70
-        // 80
-        // 90
-        // A0
-        // B0
-        // C0
-        // D0
-        // E0
         // F0
         //    /**
         //     *  Character class.  This is a minor attempt to overcome the problem that
@@ -547,261 +515,68 @@ namespace iText.IO.Font {
         //        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   /* e0 */
         //        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1   /* f0 */
         //    };
-        /*   00    */
-        /*   01    */
-        /*   02    */
-        /*   03    */
-        /*   04    */
-        /*   05    */
-        /*   06    */
-        /*   07    */
-        /*   08    */
-        /*   09    */
-        /*   0a    */
-        /*   0b    */
-        /*   0c    */
-        /*   0d    */
-        /*   0e    */
-        /*   0f    */
-        /*   10    */
-        /*   11    */
-        /*   12    */
-        /*   13    */
-        /*   14    */
-        /*   15    */
-        /*   16    */
-        /*   17    */
-        /*   18    */
-        /*   19    */
-        /*   1a    */
-        /*   1b    */
-        /*   1c    */
-        /*   1d    */
-        /*   1e    */
-        /*   1f    */
-        /*   20    */
-        /*   21    */
-        /*   22    */
-        /*   23    */
-        /*   24    */
-        /*   25    */
-        /*   26    */
-        /*   27    */
-        /*   28    */
-        /*   29    */
-        /*   2A    */
-        /*   2B    */
-        /*   2C    */
-        /*   2D    */
-        /*   2E    */
-        /*   2F    */
-        /*   30    */
-        /*   31    */
-        /*   32    */
-        /*   33    */
-        /*   34    */
-        /*   35    */
-        /*   36    */
-        /*   37    */
-        /*   38    */
-        /*   39    */
-        /*   3A    */
-        /*   3B    */
-        /*   3C    */
-        /*   3D    */
-        /*   3E    */
-        /*   3F    */
-        /*   40    */
-        /*   41    */
-        /*   42    */
-        /*   43    */
-        /*   44    */
-        /*   45    */
-        /*   46    */
-        /*   47    */
-        /*   48    */
-        /*   49    */
-        /*   4A    */
-        /*   4B    */
-        /*   4C    */
-        /*   4D    */
-        /*   4E    */
-        /*   4F    */
-        /*   50    */
-        /*   51    */
-        /*   52    */
-        /*   53    */
-        /*   54    */
-        /*   55    */
-        /*   56    */
-        /*   57    */
-        /*   58    */
-        /*   59    */
-        /*   5A    */
-        /*   5B    */
-        /*   5C    */
-        /*   5D    */
-        /*   5E    */
-        /*   5F    */
-        /*   60    */
-        /*   61    */
-        /*   62    */
-        /*   63    */
-        /*   64    */
-        /*   65    */
-        /*   66    */
-        /*   67    */
-        /*   68    */
-        /*   69    */
-        /*   6A    */
-        /*   6B    */
-        /*   6C    */
-        /*   6D    */
-        /*   6E    */
-        /*   6F    */
-        /*   70    */
-        /*   71    */
-        /*   72    */
-        /*   73    */
-        /*   74    */
-        /*   75    */
-        /*   76    */
-        /*   77    */
-        /*   78    */
-        /*   79    */
-        /*   7A    */
-        /*   7B    */
-        /*   7C    */
-        /*   7D    */
-        /*   7E    */
-        /*   7F    */
-        /*   80    */
-        /*   81    */
-        /*   82    */
-        /*   83    */
-        /*   84    */
-        /*   85    */
-        /*   86    */
-        /*   87    */
-        /*   88    */
-        /*   89    */
-        /*   8A    */
-        /*   8B    */
-        /*   8C    */
-        /*   8D    */
-        /*   8E    */
-        /*   8F    */
-        /*   90    */
-        /*   91    */
-        /*   92    */
-        /*   93    */
-        /*   94    */
-        /*   95    */
-        /*   96    */
-        /*   97    */
-        /*   98    */
-        /*   99    */
-        /*   9A    */
-        /*   9B    */
-        /*   9C    */
-        /*   9D    */
-        /*   9E    */
-        /*   9F    */
-        /*   A0    */
-        /*   A1    */
-        /*   A2    */
-        /*   A3    */
-        /*   A4    */
-        /*   A5    */
-        /*   A6    */
-        /*   A7    */
-        /*   A8    */
-        /*   A9    */
-        /*   AA    */
-        /*   AB    */
-        /*   AC    */
-        /*   AD    */
-        /*   AE    */
-        /*   AF    */
-        /*   B0    */
-        /*   B1    */
-        /*   B2    */
-        /*   B3    */
-        /*   B4    */
-        /*   B5    */
-        /*   B6    */
-        /*   B7    */
-        /*   B8    */
-        /*   B9    */
-        /*   BA    */
-        /*   BB    */
-        /*   BC    */
-        /*   BD    */
-        /*   BE    */
-        /*   BF    */
-        /*   C0    */
-        /*   C1    */
-        /*   C2    */
-        /*   C3    */
-        /*   C4    */
-        /*   C5    */
-        /*   C6    */
-        /*   C7    */
-        /*   C8    */
-        /*   C9    */
-        /*   CA    */
-        /*   CB    */
-        /*   CC    */
-        /*   CD    */
-        /*   CE    */
-        /*   CF    */
-        /*   D0    */
-        /*   D1    */
-        /*   D2    */
-        /*   D3    */
-        /*   D4    */
-        /*   D5    */
-        /*   D6    */
-        /*   D7    */
-        /*   D8    */
-        /*   D9    */
-        /*   DA    */
-        /*   DB    */
-        /*   DC    */
-        /*   DD    */
-        /*   DE    */
-        /*   DF    */
-        /*   E0    */
-        /*   E1    */
-        /*   E2    */
-        /*   E3    */
-        /*   E4    */
-        /*   E5    */
-        /*   E6    */
-        /*   E7    */
-        /*   E8    */
-        /*   E9    */
-        /*   EA    */
-        /*   EB    */
-        /*   EC    */
-        /*   ED    */
-        /*   EE    */
-        /*   EF    */
-        /*   F0    */
-        /*   F1    */
-        /*   F2    */
-        /*   F3    */
-        /*   F4    */
-        /*   F5    */
-        /*   F6    */
-        /*   F7    */
-        /*   F8    */
-        /*   F9    */
-        /*   FA    */
-        /*   FB    */
-        /*   FC    */
-        /*   FD    */
-        /*   FE    */
+        /// <summary>Windows character names.</summary>
+        /// <remarks>
+        /// Windows character names.  Give a name to the used locations
+        /// for when the all flag is specified.
+        /// </remarks>
+        private String[] WinChars = new String[] { "W00", /*   00    */ "W01", /*   01    */ "W02", /*   02    */ 
+            "W03", /*   03    */ "macron", /*   04    */ "breve", /*   05    */ "dotaccent", /*   06    */ "W07", 
+            /*   07    */ "ring", /*   08    */ "W09", /*   09    */ "W0a", /*   0a    */ "W0b", /*   0b    */ "W0c"
+            , /*   0c    */ "W0d", /*   0d    */ "W0e", /*   0e    */ "W0f", /*   0f    */ "hungarumlaut", /*   10    */ 
+            "ogonek", /*   11    */ "caron", /*   12    */ "W13", /*   13    */ "W14", /*   14    */ "W15", /*   15    */ 
+            "W16", /*   16    */ "W17", /*   17    */ "W18", /*   18    */ "W19", /*   19    */ "W1a", /*   1a    */ 
+            "W1b", /*   1b    */ "W1c", /*   1c    */ "W1d", /*   1d    */ "W1e", /*   1e    */ "W1f", /*   1f    */ 
+            "space", /*   20    */ "exclam", /*   21    */ "quotedbl", /*   22    */ "numbersign", /*   23    */ "dollar"
+            , /*   24    */ "percent", /*   25    */ "ampersand", /*   26    */ "quotesingle", /*   27    */ "parenleft"
+            , /*   28    */ "parenright", /*   29    */ "asterisk", /*   2A    */ "plus", /*   2B    */ "comma", /*   2C    */ 
+            "hyphen", /*   2D    */ "period", /*   2E    */ "slash", /*   2F    */ "zero", /*   30    */ "one", /*   31    */ 
+            "two", /*   32    */ "three", /*   33    */ "four", /*   34    */ "five", /*   35    */ "six", /*   36    */ 
+            "seven", /*   37    */ "eight", /*   38    */ "nine", /*   39    */ "colon", /*   3A    */ "semicolon"
+            , /*   3B    */ "less", /*   3C    */ "equal", /*   3D    */ "greater", /*   3E    */ "question", /*   3F    */ 
+            "at", /*   40    */ "A", /*   41    */ "B", /*   42    */ "C", /*   43    */ "D", /*   44    */ "E", /*   45    */ 
+            "F", /*   46    */ "G", /*   47    */ "H", /*   48    */ "I", /*   49    */ "J", /*   4A    */ "K", /*   4B    */ 
+            "L", /*   4C    */ "M", /*   4D    */ "N", /*   4E    */ "O", /*   4F    */ "P", /*   50    */ "Q", /*   51    */ 
+            "R", /*   52    */ "S", /*   53    */ "T", /*   54    */ "U", /*   55    */ "V", /*   56    */ "W", /*   57    */ 
+            "X", /*   58    */ "Y", /*   59    */ "Z", /*   5A    */ "bracketleft", /*   5B    */ "backslash", /*   5C    */ 
+            "bracketright", /*   5D    */ "asciicircum", /*   5E    */ "underscore", /*   5F    */ "grave", /*   60    */ 
+            "a", /*   61    */ "b", /*   62    */ "c", /*   63    */ "d", /*   64    */ "e", /*   65    */ "f", /*   66    */ 
+            "g", /*   67    */ "h", /*   68    */ "i", /*   69    */ "j", /*   6A    */ "k", /*   6B    */ "l", /*   6C    */ 
+            "m", /*   6D    */ "n", /*   6E    */ "o", /*   6F    */ "p", /*   70    */ "q", /*   71    */ "r", /*   72    */ 
+            "s", /*   73    */ "t", /*   74    */ "u", /*   75    */ "v", /*   76    */ "w", /*   77    */ "x", /*   78    */ 
+            "y", /*   79    */ "z", /*   7A    */ "braceleft", /*   7B    */ "bar", /*   7C    */ "braceright", /*   7D    */ 
+            "asciitilde", /*   7E    */ "W7f", /*   7F    */ "euro", /*   80    */ "W81", /*   81    */ "quotesinglbase"
+            , /*   82    */ "florin", /*   83    */ "quotedblbase", /*   84    */ "ellipsis", /*   85    */ "dagger"
+            , /*   86    */ "daggerdbl", /*   87    */ "circumflex", /*   88    */ "perthousand", /*   89    */ "Scaron"
+            , /*   8A    */ "guilsinglleft", /*   8B    */ "OE", /*   8C    */ "W8d", /*   8D    */ "Zcaron", /*   8E    */ 
+            "W8f", /*   8F    */ "W90", /*   90    */ "quoteleft", /*   91    */ "quoteright", /*   92    */ "quotedblleft"
+            , /*   93    */ "quotedblright", /*   94    */ "bullet", /*   95    */ "endash", /*   96    */ "emdash"
+            , /*   97    */ "tilde", /*   98    */ "trademark", /*   99    */ "scaron", /*   9A    */ "guilsinglright"
+            , /*   9B    */ "oe", /*   9C    */ "W9d", /*   9D    */ "zcaron", /*   9E    */ "Ydieresis", /*   9F    */ 
+            "reqspace", /*   A0    */ "exclamdown", /*   A1    */ "cent", /*   A2    */ "sterling", /*   A3    */ 
+            "currency", /*   A4    */ "yen", /*   A5    */ "brokenbar", /*   A6    */ "section", /*   A7    */ "dieresis"
+            , /*   A8    */ "copyright", /*   A9    */ "ordfeminine", /*   AA    */ "guillemotleft", /*   AB    */ 
+            "logicalnot", /*   AC    */ "syllable", /*   AD    */ "registered", /*   AE    */ "macron", /*   AF    */ 
+            "degree", /*   B0    */ "plusminus", /*   B1    */ "twosuperior", /*   B2    */ "threesuperior", /*   B3    */ 
+            "acute", /*   B4    */ "mu", /*   B5    */ "paragraph", /*   B6    */ "periodcentered", /*   B7    */ 
+            "cedilla", /*   B8    */ "onesuperior", /*   B9    */ "ordmasculine", /*   BA    */ "guillemotright", 
+            /*   BB    */ "onequarter", /*   BC    */ "onehalf", /*   BD    */ "threequarters", /*   BE    */ "questiondown"
+            , /*   BF    */ "Agrave", /*   C0    */ "Aacute", /*   C1    */ "Acircumflex", /*   C2    */ "Atilde", 
+            /*   C3    */ "Adieresis", /*   C4    */ "Aring", /*   C5    */ "AE", /*   C6    */ "Ccedilla", /*   C7    */ 
+            "Egrave", /*   C8    */ "Eacute", /*   C9    */ "Ecircumflex", /*   CA    */ "Edieresis", /*   CB    */ 
+            "Igrave", /*   CC    */ "Iacute", /*   CD    */ "Icircumflex", /*   CE    */ "Idieresis", /*   CF    */ 
+            "Eth", /*   D0    */ "Ntilde", /*   D1    */ "Ograve", /*   D2    */ "Oacute", /*   D3    */ "Ocircumflex"
+            , /*   D4    */ "Otilde", /*   D5    */ "Odieresis", /*   D6    */ "multiply", /*   D7    */ "Oslash", 
+            /*   D8    */ "Ugrave", /*   D9    */ "Uacute", /*   DA    */ "Ucircumflex", /*   DB    */ "Udieresis"
+            , /*   DC    */ "Yacute", /*   DD    */ "Thorn", /*   DE    */ "germandbls", /*   DF    */ "agrave", /*   E0    */ 
+            "aacute", /*   E1    */ "acircumflex", /*   E2    */ "atilde", /*   E3    */ "adieresis", /*   E4    */ 
+            "aring", /*   E5    */ "ae", /*   E6    */ "ccedilla", /*   E7    */ "egrave", /*   E8    */ "eacute", 
+            /*   E9    */ "ecircumflex", /*   EA    */ "edieresis", /*   EB    */ "igrave", /*   EC    */ "iacute"
+            , /*   ED    */ "icircumflex", /*   EE    */ "idieresis", /*   EF    */ "eth", /*   F0    */ "ntilde", 
+            /*   F1    */ "ograve", /*   F2    */ "oacute", /*   F3    */ "ocircumflex", /*   F4    */ "otilde", /*   F5    */ 
+            "odieresis", /*   F6    */ "divide", /*   F7    */ "oslash", /*   F8    */ "ugrave", /*   F9    */ "uacute"
+            , /*   FA    */ "ucircumflex", /*   FB    */ "udieresis", /*   FC    */ "yacute", /*   FD    */ "thorn"
+            , /*   FE    */ "ydieresis" };
         /*   FF    */
     }
 }

@@ -46,8 +46,7 @@ using System.Collections.Generic;
 namespace iText.Layout.Font {
     /// <summary>
     /// Builder of
-    /// <see cref="Range"/>
-    /// .
+    /// <see cref="Range"/>.
     /// </summary>
     public class RangeBuilder {
         private static readonly Range fullRangeSingleton = new Range.FullRange();

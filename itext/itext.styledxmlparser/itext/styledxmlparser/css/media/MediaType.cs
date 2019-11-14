@@ -46,8 +46,7 @@ using System.Collections.Generic;
 namespace iText.StyledXmlParser.Css.Media {
     /// <summary>
     /// Class that bundles all the media types and allows you to registered valid media types in a
-    /// <see cref="Java.Util.Set{E}"/>
-    /// .
+    /// <see cref="Java.Util.Set{E}"/>.
     /// </summary>
     public sealed class MediaType {
         /// <summary>The Constant registeredMediaTypes.</summary>

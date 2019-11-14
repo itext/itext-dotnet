@@ -78,8 +78,6 @@ namespace iText.Kernel.XMP.Impl
 		/// advanced iteration options, see
 		/// <see cref="iText.Kernel.XMP.Options.IteratorOptions"/>
 		/// </param>
-		/// <exception cref="iText.Kernel.XMP.XMPException">If the node defined by the paramters is not existing.
-		/// 	</exception>
 		public XMPIteratorImpl(XMPMetaImpl xmp, String schemaNS, String propPath, IteratorOptions
 			 options)
 		{

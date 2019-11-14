@@ -43,11 +43,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Jsoup.Helper;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for FormElement</summary>
     /// <author>Jonathan Hedley</author>
-    public class FormElementTest {
+    public class FormElementTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void HasAssociatedControls() {
             //"button", "fieldset", "input", "keygen", "object", "output", "select", "textarea"

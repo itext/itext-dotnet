@@ -30,7 +30,7 @@
 using System;
 
 namespace iText.Kernel.XMP.Impl.XPath {
-    /// <summary>A segment of a parsed <code>XMPPath</code>.</summary>
+    /// <summary>A segment of a parsed <c>XMPPath</c>.</summary>
     /// <since>23.06.2006</since>
     public class XMPPathSegment {
         /// <summary>name of the path segment</summary>

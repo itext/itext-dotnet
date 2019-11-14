@@ -54,10 +54,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private const char ESC = '\\';
 
+        // escape char for chomp balanced.
         /// <summary>Create a new TokenQueue.</summary>
         /// <param name="data">string of data to back queue.</param>
         public TokenQueue(String data) {
-            // escape char for chomp balanced.
             Validate.NotNull(data);
             queue = data;
         }

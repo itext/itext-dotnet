@@ -52,6 +52,7 @@ namespace iText.Kernel.Pdf {
     public class PdfStream : PdfDictionary {
         protected internal int compressionLevel;
 
+        // Output stream associated with PDF stream.
         protected internal PdfOutputStream outputStream;
 
         private Stream inputStream;
@@ -67,14 +68,12 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="bytes">
         /// initial content of
-        /// <see cref="PdfOutputStream"/>
-        /// .
+        /// <see cref="PdfOutputStream"/>.
         /// </param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
         public PdfStream(byte[] bytes, int compressionLevel)
             : base() {
-            // Output stream associated with PDF stream.
             SetState(MUST_BE_INDIRECT);
             this.compressionLevel = compressionLevel;
             if (bytes != null && bytes.Length > 0) {
@@ -165,9 +164,9 @@ namespace iText.Kernel.Pdf {
             SetState(MUST_BE_INDIRECT);
         }
 
+        //NOTE This constructor only for PdfReader.
         internal PdfStream(long offset, PdfDictionary keys)
             : base() {
-            //NOTE This constructor only for PdfReader.
             this.compressionLevel = CompressionConstants.UNDEFINED_COMPRESSION;
             this.offset = offset;
             PutAll(keys);
@@ -190,8 +189,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <returns>compression level.</returns>
         public virtual int GetCompressionLevel() {
@@ -202,8 +200,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets compression level of this PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
@@ -236,8 +233,7 @@ namespace iText.Kernel.Pdf {
         /// if the
         /// <c>PdfStream</c>
         /// was created by
-        /// <c>InputStream</c>
-        /// .
+        /// <c>InputStream</c>.
         /// </returns>
         public virtual byte[] GetBytes(bool decoded) {
             if (IsFlushed()) {
@@ -281,20 +277,20 @@ namespace iText.Kernel.Pdf {
             return bytes;
         }
 
-        /// <summary>Sets <code>bytes</code> as stream's content.</summary>
+        /// <summary>Sets <c>bytes</c> as stream's content.</summary>
         /// <remarks>
-        /// Sets <code>bytes</code> as stream's content.
-        /// Could not be used with streams which were created by <code>InputStream</code>.
+        /// Sets <c>bytes</c> as stream's content.
+        /// Could not be used with streams which were created by <c>InputStream</c>.
         /// </remarks>
-        /// <param name="bytes">new content for stream; if <code>null</code> then stream's content will be discarded</param>
+        /// <param name="bytes">new content for stream; if <c>null</c> then stream's content will be discarded</param>
         public virtual void SetData(byte[] bytes) {
             SetData(bytes, false);
         }
 
-        /// <summary>Sets or appends <code>bytes</code> to stream content.</summary>
+        /// <summary>Sets or appends <c>bytes</c> to stream content.</summary>
         /// <remarks>
-        /// Sets or appends <code>bytes</code> to stream content.
-        /// Could not be used with streams which were created by <code>InputStream</code>.
+        /// Sets or appends <c>bytes</c> to stream content.
+        /// Could not be used with streams which were created by <c>InputStream</c>.
         /// </remarks>
         /// <param name="bytes">
         /// New content for stream. These bytes are considered to be a raw data (i.e. not encoded/compressed/encrypted)
@@ -303,10 +299,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="SetCompressionLevel(int)"/>
         /// and
         /// is handled on stream writing to the output document.
-        /// If <code>null</code> and <code>append</code> is false then stream's content will be discarded.
+        /// If <c>null</c> and <c>append</c> is false then stream's content will be discarded.
         /// </param>
         /// <param name="append">
-        /// If set to true then <code>bytes</code> will be appended to the end,
+        /// If set to true then <c>bytes</c> will be appended to the end,
         /// rather then replace original content. The original content will be decoded if needed.
         /// </param>
         public virtual void SetData(byte[] bytes, bool append) {

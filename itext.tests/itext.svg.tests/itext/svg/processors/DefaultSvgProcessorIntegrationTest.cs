@@ -57,7 +57,6 @@ namespace iText.Svg.Processors {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DefaultBehaviourTest() {
             String svgFile = sourceFolder + "RedCircle.svg";
@@ -78,7 +77,6 @@ namespace iText.Svg.Processors {
         //Attribute comparison
         //TODO(RND-868) : Replace above check with the following
         //Assert.assertEquals(expected,actual);
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void NamedObjectRectangleTest() {
             String svgFile = sourceFolder + "namedObjectRectangleTest.svg";

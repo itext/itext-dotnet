@@ -40,8 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.Layout.Font {
-    public class FontCharacteristicsUtilsTest {
+    public class FontCharacteristicsUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestNormalizingThinFontWeight() {
             NUnit.Framework.Assert.AreEqual(100, FontCharacteristicsUtils.NormalizeFontWeight((short)-10000));

@@ -76,8 +76,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// The name of an icon that is used in displaying the annotation. Possible values are different for different
         /// annotation types. See
-        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// a
@@ -94,10 +93,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are different
         /// for different annotation types:
-        /// <ul>
-        /// <li>GraphPushPin
-        /// <li>PaperclipTag
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>GraphPushPin
+        /// </description></item>
+        /// <item><description>PaperclipTag
+        /// </description></item>
+        /// </list>
         /// Additional names may be supported as well.
         /// </param>
         /// <returns>

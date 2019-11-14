@@ -93,9 +93,10 @@ namespace iText.Kernel.Log {
         private void PlusOne() {
             if (++count > repeat_level) {
                 if (iText.Kernel.Version.IsAGPLVersion() || iText.Kernel.Version.IsExpired()) {
-                    String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1);
+                    String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1, iText.IO.Util.EncodingUtil.ISO_8859_1
+                        );
                     if (iText.Kernel.Version.IsExpired()) {
-                        message = iText.IO.Util.JavaUtil.GetStringForBytes(message_2);
+                        message = iText.IO.Util.JavaUtil.GetStringForBytes(message_2, iText.IO.Util.EncodingUtil.ISO_8859_1);
                     }
                     level++;
                     if (level == 1) {

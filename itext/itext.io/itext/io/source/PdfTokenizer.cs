@@ -122,50 +122,46 @@ namespace iText.IO.Source {
 
         /// <summary>
         /// Creates a PdfTokenizer for the specified
-        /// <see cref="RandomAccessFileOrArray"/>
-        /// .
+        /// <see cref="RandomAccessFileOrArray"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a PdfTokenizer for the specified
+        /// <see cref="RandomAccessFileOrArray"/>.
         /// The beginning of the file is read to determine the location of the header, and the data source is adjusted
         /// as necessary to account for any junk that occurs in the byte source before the header
-        /// </summary>
+        /// </remarks>
         /// <param name="file">the source</param>
         public PdfTokenizer(RandomAccessFileOrArray file) {
             this.file = file;
             this.outBuf = new ByteBuffer();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Seek(long pos) {
             file.Seek(pos);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ReadFully(byte[] bytes) {
             file.ReadFully(bytes);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long GetPosition() {
             return file.GetPosition();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             if (closeStream) {
                 file.Close();
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long Length() {
             return file.Length();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int Read() {
             return file.Read();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual String ReadString(int size) {
             StringBuilder buf = new StringBuilder();
             int ch;
@@ -225,7 +221,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual int GetHeaderOffset() {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
@@ -238,7 +233,6 @@ namespace iText.IO.Source {
             return idx;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual String CheckPdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -249,7 +243,6 @@ namespace iText.IO.Source {
             return str.JSubstring(idx + 1, idx + 8);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void CheckFdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -259,7 +252,6 @@ namespace iText.IO.Source {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual long GetStartxref() {
             int arrLength = 1024;
             long fileLength = file.Length();
@@ -274,13 +266,12 @@ namespace iText.IO.Source {
                 if (idx >= 0) {
                     return pos + idx;
                 }
+                // 9 = "startxref".length()
                 pos = pos - arrLength + 9;
             }
-            // 9 = "startxref".length()
             throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void NextValidToken() {
             int level = 0;
             byte[] n1 = null;
@@ -325,7 +316,7 @@ namespace iText.IO.Source {
                                 catch (Exception) {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
-                                    ILog logger = LogManager.GetLogger(typeof(iText.IO.Source.PdfTokenizer));
+                                    ILog logger = LogManager.GetLogger(typeof(PdfTokenizer));
                                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.IO.Util.JavaUtil.GetStringForBytes
                                         (n1), iText.IO.Util.JavaUtil.GetStringForBytes(n2)));
                                     reference = -1;
@@ -350,8 +341,9 @@ namespace iText.IO.Source {
                     }
                 }
             }
+            // if the level 1 check returns EOF,
+            // then we are still looking at a number - set the type back to Number
             if (level == 1) {
-                // if the level 1 check returns EOF, then we are still looking at a number - set the type back to Number
                 type = PdfTokenizer.TokenType.Number;
                 outBuf.Reset().Append(n1);
             }
@@ -360,7 +352,6 @@ namespace iText.IO.Source {
         // if we hit here, the file is either corrupt (stream ended unexpectedly),
         // or the last token ended exactly at the end of a stream.  This last
         // case can occur inside an Object Stream.
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool NextToken() {
             int ch;
             outBuf.Reset();
@@ -498,8 +489,8 @@ namespace iText.IO.Source {
                         bool isReal = false;
                         int numberOfMinuses = 0;
                         if (ch == '-') {
+                            // Take care of number like "--234". If Acrobat can read them so must we.
                             do {
-                                // Take care of number like "--234". If Acrobat can read them so must we.
                                 ++numberOfMinuses;
                                 ch = file.Read();
                             }
@@ -595,13 +586,12 @@ namespace iText.IO.Source {
         /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </returns>
         protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting) {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
+            // <6954657874ae...>
             if (hexWriting) {
-                // <6954657874ae...>
                 for (int i = from; i <= to; ) {
                     int v1 = ByteBuffer.GetHex(content[i++]);
                     if (i > to) {
@@ -718,8 +708,7 @@ namespace iText.IO.Source {
         /// <param name="hexWriting"/>
         /// <returns>
         /// byte[] for decrypting or for creating
-        /// <see cref="System.String"/>
-        /// .
+        /// <see cref="System.String"/>.
         /// </returns>
         public static byte[] DecodeStringContent(byte[] content, bool hexWriting) {
             return DecodeStringContent(content, 0, content.Length - 1, hexWriting);
@@ -731,8 +720,7 @@ namespace iText.IO.Source {
         /// Is a certain character a whitespace? Currently checks on the following: '0', '9', '10', '12', '13', '32'.
         /// <br />
         /// The same as calling
-        /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>
-        /// .
+        /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(ch, true)</see>.
         /// </remarks>
         /// <param name="ch">int</param>
         /// <returns>boolean</returns>
@@ -762,16 +750,10 @@ namespace iText.IO.Source {
         /// <summary>Helper method to handle content errors.</summary>
         /// <remarks>
         /// Helper method to handle content errors. Add file position to
-        /// <c>PdfRuntimeException</c>
-        /// .
+        /// <c>PdfRuntimeException</c>.
         /// </remarks>
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
-        /// <exception cref="iText.IO.IOException">
-        /// wrap error message into
-        /// <c>PdfRuntimeException</c>
-        /// and add position in file.
-        /// </exception>
         public virtual void ThrowError(String error, params Object[] messageParams) {
             try {
                 throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
@@ -812,12 +794,10 @@ namespace iText.IO.Source {
         /// for a list of whitespace characters.
         /// <br />
         /// The same as calling
-        /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>
-        /// .
+        /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>.
         /// </remarks>
         /// <param name="buffer">@see ByteBuffer</param>
         /// <returns>boolean</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool ReadLineSegment(ByteBuffer buffer) {
             return ReadLineSegment(buffer, true);
         }
@@ -838,7 +818,6 @@ namespace iText.IO.Source {
         /// <see cref="ReadLineSegment(ByteBuffer)">readLineSegment(input)</see>
         /// </param>
         /// <returns>boolean</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace) {
             int c;
             bool eol = false;
@@ -866,9 +845,9 @@ namespace iText.IO.Source {
                     }
 
                     case 9:
+                    //whitespaces
                     case 12:
                     case 32: {
-                        //whitespaces
                         if (prevWasWhitespace) {
                             break;
                         }
@@ -918,7 +897,7 @@ namespace iText.IO.Source {
         /// <summary>Check whether line starts with object declaration.</summary>
         /// <param name="lineTokenizer">tokenizer, built by single line.</param>
         /// <returns>object number and generation if check is successful, otherwise - null.</returns>
-        public static int[] CheckObjectStart(iText.IO.Source.PdfTokenizer lineTokenizer) {
+        public static int[] CheckObjectStart(PdfTokenizer lineTokenizer) {
             try {
                 lineTokenizer.Seek(0);
                 if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number) {
@@ -943,6 +922,7 @@ namespace iText.IO.Source {
             return null;
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. This inner class is not used anywhere")]
         protected internal class ReusableRandomAccessSource : IRandomAccessSource {
             private ByteBuffer buffer;
 
@@ -978,7 +958,6 @@ namespace iText.IO.Source {
                 return buffer.Size();
             }
 
-            /// <exception cref="System.IO.IOException"/>
             public virtual void Close() {
                 buffer = null;
             }

@@ -60,10 +60,16 @@ namespace iText.Layout.Renderer {
     /// <see cref="IRenderer">renderer</see>
     /// object for a
     /// <see cref="iText.Layout.Element.Paragraph"/>
-    /// object. It will draw the glyphs of the textual content on the
-    /// <see cref="DrawContext"/>
-    /// .
+    /// object.
     /// </summary>
+    /// <remarks>
+    /// This class represents the
+    /// <see cref="IRenderer">renderer</see>
+    /// object for a
+    /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// object. It will draw the glyphs of the textual content on the
+    /// <see cref="DrawContext"/>.
+    /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
 
@@ -159,8 +165,8 @@ namespace iText.Layout.Renderer {
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
             bool floatOverflowedToNextPageWithNothing = false;
-            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
             // rectangles are compared by instances
+            ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
@@ -223,43 +229,11 @@ namespace iText.Layout.Renderer {
                 }
                 TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
                     .LEFT);
-                if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
-                    () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
-                    if (processedRenderer != null) {
-                        Rectangle actualLineLayoutBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        processedRenderer.Justify(actualLineLayoutBox.GetWidth() - lineIndent);
-                    }
-                }
-                else {
-                    if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
-                        Rectangle actualLineLayoutBox = layoutBox.Clone();
-                        FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
-                        float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
-                            ().GetBBox().GetWidth());
-                        switch (textAlignment) {
-                            case TextAlignment.RIGHT: {
-                                AlignStaticKids(processedRenderer, deltaX);
-                                break;
-                            }
-
-                            case TextAlignment.CENTER: {
-                                AlignStaticKids(processedRenderer, deltaX / 2);
-                                break;
-                            }
-
-                            case TextAlignment.JUSTIFIED: {
-                                if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
-                                    AlignStaticKids(processedRenderer, deltaX);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
+                ApplyTextAlignment(textAlignment, result, processedRenderer, layoutBox, floatRendererAreas, onlyOverflowedFloatsLeft
+                    , lineIndent);
+                // could be false if e.g. line contains only floats
                 bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
                     () > 0;
-                // could be false if e.g. line contains only floats
                 bool doesNotFit = processedRenderer == null;
                 float deltaY = 0;
                 if (!doesNotFit) {
@@ -405,11 +379,11 @@ namespace iText.Layout.Renderer {
                     previousDescent = processedRenderer.GetMaxDescent();
                     if (!inlineFloatsOverflowedToNextPage.IsEmpty() && result.GetOverflowRenderer() == null) {
                         onlyOverflowedFloatsLeft = true;
+                        // dummy renderer to trick paragraph renderer to continue kids loop
                         currentRenderer = new LineRenderer();
                     }
                 }
             }
-            // dummy renderer to trick paragraph renderer to continue kids loop
             float moveDown = lastLineBottomLeadingIndent;
             if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
                 moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();
@@ -522,10 +496,9 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Gets the lines which are the result of the
-        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
-        /// .
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>.
         /// </summary>
-        /// <returns>paragraph lines, or <code>null</code> if layout hasn't been called yet</returns>
+        /// <returns>paragraph lines, or <c>null</c> if layout hasn't been called yet</returns>
         public virtual IList<LineRenderer> GetLines() {
             return lines;
         }
@@ -639,6 +612,45 @@ namespace iText.Layout.Renderer {
                     continue;
                 }
                 childRenderer.Move(dxRight, 0);
+            }
+        }
+
+        private void ApplyTextAlignment(TextAlignment? textAlignment, LineLayoutResult result, LineRenderer processedRenderer
+            , Rectangle layoutBox, IList<Rectangle> floatRendererAreas, bool onlyOverflowedFloatsLeft, float lineIndent
+            ) {
+            if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
+                () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
+                if (processedRenderer != null) {
+                    Rectangle actualLineLayoutBox = layoutBox.Clone();
+                    FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                    processedRenderer.Justify(actualLineLayoutBox.GetWidth() - lineIndent);
+                }
+            }
+            else {
+                if (textAlignment != TextAlignment.LEFT && processedRenderer != null) {
+                    Rectangle actualLineLayoutBox = layoutBox.Clone();
+                    FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);
+                    float deltaX = Math.Max(0, actualLineLayoutBox.GetWidth() - lineIndent - processedRenderer.GetOccupiedArea
+                        ().GetBBox().GetWidth());
+                    switch (textAlignment) {
+                        case TextAlignment.RIGHT: {
+                            AlignStaticKids(processedRenderer, deltaX);
+                            break;
+                        }
+
+                        case TextAlignment.CENTER: {
+                            AlignStaticKids(processedRenderer, deltaX / 2);
+                            break;
+                        }
+
+                        case TextAlignment.JUSTIFIED: {
+                            if (BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION))) {
+                                AlignStaticKids(processedRenderer, deltaX);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

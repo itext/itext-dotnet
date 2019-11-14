@@ -47,11 +47,8 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Layout.Borders {
     public class GrooveBorder : Border3D {
         /// <summary>Creates a GrooveBorder instance with the specified width.</summary>
-        /// <remarks>
-        /// Creates a GrooveBorder instance with the specified width. The color is set to the default:
-        /// <see cref="Border3D#GRAY">gray</see>
-        /// .
-        /// </remarks>
+        /// <remarks>Creates a GrooveBorder instance with the specified width. The color is set to the predefined gray.
+        ///     </remarks>
         /// <param name="width">width of the border</param>
         public GrooveBorder(float width)
             : base(width) {
@@ -59,8 +56,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a GrooveBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">
@@ -74,8 +70,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a GrooveBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">
@@ -89,8 +84,7 @@ namespace iText.Layout.Borders {
 
         /// <summary>
         /// Creates a GrooveBorder instance with the specified width and the
-        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>
-        /// .
+        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
         /// <param name="color">

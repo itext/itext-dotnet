@@ -47,7 +47,7 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Navigation {
     /// <summary>
     /// This class shall be used for creation of destinations, associated Remote Go-To and Embedded Go-To actions only,
-    /// i.e.
+    /// i.e. the destination point is in another PDF.
     /// </summary>
     /// <remarks>
     /// This class shall be used for creation of destinations, associated Remote Go-To and Embedded Go-To actions only,

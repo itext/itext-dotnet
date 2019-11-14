@@ -46,8 +46,7 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
-    /// <summary>Helper class to read nt, short, words, etc.</summary>
-    /// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
+    /// <summary>Helper class to read nt, short, words, etc. from an InputStream.</summary>
     public class InputMeta {
         internal Stream @in;
 
@@ -61,7 +60,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Read the next word from the InputStream.</summary>
         /// <returns>the next word or 0 if the end of the stream has been reached</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int ReadWord() {
             length += 2;
             int k1 = @in.Read();
@@ -73,7 +71,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Read the next short from the InputStream.</summary>
         /// <returns>the next short value</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int ReadShort() {
             int k = ReadWord();
             if (k > 0x7fff) {
@@ -84,7 +81,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Read the next int from the InputStream.</summary>
         /// <returns>the next int</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int ReadInt() {
             length += 4;
             int k1 = @in.Read();
@@ -98,7 +94,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Read the next byte from the InputStream.</summary>
         /// <returns>the next byte</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual int ReadByte() {
             ++length;
             return @in.Read() & 0xff;
@@ -107,7 +102,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Skips "len" amount of bytes from the InputStream.</summary>
         /// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.</remarks>
         /// <param name="len">amount of bytes needed to skip</param>
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Skip(int len) {
             length += len;
             StreamUtil.Skip(@in, len);
@@ -122,10 +116,14 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>
         /// Read the next
         /// <see cref="iText.Kernel.Colors.Color"/>
-        /// from the InputStream. This reads 4 bytes.
+        /// from the InputStream.
         /// </summary>
+        /// <remarks>
+        /// Read the next
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// from the InputStream. This reads 4 bytes.
+        /// </remarks>
         /// <returns>the next Color</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual Color ReadColor() {
             int red = ReadByte();
             int green = ReadByte();

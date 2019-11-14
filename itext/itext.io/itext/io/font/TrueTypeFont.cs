@@ -65,16 +65,15 @@ namespace iText.IO.Font {
         /// <summary>The map containing the kerning information.</summary>
         /// <remarks>
         /// The map containing the kerning information. It represents the content of
-        /// table 'kern'. The key is an <CODE>Integer</CODE> where the top 16 bits
+        /// table 'kern'. The key is an <c>Integer</c> where the top 16 bits
         /// are the glyph number for the first character and the lower 16 bits are the
         /// glyph number for the second character. The value is the amount of kerning in
-        /// normalized 1000 units as an <CODE>Integer</CODE>. This value is usually negative.
+        /// normalized 1000 units as an <c>Integer</c>. This value is usually negative.
         /// </remarks>
         protected internal IntHashtable kerning = new IntHashtable();
 
         private byte[] fontStreamBytes;
 
-        /// <exception cref="System.IO.IOException"/>
         private TrueTypeFont(OpenTypeParser fontParser) {
             this.fontParser = fontParser;
             this.fontParser.LoadTables(true);
@@ -85,22 +84,18 @@ namespace iText.IO.Font {
             fontNames = new FontNames();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path)
             : this(new OpenTypeParser(path)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(byte[] ttf)
             : this(new OpenTypeParser(ttf)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(String ttcPath, int ttcIndex)
             : this(new OpenTypeParser(ttcPath, ttcIndex)) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(byte[] ttc, int ttcIndex)
             : this(new OpenTypeParser(ttc, ttcIndex)) {
         }
@@ -213,7 +208,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGdefTable() {
             int[] gdef = fontParser.tables.Get("GDEF");
             if (gdef != null) {
@@ -225,7 +219,6 @@ namespace iText.IO.Font {
             gdefTable.ReadTable();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGsubTable() {
             int[] gsub = fontParser.tables.Get("GSUB");
             if (gsub != null) {
@@ -234,7 +227,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadGposTable() {
             int[] gpos = fontParser.tables.Get("GPOS");
             if (gpos != null) {
@@ -243,7 +235,6 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void InitializeFontProperties() {
             // initialize sfnt tables
             OpenTypeParser.HeaderTable head = fontParser.GetHeadTable();
@@ -364,7 +355,6 @@ namespace iText.IO.Font {
             return Object.Equals(fontParser.fileName, fontProgram);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             if (fontParser != null) {
                 fontParser.Close();
@@ -376,9 +366,12 @@ namespace iText.IO.Font {
         ///     </summary>
         /// <remarks>
         /// The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
-        /// usedGlyphs can be used for width array and ToUnicode CMAP.
+        /// This set of used glyphs can be used for building width array and ToUnicode CMAP.
         /// </remarks>
-        /// <param name="usedGlyphs">used glyphs that will be updated if needed.</param>
+        /// <param name="usedGlyphs">
+        /// a set of integers, which are glyph ids that denote used glyphs.
+        /// This set is updated inside of the method if needed.
+        /// </param>
         /// <param name="subset">subset status</param>
         /// <param name="subsetRanges">additional subset ranges</param>
         public virtual void UpdateUsedGlyphs(SortedSet<int> usedGlyphs, bool subset, IList<int[]> subsetRanges) {
@@ -405,6 +398,17 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>
+        /// Normalizes given ranges by making sure that first values in pairs are lower than second values and merges overlapping
+        /// ranges in one.
+        /// </summary>
+        /// <param name="ranges">
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of integer arrays, which are constituted by pairs of ints that denote
+        /// each range limits. Each integer array size shall be a multiple of two.
+        /// </param>
+        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
         private static int[] ToCompactRange(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
             foreach (int[] range in ranges) {

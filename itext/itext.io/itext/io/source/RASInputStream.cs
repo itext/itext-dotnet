@@ -93,7 +93,6 @@ namespace iText.IO.Source {
 	    }
 
 	    /// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
 		public override int Read(byte[] b, int off, int len)
 		{
 			int count = source.Get(position, b, off, len);
@@ -104,7 +103,6 @@ namespace iText.IO.Source {
 		}
 
 		/// <summary><inheritDoc/></summary>
-		/// <exception cref="System.IO.IOException"/>
 		public override int ReadByte()
 		{
             int c = source.Get(position);

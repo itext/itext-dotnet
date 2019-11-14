@@ -186,7 +186,7 @@ namespace iText.Kernel.Pdf.Filters {
             }
         }
 
-        /// <summary>Append <code>newString</code> to the end of <code>oldString</code>.</summary>
+        /// <summary>Append <c>newString</c> to the end of <c>oldString</c>.</summary>
         /// <param name="oldString">string be appended to</param>
         /// <param name="newString">string that is to be appended to oldString</param>
         /// <returns>combined string</returns>

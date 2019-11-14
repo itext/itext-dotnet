@@ -46,8 +46,7 @@ using System.Collections.Generic;
 namespace iText.Svg.Renderers.Path {
     /// <summary>
     /// Interface that will provide a mapping from path element-data  instruction names to
-    /// <see cref="IPathShape"/>
-    /// .
+    /// <see cref="IPathShape"/>.
     /// </summary>
     public interface IPathShapeMapper {
         /// <summary>Provides a mapping of Path-data instructions' names to path shape classes.</summary>

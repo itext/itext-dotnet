@@ -47,20 +47,23 @@ using iText.IO.Util;
 namespace iText.Layout.Font {
     /// <summary>
     /// Ordered range for
-    /// <see cref="FontInfo.GetFontUnicodeRange()"/>
-    /// .
+    /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
+    /// </summary>
+    /// <remarks>
+    /// Ordered range for
+    /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
     /// To create a custom Range instance
     /// <see cref="RangeBuilder"/>
     /// shall be used.
-    /// </summary>
+    /// </remarks>
     public class Range {
+        //ordered sub-ranges
         private Range.SubRange[] ranges;
 
         private Range() {
         }
 
         internal Range(IList<Range.SubRange> ranges) {
-            //ordered sub-ranges
             if (ranges.Count == 0) {
                 throw new ArgumentException("Ranges shall not be empty");
             }

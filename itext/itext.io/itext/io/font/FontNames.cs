@@ -49,44 +49,43 @@ namespace iText.IO.Font {
     public class FontNames {
         protected internal IDictionary<int, IList<String[]>> allNames;
 
+        // name, ID = 4
         private String[][] fullName;
 
+        // name, ID = 1 or 16
         private String[][] familyName;
 
+        // name, ID = 2 or 17
         private String[][] subfamily;
 
+        //name, ID = 6
         private String fontName;
 
+        // name, ID = 2
         private String style = "";
 
+        // name, ID = 20
         private String cidFontName;
 
+        // os/2.usWeightClass
         private int weight = FontWeights.NORMAL;
 
+        // os/2.usWidthClass
         private String fontStretch = FontStretches.NORMAL;
 
+        // head.macStyle
         private int macStyle;
 
+        // os/2.fsType != 2
         private bool allowEmbedding;
 
-        // name, ID = 4
-        // name, ID = 1 or 16
-        // name, ID = 2 or 17
-        //name, ID = 6
-        // name, ID = 2
-        // name, ID = 20
-        // os/2.usWeightClass
-        // os/2.usWidthClass
-        // head.macStyle
-        // os/2.fsType != 2
         /// <summary>Extracts the names of the font in all the languages available.</summary>
         /// <param name="id">the name id to retrieve in OpenType notation</param>
         /// <returns>
         /// not empty
         /// <c>String[][]</c>
         /// if any names exists, otherwise
-        /// <see langword="null"/>
-        /// .
+        /// <see langword="null"/>.
         /// </returns>
         public virtual String[][] GetNames(int id) {
             IList<String[]> names = allNames.Get(id);
@@ -124,8 +123,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="weight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal virtual void SetFontWeight(int weight) {
             this.weight = FontWeights.NormalizeFontWeight(weight);
@@ -144,8 +142,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font stretch in css notation (font-stretch property).</summary>
         /// <param name="fontStretch">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal virtual void SetFontStretch(String fontStretch) {
             this.fontStretch = fontStretch;

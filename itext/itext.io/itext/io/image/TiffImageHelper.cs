@@ -58,10 +58,10 @@ namespace iText.IO.Image {
 
             internal TiffImageData image;
 
+            //ByteArrayOutputStream stream;
             internal bool jpegProcessing;
 
             internal IDictionary<String, Object> additional;
-            //ByteArrayOutputStream stream;
         }
 
         /// <summary>Processes the ImageData as a TIFF image.</summary>
@@ -163,9 +163,9 @@ namespace iText.IO.Image {
                 }
                 long[] offset = GetArrayLongShort(dir, TIFFConstants.TIFFTAG_STRIPOFFSETS);
                 long[] size = GetArrayLongShort(dir, TIFFConstants.TIFFTAG_STRIPBYTECOUNTS);
+                // some TIFF producers are really lousy, so...
                 if ((size == null || (size.Length == 1 && (size[0] == 0 || size[0] + offset[0] > s.Length()))) && h == rowsStrip
                     ) {
-                    // some TIFF producers are really lousy, so...
                     size = new long[] { s.Length() - (int)offset[0] };
                 }
                 bool reverse = false;
@@ -215,8 +215,8 @@ namespace iText.IO.Image {
                         break;
                     }
                 }
+                //single strip, direct
                 if (direct && rowsStrip == h) {
-                    //single strip, direct
                     byte[] im = new byte[(int)size[0]];
                     s.Seek(offset[0]);
                     s.ReadFully(im);
@@ -388,8 +388,8 @@ namespace iText.IO.Image {
                     extraSamples = 1;
                 }
                 int samplePerPixel = 1;
+                // 1,3,4
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_SAMPLESPERPIXEL)) {
-                    // 1,3,4
                     samplePerPixel = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_SAMPLESPERPIXEL);
                 }
                 int bitsPerSample = 1;
@@ -426,8 +426,8 @@ namespace iText.IO.Image {
                 }
                 bool reverse = (fillOrder == TIFFConstants.FILLORDER_LSB2MSB);
                 int rowsStrip = h;
+                // another hack for broken tiffs
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_ROWSPERSTRIP)) {
-                    //another hack for broken tiffs
                     rowsStrip = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_ROWSPERSTRIP);
                 }
                 if (rowsStrip <= 0 || rowsStrip > h) {
@@ -435,9 +435,9 @@ namespace iText.IO.Image {
                 }
                 long[] offset = GetArrayLongShort(dir, TIFFConstants.TIFFTAG_STRIPOFFSETS);
                 long[] size = GetArrayLongShort(dir, TIFFConstants.TIFFTAG_STRIPBYTECOUNTS);
+                // some TIFF producers are really lousy, so...
                 if ((size == null || (size.Length == 1 && (size[0] == 0 || size[0] + offset[0] > s.Length()))) && h == rowsStrip
                     ) {
-                    // some TIFF producers are really lousy, so...
                     size = new long[] { s.Length() - (int)offset[0] };
                 }
                 if (compression == TIFFConstants.COMPRESSION_LZW || compression == TIFFConstants.COMPRESSION_DEFLATE || compression
@@ -694,7 +694,6 @@ namespace iText.IO.Image {
             return dpi;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessExtraSamples(DeflaterOutputStream zip, DeflaterOutputStream mzip, byte[] outBuf
             , int samplePerPixel, int bitsPerSample, int width, int height) {
             if (bitsPerSample == 8) {

@@ -82,10 +82,10 @@ namespace iText.Layout.Font {
         /// </remarks>
         /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
+            // fonts is sorted best to worst, get(0) returns the best matched FontInfo
             return fonts[0];
         }
 
-        // fonts is sorted best to worst, get(0) returns the best matched FontInfo
         /// <summary>Sorted set of fonts.</summary>
         /// <returns>sorted set of fonts</returns>
         public IEnumerable<FontInfo> GetFonts() {
@@ -124,7 +124,7 @@ namespace iText.Layout.Font {
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
                     String fontFamily = fontFamilies[i];
-                    if (fontFamily.EqualsIgnoreCase("monospace")) {
+                    if ("monospace".EqualsIgnoreCase(fontFamily)) {
                         fc.SetMonospaceFlag(true);
                     }
                     bool isLastFontFamilyToBeProcessed = i == fontFamilies.Count - 1;
@@ -193,9 +193,9 @@ namespace iText.Layout.Font {
                 }
                 if (!fontFamilySetByCharacteristics) {
                     // if alias is set, fontInfo's descriptor should not be checked
-                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && fontInfo.GetDescriptor().GetFamilyNameLowerCase
-                        ().Equals(fontFamily) || (null != fontInfo.GetAlias() && fontInfo.GetAlias().ToLowerInvariant().Equals
-                        (fontFamily)))) {
+                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && null != fontInfo.GetDescriptor().GetFamilyNameLowerCase
+                        () && fontInfo.GetDescriptor().GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias
+                        () && fontInfo.GetAlias().ToLowerInvariant().Equals(fontFamily)))) {
                         score += FONT_FAMILY_EQUALS_AWARD;
                     }
                     else {

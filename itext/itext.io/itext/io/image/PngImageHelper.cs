@@ -104,6 +104,7 @@ namespace iText.IO.Image {
 
             internal int inputBands;
 
+            // number of bytes per input pixel
             internal int bytesPerPixel;
 
             internal byte[] colorTable;
@@ -131,7 +132,6 @@ namespace iText.IO.Image {
             internal String intent;
 
             internal IccProfile iccProfile;
-            // number of bytes per input pixel
         }
 
         /// <summary>Some PNG specific values.</summary>
@@ -212,7 +212,6 @@ namespace iText.IO.Image {
             RawImageHelper.UpdateImageAttributes(png.image, png.additional);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png) {
             ReadPng(pngStream, png);
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
@@ -387,7 +386,6 @@ namespace iText.IO.Image {
                         float ZC = YC * ((1 - png.xB) / png.yB - 1);
                         float XW = XA + XB + XC;
                         float YW = 1;
-                        //YA+YB+YC;
                         float ZW = ZA + ZB + ZC;
                         float[] wpa = new float[3];
                         wpa[0] = XW;
@@ -417,7 +415,6 @@ namespace iText.IO.Image {
             return (png.colorType & 2) == 0 ? 1 : 3;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void ReadPng(Stream pngStream, PngImageHelper.PngParameters png) {
             for (int i = 0; i < PNGID.Length; i++) {
                 if (PNGID[i] != pngStream.Read()) {
@@ -728,9 +725,9 @@ namespace iText.IO.Image {
                 }
                 catch (Exception) {
                 }
+                // empty on purpose
                 switch (filter) {
                     case PNG_FILTER_NONE: {
-                        // empty on purpose
                         break;
                     }
 
@@ -820,9 +817,9 @@ namespace iText.IO.Image {
                             v[0] = png.trans[idx];
                         }
                         else {
+                            // Patrick Valsecchi
                             v[0] = 255;
                         }
-                        // Patrick Valsecchi
                         SetPixel(png.smask, v, 0, 1, dstX, y, 8, yStride);
                         dstX += step;
                     }
@@ -1013,26 +1010,23 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <summary>Gets an <CODE>int</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Gets an <c>int</c> from an <c>InputStream</c>.</summary>
+        /// <param name="pngStream">an <c>InputStream</c></param>
+        /// <returns>the value of an <c>int</c></returns>
         public static int GetInt(Stream pngStream) {
             return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
         }
 
-        /// <summary>Gets a <CODE>word</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Gets a <c>word</c> from an <c>InputStream</c>.</summary>
+        /// <param name="pngStream">an <c>InputStream</c></param>
+        /// <returns>the value of an <c>int</c></returns>
         public static int GetWord(Stream pngStream) {
             return (pngStream.Read() << 8) + pngStream.Read();
         }
 
-        /// <summary>Gets a <CODE>String</CODE> from an <CODE>InputStream</CODE>.</summary>
-        /// <param name="pngStream">an <CODE>InputStream</CODE></param>
-        /// <returns>the value of an <CODE>int</CODE></returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Gets a <c>String</c> from an <c>InputStream</c>.</summary>
+        /// <param name="pngStream">an <c>InputStream</c></param>
+        /// <returns>the value of an <c>int</c></returns>
         public static String GetString(Stream pngStream) {
             StringBuilder buf = new StringBuilder();
             for (int i = 0; i < 4; i++) {

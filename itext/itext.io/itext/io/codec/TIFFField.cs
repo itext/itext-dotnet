@@ -119,7 +119,7 @@ namespace iText.IO.Codec {
         /// type of the TIFF field.  Since there is no available 32-bit
         /// unsigned data type, long is used. The mapping between types is
         /// as follows:
-        /// <table border="1" summary="TIFFField data">
+        /// <table border="1" summary="tifffield data">
         /// <tr>
         /// <th> TIFF type </th> <th> Java type </th>
         /// </tr>
@@ -580,16 +580,15 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>
-        /// Compares this <code>TIFFField</code> with another
-        /// <code>TIFFField</code> by comparing the tags.
+        /// Compares this <c>TIFFField</c> with another
+        /// <c>TIFFField</c> by comparing the tags.
         /// </summary>
         /// <remarks>
-        /// Compares this <code>TIFFField</code> with another
-        /// <code>TIFFField</code> by comparing the tags.
+        /// Compares this <c>TIFFField</c> with another
+        /// <c>TIFFField</c> by comparing the tags.
         /// <para /><b>Note: this class has a natural ordering that is inconsistent
-        /// with <code>equals()</code>.</b>
+        /// with <c>equals()</c>.</b>
         /// </remarks>
-        /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.</exception>
         public virtual int CompareTo(iText.IO.Codec.TIFFField o) {
             if (o == null) {
                 throw new ArgumentException();

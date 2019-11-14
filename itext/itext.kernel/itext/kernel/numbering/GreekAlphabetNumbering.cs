@@ -77,19 +77,25 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet lowercase string representation.
-        /// E.g. 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// E.g. 1 will be converted to a string consisting of a unicode character for greek small letter alpha,
+        /// 2 - a string consisting of a unicode character for greek small letter beta,
+        /// 25 - a string consisting of two unicode characters for greek small letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
+        /// <returns>Greek alphabet lowercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberLowerCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
         }
 
-        /// <summary>Converts the given number to its Greek alphabet lowercase string representation.</summary>
+        /// <summary>Converts the given number to its Greek alphabet uppercase string representation.</summary>
         /// <remarks>
-        /// Converts the given number to its Greek alphabet lowercase string representation.
-        /// E.g. 1 will be converted to "A", 2 to "B", and so on.
+        /// Converts the given number to its Greek alphabet uppercase string representation.
+        /// E.g. 1 will be converted to a string consisting of a unicode character for greek capital letter alpha,
+        /// 2 - a string consisting of a unicode character for greek capital letter beta,
+        /// 25 - a string consisting of two unicode characters for greek capital letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
+        /// <returns>Greek alphabet uppercase string representation of an integer.</returns>
         public static String ToGreekAlphabetNumberUpperCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
         }
@@ -97,11 +103,14 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its Greek alphabet string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet string representation.
-        /// E.g. for <code>upperCase</code> set to false,
-        /// 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// E.g. for <c>upperCase</c> set to false,
+        /// 1 will be converted to a string consisting of a unicode character for greek small letter alpha,
+        /// 2 - a string consisting of a unicode character for greek small letter beta,
+        /// 25 - a string consisting of two unicode characters for greek small letter alpha, and so on.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
+        /// <returns>Greek alphabet string representation of an integer.</returns>
         public static String ToGreekAlphabetNumber(int number, bool upperCase) {
             return ToGreekAlphabetNumber(number, upperCase, false);
         }
@@ -109,13 +118,20 @@ namespace iText.Kernel.Numbering {
         /// <summary>Converts the given number to its Greek alphabet string representation.</summary>
         /// <remarks>
         /// Converts the given number to its Greek alphabet string representation.
-        /// E.g. for <code>upperCase</code> set to false,
-        /// 1 will be converted to "alpha", 2 to "beta", and so on.
+        /// E.g. for <c>upperCase</c> set to false,
+        /// 1 will be converted to a string consisting of a unicode character for greek small letter alpha
+        /// if <c>symbolFont</c> is set to false,
+        /// otherwise - a string consisting of the corresponding symbol code in Symbol standard font;
+        /// 26 will be converted to a string consisting of two unicode characters:
+        /// greek small letter alpha followed by greek small letter beta
+        /// if <c>symbolFont</c> is set to false,
+        /// otherwise - a string consisting of the corresponding sequence of symbol codes in Symbol standard font.
         /// </remarks>
-        /// <param name="number">the number to be converted</param>
+        /// <param name="number">the number greater than zero to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
-        /// <param name="symbolFont">if <code>true</code>, then the string representation will be returned ready to write it in Symbol font
+        /// <param name="symbolFont">if <c>true</c>, then the string representation will be returned ready to write it in Symbol font
         ///     </param>
+        /// <returns>Greek alphabet string representation of an integer.</returns>
         public static String ToGreekAlphabetNumber(int number, bool upperCase, bool symbolFont) {
             String result = upperCase ? ToGreekAlphabetNumberUpperCase(number) : ToGreekAlphabetNumberLowerCase(number
                 );
@@ -138,211 +154,212 @@ namespace iText.Kernel.Numbering {
         private static char GetSymbolFontChar(char unicodeChar) {
             switch (unicodeChar) {
                 case (char)913: {
+                    // ALFA
                     return 'A';
                 }
 
                 case (char)914: {
-                    // ALFA
+                    // BETA
                     return 'B';
                 }
 
                 case (char)915: {
-                    // BETA
+                    // GAMMA
                     return 'G';
                 }
 
                 case (char)916: {
-                    // GAMMA
+                    // DELTA
                     return 'D';
                 }
 
                 case (char)917: {
-                    // DELTA
+                    // EPSILON
                     return 'E';
                 }
 
                 case (char)918: {
-                    // EPSILON
+                    // ZETA
                     return 'Z';
                 }
 
                 case (char)919: {
-                    // ZETA
+                    // ETA
                     return 'H';
                 }
 
                 case (char)920: {
-                    // ETA
+                    // THETA
                     return 'Q';
                 }
 
                 case (char)921: {
-                    // THETA
+                    // IOTA
                     return 'I';
                 }
 
                 case (char)922: {
-                    // IOTA
+                    // KAPPA
                     return 'K';
                 }
 
                 case (char)923: {
-                    // KAPPA
+                    // LAMBDA
                     return 'L';
                 }
 
                 case (char)924: {
-                    // LAMBDA
+                    // MU
                     return 'M';
                 }
 
                 case (char)925: {
-                    // MU
+                    // NU
                     return 'N';
                 }
 
                 case (char)926: {
-                    // NU
+                    // XI
                     return 'X';
                 }
 
                 case (char)927: {
-                    // XI
+                    // OMICRON
                     return 'O';
                 }
 
                 case (char)928: {
-                    // OMICRON
+                    // PI
                     return 'P';
                 }
 
                 case (char)929: {
-                    // PI
+                    // RHO
                     return 'R';
                 }
 
                 case (char)931: {
-                    // RHO
+                    // SIGMA
                     return 'S';
                 }
 
                 case (char)932: {
-                    // SIGMA
+                    // TAU
                     return 'T';
                 }
 
                 case (char)933: {
-                    // TAU
+                    // UPSILON
                     return 'U';
                 }
 
                 case (char)934: {
-                    // UPSILON
+                    // PHI
                     return 'F';
                 }
 
                 case (char)935: {
-                    // PHI
+                    // CHI
                     return 'C';
                 }
 
                 case (char)936: {
-                    // CHI
+                    // PSI
                     return 'Y';
                 }
 
                 case (char)937: {
-                    // PSI
+                    // OMEGA
                     return 'W';
                 }
 
                 case (char)945: {
-                    // OMEGA
+                    // alfa
                     return 'a';
                 }
 
                 case (char)946: {
-                    // alfa
+                    // beta
                     return 'b';
                 }
 
                 case (char)947: {
-                    // beta
+                    // gamma
                     return 'g';
                 }
 
                 case (char)948: {
-                    // gamma
+                    // delta
                     return 'd';
                 }
 
                 case (char)949: {
-                    // delta
+                    // epsilon
                     return 'e';
                 }
 
                 case (char)950: {
-                    // epsilon
+                    // zeta
                     return 'z';
                 }
 
                 case (char)951: {
-                    // zeta
+                    // eta
                     return 'h';
                 }
 
                 case (char)952: {
-                    // eta
+                    // theta
                     return 'q';
                 }
 
                 case (char)953: {
-                    // theta
+                    // iota
                     return 'i';
                 }
 
                 case (char)954: {
-                    // iota
+                    // kappa
                     return 'k';
                 }
 
                 case (char)955: {
-                    // kappa
+                    // lambda
                     return 'l';
                 }
 
                 case (char)956: {
-                    // lambda
+                    // mu
                     return 'm';
                 }
 
                 case (char)957: {
-                    // mu
+                    // nu
                     return 'n';
                 }
 
                 case (char)958: {
-                    // nu
+                    // xi
                     return 'x';
                 }
 
                 case (char)959: {
-                    // xi
+                    // omicron
                     return 'o';
                 }
 
                 case (char)960: {
-                    // omicron
+                    // pi
                     return 'p';
                 }
 
                 case (char)961: {
-                    // pi
+                    // rho
                     return 'r';
                 }
 
                 case (char)962: {
-                    // rho
+                    // sigma
                     return 'V';
                 }
 
@@ -352,37 +369,36 @@ namespace iText.Kernel.Numbering {
                 }
 
                 case (char)964: {
-                    // sigma
+                    // tau
                     return 't';
                 }
 
                 case (char)965: {
-                    // tau
+                    // upsilon
                     return 'u';
                 }
 
                 case (char)966: {
-                    // upsilon
+                    // phi
                     return 'f';
                 }
 
                 case (char)967: {
-                    // phi
+                    // chi
                     return 'c';
                 }
 
                 case (char)968: {
-                    // chi
+                    // psi
                     return 'y';
                 }
 
                 case (char)969: {
-                    // psi
+                    // omega
                     return 'w';
                 }
 
                 default: {
-                    // omega
                     return ' ';
                 }
             }

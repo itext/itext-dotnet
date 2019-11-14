@@ -61,7 +61,6 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EgsTest1() {
             String destinationDocument = destinationFolder + "egsTest1.pdf";

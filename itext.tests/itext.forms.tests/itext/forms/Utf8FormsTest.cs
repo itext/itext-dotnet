@@ -51,7 +51,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
-    public class Utf8FormsTest {
+    public class Utf8FormsTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/Utf8FormsTest/";
 
@@ -66,8 +66,6 @@ namespace iText.Forms {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8FieldName() {
             String filename = sourceFolder + "utf-8-field-name.pdf";
@@ -82,8 +80,6 @@ namespace iText.Forms {
             pdfDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ReadUtf8TextAnnot() {
             String filename = sourceFolder + "utf-8-text-annot.pdf";
@@ -97,10 +93,9 @@ namespace iText.Forms {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WriteUtf8FieldNameAndValue() {
+            //TODO DEVSIX-2798
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfTextFormField field = PdfTextFormField.CreateText(pdfDoc, new Rectangle(99, 753, 425, 15), "", "");

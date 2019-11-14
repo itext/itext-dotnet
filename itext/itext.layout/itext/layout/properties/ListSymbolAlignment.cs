@@ -43,6 +43,22 @@ address: sales@itextpdf.com
 */
 namespace iText.Layout.Properties {
     /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
+    /// <remarks>
+    /// A specialized enum containing alignment properties for list symbols.
+    /// <para />
+    /// <see cref="LEFT"/>
+    /// means that the items will be aligned as follows:
+    /// <para />
+    /// 9.  Item 9<br />
+    /// 10. Item 10
+    /// <para />
+    /// Whereas
+    /// <see cref="RIGHT"/>
+    /// means the items will be aligned as follows:
+    /// <para />
+    /// 9. Item 9<br />
+    /// 10. Item 10
+    /// </remarks>
     public enum ListSymbolAlignment {
         RIGHT,
         LEFT

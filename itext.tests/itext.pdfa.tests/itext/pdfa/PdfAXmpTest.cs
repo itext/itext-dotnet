@@ -62,8 +62,6 @@ namespace iText.Pdfa {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeywordsInfoTestPdfA1b() {
             String outFile = destinationFolder + "keywordsInfoTestPdfA1b.pdf";
@@ -81,8 +79,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeywordsInfoTestPdfA2b() {
             String outFile = destinationFolder + "keywordsInfoTestPdfA2b.pdf";

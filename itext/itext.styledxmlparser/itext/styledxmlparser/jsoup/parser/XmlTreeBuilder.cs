@@ -51,23 +51,29 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <c>XmlTreeBuilder</c>
     /// when you want to parse XML without any of the HTML DOM rules being applied to the
     /// document.
+    /// </summary>
+    /// <remarks>
+    /// Use the
+    /// <c>XmlTreeBuilder</c>
+    /// when you want to parse XML without any of the HTML DOM rules being applied to the
+    /// document.
     /// <para />
     /// Usage example:
     /// <c>Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());</c>
-    /// </summary>
+    /// </remarks>
     /// <author>Jonathan Hedley</author>
     public class XmlTreeBuilder : TreeBuilder {
         internal override void InitialiseParse(String input, String baseUri, ParseErrorList errors) {
             base.InitialiseParse(input, baseUri, errors);
             stack.Add(doc);
             // place the document onto the stack. differs from HtmlTreeBuilder (not on stack)
-            doc.OutputSettings().Syntax(Syntax.xml);
+            doc.OutputSettings().Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml);
         }
 
         internal override bool Process(Token token) {
+            // start tag, end tag, doctype, comment, character, eof
             switch (token.type) {
                 case iText.StyledXmlParser.Jsoup.Parser.TokenType.StartTag: {
-                    // start tag, end tag, doctype, comment, character, eof
                     Insert(token.AsStartTag());
                     break;
                 }

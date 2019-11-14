@@ -69,12 +69,10 @@ namespace iText.Signatures.Testutils.Client {
             return 4096;
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual IDigest GetMessageDigest() {
             return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
         }
 
-        /// <exception cref="System.Exception"/>
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
             TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
             tsqGenerator.SetCertReq(true);

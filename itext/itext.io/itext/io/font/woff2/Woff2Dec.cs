@@ -20,7 +20,9 @@ using iText.IO.Codec.Brotli.Dec;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Woff2 {
+    // Library for converting WOFF2 format font files to their TTF versions.
     internal class Woff2Dec {
+        // simple glyph flags
         private const int kGlyfOnCurve = 1 << 0;
 
         private const int kGlyfXShort = 1 << 1;
@@ -33,6 +35,8 @@ namespace iText.IO.Font.Woff2 {
 
         private const int kGlyfThisYIsSame = 1 << 5;
 
+        // composite glyph flags
+        // See CompositeGlyph.java in sfntly for full definitions
         private const int FLAG_ARG_1_AND_2_ARE_WORDS = 1 << 0;
 
         private const int FLAG_WE_HAVE_A_SCALE = 1 << 3;
@@ -51,10 +55,15 @@ namespace iText.IO.Font.Woff2 {
 
         private const int kCompositeGlyphBegin = 10;
 
+        // 98% of Google Fonts have no glyph above 5k bytes
+        // Largest glyph ever observed was 72k bytes
         private const int kDefaultGlyphBuf = 5120;
 
+        // Over 14k test fonts the max compression ratio seen to date was ~20.
+        // >100 suggests you wrote a bad uncompressed size.
         private const float kMaxPlausibleCompressionRatio = 100.0f;
 
+        // metadata for a TTC font entry
         private class TtcFont {
             public int flavor;
 
@@ -63,15 +72,6 @@ namespace iText.IO.Font.Woff2 {
             public int header_checksum;
 
             public short[] table_indices;
-            // Library for converting WOFF2 format font files to their TTF versions.
-            // simple glyph flags
-            // composite glyph flags
-            // See CompositeGlyph.java in sfntly for full definitions
-            // 98% of Google Fonts have no glyph above 5k bytes
-            // Largest glyph ever observed was 72k bytes
-            // Over 14k test fonts the max compression ratio seen to date was ~20.
-            // >100 suggests you wrote a bad uncompressed size.
-            // metadata for a TTC font entry
         }
 
         private class Woff2Header {
@@ -81,6 +81,7 @@ namespace iText.IO.Font.Woff2 {
 
             public short num_tables;
 
+            //TODO do we need it to be long?
             public long compressed_offset;
 
             public int compressed_length;
@@ -89,9 +90,8 @@ namespace iText.IO.Font.Woff2 {
 
             public Woff2Common.Table[] tables;
 
-            public Woff2Dec.TtcFont[] ttc_fonts;
-            //TODO do we need it to be long?
             // num_tables unique tables
+            public Woff2Dec.TtcFont[] ttc_fonts;
             // metadata to help rebuild font
         }
 
@@ -112,17 +112,17 @@ namespace iText.IO.Font.Woff2 {
             public IDictionary<int, int?> table_entry_by_tag = new Dictionary<int, int?>();
         }
 
+        // Accumulates metadata as we rebuild the font
         private class RebuildMetadata {
             internal int header_checksum;
 
+            // set by writeHeaders
             internal Woff2Dec.Woff2FontInfo[] font_infos;
 
-            internal IDictionary<Woff2Dec.TableChecksumInfo, int?> checksums = new Dictionary<Woff2Dec.TableChecksumInfo
-                , int?>();
-            // Accumulates metadata as we rebuild the font
-            // set by writeHeaders
             // checksums for tables that have been written.
             // (tag, src_offset) => checksum. Need both because 0-length loca.
+            internal IDictionary<Woff2Dec.TableChecksumInfo, int?> checksums = new Dictionary<Woff2Dec.TableChecksumInfo
+                , int?>();
         }
 
         private class TableChecksumInfo {

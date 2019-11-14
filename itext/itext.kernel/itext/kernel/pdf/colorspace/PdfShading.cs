@@ -171,8 +171,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <summary>Gets the shading type.</summary>
         /// <returns>
         /// int value of
-        /// <see cref="iText.Kernel.Pdf.PdfName.ShadingType"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ShadingType"/>.
         /// </returns>
         public virtual int GetShadingType() {
             return (int)GetPdfObject().GetAsInt(PdfName.ShadingType);
@@ -238,12 +237,17 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <c>PdfObject</c>
         /// behind this wrapper, you have to ensure
         /// that this object is added to the document, i.e. it has an indirect reference.
+        /// </summary>
+        /// <remarks>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
         /// Basically this means that before flushing you need to explicitly call
-        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>.
         /// For example: wrapperInstance.makeIndirect(document).flush();
         /// Note that not every wrapper require this, only those that have such warning in documentation.
-        /// </summary>
+        /// </remarks>
         public override void Flush() {
             base.Flush();
         }
@@ -617,11 +621,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the Extend object with the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of two
-            /// <c>boolean</c>
-            /// .
+            /// <c>boolean</c>.
+            /// </summary>
+            /// <remarks>
+            /// Sets the Extend object with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>boolean</c>.
             /// If first is true shading will extend beyond the starting point of Coords.
             /// If second is true shading will extend beyond the ending point of Coords.
-            /// </summary>
+            /// </remarks>
             /// <param name="extend">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -638,8 +647,14 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="PdfShading"/>
         /// class and is in charge of Shading Dictionary with radial type,
         /// that define a colour blend that varies between two circles.
-        /// This type of shading shall not be used with an Indexed colour space
         /// </summary>
+        /// <remarks>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with radial type,
+        /// that define a colour blend that varies between two circles.
+        /// This type of shading shall not be used with an Indexed colour space
+        /// </remarks>
         public class Radial : PdfShading {
             protected internal Radial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
@@ -773,10 +788,17 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// object - an array of six numbers [x0 y0 r0 x1 y1 r1],
             /// specifying the centres and radii of the starting and ending circles,
             /// expressed in the shading’s target coordinate space.
+            /// </summary>
+            /// <remarks>
+            /// Gets the coords
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// object - an array of six numbers [x0 y0 r0 x1 y1 r1],
+            /// specifying the centres and radii of the starting and ending circles,
+            /// expressed in the shading’s target coordinate space.
             /// The radii r0 and r1 shall both be greater than or equal to 0.
             /// If one radius is 0, the corresponding circle shall be treated as a point;
             /// if both are 0, nothing shall be painted.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -815,10 +837,17 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// object - an array of six numbers [x0 y0 r0 x1 y1 r1],
             /// specifying the centres and radii of the starting and ending circles,
             /// expressed in the shading’s target coordinate space.
+            /// </summary>
+            /// <remarks>
+            /// Sets the coords
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// object - an array of six numbers [x0 y0 r0 x1 y1 r1],
+            /// specifying the centres and radii of the starting and ending circles,
+            /// expressed in the shading’s target coordinate space.
             /// The radii r0 and r1 shall both be greater than or equal to 0.
             /// If one radius is 0, the corresponding circle shall be treated as a point;
             /// if both are 0, nothing shall be painted.
-            /// </summary>
+            /// </remarks>
             /// <param name="coords">
             /// -
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -918,11 +947,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the Extend object with the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of two
-            /// <c>boolean</c>
-            /// .
+            /// <c>boolean</c>.
+            /// </summary>
+            /// <remarks>
+            /// Sets the Extend object with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two
+            /// <c>boolean</c>.
             /// If first is true shading will extend beyond the starting circle of Coords.
             /// If second is true shading will extend beyond the ending circle of Coords.
-            /// </summary>
+            /// </remarks>
             /// <param name="extend">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -939,6 +973,12 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="PdfShading"/>
         /// class and is in charge of Shading Dictionary with
         /// free-form Gouraud-shaded triangle mesh type.
+        /// </summary>
+        /// <remarks>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with
+        /// free-form Gouraud-shaded triangle mesh type.
         /// The area to be shaded is defined by a path composed entirely of triangles.
         /// The colour at each vertex of the triangles is specified,
         /// and a technique known as Gouraud interpolation is used to colour the interiors.
@@ -951,7 +991,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// c1...cn - vertex's colour components.
         /// If the shading dictionary includes a Function entry, only a single parametric value, t,
         /// shall be specified for each vertex in place of the colour components c1...cn.
-        /// </summary>
+        /// </remarks>
         public class FreeFormGouraudShadedTriangleMesh : PdfShading {
             protected internal FreeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
@@ -1082,10 +1122,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Gets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1099,10 +1145,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <c>float[]</c>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <c>float[]</c>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <c>float[]</c>
@@ -1116,10 +1168,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1136,6 +1194,12 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="PdfShading"/>
         /// class and is in charge of Shading Dictionary with
         /// lattice-form Gouraud-shaded triangle mesh type.
+        /// </summary>
+        /// <remarks>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with
+        /// lattice-form Gouraud-shaded triangle mesh type.
         /// This type is similar to
         /// <see cref="FreeFormGouraudShadedTriangleMesh"/>
         /// but instead of using free-form geometry,
@@ -1146,7 +1210,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="FreeFormGouraudShadedTriangleMesh"/>
         /// ,
         /// except there is no edge flag.
-        /// </summary>
+        /// </remarks>
         public class LatticeFormGouraudShadedTriangleMesh : PdfShading {
             protected internal LatticeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
@@ -1267,10 +1331,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Gets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1284,10 +1354,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <c>float[]</c>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <c>float[]</c>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <c>float[]</c>
@@ -1301,10 +1377,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1321,6 +1403,12 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="PdfShading"/>
         /// class and is in charge of Shading Dictionary with
         /// Coons Patch mesh type.
+        /// </summary>
+        /// <remarks>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with
+        /// Coons Patch mesh type.
         /// This type of shading is constructed from one or more colour patches, each bounded by four cubic Bézier curves.
         /// Degenerate Bézier curves are allowed and are useful for certain graphical effects.
         /// At least one complete patch shall be specified.
@@ -1333,7 +1421,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// For the format of data stream, that defines patches (see ISO-320001 Table 85).
         /// If the shading dictionary contains a Function entry, the colour data for each corner of a patch
         /// shall be specified by a single parametric value t rather than by n separate colour components c1...cn.
-        /// </summary>
+        /// </remarks>
         public class CoonsPatchMesh : PdfShading {
             protected internal CoonsPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
@@ -1464,10 +1552,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Gets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1481,10 +1575,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <c>float[]</c>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <c>float[]</c>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <c>float[]</c>
@@ -1498,10 +1598,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1518,12 +1624,18 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="PdfShading"/>
         /// class and is in charge of Shading Dictionary with
         /// Tensor-Product Patch mesh type.
+        /// </summary>
+        /// <remarks>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with
+        /// Tensor-Product Patch mesh type.
         /// This type of shading is identical to
         /// <see cref="CoonsPatchMesh"/>
         /// , except that it's based on a
         /// bicubic tensor-product patch defined by 16 control points.
         /// For the format of data stream, that defines patches, see ISO-320001 Table 86.
-        /// </summary>
+        /// </remarks>
         public class TensorProductPatchMesh : PdfShading {
             protected internal TensorProductPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
@@ -1654,10 +1766,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Gets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <returns>
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
@@ -1671,10 +1789,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <c>float[]</c>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <c>float[]</c>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <c>float[]</c>
@@ -1688,10 +1812,16 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// Sets the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
             /// of numbers specifying how to map vertex coordinates and colour components
+            /// into the appropriate ranges of values.
+            /// </summary>
+            /// <remarks>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of numbers specifying how to map vertex coordinates and colour components
             /// into the appropriate ranges of values. The ranges shall be specified as follows:
             /// [x_min x_max y_min y_max c1_min c1_max … cn_min cn_max].
             /// Only one pair of color values shall be specified if a Function entry is present.
-            /// </summary>
+            /// </remarks>
             /// <param name="decode">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>

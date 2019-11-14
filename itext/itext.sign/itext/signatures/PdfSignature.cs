@@ -80,8 +80,7 @@ namespace iText.Signatures {
         /// which usually has a value either
         /// <see cref="iText.Kernel.Pdf.PdfName.Adbe_pkcs7_detached"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.PdfName.ETSI_CAdES_DETACHED"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.ETSI_CAdES_DETACHED"/>.
         /// </returns>
         public virtual PdfName GetSubFilter() {
             return GetPdfObject().GetAsName(PdfName.SubFilter);
@@ -93,13 +92,20 @@ namespace iText.Signatures {
         /// for a signature
         /// dictionary or
         /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
+        /// for a timestamp signature dictionary.
+        /// </summary>
+        /// <remarks>
+        /// The type of PDF object that the wrapped dictionary describes; if present, shall be
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
+        /// for a signature
+        /// dictionary or
+        /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
         /// for a timestamp signature dictionary. Shall be not null if it's value
         /// is
         /// <see cref="iText.Kernel.Pdf.PdfName.DocTimeStamp"/>
         /// . The default value is:
-        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>
-        /// .
-        /// </summary>
+        /// <see cref="iText.Kernel.Pdf.PdfName.Sig"/>.
+        /// </remarks>
         /// <returns>
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>

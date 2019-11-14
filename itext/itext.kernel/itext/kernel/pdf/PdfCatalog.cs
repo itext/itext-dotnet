@@ -65,9 +65,11 @@ namespace iText.Kernel.Pdf {
 
         private PdfOutline outlines;
 
+        //This HashMap contents all pages of the document and outlines associated to them
         private IDictionary<PdfObject, IList<PdfOutline>> pagesWithOutlines = new Dictionary<PdfObject, IList<PdfOutline
             >>();
 
+        //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
         private bool outlineMode;
 
         private static readonly ICollection<PdfName> PAGE_MODES = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
@@ -80,8 +82,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
-            //This HashMap contents all pages of the document and outlines associated to them
-            //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
             if (pdfObject == null) {
                 throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
             }
@@ -95,18 +95,18 @@ namespace iText.Kernel.Pdf {
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
         }
 
-        /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
+        /// <summary>Use this method to get the <b>Optional Content Properties Dictionary</b>.</summary>
         /// <remarks>
-        /// Use this method to get the <B>Optional Content Properties Dictionary</B>.
+        /// Use this method to get the <b>Optional Content Properties Dictionary</b>.
         /// Note that if you call this method, then the PdfDictionary with OCProperties will be
         /// generated from PdfOCProperties object right before closing the PdfDocument,
         /// so if you want to make low-level changes in Pdf structures themselves (PdfArray, PdfDictionary, etc),
         /// then you should address directly those objects, e.g.:
-        /// <CODE>
+        /// <c>
         /// PdfCatalog pdfCatalog = pdfDoc.getCatalog();
         /// PdfDictionary ocProps = pdfCatalog.getAsDictionary(PdfName.OCProperties);
         /// // manipulate with ocProps.
-        /// </CODE>
+        /// </c>
         /// Also note that this method is implicitly called when creating a new PdfLayer instance,
         /// so you should either use hi-level logic of operating with layers,
         /// or manipulate low-level Pdf objects by yourself.
@@ -176,8 +176,7 @@ namespace iText.Kernel.Pdf {
         /// ,
         /// <c>PdfName.UseOC</c>
         /// ,
-        /// <c>PdfName.UseAttachments</c>
-        /// .
+        /// <c>PdfName.UseAttachments</c>.
         /// </remarks>
         /// <param name="pageMode">page mode.</param>
         /// <returns>current instance of PdfCatalog</returns>

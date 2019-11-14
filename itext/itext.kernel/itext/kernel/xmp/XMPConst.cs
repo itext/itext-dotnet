@@ -33,6 +33,9 @@ namespace iText.Kernel.XMP {
     /// <summary>Common constants for the XMP Toolkit.</summary>
     /// <since>20.01.2006</since>
     public abstract class XMPConst {
+        // ---------------------------------------------------------------------------------------------
+        // Standard namespace URI constants
+        // Standard namespaces
         /// <summary>The XML namespace for XML.</summary>
         public const String NS_XML = "http://www.w3.org/XML/1998/namespace";
 
@@ -54,6 +57,7 @@ namespace iText.Kernel.XMP {
         /// <summary>The XML namespace for the PLUS (Picture Licensing Universal System, http://www.useplus.org)</summary>
         public const String NS_PLUS = "http://ns.useplus.org/ldf/xmp/1.0/";
 
+        // Adobe standard namespaces
         /// <summary>The XML namespace Adobe XMP Metadata.</summary>
         public const String NS_X = "adobe:ns:meta/";
 
@@ -143,6 +147,7 @@ namespace iText.Kernel.XMP {
         /// <summary>Adobe Flash SWF</summary>
         public const String NS_SWF = "http://ns.adobe.com/swf/1.0/";
 
+        // XMP namespaces that are Adobe private
         public const String NS_DM = "http://ns.adobe.com/xmp/1.0/DynamicMedia/";
 
         public const String NS_TRANSIENT = "http://ns.adobe.com/xmp/transient/1.0/";
@@ -150,6 +155,7 @@ namespace iText.Kernel.XMP {
         /// <summary>legacy Dublin Core NS, will be converted to NS_DC</summary>
         public const String NS_DC_DEPRECATED = "http://purl.org/dc/1.1/";
 
+        // XML namespace constants for qualifiers and structured property fields.
         /// <summary>The XML namespace for qualifiers of the xmp:Identifier property.</summary>
         public const String TYPE_IDENTIFIERQUAL = "http://ns.adobe.com/xmp/Identifier/qual/1.0/";
 
@@ -182,6 +188,8 @@ namespace iText.Kernel.XMP {
 
         public const String TYPE_MANIFESTITEM = "http://ns.adobe.com/xap/1.0/sType/ManifestItem#";
 
+        // ---------------------------------------------------------------------------------------------
+        // Basic types and constants
         /// <summary>The canonical true string value for Booleans in serialized XMP.</summary>
         /// <remarks>
         /// The canonical true string value for Booleans in serialized XMP. Code that converts from the
@@ -225,14 +233,6 @@ namespace iText.Kernel.XMP {
 
         /// <summary>Conformance, A, B, or U.</summary>
         public const String CONFORMANCE = "conformance";
-        // ---------------------------------------------------------------------------------------------
-        // Standard namespace URI constants
-        // Standard namespaces
-        // Adobe standard namespaces
-        // XMP namespaces that are Adobe private
-        // XML namespace constants for qualifiers and structured property fields.
-        // ---------------------------------------------------------------------------------------------
-        // Basic types and constants
     }
 
     public static class XMPConstConstants {

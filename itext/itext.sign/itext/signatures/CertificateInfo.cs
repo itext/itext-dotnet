@@ -56,6 +56,7 @@ namespace iText.Signatures {
     /// an X509 Certificate: the issuer and the subject.
     /// </summary>
     public class CertificateInfo {
+        // Inner classes
         /// <summary>Class that holds an X509 name.</summary>
         public class X500Name {
             /// <summary>Country code - StringType(SIZE(2)).</summary>
@@ -119,7 +120,6 @@ namespace iText.Signatures {
                 , String>();
 
             static X500Name() {
-                // Inner classes
                 DefaultSymbols.Put(C, "C");
                 DefaultSymbols.Put(O, "O");
                 DefaultSymbols.Put(T, "T");
@@ -212,10 +212,13 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Class for breaking up an X500 Name into it's component tokens, similar to
-        /// <see cref="iText.IO.Util.StringTokenizer"/>
-        /// .
-        /// We need this class as some of the lightweight Java environments don't support classes such as StringTokenizer.
+        /// <see cref="iText.IO.Util.StringTokenizer"/>.
         /// </summary>
+        /// <remarks>
+        /// Class for breaking up an X500 Name into it's component tokens, similar to
+        /// <see cref="iText.IO.Util.StringTokenizer"/>.
+        /// We need this class as some of the lightweight Java environments don't support classes such as StringTokenizer.
+        /// </remarks>
         public class X509NameTokenizer {
             private String oid;
 

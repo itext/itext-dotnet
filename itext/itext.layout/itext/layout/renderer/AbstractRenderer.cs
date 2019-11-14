@@ -68,9 +68,14 @@ namespace iText.Layout.Renderer {
     /// <summary>
     /// Defines the most common properties and behavior that are shared by most
     /// <see cref="IRenderer"/>
+    /// implementations.
+    /// </summary>
+    /// <remarks>
+    /// Defines the most common properties and behavior that are shared by most
+    /// <see cref="IRenderer"/>
     /// implementations. All default Renderers are subclasses of
     /// this default implementation.
-    /// </summary>
+    /// </remarks>
     public abstract class AbstractRenderer : IRenderer {
         /// <summary>
         /// The maximum difference between
@@ -82,6 +87,7 @@ namespace iText.Layout.Renderer {
         /// <summary>The infinity value which is used while layouting</summary>
         protected internal const float INF = 1e6f;
 
+        // TODO linkedList?
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
         protected internal IList<IRenderer> positionedRenderers = new List<IRenderer>();
@@ -105,7 +111,6 @@ namespace iText.Layout.Renderer {
         /// <summary>Creates a renderer for the specified layout element.</summary>
         /// <param name="modelElement">the layout element that will be drawn by this renderer</param>
         protected internal AbstractRenderer(IElement modelElement) {
-            // TODO linkedList?
             this.modelElement = modelElement;
         }
 
@@ -209,12 +214,8 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Checks if this renderer or its model element have the specified property,
-        /// i.e.
-        /// </summary>
-        /// <remarks>
-        /// Checks if this renderer or its model element have the specified property,
         /// i.e. if it was set to this very element or its very model element earlier.
-        /// </remarks>
+        /// </summary>
         /// <param name="property">the property to be checked</param>
         /// <returns>
         /// 
@@ -319,8 +320,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Returns a property with a certain key, as a
-        /// <see cref="iText.Layout.Properties.TransparentColor"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>.
         /// </summary>
         /// <param name="property">
         /// an
@@ -867,13 +867,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>Indicates whether this renderer is flushed or not, i.e.</summary>
-        /// <remarks>
+        /// <summary>
         /// Indicates whether this renderer is flushed or not, i.e. if
         /// <see cref="Draw(DrawContext)"/>
         /// has already
         /// been called.
-        /// </remarks>
+        /// </summary>
         /// <returns>whether the renderer has been flushed</returns>
         /// <seealso cref="Draw(DrawContext)"/>
         public virtual bool IsFlushed() {
@@ -924,8 +923,7 @@ namespace iText.Layout.Renderer {
         /// Gets the bounding box that contains all content written to the
         /// <see cref="DrawContext"/>
         /// by this
-        /// <see cref="IRenderer"/>
-        /// .
+        /// <see cref="IRenderer"/>.
         /// </summary>
         /// <returns>
         /// the smallest
@@ -1779,8 +1777,8 @@ namespace iText.Layout.Renderer {
                 return;
             }
             // Update height related properties on split or overflow
-            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             // For relative heights, we need the parent's resolved height declaration
+            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
             UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
             if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {
@@ -1943,8 +1941,8 @@ namespace iText.Layout.Renderer {
         /// <summary>Gets borders of the element in the specified order: top, right, bottom, left.</summary>
         /// <returns>
         /// an array of BorderDrawer objects.
-        /// In case when certain border isn't set <code>Property.BORDER</code> is used,
-        /// and if <code>Property.BORDER</code> is also not set then <code>null</code> is returned
+        /// In case when certain border isn't set <c>Property.BORDER</c> is used,
+        /// and if <c>Property.BORDER</c> is also not set then <c>null</c> is returned
         /// on position of this border
         /// </returns>
         protected internal virtual Border[] GetBorders() {
@@ -1955,8 +1953,8 @@ namespace iText.Layout.Renderer {
         ///     </summary>
         /// <returns>
         /// an array of BorderRadius objects.
-        /// In case when certain border radius isn't set <code>Property.BORDER_RADIUS</code> is used,
-        /// and if <code>Property.BORDER_RADIUS</code> is also not set then <code>null</code> is returned
+        /// In case when certain border radius isn't set <c>Property.BORDER_RADIUS</c> is used,
+        /// and if <c>Property.BORDER_RADIUS</c> is also not set then <c>null</c> is returned
         /// on position of this border radius
         /// </returns>
         protected internal virtual BorderRadius[] GetBorderRadii() {
@@ -1991,7 +1989,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,
-        /// e.g.
+        /// e.g. document page or form xObject.
         /// </summary>
         /// <remarks>
         /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,

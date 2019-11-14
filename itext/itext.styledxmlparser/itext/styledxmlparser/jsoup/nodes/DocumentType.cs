@@ -56,6 +56,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private const String SYSTEM_ID = "systemId";
 
+        // todo: quirk mode from publicId and systemId
         /// <summary>Create a new doctype element.</summary>
         /// <param name="name">the doctype's name</param>
         /// <param name="publicId">the doctype's public ID</param>
@@ -63,7 +64,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="baseUri">the doctype's base URI</param>
         public DocumentType(String name, String publicId, String systemId, String baseUri)
             : base(baseUri) {
-            // todo: quirk mode from publicId and systemId
             Attr(NAME, name);
             Attr(PUBLIC_ID, publicId);
             Attr(SYSTEM_ID, systemId);
@@ -73,9 +73,8 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return "#doctype";
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
-            if (@out.Syntax() == Syntax.html && !Has(PUBLIC_ID) && !Has(SYSTEM_ID)) {
+            if (@out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html && !Has(PUBLIC_ID) && !Has(SYSTEM_ID)) {
                 // looks like a html5 doctype, go lowercase for aesthetics
                 accum.Append("<!doctype");
             }

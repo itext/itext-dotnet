@@ -131,6 +131,16 @@ namespace iText.Kernel.Font {
             base.Flush();
         }
 
+        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        ///     </summary>
+        /// <remarks>
+        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
+        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
+        /// </remarks>
+        /// <param name="longTag">
+        /// a set of integers, which are glyph ids that denote used glyphs.
+        /// This set is updated inside of the method if needed.
+        /// </param>
         [System.ObsoleteAttribute(@"use iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(Java.Util.SortedSet{E}, bool, System.Collections.Generic.IList{E})"
             )]
         protected internal virtual void AddRangeUni(ICollection<int> longTag) {

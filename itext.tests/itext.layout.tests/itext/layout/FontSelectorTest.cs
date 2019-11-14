@@ -72,7 +72,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup() {
             String fileName = "cyrillicAndLatinGroup";
@@ -96,7 +95,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup2() {
             String fileName = "cyrillicAndLatinGroup2";
@@ -119,7 +117,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinGroup3() {
             String fileName = "cyrillicAndLatinGroup3";
@@ -142,7 +139,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
             )]
@@ -167,7 +163,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LatinAndNotdefGroup() {
             String fileName = "latinAndNotdefGroup";
@@ -188,7 +183,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight() {
             String fileName = "customFontWeight";
@@ -215,7 +209,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight2() {
             String fileName = "customFontWeight2";
@@ -239,7 +232,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CustomFontWeight3() {
             String fileName = "customFontWeight3";
@@ -264,7 +256,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void StandardPdfFonts() {
             String fileName = "standardPdfFonts";
@@ -287,7 +278,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SearchNames() {
             FontProvider sel = new FontProvider();
@@ -314,7 +304,6 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SearchNames2() {
             FontProvider sel = new FontProvider();
@@ -355,12 +344,12 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SearchFontAliasWithUnicodeChars() {
-            String cyrillicAlias = "\u0444\u043E\u043D\u04421";
             // фонт1
-            String greekAlias = "\u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC2";
+            String cyrillicAlias = "\u0444\u043E\u043D\u04421";
             // γραμματοσειρά2
-            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
+            String greekAlias = "\u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC2";
             // フォント3
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             IDictionary<String, String> aliasToFontName = new LinkedDictionary<String, String>();
             aliasToFontName.Put(cyrillicAlias, "NotoSans-Regular.ttf");
             aliasToFontName.Put(greekAlias, "FreeSans.ttf");
@@ -384,15 +373,13 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void WriteTextInFontWhichAliasWithUnicodeChars() {
             String fileName = "writeTextInFontWhichAliasWithUnicodeChars";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
-            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             // フォント3
+            String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             FontProvider provider = new FontProvider();
             provider.AddFont(fontsFolder + "NotoSans-Regular.ttf");
             provider.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, japaneseAlias);
@@ -410,7 +397,6 @@ namespace iText.Layout {
                 ));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CyrillicAndLatinWithUnicodeRange() {
             String fileName = "cyrillicAndLatinWithUnicodeRange";
@@ -435,7 +421,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DuplicateFontWithUnicodeRange() {
             String fileName = "duplicateFontWithUnicodeRange";
@@ -461,7 +446,6 @@ namespace iText.Layout {
                 , "diff" + fileName));
         }
 
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleFontWithUnicodeRange() {
             String fileName = "singleFontWithUnicodeRange";
@@ -537,11 +521,11 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        // TODO DEVSIX-2120 ExtraBold subfamily is not processed
+        // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
         [NUnit.Framework.Ignore("DEVSIX-2120: we cannot set a wrong expected string for normal font characteristics because in different contexts iText selects different fonts"
             )]
         public virtual void OpenSansFontSetExtraBoldTest01() {
-            // TODO DEVSIX-2120 ExtraBold subfamily is not processed
-            // TODO DEVSIX-2135 if FontCharacteristics instance is not modified, font-family is parsed and 'bold' substring is considered as a reason to set bold flag in FontCharacteristics instance. That should be reviewed.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
             CheckSelector(set.GetFonts(), "Open Sans ExtraBold", "Times-Bold", "Times-Bold", "Times-BoldItalic", "Times-BoldItalic"

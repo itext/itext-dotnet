@@ -79,10 +79,9 @@ namespace iText.IO.Codec {
         /// <param name="outputStream">destination for compressed data</param>
         /// <param name="codeSize">the initial code size for the LZW compressor</param>
         /// <param name="TIFF">flag indicating that TIFF lzw fudge needs to be applied</param>
-        /// <exception cref="System.IO.IOException">if underlying output stream error</exception>
         public LZWCompressor(Stream outputStream, int codeSize, bool TIFF) {
-            bf_ = new BitFile(outputStream, !TIFF);
             // set flag for GIF as NOT tiff
+            bf_ = new BitFile(outputStream, !TIFF);
             codeSize_ = codeSize;
             tiffFudge_ = TIFF;
             clearCode_ = 1 << codeSize_;
@@ -102,7 +101,6 @@ namespace iText.IO.Codec {
         /// <param name="buf">The data to be compressed to output stream</param>
         /// <param name="offset">The offset at which the data starts</param>
         /// <param name="length">The length of the data being compressed</param>
-        /// <exception cref="System.IO.IOException">if underlying output stream error</exception>
         public virtual void Compress(byte[] buf, int offset, int length) {
             int idx;
             byte c;
@@ -138,7 +136,6 @@ namespace iText.IO.Codec {
         /// Indicate to compressor that no more data to go so write out
         /// any remaining buffered data.
         /// </summary>
-        /// <exception cref="System.IO.IOException">if underlying output stream error</exception>
         public virtual void Flush() {
             if (prefix_ != -1) {
                 bf_.WriteBits(prefix_, numBits_);

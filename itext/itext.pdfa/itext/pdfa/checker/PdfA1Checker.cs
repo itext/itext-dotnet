@@ -60,9 +60,15 @@ namespace iText.Pdfa.Checker {
     /// method implementations from the abstract
     /// <see cref="PdfAChecker"/>
     /// class.
+    /// </summary>
+    /// <remarks>
+    /// PdfA1Checker defines the requirements of the PDF/A-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfAChecker"/>
+    /// class.
     /// <para />
     /// The specification implemented by this class is ISO 19005-1
-    /// </summary>
+    /// </remarks>
     public class PdfA1Checker : PdfAChecker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
@@ -83,8 +89,8 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
-        /// the required conformance level, <code>a</code> or
-        /// <code>b</code>
+        /// the required conformance level, <c>a</c> or
+        /// <c>b</c>
         /// </param>
         public PdfA1Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
@@ -258,7 +264,7 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
-            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) || trueTypeFont.GetFontEncoding
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !PdfEncodings.MACROMAN.Equals(encoding) || trueTypeFont.GetFontEncoding
                 ().HasDifferences()) {
                 throw new PdfAConformanceException(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY
                     , trueTypeFont);

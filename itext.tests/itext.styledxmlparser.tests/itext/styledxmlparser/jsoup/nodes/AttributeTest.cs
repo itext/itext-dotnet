@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
-    public class AttributeTest {
+    public class AttributeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Html() {
             iText.StyledXmlParser.Jsoup.Nodes.Attribute attr = new iText.StyledXmlParser.Jsoup.Nodes.Attribute("key", 

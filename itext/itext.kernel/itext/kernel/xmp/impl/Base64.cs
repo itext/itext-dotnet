@@ -49,34 +49,42 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>marker for an equal symbol</summary>
         private const byte EQUAL = (byte)0xfd;
 
-        private static byte[] base64 = new byte[] { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F'
-            , (byte)'G', (byte)'H', (byte)'I', (byte)'J', (byte)'K', (byte)'L', (byte)'M', (byte)'N', (byte)'O', (
-            byte)'P', (byte)'Q', (byte)'R', (byte)'S', (byte)'T', (byte)'U', (byte)'V', (byte)'W', (byte)'X', (byte
-            )'Y', (byte)'Z', (byte)'a', (byte)'b', (byte)'c', (byte)'d', (byte)'e', (byte)'f', (byte)'g', (byte)'h'
-            , (byte)'i', (byte)'j', (byte)'k', (byte)'l', (byte)'m', (byte)'n', (byte)'o', (byte)'p', (byte)'q', (
-            byte)'r', (byte)'s', (byte)'t', (byte)'u', (byte)'v', (byte)'w', (byte)'x', (byte)'y', (byte)'z', (byte
-            )'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4', (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9'
-            , (byte)'+', (byte)'/' };
+        private static byte[] base64 = new byte[] { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)
+                //  0 to  3
+                'E', (byte)'F', (byte)'G', (byte)'H', (byte)
+                //  4 to  7
+                'I', (byte)'J', (byte)'K', (byte)'L', (byte)
+                //  8 to 11
+                'M', (byte)'N', (byte)'O', (byte)'P', (byte)
+                // 11 to 15
+                'Q', (byte)'R', (byte)'S', (byte)'T', (byte)
+                // 16 to 19
+                'U', (byte)'V', (byte)'W', (byte)'X', (byte)
+                // 20 to 23
+                'Y', (byte)'Z', (byte)'a', (byte)'b', (byte)
+                // 24 to 27
+                'c', (byte)'d', (byte)'e', (byte)'f', (byte)
+                // 28 to 31
+                'g', (byte)'h', (byte)'i', (byte)'j', (byte)
+                // 32 to 35
+                'k', (byte)'l', (byte)'m', (byte)'n', (byte)
+                // 36 to 39
+                'o', (byte)'p', (byte)'q', (byte)'r', (byte)
+                // 40 to 43
+                's', (byte)'t', (byte)'u', (byte)'v', (byte)
+                // 44 to 47
+                'w', (byte)'x', (byte)'y', (byte)'z', (byte)
+                // 48 to 51
+                '0', (byte)'1', (byte)'2', (byte)'3', (byte)
+                // 52 to 55
+                '4', (byte)'5', (byte)'6', (byte)'7', (byte)
+                // 56 to 59
+                '8', (byte)'9', (byte)'+', (byte)'/' };
 
+        // 60 to 63
         private static byte[] ascii = new byte[255];
 
         static Base64() {
-            //  0 to  3
-            //  4 to  7
-            //  8 to 11
-            // 11 to 15
-            // 16 to 19
-            // 20 to 23
-            // 24 to 27
-            // 28 to 31
-            // 32 to 35
-            // 36 to 39
-            // 40 to 43
-            // 44 to 47
-            // 48 to 51
-            // 52 to 55
-            // 56 to 59
-            // 60 to 63
             // not valid bytes
             for (int idx = 0; idx < 255; idx++) {
                 ascii[idx] = INVALID;
@@ -104,7 +112,7 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>Encode the given byte[].</summary>
         /// <param name="src">the source string.</param>
         /// <param name="lineFeed">
-        /// a linefeed is added after <code>linefeed</code> characters;
+        /// a linefeed is added after <c>linefeed</c> characters;
         /// must be dividable by four; 0 means no linefeeds
         /// </param>
         /// <returns>the base64-encoded data.</returns>
@@ -180,10 +188,6 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>Decode the given byte[].</summary>
         /// <param name="src">the base64-encoded data.</param>
         /// <returns>the decoded data.</returns>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown if the base 64 strings contains non-valid characters,
-        /// beside the bas64 chars, LF, CR, tab and space are accepted.
-        /// </exception>
         public static byte[] Decode(byte[] src) {
             //
             // Do ascii printable to 0-63 conversion.

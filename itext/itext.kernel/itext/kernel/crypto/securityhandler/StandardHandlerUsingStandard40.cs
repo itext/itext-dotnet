@@ -60,13 +60,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal byte[] documentId;
 
+        // stores key length of the main key
         protected internal int keyLength;
 
         protected internal ARCFOUREncryption arcfour = new ARCFOUREncryption();
 
         public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId) {
-            // stores key length of the main key
             InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
                 embeddedFilesOnly, documentId);
         }
@@ -190,18 +190,18 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private void CheckPassword(bool encryptMetadata, byte[] uValue, byte[] oValue, byte[] paddedPassword) {
-            byte[] userKey;
             // assume password - is owner password
+            byte[] userKey;
             byte[] userPad = ComputeOwnerKey(oValue, paddedPassword);
             ComputeGlobalEncryptionKey(userPad, oValue, encryptMetadata);
             userKey = ComputeUserKey();
+            // computed user key should be equal to uValue
             if (IsValidPassword(uValue, userKey)) {
-                // computed user key should be equal to uValue
                 // assume password - is user password
                 ComputeGlobalEncryptionKey(paddedPassword, oValue, encryptMetadata);
                 userKey = ComputeUserKey();
+                // computed user key should be equal to uValue
                 if (IsValidPassword(uValue, userKey)) {
-                    // computed user key should be equal to uValue
                     throw new BadPasswordException(PdfException.BadUserPassword);
                 }
                 usedOwnerPassword = false;

@@ -77,7 +77,6 @@ namespace iText.Test {
             return parametersList;
         }
 
-        /// <exception cref="System.Exception"/>
         public virtual void RunSamples() {
             Assume.That(sampleClassParams.ignoreMessage == null, sampleClassParams.ignoreMessage);
 
@@ -112,7 +111,6 @@ namespace iText.Test {
         /// <param name="outPath">The path to the working folder where comparison results and temp files will be created</param>
         /// <param name="dest">The PDF that resulted from the test</param>
         /// <param name="cmp">The reference PDF</param>
-        /// <exception cref="System.Exception">If there is a problem opening the compare files</exception>
         protected internal abstract void ComparePdf(String outPath, String dest, String cmp);
 
         /// <summary>Gets the path to the resulting PDF from the sample class;</summary>
@@ -171,9 +169,6 @@ namespace iText.Test {
             }
         }
 
-        /// <exception cref="System.MissingMethodException"/>
-        /// <exception cref="System.MemberAccessException"/>
-        /// <exception cref="System.Reflection.TargetInvocationException"/>
         private void RunMain() {
             MethodInfo mainMethod = GetMain(sampleClassParams.sampleType);
             if (mainMethod == null) {

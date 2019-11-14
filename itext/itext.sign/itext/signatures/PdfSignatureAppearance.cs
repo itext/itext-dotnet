@@ -61,8 +61,7 @@ namespace iText.Signatures {
     /// <summary>Provides convenient methods to make a signature appearance.</summary>
     /// <remarks>
     /// Provides convenient methods to make a signature appearance. Use it in conjunction with
-    /// <see cref="PdfSigner"/>
-    /// .
+    /// <see cref="PdfSigner"/>.
     /// </remarks>
     public class PdfSignatureAppearance {
         /// <summary>Extra space at the top.</summary>
@@ -461,14 +460,9 @@ namespace iText.Signatures {
         }
 
         /// <summary>Constructs appearance (top-level) for a signature.</summary>
-        /// <remarks>
-        /// Constructs appearance (top-level) for a signature.
-        /// <para />
-        /// Consult <A HREF="http://partners.adobe.com/asn/developer/pdfs/tn/PPKAppearances.pdf">PPKAppearances.pdf</A>
-        /// for further details.
-        /// </remarks>
+        /// <seealso><a href="http://partners.adobe.com/asn/developer/pdfs/tn/ppkappearances.pdf">PPKAppearances.pdf</a> for further details
+        ///     </seealso>
         /// <returns>a top-level signature appearance</returns>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual PdfFormXObject GetAppearance() {
             PdfCanvas canvas;
             if (IsInvisible()) {
@@ -576,11 +570,11 @@ namespace iText.Signatures {
                             throw new InvalidOperationException("A signature image must be present when rendering mode is graphic. Use setSignatureGraphic()"
                                 );
                         }
-                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight()
-                             - 2 * MARGIN);
+                        signatureRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, 
+                                                // take all space available
+                                                rotatedRect.GetHeight() - 2 * MARGIN);
                     }
                     else {
-                        // take all space available
                         dataRect = new Rectangle(MARGIN, MARGIN, rotatedRect.GetWidth() - 2 * MARGIN, rotatedRect.GetHeight() * (1
                              - TOP_SECTION) - 2 * MARGIN);
                     }

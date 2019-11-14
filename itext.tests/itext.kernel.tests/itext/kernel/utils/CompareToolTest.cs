@@ -56,10 +56,6 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest01() {
             CompareTool compareTool = new CompareTool();
@@ -75,10 +71,6 @@ namespace iText.Kernel.Utils {
                  + "cmp_report01.xml"), "CompareTool report differs from the reference one");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest02() {
             CompareTool compareTool = new CompareTool();
@@ -94,10 +86,6 @@ namespace iText.Kernel.Utils {
                  + "cmp_report02.xml"), "CompareTool report differs from the reference one");
         }
 
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest03() {
             CompareTool compareTool = new CompareTool();
@@ -113,10 +101,6 @@ namespace iText.Kernel.Utils {
                  + "cmp_report03.xml"), "CompareTool report differs from the reference one");
         }
 
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest04() {
             // Test space in name
@@ -133,7 +117,6 @@ namespace iText.Kernel.Utils {
                  + "cmp_report01.xml"), "CompareTool report differs from the reference one");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void DifferentProducerTest() {
             String expectedMessage = "Document info fail. Expected: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (iText Software; licensed version)\", actual: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (AGPL-version)\"";

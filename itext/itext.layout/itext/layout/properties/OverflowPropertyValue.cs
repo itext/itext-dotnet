@@ -40,7 +40,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Layout.Element;
+
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// The possible values for the type of overflow of
+    /// <see cref="BlockElement{T}"/>.
+    /// </summary>
     public enum OverflowPropertyValue {
         FIT,
         VISIBLE,

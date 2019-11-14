@@ -44,9 +44,10 @@ using System;
 using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
-    public class CssTest {
+    public class CssTest : ExtendedITextTest {
         private Document html = null;
 
         private static String htmlString;

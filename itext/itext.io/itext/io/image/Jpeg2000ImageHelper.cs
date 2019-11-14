@@ -159,12 +159,12 @@ namespace iText.IO.Image {
                                 catch (Jpeg2000ImageHelper.ZeroBoxSizeException) {
                                 }
                             }
+                            //Probably we have reached the contiguous codestream box which is the last in jpeg2000 and has no length.
                             while (JP2_COLR == box.type);
                         }
                     }
                 }
                 else {
-                    //Probably we have reached the contiguous codestream box which is the last in jpeg2000 and has no length.
                     if (box.length == unchecked((int)(0xff4fff51))) {
                         StreamUtil.Skip(jpeg2000Stream, 4);
                         int x1 = Cio_read(4, jpeg2000Stream);
@@ -187,7 +187,6 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static Jpeg2000ImageData.ColorSpecBox Jp2_read_colr(Jpeg2000ImageHelper.Jpeg2000Box box, Stream jpeg2000Stream
             ) {
             int readBytes = 8;
@@ -211,7 +210,6 @@ namespace iText.IO.Image {
             return colorSpecBox;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void Jp2_read_boxhdr(Jpeg2000ImageHelper.Jpeg2000Box box, Stream jpeg2000Stream) {
             box.length = Cio_read(4, jpeg2000Stream);
             box.type = Cio_read(4, jpeg2000Stream);
@@ -231,7 +229,6 @@ namespace iText.IO.Image {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static int Cio_read(int n, Stream jpeg2000Stream) {
             int v = 0;
             for (int i = n - 1; i >= 0; i--) {

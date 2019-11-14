@@ -56,20 +56,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// abstractions into the abstractions of the Clipper library and vise versa.
     /// <para />
     /// For example:
-    /// <ul>
-    /// <li>
+    /// <list type="bullet">
+    /// <item><description>
     /// <see cref="PolyTree"/>
     /// to
     /// <see cref="iText.Kernel.Geom.Path"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="iText.Kernel.Geom.Point"/>
     /// to
     /// <see cref="IntPoint"/>
-    /// <li>
+    /// </description></item>
+    /// <item><description>
     /// <see cref="IntPoint"/>
     /// to
     /// <see cref="iText.Kernel.Geom.Point"/>
-    /// </ul>
+    /// </description></item>
+    /// </list>
     /// </remarks>
     public class ClipperBridge {
         /// <summary>
@@ -117,13 +120,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// The
         /// <see cref="iText.Kernel.Geom.Path"/>
         /// object to be added to the
-        /// <see cref="Clipper"/>
-        /// .
+        /// <see cref="Clipper"/>.
         /// </param>
         /// <param name="polyType">
         /// See
-        /// <see cref="PolyType"/>
-        /// .
+        /// <see cref="PolyType"/>.
         /// </param>
         public static void AddPath(Clipper clipper, Path path, PolyType polyType) {
             foreach (Subpath subpath in path.GetSubpaths()) {
@@ -256,8 +257,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
         /// </param>
         /// <returns>Clipper fill type constant.</returns>
         public static PolyFillType GetFillType(int fillingRule) {
@@ -278,13 +278,26 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="Clipper"/>
         /// instance, treating the path as
         /// a closed polygon.
+        /// </summary>
+        /// <remarks>
+        /// Adds polygon path based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
+        /// a closed polygon.
         /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
-        /// <ul>
-        /// <li>it has less than 3 vertices;
-        /// <li>the vertices are all co-linear.
-        /// </ul>
-        /// </summary>
+        /// <list type="bullet">
+        /// <item><description>it has less than 3 vertices;
+        /// </description></item>
+        /// <item><description>the vertices are all co-linear.
+        /// </description></item>
+        /// </list>
+        /// </remarks>
         /// <param name="clipper">
         /// 
         /// <see cref="Clipper"/>
@@ -319,14 +332,26 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// ) and adds this path to
         /// <see cref="Clipper"/>
         /// instance, treating the path as
+        /// a polyline (an open path in terms of clipper library).
+        /// </summary>
+        /// <remarks>
+        /// Adds polyline path based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance, treating the path as
         /// a polyline (an open path in terms of clipper library). This path is added to the subject of future clipping.
         /// Polylines cannot be part of clipping polygon.
         /// <para />
         /// The return value will be false if the path is invalid for clipping. A path is invalid for clipping when:
-        /// <ul>
-        /// <li>it has less than 2 vertices;
-        /// </ul>
-        /// </summary>
+        /// <list type="bullet">
+        /// <item><description>it has less than 2 vertices;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
         /// <param name="clipper">
         /// 
         /// <see cref="Clipper"/>

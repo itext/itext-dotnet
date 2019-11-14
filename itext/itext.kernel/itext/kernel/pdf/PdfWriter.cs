@@ -54,6 +54,7 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
+        // For internal usage only
         private PdfOutputStream duplicateStream = null;
 
         protected internal WriterProperties properties;
@@ -77,11 +78,11 @@ namespace iText.Kernel.Pdf {
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
         private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
 
+        //forewarned is forearmed
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
         /// <param name="file">File to write to.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(FileInfo file)
             : this(file.FullName) {
         }
@@ -94,8 +95,6 @@ namespace iText.Kernel.Pdf {
 
         public PdfWriter(Stream os, WriterProperties properties)
             : base(FileUtil.WrapWithBufferedOutputStream(os)) {
-            // For internal usage only
-            //forewarned is forearmed
             this.properties = properties;
             if (properties.debugMode) {
             }
@@ -103,7 +102,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Create a PdfWriter writing to the passed filename and with default writer properties.</summary>
         /// <param name="filename">filename of the resulting pdf.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename)
             : this(filename, new WriterProperties()) {
         }
@@ -111,7 +109,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Create a PdfWriter writing to the passed filename and using the passed writer properties.</summary>
         /// <param name="filename">filename of the resulting pdf.</param>
         /// <param name="properties">writerproperties to use.</param>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename, WriterProperties properties)
             : this(FileUtil.GetBufferedOutputStream(filename), properties) {
         }
@@ -126,8 +123,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Gets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <returns>compression level.</returns>
         public virtual int GetCompressionLevel() {
@@ -138,8 +134,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets default compression level for @see PdfStream.
         /// For more details @see
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// .
+        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
         public virtual iText.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel) {
@@ -165,7 +160,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual PdfObjectStream GetObjectStream() {
             if (!IsFullCompression()) {
                 return null;
@@ -202,7 +196,6 @@ namespace iText.Kernel.Pdf {
         ///     </remarks>
         /// <param name="pdfObject">object to flush.</param>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="System.IO.IOException">on error.</exception>
         protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
             if (IsFullCompression() && canBeInObjStm) {
@@ -295,7 +288,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Writes object to body of PDF document.</summary>
         /// <param name="pdfObj">object to write.</param>
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void WriteToBody(PdfObject pdfObj) {
             if (crypto != null) {
                 crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj.GetIndirectReference()

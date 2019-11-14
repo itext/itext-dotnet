@@ -42,11 +42,12 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.StyledXmlParser.Jsoup;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Test TextNodes</summary>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
-    public class TextNodeTest {
+    public class TextNodeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestBlank() {
             TextNode one = new TextNode("", "");

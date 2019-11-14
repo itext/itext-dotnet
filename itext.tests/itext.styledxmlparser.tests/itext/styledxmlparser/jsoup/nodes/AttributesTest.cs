@@ -40,10 +40,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Test;
+
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Attributes.</summary>
     /// <author>Jonathan Hedley</author>
-    public class AttributesTest {
+    public class AttributesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Html() {
             Attributes a = new Attributes();

@@ -46,14 +46,16 @@ using System.Collections.Generic;
 namespace iText.Kernel.Counter.Data {
     /// <summary>
     /// Interface responsible for caching
-    /// <see cref="EventData{T}"/>
-    /// .
-    /// Used in
-    /// <see cref="EventDataHandler{T, V}"/>
-    /// .
+    /// <see cref="EventData{T}"/>.
     /// </summary>
-    /// 
-    /// 
+    /// <remarks>
+    /// Interface responsible for caching
+    /// <see cref="EventData{T}"/>.
+    /// Used in
+    /// <see cref="EventDataHandler{T, V}"/>.
+    /// </remarks>
+    /// <typeparam name="T">the data signature type</typeparam>
+    /// <typeparam name="V">the data type</typeparam>
     public interface IEventDataCache<T, V>
         where V : EventData<T> {
         void Put(V data);

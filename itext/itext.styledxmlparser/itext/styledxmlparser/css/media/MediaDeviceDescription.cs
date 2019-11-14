@@ -77,6 +77,7 @@ namespace iText.StyledXmlParser.Css.Media {
         /// <summary>The resolution in DPI.</summary>
         private float resolution;
 
+        // TODO change default units? If so, change CssUtils#parseResolution as well
         /// <summary>
         /// See
         /// <see cref="MediaType"/>
@@ -84,7 +85,6 @@ namespace iText.StyledXmlParser.Css.Media {
         /// </summary>
         /// <param name="type">a type of the media to use.</param>
         public MediaDeviceDescription(String type) {
-            // TODO change default units? If so, change CssUtils#parseResolution as well
             this.type = type;
         }
 
@@ -104,8 +104,7 @@ namespace iText.StyledXmlParser.Css.Media {
 
         /// <summary>
         /// Creates the default
-        /// <see cref="MediaDeviceDescription"/>
-        /// .
+        /// <see cref="MediaDeviceDescription"/>.
         /// </summary>
         /// <returns>the media device description</returns>
         public static iText.StyledXmlParser.Css.Media.MediaDeviceDescription CreateDefault() {
@@ -116,11 +115,16 @@ namespace iText.StyledXmlParser.Css.Media {
         /// Gets default
         /// <see cref="MediaDeviceDescription"/>
         /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Gets default
+        /// <see cref="MediaDeviceDescription"/>
+        /// instance.
         /// Do not modify any fields of the returned media device description because it may lead
         /// to unpredictable results. Use
         /// <see cref="CreateDefault()"/>
         /// if you want to modify device description.
-        /// </summary>
+        /// </remarks>
         /// <returns>the default media device description</returns>
         public static iText.StyledXmlParser.Css.Media.MediaDeviceDescription GetDefault() {
             return DEFAULT;

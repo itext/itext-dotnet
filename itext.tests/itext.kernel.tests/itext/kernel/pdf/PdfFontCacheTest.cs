@@ -75,8 +75,6 @@ namespace iText.Kernel.Pdf {
 
         private static readonly String[] TextSetChinese = new String[] { "Hello World", "你好", "世界" };
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithKozmin() {
             String testName = "DocumentWithKozmin";
@@ -91,8 +89,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaMixEncodings() {
             String testName = "DocumentWithHelveticaMixEncodings";
@@ -109,8 +105,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelvetica() {
             String testName = "DocumentWithHelvetica";
@@ -128,8 +122,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFlushed() {
             String testName = "DocumentWithHelveticaFlushed";
@@ -150,8 +142,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTimesAndCustomEncoding() {
             String testName = "DocumentTimesAndCustomEncoding";
@@ -170,8 +160,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithCourierAndWinAnsiEncodings() {
             String testName = "DocumentCourierAndWinAnsiEncodings";
@@ -190,8 +178,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTimesBoldAndMacRomanEncodings() {
             String testName = "DocumentTimesBoldAndMacRomanEncodings";
@@ -208,8 +194,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueType() {
             String testName = "DocumentWithTrueType";
@@ -227,8 +211,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeFlushed() {
             String testName = "DocumentWithTrueTypeFlushed";
@@ -251,8 +233,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsType0() {
             String testName = "DocumentWithTrueTypeAsType0";
@@ -270,8 +250,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsType0Flushed() {
             String testName = "DocumentWithTrueTypeAsType0Flushed";
@@ -292,8 +270,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithOpenTypeAsType0() {
             String testName = "DocumentWithOpenTypeAsType0";
@@ -311,8 +287,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithOpenTypeAsType0Flushed() {
             String testName = "DocumentWithOpenTypeAsType0Flushed";
@@ -333,8 +307,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFromDocument() {
             String testName = "DocumentWithHelveticaFromDocument";
@@ -367,8 +339,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFromDocumentWithWrongEncoding() {
             String testName = "DocumentWithHelveticaFromDocumentWithWrongEncoding";
@@ -400,8 +370,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAboriginalFromDocument() {
             String testName = "DocumentWithTrueTypeAboriginalFromDocument";
@@ -432,8 +400,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType1NotoFromDocument() {
             String testName = "DocumentWithType1NotoFromDocument";
@@ -464,8 +430,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType0AboriginalFromDocument1() {
             String testName = "DocumentWithType0AboriginalFromDocument";
@@ -496,8 +460,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType0NotoFromDocument1() {
             String testName = "DocumentWithType0NotoFromDocument";
@@ -528,8 +490,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType3Font() {
             String testName = "DocumentWithType3Font";
@@ -563,7 +523,6 @@ namespace iText.Kernel.Pdf {
                 "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void AddPagesWithFonts(PdfDocument pdfDoc, String fontProgram, String fontEncoding, String[] text) {
             int top = 700;
             foreach (String t in text) {
@@ -576,7 +535,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private int CountPdfFonts(String filename) {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -590,7 +548,6 @@ namespace iText.Kernel.Pdf {
             return fonts.Count;
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         private PdfDocument CreateDocument(String filename) {
             PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             return new PdfDocument(writer);

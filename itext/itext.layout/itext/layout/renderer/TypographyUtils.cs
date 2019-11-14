@@ -132,7 +132,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Checks if layout module can access pdfCalligraph</summary>
-        /// <returns><code>true</code> if layout can access pdfCalligraph and <code>false</code> otherwise</returns>
+        /// <returns><c>true</c> if layout can access pdfCalligraph and <c>false</c> otherwise</returns>
         public static bool IsPdfCalligraphAvailable() {
             return TYPOGRAPHY_MODULE_INITIALIZED;
         }
@@ -334,8 +334,6 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        /// <exception cref="System.MissingMethodException"/>
-        /// <exception cref="System.TypeLoadException"/>
         private static MethodInfo FindMethod(String className, String methodName, Type[] parameterTypes) {
             TypographyUtils.TypographyMethodSignature tm = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
                 , methodName);
@@ -347,8 +345,6 @@ namespace iText.Layout.Renderer {
             return m;
         }
 
-        /// <exception cref="System.MissingMethodException"/>
-        /// <exception cref="System.TypeLoadException"/>
         private static ConstructorInfo FindConstructor(String className, Type[] parameterTypes) {
             TypographyUtils.TypographyMethodSignature tc = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
                 );
@@ -360,7 +356,6 @@ namespace iText.Layout.Renderer {
             return c;
         }
 
-        /// <exception cref="System.TypeLoadException"/>
         private static Type FindClass(String className) {
             Type c = cachedClasses.Get(className);
             if (c == null) {

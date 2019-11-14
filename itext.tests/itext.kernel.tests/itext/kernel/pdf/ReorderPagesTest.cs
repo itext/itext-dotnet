@@ -58,10 +58,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReorderTaggedHasCommonStructElem01() {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
@@ -74,10 +70,6 @@ namespace iText.Kernel.Pdf {
             Compare(outPath, cmpPath, destinationFolder, "diff_01");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReorderTaggedHasCommonStructElem02() {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
@@ -89,10 +81,6 @@ namespace iText.Kernel.Pdf {
             Compare(outPath, cmpPath, destinationFolder, "diff_02");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ReorderTaggedHasCommonStructElemBigger() {
             String inPath = sourceFolder + "taggedHasCommonStructElemBigger.pdf";
@@ -104,10 +92,6 @@ namespace iText.Kernel.Pdf {
             Compare(outPath, cmpPath, destinationFolder, "diff_03");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CopyReorderTaggedHasCommonStructElem() {
             String inPath = sourceFolder + "taggedHasCommonStructElem.pdf";
@@ -122,10 +106,6 @@ namespace iText.Kernel.Pdf {
             Compare(outPath, cmpPath, destinationFolder, "diff_04");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
         private void Compare(String outPath, String cmpPath, String destinationFolder, String diffPrefix) {
             CompareTool compareTool = new CompareTool();
             String tagStructureErrors = compareTool.CompareTagStructures(outPath, cmpPath);

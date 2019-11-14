@@ -48,8 +48,13 @@ namespace iText.Kernel.Counter.Event {
     /// Generic
     /// <see cref="IEvent"/>
     /// that has additional id, that should help during events filtering.
-    /// The common practice is to return the namespace as id.
     /// </summary>
+    /// <remarks>
+    /// Generic
+    /// <see cref="IEvent"/>
+    /// that has additional id, that should help during events filtering.
+    /// The common practice is to return the namespace as id.
+    /// </remarks>
     public interface IGenericEvent : IEvent {
         /// <summary>The id that uniquely identifies event origin.</summary>
         /// <remarks>

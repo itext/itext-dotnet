@@ -48,19 +48,23 @@ namespace iText.Kernel.Pdf.Canvas {
     /// A subclass of
     /// <see cref="CanvasTag"/>
     /// for Artifacts.
+    /// </summary>
+    /// <remarks>
+    /// A subclass of
+    /// <see cref="CanvasTag"/>
+    /// for Artifacts.
     /// In Tagged PDF, an object can be marked as an Artifact in order to signify
     /// that it is more part of the document structure than of the document content.
     /// Examples are page headers, layout features, etc. Screen readers can choose to
     /// ignore Artifacts.
-    /// </summary>
+    /// </remarks>
     public class CanvasArtifact : CanvasTag {
         /// <summary>
         /// Creates a CanvasArtifact object, which is a
         /// <see cref="CanvasTag"/>
         /// with a role
         /// of
-        /// <see cref="iText.Kernel.Pdf.PdfName.Artifact">Artifact</see>
-        /// .
+        /// <see cref="iText.Kernel.Pdf.PdfName.Artifact">Artifact</see>.
         /// </summary>
         public CanvasArtifact()
             : base(PdfName.Artifact) {

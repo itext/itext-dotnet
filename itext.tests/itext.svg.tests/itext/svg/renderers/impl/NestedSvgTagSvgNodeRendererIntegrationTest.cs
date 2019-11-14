@@ -57,36 +57,26 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SingleNestedSvgTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "singleNested");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DoubleNestedSvgTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "doubleNested");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoNestedSvgTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "twoNested");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void EmptySvgTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "empty");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TranslatedSvgTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "translated");

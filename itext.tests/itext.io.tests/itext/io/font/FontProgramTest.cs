@@ -45,12 +45,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.IO.Font {
-    public class FontProgramTest {
+    public class FontProgramTest : ExtendedITextTest {
         private const String notExistingFont = "some-font.ttf";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -60,7 +60,6 @@ namespace iText.IO.Font {
 ;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BoldTest() {
             FontProgram fp = FontProgramFactory.CreateFont(StandardFonts.HELVETICA);

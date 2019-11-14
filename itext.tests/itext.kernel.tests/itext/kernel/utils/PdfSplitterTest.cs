@@ -61,15 +61,13 @@ namespace iText.Kernel.Utils {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest01() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             IList<int> pageNumbers = JavaUtil.ArraysAsList(30, 100);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_86(inputPdfDoc).SplitByPageNumbers(pageNumbers);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_85(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
             }
@@ -80,8 +78,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_86 : PdfSplitter {
-            public _PdfSplitter_86(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_85 : PdfSplitter {
+            public _PdfSplitter_85(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -99,14 +97,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest02() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            new _PdfSplitter_116(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_127());
+            new _PdfSplitter_115(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_126());
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
                     .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument2_" + i.ToString() + ".pdf", destinationFolder
@@ -114,8 +110,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_116 : PdfSplitter {
-            public _PdfSplitter_116(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_115 : PdfSplitter {
+            public _PdfSplitter_115(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -133,8 +129,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _IDocumentReadyListener_127 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_127() {
+        private sealed class _IDocumentReadyListener_126 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_126() {
             }
 
             public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
@@ -145,8 +141,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest03() {
@@ -154,7 +148,7 @@ namespace iText.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_155(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_154(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -166,8 +160,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_155 : PdfSplitter {
-            public _PdfSplitter_155(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_154 : PdfSplitter {
+            public _PdfSplitter_154(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -185,8 +179,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest04() {
@@ -195,7 +187,7 @@ namespace iText.Kernel.Utils {
             PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
                 (1, 2);
             PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_189(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_188(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -207,8 +199,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_189 : PdfSplitter {
-            public _PdfSplitter_189(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_188 : PdfSplitter {
+            public _PdfSplitter_188(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -226,8 +218,6 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentByOutlineTest() {
@@ -244,13 +234,11 @@ namespace iText.Kernel.Utils {
             list[1].Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_235(inputPdfDoc);
+            PdfSplitter splitter = new _PdfSplitter_234(inputPdfDoc);
             IList<PdfDocument> documents = splitter.SplitBySize(100000);
             foreach (PdfDocument doc in documents) {
                 doc.Close();
@@ -261,8 +249,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_235 : PdfSplitter {
-            public _PdfSplitter_235(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_234 : PdfSplitter {
+            public _PdfSplitter_234(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }

@@ -52,6 +52,8 @@ namespace iText.IO.Font {
 
         public const int UNITS_NORMALIZATION = 1000;
 
+        // In case Type1: char code to glyph.
+        // In case TrueType: glyph index to glyph.
         protected internal IDictionary<int, Glyph> codeToGlyph = new Dictionary<int, Glyph>();
 
         protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph>();
@@ -75,8 +77,6 @@ namespace iText.IO.Font {
 
         protected internal String registry;
 
-        // In case Type1: char code to glyph.
-        // In case TrueType: glyph index to glyph.
         public virtual int CountOfGlyphs() {
             return Math.Max(codeToGlyph.Count, unicodeToGlyph.Count);
         }
@@ -154,8 +154,13 @@ namespace iText.IO.Font {
         /// Checks whether the
         /// <see cref="FontProgram"/>
         /// was built with corresponding fontName.
-        /// Default value is false unless overridden.
         /// </summary>
+        /// <remarks>
+        /// Checks whether the
+        /// <see cref="FontProgram"/>
+        /// was built with corresponding fontName.
+        /// Default value is false unless overridden.
+        /// </remarks>
         /// <param name="fontName">a font name or path to a font program</param>
         /// <returns>true, if the FontProgram was built with the fontProgram. Otherwise false.</returns>
         public virtual bool IsBuiltWith(String fontName) {
@@ -229,8 +234,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font weight.</summary>
         /// <param name="fontWeight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal virtual void SetFontWeight(int fontWeight) {
             fontNames.SetFontWeight(fontWeight);
@@ -239,8 +243,7 @@ namespace iText.IO.Font {
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal virtual void SetFontStretch(String fontWidth) {
             fontNames.SetFontStretch(fontWidth);

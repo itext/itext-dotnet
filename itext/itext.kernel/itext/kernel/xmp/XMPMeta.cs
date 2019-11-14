@@ -36,7 +36,7 @@ namespace iText.Kernel.XMP {
     /// <remarks>
     /// This class represents the set of XMP metadata as a DOM representation. It has methods to read and
     /// modify all kinds of properties, create an iterator over all properties and serialize the metadata
-    /// to a String, byte-array or <code>OutputStream</code>.
+    /// to a String, byte-array or <c>OutputStream</c>.
     /// </remarks>
     /// <since>20.01.2006</since>
     public interface XMPMeta
@@ -57,8 +57,8 @@ namespace iText.Kernel.XMP {
         /// of the property being referenced. See the introductory discussion of path expression usage
         /// for more information.
         /// <para />
-        /// All of the functions return an object inherited from <code>PropertyBase</code> or
-        /// <code>null</code> if the property does not exists. The result object contains the value of
+        /// All of the functions return an object inherited from <c>PropertyBase</c> or
+        /// <c>null</c> if the property does not exists. The result object contains the value of
         /// the property and option flags describing the property. Arrays and the non-leaf levels of
         /// nodes do not have values.
         /// <para />
@@ -70,24 +70,22 @@ namespace iText.Kernel.XMP {
         /// the path composition functions in XMPPathFactory.
         /// </remarks>
         /// <param name="schemaNS">
-        /// The namespace URI for the property. May be <code>null</code> or the empty
+        /// The namespace URI for the property. May be <c>null</c> or the empty
         /// string if the first component of the propName path contains a namespace prefix. The
         /// URI must be for a registered namespace.
         /// </param>
         /// <param name="propName">
         /// The name of the property. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Using a namespace prefix on the first
+        /// <c>null</c> or the empty string. Using a namespace prefix on the first
         /// component is optional. If present without a schemaNS value then the prefix specifies
         /// the namespace. The prefix must be for a registered namespace. If both a schemaNS URI
         /// and propName prefix are present, they must be corresponding parts of a registered
         /// namespace.
         /// </param>
         /// <returns>
-        /// Returns a <code>XMPProperty</code> containing the value and the options or
-        /// <code>null</code> if the property does not exist.
+        /// Returns a <c>XMPProperty</c> containing the value and the options or
+        /// <c>null</c> if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetProperty(String schemaNS, String propName);
 
         /// <summary>Provides access to items within an array.</summary>
@@ -98,8 +96,8 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the array. Has the same usage as in getProperty.</param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="itemIndex">
         /// The index of the desired item. Arrays in XMP are indexed from 1. The
@@ -109,23 +107,19 @@ namespace iText.Kernel.XMP {
         /// item.
         /// </param>
         /// <returns>
-        /// Returns a <code>XMPProperty</code> containing the value and the options or
-        /// <code>null</code> if the property does not exist.
+        /// Returns a <c>XMPProperty</c> containing the value and the options or
+        /// <c>null</c> if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex);
 
         /// <summary>Returns the number of items in the array.</summary>
         /// <param name="schemaNS">The namespace URI for the array. Has the same usage as in getProperty.</param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <returns>Returns the number of items in the array.</returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         int CountArrayItems(String schemaNS, String arrayName);
 
         /// <summary>Provides access to fields within a nested structure.</summary>
@@ -141,8 +135,8 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the struct. Has the same usage as in getProperty.</param>
         /// <param name="structName">
         /// The name of the struct. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="fieldNS">
         /// The namespace URI for the field. Has the same URI and prefix usage as the
@@ -150,16 +144,14 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="fieldName">
         /// The name of the field. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// structName parameter.
         /// </param>
         /// <returns>
-        /// Returns a <code>XMPProperty</code> containing the value and the options or
-        /// <code>null</code> if the property does not exist. Arrays and non-leaf levels of
+        /// Returns a <c>XMPProperty</c> containing the value and the options or
+        /// <c>null</c> if the property does not exist. Arrays and non-leaf levels of
         /// structs do not have values.
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetStructField(String schemaNS, String structName, String fieldNS, String fieldName);
 
         /// <summary>Provides access to a qualifier attached to a property.</summary>
@@ -179,8 +171,8 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the struct. Has the same usage as in getProperty.</param>
         /// <param name="propName">
         /// The name of the property to which the qualifier is attached. May be a general
-        /// path expression, must not be <code>null</code> or the empty string. Has the same
-        /// namespace prefix usage as in <code>getProperty()</code>.
+        /// path expression, must not be <c>null</c> or the empty string. Has the same
+        /// namespace prefix usage as in <c>getProperty()</c>.
         /// </param>
         /// <param name="qualNS">
         /// The namespace URI for the qualifier. Has the same URI and prefix usage as the
@@ -188,32 +180,30 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="qualName">
         /// The name of the qualifier. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// propName parameter.
         /// </param>
         /// <returns>
-        /// Returns a <code>XMPProperty</code> containing the value and the options of the
-        /// qualifier or <code>null</code> if the property does not exist. The name of the
-        /// qualifier must be a single XML name, must not be <code>null</code> or the empty
+        /// Returns a <c>XMPProperty</c> containing the value and the options of the
+        /// qualifier or <c>null</c> if the property does not exist. The name of the
+        /// qualifier must be a single XML name, must not be <c>null</c> or the empty
         /// string. Has the same namespace prefix usage as the propName parameter.
         /// <para />
         /// The value of the qualifier is only set if it has one (Arrays and non-leaf levels of
         /// structs do not have values).
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetQualifier(String schemaNS, String propName, String qualNS, String qualName);
 
         // ---------------------------------------------------------------------------------------------
         // Functions for setting property values
         /// <summary>
-        /// The property value <code>setters</code> all take a property specification, their
+        /// The property value <c>setters</c> all take a property specification, their
         /// differences are in the form of this.
         /// </summary>
         /// <remarks>
-        /// The property value <code>setters</code> all take a property specification, their
+        /// The property value <c>setters</c> all take a property specification, their
         /// differences are in the form of this. The first two parameters are always the top level
-        /// namespace URI (the <code>schema</code> namespace) and the basic name of the property being
+        /// namespace URI (the <c>schema</c> namespace) and the basic name of the property being
         /// referenced. See the introductory discussion of path expression usage for more information.
         /// <para />
         /// All of the functions take a string value for the property and option flags describing the
@@ -228,24 +218,21 @@ namespace iText.Kernel.XMP {
         /// <para />
         /// This is the simplest property setter, mainly for top level simple properties or after using
         /// the path composition functions in
-        /// <see cref="XMPPathFactory"/>
-        /// .
+        /// <see cref="XMPPathFactory"/>.
         /// </remarks>
         /// <param name="schemaNS">The namespace URI for the property. Has the same usage as in getProperty.</param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <param name="propValue">
         /// the value for the property (only leaf properties have a value).
         /// Arrays and non-leaf levels of structs do not have values.
-        /// Must be <code>null</code> if the value is not relevant.<br />
+        /// Must be <c>null</c> if the value is not relevant.<br />
         /// The value is automatically detected: Boolean, Integer, Long, Double, XMPDateTime and
-        /// byte[] are handled, on all other <code>toString()</code> is called.
+        /// byte[] are handled, on all other <c>toString()</c> is called.
         /// </param>
         /// <param name="options">Option flags describing the property. See the earlier description.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetProperty(String schemaNS, String propName, Object propValue, PropertyOptions options);
 
         /// <seealso cref="SetProperty(System.String, System.String, System.Object, iText.Kernel.XMP.Options.PropertyOptions)
@@ -253,8 +240,6 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the value for the property</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetProperty(String schemaNS, String propName, Object propValue);
 
         /// <summary>Replaces an item within an array.</summary>
@@ -267,7 +252,7 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the array. Has the same usage as in getProperty.</param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
         /// propName in getProperty.
         /// </param>
         /// <param name="itemIndex">
@@ -279,11 +264,9 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="itemValue">
         /// the new value of the array item. Has the same usage as propValue in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="options">the set options for the item.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue, PropertyOptions options
             );
 
@@ -293,8 +276,6 @@ namespace iText.Kernel.XMP {
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemIndex">The index to insert the new item</param>
         /// <param name="itemValue">the new value of the array item</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue);
 
         /// <summary>Inserts an item into an array previous to the given index.</summary>
@@ -307,20 +288,18 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the array. Has the same usage as in getProperty.</param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
         /// propName in getProperty.
         /// </param>
         /// <param name="itemIndex">
         /// The index to insert the new item. Arrays in XMP are indexed from 1. Use
-        /// <code>XMPConst.ARRAY_LAST_ITEM</code> to append items.
+        /// <c>XMPConst.ARRAY_LAST_ITEM</c> to append items.
         /// </param>
         /// <param name="itemValue">
         /// the new value of the array item. Has the same usage as
-        /// propValue in <code>setProperty()</code>.
+        /// propValue in <c>setProperty()</c>.
         /// </param>
         /// <param name="options">the set options that decide about the kind of the node.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void InsertArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue, PropertyOptions options
             );
 
@@ -330,8 +309,6 @@ namespace iText.Kernel.XMP {
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemIndex">The index to insert the new item</param>
         /// <param name="itemValue">the value of the array item</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void InsertArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue);
 
         /// <summary>Simplifies the construction of an array by not requiring that you pre-create an empty array.</summary>
@@ -349,24 +326,26 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="arrayOptions">
         /// Option flags describing the array form. The only valid options are
-        /// <ul>
-        /// <li>
+        /// <list type="bullet">
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY"/>
         /// ,
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ORDERED"/>
         /// ,
-        /// <li>
+        /// </description></item>
+        /// <item><description>
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALTERNATE"/>
         /// or
-        /// <li>
-        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>
-        /// .
-        /// </ul>
+        /// </description></item>
+        /// <item><description>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>.
+        /// </description></item>
+        /// </list>
         /// <em>Note:</em> the array options only need to be provided if the array is not
-        /// already existing, otherwise you can set them to <code>null</code> or use
-        /// <see cref="AppendArrayItem(System.String, System.String, System.String)"/>
-        /// .
+        /// already existing, otherwise you can set them to <c>null</c> or use
+        /// <see cref="AppendArrayItem(System.String, System.String, System.String)"/>.
         /// </param>
         /// <param name="itemValue">the value of the array item. Has the same usage as propValue in getProperty.</param>
         /// <param name="itemOptions">
@@ -374,8 +353,6 @@ namespace iText.Kernel.XMP {
         /// <see cref="iText.Kernel.XMP.Options.PropertyOptions"/>
         /// )
         /// </param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void AppendArrayItem(String schemaNS, String arrayName, PropertyOptions arrayOptions, String itemValue, PropertyOptions
              itemOptions);
 
@@ -384,8 +361,6 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the array</param>
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemValue">the value of the array item</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void AppendArrayItem(String schemaNS, String arrayName, String itemValue);
 
         /// <summary>Provides access to fields within a nested structure.</summary>
@@ -414,8 +389,6 @@ namespace iText.Kernel.XMP {
         /// Has the same usage as propValue in getProperty.
         /// </param>
         /// <param name="options">Option flags describing the field. See the earlier description.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetStructField(String schemaNS, String structName, String fieldNS, String fieldName, String fieldValue
             , PropertyOptions options);
 
@@ -426,8 +399,6 @@ namespace iText.Kernel.XMP {
         /// <param name="fieldNS">The namespace URI for the field</param>
         /// <param name="fieldName">The name of the field</param>
         /// <param name="fieldValue">the value of the field</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetStructField(String schemaNS, String structName, String fieldNS, String fieldName, String fieldValue
             );
 
@@ -453,17 +424,15 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="qualName">
         /// The name of the qualifier. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// propName parameter.
         /// </param>
         /// <param name="qualValue">
-        /// A pointer to the <code>null</code> terminated UTF-8 string that is the
+        /// A pointer to the <c>null</c> terminated UTF-8 string that is the
         /// value of the qualifier, if the qualifier has a value. Has the same usage as propValue
         /// in getProperty.
         /// </param>
         /// <param name="options">Option flags describing the qualifier. See the earlier description.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetQualifier(String schemaNS, String propName, String qualNS, String qualName, String qualValue, PropertyOptions
              options);
 
@@ -474,8 +443,6 @@ namespace iText.Kernel.XMP {
         /// <param name="qualNS">The namespace URI for the qualifier</param>
         /// <param name="qualName">The name of the qualifier</param>
         /// <param name="qualValue">the value of the qualifier</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetQualifier(String schemaNS, String propName, String qualNS, String qualName, String qualValue);
 
         // ---------------------------------------------------------------------------------------------
@@ -488,7 +455,7 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">The name of the property. Has the same usage as in getProperty.</param>
         void DeleteProperty(String schemaNS, String propName);
@@ -501,12 +468,12 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the array. Has the same usage as in getProperty.</param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="itemIndex">
         /// The index of the desired item. Arrays in XMP are indexed from 1. The
-        /// constant <code>XMPConst.ARRAY_LAST_ITEM</code> always refers to the last
+        /// constant <c>XMPConst.ARRAY_LAST_ITEM</c> always refers to the last
         /// existing array item.
         /// </param>
         void DeleteArrayItem(String schemaNS, String arrayName, int itemIndex);
@@ -518,11 +485,11 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the struct. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="structName">
         /// The name of the struct. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
         /// propName in getProperty.
         /// </param>
         /// <param name="fieldNS">
@@ -531,7 +498,7 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="fieldName">
         /// The name of the field. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// structName parameter.
         /// </param>
         void DeleteStructField(String schemaNS, String structName, String fieldNS, String fieldName);
@@ -543,7 +510,7 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the struct. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property to which the qualifier is attached. Has the same
@@ -555,7 +522,7 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="qualName">
         /// The name of the qualifier. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// propName parameter.
         /// </param>
         void DeleteQualifier(String schemaNS, String propName, String qualNS, String qualName);
@@ -563,11 +530,11 @@ namespace iText.Kernel.XMP {
         /// <summary>Returns whether the property exists.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>Returns true if the property exists.</returns>
         bool DoesPropertyExist(String schemaNS, String propName);
@@ -575,30 +542,30 @@ namespace iText.Kernel.XMP {
         /// <summary>Tells if the array item exists.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the array. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="arrayName">
         /// The name of the array. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="itemIndex">
         /// The index of the desired item. Arrays in XMP are indexed from 1. The
-        /// constant <code>XMPConst.ARRAY_LAST_ITEM</code> always refers to the last
+        /// constant <c>XMPConst.ARRAY_LAST_ITEM</c> always refers to the last
         /// existing array item.
         /// </param>
-        /// <returns>Returns <code>true</code> if the array exists, <code>false</code> otherwise.</returns>
+        /// <returns>Returns <c>true</c> if the array exists, <c>false</c> otherwise.</returns>
         bool DoesArrayItemExist(String schemaNS, String arrayName, int itemIndex);
 
         /// <summary>DoesStructFieldExist tells if the struct field exists.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the struct. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="structName">
         /// The name of the struct. May be a general path expression, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="fieldNS">
         /// The namespace URI for the field. Has the same URI and prefix usage as the
@@ -606,7 +573,7 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="fieldName">
         /// The name of the field. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// structName parameter.
         /// </param>
         /// <returns>Returns true if the field exists.</returns>
@@ -615,11 +582,11 @@ namespace iText.Kernel.XMP {
         /// <summary>DoesQualifierExist tells if the qualifier exists.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the struct. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property to which the qualifier is attached. Has the same
-        /// usage as in <code>getProperty()</code>.
+        /// usage as in <c>getProperty()</c>.
         /// </param>
         /// <param name="qualNS">
         /// The namespace URI for the qualifier. Has the same URI and prefix usage as the
@@ -627,7 +594,7 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="qualName">
         /// The name of the qualifier. Must be a single XML name, must not be
-        /// <code>null</code> or the empty string. Has the same namespace prefix usage as the
+        /// <c>null</c> or the empty string. Has the same namespace prefix usage as the
         /// propName parameter.
         /// </param>
         /// <returns>Returns true if the qualifier exists.</returns>
@@ -660,57 +627,63 @@ namespace iText.Kernel.XMP {
         /// <para />
         /// <em>Note:</em> RFC 3066 language tags must be treated in a case insensitive manner. The XMP
         /// Toolkit does this by normalizing their capitalization:
-        /// <ul>
-        /// <li> The primary subtag is lower case, the suggested practice of ISO 639.
-        /// <li> All 2 letter secondary subtags are upper case, the suggested practice of ISO 3166.
-        /// <li> All other subtags are lower case. The XMP specification defines an artificial language,
-        /// <li>"x-default", that is used to explicitly denote a default item in an alt-text array.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description> The primary subtag is lower case, the suggested practice of ISO 639.
+        /// </description></item>
+        /// <item><description> All 2 letter secondary subtags are upper case, the suggested practice of ISO 3166.
+        /// </description></item>
+        /// <item><description> All other subtags are lower case. The XMP specification defines an artificial language,
+        /// </description></item>
+        /// <item><description>"x-default", that is used to explicitly denote a default item in an alt-text array.
+        /// </description></item>
+        /// </list>
         /// The XMP toolkit normalizes alt-text arrays such that the x-default item is the first item.
         /// The SetLocalizedText function has several special features related to the x-default item, see
         /// its description for details. The selection of the array item is the same for GetLocalizedText
         /// and SetLocalizedText:
-        /// <ul>
-        /// <li> Look for an exact match with the specific language.
-        /// <li> If a generic language is given, look for a partial match.
-        /// <li> Look for an x-default item.
-        /// <li> Choose the first item.
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description> Look for an exact match with the specific language.
+        /// </description></item>
+        /// <item><description> If a generic language is given, look for a partial match.
+        /// </description></item>
+        /// <item><description> Look for an x-default item.
+        /// </description></item>
+        /// <item><description> Choose the first item.
+        /// </description></item>
+        /// </list>
         /// A partial match with the generic language is where the start of the item's language matches
         /// the generic string and the next character is '-'. An exact match is also recognized as a
         /// degenerate case. It is fine to pass x-default as the specific language. In this case,
         /// selection of an x-default item is an exact match by the first rule, not a selection by the
         /// 3rd rule. The last 2 rules are fallbacks used when the specific and generic languages fail to
-        /// produce a match. <code>getLocalizedText</code> returns information about a selected item in
+        /// produce a match. <c>getLocalizedText</c> returns information about a selected item in
         /// an alt-text array. The array item is selected according to the rules given above.
         /// <em>Note:</em> In a future version of this API a method
-        /// using Java <code>java.lang.Locale</code> will be added.
+        /// using Java <c>java.lang.Locale</c> will be added.
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the alt-text array. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="altTextName">
         /// The name of the alt-text array. May be a general path expression, must not
-        /// be <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// be <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="genericLang">
         /// The name of the generic language as an RFC 3066 primary subtag. May be
-        /// <code>null</code> or the empty string if no generic language is wanted.
+        /// <c>null</c> or the empty string if no generic language is wanted.
         /// </param>
         /// <param name="specificLang">
         /// The name of the specific language as an RFC 3066 tag. Must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <returns>
-        /// Returns an <code>XMPProperty</code> containing the value, the actual language and
-        /// the options if an appropriate alternate collection item exists, <code>null</code>
+        /// Returns an <c>XMPProperty</c> containing the value, the actual language and
+        /// the options if an appropriate alternate collection item exists, <c>null</c>
         /// if the property.
         /// does not exist.
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang);
 
         /// <summary>Modifies the value of a selected item in an alt-text array.</summary>
@@ -731,32 +704,30 @@ namespace iText.Kernel.XMP {
         /// item, the x-default item is also modified. If the array was empty, items are created for the
         /// specific language and x-default.
         /// <em>Note:</em> In a future version of this API a method
-        /// using Java <code>java.lang.Locale</code> will be added.
+        /// using Java <c>java.lang.Locale</c> will be added.
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the alt-text array. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="altTextName">
         /// The name of the alt-text array. May be a general path expression, must not
-        /// be <code>null</code> or the empty string. Has the same namespace prefix usage as
-        /// propName in <code>getProperty()</code>.
+        /// be <c>null</c> or the empty string. Has the same namespace prefix usage as
+        /// propName in <c>getProperty()</c>.
         /// </param>
         /// <param name="genericLang">
         /// The name of the generic language as an RFC 3066 primary subtag. May be
-        /// <code>null</code> or the empty string if no generic language is wanted.
+        /// <c>null</c> or the empty string if no generic language is wanted.
         /// </param>
         /// <param name="specificLang">
         /// The name of the specific language as an RFC 3066 tag. Must not be
-        /// <code>null</code> or the empty string.
+        /// <c>null</c> or the empty string.
         /// </param>
         /// <param name="itemValue">
-        /// A pointer to the <code>null</code> terminated UTF-8 string that is the new
+        /// A pointer to the <c>null</c> terminated UTF-8 string that is the new
         /// value for the appropriate array item.
         /// </param>
         /// <param name="options">Option flags, none are defined at present.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang, String
              itemValue, PropertyOptions options);
 
@@ -767,281 +738,223 @@ namespace iText.Kernel.XMP {
         /// <param name="genericLang">The name of the generic language</param>
         /// <param name="specificLang">The name of the specific language</param>
         /// <param name="itemValue">the new value for the appropriate array item</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang, String
              itemValue);
 
         // ---------------------------------------------------------------------------------------------
         // Functions accessing properties as binary values.
         /// <summary>
-        /// These are very similar to <code>getProperty()</code> and <code>SetProperty()</code> above,
+        /// These are very similar to <c>getProperty()</c> and <c>SetProperty()</c> above,
         /// but the value is returned or provided in a literal form instead of as a UTF-8 string.
         /// </summary>
         /// <remarks>
-        /// These are very similar to <code>getProperty()</code> and <code>SetProperty()</code> above,
+        /// These are very similar to <c>getProperty()</c> and <c>SetProperty()</c> above,
         /// but the value is returned or provided in a literal form instead of as a UTF-8 string.
-        /// The path composition functions in <code>XMPPathFactory</code> may be used to compose an path
+        /// The path composition functions in <c>XMPPathFactory</c> may be used to compose an path
         /// expression for fields in nested structures, items in arrays, or qualifiers.
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>Boolean</code> value or <code>null</code>
+        /// Returns a <c>Boolean</c> value or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         bool? GetPropertyBoolean(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns an <code>Integer</code> value or <code>null</code>
+        /// Returns an <c>Integer</c> value or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         int? GetPropertyInteger(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>Long</code> value or <code>null</code>
+        /// Returns a <c>Long</c> value or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         long? GetPropertyLong(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>Double</code> value or <code>null</code>
+        /// Returns a <c>Double</c> value or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         double? GetPropertyDouble(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>XMPDateTime</code>-object or <code>null</code>
+        /// Returns a <c>XMPDateTime</c>-object or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPDateTime GetPropertyDate(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a Java <code>Calendar</code>-object or <code>null</code>
+        /// Returns a Java <c>Calendar</c>-object or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         DateTime GetPropertyCalendar(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>byte[]</code>-array contained the decoded base64 value
-        /// or <code>null</code> if the property does not exist.
+        /// Returns a <c>byte[]</c>-array contained the decoded base64 value
+        /// or <c>null</c> if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         byte[] GetPropertyBase64(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
         /// <remarks>
         /// Convenience method to retrieve the literal value of a property.
-        /// <em>Note:</em> There is no <code>setPropertyString()</code>,
-        /// because <code>setProperty()</code> sets a string value.
+        /// <em>Note:</em> There is no <c>setPropertyString()</c>,
+        /// because <c>setProperty()</c> sets a string value.
         /// </remarks>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>getProperty()</code>.
+        /// <c>getProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <returns>
-        /// Returns a <code>String</code> value or <code>null</code>
+        /// Returns a <c>String</c> value or <c>null</c>
         /// if the property does not exist.
         /// </returns>
-        /// <exception cref="XMPException">
-        /// Wraps all exceptions that may occur,
-        /// especially conversion errors.
-        /// </exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         String GetPropertyString(String schemaNS, String propName);
 
-        /// <summary>Convenience method to set a property to a literal <code>boolean</code> value.</summary>
+        /// <summary>Convenience method to set a property to a literal <c>boolean</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the literal property value as <code>boolean</code>.</param>
+        /// <param name="propValue">the literal property value as <c>boolean</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBoolean(String schemaNS, String propName, bool propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyBoolean(System.String, System.String, bool, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the literal property value as <code>boolean</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the literal property value as <c>boolean</c></param>
         void SetPropertyBoolean(String schemaNS, String propName, bool propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>int</code> value.</summary>
+        /// <summary>Convenience method to set a property to a literal <c>int</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the literal property value as <code>int</code>.</param>
+        /// <param name="propValue">the literal property value as <c>int</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyInteger(String schemaNS, String propName, int propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyInteger(System.String, System.String, int, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the literal property value as <code>int</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the literal property value as <c>int</c></param>
         void SetPropertyInteger(String schemaNS, String propName, int propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>long</code> value.</summary>
+        /// <summary>Convenience method to set a property to a literal <c>long</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the literal property value as <code>long</code>.</param>
+        /// <param name="propValue">the literal property value as <c>long</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyLong(String schemaNS, String propName, long propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyLong(System.String, System.String, long, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the literal property value as <code>long</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the literal property value as <c>long</c></param>
         void SetPropertyLong(String schemaNS, String propName, long propValue);
 
-        /// <summary>Convenience method to set a property to a literal <code>double</code> value.</summary>
+        /// <summary>Convenience method to set a property to a literal <c>double</c> value.</summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the literal property value as <code>double</code>.</param>
+        /// <param name="propValue">the literal property value as <c>double</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDouble(String schemaNS, String propName, double propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyDouble(System.String, System.String, double, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the literal property value as <code>double</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the literal property value as <c>double</c></param>
         void SetPropertyDouble(String schemaNS, String propName, double propValue);
 
         /// <summary>
@@ -1050,25 +963,21 @@ namespace iText.Kernel.XMP {
         /// </summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the property value as <code>XMPDateTime</code>.</param>
+        /// <param name="propValue">the property value as <c>XMPDateTime</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDate(String schemaNS, String propName, XMPDateTime propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyDate(System.String, System.String, XMPDateTime, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the property value as <code>XMPDateTime</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the property value as <c>XMPDateTime</c></param>
         void SetPropertyDate(String schemaNS, String propName, XMPDateTime propValue);
 
         /// <summary>
@@ -1077,43 +986,37 @@ namespace iText.Kernel.XMP {
         /// </summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
-        /// <param name="propValue">the property value as Java <code>Calendar</code>.</param>
+        /// <param name="propValue">the property value as Java <c>Calendar</c>.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyCalendar(System.String, System.String, System.DateTime, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
-        /// <param name="propValue">the property value as <code>Calendar</code></param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <param name="propValue">the property value as <c>Calendar</c></param>
         void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue);
 
         /// <summary>
-        /// Convenience method to set a property from a binary <code>byte[]</code>-array,
+        /// Convenience method to set a property from a binary <c>byte[]</c>-array,
         /// which is serialized as base64-string.
         /// </summary>
         /// <param name="schemaNS">
         /// The namespace URI for the property. Has the same usage as in
-        /// <code>setProperty()</code>.
+        /// <c>setProperty()</c>.
         /// </param>
         /// <param name="propName">
         /// The name of the property.
-        /// Has the same usage as in <code>getProperty()</code>.
+        /// Has the same usage as in <c>getProperty()</c>.
         /// </param>
         /// <param name="propValue">the literal property value as byte array.</param>
         /// <param name="options">options of the property to set (optional).</param>
-        /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBase64(String schemaNS, String propName, byte[] propValue, PropertyOptions options);
 
         /// <seealso cref="SetPropertyBase64(System.String, System.String, byte[], iText.Kernel.XMP.Options.PropertyOptions)
@@ -1121,23 +1024,17 @@ namespace iText.Kernel.XMP {
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as byte array</param>
-        /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBase64(String schemaNS, String propName, byte[] propValue);
 
         /// <summary>Constructs an iterator for the properties within this XMP object.</summary>
-        /// <returns>Returns an <code>XMPIterator</code>.</returns>
+        /// <returns>Returns an <c>XMPIterator</c>.</returns>
         /// <seealso cref="Iterator(System.String, System.String, iText.Kernel.XMP.Options.IteratorOptions)"/>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator();
 
         /// <summary>Constructs an iterator for the properties within this XMP object using some options.</summary>
         /// <param name="options">Option flags to control the iteration.</param>
-        /// <returns>Returns an <code>XMPIterator</code>.</returns>
+        /// <returns>Returns an <c>XMPIterator</c>.</returns>
         /// <seealso cref="Iterator(System.String, System.String, iText.Kernel.XMP.Options.IteratorOptions)"/>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator(IteratorOptions options);
 
         /// <summary>Construct an iterator for the properties within an XMP object.</summary>
@@ -1147,11 +1044,11 @@ namespace iText.Kernel.XMP {
         /// </remarks>
         /// <param name="schemaNS">
         /// Optional schema namespace URI to restrict the iteration. Omitted (visit all
-        /// schema) by passing <code>null</code> or empty String.
+        /// schema) by passing <c>null</c> or empty String.
         /// </param>
         /// <param name="propName">
         /// Optional property name to restrict the iteration. May be an arbitrary path
-        /// expression. Omitted (visit all properties) by passing <code>null</code> or empty
+        /// expression. Omitted (visit all properties) by passing <c>null</c> or empty
         /// String. If no schema URI is given, it is ignored.
         /// </param>
         /// <param name="options">
@@ -1161,11 +1058,9 @@ namespace iText.Kernel.XMP {
         /// details.
         /// </param>
         /// <returns>
-        /// Returns an <code>XMPIterator</code> for this <code>XMPMeta</code>-object
+        /// Returns an <c>XMPIterator</c> for this <c>XMPMeta</c>-object
         /// considering the given options.
         /// </returns>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator(String schemaNS, String propName, IteratorOptions options);
 
         /// <summary>
@@ -1183,7 +1078,7 @@ namespace iText.Kernel.XMP {
         /// This contains normally the attribute-like elements 'begin="&lt;BOM&gt;"
         /// id="W5M0MpCehiHzreSzNTczkc9d"' and possibly the deprecated elements 'bytes="1234"' or
         /// 'encoding="XXX"'. If the parsed packet has not been wrapped into an xpacket,
-        /// <code>null</code> is returned.
+        /// <c>null</c> is returned.
         /// </returns>
         String GetPacketHeader();
 
@@ -1193,19 +1088,23 @@ namespace iText.Kernel.XMP {
 
         /// <summary>
         /// Sorts the complete datamodel according to the following rules:
-        /// <ul>
-        /// <li>Schema nodes are sorted by prefix.
+        /// <list type="bullet">
+        /// <item><description>Schema nodes are sorted by prefix.
         /// </summary>
         /// <remarks>
         /// Sorts the complete datamodel according to the following rules:
-        /// <ul>
-        /// <li>Schema nodes are sorted by prefix.
-        /// <li>Properties at top level and within structs are sorted by full name, that is
+        /// <list type="bullet">
+        /// <item><description>Schema nodes are sorted by prefix.
+        /// </description></item>
+        /// <item><description>Properties at top level and within structs are sorted by full name, that is
         /// prefix + local name.
-        /// <li>Array items are not sorted, even if they have no certain order such as bags.
-        /// <li>Qualifier are sorted, with the exception of "xml:lang" and/or "rdf:type"
+        /// </description></item>
+        /// <item><description>Array items are not sorted, even if they have no certain order such as bags.
+        /// </description></item>
+        /// <item><description>Qualifier are sorted, with the exception of "xml:lang" and/or "rdf:type"
         /// that stay at the top of the list in that order.
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         void Sort();
 
@@ -1214,13 +1113,11 @@ namespace iText.Kernel.XMP {
         /// Perform the normalization as a separate parsing step.
         /// Normally it is done during parsing, unless the parsing option
         /// <see cref="iText.Kernel.XMP.Options.ParseOptions.OMIT_NORMALIZATION"/>
-        /// is set to <code>true</code>.
+        /// is set to <c>true</c>.
         /// <em>Note:</em> It does no harm to call this method to an already normalized xmp object.
-        /// It was a PDF/A requirement to get hand on the unnormalized <code>XMPMeta</code> object.
+        /// It was a PDF/A requirement to get hand on the unnormalized <c>XMPMeta</c> object.
         /// </remarks>
         /// <param name="options">optional parsing options.</param>
-        /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void Normalize(ParseOptions options);
 
         /// <summary>Renders this node and the tree unter this node in a human readable form.</summary>

@@ -47,8 +47,7 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Forms.Util {
     /// <summary>
     /// Utility class to draw form fields
-    /// <see cref="iText.Forms.Fields.PdfFormField"/>
-    /// .
+    /// <see cref="iText.Forms.Fields.PdfFormField"/>.
     /// </summary>
     public class DrawingUtil {
         protected internal const String check = "0.8 0 0 0.8 0.3 0.5 cm 0 0 m\n" + "0.066 -0.026 l\n" + "0.137 -0.15 l\n"

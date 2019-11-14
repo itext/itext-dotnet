@@ -81,8 +81,6 @@ namespace iText.Svg.Converter {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UnusedXObjectIntegrationTest() {
             // This method tests that making an XObject does not, in itself, influence the document it's for.
@@ -97,8 +95,6 @@ namespace iText.Svg.Converter {
                 , destinationFolder + "unusedXObjectIntegrationTest2.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BasicIntegrationTest() {
             String filename = "basicIntegrationTest.pdf";
@@ -122,9 +118,7 @@ namespace iText.Svg.Converter {
         }
 
         /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
-        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 32)]
         public virtual void ConvertFileWithAllIgnoredTags() {
@@ -132,9 +126,7 @@ namespace iText.Svg.Converter {
         }
 
         /// <summary>Convert a SVG file of a chart which contains some currently ignored tags.</summary>
-        /// <result>There will be no <code>Exception</code> during the process and PDF output is generated.</result>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
+        /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         [NUnit.Framework.Test]
         public virtual void ConvertChartWithSomeIgnoredTags() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "chart_snippet");
@@ -152,8 +144,6 @@ namespace iText.Svg.Converter {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void PdfFromSvgString() {
             PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgString.pdf");
@@ -173,8 +163,6 @@ namespace iText.Svg.Converter {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FromFile() {
             PdfWriter writer = new PdfWriter(destinationFolder + "pdfFromSvgFile.pdf");
@@ -191,8 +179,6 @@ namespace iText.Svg.Converter {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddToExistingDoc() {
             PdfReader reader = new PdfReader(sourceFolder + "cmp_eclipse.pdf");
@@ -209,15 +195,11 @@ namespace iText.Svg.Converter {
                 ));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SinglePageHelloWorldTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "hello_world");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TwoArgTest() {
             String name = "hello_world";
@@ -228,8 +210,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionX() {
             String name = "eclipse";
@@ -242,8 +222,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionY() {
             String name = "eclipse";
@@ -256,8 +234,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionXY() {
             String name = "eclipse";
@@ -270,8 +246,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionNegativeX() {
             String name = "eclipse";
@@ -284,8 +258,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionNegativeY() {
             String name = "eclipse";
@@ -298,8 +270,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionNegativeXY() {
             String name = "eclipse";
@@ -312,8 +282,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnSpecifiedPositionPartialOnPage() {
             String name = "eclipse";
@@ -326,8 +294,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectStringPdfDocumentConverterProps() {
             String name = "eclipse";
@@ -343,8 +309,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectStreamPdfDocumentConverterProps() {
             String name = "eclipse";
@@ -361,8 +325,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToImageStreamDocument() {
             String name = "eclipse";
@@ -379,8 +341,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ConvertToImageStreamDocumentConverterProperties() {
             String name = "eclipse";
@@ -398,8 +358,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageStringPage() {
             String name = "eclipse";
@@ -412,8 +370,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageStringPageConverterProps() {
             String name = "eclipse";
@@ -427,8 +383,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageStreamPage() {
             String name = "eclipse";
@@ -442,8 +396,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnPageStreamPageConverterProperties() {
             String name = "eclipse";
@@ -458,8 +410,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentStringPdfDocumentInt() {
             String name = "eclipse";
@@ -472,8 +422,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentStringPdfDocumentIntConverterProperties() {
             String name = "eclipse";
@@ -488,8 +436,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnDocumentStreamPdfDocumentIntConverterProperties() {
             String name = "eclipse";
@@ -503,8 +449,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasStringPdfCanvasConverter() {
             String name = "eclipse";
@@ -517,8 +461,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasStringPdfCanvasConverterProps() {
             String name = "eclipse";
@@ -532,8 +474,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasStreamPdfCanvas() {
             String name = "eclipse";
@@ -547,8 +487,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DrawOnCanvasStreamPdfCanvasConverterProps() {
             String name = "eclipse";
@@ -563,7 +501,6 @@ namespace iText.Svg.Converter {
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private static void DrawOnSpecifiedPositionDocument(Stream svg, String dest, int x, int y) {
             PdfDocument document = new PdfDocument(new PdfWriter(dest, new WriterProperties().SetCompressionLevel(0)));
             document.AddNewPage();
@@ -571,7 +508,6 @@ namespace iText.Svg.Converter {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessSuccessTest() {
             String name = "minimal";
@@ -597,7 +533,6 @@ namespace iText.Svg.Converter {
 
         //TODO(RND-868): Switch test over to this logic
         //Assert.assertEquals(expected,actual);
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessIOExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {
@@ -606,6 +541,13 @@ namespace iText.Svg.Converter {
             }
             , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseDoubleValues() {
+            // Before the changes have been implemented this test had been produced different result in Java and .NET.
+            // So this test checks if there are any differences
+            ConvertAndCompare(sourceFolder, destinationFolder, "svgStackOver");
         }
     }
 }

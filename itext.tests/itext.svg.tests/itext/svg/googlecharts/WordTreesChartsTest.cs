@@ -49,49 +49,37 @@ using iText.Test.Attributes;
 namespace iText.Svg.Googlecharts {
     public class WordTreesChartsTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/wordTrees_charts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/WordTreesChartsTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/wordTrees_charts/";
+             + "/test/itext/svg/googlecharts/WordTreesChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void WordTrees_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees_chart");
+        public virtual void WordTreesChart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTreesChart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void WordTrees2_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2_chart");
+        public virtual void WordTrees2Chart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2Chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        public virtual void WordTrees3_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3_chart");
+        public virtual void WordTrees3Chart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3Chart");
         }
 
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        public virtual void WordTrees4_chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4_chart");
+        public virtual void WordTrees4Chart() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4Chart");
         }
     }
 }

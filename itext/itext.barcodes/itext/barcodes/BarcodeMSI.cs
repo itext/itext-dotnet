@@ -52,13 +52,13 @@ namespace iText.Barcodes {
     /// <summary>Implements the MSI Barcode.</summary>
     /// <remarks>
     /// Implements the MSI Barcode.
-    /// The <CODE>code</CODE> may only contain numeric characters.
+    /// The <c>code</c> may only contain numeric characters.
     /// The
     /// <see cref="GetChecksum(System.String)">getChecksum</see>
     /// method returns the mod 10 checksum digit which is the most widely used for MSI barcodes.
     /// </remarks>
     public class BarcodeMSI : Barcode1D {
-        /// <summary>The index chars to <CODE>BARS</CODE> representing valid characters in the <CODE>code</CODE></summary>
+        /// <summary>The index chars to <c>BARS</c> representing valid characters in the <c>code</c></summary>
         private const String CHARS = "0123456789";
 
         /// <summary>The sequence prepended to the start of all MSI Barcodes.</summary>
@@ -68,14 +68,29 @@ namespace iText.Barcodes {
         private static readonly byte[] BARS_END = new byte[] { 1, 0, 0, 1 };
 
         /// <summary>The bars to generate the code.</summary>
-        private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
-            new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
-            new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 } };
+        private static readonly byte[][] BARS = new byte[][] { 
+                // 0
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 1
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, 
+                // 2
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0 }, 
+                // 3
+                new byte[] { 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0 }, 
+                // 4
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 5
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0 }, 
+                // 6
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0 }, 
+                // 7
+                new byte[] { 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 }, 
+                // 8
+                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 }, 
+                // 9
+                new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 } };
 
-        /// <summary>The number of individual bars either drawn or not drawn per character of the <CODE>code</CODE></summary>
+        /// <summary>The number of individual bars either drawn or not drawn per character of the <c>code</c></summary>
         private const int BARS_PER_CHARACTER = 12;
 
         /// <summary>Creates a new BarcodeMSI.</summary>
@@ -85,8 +100,7 @@ namespace iText.Barcodes {
         /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
         /// will be implicitly called.
         /// If you want to use this barcode in PDF/A documents, please consider using
-        /// <see cref="BarcodeMSI(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>
-        /// .
+        /// <see cref="BarcodeMSI(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Font.PdfFont)"/>.
         /// </remarks>
         /// <param name="document">The document to which the barcode will be added</param>
         public BarcodeMSI(PdfDocument document)
@@ -98,16 +112,6 @@ namespace iText.Barcodes {
         /// <param name="font">The font to use</param>
         public BarcodeMSI(PdfDocument document, PdfFont font)
             : base(document) {
-            // 0
-            // 1
-            // 2
-            // 3
-            // 4
-            // 5
-            // 6
-            // 7
-            // 8
-            // 9
             this.x = 0.8f;
             this.n = 2.0f;
             this.font = font;
@@ -151,44 +155,44 @@ namespace iText.Barcodes {
             return new Rectangle(fullWidth, fullHeight);
         }
 
-        /// <summary>Places the barcode in a <CODE>PdfCanvas</CODE>.</summary>
+        /// <summary>Places the barcode in a <c>PdfCanvas</c>.</summary>
         /// <remarks>
-        /// Places the barcode in a <CODE>PdfCanvas</CODE>. The
+        /// Places the barcode in a <c>PdfCanvas</c>. The
         /// barcode is always placed at coordinates (0, 0). Use the
         /// translation matrix to move it elsewhere.
         /// <para />
         /// The bars and text are written in the following colors:
-        /// <TABLE BORDER="1" summary="">
-        /// <TR>
-        /// <TH><CODE>barColor</CODE></TH>
-        /// <TH><CODE>textColor</CODE></TH>
-        /// <TH>Result</TH>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with current fill color</TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD>bars and text painted with <CODE>barColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>null</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with current color<br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// <TR>
-        /// <TD><CODE>barColor</CODE></TD>
-        /// <TD><CODE>textColor</CODE></TD>
-        /// <TD>bars painted with <CODE>barColor</CODE><br />text painted with <CODE>textColor</CODE></TD>
-        /// </TR>
-        /// </TABLE>
+        /// <table border="1" summary="">
+        /// <tr>
+        /// <th><c>barColor</c></th>
+        /// <th><c>textColor</c></th>
+        /// <th>Result</th>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with current fill color</td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>null</c></td>
+        /// <td>bars and text painted with <c>barColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>null</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with current color<br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// <tr>
+        /// <td><c>barColor</c></td>
+        /// <td><c>textColor</c></td>
+        /// <td>bars painted with <c>barColor</c><br />text painted with <c>textColor</c></td>
+        /// </tr>
+        /// </table>
         /// </remarks>
-        /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
-        /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
-        /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
+        /// <param name="canvas">the <c>PdfCanvas</c> where the barcode will be placed</param>
+        /// <param name="barColor">the color of the bars. It can be <c>null</c></param>
+        /// <param name="textColor">the color of the text. It can be <c>null</c></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             String fullCode = this.code;

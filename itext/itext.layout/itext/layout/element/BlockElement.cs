@@ -51,11 +51,17 @@ namespace iText.Layout.Element {
     /// A
     /// <see cref="BlockElement{T}"/>
     /// will try to take up as much horizontal space as
+    /// available to it on the canvas or page.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="BlockElement{T}"/>
+    /// will try to take up as much horizontal space as
     /// available to it on the canvas or page. The concept is comparable to the block
     /// element in HTML. Also like in HTML, the visual representation of the object
     /// can be delimited by padding, a border, and/or a margin.
-    /// </summary>
-    /// 
+    /// </remarks>
+    /// <typeparam name="T">the type of the implementation</typeparam>
     public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement, IBlockElement
         where T : IElement {
         /// <summary>Creates a BlockElement.</summary>
@@ -347,10 +353,15 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// and the start of the next sibling of this element
         /// should be placed in the same area.
-        /// Note that this will only work for high-level elements, i.e. elements added to the
-        /// <see cref="iText.Layout.RootElement{T}"/>
-        /// .
         /// </summary>
+        /// <remarks>
+        /// Sets whether the end of this
+        /// <see cref="BlockElement{T}"/>
+        /// and the start of the next sibling of this element
+        /// should be placed in the same area.
+        /// Note that this will only work for high-level elements, i.e. elements added to the
+        /// <see cref="iText.Layout.RootElement{T}"/>.
+        /// </remarks>
         /// <param name="keepWithNext">
         /// the new value of the
         /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>
@@ -363,7 +374,7 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="angleInRadians">the new rotation radAngle, as a <code>float</code>, in radians</param>
+        /// <param name="angleInRadians">the new rotation radAngle, as a <c>float</c>, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(float angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, angleInRadians);
@@ -371,7 +382,7 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>Sets the rotation angle.</summary>
-        /// <param name="angleInRadians">the new rotation angle, as a <code>double</code>, in radians</param>
+        /// <param name="angleInRadians">the new rotation angle, as a <c>double</c>, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(double angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, (float)angleInRadians);
@@ -388,8 +399,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="width">
         /// a
@@ -411,8 +421,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="height">
         /// a
@@ -451,8 +460,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxHeight">
         /// a
@@ -467,8 +475,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-height property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minHeight">
         /// a
@@ -492,8 +499,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxWidth">
         /// a
@@ -516,8 +522,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-width property of a block element with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minWidth">
         /// a

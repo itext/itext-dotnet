@@ -71,8 +71,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
-            md5.Reset();
             // added by ujihara
+            md5.Reset();
             extra[0] = (byte)objNumber;
             extra[1] = (byte)(objNumber >> 8);
             extra[2] = (byte)(objNumber >> 16);

@@ -51,7 +51,6 @@ using iText.Test;
 
 namespace iText.Svg.Renderers {
     public class SvgIntegrationTest : ExtendedITextTest {
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Convert(Stream svg, Stream pdfOutputStream) {
             PdfDocument doc = new PdfDocument(new PdfWriter(pdfOutputStream, new WriterProperties().SetCompressionLevel
                 (0)));
@@ -60,7 +59,6 @@ namespace iText.Svg.Renderers {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void Convert(String svg, String output) {
             PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
             doc.AddNewPage();
@@ -69,7 +67,6 @@ namespace iText.Svg.Renderers {
             doc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public static PdfDocument ConvertWithResult(String svg, String output) {
             PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
             doc.AddNewPage();
@@ -78,62 +75,49 @@ namespace iText.Svg.Renderers {
             return doc;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream) {
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
             SvgConverter.CreatePdf(svg, pdfOutputStream, writerprops);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf) {
             SvgConverter.CreatePdf(svg, pdf);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, ISvgConverterProperties properties) {
             SvgConverter.CreatePdf(svg, pdf, properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, ISvgConverterProperties properties, WriterProperties
              writerProperties) {
             SvgConverter.CreatePdf(svg, pdf, properties, writerProperties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(FileInfo svg, FileInfo pdf, WriterProperties writerProperties) {
             SvgConverter.CreatePdf(svg, pdf, writerProperties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream, ISvgConverterProperties properties
             ) {
             SvgConverter.CreatePdf(svg, pdfOutputStream, properties);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToSinglePage(Stream svg, Stream pdfOutputStream, ISvgConverterProperties properties
             , WriterProperties writerprops) {
             SvgConverter.CreatePdf(svg, pdfOutputStream, properties, writerprops);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         public virtual void ConvertAndCompare(String src, String dest, String fileName) {
             Convert(src + fileName + ".svg", dest + fileName + ".pdf");
             Compare(fileName, src, dest);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
             ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
                 (dest + fileName + ".pdf", FileMode.Create));
             Compare(fileName, src, dest);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName, ISvgConverterProperties
              properties) {
             ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
@@ -141,8 +125,6 @@ namespace iText.Svg.Renderers {
             Compare(fileName, src, dest);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         protected internal virtual void Compare(String filename, String sourceFolder, String destinationFolder) {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder
                  + "cmp_" + filename + ".pdf", destinationFolder, "diff_"));

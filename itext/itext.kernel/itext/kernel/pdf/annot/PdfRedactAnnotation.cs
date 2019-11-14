@@ -140,8 +140,13 @@ namespace iText.Kernel.Pdf.Annot {
         /// Sets n quadrilaterals in default user space by passing an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of 8 × n numbers.
-        /// Quadrilaterals are used to define the content region that is intended to be removed for a redaction annotation.
         /// </summary>
+        /// <remarks>
+        /// Sets n quadrilaterals in default user space by passing an
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of 8 × n numbers.
+        /// Quadrilaterals are used to define the content region that is intended to be removed for a redaction annotation.
+        /// </remarks>
         /// <param name="quadPoints">
         /// an
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>

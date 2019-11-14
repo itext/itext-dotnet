@@ -119,107 +119,56 @@ namespace iText.Layout.Renderer {
             foreach (TableWidths.ColumnWidthData width in widths) {
                 minSum += width.min;
             }
-            //region Process cells
             foreach (TableWidths.CellInfo cell in cells) {
-                // For automatic layout algorithm percents have higher priority
-                // value must be > 0, while for fixed layout >= 0
-                UnitValue cellWidth = GetCellWidth(cell.GetCell(), false);
-                if (cellWidth != null) {
-                    System.Diagnostics.Debug.Assert(cellWidth.GetValue() > 0);
-                    if (cellWidth.IsPercentValue()) {
-                        //cellWidth has percent value
-                        if (cell.GetColspan() == 1) {
-                            widths[cell.GetCol()].SetPercents(cellWidth.GetValue());
-                        }
-                        else {
-                            int pointColumns = 0;
-                            float percentSum = 0;
-                            for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                if (!widths[i].isPercent) {
-                                    pointColumns++;
-                                }
-                                else {
-                                    percentSum += widths[i].width;
-                                }
-                            }
-                            float percentAddition = cellWidth.GetValue() - percentSum;
-                            if (percentAddition > 0) {
-                                if (pointColumns == 0) {
-                                    //ok, add percents to each column
-                                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        widths[i].AddPercents(percentAddition / cell.GetColspan());
-                                    }
-                                }
-                                else {
-                                    // set percent only to cells without one
-                                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        if (!widths[i].isPercent) {
-                                            widths[i].SetPercents(percentAddition / pointColumns);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                ProcessCell(cell);
+            }
+            ProcessColumns();
+            Recalculate(minSum);
+            return ExtractWidths();
+        }
+
+        internal IList<TableWidths.CellInfo> AutoLayoutCustom() {
+            System.Diagnostics.Debug.Assert(tableRenderer.GetTable().IsComplete());
+            FillAndSortCells();
+            CalculateMinMaxWidths();
+            return cells;
+        }
+
+        internal void ProcessCell(TableWidths.CellInfo cell) {
+            // For automatic layout algorithm percents have higher priority
+            // value must be > 0, while for fixed layout >= 0
+            UnitValue cellWidth = GetCellWidth(cell.GetCell(), false);
+            if (cellWidth != null) {
+                System.Diagnostics.Debug.Assert(cellWidth.GetValue() > 0);
+                if (cellWidth.IsPercentValue()) {
+                    //cellWidth has percent value
+                    if (cell.GetColspan() == 1) {
+                        widths[cell.GetCol()].SetPercents(cellWidth.GetValue());
                     }
                     else {
-                        //cellWidth has point value
-                        if (cell.GetColspan() == 1) {
-                            if (!widths[cell.GetCol()].isPercent) {
-                                if (widths[cell.GetCol()].min <= cellWidth.GetValue()) {
-                                    widths[cell.GetCol()].SetPoints(cellWidth.GetValue()).SetFixed(true);
-                                }
-                                else {
-                                    widths[cell.GetCol()].SetPoints(widths[cell.GetCol()].min);
-                                }
+                        int pointColumns = 0;
+                        float percentSum = 0;
+                        for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                            if (!widths[i].isPercent) {
+                                pointColumns++;
+                            }
+                            else {
+                                percentSum += widths[i].width;
                             }
                         }
-                        else {
-                            int flexibleCols = 0;
-                            float remainWidth = cellWidth.GetValue();
-                            for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                if (!widths[i].isPercent) {
-                                    remainWidth -= widths[i].width;
-                                    if (!widths[i].isFixed) {
-                                        flexibleCols++;
-                                    }
-                                }
-                                else {
-                                    // if any col has percent value, we cannot predict remaining width.
-                                    remainWidth = 0;
-                                    break;
+                        float percentAddition = cellWidth.GetValue() - percentSum;
+                        if (percentAddition > 0) {
+                            if (pointColumns == 0) {
+                                //ok, add percents to each column
+                                for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                                    widths[i].AddPercents(percentAddition / cell.GetColspan());
                                 }
                             }
-                            if (remainWidth > 0) {
-                                int[] flexibleColIndexes = ArrayUtil.FillWithValue(new int[cell.GetColspan()], -1);
-                                if (flexibleCols > 0) {
-                                    // check min width in columns
-                                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        if (!widths[i].IsFlexible()) {
-                                            continue;
-                                        }
-                                        if (widths[i].min > widths[i].width + remainWidth / flexibleCols) {
-                                            widths[i].ResetPoints(widths[i].min);
-                                            remainWidth -= widths[i].min - widths[i].width;
-                                            flexibleCols--;
-                                            if (flexibleCols == 0 || remainWidth <= 0) {
-                                                break;
-                                            }
-                                        }
-                                        else {
-                                            flexibleColIndexes[i - cell.GetCol()] = i;
-                                        }
-                                    }
-                                    if (flexibleCols > 0 && remainWidth > 0) {
-                                        for (int i = 0; i < flexibleColIndexes.Length; i++) {
-                                            if (flexibleColIndexes[i] >= 0) {
-                                                widths[flexibleColIndexes[i]].AddPoints(remainWidth / flexibleCols).SetFixed(true);
-                                            }
-                                        }
-                                    }
-                                }
-                                else {
-                                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                        widths[i].AddPoints(remainWidth / cell.GetColspan());
+                            else {
+                                // set percent only to cells without one
+                                for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                                    if (!widths[i].isPercent) {
+                                        widths[i].SetPercents(percentAddition / pointColumns);
                                     }
                                 }
                             }
@@ -227,29 +176,46 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (widths[cell.GetCol()].IsFlexible()) {
-                        //if there is no information, try to set max width
-                        int flexibleCols = 0;
-                        float remainWidth = 0;
-                        for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                            if (widths[i].IsFlexible()) {
-                                remainWidth += widths[i].max - widths[i].width;
-                                flexibleCols++;
+                    //cellWidth has point value
+                    if (cell.GetColspan() == 1) {
+                        if (!widths[cell.GetCol()].isPercent) {
+                            if (widths[cell.GetCol()].min <= cellWidth.GetValue()) {
+                                widths[cell.GetCol()].SetPoints(cellWidth.GetValue()).SetFixed(true);
+                            }
+                            else {
+                                widths[cell.GetCol()].SetPoints(widths[cell.GetCol()].min);
                             }
                         }
-                        if (remainWidth > 0) {
-                            // flexibleCols > 0 too
-                            for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                if (widths[i].IsFlexible()) {
-                                    widths[i].AddPoints(remainWidth / flexibleCols);
-                                }
+                    }
+                    else {
+                        ProcessCellsRemainWidth(cell, cellWidth);
+                    }
+                }
+            }
+            else {
+                if (widths[cell.GetCol()].IsFlexible()) {
+                    //if there is no information, try to set max width
+                    int flexibleCols = 0;
+                    float remainWidth = 0;
+                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                        if (widths[i].IsFlexible()) {
+                            remainWidth += widths[i].max - widths[i].width;
+                            flexibleCols++;
+                        }
+                    }
+                    if (remainWidth > 0) {
+                        // flexibleCols > 0 too
+                        for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                            if (widths[i].IsFlexible()) {
+                                widths[i].AddPoints(remainWidth / flexibleCols);
                             }
                         }
                     }
                 }
             }
-            //endregion
-            //region Process columns
+        }
+
+        internal void ProcessColumns() {
             //TODO add colgroup information.
             for (int i = 0; i < numberOfColumns; i++) {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
@@ -274,8 +240,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            //endregion
-            // region recalculate
+        }
+
+        internal void Recalculate(float minSum) {
             if (tableWidth - minSum < 0) {
                 for (int i = 0; i < numberOfColumns; i++) {
                     widths[i].finalWidth = widths[i].min;
@@ -477,8 +444,58 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            //endregion
-            return ExtractWidths();
+        }
+
+        internal void ProcessCellsRemainWidth(TableWidths.CellInfo cell, UnitValue cellWidth) {
+            int flexibleCols = 0;
+            float remainWidth = cellWidth.GetValue();
+            for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                if (!widths[i].isPercent) {
+                    remainWidth -= widths[i].width;
+                    if (!widths[i].isFixed) {
+                        flexibleCols++;
+                    }
+                }
+                else {
+                    // if any col has percent value, we cannot predict remaining width.
+                    remainWidth = 0;
+                    break;
+                }
+            }
+            if (remainWidth > 0) {
+                int[] flexibleColIndexes = ArrayUtil.FillWithValue(new int[cell.GetColspan()], -1);
+                if (flexibleCols > 0) {
+                    // check min width in columns
+                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                        if (!widths[i].IsFlexible()) {
+                            continue;
+                        }
+                        if (widths[i].min > widths[i].width + remainWidth / flexibleCols) {
+                            widths[i].ResetPoints(widths[i].min);
+                            remainWidth -= widths[i].min - widths[i].width;
+                            flexibleCols--;
+                            if (flexibleCols == 0 || remainWidth <= 0) {
+                                break;
+                            }
+                        }
+                        else {
+                            flexibleColIndexes[i - cell.GetCol()] = i;
+                        }
+                    }
+                    if (flexibleCols > 0 && remainWidth > 0) {
+                        for (int i = 0; i < flexibleColIndexes.Length; i++) {
+                            if (flexibleColIndexes[i] >= 0) {
+                                widths[flexibleColIndexes[i]].AddPoints(remainWidth / flexibleCols).SetFixed(true);
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
+                        widths[i].AddPoints(remainWidth / cell.GetColspan());
+                    }
+                }
+            }
         }
 
         internal float[] FixedLayout() {
@@ -520,8 +537,8 @@ namespace iText.Layout.Renderer {
                 columnWidthIfPercent[i] = -1;
             }
             float sumOfPercents = 0;
-            if (firtsRow != null && GetTable().IsComplete() && 0 == GetTable().GetLastRowBottomBorder().Count) {
-                // only for not large tables
+            // only for not large tables
+            if (firtsRow != null && GetTable().IsComplete() && GetTable().GetLastRowBottomBorder().IsEmpty()) {
                 for (int i = 0; i < numberOfColumns; i++) {
                     if (columnWidths[i] == -1) {
                         CellRenderer cell = firtsRow[i];
@@ -796,10 +813,10 @@ namespace iText.Layout.Renderer {
 
             internal bool isPercent = false;
 
+            //true means that this column has cell property based width.
             internal bool isFixed = false;
 
             internal ColumnWidthData(float min, float max) {
-                //true means that this column has cell property based width.
                 System.Diagnostics.Debug.Assert(min >= 0);
                 System.Diagnostics.Debug.Assert(max >= 0);
                 this.min = min > 0 ? min + MinMaxWidthUtils.GetEps() : 0;
@@ -923,7 +940,7 @@ namespace iText.Layout.Renderer {
             return widthValue;
         }
 
-        private class CellInfo : IComparable<TableWidths.CellInfo> {
+        internal class CellInfo : IComparable<TableWidths.CellInfo> {
             internal const byte HEADER = 1;
 
             internal const byte BODY = 2;

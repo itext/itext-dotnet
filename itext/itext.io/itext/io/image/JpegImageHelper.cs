@@ -143,8 +143,6 @@ namespace iText.IO.Image {
         }
 
         /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
-        /// <exception cref="iText.IO.IOException"/>
-        /// <exception cref="System.IO.IOException"/>
         private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image) {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8) {
@@ -368,17 +366,16 @@ namespace iText.IO.Image {
         }
 
         // ignore ICC profile if it's invalid.
-        /// <summary>Reads a short from the <CODE>InputStream</CODE>.</summary>
-        /// <param name="jpegStream">the <CODE>InputStream</CODE></param>
+        /// <summary>Reads a short from the <c>InputStream</c>.</summary>
+        /// <param name="jpegStream">the <c>InputStream</c></param>
         /// <returns>an int</returns>
-        /// <exception cref="System.IO.IOException"/>
         private static int GetShort(Stream jpegStream) {
             return (jpegStream.Read() << 8) + jpegStream.Read();
         }
 
         /// <summary>Returns a type of marker.</summary>
         /// <param name="marker">an int</param>
-        /// <returns>a type: <VAR>VALID_MARKER</VAR>, <VAR>UNSUPPORTED_MARKER</VAR> or <VAR>NOPARAM_MARKER</VAR></returns>
+        /// <returns>a type: <var>VALID_MARKER</var>, <var>UNSUPPORTED_MARKER</var> or <var>NOPARAM_MARKER</var></returns>
         private static int Marker(int marker) {
             for (int i = 0; i < VALID_MARKERS.Length; i++) {
                 if (marker == VALID_MARKERS[i]) {

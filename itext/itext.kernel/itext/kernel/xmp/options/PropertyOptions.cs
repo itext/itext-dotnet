@@ -32,7 +32,7 @@ using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Options {
     /// <summary>
-    /// The property flags are used when properties are fetched from the <code>XMPMeta</code>-object
+    /// The property flags are used when properties are fetched from the <c>XMPMeta</c>-object
     /// and provide more detailed information about the property.
     /// </summary>
     /// <since>03.07.2006</since>
@@ -72,14 +72,13 @@ namespace iText.Kernel.XMP.Options {
         public PropertyOptions() {
         }
 
+        // reveal default constructor
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not valid</exception>
         public PropertyOptions(int options)
             : base(options) {
         }
 
-        // reveal default constructor
         /// <returns>
         /// Return whether the property value is a URI. It is serialized to RDF using the
         /// <tt>rdf:resource</tt> attribute. Not mandatory for URIs, but considered RDF-savvy.
@@ -262,7 +261,6 @@ namespace iText.Kernel.XMP.Options {
         /// If the other options set is null, this objects stays the same.
         /// </remarks>
         /// <param name="options">other options</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">If illegal options are provided</exception>
         public void MergeWith(iText.Kernel.XMP.Options.PropertyOptions options) {
             if (options != null) {
                 SetOptions(GetOptions() | options.GetOptions());
@@ -338,7 +336,6 @@ namespace iText.Kernel.XMP.Options {
         /// and URI cannot be a struct.
         /// </summary>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal override void AssertConsistency(int options) {
             if ((options & STRUCT) > 0 && (options & ARRAY) > 0) {
                 throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError.BADOPTIONS);

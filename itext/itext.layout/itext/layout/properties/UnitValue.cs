@@ -105,8 +105,7 @@ namespace iText.Layout.Properties {
         /// a new normalized (Σ=100%) array of
         /// <see cref="PERCENT"/>
         /// 
-        /// <see cref="UnitValue"/>
-        /// .
+        /// <see cref="UnitValue"/>.
         /// </returns>
         public static iText.Layout.Properties.UnitValue[] CreatePercentArray(float[] values) {
             iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
@@ -126,8 +125,7 @@ namespace iText.Layout.Properties {
         /// a array of equal
         /// <see cref="PERCENT"/>
         /// 
-        /// <see cref="UnitValue"/>
-        /// .
+        /// <see cref="UnitValue"/>.
         /// </returns>
         public static iText.Layout.Properties.UnitValue[] CreatePercentArray(int size) {
             iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[size];
@@ -176,26 +174,26 @@ namespace iText.Layout.Properties {
         }
 
         /// <summary>Gets the measured value stored in this object</summary>
-        /// <returns>the value, as a <code>float</code></returns>
+        /// <returns>the value, as a <c>float</c></returns>
         public virtual float GetValue() {
             return value;
         }
 
         /// <summary>Sets the measured value stored in this object</summary>
-        /// <param name="value">a <code>float</code></param>
+        /// <param name="value">a <c>float</c></param>
         public virtual void SetValue(float value) {
             System.Diagnostics.Debug.Assert(!float.IsNaN(value));
             this.value = value;
         }
 
         /// <summary>Returns whether or not the value is stored in points (pt)</summary>
-        /// <returns><code>true</code> if stored in points</returns>
+        /// <returns><c>true</c> if stored in points</returns>
         public virtual bool IsPointValue() {
             return unitType == POINT;
         }
 
         /// <summary>Returns whether or not the value is stored in percent (%)</summary>
-        /// <returns><code>true</code> if stored in percent</returns>
+        /// <returns><c>true</c> if stored in percent</returns>
         public virtual bool IsPercentValue() {
             return unitType == PERCENT;
         }

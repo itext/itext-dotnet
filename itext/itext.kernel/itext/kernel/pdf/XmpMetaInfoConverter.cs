@@ -99,7 +99,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         internal static void AppendDocumentInfoToMetadata(PdfDocumentInfo info, XMPMeta xmpMeta) {
             PdfDictionary docInfo = info.GetPdfObject();
             if (docInfo != null) {
@@ -181,7 +180,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static void AppendArrayItemIfDoesNotExist(XMPMeta meta, String ns, String arrayName, String value, 
             int arrayOption) {
             int currentCnt = meta.CountArrayItems(ns, arrayName);
@@ -194,7 +192,6 @@ namespace iText.Kernel.Pdf {
             meta.AppendArrayItem(ns, arrayName, new PropertyOptions(arrayOption), value, null);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static String FetchArrayIntoString(XMPMeta meta, String ns, String arrayName) {
             int keywordsCnt = meta.CountArrayItems(ns, arrayName);
             StringBuilder sb = null;

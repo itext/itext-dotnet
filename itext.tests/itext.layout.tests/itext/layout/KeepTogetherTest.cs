@@ -68,8 +68,6 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepTogetherParagraphTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
@@ -89,8 +87,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherParagraphTest02() {
@@ -114,8 +110,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepTogetherListTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
@@ -134,8 +128,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepTogetherDivTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
@@ -158,8 +150,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KeepTogetherMinHeightTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherMinHeightTest.pdf";
@@ -182,8 +172,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDivTest02() {
@@ -206,8 +194,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDefaultTest01() {
@@ -235,8 +221,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1837: NPE")]
         public virtual void KeepTogetherInlineDiv01() {
@@ -256,8 +240,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherInlineDiv02() {
@@ -279,8 +261,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 8)]
         public virtual void NarrowPageTest01() {
@@ -309,8 +289,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void NarrowPageTest02() {
@@ -343,8 +321,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void NarrowPageTest02A() {
             String testName = "narrowPageTest02A.pdf";
@@ -400,8 +376,6 @@ namespace iText.Layout {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void UpdateHeightTest01() {
@@ -424,8 +398,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 1)]
         [LogMessage(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 22)]
@@ -450,8 +422,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FixedHeightOverflowTest01() {
@@ -461,8 +431,8 @@ namespace iText.Layout {
             pdfDoc.SetDefaultPageSize(PageSize.A4);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
-            int divHeight = 1000;
             // specifying height definitely bigger than page height
+            int divHeight = 1000;
             // test keep-together processing on height-only overflow for blocks
             Div div = new Div().SetHeight(divHeight).SetBorder(new SolidBorder(3));
             div.SetKeepTogether(true);

@@ -55,6 +55,14 @@ namespace iText.Kernel.Pdf {
     /// JAVA-
     /// <c>String</c>
     /// -object.
+    /// </summary>
+    /// <remarks>
+    /// A
+    /// <c>PdfString</c>
+    /// -class is the PDF-equivalent of a
+    /// JAVA-
+    /// <c>String</c>
+    /// -object.
     /// <para />
     /// A string is a sequence of characters delimited by parenthesis.
     /// If a string is too long to be conveniently placed on a single line, it may
@@ -66,7 +74,7 @@ namespace iText.Kernel.Pdf {
     /// way to represent characters outside the printable ASCII character set.<br />
     /// This object is described in the 'Portable Document Format Reference Manual
     /// version 1.7' section 3.2.3 (page 53-56).
-    /// </summary>
+    /// </remarks>
     /// <seealso cref="PdfObject"/>
     public class PdfString : PdfPrimitiveObject {
         protected internal String value;
@@ -79,11 +87,12 @@ namespace iText.Kernel.Pdf {
 
         private int decryptInfoGen;
 
+        // if it's not null: content shall contain encrypted data; value shall be null
         private PdfEncryption decryption;
 
         public PdfString(String value, String encoding)
             : base() {
-            // if it's not null: content shall contain encrypted data; value shall be null
+            System.Diagnostics.Debug.Assert(value != null);
             this.value = value;
             this.encoding = encoding;
         }
@@ -180,7 +189,7 @@ namespace iText.Kernel.Pdf {
             if (value == null) {
                 GenerateValue();
             }
-            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings.IsPdfDocEncoding(value)) {
+            if (encoding != null && PdfEncodings.UNICODE_BIG.Equals(encoding) && PdfEncodings.IsPdfDocEncoding(value)) {
                 return PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
             }
             else {
@@ -210,7 +219,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (value == null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(DecodeContent());
+                return iText.IO.Util.JavaUtil.GetStringForBytes(DecodeContent(), iText.IO.Util.EncodingUtil.ISO_8859_1);
             }
             else {
                 return GetValue();
@@ -265,9 +274,14 @@ namespace iText.Kernel.Pdf {
         /// Encrypt content of
         /// <c>value</c>
         /// and set as content.
+        /// </summary>
+        /// <remarks>
+        /// Encrypt content of
+        /// <c>value</c>
+        /// and set as content.
         /// <c>generateContent()</c>
         /// won't be called.
-        /// </summary>
+        /// </remarks>
         /// <param name="encrypt">@see PdfEncryption</param>
         /// <returns>true if value was encrypted, otherwise false.</returns>
         protected internal virtual bool Encrypt(PdfEncryption encrypt) {
@@ -304,8 +318,7 @@ namespace iText.Kernel.Pdf {
         /// or
         /// <c>content</c>
         /// ot the
-        /// <c>PdfString</c>
-        /// .
+        /// <c>PdfString</c>.
         /// </remarks>
         /// <param name="bytes">byte array to manipulate with.</param>
         /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>

@@ -41,7 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Layout.Element;
+
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// A specialized enum holding the possible values for a
+    /// <see cref="Tab">Tab</see>
+    /// 's alignment.
+    /// </summary>
     public enum TabAlignment {
         LEFT,
         RIGHT,

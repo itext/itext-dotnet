@@ -46,73 +46,128 @@ using System.IO;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>Represents xfdf element, the top level element in an xfdf document.</summary>
+    /// <remarks>
+    /// Represents xfdf element, the top level element in an xfdf document.
+    /// For more details see paragraph 6.2.1 in Xfdf document specification.
+    /// Content model: ( f? & ids? & fields? & annots? )
+    /// Attributes: xml:space, xmlns.
+    /// </remarks>
     public class XfdfObject {
+        /// <summary>Represents f element, child of the xfdf element.</summary>
+        /// <remarks>
+        /// Represents f element, child of the xfdf element.
+        /// Corresponds to the F key in the file dictionary.
+        /// </remarks>
         private FObject f;
 
+        /// <summary>Represents ids element, a child of the xfdf element.</summary>
+        /// <remarks>
+        /// Represents ids element, a child of the xfdf element.
+        /// Corresponds to the ID key in the file dictionary.
+        /// </remarks>
         private IdsObject ids;
 
+        /// <summary>Represents the fields element, a child of the xfdf element and is the container for form field elements.
+        ///     </summary>
         private FieldsObject fields;
 
+        /// <summary>Represent annots element, a child of the xfdf element and is the container for annot elements.</summary>
         private AnnotsObject annots;
 
+        /// <summary>A list of attributes of xfdf object.</summary>
         private IList<AttributeObject> attributes;
 
+        /// <summary>Gets the f element, child of the xfdf element.</summary>
+        /// <remarks>
+        /// Gets the f element, child of the xfdf element.
+        /// Corresponds to the F key in the file dictionary.
+        /// </remarks>
         public virtual FObject GetF() {
             return f;
         }
 
+        /// <summary>Sets the f element, child of the xfdf element.</summary>
+        /// <remarks>
+        /// Sets the f element, child of the xfdf element.
+        /// Corresponds to the F key in the file dictionary.
+        /// </remarks>
         public virtual void SetF(FObject f) {
             this.f = f;
         }
 
+        /// <summary>Gets the ids element, child of the xfdf element.</summary>
+        /// <remarks>
+        /// Gets the ids element, child of the xfdf element.
+        /// Corresponds to the ID key in the file dictionary.
+        /// </remarks>
         public virtual IdsObject GetIds() {
             return ids;
         }
 
+        /// <summary>Sets the ids element, child of the xfdf element.</summary>
+        /// <remarks>
+        /// Sets the ids element, child of the xfdf element.
+        /// Corresponds to the ID key in the file dictionary.
+        /// </remarks>
         public virtual void SetIds(IdsObject ids) {
             this.ids = ids;
         }
 
+        /// <summary>Gets the fields element, a child of the xfdf element and is the container for form field elements.
+        ///     </summary>
         public virtual FieldsObject GetFields() {
             return fields;
         }
 
+        /// <summary>Sets the fields element, a child of the xfdf element and is the container for form field elements.
+        ///     </summary>
         public virtual void SetFields(FieldsObject fields) {
             this.fields = fields;
         }
 
+        /// <summary>Gets the annots element, a child of the xfdf element and is the container for annot elements.</summary>
         public virtual AnnotsObject GetAnnots() {
             return annots;
         }
 
+        /// <summary>Sets the annots element, a child of the xfdf element and is the container for annot elements.</summary>
         public virtual void SetAnnots(AnnotsObject annots) {
             this.annots = annots;
         }
 
+        /// <summary>Gets the list of attributes of xfdf object.</summary>
         public virtual IList<AttributeObject> GetAttributes() {
             return attributes;
         }
 
+        /// <summary>Sets the list of attributes of xfdf object.</summary>
         public virtual void SetAttributes(IList<AttributeObject> attributes) {
             this.attributes = attributes;
         }
 
+        /// <summary>Merges info from XfdfObject to pdf document.</summary>
+        /// <param name="pdfDocument">the target document for merge.</param>
+        /// <param name="pdfDocumentName">
+        /// the name of the target document. Will be checked in the merge process to determined
+        /// if it is the same as href attribute of f element of merged XfdfObject. If the names are
+        /// different, a warning will be thrown.
+        /// </param>
         public virtual void MergeToPdf(PdfDocument pdfDocument, String pdfDocumentName) {
             XfdfReader reader = new XfdfReader();
             reader.MergeXfdfIntoPdf(this, pdfDocument, pdfDocumentName);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <summary>Writes info from XfdfObject to .xfdf file.</summary>
+        /// <param name="filename">name of the target file.</param>
         public virtual void WriteToFile(String filename) {
             using (Stream os = new FileStream(filename, FileMode.Create)) {
                 WriteToFile(os);
             }
         }
 
-        /// <exception cref="Javax.Xml.Transform.TransformerException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <summary>Writes info from XfdfObject to .xfdf file.</summary>
+        /// <param name="os">target output stream.</param>
         public virtual void WriteToFile(Stream os) {
             XfdfWriter writer = new XfdfWriter(os);
             writer.Write(this);

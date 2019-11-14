@@ -469,7 +469,7 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        //TODO(DEVSIX-1658):Remove bugged mention
+        //TODO(DEVSIX-1659):Remove bugged mention
         /// <summary>Sets the autoscale property for the height of the image.</summary>
         /// <remarks>
         /// Sets the autoscale property for the height of the image.
@@ -512,8 +512,7 @@ namespace iText.Layout.Element {
         /// side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="left">horizontal position on the page</param>
         /// <param name="bottom">vertical position on the page</param>
@@ -532,8 +531,7 @@ namespace iText.Layout.Element {
         /// page. Also has as a side effect that the Element's
         /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
-        /// .
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>.
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="left">horizontal position on the page</param>
@@ -575,8 +573,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the height property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="height">a value measured in points.</param>
         /// <returns>this image.</returns>
@@ -596,8 +593,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-height property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxHeight">a value measured in points.</param>
         /// <returns>this image.</returns>
@@ -617,8 +613,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-height property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minHeight">a value measured in points.</param>
         /// <returns>this image.</returns>
@@ -638,8 +633,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the max-width property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="maxWidth">a value measured in points.</param>
         /// <returns>this image.</returns>
@@ -659,8 +653,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the min-width property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="minWidth">a value measured in points.</param>
         /// <returns>this image.</returns>
@@ -679,8 +672,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets the width property of the image with a
-        /// <see cref="iText.Layout.Properties.UnitValue"/>
-        /// .
+        /// <see cref="iText.Layout.Properties.UnitValue"/>.
         /// </summary>
         /// <param name="width">
         /// a

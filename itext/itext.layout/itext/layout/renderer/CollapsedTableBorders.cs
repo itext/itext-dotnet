@@ -54,6 +54,7 @@ namespace iText.Layout.Renderer {
 
         private IList<Border> bottomBorderCollapseWith = new List<Border>();
 
+        // region constructors
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
             )
             : base(rows, numberOfColumns, tableBoundingBorders) {
@@ -64,7 +65,6 @@ namespace iText.Layout.Renderer {
             : base(rows, numberOfColumns, tableBoundingBorders, largeTableIndexOffset) {
         }
 
-        // region constructors
         // endregion
         // region getters
         public virtual IList<Border> GetTopBorderCollapseWith() {
@@ -181,8 +181,8 @@ namespace iText.Layout.Renderer {
                         int col = 0;
                         int row = index - 1;
                         while (col < numberOfColumns) {
+                            // TODO
                             if (null != rows[row - largeTableIndexOffset][col]) {
-                                // TODO
                                 CellRenderer cell = rows[row - largeTableIndexOffset][col];
                                 Border cellModelBottomBorder = TableBorderUtil.GetCellSideBorder(((Cell)cell.GetModelElement()), Property.
                                     BORDER_BOTTOM);
@@ -382,8 +382,7 @@ namespace iText.Layout.Renderer {
         // region draw
         protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
             , float[] countedColumnWidth) {
-            IList<Border> borders = GetHorizontalBorder(startRow + i);
-            /*- largeTableIndexOffset*/
+            IList<Border> borders = GetHorizontalBorder(startRow + /*- largeTableIndexOffset*/ i);
             float x1 = startX;
             float x2 = x1 + countedColumnWidth[0];
             if (i == 0) {

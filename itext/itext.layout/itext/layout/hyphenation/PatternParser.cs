@@ -51,28 +51,21 @@ namespace iText.Layout.Hyphenation {
         internal const int ELEM_HYPHEN = 4;
 
         /// <summary>Construct a pattern parser.</summary>
-        /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         private PatternParser() {
             token = new StringBuilder();
+            // default
             hyphenChar = '-';
         }
 
         /// <summary>Construct a pattern parser.</summary>
         /// <param name="consumer">a pattern consumer</param>
-        /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public PatternParser(IPatternConsumer consumer)
             : this() {
-            // default
             this.consumer = consumer;
         }
 
         /// <summary>Parses a hyphenation pattern file.</summary>
         /// <param name="filename">the filename</param>
-        /// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
-        /// <exception cref="System.IO.FileNotFoundException"/>
         public virtual void Parse(String filename) {
             Parse(new FileStream(filename, FileMode.Open), filename);
         }
@@ -80,8 +73,6 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Parses a hyphenation pattern file.</summary>
         /// <param name="stream">the InputStream for the file</param>
         /// <param name="name">unique key representing country-language combination</param>
-        /// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void Parse(Stream stream, String name) {
             XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Ignore};
             XmlReader reader = XmlReader.Create(stream, settings);
@@ -221,8 +212,8 @@ namespace iText.Layout.Hyphenation {
 
         private static String GetInterletterValues(String pat) {
             StringBuilder il = new StringBuilder();
-            String word = pat + "a";
             // add dummy letter to serve as sentinel
+            String word = pat + "a";
             int len = word.Length;
             for (int i = 0; i < len; i++) {
                 char c = word[i];
@@ -236,7 +227,6 @@ namespace iText.Layout.Hyphenation {
             return il.ToString();
         }
 
-        /// <exception cref="Org.Xml.Sax.SAXException">if not caught</exception>
         protected internal virtual void GetExternalClasses() {
             Parse(ResourceUtil.GetResourceStream(HyphenationConstants.HYPHENATION_DEFAULT_RESOURCE + "External.classes.xml"), "classes.xml");
         }

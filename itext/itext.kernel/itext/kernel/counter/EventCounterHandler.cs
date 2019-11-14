@@ -50,6 +50,10 @@ using iText.Kernel.Counter.Event;
 namespace iText.Kernel.Counter {
     /// <summary>
     /// Manager that works with
+    /// <see cref="IEventCounterFactory"/>.
+    /// </summary>
+    /// <remarks>
+    /// Manager that works with
     /// <see cref="IEventCounterFactory"/>
     /// . Create
     /// <see cref="EventCounter"/>
@@ -69,14 +73,14 @@ namespace iText.Kernel.Counter {
     /// and register it with
     /// <see cref="SimpleEventCounterFactory"/>
     /// like this:
-    /// <code>EventCounterManager.getInstance().register(new SimpleEventCounterFactory(new SystemOutEventCounter());</code>
+    /// <c>EventCounterHandler.getInstance().register(new SimpleEventCounterFactory(new SystemOutEventCounter());</c>
     /// <see cref="SystemOutEventCounter"/>
     /// is just an example of a
     /// <see cref="EventCounter"/>
     /// implementation.
     /// <para />
     /// This functionality can be used to create metrics in a SaaS context.
-    /// </summary>
+    /// </remarks>
     public class EventCounterHandler {
         /// <summary>The singleton instance.</summary>
         private static readonly iText.Kernel.Counter.EventCounterHandler instance = new iText.Kernel.Counter.EventCounterHandler
@@ -141,9 +145,13 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Register new
+        /// <see cref="IEventCounterFactory"/>.
+        /// </summary>
+        /// <remarks>
+        /// Register new
         /// <see cref="IEventCounterFactory"/>
         /// . Does nothing if same factory was already registered.
-        /// </summary>
+        /// </remarks>
         /// <param name="factory">
         /// 
         /// <see cref="IEventCounterFactory"/>
@@ -157,9 +165,13 @@ namespace iText.Kernel.Counter {
 
         /// <summary>
         /// Unregister specified
+        /// <see cref="IEventCounterFactory"/>.
+        /// </summary>
+        /// <remarks>
+        /// Unregister specified
         /// <see cref="IEventCounterFactory"/>
         /// . Does nothing if this factory wasn't registered first.
-        /// </summary>
+        /// </remarks>
         /// <param name="factory">
         /// 
         /// <see cref="IEventCounterFactory"/>

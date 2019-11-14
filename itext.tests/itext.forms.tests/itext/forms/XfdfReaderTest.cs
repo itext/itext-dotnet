@@ -46,9 +46,10 @@ using iText.Forms.Xfdf;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
-    public class XfdfReaderTest {
+    public class XfdfReaderTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/XfdfReaderTest/";
 
@@ -57,14 +58,11 @@ namespace iText.Forms {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFields() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFields.pdf", 
                 FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFields.pdf", 
@@ -79,11 +77,8 @@ namespace iText.Forms {
                  + "cmp_xfdfNoFields.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfNoFieldsNoFAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoFAttributes.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf"
@@ -98,11 +93,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfNoFieldsNoFAttributes.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFieldsNoIdsAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
@@ -117,11 +109,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfNoFieldsNoIdsAttributes.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfWithFieldsWithValue() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValue.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValue.pdf"
@@ -136,13 +125,11 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfWithFieldsWithValue.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        //TODO Rich text functionality not implemented yet
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT)]
         public virtual void XfdfValueRichText() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfValueRichText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfValueRichText.pdf"
                 , FileMode.Create)));
@@ -156,11 +143,9 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfValueRichText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfHierarchyFieldsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "hierarchy_fields.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "hierarchy_fields.pdf"
@@ -175,60 +160,9 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_hierarchy_fields.pdf", destinationFolder, "diff_"));
         }
 
-        ////
-        //    @Test
-        //    public void xfdfMultipleChoiceFieldsTest() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-        //        //TODO add to the test radio buttons, check boxes, lists.
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "multiple_choice_fields.pdf")),
-        //                new PdfWriter(new FileOutputStream(destinationFolder + "multiple-choice_fields.pdf")));
-        //        String xfdfFilename = sourceFolder + "multiple_choice_fields.xfdf";
-        //        XfdfObjectFactory factory = new XfdfObjectFactory();
-        //        XfdfObject xfdfObject = factory.createXfdfObject(new FileInputStream(xfdfFilename));
-        //        XfdfReader reader = new XfdfReader();
-        //        reader.mergeXfdfIntoPdf(xfdfObject, pdfDocument,sourceFolder + "multiple_choice.pdf" );
-        //        pdfDocument.close();
-        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "multiple_choice_fields.pdf",
-        //                sourceFolder + "cmp_multiple_choice_fields.pdf", destinationFolder, "diff_"));
-        //    }
-        //    //TODO add Button test
-        //    @Test
-        //    public void xfdfWithButtonTest() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "pdf_with_buttons.pdf")),
-        //                new PdfWriter(new FileOutputStream(destinationFolder + "pdf_with_buttons.pdf")));
-        //        String xfdfFilename = sourceFolder + "xfdf_with_button.xfdf";
-        //        XfdfObjectFactory factory = new XfdfObjectFactory();
-        //        XfdfObject xfdfObject = factory.createXfdfObject(new FileInputStream(xfdfFilename));
-        //        XfdfReader reader = new XfdfReader();
-        //        reader.mergeXfdfIntoPdf(xfdfObject, pdfDocument,sourceFolder + "pdf_with_button.pdf" );
-        //        pdfDocument.close();
-        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "pdf_with_button.pdf",
-        //                sourceFolder + "cmp_pdf_with_button.pdf", destinationFolder, "diff_"
-        //        ));
-        //    }
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
-        public virtual void Book9Test() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "submit_me_form_book_9.pdf"
-                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "submit_me_form_book_9_filled.pdf"
-                , FileMode.Create)));
-            String xfdfFilename = sourceFolder + "submit_me_form_book_9.xfdf";
-            XfdfObjectFactory factory = new XfdfObjectFactory();
-            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
-                ));
-            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "submit_me_form_book_9.pdf");
-            pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "submit_me_form_book_9_filled.pdf"
-                , sourceFolder + "cmp_submit_me_form_book_9.pdf", destinationFolder, "diff_"));
-        }
-
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfWithFieldsWithValueParentAndChild() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
@@ -243,11 +177,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfWithFieldsWithValueParentAndChild.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
@@ -262,11 +193,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationHighlightedText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineText.pdf"
@@ -281,11 +209,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlineText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineTextRectWithTwoCoords() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
@@ -300,11 +225,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlinePopupAllFlags() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
@@ -319,11 +241,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationUnderlinePopupAllFlags.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationText.pdf"
@@ -338,11 +257,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStrikeout() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStrikeout.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStrikeout.pdf"
@@ -357,11 +273,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationStrikeout.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquigglyText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquigglyText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquigglyText.pdf"
@@ -376,11 +289,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSquigglyText.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationLine() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLine.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLine.pdf"
@@ -395,11 +307,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationLine.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCircle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCircle.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCircle.pdf"
@@ -414,11 +323,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCircle.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquare() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSquare.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSquare.pdf"
@@ -433,11 +339,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSquare.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCaret() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCaret.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCaret.pdf"
@@ -452,11 +355,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCaret.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolygon() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolygon.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolygon.pdf"
@@ -471,11 +371,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationPolygon.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolyline() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationPolyline.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationPolyline.pdf"
@@ -490,11 +387,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationPolyline.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStamp() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationStamp.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationStamp.pdf"
@@ -509,12 +403,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationStamp.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationInk() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationInk.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationInk.pdf"
                 , FileMode.Create)));
@@ -528,11 +420,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationInk.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationFreeText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFreeText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationFreeText.pdf"
@@ -547,12 +436,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationFreeText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationFileAttachment() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationFileAttachment.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationFileAttachment.pdf"
                 , FileMode.Create)));
@@ -566,12 +453,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationFileAttachment.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSound() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationSound.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationSound.pdf"
                 , FileMode.Create)));
@@ -585,24 +470,26 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationSound.pdf", destinationFolder, "diff_"));
         }
 
-        //    @Test
-        //    //TODO can't generate proper xfdf until link annotation export will be fixed
-        //    public void xfdfAnnotationLink() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfAnnotationLink.pdf")),
-        //                new PdfWriter(new FileOutputStream(destinationFolder + "xfdfAnnotationLink.pdf")));
-        //        String xfdfFilename = sourceFolder + "xfdfAnnotationLink.xfdf";
-        //        XfdfReader reader = new XfdfReader(xfdfFilename);
-        //        reader.mergeXfdfIntoPdf(pdfDocument, sourceFolder + "xfdfAnnotationLink.pdf");
-        //        pdfDocument.close();
-        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "xfdfAnnotationLink.pdf",
-        //                sourceFolder + "cmp_xfdfAnnotationLink.pdf", destinationFolder, "diff_"));
-        //    }
-        // @Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        public virtual void XfdfAnnotationLink() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLink.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLink.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationLink.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationLink.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationLink.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationLink.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationRedact() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationRedact.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationRedact.pdf"
                 , FileMode.Create)));
@@ -616,12 +503,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationRedact.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationProjection() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationProjection.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationProjection.pdf"
                 , FileMode.Create)));
@@ -635,24 +520,27 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationProjection.pdf", destinationFolder, "diff_"));
         }
 
-        //    @Test
-        //    //TODO can't generate proper xfdf until link annotation export will be fixed
-        //    public void xfdfAnnotationLinkAllParams() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-        //        PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInputStream(sourceFolder + "xfdfAnnotationLinkAllParams.pdf")),
-        //                new PdfWriter(new FileOutputStream(destinationFolder + "xfdfAnnotationLinkAllParams.pdf")));
-        //        String xfdfFilename = sourceFolder + "xfdfAnnotationLinkAllParams.xfdf";
-        //        XfdfReader reader = new XfdfReader(xfdfFilename);
-        //        reader.mergeXfdfIntoPdf(pdfDocument, sourceFolder + "xfdfAnnotationLinkAllParams.pdf");
-        //        pdfDocument.close();
-        //        Assert.assertNull(new CompareTool().compareByContent(destinationFolder + "xfdfAnnotationLinkAllParams.pdf",
-        //                sourceFolder + "cmp_xfdfAnnotationLinkAllParams.pdf", destinationFolder, "diff_"));
-        //    }
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        public virtual void XfdfAnnotationLinkAllParams() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationLinkAllParams.pdf"
+                , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationLinkAllParams.pdf"
+                , FileMode.Create)));
+            String xfdfFilename = sourceFolder + "xfdfAnnotationLinkAllParams.xfdf";
+            XfdfObjectFactory factory = new XfdfObjectFactory();
+            XfdfObject xfdfObject = factory.CreateXfdfObject(new FileStream(xfdfFilename, FileMode.Open, FileAccess.Read
+                ));
+            xfdfObject.MergeToPdf(pdfDocument, sourceFolder + "xfdfAnnotationLinkAllParams.pdf");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "xfdfAnnotationLinkAllParams.pdf"
+                , sourceFolder + "cmp_xfdfAnnotationLinkAllParams.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE)]
         public virtual void XfdfAnnotationReplaceText() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationReplaceText.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationReplaceText.pdf"
                 , FileMode.Create)));
@@ -666,11 +554,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationReplaceText.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 5)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationArrow() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationArrow.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationArrow.pdf"
@@ -685,12 +572,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationArrow.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCallout() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCallout.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCallout.pdf"
                 , FileMode.Create)));
@@ -704,12 +589,11 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCallout.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloud() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloud.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCloud.pdf"
                 , FileMode.Create)));
@@ -723,12 +607,11 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCloud.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 3)]
         public virtual void XfdfAnnotationCloudNested() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationCloudNested.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationCloudNested.pdf"
                 , FileMode.Create)));
@@ -742,12 +625,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationCloudNested.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationTextBoxAllParams() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationTextBoxAllParams.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationTextBoxAllParams.pdf"
                 , FileMode.Create)));
@@ -761,12 +642,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationTextBoxAllParams.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfJavaScriptForms() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfJavaScriptForms.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfJavaScriptForms.pdf"
                 , FileMode.Create)));
@@ -780,11 +659,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfJavaScriptForms.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfFormsFieldParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFormsFieldParams.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfFormsFieldParams.pdf"
@@ -799,12 +675,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfFormsFieldParams.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationAttrColor() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrColor.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrColor.pdf"
                 , FileMode.Create)));
@@ -818,11 +692,8 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrColor.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationAttrFlagsOpacity() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
@@ -837,12 +708,11 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrFlagsOpacity.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE, Count = 4)]
         public virtual void XfdfAnnotationAttrTitle() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAnnotationAttrTitle.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfAnnotationAttrTitle.pdf"
                 , FileMode.Create)));
@@ -856,12 +726,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfAnnotationAttrTitle.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DMeasurement() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DMeasurement.pdf"
                 , FileMode.Create)));
@@ -875,12 +743,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DMeasurement.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DAngular() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DAngular.pdf"
                 , FileMode.Create)));
@@ -894,12 +760,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DAngular.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfReferenceFor3DRadial() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfReferenceFor3DRadial.pdf"
                 , FileMode.Create)));
@@ -913,12 +777,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfReferenceFor3DRadial.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfSubelementContents() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementContents.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfSubelementContents.pdf"
                 , FileMode.Create)));
@@ -932,12 +794,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfSubelementContents.pdf", destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfSubelementOverlayAppearance() {
+            //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
                 , FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfSubelementOverlayAppearance.pdf"
                 , FileMode.Create)));
@@ -951,12 +811,10 @@ namespace iText.Forms {
                 , sourceFolder + "cmp_xfdfSubelementOverlayAppearance.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfButton() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfButton.pdf", FileMode.Open
                 , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfButton.pdf", FileMode.Create
                 )));
@@ -970,12 +828,10 @@ namespace iText.Forms {
                  + "cmp_xfdfButton.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfCheckBox() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCheckBox.pdf", 
                 FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfCheckBox.pdf", 
                 FileMode.Create)));
@@ -989,12 +845,10 @@ namespace iText.Forms {
                  + "cmp_xfdfCheckBox.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfList() {
+            //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
                 , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfList.pdf", FileMode.Create)
                 ));
@@ -1008,12 +862,10 @@ namespace iText.Forms {
                  + "cmp_xfdfList.pdf", destinationFolder, "diff_"));
         }
 
-        //@Test
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
-        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfDropDown() {
+            //TODO DEVSIX-3215 Support richtext
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfDropDown.pdf", 
                 FileMode.Open, FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "xfdfDropDown.pdf", 
                 FileMode.Create)));

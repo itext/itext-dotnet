@@ -75,7 +75,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <param name="charsetName">character set of input</param>
         /// <param name="baseUri">base URI of document, to resolve relative links against</param>
         /// <returns>Document</returns>
-        /// <exception cref="System.IO.IOException">on IO error</exception>
         public static Document Load(FileInfo @in, String charsetName, String baseUri) {
             ByteBuffer byteData = ReadFileToByteBuffer(@in);
             return ParseByteData(byteData, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser(
@@ -87,7 +86,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <param name="charsetName">character set of input</param>
         /// <param name="baseUri">base URI of document, to resolve relative links against</param>
         /// <returns>Document</returns>
-        /// <exception cref="System.IO.IOException">on IO error</exception>
         public static Document Load(Stream @in, String charsetName, String baseUri) {
             ByteBuffer byteData = ReadToByteBuffer(@in);
             return ParseByteData(byteData, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser(
@@ -104,7 +102,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// to use.
         /// </param>
         /// <returns>Document</returns>
-        /// <exception cref="System.IO.IOException">on IO error</exception>
         public static Document Load(Stream @in, String charsetName, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
             ByteBuffer byteData = ReadToByteBuffer(@in);
@@ -115,7 +112,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <remarks>Writes the input stream to the output stream. Doesn't close them.</remarks>
         /// <param name="in">input stream to read from</param>
         /// <param name="out">output stream to write to</param>
-        /// <exception cref="System.IO.IOException">on IO error</exception>
         internal static void CrossStreams(Stream @in, Stream @out) {
             byte[] buffer = new byte[bufferSize];
             int len;
@@ -184,7 +180,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <param name="inStream">the input stream to read from</param>
         /// <param name="maxSize">the maximum size in bytes to read from the stream. Set to 0 to be unlimited.</param>
         /// <returns>the filled byte buffer</returns>
-        /// <exception cref="System.IO.IOException">if an exception occurs whilst reading from the input stream.</exception>
         internal static ByteBuffer ReadToByteBuffer(Stream inStream, int maxSize) {
             Validate.IsTrue(maxSize >= 0, "maxSize must be 0 (unlimited) or larger");
             bool capped = maxSize > 0;
@@ -209,12 +204,10 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             return ByteBuffer.Wrap(outStream.ToArray());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal static ByteBuffer ReadToByteBuffer(Stream inStream) {
             return ReadToByteBuffer(inStream, 0);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         internal static ByteBuffer ReadFileToByteBuffer(FileInfo file) {
             FileStream randomAccessFile = null;
             try {

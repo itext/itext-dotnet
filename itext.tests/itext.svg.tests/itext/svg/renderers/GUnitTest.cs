@@ -57,8 +57,6 @@ namespace iText.Svg.Renderers {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void MeetTheTeam() {
             IList<Exception> assertionErrorsThrown = new List<Exception>();
@@ -77,15 +75,11 @@ namespace iText.Svg.Renderers {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ViewboxTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "test_viewbox");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SimpleGTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleG");

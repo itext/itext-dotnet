@@ -52,31 +52,39 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     internal sealed class Tokeniser {
         internal const char replacementChar = '\uFFFD';
 
+        // replaces null character
         private static readonly char[] notCharRefCharsSorted = new char[] { '\t', '\n', '\r', '\f', ' ', '<', '&' };
 
         static Tokeniser() {
-            // replaces null character
             JavaUtil.Sort(notCharRefCharsSorted);
         }
 
         private CharacterReader reader;
 
+        // html input
         private ParseErrorList errors;
 
+        // errors found while tokenising
         private TokeniserState state = TokeniserState.Data;
 
+        // current tokenisation state
         private Token emitPending;
 
+        // the token we are about to emit on next read
         private bool isEmitPending = false;
 
         private String charsString = null;
 
+        // characters pending an emit. Will fall to charsBuilder if more than one
         private StringBuilder charsBuilder = new StringBuilder(1024);
 
+        // buffers characters to output as one token, if more than one emit per read
         internal StringBuilder dataBuffer = new StringBuilder(1024);
 
+        // buffers data looking for </script>
         internal Token.Tag tagPending;
 
+        // tag we are building up
         internal Token.StartTag startPending = new Token.StartTag();
 
         internal Token.EndTag endPending = new Token.EndTag();
@@ -85,24 +93,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         internal Token.Doctype doctypePending = new Token.Doctype();
 
+        // doctype building up
         internal Token.Comment commentPending = new Token.Comment();
 
+        // comment building up
         private String lastStartTag;
 
+        // the last start tag emitted, to test appropriate end tag
         private bool selfClosingFlagAcknowledged = true;
 
         internal Tokeniser(CharacterReader reader, ParseErrorList errors) {
-            // html input
-            // errors found while tokenising
-            // current tokenisation state
-            // the token we are about to emit on next read
-            // characters pending an emit. Will fall to charsBuilder if more than one
-            // buffers characters to output as one token, if more than one emit per read
-            // buffers data looking for </script>
-            // tag we are building up
-            // doctype building up
-            // comment building up
-            // the last start tag emitted, to test appropriate end tag
             this.reader = reader;
             this.errors = errors;
         }

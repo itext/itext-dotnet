@@ -57,10 +57,12 @@ namespace iText.Forms.Xfdf {
             this.value = value;
         }
 
+        /// <summary>Returns a string containing attribute name.</summary>
         public virtual String GetName() {
             return name;
         }
 
+        /// <summary>Returns a string representation of attribute value.</summary>
         public virtual String GetValue() {
             return value;
         }

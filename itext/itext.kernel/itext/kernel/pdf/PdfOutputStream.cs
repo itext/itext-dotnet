@@ -63,6 +63,7 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R");
 
+        // For internal usage only
         private byte[] duplicateContentBuffer = null;
 
         /// <summary>Document associated with PdfOutputStream.</summary>
@@ -77,7 +78,6 @@ namespace iText.Kernel.Pdf {
             : base(outputStream) {
         }
 
-        // For internal usage only
         /// <summary>Write a PdfObject to the outputstream.</summary>
         /// <param name="pdfObject">PdfObject to write</param>
         /// <returns>this PdfOutPutStream</returns>
@@ -142,7 +142,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Writes corresponding amount of bytes from a given long</summary>
         /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
         /// <param name="size">expected amount of bytes</param>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void Write(long bytes, int size) {
             System.Diagnostics.Debug.Assert(bytes >= 0);
             while (--size >= 0) {
@@ -153,7 +152,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Writes corresponding amount of bytes from a given int</summary>
         /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
         /// <param name="size">expected amount of bytes</param>
-        /// <exception cref="System.IO.IOException"/>
         internal virtual void Write(int bytes, int size) {
             //safe convert to long, despite sign.
             Write(bytes & 0xFFFFFFFFL, size);

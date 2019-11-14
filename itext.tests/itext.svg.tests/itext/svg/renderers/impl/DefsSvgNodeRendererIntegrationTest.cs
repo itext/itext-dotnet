@@ -57,29 +57,21 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithNoChildrenTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithNoChildren");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithOneChild");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithMultipleChildrenTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithMultipleChildren");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildAndNonDefsBeingDrawnTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "defsWithOneChildAndNonDefsBeingDrawn");

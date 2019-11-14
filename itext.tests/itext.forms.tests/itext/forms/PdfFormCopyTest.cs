@@ -60,8 +60,6 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest01() {
@@ -82,8 +80,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest02() {
             String srcFilename = sourceFolder + "hello_with_comments.pdf";
@@ -97,8 +93,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest03() {
             String srcFilename = sourceFolder + "hello2_with_comments.pdf";
@@ -112,8 +106,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void LargeFileTest() {
             String srcFilename1 = sourceFolder + "frontpage.pdf";
@@ -131,8 +123,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest04() {
@@ -149,8 +139,6 @@ namespace iText.Forms {
             destDoc.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest05() {
             String srcFilename = sourceFolder + "srcFile1.pdf";
@@ -163,8 +151,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
         public virtual void CopyMultipleSubfieldsTest01() {
@@ -188,8 +174,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
         public virtual void CopyMultipleSubfieldsTest02() {
@@ -210,8 +194,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 2)]
         public virtual void CopyMultipleSubfieldsTest03() {
@@ -232,8 +214,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 12)]
         public virtual void CopyMultipleSubfieldsSmartModeTest01() {
@@ -257,8 +237,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest06() {
@@ -277,8 +255,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest07() {
@@ -297,8 +273,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest08() {
@@ -321,8 +295,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 26)]
         public virtual void CopyFieldsTest09() {
@@ -342,8 +314,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest10() {
             String srcFilename = sourceFolder + "datasheet.pdf";
@@ -361,8 +331,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest11() {
             String srcFilename1 = sourceFolder + "datasheet.pdf";
@@ -382,8 +350,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyFieldsTest12() {
             String srcFilename1 = sourceFolder + "datasheet.pdf";
@@ -403,8 +369,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 1)]
         public virtual void CopyFieldsTest13() {
@@ -424,8 +388,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CopyPagesWithInheritedResources() {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
@@ -439,8 +401,6 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void UnnamedFieldsHierarchyTest() {
             String srcFilename = sourceFolder + "unnamedFields.pdf";
@@ -451,6 +411,75 @@ namespace iText.Forms {
             merged.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_unnamedFieldsHierarchyTest.pdf"
                 , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditTextFields() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditTextFields.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("text_1").SetValue("text_1");
+            acroForm.GetField("NumberField_text.2").SetValue("-100.00");
+            acroForm.GetField("NumberField_text.2_1").SetValue("3.00");
+            acroForm.GetField("text.3_1<!").SetValue("text.3_1<!");
+            acroForm.GetField("text.4___#1+1").SetValue("CHANGEDtext");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditCheckboxes() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditCheckboxes.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("CheckBox_1").SetValue("On");
+            acroForm.GetField("Check Box.2").SetValue("Off");
+            acroForm.GetField("CheckBox4.1#1").SetValue("Off");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
+        public virtual void CopyAndEditRadioButtons() {
+            //TODO: update after DEVSIX-2354
+            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
+            String cmpFileName = sourceFolder + "/cmp_copyAndEditRadioButtons.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            for (int i = 0; i < 4; i++) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(destDoc, false);
+            acroForm.GetField("Group.4").SetValue("Choice_3!<>3.3.3");
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, cmpFileName, destinationFolder
+                , "diff_"));
         }
     }
 }

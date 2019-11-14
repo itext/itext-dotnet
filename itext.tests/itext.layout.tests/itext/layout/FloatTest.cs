@@ -72,8 +72,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatParagraphTest01() {
             String cmpFileName = sourceFolder + "cmp_floatParagraphTest01.pdf";
@@ -104,8 +102,6 @@ namespace iText.Layout {
                 "diff01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatParagraphTest02() {
             String cmpFileName = sourceFolder + "cmp_floatParagraphTest02.pdf";
@@ -138,8 +134,6 @@ namespace iText.Layout {
                 "diff02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatDivTest01() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest01.pdf";
@@ -162,8 +156,6 @@ namespace iText.Layout {
                 "diff03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatDivTest02() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest02.pdf";
@@ -197,8 +189,6 @@ namespace iText.Layout {
                 "diff04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatDivTest03() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
@@ -229,8 +219,6 @@ namespace iText.Layout {
                 "diff05_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingImageInCell() {
             String cmpFileName = sourceFolder + "cmp_floatingImageInCell.pdf";
@@ -256,8 +244,6 @@ namespace iText.Layout {
                 "diff06_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingImageToNextPage() {
             String cmpFileName = sourceFolder + "cmp_floatingImageToNextPage.pdf";
@@ -282,8 +268,6 @@ namespace iText.Layout {
                 "diff07_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineFloatingImageToNextPage() {
             String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
@@ -309,8 +293,6 @@ namespace iText.Layout {
                 "diff08_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingTwoImages() {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImages.pdf";
@@ -333,8 +315,6 @@ namespace iText.Layout {
                 "diff09_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingTwoImagesLR() {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImagesLR.pdf";
@@ -357,8 +337,6 @@ namespace iText.Layout {
                 "diff10_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingImageInParagraph() {
             String cmpFileName = sourceFolder + "cmp_floatingImageInParagraph.pdf";
@@ -415,8 +393,6 @@ namespace iText.Layout {
                 "diff11_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnCanvas() {
             String cmpFileName = sourceFolder + "cmp_floatsOnCanvas.pdf";
@@ -452,8 +428,6 @@ namespace iText.Layout {
                 "diff12_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsFixedWidthTest01_floatRight() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidthTest01_floatRight.pdf";
@@ -478,8 +452,6 @@ namespace iText.Layout {
                 "diff_width01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsFixedWidth01_noFloat() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_noFloat.pdf";
@@ -503,8 +475,6 @@ namespace iText.Layout {
                 "diff_width01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsFixedWidth01_floatLeft() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_floatLeft.pdf";
@@ -529,8 +499,6 @@ namespace iText.Layout {
                 "diff_width01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 3)]
         public virtual void FloatFixedHeightContentNotFit() {
@@ -560,8 +528,6 @@ namespace iText.Layout {
                 "diff13_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearanceFixedHeightPageSplitInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearanceFixedHeightPageSplitInRoot01.pdf";
@@ -583,8 +549,6 @@ namespace iText.Layout {
                 "diff13_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot01.pdf";
@@ -607,8 +571,6 @@ namespace iText.Layout {
                 "diff14_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInRoot02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot02.pdf";
@@ -630,8 +592,6 @@ namespace iText.Layout {
                 "diff15_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInRoot03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot03.pdf";
@@ -658,8 +618,6 @@ namespace iText.Layout {
                 "diff14_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock01.pdf";
@@ -677,10 +635,10 @@ namespace iText.Layout {
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Float with clear shall be drawn under the previous float on second page.
-            containerDiv.Add(new Paragraph(text));
+            containerDiv.Add(divClear);
             // text shall start on the first page.
+            containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Add(new Paragraph(text));
             // TODO DEVSIX-1270: text around green cleared float is trying to wrap to the left of it (there are 2px of space)
@@ -689,8 +647,6 @@ namespace iText.Layout {
                 "diff23_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInBlock02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock02.pdf";
@@ -715,8 +671,6 @@ namespace iText.Layout {
                 "diff24_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatPartialInBlock03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock03.pdf";
@@ -734,23 +688,21 @@ namespace iText.Layout {
             divClear.Add(new Paragraph("Cleared floating div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Float with clear shall be drawn under the previous float on second page.
+            containerDiv.Add(divClear);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 2));
             div2.Add(new Paragraph("Last float."));
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(div2);
             // This float top shall not appear higher than floats tops added before this one.
-            containerDiv.Add(new Paragraph(text + text));
+            containerDiv.Add(div2);
             // text shall start on the first page.
+            containerDiv.Add(new Paragraph(text + text));
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff23_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ClearancePageSplitFloatNothingInRoot01() {
@@ -761,21 +713,19 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit and is to be forced placed.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff16_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatNothingInRoot02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot02.pdf";
@@ -786,21 +736,19 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff16_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatNothingInRoot03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot03.pdf";
@@ -811,22 +759,20 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            document.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            document.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            document.Add(divClear);
             document.Add(new Paragraph(text + text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff16_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ClearancePageSplitFloatNothingInBlock01() {
@@ -839,13 +785,13 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit and is to be forced placed.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
@@ -853,8 +799,6 @@ namespace iText.Layout {
                 "diff25_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatNothingInBlock02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock02.pdf";
@@ -867,13 +811,13 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
@@ -881,8 +825,6 @@ namespace iText.Layout {
                 "diff25_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearancePageSplitFloatNothingInBlock03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock03.pdf";
@@ -895,14 +837,14 @@ namespace iText.Layout {
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
                 SetWidth(300));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float at the end of the page, it doesn't fit vertically.
+            containerDiv.Add(div);
             Div divClear = new Div().SetBackgroundColor(ColorConstants.GREEN);
             divClear.Add(new Paragraph("Cleared div."));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
             divClear.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            containerDiv.Add(divClear);
             // Adding cleared element which shall be after the previous float.
+            containerDiv.Add(divClear);
             containerDiv.Add(new Paragraph(text + text));
             document.Add(containerDiv);
             document.Close();
@@ -910,8 +852,6 @@ namespace iText.Layout {
                 "diff25_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearanceNoContentPageSplitFloatPartialInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearanceNoContentPageSplitFloatPartialInRoot01.pdf";
@@ -922,13 +862,13 @@ namespace iText.Layout {
             div.Add(new Paragraph("Floating div."));
             div.SetHeight(400).SetWidth(100);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float at the end of the page, it is split.
+            document.Add(div);
             Div divClear = new Div();
             divClear.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
             divClear.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
-            document.Add(divClear);
             // Adding empty element with clearance - it shall be placed after the overflow part of the float.
+            document.Add(divClear);
             document.Add(new Paragraph(text));
             document.Add(new Paragraph(text));
             document.Close();
@@ -936,8 +876,6 @@ namespace iText.Layout {
                 "diff15_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ClearanceNoContentPageSplitFloatPartialInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearanceNoContentPageSplitFloatPartialInBlock01.pdf";
@@ -963,8 +901,6 @@ namespace iText.Layout {
                 "diff26_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void FloatsOnPageSplit01() {
@@ -984,8 +920,6 @@ namespace iText.Layout {
                 "diff17_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit02.pdf";
@@ -1004,8 +938,6 @@ namespace iText.Layout {
                 "diff18_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit03.pdf";
@@ -1024,8 +956,6 @@ namespace iText.Layout {
                 "diff19_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit04() {
@@ -1044,8 +974,6 @@ namespace iText.Layout {
                 "diff20_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit05() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit05.pdf";
@@ -1057,20 +985,18 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div);
             // Adding float that doesn't fit on first page.
+            document.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            document.Add(div2);
             // Adding float that shall be after the previous float.
+            document.Add(div2);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff21_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit06_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_01.pdf";
@@ -1078,23 +1004,21 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            div.SetHeight(600);
             // Setting fixed height for the div, that will be split between pages.
+            div.SetHeight(600);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(280);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that will not fit on the first page.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
-            document.Add(div);
             // div height shall be correct on the second page.
+            document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit06_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_02.pdf";
@@ -1102,23 +1026,21 @@ namespace iText.Layout {
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
-            div.SetHeight(600);
             // Setting fixed height for the div, that will be split between pages.
+            div.SetHeight(600);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(250);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that WILL fit on the first page.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
-            document.Add(div);
             // div height shall be correct on the second page.
+            document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_02"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit06_03() {
@@ -1133,18 +1055,16 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.Add(img);
             // Adding float that will not fit on the first page and will have FORCED_PLACEMENT on the second.
+            div.Add(img);
             div.Add(new Paragraph("some small text"));
+            // TODO DEVSIX-1655: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
             document.Add(div);
-            // TODO DEVSIX-1001: blocks don't extend their height to MIN_HEIGHT if forced placement is applied, why?
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff22_03"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit07.pdf";
@@ -1158,18 +1078,16 @@ namespace iText.Layout {
                 )).SetHeight(200);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that WILL fit on the first page.
-            containerDiv.Add(img);
+            containerDiv.Add(div);
             // Adding img that shall be overflowed to the next page. containerDiv occupied area shall not have zero height on first page.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff27_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit08_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_01.pdf";
@@ -1181,20 +1099,18 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(310).SetWidth(310);
-            div.Add(img);
             // Adding image that will not fit on first page in floating div.
+            div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff28_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit08_02() {
@@ -1207,23 +1123,21 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
-            div.Add(img);
             // Adding image that will not fit on first page in floating div.
+            div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             containerDiv.Add(div);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page and requires forced placement.
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1001: currently forced placement is applied on containerDiv, which results in all it's content
+            // TODO DEVSIX-1655: currently forced placement is applied on containerDiv, which results in all it's content
             // being forced placed at once, rather than content being split more gracefully (it makes sense to put the second
             // image on the next empty area, not on current area).
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff28_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit08_03() {
@@ -1236,19 +1150,17 @@ namespace iText.Layout {
             containerDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(750).SetWidth(600);
-            containerDiv.Add(img);
             // Adding normal image that will not fit on the first page and requires forced placement.
-            containerDiv.Add(new Paragraph(text));
+            containerDiv.Add(img);
             // Adding more text that is naturally expected to be correctly shown.
+            containerDiv.Add(new Paragraph(text));
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1001: text in the container div gets lost. And floating property doesn't actually affect this.
+            // TODO DEVSIX-1655: text in the container div gets lost. And floating property doesn't actually affect this.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff28_03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit09() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit09.pdf";
@@ -1260,20 +1172,18 @@ namespace iText.Layout {
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph(text).SetWidth(250));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that will be split.
+            containerDiv.Add(div);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(250);
-            containerDiv.Add(img);
             // Adding image that will not fit on first page. containerDiv shall return PARTIAL status
+            containerDiv.Add(img);
             document.Add(containerDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff29_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit10() {
@@ -1295,8 +1205,6 @@ namespace iText.Layout {
                 "diff30_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsOnPageSplit11() {
@@ -1311,22 +1219,20 @@ namespace iText.Layout {
                 )).SetHeight(400);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div);
             // Adding float that will not fit.
+            containerDiv.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            containerDiv.Add(div2);
             // Adding float that shall be after the previous float. And shall overflow to the third page.
+            containerDiv.Add(div2);
             document.Add(containerDiv);
             document.Close();
-            // TODO DEVSIX-1001: Forced placement is applied to the parent element, forcing it to return FULL even though part of the child element overflowed.
+            // TODO DEVSIX-1655: Forced placement is applied to the parent element, forcing it to return FULL even though part of the child element overflowed.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff31_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit12_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_01.pdf";
@@ -1336,16 +1242,14 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetMinHeight(300).Add(img);
             // Div shall have height of 300pt.
+            div.SetMinHeight(300).Add(img);
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff32_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit12_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_02.pdf";
@@ -1355,16 +1259,14 @@ namespace iText.Layout {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
             img.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            div.SetHeight(500).Add(img);
             // Div shall have height of 500pt.
+            div.SetHeight(500).Add(img);
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff32_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit14() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit14.pdf";
@@ -1385,8 +1287,6 @@ namespace iText.Layout {
                 "diff33_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit15() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit15.pdf";
@@ -1399,21 +1299,19 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            mainDiv.Add(div);
             // Adding float that doesn't fit on first page.
+            mainDiv.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            mainDiv.Add(div2);
             // Adding float that shall be after the previous float.
+            mainDiv.Add(div2);
             document.Add(mainDiv);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff34_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit16() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit16.pdf";
@@ -1426,21 +1324,19 @@ namespace iText.Layout {
                 )).SetHeight(280);
             div.Add(img);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            p.Add(div);
             // Adding float that doesn't fit on first page.
+            p.Add(div);
             Div div2 = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div2.Add(new Paragraph(text)).SetWidth(300);
             div2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            p.Add(div2);
             // Adding float that shall be after the previous float.
+            p.Add(div2);
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff34_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit17() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit17.pdf";
@@ -1461,8 +1357,6 @@ namespace iText.Layout {
                 "diff35_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit18() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit18.pdf";
@@ -1485,8 +1379,6 @@ namespace iText.Layout {
                 "diff36_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnPageSplit19() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit19.pdf";
@@ -1509,8 +1401,6 @@ namespace iText.Layout {
                 "diff37_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsKeepTogetherOnPageSplit01() {
@@ -1527,8 +1417,6 @@ namespace iText.Layout {
                 "diff38_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsKeepTogetherOnPageSplit02() {
@@ -1548,8 +1436,6 @@ namespace iText.Layout {
                 "diff39_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit01.pdf";
@@ -1567,8 +1453,6 @@ namespace iText.Layout {
                 "diff40_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit02.pdf";
@@ -1590,8 +1474,6 @@ namespace iText.Layout {
                 "diff41_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit03.pdf";
@@ -1613,8 +1495,6 @@ namespace iText.Layout {
                 "diff42_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit04() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit04.pdf";
@@ -1636,8 +1516,6 @@ namespace iText.Layout {
                 "diff43_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit05() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit05.pdf";
@@ -1655,8 +1533,6 @@ namespace iText.Layout {
                 "diff44_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit06() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit06.pdf";
@@ -1683,8 +1559,6 @@ namespace iText.Layout {
                 "diff45_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit07.pdf";
@@ -1711,8 +1585,6 @@ namespace iText.Layout {
                 "diff46_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit08() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit08.pdf";
@@ -1738,8 +1610,6 @@ namespace iText.Layout {
                 "diff47_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingTextInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit01.pdf";
@@ -1756,8 +1626,6 @@ namespace iText.Layout {
                 "diff51_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingTextInParagraphPartialSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit02.pdf";
@@ -1785,8 +1653,6 @@ namespace iText.Layout {
                 "diff52_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatingTextInParagraphPartialSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit03.pdf";
@@ -1813,8 +1679,6 @@ namespace iText.Layout {
                 "diff53"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit01() {
@@ -1835,8 +1699,6 @@ namespace iText.Layout {
                 "diff48_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit02() {
@@ -1857,8 +1719,6 @@ namespace iText.Layout {
                 "diff49_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatsFirstOnPageNotFit03() {
@@ -1877,16 +1737,14 @@ namespace iText.Layout {
                 "diff50_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatPartialSplitBigGapAtPageEnd01() {
             String cmpFileName = sourceFolder + "cmp_floatPartialSplitBigGapAtPageEnd01.pdf";
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd01.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
-            div.SetFillAvailableAreaOnSplit(true);
             // specifying fill available area option
+            div.SetFillAvailableAreaOnSplit(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -1899,16 +1757,14 @@ namespace iText.Layout {
                 "diff54_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatPartialSplitBigGapAtPageEnd02() {
             String cmpFileName = sourceFolder + "cmp_floatPartialSplitBigGapAtPageEnd02.pdf";
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd02.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
-            div.SetFillAvailableAreaOnSplit(true);
             // specifying fill available area option
+            div.SetFillAvailableAreaOnSplit(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetWidth(345).SetHeight
@@ -1926,8 +1782,6 @@ namespace iText.Layout {
                 "diff55_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatInParagraphLastLineLeadingOverflow01() {
             String cmpFileName = sourceFolder + "cmp_floatInParagraphLastLineLeadingOverflow01.pdf";
@@ -1947,8 +1801,6 @@ namespace iText.Layout {
                 "diff56_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatOverflowNothingInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph01.pdf";
@@ -1976,8 +1828,6 @@ namespace iText.Layout {
                 "diff57_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatOverflowNothingInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph02.pdf";
@@ -1995,8 +1845,6 @@ namespace iText.Layout {
                 "diff58_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatInlineBlockTest01() {
             String cmpFileName = sourceFolder + "cmp_floatInlineBlockTest01.pdf";
@@ -2017,8 +1865,6 @@ namespace iText.Layout {
                 "diff14_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInBlock01() {
@@ -2035,8 +1881,6 @@ namespace iText.Layout {
                 "diff_height_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInBlock02() {
@@ -2054,8 +1898,6 @@ namespace iText.Layout {
                 "diff_height_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInParagraph01() {
@@ -2074,8 +1916,6 @@ namespace iText.Layout {
                 "diff_height_03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsHeightFixedInParagraph02() {
@@ -2095,8 +1935,6 @@ namespace iText.Layout {
                 "diff_height_04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInBlock01() {
@@ -2113,8 +1951,6 @@ namespace iText.Layout {
                 "diff_maxheight_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInBlock02() {
@@ -2132,8 +1968,6 @@ namespace iText.Layout {
                 "diff_maxheight_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInParagraph01() {
@@ -2152,8 +1986,6 @@ namespace iText.Layout {
                 "diff_maxheight_03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMaxHeightFixedInParagraph02() {
@@ -2173,8 +2005,6 @@ namespace iText.Layout {
                 "diff_maxheight_04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsMinHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock01.pdf";
@@ -2190,8 +2020,6 @@ namespace iText.Layout {
                 "diff_minheight_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsMinHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock02.pdf";
@@ -2208,8 +2036,6 @@ namespace iText.Layout {
                 "diff_minheight_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsMinHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph01.pdf";
@@ -2227,8 +2053,6 @@ namespace iText.Layout {
                 "diff_minheight_03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsMinHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph02.pdf";
@@ -2247,8 +2071,6 @@ namespace iText.Layout {
                 "diff_minheight_04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsMinHeightApplyingOnSplitTest01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest01.pdf";
@@ -2268,8 +2090,6 @@ namespace iText.Layout {
                 "diff_minheightapplying_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMinHeightApplyingOnSplitTest02() {
@@ -2291,8 +2111,6 @@ namespace iText.Layout {
                 "diff_minheightapplying_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
         public virtual void FloatsMinHeightApplyingOnSplitTest03() {
@@ -2313,8 +2131,6 @@ namespace iText.Layout {
                 "diff_minheightapplying_03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest04() {
@@ -2342,8 +2158,6 @@ namespace iText.Layout {
                 "diff_minheightapplying_04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FloatsMinHeightApplyingOnSplitTest05() {
@@ -2364,10 +2178,10 @@ namespace iText.Layout {
             // first addition
             document.Add(new Paragraph(text));
             document.Add(mainDiv);
-            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // TODO DEVSIX-1819: floats break area-break logic if min_height doesn't overflow to the next page on first addition: SMALL TICKET
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // adding two page breaks two work around the issue
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             // second addition
             mainDiv.SetMinHeight(50);
             document.Add(new Paragraph(text));
@@ -2377,8 +2191,6 @@ namespace iText.Layout {
                 "diff_minheightapplying_05_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsFixedMaxHeightAndOverflowHidden01() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedMaxHeightAndOverflowHidden01.pdf";
@@ -2405,8 +2217,6 @@ namespace iText.Layout {
                 "diff_maxheighthidden_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
@@ -2430,8 +2240,6 @@ namespace iText.Layout {
                 "diff_overflowNextLineAtPageEnd_01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph02.pdf";
@@ -2453,8 +2261,6 @@ namespace iText.Layout {
                 "diff_overflowNextLineAtPageEnd_02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph03() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph03.pdf";
@@ -2503,8 +2309,6 @@ namespace iText.Layout {
         }
 
         /// <summary>Suggested by Richard Cohn.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatRootElementNotFitPage01() {
             String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage01.pdf";
@@ -2540,8 +2344,6 @@ namespace iText.Layout {
         }
 
         /// <summary>Suggested by Richard Cohn.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatRootElementNotFitPage02() {
             String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage02.pdf";
@@ -2583,8 +2385,6 @@ namespace iText.Layout {
                 "diff16_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatOverflowAlongWithNewContent01() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent01.pdf";
@@ -2605,8 +2405,6 @@ namespace iText.Layout {
                 "diff_overflowNewContent01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatOverflowAlongWithNewContent02() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent02.pdf";
@@ -2627,8 +2425,6 @@ namespace iText.Layout {
                 "diff_overflowNewContent02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void FloatTableTest01() {

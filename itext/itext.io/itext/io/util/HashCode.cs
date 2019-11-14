@@ -52,23 +52,22 @@ namespace iText.IO.Util {
     /// This class is a convenience method to sequentially calculate hash code of the
     /// object based on the field values. The result depends on the order of elements
     /// appended. The exact formula is the same as for
-    /// <see cref="System.Collections.IList{E}.GetHashCode()"/>
-    /// .
+    /// <see cref="System.Collections.IList{E}.GetHashCode()"/>.
     /// If you need order independent hash code just summate, multiply or XOR all
     /// elements.
     /// <para />
     /// Suppose we have class:
-    /// <pre><code>
+    /// <pre><c>
     /// class Thing {
     /// long id;
     /// String name;
     /// float weight;
     /// }
-    /// </code></pre>
+    /// </c></pre>
     /// The hash code calculation can be expressed in 2 forms.
     /// <para />
     /// For maximum performance:
-    /// <pre><code>
+    /// <pre><c>
     /// public int hashCode() {
     /// int hashCode = HashCode.EMPTY_HASH_CODE;
     /// hashCode = HashCode.combine(hashCode, id);
@@ -76,14 +75,14 @@ namespace iText.IO.Util {
     /// hashCode = HashCode.combine(hashCode, weight);
     /// return hashCode;
     /// }
-    /// </code></pre>
+    /// </c></pre>
     /// <para />
     /// For convenience:
-    /// <pre><code>
+    /// <pre><c>
     /// public int hashCode() {
     /// return new HashCode().append(id).append(name).append(weight).hashCode();
     /// }
-    /// </code></pre>
+    /// </c></pre>
     /// </remarks>
     /// <seealso cref="System.Collections.IList{E}.GetHashCode()"/>
     public sealed class HashCode {

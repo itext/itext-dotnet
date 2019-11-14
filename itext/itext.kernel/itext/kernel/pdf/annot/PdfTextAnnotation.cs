@@ -107,8 +107,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// The name of an icon that is used in displaying the annotation.
         /// Possible values are described in
-        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>
-        /// .
+        /// <see cref="SetIconName(iText.Kernel.Pdf.PdfName)"/>.
         /// </remarks>
         /// <returns>
         /// a
@@ -124,15 +123,22 @@ namespace iText.Kernel.Pdf.Annot {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// that specifies the icon for displaying annotation. Possible values are:
-        /// <ul>
-        /// <li>Comment
-        /// <li>Key
-        /// <li>Note
-        /// <li>Help
-        /// <li>NewParagraph
-        /// <li>Paragraph
-        /// <li>Insert
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>Comment
+        /// </description></item>
+        /// <item><description>Key
+        /// </description></item>
+        /// <item><description>Note
+        /// </description></item>
+        /// <item><description>Help
+        /// </description></item>
+        /// <item><description>NewParagraph
+        /// </description></item>
+        /// <item><description>Paragraph
+        /// </description></item>
+        /// <item><description>Insert
+        /// </description></item>
+        /// </list>
         /// </param>
         /// <returns>
         /// this

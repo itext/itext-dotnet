@@ -50,8 +50,7 @@ namespace iText.Kernel.Font {
     /// <summary>FontProgram class for Type 3 font.</summary>
     /// <remarks>
     /// FontProgram class for Type 3 font. Contains map of
-    /// <see cref="Type3Glyph"/>
-    /// .
+    /// <see cref="Type3Glyph"/>.
     /// Type3Glyphs belong to a particular pdf document.
     /// Note, an instance of Type3Font can not be reused for multiple pdf documents.
     /// </remarks>
@@ -110,29 +109,27 @@ namespace iText.Kernel.Font {
         /// <summary>Sets a preferred font family name.</summary>
         /// <param name="fontFamily">a preferred font family name.</param>
         protected internal override void SetFontFamily(String fontFamily) {
-            //This dummy override allows PdfType3Font to set font family because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontFamily(fontFamily);
         }
 
         /// <summary>Sets font weight.</summary>
         /// <param name="fontWeight">
         /// integer form 100 to 900. See
-        /// <see cref="iText.IO.Font.Constants.FontWeights"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal override void SetFontWeight(int fontWeight) {
-            //This dummy override allows PdfType3Font to set font weight because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontWeight(fontWeight);
         }
 
         /// <summary>Sets font width in css notation (font-stretch property)</summary>
         /// <param name="fontWidth">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontStretches"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal override void SetFontStretch(String fontWidth) {
-            //This dummy override allows PdfType3Font to set font stretch because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetFontStretch(fontWidth);
         }
 
@@ -145,6 +142,7 @@ namespace iText.Kernel.Font {
         /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
         protected internal override void SetItalicAngle(int italicAngle) {
             //This dummy override allows PdfType3Font to set the PostScript italicAngel because of different modules.
+            //This dummy override allows PdfType3Font to set font name because of different modules.
             base.SetItalicAngle(italicAngle);
         }
 
@@ -152,8 +150,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
         /// <param name="flags">
         /// 
-        /// <see cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
-        /// .
+        /// <see cref="iText.IO.Font.Constants.FontDescriptorFlags"/>.
         /// </param>
         internal virtual void SetPdfFontFlags(int flags) {
             this.flags = flags;

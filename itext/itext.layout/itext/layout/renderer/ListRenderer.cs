@@ -283,13 +283,19 @@ namespace iText.Layout.Renderer {
         /// Corrects split and overflow renderers when
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// is applied.
+        /// </summary>
+        /// <remarks>
+        /// Corrects split and overflow renderers when
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// is applied.
+        /// <para />
         /// We assume that
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// is applied when the first
         /// <see cref="ListItemRenderer"/>
         /// cannot be fully layouted.
-        /// This means that the problem has occurred in one of first list item renderer's child.
-        /// We consider the right solution to force placement of all first item renderer's childs before the one,
+        /// This means that the problem has occurred in one of the first list item renderer's children.
+        /// In that case we force the placement of all first item renderer's children before the one,
         /// which was the cause of
         /// <see cref="iText.Layout.Layout.LayoutResult.NOTHING"/>
         /// , including this child.
@@ -300,7 +306,7 @@ namespace iText.Layout.Renderer {
         /// if we can render the first item renderer and strongly recommend not to set
         /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
         /// manually.
-        /// </summary>
+        /// </remarks>
         /// <param name="splitRenderer">
         /// the
         /// <see cref="IRenderer">split renderer</see>
@@ -312,10 +318,10 @@ namespace iText.Layout.Renderer {
         /// before correction
         /// </param>
         /// <param name="causeOfNothing">
-        /// the
-        /// <see cref="com.itextpdf.layout.layout.LayoutResult#causeOfNothing">cause of nothing renderer</see>
+        /// the renderer which has produced
+        /// <see cref="iText.Layout.Layout.LayoutResult.NOTHING"/>
         /// </param>
-        /// <param name="occupiedArea">the area occupied by layouting before correction</param>
+        /// <param name="occupiedArea">the area occupied by layout before correction</param>
         /// <returns>
         /// corrected
         /// <see cref="iText.Layout.Layout.LayoutResult">layout result</see>
@@ -386,7 +392,7 @@ namespace iText.Layout.Renderer {
                     bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
                     bool listSymbolNotFit = listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult
                         .FULL;
-                    // TODO DEVSIX-1001: partially not fitting list symbol not shown at all, however this might be improved
+                    // TODO DEVSIX-1655: partially not fitting list symbol not shown at all, however this might be improved
                     if (listSymbolNotFit && isForcedPlacement) {
                         currentSymbolRenderer = null;
                     }

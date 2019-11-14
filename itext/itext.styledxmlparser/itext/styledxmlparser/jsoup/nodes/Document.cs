@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Select;
@@ -134,13 +133,18 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>
         /// Set the document's
         /// <paramref name="title"/>
+        /// element.
+        /// </summary>
+        /// <remarks>
+        /// Set the document's
+        /// <paramref name="title"/>
         /// element. Updates the existing element, or adds
         /// <paramref name="title"/>
         /// to
         /// <c>head</c>
         /// if
         /// not present
-        /// </summary>
+        /// </remarks>
         /// <param name="title">string to set as title</param>
         public virtual void Title(String title) {
             Validate.NotNull(title);
@@ -266,8 +270,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>
         /// Set the text of the
         /// <c>body</c>
-        /// of this document. Any existing nodes within the body will be cleared.
+        /// of this document.
         /// </summary>
+        /// <remarks>
+        /// Set the text of the
+        /// <c>body</c>
+        /// of this document. Any existing nodes within the body will be cleared.
+        /// </remarks>
         /// <param name="text">unencoded text</param>
         /// <returns>this document</returns>
         public override iText.StyledXmlParser.Jsoup.Nodes.Element Text(String text) {
@@ -289,22 +298,23 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// charset / encoding element within the document.
         /// <para />
         /// This enables
-        /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>
-        /// .
+        /// <see cref="UpdateMetaCharsetElement(bool)">meta charset update</see>.
         /// <para />
         /// If there's no element with charset / encoding information yet it will
         /// be created. Obsolete charset / encoding definitions are removed!
         /// <para />
         /// <b>Elements used:</b>
-        /// <ul>
-        /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
-        /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i>
+        /// </description></item>
+        /// <item><description><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         /// <param name="charset">Charset</param>
         /// <seealso cref="UpdateMetaCharsetElement(bool)"></seealso>
         /// <seealso cref="OutputSettings.Charset(System.Text.Encoding)"></seealso>
-        public virtual void Charset(Encoding charset) {
+        public virtual void Charset(System.Text.Encoding charset) {
             UpdateMetaCharsetElement(true);
             outputSettings.Charset(charset);
             EnsureMetaCharsetElement();
@@ -314,12 +324,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <remarks>
         /// Returns the charset used in this document. This method is equivalent
         /// to
-        /// <see cref="OutputSettings.Charset()"/>
-        /// .
+        /// <see cref="OutputSettings.Charset()"/>.
         /// </remarks>
         /// <returns>Current Charset</returns>
         /// <seealso cref="OutputSettings.Charset()"></seealso>
-        public virtual Encoding Charset() {
+        public virtual System.Text.Encoding Charset() {
             return outputSettings.Charset();
         }
 
@@ -328,10 +337,16 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// updated on changes through
         /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
         /// or not.
+        /// </summary>
+        /// <remarks>
+        /// Sets whether the element with charset information in this document is
+        /// updated on changes through
+        /// <see cref="Charset(System.Text.Encoding)">Document.charset(Charset)</see>
+        /// or not.
         /// <para />
         /// If set to <tt>false</tt> <i>(default)</i> there are no elements
         /// modified.
-        /// </summary>
+        /// </remarks>
         /// <param name="update">
         /// If <tt>true</tt> the element updated on charset
         /// changes, <tt>false</tt> if not
@@ -372,21 +387,26 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <see cref="UpdateMetaCharsetElement(bool)">updateMetaCharset</see>
         /// set to
         /// <tt>true</tt>, otherwise this method does nothing.
-        /// <ul>
-        /// <li>An exsiting element gets updated with the current charset</li>
-        /// <li>If there's no element yet it will be inserted</li>
-        /// <li>Obsolete elements are removed</li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description>An exsiting element gets updated with the current charset
+        /// </description></item>
+        /// <item><description>If there's no element yet it will be inserted
+        /// </description></item>
+        /// <item><description>Obsolete elements are removed
+        /// </description></item>
+        /// </list>
         /// <b>Elements used:</b>
-        /// <ul>
-        /// <li><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i></li>
-        /// <li><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i></li>
-        /// </ul>
+        /// <list type="bullet">
+        /// <item><description><b>Html:</b> <i>&lt;meta charset="CHARSET"&gt;</i>
+        /// </description></item>
+        /// <item><description><b>Xml:</b> <i>&lt;?xml version="1.0" encoding="CHARSET"&gt;</i>
+        /// </description></item>
+        /// </list>
         /// </remarks>
         private void EnsureMetaCharsetElement() {
             if (updateMetaCharset) {
-                Syntax syntax = OutputSettings().Syntax();
-                if (syntax == Syntax.html) {
+                iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax = OutputSettings().Syntax();
+                if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html) {
                     iText.StyledXmlParser.Jsoup.Nodes.Element metaCharset = Select("meta[charset]").First();
                     if (metaCharset != null) {
                         metaCharset.Attr("charset", Charset().DisplayName());
@@ -401,7 +421,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     Select("meta[name=charset]").Remove();
                 }
                 else {
-                    if (syntax == Syntax.xml) {
+                    if (syntax == iText.StyledXmlParser.Jsoup.Nodes.Syntax.xml) {
                         iText.StyledXmlParser.Jsoup.Nodes.Node node = ChildNodes()[0];
                         if (node is XmlDeclaration) {
                             XmlDeclaration decl = (XmlDeclaration)node;
@@ -434,14 +454,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         // indentAmount, prettyPrint are primitives so object.clone() will handle
         /// <summary>Get the document's current output settings.</summary>
         /// <returns>the document's current output settings.</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings OutputSettings() {
+        public virtual OutputSettings OutputSettings() {
             return outputSettings;
         }
 
         /// <summary>Set the document's output settings.</summary>
         /// <param name="outputSettings">new output settings.</param>
         /// <returns>this document, for chaining.</returns>
-        public virtual Document OutputSettings(iText.StyledXmlParser.Jsoup.Nodes.OutputSettings outputSettings) {
+        public virtual Document OutputSettings(OutputSettings outputSettings) {
             Validate.NotNull(outputSettings);
             this.outputSettings = outputSettings;
             return this;
@@ -465,9 +485,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
  {
         private Entities.EscapeMode escapeMode = Entities.EscapeMode.@base;
 
-        private Encoding charset = EncodingUtil.GetEncoding("UTF-8");
+        private System.Text.Encoding charset = EncodingUtil.GetEncoding("UTF-8");
 
-        private Encoding charsetEncoder;
+        private System.Text.Encoding charsetEncoder;
 
         private bool prettyPrint = true;
 
@@ -482,16 +502,16 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         }
 
         /// <summary>
-        /// Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
-        /// entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
+        /// Get the document's current HTML escape mode: <c>base</c>, which provides a limited set of named HTML
+        /// entities and escapes other characters as numbered entities for maximum compatibility; or <c>extended</c>,
         /// which uses the complete set of HTML named entities.
         /// </summary>
         /// <remarks>
-        /// Get the document's current HTML escape mode: <code>base</code>, which provides a limited set of named HTML
-        /// entities and escapes other characters as numbered entities for maximum compatibility; or <code>extended</code>,
+        /// Get the document's current HTML escape mode: <c>base</c>, which provides a limited set of named HTML
+        /// entities and escapes other characters as numbered entities for maximum compatibility; or <c>extended</c>,
         /// which uses the complete set of HTML named entities.
         /// <para />
-        /// The default escape mode is <code>base</code>.
+        /// The default escape mode is <c>base</c>.
         /// </remarks>
         /// <returns>the document's current escape mode</returns>
         public virtual Entities.EscapeMode EscapeMode() {
@@ -504,31 +524,31 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </summary>
         /// <param name="escapeMode">the new escape mode to use</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings EscapeMode(Entities.EscapeMode escapeMode) {
+        public virtual OutputSettings EscapeMode(Entities.EscapeMode escapeMode) {
             this.escapeMode = escapeMode;
             return this;
         }
 
         /// <summary>
         /// Get the document's current output charset, which is used to control which characters are escaped when
-        /// generating HTML (via the <code>html()</code> methods), and which are kept intact.
+        /// generating HTML (via the <c>html()</c> methods), and which are kept intact.
         /// </summary>
         /// <remarks>
         /// Get the document's current output charset, which is used to control which characters are escaped when
-        /// generating HTML (via the <code>html()</code> methods), and which are kept intact.
+        /// generating HTML (via the <c>html()</c> methods), and which are kept intact.
         /// <para />
         /// Where possible (when parsing from a URL or File), the document's output charset is automatically set to the
         /// input charset. Otherwise, it defaults to UTF-8.
         /// </remarks>
         /// <returns>the document's current charset.</returns>
-        public virtual Encoding Charset() {
+        public virtual System.Text.Encoding Charset() {
             return charset;
         }
 
         /// <summary>Update the document's output charset.</summary>
         /// <param name="charset">the new charset to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Charset(Encoding charset) {
+        public virtual OutputSettings Charset(System.Text.Encoding charset) {
             this.charset = charset;
             charsetEncoder = iText.IO.Util.TextUtil.NewEncoder(charset);
             return this;
@@ -537,7 +557,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Update the document's output charset.</summary>
         /// <param name="charset">the new charset (by name) to use.</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Charset(String charset) {
+        public virtual OutputSettings Charset(String charset) {
             Charset(EncodingUtil.GetEncoding(charset));
             return this;
         }
@@ -558,8 +578,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// </remarks>
         /// <param name="syntax">serialization syntax</param>
         /// <returns>the document's output settings, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax
-             syntax) {
+        public virtual OutputSettings Syntax(iText.StyledXmlParser.Jsoup.Nodes.Syntax syntax) {
             this.syntax = syntax;
             return this;
         }
@@ -577,7 +596,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Enable or disable pretty printing.</summary>
         /// <param name="pretty">new pretty print setting</param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings PrettyPrint(bool pretty) {
+        public virtual OutputSettings PrettyPrint(bool pretty) {
             prettyPrint = pretty;
             return this;
         }
@@ -595,7 +614,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Enable or disable HTML outline mode.</summary>
         /// <param name="outlineMode">new outline setting</param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings Outline(bool outlineMode) {
+        public virtual OutputSettings Outline(bool outlineMode) {
             outline = outlineMode;
             return this;
         }
@@ -613,15 +632,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// 0.
         /// </param>
         /// <returns>this, for chaining</returns>
-        public virtual iText.StyledXmlParser.Jsoup.Nodes.OutputSettings IndentAmount(int indentAmount) {
+        public virtual OutputSettings IndentAmount(int indentAmount) {
             Validate.IsTrue(indentAmount >= 0);
             this.indentAmount = indentAmount;
             return this;
         }
 
         public virtual Object Clone() {
-            iText.StyledXmlParser.Jsoup.Nodes.OutputSettings clone;
-            clone = (iText.StyledXmlParser.Jsoup.Nodes.OutputSettings)MemberwiseClone();
+            OutputSettings clone;
+            clone = (OutputSettings)MemberwiseClone();
             clone.Charset(charset.Name());
             clone.escapeMode = Entities.EscapeMode.ValueOf(escapeMode.Name());
             return clone;

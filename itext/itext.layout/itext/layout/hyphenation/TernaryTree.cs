@@ -80,11 +80,13 @@ namespace iText.Layout.Hyphenation {
         /// <remarks>
         /// The character stored in this node: splitchar.
         /// Two special values are reserved:
-        /// <ul>
-        /// <li>0x0000 as string terminator
-        /// <li>0xFFFF to indicate that the branch starting at
+        /// <list type="bullet">
+        /// <item><description>0x0000 as string terminator
+        /// </description></item>
+        /// <item><description>0xFFFF to indicate that the branch starting at
         /// this node is compressed
-        /// </ul>
+        /// </description></item>
+        /// </list>
         /// This shouldn't be a problem if we give the usual semantics to
         /// strings since 0xFFFF is garanteed not to be an Unicode character.
         /// </remarks>
@@ -150,8 +152,9 @@ namespace iText.Layout.Hyphenation {
         /// <param name="val">a value</param>
         public virtual void Insert(String key, char val) {
             // make sure we have enough room in the arrays
-            int len = key.Length + 1;
-            // maximum number of nodes that may be generated
+            int len = key.Length + 
+                        // maximum number of nodes that may be generated
+                        1;
             if (freenode + len > eq.Length) {
                 RedimNodeArrays(eq.Length + BLOCK_SIZE);
             }
@@ -187,15 +190,15 @@ namespace iText.Layout.Hyphenation {
                 // Instead of doing that, we store the key somewhere else and create
                 // only one node with a pointer to the key
                 p = freenode++;
-                eq[p] = val;
                 // holds data
+                eq[p] = val;
                 length++;
                 hi[p] = (char)0;
                 if (len > 0) {
-                    sc[p] = (char)0xFFFF;
                     // indicates branch is compressed
-                    lo[p] = (char)kv.Alloc(len + 1);
+                    sc[p] = (char)0xFFFF;
                     // use 'lo' to hold pointer to key
+                    lo[p] = (char)kv.Alloc(len + 1);
                     Strcpy(kv.GetArray(), lo[p], key, start);
                 }
                 else {
@@ -228,10 +231,10 @@ namespace iText.Layout.Hyphenation {
                     // this will generate garbage in the external key array
                     // but we can do some garbage collection later
                     char pp = freenode++;
-                    lo[pp] = lo[p];
                     // previous pointer to key
-                    eq[pp] = eq[p];
+                    lo[pp] = lo[p];
                     // previous pointer to data
+                    eq[pp] = eq[p];
                     lo[p] = (char)0;
                     if (len > 0) {
                         sc[p] = kv.Get(lo[pp]);
@@ -565,6 +568,8 @@ namespace iText.Layout.Hyphenation {
             return new TernaryTreeIterator(this);
         }
 
+        // PLEASE NOTE that this is a helper class that was added as a result of the file modification
+        // and is not a part of the original file
         private class TreeInsertionParams {
             internal char p;
 
@@ -575,8 +580,6 @@ namespace iText.Layout.Hyphenation {
             internal char val;
 
             public TreeInsertionParams(char p, char[] key, int start, char val) {
-                // PLEASE NOTE that this is a helper class that was added as a result of the file modification
-                // and is not a part of the original file
                 this.p = p;
                 this.key = key;
                 this.start = start;

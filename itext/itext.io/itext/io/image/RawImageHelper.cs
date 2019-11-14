@@ -124,7 +124,6 @@ namespace iText.IO.Image {
         /// <param name="components">1,3 or 4 for GrayScale, RGB and CMYK</param>
         /// <param name="bpc">bits per component. Must be 1,2,4 or 8</param>
         /// <param name="data">the image data</param>
-        /// <exception cref="iText.IO.IOException">on error</exception>
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
             , int bpc, byte[] data) {
             image.SetHeight(height);

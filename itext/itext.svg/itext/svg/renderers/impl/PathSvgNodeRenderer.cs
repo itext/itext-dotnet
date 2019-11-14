@@ -62,10 +62,10 @@ namespace iText.Svg.Renderers.Impl {
     public class PathSvgNodeRenderer : AbstractSvgNodeRenderer {
         private const String SPACE_CHAR = " ";
 
-        /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// <summary>The regular expression to find invalid operators in the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to find invalid operators in the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         /// <para />
         /// Find any occurrence of a letter that is not an operator
         /// </remarks>
@@ -74,10 +74,10 @@ namespace iText.Svg.Renderers.Impl {
         private static Regex invalidRegexPattern = iText.IO.Util.StringUtil.RegexCompile(INVALID_OPERATOR_REGEX, System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
-        /// <summary>The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// <summary>The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         ///     </summary>
         /// <remarks>
-        /// The regular expression to split the <a href="https://www.w3.org/TR/SVG/paths.html#PathData">PathData attribute of the &ltpath&gt element</a>
+        /// The regular expression to split the <a href="https://www.w3.org/tr/svg/paths.html#pathdata">PathData attribute of the &lt;path&gt; element</a>
         /// <para />
         /// Since
         /// <see cref="ContainsInvalidAttributes(System.String)"/>
@@ -99,13 +99,25 @@ namespace iText.Svg.Renderers.Impl {
         /// The
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// representing the current point in the path to be used for relative pathing operations.
+        /// </summary>
+        /// <remarks>
+        /// The
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// representing the current point in the path to be used for relative pathing operations.
         /// The original value is the origin, and should be set via a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
         /// operation before it may be referenced.
-        /// </summary>
+        /// </remarks>
         private Point currentPoint = new Point(0, 0);
 
         /// <summary>
+        /// The
+        /// <see cref="iText.Svg.Renderers.Path.Impl.ClosePath"/>
+        /// shape keeping track of the initial point set by a
+        /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
+        /// operation.
+        /// </summary>
+        /// <remarks>
         /// The
         /// <see cref="iText.Svg.Renderers.Path.Impl.ClosePath"/>
         /// shape keeping track of the initial point set by a
@@ -116,7 +128,7 @@ namespace iText.Svg.Renderers.Impl {
         /// , and must be set via a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
         /// operation before it may be drawn.
-        /// </summary>
+        /// </remarks>
         private ClosePath zOperator = null;
 
         protected internal override void DoDraw(SvgDrawContext context) {
@@ -142,13 +154,14 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="shape">The current shape.</param>
         /// <param name="previousShape">The previous shape which can affect the coordinates of the current shape.</param>
         /// <param name="pathProperties">
-        /// The operator and all arguments as a
-        /// <see>String[]</see>
+        /// The operator and all arguments as an array of
+        /// <see cref="System.String">String</see>
+        /// s
         /// </param>
         /// <returns>
         /// a
-        /// <see>String[]</see>
-        /// of coordinates that shall be passed to
+        /// <see cref="System.String"/>
+        /// array of coordinates that shall be passed to
         /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[], iText.Kernel.Geom.Point)"/>
         /// </returns>
         private String[] GetShapeCoordinates(IPathShape shape, IPathShape previousShape, String[] pathProperties) {
@@ -192,8 +205,9 @@ namespace iText.Svg.Renderers.Impl {
         /// objects.
         /// </summary>
         /// <param name="pathProperties">
-        /// The property operator and all arguments as a
-        /// <see>String[]</see>
+        /// The property operator and all arguments as an array of
+        /// <see cref="System.String"/>
+        /// s
         /// </param>
         /// <param name="previousShape">
         /// The previous shape which can affect the positioning of the current shape. If no previous
@@ -285,11 +299,21 @@ namespace iText.Svg.Renderers.Impl {
         /// into one or more
         /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
         /// objects to be drawn on the canvas.
+        /// </summary>
+        /// <remarks>
+        /// Processes the
+        /// <see cref="iText.Svg.SvgConstants.Attributes.D"/>
+        /// 
+        /// <see cref="AbstractSvgNodeRenderer.attributesAndStyles"/>
+        /// and converts them
+        /// into one or more
+        /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
+        /// objects to be drawn on the canvas.
         /// <para />
         /// Each individual operator is passed to
         /// <see cref="ProcessPathOperator(System.String[], iText.Svg.Renderers.Path.IPathShape)"/>
         /// to be processed individually.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// a
         /// <see cref="System.Collections.ICollection{E}"/>
@@ -380,9 +404,8 @@ namespace iText.Svg.Renderers.Impl {
             return res.ToString();
         }
 
-        /// <summary>Gets an array of strings representing operators with their arguments, e.g.</summary>
-        /// <remarks>Gets an array of strings representing operators with their arguments, e.g. {"M 100 100", "L 300 100", "L200, 300", "z"}
-        ///     </remarks>
+        /// <summary>Gets an array of strings representing operators with their arguments, e.g. {"M 100 100", "L 300 100", "L200, 300", "z"}
+        ///     </summary>
         internal static String[] SplitPathStringIntoOperators(String path) {
             return iText.IO.Util.StringUtil.Split(SPLIT_PATTERN, path);
         }

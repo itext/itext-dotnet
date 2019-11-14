@@ -42,6 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Layout.Properties {
+    /// <summary>
+    /// A specialized enum containing potential property values for
+    /// <see cref="Property.VERTICAL_ALIGNMENT"/>.
+    /// </summary>
     public enum VerticalAlignment {
         TOP,
         MIDDLE,

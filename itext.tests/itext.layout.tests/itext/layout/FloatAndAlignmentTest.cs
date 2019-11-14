@@ -69,8 +69,6 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksInsideDiv() {
             /* this test shows different combinations of 3 float values blocks  within divParent containers
@@ -110,8 +108,6 @@ namespace iText.Layout {
                 , "diff01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksInsideDivFloat() {
             /* this test shows different combinations of 3 float values blocks  within divParent containers
@@ -151,8 +147,6 @@ namespace iText.Layout {
                 , "diff01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksInsideEachOther() {
             /* this test shows different combinations of float blocks  inside each other
@@ -194,8 +188,6 @@ namespace iText.Layout {
                 , "diff02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksInsideEachOther_sameFixedWidthsNesting() {
             /* this test shows different combinations of float blocks inside each other with blocks nested inside each other that have the same fixed width
@@ -237,8 +229,6 @@ namespace iText.Layout {
                 , "diff02_sameFixedWidth_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksNotInDivCenter() {
             /* this test shows different combinations of 3 float values blocks
@@ -252,8 +242,6 @@ namespace iText.Layout {
                 , "diff03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksNotInDivLeft() {
             /* this test shows different combinations of 3 float values blocks
@@ -267,8 +255,6 @@ namespace iText.Layout {
                 , "diff04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void BlocksNotInDivRight() {
             /* this test shows different combinations of 3 float values blocks
@@ -286,7 +272,6 @@ namespace iText.Layout {
                 , "diff05_"));
         }
 
-        /// <exception cref="System.IO.FileNotFoundException"/>
         private void CreateDocumentWithBlocks(String outFileName, HorizontalAlignment? horizontalAlignment) {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetTagged();
@@ -316,8 +301,6 @@ namespace iText.Layout {
             document.Close();
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest01() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest01";
@@ -338,8 +321,6 @@ namespace iText.Layout {
                 , "diffTextAlign01_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest02() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest02";
@@ -361,8 +342,6 @@ namespace iText.Layout {
                 , "diffTextAlign02_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest03() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest03";
@@ -385,8 +364,6 @@ namespace iText.Layout {
                 , "diffTextAlign03_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void InlineBlocksAndFloatsWithTextAlignmentTest04() {
             String testName = "inlineBlocksAndFloatsWithTextAlignmentTest04";
@@ -418,8 +395,6 @@ namespace iText.Layout {
                 , "diffTextAlign04_"));
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FloatsOnlyJustificationTest01() {
             String testName = "floatsOnlyJustificationTest01";

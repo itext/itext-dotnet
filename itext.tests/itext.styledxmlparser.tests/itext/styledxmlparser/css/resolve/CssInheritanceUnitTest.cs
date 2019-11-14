@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.StyledXmlParser.Css;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Resolve {
-    public class CssInheritanceUnitTest {
+    public class CssInheritanceUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IsInheritablePositiveTest() {
             IStyleInheritance cssInheritance = new CssInheritance();

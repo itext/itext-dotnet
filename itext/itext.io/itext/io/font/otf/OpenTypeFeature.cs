@@ -49,15 +49,14 @@ namespace iText.IO.Font.Otf {
 
         private IList<FeatureRecord> records;
 
-        /// <exception cref="System.IO.IOException"/>
         public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable) {
             this.openTypeReader = openTypeReader;
             records = new List<FeatureRecord>();
             openTypeReader.rf.Seek(locationFeatureTable);
             TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable);
             foreach (TagAndLocation tagLoc in tagsLocs) {
-                openTypeReader.rf.Seek(tagLoc.location + 2);
-                //+2 don't use FeatureParams
+                // +2 don't use FeatureParams
+                openTypeReader.rf.Seek(tagLoc.location + 2L);
                 int lookupCount = openTypeReader.rf.ReadUnsignedShort();
                 FeatureRecord rec = new FeatureRecord();
                 rec.tag = tagLoc.tag;

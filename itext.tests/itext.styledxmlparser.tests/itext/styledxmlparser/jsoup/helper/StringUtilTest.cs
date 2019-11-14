@@ -42,9 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Util;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
-    public class StringUtilTest {
+    public class StringUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Join() {
             NUnit.Framework.Assert.AreEqual("", iText.StyledXmlParser.Jsoup.Helper.StringUtil.Join(JavaUtil.ArraysAsList

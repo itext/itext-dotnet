@@ -166,6 +166,12 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="CheckRadius(float, float)"/>
         /// isn't enough: the radius cannot be more than half of the <b>smallest</b>
         /// dimension.
+        /// </summary>
+        /// <remarks>
+        /// In case of a circular radius, the calculation in
+        /// <see cref="CheckRadius(float, float)"/>
+        /// isn't enough: the radius cannot be more than half of the <b>smallest</b>
+        /// dimension.
         /// This method assumes that
         /// <see cref="CheckRadius(float, float)"/>
         /// has already run, and it is
@@ -174,7 +180,7 @@ namespace iText.Svg.Renderers.Impl {
         /// or
         /// <paramref name="ry"/>
         /// is zero.
-        /// </summary>
+        /// </remarks>
         internal virtual float FindCircularRadius(float rx, float ry, float width, float height) {
             // see https://www.w3.org/TR/SVG/shapes.html#RectElementRYAttribute
             float maxRadius = Math.Min(width, height) / 2f;

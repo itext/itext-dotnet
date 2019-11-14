@@ -98,7 +98,6 @@ namespace iText.Kernel.Pdf {
             return new SerializedObjectContent(content);
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerObject(PdfObject obj, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             if (level <= 0) {
@@ -145,28 +144,27 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (obj.IsString()) {
+                            // TODO specify length for strings, streams, may be names?
                             bb.Append("$S").Append(obj.ToString());
                         }
                         else {
-                            // TODO specify length for strings, streams, may be names?
                             if (obj.IsName()) {
                                 bb.Append("$N").Append(obj.ToString());
                             }
                             else {
+                                // PdfNull case is also here
                                 bb.Append("$L").Append(obj.ToString());
                             }
                         }
                     }
                 }
             }
-            // PdfNull case is also here
             if (savedBb != null) {
                 serializedCache.Put(reference, bb.ToByteArray());
                 savedBb.Append(bb.GetInternalBuffer(), 0, bb.Size());
             }
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerDic(PdfDictionary dic, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]>
              serializedCache) {
             bb.Append("$D");
@@ -183,7 +181,6 @@ namespace iText.Kernel.Pdf {
             bb.Append("$\\D");
         }
 
-        /// <exception cref="iText.Kernel.Pdf.SmartModePdfObjectsSerializer.SelfReferenceException"/>
         private void SerArray(PdfArray array, ByteBuffer bb, int level, IDictionary<PdfIndirectReference, byte[]> 
             serializedCache) {
             bb.Append("$A");

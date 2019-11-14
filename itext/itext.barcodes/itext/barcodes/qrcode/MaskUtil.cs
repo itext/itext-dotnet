@@ -250,14 +250,14 @@ namespace iText.Barcodes.Qrcode {
                         }
                     }
                     else {
-                        numSameBitCells = 1;
                         // Include the cell itself.
+                        numSameBitCells = 1;
                         prevBit = bit;
                     }
                 }
+                // Clear at each row/column.
                 numSameBitCells = 0;
             }
-            // Clear at each row/column.
             return penalty;
         }
     }

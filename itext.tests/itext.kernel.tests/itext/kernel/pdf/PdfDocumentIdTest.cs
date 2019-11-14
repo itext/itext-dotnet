@@ -64,7 +64,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest() {
             MemoryStream baos = new MemoryStream();
@@ -86,7 +85,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(value, extractedValue);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest02() {
             MemoryStream baos = new MemoryStream();
@@ -113,7 +111,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(initialId, extractedString);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest03() {
             MemoryStream baosInitial = new MemoryStream();
@@ -159,7 +156,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreNotEqual(modifiedId, extractedModifiedValue);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FetchReaderIdTest() {
             MemoryStream baos = new MemoryStream();
@@ -187,7 +183,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(firstModifiedId, secondModifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void WriterPropertiesPriorityTest() {
             MemoryStream baos = new MemoryStream();
@@ -220,7 +215,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(extractedModifiedId, newModifiedId.GetValue());
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadPdfWithTwoStringIdsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithTwoStringIds.pdf"));
@@ -237,7 +231,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(modifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithTwoNumberIdsTest() {
@@ -255,7 +248,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(modifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneNumberOneStringIdsTest() {
@@ -274,7 +266,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(modifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneStringIdValueTest() {
@@ -292,7 +283,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(modifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithOneNumberIdValueTest() {
@@ -310,7 +300,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(modifiedId);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED)]
         public virtual void ReadPdfWithNoIdTest() {

@@ -71,30 +71,18 @@ namespace iText.Signatures.Sign {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTest01() {
             SignApproval(certsSrc + "signCertRsa01.p12", destinationFolder + "padesRsaSigTest01.pdf");
             BasicCheckSignedDoc(destinationFolder + "padesRsaSigTest01.pdf", "Signature1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesRsaSigTestWithChain01() {
             SignApproval(certsSrc + "signCertRsaWithChain.p12", destinationFolder + "padesRsaSigTestWithChain01.pdf");
             BasicCheckSignedDoc(destinationFolder + "padesRsaSigTestWithChain01.pdf", "Signature1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1620: For some reason signatures created with the given cert (either by iText or acrobat) are considered invalid"
             )]
@@ -102,10 +90,6 @@ namespace iText.Signatures.Sign {
             SignApproval(certsSrc + "signCertDsa01.p12", destinationFolder + "padesDsaSigTest01.pdf");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
-        /// <exception cref="Org.BouncyCastle.Operator.OperatorCreationException"/>
         [NUnit.Framework.Test]
         public virtual void PadesEccSigTest01() {
             SignApproval(certsSrc + "signCertEcc01.p12", destinationFolder + "padesEccSigTest01.pdf");
@@ -113,8 +97,6 @@ namespace iText.Signatures.Sign {
             BasicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         [NUnit.Framework.Test]
         public virtual void PadesEpesProfileTest01() {
             String notExistingSignaturePolicyOid = "2.16.724.631.3.1.124.2.29.9";
@@ -133,14 +115,10 @@ namespace iText.Signatures.Sign {
             BasicCheckSignedDoc(destinationFolder + "padesEpesProfileTest01.pdf", "Signature1");
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private void SignApproval(String signCertFileName, String outFileName) {
             SignApproval(signCertFileName, outFileName, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         private void SignApproval(String signCertFileName, String outFileName, SignaturePolicyIdentifier sigPolicyInfo
             ) {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
@@ -160,8 +138,6 @@ namespace iText.Signatures.Sign {
             }
         }
 
-        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        /// <exception cref="System.IO.IOException"/>
         internal static void BasicCheckSignedDoc(String filePath, String signatureName) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(filePath));
             SignatureUtil sigUtil = new SignatureUtil(outDocument);

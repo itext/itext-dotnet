@@ -42,13 +42,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Helper {
-    public class DataUtilTest {
+    public class DataUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCharset() {
             NUnit.Framework.Assert.AreEqual("utf-8", DataUtil.GetCharsetFromContentType("text/html;charset=utf-8 "));
@@ -140,7 +140,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SupportsBOMinFiles() {
             // test files from http://www.i18nl10n.com/korean/utftest/

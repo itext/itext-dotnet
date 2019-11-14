@@ -47,15 +47,19 @@ using iText.StyledXmlParser.Jsoup.Nodes;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>
     /// Parses HTML into a
+    /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Document"/>.
+    /// </summary>
+    /// <remarks>
+    /// Parses HTML into a
     /// <see cref="iText.StyledXmlParser.Jsoup.Nodes.Document"/>
     /// . Generally best to use one of the  more convenient parse methods
     /// in
-    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>
-    /// .
-    /// </summary>
+    /// <see cref="iText.StyledXmlParser.Jsoup.Jsoup"/>.
+    /// </remarks>
     public class Parser {
         private const int DEFAULT_MAX_ERRORS = 0;
 
+        // by default, error tracking is disabled.
         private TreeBuilder treeBuilder;
 
         private int maxErrors = DEFAULT_MAX_ERRORS;
@@ -65,7 +69,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         /// <summary>Create a new Parser, using the specified TreeBuilder</summary>
         /// <param name="treeBuilder">TreeBuilder to use to parse input into Documents.</param>
         public Parser(TreeBuilder treeBuilder) {
-            // by default, error tracking is disabled.
             this.treeBuilder = treeBuilder;
         }
 

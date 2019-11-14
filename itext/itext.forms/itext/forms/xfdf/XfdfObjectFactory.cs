@@ -54,9 +54,9 @@ namespace iText.Forms.Xfdf {
     public class XfdfObjectFactory {
         private static ILog logger = LogManager.GetLogger(typeof(XfdfObjectFactory));
 
-        /// <summary>The method extracts data from pdf document acroform and annotations into XfdfObject.</summary>
+        /// <summary>Extracts data from pdf document acroform and annotations into XfdfObject.</summary>
         /// <remarks>
-        /// The method extracts data from pdf document acroform and annotations into XfdfObject.
+        /// Extracts data from pdf document acroform and annotations into XfdfObject.
         /// *
         /// </remarks>
         /// <param name="document">Pdf document for data extraction.</param>
@@ -96,9 +96,10 @@ namespace iText.Forms.Xfdf {
             return resultXfdf;
         }
 
-        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <summary>Extracts data from input stream into XfdfObject.</summary>
+        /// <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file</remarks>
+        /// <param name="xfdfInputStream">The input stream containing xml-styled xfdf data.</param>
+        /// <returns>XfdfObject containing original xfdf data.</returns>
         public virtual XfdfObject CreateXfdfObject(Stream xfdfInputStream) {
             XfdfObject xfdfObject = new XfdfObject();
             XmlDocument document = XfdfFileUtils.CreateXfdfDocumentFromStream(xfdfInputStream);
@@ -243,9 +244,8 @@ namespace iText.Forms.Xfdf {
             }
         }
 
-        //getTextContent?
         private void VisitContentsRichTextSubelement(XmlNode parentNode, AnnotObject annotObject) {
-            //no attributes, inside a text string or rich text string
+            // no attributes, inside a text string or rich text string
             XmlNodeList children = parentNode.ChildNodes;
             for (int temp = 0; temp < children.Count; temp++) {
                 XmlNode node = children.Item(temp);
@@ -255,7 +255,6 @@ namespace iText.Forms.Xfdf {
             }
         }
 
-        //getTextContent?
         private void VisitVerticesSubelement(XmlNode parentNode, AnnotObject annotObject) {
             //no attributes, inside a text string
             XmlNodeList children = parentNode.ChildNodes;
@@ -300,7 +299,7 @@ namespace iText.Forms.Xfdf {
                     }
 
                     default: {
-                        logger.Warn(XfdfConstants.UNSUPPORTED_ANNOTATION_ATTRIBUTE);
+                        logger.Warn(iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE);
                         break;
                     }
                 }

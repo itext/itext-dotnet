@@ -52,7 +52,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/BidiTextExtractionTest/";
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in01.pdf"));
@@ -65,7 +64,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(expected, actualText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test02() {
             // Again not completely correct. see test04()
@@ -93,7 +91,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test03() {
             // This is an example from the spec section 14.8.2.5.3. Not actually bidi, just reversedChars
@@ -107,7 +104,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(expectedText, actualText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Test04() {
             // Not completely correct. The brackets are different. They are extracted like in visual representation, not in logical one
@@ -119,7 +115,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(expectedText, actualText);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("see DEVSIX-854")]
         public virtual void Test05() {

@@ -56,19 +56,16 @@ namespace iText.IO.Font.Woff2 {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleTtfTest() {
             RunTest("NotoSansCJKtc-Regular");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void BigTTCTest() {
             RunTest("NotoSansCJK-Regular");
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private void RunTest(String fontName) {
             RunTest(fontName, sourceFolder, targetFolder, true);
         }

@@ -71,7 +71,6 @@ namespace iText.IO.Font {
 
         private int[] fontStreamLengths;
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal static iText.IO.Font.Type1Font CreateStandardFont(String name) {
             if (StandardFonts.IsStandardFont(name)) {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
@@ -85,7 +84,6 @@ namespace iText.IO.Font {
             fontNames = new FontNames();
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
             : this() {
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
@@ -243,7 +241,6 @@ namespace iText.IO.Font {
             return Object.Equals(fontParser.GetAfmPath(), fontProgram);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Process() {
             RandomAccessFileOrArray raf = fontParser.GetMetricsFile();
             String line;

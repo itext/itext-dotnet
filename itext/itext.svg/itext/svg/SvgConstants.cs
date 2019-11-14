@@ -57,8 +57,7 @@ namespace iText.Svg {
             /// <summary>Tag defining a Hyperlink.</summary>
             public const String A = "a";
 
-            /// <summary>Alternate glyphs to be used instead of regular grlyphs, e.g.</summary>
-            /// <remarks>Alternate glyphs to be used instead of regular grlyphs, e.g. ligatures, Asian scripts, ...</remarks>
+            /// <summary>Alternate glyphs to be used instead of regular grlyphs, e.g. ligatures, Asian scripts, ...</summary>
             public const String ALT_GLYPH = "altGlyph";
 
             /// <summary>Defines a set of glyph substitions.</summary>
@@ -81,8 +80,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.CircleSvgNodeRenderer">circle</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.CircleSvgNodeRenderer">circle</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String CIRCLE = "circle";
@@ -106,8 +104,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining an
-            /// <see cref="iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer">ellipse</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.EllipseSvgNodeRenderer">ellipse</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String ELLIPSE = "ellipse";
@@ -227,8 +224,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.LineSvgNodeRenderer">line</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.LineSvgNodeRenderer">line</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String LINE = "line";
@@ -257,8 +253,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer">path</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer">path</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String PATH = "path";
@@ -287,8 +282,7 @@ namespace iText.Svg {
 
             /// <summary>
             /// Tag defining a
-            /// <see cref="iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer">rectangle</see>
-            /// .
+            /// <see cref="iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer">rectangle</see>.
             /// </summary>
             /// <since>7.1.2</since>
             public const String RECT = "rect";
@@ -567,13 +561,10 @@ namespace iText.Svg {
             public const String BUTT = "butt";
 
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
-            public const String DEFAULT_ASPECT_RATIO = "xmidymid";
+            public const String DEFAULT_ASPECT_RATIO = SvgConstants.Values.XMID_YMID;
 
             /// <summary>Value representing how to preserve the aspect ratio when dealing with images.</summary>
             public const String DEFER = "defer";
-
-            /// <summary>Value representing the text-alignment end for text objects</summary>
-            public const String TEXT_ANCHOR_END = "end";
 
             /// <summary>Value representing the fill rule "even odd".</summary>
             public const String FILL_RULE_EVEN_ODD = "evenodd";
@@ -581,17 +572,28 @@ namespace iText.Svg {
             /// <summary>Value representing the fill rule "nonzero".</summary>
             public const String FILL_RULE_NONZERO = "nonzero";
 
-            /// <summary>Value representing the text-alignment middle for text objects</summary>
-            public const String TEXT_ANCHOR_MIDDLE = "middle";
+            /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
+            public const String MEET = "meet";
 
             /// <summary>Value representing the "none" value".</summary>
             public const String NONE = "none";
 
+            /// <summary>The value representing slice for the preserve aspect ratio calculations;</summary>
+            public const String SLICE = "slice";
+
+            /// <summary>The value corresponding with the namespace url for SVG.</summary>
+            /// <remarks>The value corresponding with the namespace url for SVG. Will be removed since version 7.2.</remarks>
+            [Obsolete]
+            public const String SVGNAMESPACEURL = "http://www.w3.org/2000/svg";
+
+            /// <summary>Value representing the text-alignment end for text objects</summary>
+            public const String TEXT_ANCHOR_END = "end";
+
+            /// <summary>Value representing the text-alignment middle for text objects</summary>
+            public const String TEXT_ANCHOR_MIDDLE = "middle";
+
             /// <summary>Value representing the text-alignment start for text objects</summary>
             public const String TEXT_ANCHOR_START = "start";
-
-            /// <summary>The value corresponding with the namespace url for SVG</summary>
-            public const String SVGNAMESPACEURL = "http://www.w3.org/2000/svg";
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";
@@ -601,6 +603,9 @@ namespace iText.Svg {
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMAX = "xminymax";
+
+            /// <summary>Value representing how to align when scaling.</summary>
+            public const String XMID_YMID = "xmidymid";
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMID_YMIN = "xmidymin";

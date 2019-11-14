@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetPdfObject().GetAsString(PdfName.N).ToUnicodeString();
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetName(String name) {
+        public virtual PdfUserProperty SetName(String name) {
             GetPdfObject().Put(PdfName.N, new PdfString(name, PdfEncodings.UNICODE_BIG));
             return this;
         }
@@ -114,22 +114,22 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetValue(String value) {
+        public virtual PdfUserProperty SetValue(String value) {
             GetPdfObject().Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
             return this;
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetValue(int value) {
+        public virtual PdfUserProperty SetValue(int value) {
             GetPdfObject().Put(PdfName.V, new PdfNumber(value));
             return this;
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetValue(float value) {
+        public virtual PdfUserProperty SetValue(float value) {
             GetPdfObject().Put(PdfName.V, new PdfNumber(value));
             return this;
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetValue(bool value) {
+        public virtual PdfUserProperty SetValue(bool value) {
             GetPdfObject().Put(PdfName.V, new PdfBoolean(value));
             return this;
         }
@@ -153,8 +153,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return f != null ? f.ToUnicodeString() : null;
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetValueFormattedRepresentation(String formattedRepresentation
-            ) {
+        public virtual PdfUserProperty SetValueFormattedRepresentation(String formattedRepresentation) {
             GetPdfObject().Put(PdfName.F, new PdfString(formattedRepresentation, PdfEncodings.UNICODE_BIG));
             return this;
         }
@@ -163,7 +162,7 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetPdfObject().GetAsBool(PdfName.H);
         }
 
-        public virtual iText.Kernel.Pdf.Tagging.PdfUserProperty SetHidden(bool isHidden) {
+        public virtual PdfUserProperty SetHidden(bool isHidden) {
             GetPdfObject().Put(PdfName.H, new PdfBoolean(isHidden));
             return this;
         }
