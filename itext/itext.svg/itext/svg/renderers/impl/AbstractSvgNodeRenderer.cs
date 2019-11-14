@@ -292,7 +292,8 @@ namespace iText.Svg.Renderers.Impl {
                                 }
                                 currentCanvas.SetStrokeColor(rgbColor);
                                 String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                                float strokeWidth = 1f;
+                                // 1 px = 0,75 pt
+                                float strokeWidth = 0.75f;
                                 if (strokeWidthRawValue != null) {
                                     strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
                                 }
