@@ -156,5 +156,15 @@ namespace iText.Signatures
                 SignUtils.HasUnsupportedCriticalExtension(null);
             }, NUnit.Framework.Throws.TypeOf<ArgumentException>());;
         }
+        
+        [NUnit.Framework.Test]
+        public void CertificateHasNoExtensionsTest()
+        {
+            X509MockCertificate cert = new X509MockCertificate();
+            
+            cert.SetCriticalExtensions(null);
+
+            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+        }
     }
 }

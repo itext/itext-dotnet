@@ -64,6 +64,7 @@ using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Tsp;
+using Org.BouncyCastle.Utilities.Collections;
 using Org.BouncyCastle.X509;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
@@ -252,11 +253,15 @@ namespace iText.Signatures {
                 throw new ArgumentException("X509Certificate can't be null.");
             }
 
-            foreach (String oid in cert.GetCriticalExtensionOids()) {
-                if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
-                    continue;
+            ISet criticalExtensionsSet = cert.GetCriticalExtensionOids();
+            if (criticalExtensionsSet != null) {
+                foreach (String oid in criticalExtensionsSet) {
+                    if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
+                        continue;
+                        
+                    }
+                    return true;
                 }
-                return true;
             }
             return false;
         }
