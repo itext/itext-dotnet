@@ -60,11 +60,10 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        public virtual void FormFlatteningTestWithAPWithoutSubtype() {
-            String filename = "job_application_filled";
-            String src = sourceFolder + filename + ".pdf";
-            String dest = destinationFolder + filename + "_flattened.pdf";
-            String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";
+        public virtual void FlatteningFormFieldNoSubtypeInAPTest() {
+            String src = sourceFolder + "formFieldNoSubtypeInAPTest.pdf";
+            String dest = destinationFolder + "flatteningFormFieldNoSubtypeInAPTest.pdf";
+            String cmp = sourceFolder + "cmp_flatteningFormFieldNoSubtypeInAPTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
             PdfAcroForm.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
