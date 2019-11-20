@@ -45,40 +45,81 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>Allows configuration of output PDF encryption.</summary>
     public class EncryptionProperties {
         protected internal int encryptionAlgorithm;
 
-        /// <summary>StandardEncryption properties</summary>
+        // StandardEncryption properties
         protected internal byte[] userPassword;
 
         protected internal byte[] ownerPassword;
 
         protected internal int standardEncryptPermissions;
 
-        /// <summary>PublicKeyEncryption properties</summary>
+        // PublicKeyEncryption properties
         protected internal X509Certificate[] publicCertificates;
 
         protected internal int[] publicKeyEncryptPermissions;
 
         /// <summary>Sets the encryption options for the document.</summary>
-        /// <remarks>
-        /// Sets the encryption options for the document. The userPassword and the
-        /// ownerPassword can be null or have zero length. In this case the ownerPassword
-        /// is replaced by a random string. The open permissions for the document can be
-        /// ALLOW_PRINTING, ALLOW_MODIFY_CONTENTS, ALLOW_COPY, ALLOW_MODIFY_ANNOTATIONS,
-        /// ALLOW_FILL_IN, ALLOW_SCREENREADERS, ALLOW_ASSEMBLY and ALLOW_DEGRADED_PRINTING.
-        /// The permissions can be combined by ORing them.
-        /// See
-        /// <see cref="EncryptionConstants"/>.
-        /// </remarks>
-        /// <param name="userPassword">the user password. Can be null or empty</param>
-        /// <param name="ownerPassword">the owner password. Can be null or empty</param>
-        /// <param name="permissions">the user permissions</param>
-        /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
-        /// ENCRYPTION_AES128 or ENCRYPTION_AES256
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
+        /// <param name="userPassword">
+        /// the user password. Can be null or of zero length, which is equal to
+        /// omitting the user password
         /// </param>
+        /// <param name="ownerPassword">
+        /// the owner password. If it's null or empty, iText will generate
+        /// a random string to be used as the owner password
+        /// </param>
+        /// <param name="permissions">
+        /// the user permissions. The open permissions for the document can be
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
+        /// The permissions can be combined by ORing them
+        /// </param>
+        /// <param name="encryptionAlgorithm">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants#ENCRYPTION_AES128"/>
+        /// or
+        /// <see cref="EncryptionConstants#ENCRYPTION_AES256"/>.
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be OEed
+        /// to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="EncryptionProperties"/>
+        /// </returns>
         public virtual EncryptionProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword, int permissions
             , int encryptionAlgorithm) {
             ClearEncryption();
@@ -97,22 +138,62 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Sets the certificate encryption options for the document.</summary>
         /// <remarks>
-        /// Sets the certificate encryption options for the document. An array of one or more public certificates
-        /// must be provided together with an array of the same size for the permissions for each certificate.
-        /// The open permissions for the document can be
-        /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
-        /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
-        /// The permissions can be combined by ORing them.
-        /// Optionally DO_NOT_ENCRYPT_METADATA can be ORed to output the metadata in cleartext
-        /// See
-        /// <see cref="EncryptionConstants"/>.
+        /// Sets the certificate encryption options for the document.
+        /// <para />
+        /// An array of one or more public certificates must be provided together with an array of the same size
+        /// for the permissions for each certificate.
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
-        /// <param name="permissions">the user permissions for each of the certificates</param>
-        /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of STANDARD_ENCRYPTION_40, STANDARD_ENCRYPTION_128,
-        /// ENCRYPTION_AES128 or ENCRYPTION_AES256.
+        /// <param name="permissions">
+        /// the user permissions for each of the certificates
+        /// The open permissions for the document can be
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
+        /// The permissions can be combined by ORing them
         /// </param>
+        /// <param name="encryptionAlgorithm">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants#ENCRYPTION_AES128"/>
+        /// or
+        /// <see cref="EncryptionConstants#ENCRYPTION_AES256"/>.
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="EncryptionProperties"/>
+        /// </returns>
         public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions, int
              encryptionAlgorithm) {
             ClearEncryption();
