@@ -330,6 +330,8 @@ namespace iText.IO {
 
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
 
+        public const String XOBJECT_HAS_NO_STRUCT_PARENTS = "XObject has no StructParents entry in its stream, no entry in ParentTree will be created for the corresponding structure elements";
+
         [System.ObsoleteAttribute(@"Use XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT instead. The constant will be removed in 7.2."
             )]
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";

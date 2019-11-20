@@ -346,8 +346,9 @@ namespace iText.Kernel.Pdf.Tagging {
         /// actual page tags.
         /// </remarks>
         public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page) {
-            IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences(page);
-            return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values) : null;
+            ParentTreeHandler.PageMcrsContainer pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences(page);
+            return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.GetAllMcrsAsCollection()) : 
+                null;
         }
 
         public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid) {

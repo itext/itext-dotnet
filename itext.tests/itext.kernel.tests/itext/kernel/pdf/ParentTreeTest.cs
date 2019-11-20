@@ -90,10 +90,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        [NUnit.Framework.Ignore("works in non-deterministic way because of the bug in iText code, DEVSIX-3322")]
         [NUnit.Framework.Test]
         public virtual void StampingFormXobjectInnerContentTaggedTest() {
-            //TODO update cmp-file after DEVSIX-3322 fixed
             String pdf = sourceFolder + "alreadyTaggedFormXObjectInnerContent.pdf";
             String outPdf = destinationFolder + "stampingFormXobjectInnerContentTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_stampingFormXobjectInnerContentTaggedTest.pdf";
@@ -105,6 +103,30 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SeveralXObjectsOnOnePageTest() {
+            String pdf = sourceFolder + "severalXObjectsOnOnePageTest.pdf";
+            String outPdf = destinationFolder + "severalXObjectsOnOnePageTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_severalXObjectsOnOnePageTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.SetTagged();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EarlyFlushXObjectTaggedTest() {
+            String pdf = sourceFolder + "earlyFlushXObjectTaggedTest.pdf";
+            String outPdf = destinationFolder + "earlyFlushXObjectTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_earlyFlushXObjectTaggedTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDictionary resource = taggedPdf.GetFirstPage().GetResources().GetResource(PdfName.XObject);
+            resource.Get(new PdfName("Fm1")).Flush();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
         public virtual void Test02() {
             String outFile = destinationFolder + "parentTreeTest02.pdf";
             String cmpFile = sourceFolder + "cmp_parentTreeTest02.pdf";

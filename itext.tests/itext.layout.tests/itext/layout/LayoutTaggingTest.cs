@@ -786,8 +786,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        //TODO update cmp-file after DEVSIX-3351 fixed
+        [LogMessage(iText.IO.LogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
-            //TODO update cmp-file after DEVSIX-3351 fixed
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));

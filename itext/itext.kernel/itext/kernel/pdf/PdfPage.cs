@@ -937,7 +937,7 @@ namespace iText.Kernel.Pdf {
             return GetContentStream(index).GetBytes();
         }
 
-        /// <summary>Calculates and returns next available MCID reference.</summary>
+        /// <summary>Calculates and returns the next available for this page's content stream MCID reference.</summary>
         /// <returns>calculated MCID reference.</returns>
         public virtual int GetNextMcid() {
             if (!GetDocument().IsTagged()) {
