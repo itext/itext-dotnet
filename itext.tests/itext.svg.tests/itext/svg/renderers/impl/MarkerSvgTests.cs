@@ -75,7 +75,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void Markers_in_different_elements() {
             //TODO: update when DEVSIX-2262, 2860 and DEVSIX-2719 fixed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "Markers_in_elements");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markers_in_elements");
         }
 
         [NUnit.Framework.Test]
