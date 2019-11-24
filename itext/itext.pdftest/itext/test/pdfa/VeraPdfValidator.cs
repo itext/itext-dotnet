@@ -70,6 +70,8 @@ namespace iText.Test.Pdfa
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             p.Start();
             
             String result = HandleVeraPdfOutput(p, dest);
