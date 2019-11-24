@@ -50,21 +50,18 @@ using System.Xml;
 using iText.IO.Util;
 using NUnit.Framework;
 
-namespace iText.Test.Pdfa
-{
-    public class VeraPdfValidator
-    {
+namespace iText.Test.Pdfa {
+    public class VeraPdfValidator {
         private String cliCommand = "java -classpath \"<libPath>\\*\" -Dfile.encoding=UTF8 " +
                                     "-XX:+IgnoreUnrecognizedVMOptions -Dapp.name=\"VeraPDF validation GUI\" " +
                                     "-Dapp.repo=\"<libPath>\" -Dapp.home=\"../\" " +
                                     "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper ";
 
-        public String Validate(String dest)
-        {
+        public String Validate(String dest) {
             Process p = new Process();
-            String currentCommand = cliCommand.Replace("<libPath>", 
+            String currentCommand = cliCommand.Replace("<libPath>",
                 TestContext.CurrentContext.TestDirectory + "\\lib\\VeraPdf");
-            
+
             p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest);
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
@@ -73,75 +70,63 @@ namespace iText.Test.Pdfa
             p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
             p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             p.Start();
-            
+
             String result = HandleVeraPdfOutput(p, dest);
             p.WaitForExit();
 
             return result;
         }
-        
-        private string HandleVeraPdfOutput(Process p, String dest)
-        {
+
+        private string HandleVeraPdfOutput(Process p, String dest) {
             StringBuilder standardOutput = new StringBuilder();
             StringBuilder standardError = new StringBuilder();
 
-            while (!p.HasExited)
-            {
+            while (!p.HasExited) {
                 standardOutput.Append(p.StandardOutput.ReadToEnd());
                 standardError.Append(p.StandardError.ReadToEnd());
             }
 
-            if (!String.IsNullOrEmpty(standardError.ToString()))
-            {
+            if (!String.IsNullOrEmpty(standardError.ToString())) {
                 return "VeraPDF execution failed: " + standardError;
-            }
-            else if (String.IsNullOrEmpty(standardOutput.ToString()))
-            {
+            } else if (String.IsNullOrEmpty(standardOutput.ToString())) {
                 return "VeraPDF execution failed: Standart output is empty" + standardOutput;
             }
 
             return GenerateReport(standardOutput.ToString(), dest, true);
         }
 
-        private String GenerateReport(String output, String dest, bool toReportSuccess)
-        {
+        private String GenerateReport(String output, String dest, bool toReportSuccess) {
             XmlDocument document = new XmlDocument();
 
-            try
-            {
+            try {
                 document.LoadXml(output.Trim());
             }
-            catch (XmlException exc)
-            {
+            catch (XmlException exc) {
                 return "VeraPDF verification results parsing failed: " + exc.Message;
             }
 
             String reportDest = dest.Substring(0, dest.Length - ".pdf".Length) + ".xml";
 
             XmlAttributeCollection detailsAttributes = document.GetElementsByTagName("details")[0].Attributes;
-            
-            if (!detailsAttributes["failedRules"].Value.Equals("0") ||
-                !detailsAttributes["failedChecks"].Value.Equals("0"))
-            {
+
+            if (!detailsAttributes["failedRules"].Value.Equals("0")
+                || !detailsAttributes["failedChecks"].Value.Equals("0")) {
                 WriteToFile(output, reportDest);
                 return "VeraPDF verification failed. See verification results: file:///"
                        + UrlUtil.ToNormalizedURI(reportDest).AbsolutePath;
             }
-            
-            if (toReportSuccess)
-            {
+
+            if (toReportSuccess) {
                 WriteToFile(output, reportDest);
-                Console.WriteLine("VeraPDF verification finished. See verification report: file:///" 
+                Console.WriteLine("VeraPDF verification finished. See verification report: file:///"
                                   + UrlUtil.ToNormalizedURI(reportDest).AbsolutePath);
             }
 
             return null;
         }
 
-        private void WriteToFile(String output, String reportDest)
-        {
-            using (FileStream stream = File.Create(reportDest))
-            {
+        private void WriteToFile(String output, String reportDest) {
+            using (FileStream stream = File.Create(reportDest)) {
                 stream.Write(new UTF8Encoding(true).GetBytes(output),
                     0, output.Length);
             }
