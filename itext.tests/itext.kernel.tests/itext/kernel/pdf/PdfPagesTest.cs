@@ -501,5 +501,33 @@ namespace iText.Kernel.Pdf {
             , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)))
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyPagesAreNotReadOnOpenTest() {
+            String srcFile = sourceFolder + "taggedOnePage.pdf";
+            PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
+            PdfDocument document = new PdfDocument(reader);
+            document.Close();
+            NUnit.Framework.Assert.IsFalse(reader.undesiredPageHasBeenRead);
+        }
+
+        private class CustomPdfReader : PdfReader {
+            public bool undesiredPageHasBeenRead = false;
+
+            public CustomPdfReader(PdfPagesTest _enclosing, String filename)
+                : base(filename) {
+                this._enclosing = _enclosing;
+            }
+
+            protected internal override PdfObject ReadObject(PdfIndirectReference reference) {
+                PdfObject toReturn = base.ReadObject(reference);
+                if (reference.GetObjNumber() == 6) {
+                    this.undesiredPageHasBeenRead = true;
+                }
+                return toReturn;
+            }
+
+            private readonly PdfPagesTest _enclosing;
+        }
     }
 }

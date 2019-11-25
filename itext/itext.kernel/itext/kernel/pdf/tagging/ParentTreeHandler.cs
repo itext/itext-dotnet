@@ -147,16 +147,16 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
-            PdfDictionary mcrPageObject = mcr.GetPageObject();
-            if (mcrPageObject == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
+            PdfIndirectReference mcrPageIndRef = mcr.GetPageIndirectReference();
+            if (mcrPageIndRef == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
                 logger.Error(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
-            ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(mcrPageObject.GetIndirectReference());
+            ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(mcrPageIndRef);
             if (pageMcrs == null) {
                 pageMcrs = new ParentTreeHandler.PageMcrsContainer();
-                pageToPageMcrs.Put(mcrPageObject.GetIndirectReference(), pageMcrs);
+                pageToPageMcrs.Put(mcrPageIndRef, pageMcrs);
             }
             PdfObject stm;
             if ((stm = GetStm(mcr)) != null) {

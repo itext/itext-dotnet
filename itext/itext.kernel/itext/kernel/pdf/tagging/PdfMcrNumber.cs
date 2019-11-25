@@ -58,7 +58,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override PdfDictionary GetPageObject() {
-            return parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
+            return base.GetPageObject();
         }
     }
 }
