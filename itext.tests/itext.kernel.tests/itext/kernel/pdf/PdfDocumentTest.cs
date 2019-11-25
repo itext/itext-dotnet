@@ -360,5 +360,27 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add_associated_files02.pdf"
                 , sourceFolder + "cmp_add_associated_files02.pdf", "d:/", "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void IgnoreTagStructureTest() {
+            String srcFile = sourceFolder + "ignoreTagStructureTest.pdf";
+            PdfDocument doNotIgnoreTagStructureDocument = new PdfDocument(new PdfReader(srcFile));
+            PdfDocumentTest.IgnoreTagStructurePdfDocument ignoreTagStructureDocument = new PdfDocumentTest.IgnoreTagStructurePdfDocument
+                (this, new PdfReader(srcFile));
+            NUnit.Framework.Assert.IsNotNull(doNotIgnoreTagStructureDocument.GetStructTreeRoot());
+            NUnit.Framework.Assert.IsNull(ignoreTagStructureDocument.GetStructTreeRoot());
+        }
+
+        private class IgnoreTagStructurePdfDocument : PdfDocument {
+            internal IgnoreTagStructurePdfDocument(PdfDocumentTest _enclosing, PdfReader reader)
+                : base(reader) {
+                this._enclosing = _enclosing;
+            }
+
+            protected internal override void TryInitTagStructure(PdfDictionary str) {
+            }
+
+            private readonly PdfDocumentTest _enclosing;
+        }
     }
 }

@@ -2180,7 +2180,7 @@ namespace iText.Kernel.Pdf {
             info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
         }
 
-        private void TryInitTagStructure(PdfDictionary str) {
+        protected internal virtual void TryInitTagStructure(PdfDictionary str) {
             try {
                 structTreeRoot = new PdfStructTreeRoot(str, this);
                 structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
