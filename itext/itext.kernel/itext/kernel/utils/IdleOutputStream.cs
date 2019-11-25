@@ -44,9 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 
-namespace iText.IO.Util {
-    [System.ObsoleteAttribute(@"This output stream implementation will be removed in iText 7.2")]
-    public class IdelOutputStream : Stream
+namespace iText.Kernel.Utils {
+    internal class IdleOutputStream : Stream
 	{
 	    public override void Flush()
 	    {
