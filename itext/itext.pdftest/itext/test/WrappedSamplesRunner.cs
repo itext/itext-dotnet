@@ -80,7 +80,7 @@ namespace iText.Test {
         public virtual void RunSamples() {
             Assume.That(sampleClassParams.ignoreMessage == null, sampleClassParams.ignoreMessage);
 
-            sampleClass = sampleClassParams.sampleType;
+            InitClass();
             System.Console.Out.WriteLine("Starting test " + sampleClassParams);
             
             string oldCurrentDir = Directory.GetCurrentDirectory();
@@ -105,6 +105,10 @@ namespace iText.Test {
             }
             System.Console.Out.WriteLine("Test complete.");
 
+        }
+        
+        protected internal virtual void InitClass() {
+            sampleClass = sampleClassParams.sampleType;
         }
         
         /// <summary>Compares two PDF files using iText's CompareTool.</summary>
