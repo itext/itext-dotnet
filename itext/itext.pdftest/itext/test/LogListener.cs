@@ -52,18 +52,23 @@ using NUnit.Framework.Interfaces;
 namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
-        private CapturingLoggerFactoryAdapter adapter;
+        private static CapturingLoggerFactoryAdapter adapter;
+
+        private ILoggerFactoryAdapter defaultLogAdapter;
 
         static LogListener() {
-            LogManager.Adapter = new ITextMemoryAddapter();
+            adapter = new ITextMemoryAddapter();
         }
 
         public override void BeforeTest(ITest testDetails) {
+            defaultLogAdapter = LogManager.Adapter;
+            LogManager.Adapter = adapter;
             Init();
         }
 
         public override void AfterTest(ITest testDetails) {
             CheckLogMessages(testDetails);
+            LogManager.Adapter = defaultLogAdapter;
         }
 
         public override ActionTargets Targets {
@@ -102,7 +107,6 @@ namespace iText.Test {
         }
 
         private void Init() {
-            adapter = LogManager.Adapter as CapturingLoggerFactoryAdapter;
             adapter.Clear();
         }
 
