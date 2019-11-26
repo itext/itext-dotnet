@@ -114,8 +114,8 @@ namespace iText.Test.Pdfa
                 return "VeraPDF verification results parsing failed: " + exc.Message;
             }
 
-            String reportDest = dest.Replace(".pdf", ".xml");
-            
+            String reportDest = dest.Substring(0, dest.Length - ".pdf".Length) + ".xml";
+
             XmlAttributeCollection detailsAttributes = document.GetElementsByTagName("details")[0].Attributes;
             
             if (!detailsAttributes["failedRules"].Value.Equals("0") ||
