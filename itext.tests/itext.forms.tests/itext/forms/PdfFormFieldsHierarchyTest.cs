@@ -59,5 +59,49 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void AutosizeInheritedDAFormFieldsTest() {
+            String inPdf = destinationFolder + "autosizeInheritedDAFormFields.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFields.pdf"), new 
+                PdfWriter(inPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("field_1").SetValue("1111 2222 3333 4444");
+            fields.Get("field_2").SetValue("1111 2222 3333 4444");
+            fields.Get("field_3").SetValue("surname surname surname surname surname surname");
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFields.pdf"
+                , inPdf, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AutosizeInheritedDAFormFieldsWithKidsTest() {
+            String inPdf = destinationFolder + "autosizeInheritedDAFormFieldsWithKids.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "autosizeInheritedDAFormFieldsWithKids.pdf"
+                ), new PdfWriter(inPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("root.child.text1").SetValue("surname surname surname surname surname");
+            fields.Get("root.child.text2").SetValue("surname surname surname surname surname");
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(inPdf, sourceFolder + "cmp_autosizeInheritedDAFormFieldsWithKids.pdf"
+                , inPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AlignmentInheritanceInFieldsTest() {
+            String name = "alignmentInheritanceInFields";
+            String fileName = destinationFolder + name + ".pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + name + ".pdf"), new PdfWriter(fileName));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.SetGenerateAppearance(false);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("root").SetValue("Deutschland");
+            form.FlattenFields();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_" + name + 
+                ".pdf", destinationFolder + name, "diff_"));
+        }
     }
 }

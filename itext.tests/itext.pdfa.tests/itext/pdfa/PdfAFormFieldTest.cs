@@ -44,10 +44,12 @@ using System;
 using System.IO;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
@@ -55,6 +57,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     public class PdfAFormFieldTest : ExtendedITextTest {
@@ -142,6 +145,162 @@ namespace iText.Pdfa {
                 //appearance stream was set, while AS has kept as is, i.e. in Off state.
                 chk.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1ButtonFieldTest() {
+            String name = "pdfA1DocWithPdfA1ButtonField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ButtonField.pdf";
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfFormField emptyField = PdfFormField.CreateEmptyField(pdfDoc, conformanceLevel).SetFieldName("empty");
+            emptyField.AddKid(PdfFormField.CreateButton(pdfDoc, new Rectangle(36, 756, 20, 20), PdfAnnotation.PRINT, conformanceLevel
+                ).SetFieldName("button").SetValue("hello"));
+            form.AddField(emptyField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1CheckBoxFieldTest() {
+            String name = "pdfA1DocWithPdfA1CheckBoxField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1CheckBoxField.pdf";
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreateCheckBox(pdfDoc, new Rectangle(36, 726, 20, 20), "checkBox", "1", PdfFormField
+                .TYPE_STAR, conformanceLevel));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
+            String name = "pdfA1DocWithPdfA1ChoiceField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfArray options = new PdfArray();
+            options.Add(new PdfString("Name"));
+            options.Add(new PdfString("Surname"));
+            form.AddField(PdfFormField.CreateChoice(pdfDoc, new Rectangle(36, 696, 100, 70), "choice", "1", options, 0
+                , fontFreeSans, conformanceLevel));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1ComboBoxFieldTest() {
+            String name = "pdfA1DocWithPdfA1ComboBoxField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
+            PdfFont fontCJK = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
+                , true);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreateComboBox(pdfDoc, new Rectangle(156, 616, 70, 70), "combo", "用", new String
+                [] { "用", "规", "表" }, fontCJK, conformanceLevel));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1ListFieldTest() {
+            String name = "pdfA1DocWithPdfA1ListField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ListField.pdf";
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfChoiceFormField f = PdfFormField.CreateList(pdfDoc, new Rectangle(86, 556, 50, 200), "list", "9", new String
+                [] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, fontFreeSans, conformanceLevel);
+            f.SetValue("4");
+            f.SetTopIndex(2);
+            f.SetListSelected(new String[] { "3", "5" });
+            form.AddField(f);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1PushButtonFieldTest() {
+            String name = "pdfA1DocWithPdfA1PushButtonField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreatePushButton(pdfDoc, new Rectangle(36, 526, 100, 20), "push button", "Push"
+                , fontFreeSans, 12, conformanceLevel));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1RadioButtonFieldTest() {
+            String name = "pdfA1DocWithPdfA1RadioButtonField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1RadioButtonField.pdf";
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfButtonFormField radioGroup = PdfFormField.CreateRadioGroup(pdfDoc, "radio group", "", conformanceLevel);
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(36, 496, 20, 20), radioGroup, "1", conformanceLevel).
+                SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(66, 496, 20, 20), radioGroup, "2", conformanceLevel).
+                SetBorderWidth(2).SetBorderColor(ColorConstants.ORANGE);
+            form.AddField(radioGroup);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1TextFieldTest() {
+            String name = "pdfA1DocWithPdfA1TextField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1TextField.pdf";
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            fontFreeSans.SetSubset(false);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(36, 466, 90, 20), "text", "textField", fontFreeSans
+                , 12, false, conformanceLevel).SetValue("iText"));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
     }
 }
