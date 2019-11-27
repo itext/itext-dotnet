@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using iText.IO.Util;
@@ -86,7 +87,17 @@ namespace iText.Test.Pdfa {
                 standardError.Append(p.StandardError.ReadToEnd());
             }
 
-            if (!String.IsNullOrEmpty(standardError.ToString())) {
+            String stdErrOutput = standardError.ToString();
+            
+            /* If JAVA_TOOL_OPTIONS env var is defined JVM will always print its value to stderr. We filter this line
+               in order to catch other valuable error output. */
+            string javaToolOptionsWarn = "Picked up JAVA_TOOL_OPTIONS: ";
+            stdErrOutput = String.Join("\n", 
+                stdErrOutput
+                    .Split('\n').Where(s => !s.StartsWith(javaToolOptionsWarn))
+            );
+                
+            if (!String.IsNullOrEmpty(stdErrOutput)) {
                 return "VeraPDF execution failed: " + standardError;
             } else if (String.IsNullOrEmpty(standardOutput.ToString())) {
                 return "VeraPDF execution failed: Standart output is empty" + standardOutput;
