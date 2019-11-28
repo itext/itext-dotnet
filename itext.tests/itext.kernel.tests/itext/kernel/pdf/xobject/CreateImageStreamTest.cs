@@ -117,6 +117,12 @@ namespace iText.Kernel.Pdf.Xobject {
             TestSingleImage("img_rgb_icc.png");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void AddPngImageIndexedColorspaceTest() {
+            //TODO update cmp-file after DEVSIX-2865 will be fixed
+            TestSingleImage("pngImageIndexedColorspace.png");
+        }
+
         private void TestSingleImage(String imgName) {
             String @out = destinationFolder + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";
             String cmp = sourceFolder + "cmp_" + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";
