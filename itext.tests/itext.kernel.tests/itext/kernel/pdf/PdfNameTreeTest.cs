@@ -147,6 +147,25 @@ namespace iText.Kernel.Pdf {
             TestSetModified(true);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckNamesOrder() {
+            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "namedDestinations.pdf"));
+            IList<String> expectedNames = new List<String>();
+            expectedNames.Add("Destination_1");
+            expectedNames.Add("Destination_2");
+            expectedNames.Add("Destination_3");
+            expectedNames.Add("Destination_4");
+            expectedNames.Add("Destination_5");
+            System.Console.Out.WriteLine("Expected names: " + expectedNames);
+            for (int i = 0; i < 10; i++) {
+                IDictionary<String, PdfObject> names = doc.GetCatalog().GetNameTree(PdfName.Dests).GetNames();
+                IList<String> actualNames = new List<String>(names.Keys);
+                System.Console.Out.WriteLine("Actual names:   " + actualNames);
+                NUnit.Framework.Assert.AreEqual(expectedNames, actualNames);
+            }
+            doc.Close();
+        }
+
         private static void TestSetModified(bool isAppendMode) {
             String[] expectedKeys = new String[] { "new_key1", "new_key2", "new_key3" };
             MemoryStream sourceFile = CreateDocumentInMemory();

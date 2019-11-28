@@ -55,7 +55,8 @@ namespace iText.Kernel.Pdf {
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
         private readonly PdfPagesTree pageTree;
 
-        protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new Dictionary<PdfName, PdfNameTree>();
+        protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new LinkedDictionary<PdfName, PdfNameTree
+            >();
 
         protected internal PdfNumTree pageLabels;
 
