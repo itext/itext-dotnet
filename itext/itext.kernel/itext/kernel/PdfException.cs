@@ -219,6 +219,8 @@ namespace iText.Kernel {
 
         public const String DocumentHasNoPdfCatalogObject = "Document has no PDF Catalog object.";
 
+        public const String DocumentHasNotBeenReadYet = "The PDF document has not been read yet. Document reading occurs in PdfDocument class constructor";
+
         public const String DocumentMustBePreClosed = "Document must be preClosed.";
 
         public const String DocumentForCopyToCannotBeNull = "Document for copyTo cannot be null.";

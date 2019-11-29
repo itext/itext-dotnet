@@ -213,6 +213,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>If any exception generated while reading XRef section, PdfReader will try to rebuild it.</summary>
         /// <returns>true, if PdfReader rebuilt Cross-Reference section.</returns>
         public virtual bool HasRebuiltXref() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return rebuiltXref;
         }
 
@@ -222,25 +225,43 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>true, if the document has hybrid Cross-Reference section.</returns>
         public virtual bool HasHybridXref() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return hybridXref;
         }
 
         /// <summary>Indicates whether the document has Cross-Reference Streams.</summary>
         /// <returns>true, if the document has Cross-Reference Streams.</returns>
         public virtual bool HasXrefStm() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return xrefStm;
         }
 
         /// <summary>If any exception generated while reading PdfObject, PdfReader will try to fix offsets of all objects.
         ///     </summary>
+        /// <remarks>
+        /// If any exception generated while reading PdfObject, PdfReader will try to fix offsets of all objects.
+        /// <para />
+        /// This method's returned value might change over time, because PdfObjects reading
+        /// can be postponed even up to document closing.
+        /// </remarks>
         /// <returns>true, if PdfReader fixed offsets of PdfObjects.</returns>
         public virtual bool HasFixedXref() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return fixedXref;
         }
 
         /// <summary>Gets position of the last Cross-Reference table.</summary>
         /// <returns>-1 if Cross-Reference table has rebuilt, otherwise position of the last Cross-Reference table.</returns>
         public virtual long GetLastXref() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return lastXref;
         }
 
@@ -483,6 +504,9 @@ namespace iText.Kernel.Pdf {
         /// if the document was opened with the user password.
         /// </returns>
         public virtual bool IsOpenedWithFullPermission() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return !encrypted || decrypt.IsOpenedWithFullPermission() || unethicalReading;
         }
 
@@ -494,6 +518,14 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
         public virtual long GetPermissions() {
+            /* !pdfDocument.getXref().isReadingCompleted() can be used for encryption properties as well,
+            * because decrypt object is initialized in private readDecryptObj method which is called in our code
+            * in the next line after the setting isReadingCompleted line. This means that there's no way for users
+            * when this method would work incorrectly right now.
+            */
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             long perm = 0;
             if (encrypted && decrypt.GetPermissions() != null) {
                 perm = (long)decrypt.GetPermissions();
@@ -504,6 +536,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets encryption algorithm and access permissions.</summary>
         /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             if (decrypt == null) {
                 return -1;
             }
@@ -532,6 +567,9 @@ namespace iText.Kernel.Pdf {
         /// <returns>user password, or null if not a standard encryption handler was used or if ownerPasswordUsed wasn't use to open the document.
         ///     </returns>
         public virtual byte[] ComputeUserPassword() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             if (!encrypted || !decrypt.IsOpenedWithFullPermission()) {
                 return null;
             }
@@ -556,6 +594,9 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array represents original file ID.</returns>
         /// <seealso cref="PdfDocument.GetOriginalDocumentId()"/>
         public virtual byte[] GetOriginalFileId() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             PdfArray id = trailer.GetAsArray(PdfName.ID);
             if (id != null && id.Size() == 2) {
                 return ByteUtils.GetIsoBytes(id.GetAsString(0).GetValue());
@@ -583,6 +624,9 @@ namespace iText.Kernel.Pdf {
         /// <returns>byte array represents modified file ID.</returns>
         /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>
         public virtual byte[] GetModifiedFileId() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             PdfArray id = trailer.GetAsArray(PdfName.ID);
             if (id != null && id.Size() == 2) {
                 return ByteUtils.GetIsoBytes(id.GetAsString(1).GetValue());
@@ -593,6 +637,9 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual bool IsEncrypted() {
+            if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
+                throw new PdfException(PdfException.DocumentHasNotBeenReadYet);
+            }
             return encrypted;
         }
 
@@ -780,7 +827,7 @@ namespace iText.Kernel.Pdf {
 
                 case PdfTokenizer.TokenType.String: {
                     PdfString pdfString = new PdfString(tokens.GetByteContent(), tokens.IsHexString());
-                    if (IsEncrypted() && !decrypt.IsEmbeddedFilesOnly() && !objStm) {
+                    if (encrypted && !decrypt.IsEmbeddedFilesOnly() && !objStm) {
                         pdfString.SetDecryption(currentIndirectReference.GetObjNumber(), currentIndirectReference.GetGenNumber(), 
                             decrypt);
                     }

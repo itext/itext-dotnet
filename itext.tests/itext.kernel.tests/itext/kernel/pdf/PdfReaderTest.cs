@@ -1501,6 +1501,355 @@ namespace iText.Kernel.Pdf {
             return type.Equals(objectType);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void HasRebuiltXrefPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader hasRebuiltXrefReader = PdfDocumentNotReadTestInit();
+                hasRebuiltXrefReader.HasRebuiltXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasRebuiltXrefReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader hasRebuiltXrefReader = new _PdfReader_1748(filename);
+            ReadingNotCompletedTest(hasRebuiltXrefReader);
+        }
+
+        private sealed class _PdfReader_1748 : PdfReader {
+            public _PdfReader_1748(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.HasRebuiltXref();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasHybridXrefPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader hasHybridXrefPdfReader = PdfDocumentNotReadTestInit();
+                hasHybridXrefPdfReader.HasHybridXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasHybridXrefReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader hasHybridXrefPdfReader = new _PdfReader_1772(filename);
+            ReadingNotCompletedTest(hasHybridXrefPdfReader);
+        }
+
+        private sealed class _PdfReader_1772 : PdfReader {
+            public _PdfReader_1772(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.HasHybridXref();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasXrefStmPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader hasXrefStmReader = PdfDocumentNotReadTestInit();
+                hasXrefStmReader.HasXrefStm();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasXrefStmReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader hasXrefStmReader = new _PdfReader_1796(filename);
+            ReadingNotCompletedTest(hasXrefStmReader);
+        }
+
+        private sealed class _PdfReader_1796 : PdfReader {
+            public _PdfReader_1796(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.HasXrefStm();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasFixedXrefPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader hasFixedXrefReader = PdfDocumentNotReadTestInit();
+                hasFixedXrefReader.HasFixedXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasFixedXrefReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader hasFixedXrefReader = new _PdfReader_1820(filename);
+            ReadingNotCompletedTest(hasFixedXrefReader);
+        }
+
+        private sealed class _PdfReader_1820 : PdfReader {
+            public _PdfReader_1820(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.HasFixedXref();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetLastXrefPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader getLastXrefReader = PdfDocumentNotReadTestInit();
+                getLastXrefReader.GetLastXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetLastXrefReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader getLastXrefReader = new _PdfReader_1844(filename);
+            ReadingNotCompletedTest(getLastXrefReader);
+        }
+
+        private sealed class _PdfReader_1844 : PdfReader {
+            public _PdfReader_1844(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.GetLastXref();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetPermissionsPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader getPermissionsReader = PdfDocumentNotReadTestInit();
+                getPermissionsReader.GetPermissions();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetPermissionsReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader getPermissionsReader = new _PdfReader_1868(filename);
+            ReadingNotCompletedTest(getPermissionsReader);
+        }
+
+        private sealed class _PdfReader_1868 : PdfReader {
+            public _PdfReader_1868(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.GetPermissions();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsOpenedWithFullPPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader isOpenedWithFullPReader = PdfDocumentNotReadTestInit();
+                isOpenedWithFullPReader.IsOpenedWithFullPermission();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsOpenedWithFullPReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader isOpenedWithFullPReader = new _PdfReader_1892(filename);
+            ReadingNotCompletedTest(isOpenedWithFullPReader);
+        }
+
+        private sealed class _PdfReader_1892 : PdfReader {
+            public _PdfReader_1892(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.IsOpenedWithFullPermission();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCryptoModePdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader getCryptoModeReader = PdfDocumentNotReadTestInit();
+                getCryptoModeReader.GetCryptoMode();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCryptoModeReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader getCryptoModeReader = new _PdfReader_1916(filename);
+            ReadingNotCompletedTest(getCryptoModeReader);
+        }
+
+        private sealed class _PdfReader_1916 : PdfReader {
+            public _PdfReader_1916(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.GetCryptoMode();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ComputeUserPasswordPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader computeUserPasswordReader = PdfDocumentNotReadTestInit();
+                computeUserPasswordReader.ComputeUserPassword();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ComputeUserPasswordReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader computeUserPasswordReader = new _PdfReader_1940(filename);
+            ReadingNotCompletedTest(computeUserPasswordReader);
+        }
+
+        private sealed class _PdfReader_1940 : PdfReader {
+            public _PdfReader_1940(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.ComputeUserPassword();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOriginalFileIdPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader getOriginalFileIdReader = PdfDocumentNotReadTestInit();
+                getOriginalFileIdReader.GetOriginalFileId();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOriginalFileIdReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader getOriginalFileIdReader = new _PdfReader_1964(filename);
+            ReadingNotCompletedTest(getOriginalFileIdReader);
+        }
+
+        private sealed class _PdfReader_1964 : PdfReader {
+            public _PdfReader_1964(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.GetOriginalFileId();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetModifiedFileIdPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader getModifiedFileIdReader = PdfDocumentNotReadTestInit();
+                getModifiedFileIdReader.GetModifiedFileId();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetModifiedFileIdReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader getModifiedFileIdReader = new _PdfReader_1988(filename);
+            ReadingNotCompletedTest(getModifiedFileIdReader);
+        }
+
+        private sealed class _PdfReader_1988 : PdfReader {
+            public _PdfReader_1988(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.GetModifiedFileId();
+                base.ReadPdf();
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsEncryptedPdfDocumentNotReadTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader isEncryptedReader = PdfDocumentNotReadTestInit();
+                isEncryptedReader.IsEncrypted();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsEncryptedReadingNotCompletedTest() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            PdfReader isEncryptedReader = new _PdfReader_2012(filename);
+            ReadingNotCompletedTest(isEncryptedReader);
+        }
+
+        private sealed class _PdfReader_2012 : PdfReader {
+            public _PdfReader_2012(String baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override void ReadPdf() {
+                this.IsEncrypted();
+                base.ReadPdf();
+            }
+        }
+
+        private PdfReader PdfDocumentNotReadTestInit() {
+            String filename = sourceFolder + "XrefWithNullOffsets.pdf";
+            return new PdfReader(filename);
+        }
+
+        private void ReadingNotCompletedTest(PdfReader reader) {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument document = new PdfDocument(reader);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.DocumentHasNotBeenReadYet))
+;
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));
