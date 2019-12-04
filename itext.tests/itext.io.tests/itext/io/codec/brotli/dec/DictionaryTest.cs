@@ -15,6 +15,12 @@ namespace iText.IO.Codec.Brotli.Dec
 	/// </summary>
 	public class DictionaryTest : ExtendedITextTest
 	{
+		[NUnit.Framework.Test]
+		public virtual void TestGetData()
+		{
+			NUnit.Framework.Assert.AreEqual(37084801881332636L, Crc64(iText.IO.Codec.Brotli.Dec.Dictionary.GetData()));
+		}
+		
 		private static long Crc64(byte[] data)
 		{
 			long crc = -1;
@@ -28,12 +34,6 @@ namespace iText.IO.Codec.Brotli.Dec
 				crc = c ^ ((long)(((ulong)crc) >> 8));
 			}
 			return ~crc;
-		}
-
-		[NUnit.Framework.Test]
-		public virtual void TestGetData()
-		{
-			NUnit.Framework.Assert.AreEqual(37084801881332636L, Crc64(iText.IO.Codec.Brotli.Dec.Dictionary.GetData()));
 		}
 	}
 }
