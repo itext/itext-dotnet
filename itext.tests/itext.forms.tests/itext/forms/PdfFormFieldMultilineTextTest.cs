@@ -190,5 +190,45 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "formFieldWithStringTest.pdf"
                 , sourceFolder + "cmp_formFieldWithStringTest.pdf", destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MultilineTextFieldLeadingSpacesAreNotTrimmedTest() {
+            String filename = destinationFolder + "multilineTextFieldLeadingSpacesAreNotTrimmed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfPage page = pdfDoc.GetFirstPage();
+            Rectangle rect = new Rectangle(210, 490, 300, 200);
+            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "TestField", "        value\n      with\n    leading\n    space"
+                );
+            form.AddField(field, page);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_multilineTextFieldLeadingSpacesAreNotTrimmed.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultilineTextFieldRedundantSpacesAreTrimmedTest() {
+            String filename = destinationFolder + "multilineTextFieldRedundantSpacesAreTrimmedTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfPage page = pdfDoc.GetFirstPage();
+            Rectangle rect = new Rectangle(210, 490, 90, 200);
+            PdfTextFormField field = PdfFormField.CreateMultilineText(pdfDoc, rect, "TestField", "before spaces           after spaces"
+                );
+            form.AddField(field, page);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_multilineTextFieldRedundantSpacesAreTrimmedTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }

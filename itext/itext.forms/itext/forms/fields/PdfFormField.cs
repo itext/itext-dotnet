@@ -3282,8 +3282,8 @@ namespace iText.Forms.Fields {
                     logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
                         ));
                 }
-                modelCanvas.ShowTextAligned(new Paragraph(value).AddStyle(paragraphStyle).SetPaddings(0, X_OFFSET, 0, X_OFFSET
-                    ), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+                modelCanvas.ShowTextAligned(CreateParagraphForTextFieldValue(value).AddStyle(paragraphStyle).SetPaddings(0
+                    , X_OFFSET, 0, X_OFFSET), x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
             }
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
@@ -3317,8 +3317,8 @@ namespace iText.Forms.Fields {
             Rectangle areaRect = new Rectangle(0, 0, width, height);
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), areaRect);
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
-            Paragraph paragraph = new Paragraph(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading(1
-                );
+            Paragraph paragraph = CreateParagraphForTextFieldValue(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading
+                (1);
             if (fontSize == 0) {
                 paragraph.SetFontSize(ApproximateFontSizeToFitMultiLine(paragraph, areaRect, modelCanvas.GetRenderer()));
             }
@@ -4293,6 +4293,12 @@ namespace iText.Forms.Fields {
                 }
             }
             return null;
+        }
+
+        private static Paragraph CreateParagraphForTextFieldValue(String value) {
+            iText.Layout.Element.Text text = new iText.Layout.Element.Text(value);
+            text.SetNextRenderer(new FormFieldValueNonTrimmingTextRenderer(text));
+            return new Paragraph(text);
         }
     }
 }

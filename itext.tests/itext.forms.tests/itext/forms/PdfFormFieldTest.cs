@@ -139,6 +139,26 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TextFieldLeadingSpacesAreNotTrimmedTest() {
+            String filename = destinationFolder + "textFieldLeadingSpacesAreNotTrimmed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfPage page = pdfDoc.GetFirstPage();
+            Rectangle rect = new Rectangle(210, 490, 300, 22);
+            PdfTextFormField field = PdfFormField.CreateText(pdfDoc, rect, "TestField", "        value with leading space"
+                );
+            form.AddField(field, page);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textFieldLeadingSpacesAreNotTrimmed.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void UnicodeFormFieldTest() {
             String filename = sourceFolder + "unicodeFormFieldFile.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
