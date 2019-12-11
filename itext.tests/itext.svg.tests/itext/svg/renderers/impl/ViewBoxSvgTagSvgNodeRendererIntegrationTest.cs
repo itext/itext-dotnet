@@ -103,5 +103,26 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ViewBox400x200() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400x200");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioNoneValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioNoneValues"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues"
+                );
+        }
     }
 }
