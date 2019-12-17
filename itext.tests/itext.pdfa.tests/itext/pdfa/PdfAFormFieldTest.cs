@@ -106,7 +106,8 @@ namespace iText.Pdfa {
             p2.Add(t2).Add(pc1);
             doc.Add(p);
             doc.Add(p2);
-            group.SetValue("v1");
+            //set generateAppearance param to false to retain custom appearance
+            group.SetValue("v1", false);
             PdfAcroForm.GetAcroForm(pdf, true).AddField(group);
             pdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder

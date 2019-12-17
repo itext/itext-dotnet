@@ -671,7 +671,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT)]
         public virtual void NoMaxLenWithSetCombFlagTest() {
             String outPdf = destinationFolder + "noMaxLenWithSetCombFlagTest.pdf";
             String cmpPdf = sourceFolder + "cmp_noMaxLenWithSetCombFlagTest.pdf";
@@ -1048,13 +1048,13 @@ namespace iText.Forms {
         public virtual void FillUnmergedTextFormField() {
             // TODO update cmp-file after DEVSIX-2622 fixed
             String file = sourceFolder + "fillUnmergedTextFormField.pdf";
-            String outfile = destinationFolder + "outfile.pdf";
+            String outfile = destinationFolder + "fillUnmergedTextFormField.pdf";
             String text = "John";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(file), new PdfWriter(outfile));
             FillAcroForm(pdfDocument, text);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "outfile.pdf", sourceFolder
-                 + "cmp_" + "fillUnmergedTextFormField.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "fillUnmergedTextFormField.pdf"
+                , sourceFolder + "cmp_" + "fillUnmergedTextFormField.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]

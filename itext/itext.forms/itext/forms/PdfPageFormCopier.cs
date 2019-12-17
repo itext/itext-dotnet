@@ -233,7 +233,7 @@ namespace iText.Forms {
                 mergedField.Put(PdfName.Kids, kids);
             }
             mergedField.AddKid(existingField).AddKid(newField);
-            PdfObject value = existingField.GetValue();
+            PdfObject value = existingField.GetPdfObject().Get(PdfName.V);
             if (value != null) {
                 mergedField.Put(PdfName.V, existingField.GetPdfObject().Get(PdfName.V));
             }

@@ -32,10 +32,10 @@ using iText.Test;
 namespace iText.Forms {
     public class PdfChoiceFieldTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/PdfCheckBoxFieldTest/";
+             + "/test/itext/forms/PdfChoiceFieldTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfCheckBoxFieldTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfChoiceFieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
