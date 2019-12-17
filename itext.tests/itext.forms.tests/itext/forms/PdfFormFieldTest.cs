@@ -973,25 +973,6 @@ namespace iText.Forms {
             NUnit.Framework.Assert.AreEqual(field, thirdPageAnnots.Get(0));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CreateFieldInAppendModeTest() {
-            //TODO update cmp-file after DEVSIX-3077 fixed
-            String file = destinationFolder + "blank.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(file));
-            document.AddNewPage();
-            PdfAcroForm.GetAcroForm(document, true);
-            document.Close();
-            PdfReader reader = new PdfReader(file);
-            PdfWriter writer1 = new PdfWriter(destinationFolder + "createFieldInAppendModeTest.pdf");
-            PdfDocument doc = new PdfDocument(reader, writer1, new StampingProperties().UseAppendMode());
-            PdfFormField field = PdfFormField.CreateCheckBox(doc, new Rectangle(10, 10, 24, 24), "checkboxname", "On", 
-                PdfFormField.TYPE_CHECK);
-            PdfAcroForm.GetAcroForm(doc, true).AddField(field);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "createFieldInAppendModeTest.pdf"
-                , sourceFolder + "cmp_" + "createFieldInAppendModeTest.pdf", destinationFolder, "diff_"));
-        }
-
         private void CreateAcroForm(PdfDocument pdfDoc, PdfAcroForm form, PdfFont font, String text, int offSet) {
             for (int x = offSet; x < (offSet + 3); x++) {
                 Rectangle rect = new Rectangle(100 + (30 * x), 100 + (100 * x), 55, 30);

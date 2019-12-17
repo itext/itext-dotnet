@@ -256,6 +256,7 @@ namespace iText.Forms {
                 PdfAnnotation annot = PdfAnnotation.MakeAnnotation(fieldDic);
                 AddWidgetAnnotationToPage(page, annot);
             }
+            SetModified();
         }
 
         /// <summary>
@@ -368,11 +369,12 @@ namespace iText.Forms {
             if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
                 .DEPRECATED_NEED_APPEARANCES_IN_ACROFORM)) {
                 GetPdfObject().Remove(PdfName.NeedAppearances);
-                return this;
+                SetModified();
             }
             else {
-                return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
+                Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
             }
+            return this;
         }
 
         /// <summary>Gets the <c>NeedAppearances</c> boolean property on the AcroForm.</summary>
@@ -709,6 +711,7 @@ namespace iText.Forms {
         public virtual void SetGenerateAppearance(bool generateAppearance) {
             if (generateAppearance) {
                 GetPdfObject().Remove(PdfName.NeedAppearances);
+                SetModified();
             }
             this.generateAppearance = generateAppearance;
         }
@@ -885,12 +888,14 @@ namespace iText.Forms {
             if (parent != null) {
                 parent.GetAsArray(PdfName.Kids).Remove(fieldObject);
                 fields.JRemove(fieldName);
+                parent.SetModified();
                 return true;
             }
             PdfArray fieldsPdfArray = GetFields();
             if (fieldsPdfArray.Contains(fieldObject)) {
                 fieldsPdfArray.Remove(fieldObject);
                 this.fields.JRemove(fieldName);
+                SetModified();
                 return true;
             }
             return false;
@@ -1143,6 +1148,7 @@ namespace iText.Forms {
 
         public virtual iText.Forms.PdfAcroForm Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
