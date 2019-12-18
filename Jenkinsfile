@@ -88,6 +88,30 @@ pipeline {
                 }
             }
         }
+        stage('Branch Artifactory Deploy') {
+            options {
+                timeout(time: 5, unit: 'MINUTES')
+            }
+            when {
+                not {
+                    anyOf {
+                        branch "master"
+                        branch "develop"
+                    }
+                }
+            }
+            steps {
+                script {
+                    if (env.GIT_URL) {
+                        getAndConfigureJFrogCLI()
+                        repoName = ("${env.GIT_URL}" =~ /(.*\/)(.*)(\.git)/)[ 0 ][ 2 ]
+                        findFiles(glob: '*.nupkg').each { item ->
+                            sh "./jfrog rt u \"${item.path}\" branch-artifacts/${env.BRANCH_NAME}/${repoName}/dotnet/ --recursive=false --build-name ${env.BRANCH_NAME} --build-number ${env.BUILD_NUMBER} --props \"vcs.revision=${env.GIT_COMMIT};repo.name=${repoName}\""
+                        }
+                    }
+                }
+            }
+        }
         stage('Archive Artifacts') {
             options {
                 timeout(time: 5, unit: 'MINUTES')
