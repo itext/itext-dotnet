@@ -96,6 +96,7 @@ namespace iText.Kernel.Pdf {
             kids.Add(page);
             IncrementCount();
             page.Put(PdfName.Parent, GetPdfObject());
+            page.SetModified();
         }
 
         public virtual bool AddPage(int index, PdfPage pdfPage) {
@@ -104,8 +105,8 @@ namespace iText.Kernel.Pdf {
             }
             kids.Add(index - from, pdfPage.GetPdfObject());
             pdfPage.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
+            pdfPage.SetModified();
             IncrementCount();
-            SetModified();
             return true;
         }
 
@@ -122,6 +123,7 @@ namespace iText.Kernel.Pdf {
             kids.Add(pdfPages.GetPdfObject());
             count.SetValue(count.IntValue() + pdfPages.GetCount());
             pdfPages.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
+            pdfPages.SetModified();
             SetModified();
         }
 

@@ -68,6 +68,8 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
+
         /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
         /// a
@@ -121,11 +123,18 @@ namespace iText.Kernel.Pdf {
                 LoadPage(pageNum);
                 if (pageRefs[pageNum] != null) {
                     int parentIndex = FindPageParent(pageNum);
-                    pdfPage = new PdfPage((PdfDictionary)pageRefs[pageNum].GetRefersTo());
-                    pdfPage.parentPages = parents[parentIndex];
+                    PdfObject pageObject = pageRefs[pageNum].GetRefersTo();
+                    if (pageObject is PdfDictionary) {
+                        pdfPage = new PdfPage((PdfDictionary)pageObject);
+                        pdfPage.parentPages = parents[parentIndex];
+                    }
+                    else {
+                        LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                            , pageNum + 1));
+                    }
                 }
                 else {
-                    LogManager.GetLogger(GetType()).Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                    LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                         , pageNum + 1));
                 }
                 pages[pageNum] = pdfPage;
@@ -265,8 +274,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
-                ILog logger = LogManager.GetLogger(typeof(PdfPage));
-                logger.Warn(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                LOGGER.Warn(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;
@@ -379,6 +387,9 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(PdfException.InvalidPageStructure1).SetMessageParams(pageNum + 1);
                     }
                 }
+                if (document.GetReader().IsMemorySavingMode() && !findPdfPages && parent.GetFrom() + i != pageNum) {
+                    page.Release();
+                }
             }
             if (findPdfPages) {
                 // handle mix of PdfPage and PdfPages.
@@ -386,6 +397,13 @@ namespace iText.Kernel.Pdf {
                 IList<PdfPages> newParents = new List<PdfPages>(kids.Size());
                 PdfPages lastPdfPages = null;
                 for (int i = 0; i < kids.Size() && kidsCount > 0; i++) {
+                    /*
+                    * We don't release pdfPagesObject in the end of each loop because we enter this for-cycle only when parent has PdfPages kids.
+                    * If all of the kids are PdfPages, then there's nothing to release, because we don't release PdfPages at this point.
+                    * If there are kids that are instances of PdfPage, then there's no sense in releasing them:
+                    * in this case ParentTreeStructure is being rebuilt by inserting an intermediate PdfPages between the parent and a PdfPage,
+                    * thus modifying the page object by resetting its parent, thus making it impossible to release the object.
+                    */
                     PdfDictionary pdfPagesObject = kids.GetAsDictionary(i);
                     if (pdfPagesObject.GetAsArray(PdfName.Kids) == null) {
                         // pdfPagesObject is PdfPage
@@ -427,9 +445,11 @@ namespace iText.Kernel.Pdf {
                 // In any case parent.getCount() has higher priority.
                 // NOTE optimization? when we already found needed index
                 for (int i = 0; i < parent.GetCount(); i++) {
-                    PdfDictionary kid = kids.GetAsDictionary(i);
-                    // make sure it's a dictionary
-                    if (kid != null) {
+                    PdfObject kid = kids.Get(i, false);
+                    if (kid is PdfIndirectReference) {
+                        pageRefs[from + i] = (PdfIndirectReference)kid;
+                    }
+                    else {
                         pageRefs[from + i] = kid.GetIndirectReference();
                     }
                 }

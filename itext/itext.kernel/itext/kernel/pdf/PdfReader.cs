@@ -70,6 +70,8 @@ namespace iText.Kernel.Pdf {
 
         private bool unethicalReading;
 
+        private bool memorySavingMode;
+
         //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
 
@@ -177,6 +179,11 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         public virtual iText.Kernel.Pdf.PdfReader SetUnethicalReading(bool unethicalReading) {
             this.unethicalReading = unethicalReading;
+            return this;
+        }
+
+        public virtual iText.Kernel.Pdf.PdfReader SetMemorySavingMode(bool memorySavingMode) {
+            this.memorySavingMode = memorySavingMode;
             return this;
         }
 
@@ -1282,6 +1289,10 @@ namespace iText.Kernel.Pdf {
             if (trailer == null) {
                 throw new PdfException(PdfException.TrailerNotFound);
             }
+        }
+
+        internal virtual bool IsMemorySavingMode() {
+            return memorySavingMode;
         }
 
         private void ReadDecryptObj() {
