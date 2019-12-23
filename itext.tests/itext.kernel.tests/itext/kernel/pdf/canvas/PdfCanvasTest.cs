@@ -55,7 +55,6 @@ using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas {
     public class PdfCanvasTest : ExtendedITextTest {
@@ -1133,84 +1132,6 @@ namespace iText.Kernel.Pdf.Canvas {
         
         Assert.assertNull(new CompareTool().compareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder, "diff_"));
         }*/
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
-        public virtual void InlineImagesTest01() {
-            String filename = "inlineImages01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "Desert.jpg"), 36, 700, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "bulb.gif"), 36, 600, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "smpl.bmp"), 36, 500, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 36, 460, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "0047478.jpg"), 36, 300, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "map.jp2"), 36, 200, 100, true);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "amb.jb2"), 36, 30, 100, true);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
-        public virtual void InlineImagesTest02() {
-            String filename = "inlineImages02.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "Desert.jpg"));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 700, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bulb.gif"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 600, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "smpl.bmp"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 500, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "itext.png"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 460, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "0047478.jpg"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 300, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 200, 100, true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"));
-            baos = new ByteArrayOutputStream();
-            StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImage(ImageDataFactory.Create(baos.ToArray()), 36, 30, 100, true);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void InlineImagesTest03() {
-            String filename = "inlineImages03.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().
-                SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "bulb.gif"), 36, 600, 100, true);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
-        }
-
         [NUnit.Framework.Test]
         public virtual void CanvasInitializationPageNoContentsKey() {
             String srcFile = sourceFolder + "pageNoContents.pdf";
