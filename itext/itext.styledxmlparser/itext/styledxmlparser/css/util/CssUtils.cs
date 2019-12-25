@@ -174,47 +174,48 @@ namespace iText.StyledXmlParser.Css.Util {
                 throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
                     length));
             }
-            float f = float.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
+            // Use double type locally to have better precision of the result after applying arithmetic operations
+            double f = Double.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
             String unit = length.Substring(pos);
             //points
             if (unit.StartsWith(CommonCssConstants.PT) || unit.Equals("") && defaultMetric.Equals(CommonCssConstants.PT
                 )) {
-                return f;
+                return (float)f;
             }
             // inches
             if (unit.StartsWith(CommonCssConstants.IN) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
                 IN))) {
-                return f * 72f;
+                return (float)(f * 72);
             }
             else {
                 // centimeters
                 if (unit.StartsWith(CommonCssConstants.CM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
                     CM))) {
-                    return (f / 2.54f) * 72f;
+                    return (float)((f / 2.54) * 72);
                 }
                 else {
                     // quarter of a millimeter (1/40th of a centimeter).
                     if (unit.StartsWith(CommonCssConstants.Q) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.Q
                         ))) {
-                        return (f / 2.54f) * 72f / 40;
+                        return (float)((f / 2.54) * 72 / 40);
                     }
                     else {
                         // millimeters
                         if (unit.StartsWith(CommonCssConstants.MM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
                             MM))) {
-                            return (f / 25.4f) * 72f;
+                            return (float)((f / 25.4) * 72);
                         }
                         else {
                             // picas
                             if (unit.StartsWith(CommonCssConstants.PC) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
                                 PC))) {
-                                return f * 12f;
+                                return (float)(f * 12);
                             }
                             else {
                                 // pixels (1px = 0.75pt).
                                 if (unit.StartsWith(CommonCssConstants.PX) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
                                     PX))) {
-                                    return f * 0.75f;
+                                    return (float)(f * 0.75);
                                 }
                             }
                         }
@@ -224,7 +225,7 @@ namespace iText.StyledXmlParser.Css.Util {
             ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils));
             logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
-            return f;
+            return (float)f;
         }
 
         /// <summary>Parses the absolute length.</summary>
@@ -246,6 +247,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (pos == 0) {
                 return 0f;
             }
+            // Use double type locally to have better precision of the result after applying arithmetic operations
             double f = Double.Parse(relativeValue.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
                 );
             String unit = relativeValue.Substring(pos);
@@ -408,17 +410,18 @@ namespace iText.StyledXmlParser.Css.Util {
             if (pos == 0) {
                 return 0f;
             }
-            float f = float.Parse(resolutionStr.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
+            double f = Double.Parse(resolutionStr.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
+                );
             String unit = resolutionStr.Substring(pos);
             if (unit.StartsWith(CommonCssConstants.DPCM)) {
-                f *= 2.54f;
+                f *= 2.54;
             }
             else {
                 if (unit.StartsWith(CommonCssConstants.DPPX)) {
                     f *= 96;
                 }
             }
-            return f;
+            return (float)f;
         }
 
         /// <summary>

@@ -41,16 +41,19 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class EllipseNodeRendererIntegrationTest : SvgIntegrationTest {
+    public class EllipseSvgNodeRendererIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/EllipseSvgNodeRendererTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/EllipseSvgNodeRendererIntegrationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/renderers/impl/EllipseSvgNodeRendererTest/";
+             + "/test/itext/svg/renderers/impl/EllipseSvgNodeRendererIntegrationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -142,6 +145,31 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void EllipseSkewYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipseSkewY");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseParametersAndCalculateCoordinatesWithBetterPrecisionEllipseTest() {
+            String filename = "parseParametersAndCalculateCoordinatesWithBetterPrecisionEllipseTest.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            doc.AddNewPage();
+            EllipseSvgNodeRenderer ellipseRenderer = new EllipseSvgNodeRenderer();
+            ellipseRenderer.SetAttribute(SvgConstants.Attributes.CX, "170.3");
+            ellipseRenderer.SetAttribute(SvgConstants.Attributes.CY, "339.5");
+            ellipseRenderer.SetAttribute(SvgConstants.Attributes.RX, "6");
+            ellipseRenderer.SetAttribute(SvgConstants.Attributes.RY, "6");
+            // Parse parameters with better precision (in double type) in the method CssUtils#parseAbsoluteLength
+            ellipseRenderer.SetParameters();
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            PdfCanvas cv = new PdfCanvas(doc, 1);
+            context.PushCanvas(cv);
+            // Calculate coordinates with better precision (in double type) in the method EllipseSvgNodeRenderer#doDraw
+            ellipseRenderer.Draw(context);
+            String pageContentBytes = iText.IO.Util.JavaUtil.GetStringForBytes(doc.GetPage(1).GetContentBytes(), System.Text.Encoding
+                .UTF8);
+            doc.Close();
+            String expectedResult = "132.22 254.63 m\n" + "132.22 257.11 130.21 259.13 127.72 259.13 c\n" + "125.24 259.13 123.22 257.11 123.22 254.63 c\n"
+                 + "123.22 252.14 125.24 250.13 127.72 250.13 c\n" + "130.21 250.13 132.22 252.14 132.22 254.63 c";
+            NUnit.Framework.Assert.IsTrue(pageContentBytes.Contains(expectedResult));
         }
     }
 }

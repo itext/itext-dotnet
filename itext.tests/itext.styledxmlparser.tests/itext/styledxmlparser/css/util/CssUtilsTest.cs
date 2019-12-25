@@ -48,7 +48,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
-    public class CssUtilTest : ExtendedITextTest {
+    public class CssUtilsTest : ExtendedITextTest {
         public static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
@@ -243,6 +243,22 @@ namespace iText.StyledXmlParser.Css.Util {
             catch (Exception) {
                 NUnit.Framework.Assert.Fail();
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteLength12cmTest() {
+            // Calculations in CssUtils#parseAbsoluteLength were changed to work
+            // with double values instead of float to improve precision and eliminate
+            // the difference between java and .net. So the test verifies this fix.
+            NUnit.Framework.Assert.AreEqual(340.15747f, CssUtils.ParseAbsoluteLength("12cm"), 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteLength12qTest() {
+            // Calculations in CssUtils#parseAbsoluteLength were changed to work
+            // with double values instead of float to improve precision and eliminate
+            // the difference between java and .net. So the test verifies this fix
+            NUnit.Framework.Assert.AreEqual(8.503937f, CssUtils.ParseAbsoluteLength("12q"), 0f);
         }
     }
 }
