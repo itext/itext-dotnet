@@ -133,6 +133,7 @@ namespace iText.IO {
 
         public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
 
+        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
         public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
 
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
@@ -178,6 +179,7 @@ namespace iText.IO {
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
 
+        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
         public const String IMAGE_MASK_CLEAN_UP_NOT_SUPPORTED = "Partial clean up of transparent images with mask encoded with one of the following filters is not supported: JBIG2Decode, DCTDecode, JPXDecode. Image will become non-transparent.";
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
@@ -252,6 +254,7 @@ namespace iText.IO {
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
 
+        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
         public const String REDACTION_OF_ANNOTATION_TYPE_WATERMARK_IS_NOT_SUPPORTED = "Redaction of annotation subtype /Watermark is not supported";
 
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
