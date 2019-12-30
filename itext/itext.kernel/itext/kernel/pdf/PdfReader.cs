@@ -182,6 +182,20 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Defines if memory saving mode is enabled.</summary>
+        /// <remarks>
+        /// Defines if memory saving mode is enabled.
+        /// <para />
+        /// By default memory saving mode is disabled for the sake of time–memory trade-off.
+        /// <para />
+        /// If memory saving mode is enabled, document processing might slow down, but reading will be less memory demanding.
+        /// </remarks>
+        /// <param name="memorySavingMode">true to enable memory saving mode, false to disable it.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfReader"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfReader SetMemorySavingMode(bool memorySavingMode) {
             this.memorySavingMode = memorySavingMode;
             return this;
