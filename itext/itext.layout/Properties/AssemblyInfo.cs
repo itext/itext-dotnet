@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 using Versions.Attributes;
 
 [assembly: AssemblyTitle("iText.Layout")]
-[assembly: AssemblyDescription ("")]
-[assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("iText Group NV")]
-[assembly: AssemblyProduct ("iText")]
-[assembly: AssemblyCopyright ("Copyright (c) 1998-2019 iText Group NV")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("iText Group NV")]
+[assembly: AssemblyProduct("iText")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2020 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.layout.tests,PublicKey=0024000004800000940000000602000000240000525" +
