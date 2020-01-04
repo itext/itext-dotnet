@@ -1363,7 +1363,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// which value is an annotation title or null if it isn't specifed.
+        /// which value is an annotation title or null if it isn't specified.
         /// </returns>
         public virtual PdfString GetTitle() {
             return GetPdfObject().GetAsString(PdfName.T);
