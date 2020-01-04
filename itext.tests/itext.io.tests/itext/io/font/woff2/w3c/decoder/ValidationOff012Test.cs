@@ -44,9 +44,7 @@ using System;
 using iText.IO.Font.Woff2.W3c;
 
 namespace iText.IO.Font.Woff2.W3c.Decoder {
-    [NUnit.Framework.Ignore("DEVSIX-1612: different result in java and C#")]
     public class ValidationOff012Test : W3CWoff2DecodeTest {
-        //NOTE: Should be invalid by w3c test suite spec. See w3cProblemTest07 in html font-face test for more details.
         protected internal override String GetFontName() {
             return "validation-off-012";
         }

@@ -1128,7 +1128,7 @@ namespace iText.IO.Font.Woff2 {
             System.Diagnostics.Debug.Assert(firstTableOffset <= int.MaxValue);
             byte[] output = new byte[(int)firstTableOffset];
             // Re-order tables in output (OTSpec) order
-            IList<Woff2Common.Table> sorted_tables = JavaUtil.ArraysAsList(hdr.tables);
+            IList<Woff2Common.Table> sorted_tables = new List<Woff2Common.Table>(JavaUtil.ArraysAsList(hdr.tables));
             if (hdr.header_version != 0) {
                 // collection font; we have to sort the table offset vector in each font
                 foreach (Woff2Dec.TtcFont ttc_font in hdr.ttc_fonts) {
