@@ -115,20 +115,7 @@ namespace iText.Svg.Css.Impl {
         }
 
         public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
-            IDictionary<String, String> styles = new Dictionary<String, String>();
-            //Load in from collected style sheets
-            IList<CssDeclaration> styleSheetDeclarations = css.GetCssDeclarations(node, MediaDeviceDescription.CreateDefault
-                ());
-            foreach (CssDeclaration ssd in styleSheetDeclarations) {
-                styles.Put(ssd.GetProperty(), ssd.GetExpression());
-            }
-            //Load in attributes declarations
-            if (node is IElementNode) {
-                IElementNode eNode = (IElementNode)node;
-                foreach (IAttribute attr in eNode.GetAttributes()) {
-                    ProcessAttribute(attr, styles);
-                }
-            }
+            IDictionary<String, String> styles = ResolveNativeStyles(node, context);
             //Load in and merge inherited declarations from parent
             if (node.ParentNode() is IStylesContainer) {
                 IStylesContainer parentNode = (IStylesContainer)node.ParentNode();
@@ -145,6 +132,28 @@ namespace iText.Svg.Css.Impl {
                         }
                         sru.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeString);
                     }
+                }
+            }
+            return styles;
+        }
+
+        /// <summary>Resolves node styles without inheritance of parent element styles.</summary>
+        /// <param name="node">the node</param>
+        /// <param name="cssContext">the CSS context (RootFontSize, etc.)</param>
+        /// <returns>the map containing the resolved styles that are defined in the body of the element</returns>
+        public virtual IDictionary<String, String> ResolveNativeStyles(INode node, AbstractCssContext cssContext) {
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            // Load in from collected style sheets
+            IList<CssDeclaration> styleSheetDeclarations = css.GetCssDeclarations(node, MediaDeviceDescription.CreateDefault
+                ());
+            foreach (CssDeclaration ssd in styleSheetDeclarations) {
+                styles.Put(ssd.GetProperty(), ssd.GetExpression());
+            }
+            // Load in attributes declarations
+            if (node is IElementNode) {
+                IElementNode eNode = (IElementNode)node;
+                foreach (IAttribute attr in eNode.GetAttributes()) {
+                    ProcessAttribute(attr, styles);
                 }
             }
             return styles;

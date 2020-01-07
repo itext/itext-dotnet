@@ -71,10 +71,18 @@ namespace iText.Svg.Utils {
 
         ///<summary>Converts a float pts values to pixels </summary>
         ///<param name="v"> the value to be converted pixels</param>
-        ///<returns>float converted value pts*0.75f</returns>
+        ///<returns>float converted value pts/0.75f</returns>
         public static float ConvertPtsToPx(float v)
         {
-            return v * 0.75f;
+            return v / 0.75f;
+        }
+        
+        ///<summary>Converts a double pts values to pixels </summary>
+        ///<param name="v"> the value to be converted pixels</param>
+        ///<returns>double converted value pts/0.75</returns>
+        public static double ConvertPtsToPx(double v)
+        {
+            return v / 0.75;
         }
        
         ///<summary>Converts a float to a String.</summary>

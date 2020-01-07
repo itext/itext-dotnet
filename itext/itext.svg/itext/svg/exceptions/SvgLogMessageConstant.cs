@@ -78,6 +78,14 @@ namespace iText.Svg.Exceptions {
 
         public const String LOOP = "Loop detected";
 
+        public const String MARKER_HEIGHT_IS_NEGATIVE_VALUE = "markerHeight has negative value. Marker will not be rendered.";
+
+        public const String MARKER_HEIGHT_IS_ZERO_VALUE = "markerHeight has zero value. Marker will not be rendered.";
+
+        public const String MARKER_WIDTH_IS_NEGATIVE_VALUE = "markerWidth has negative value. Marker will not be rendered.";
+
+        public const String MARKER_WIDTH_IS_ZERO_VALUE = "markerWidth has zero value. Marker will not be rendered.";
+
         public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not present, so browser default of 300px is used";
 
         public const String MISSING_HEIGHT = "Top Svg tag has no defined height attribute and viewbox height is not present, so browser default of 150px is used";
@@ -106,6 +114,8 @@ namespace iText.Svg.Exceptions {
         public const String TRANSFORM_INCORRECT_VALUE_TYPE = "The transformation value is not a number.";
 
         public const String TRANSFORM_NULL = "The transformation value is null.";
+
+        public const String UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT = "Unable to get inverse transformation matrix and thus calculate a viewport for the element because some of the transformation matrices, which are written to document, have a determinant of zero value. A bbox of zero values will be used as a viewport for this element.";
 
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 

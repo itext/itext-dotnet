@@ -191,6 +191,13 @@ namespace iText.Kernel.Geom {
                 ));
         }
 
+        /// <summary>Convert rectangle to an array of points</summary>
+        /// <returns>array of four extreme points of rectangle</returns>
+        public virtual Point[] ToPointsArray() {
+            return new Point[] { new Point(x, y), new Point(x + width, y), new Point(x + width, y + height), new Point
+                (x, y + height) };
+        }
+
         /// <summary>Get the rectangle representation of the intersection between this rectangle and the passed rectangle
         ///     </summary>
         /// <param name="rect">the rectangle to find the intersection with</param>

@@ -292,5 +292,41 @@ namespace iText.Svg.Utils {
             float actual = SvgTextUtil.ResolveFontSize(root, 10);
             NUnit.Framework.Assert.AreEqual(expected, actual, EPS);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueMarkerReference() {
+            NUnit.Framework.Assert.AreEqual("MarkerCircle", SvgTextUtil.FilterReferenceValue("url(#MarkerCircle)"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueMarkerFullEntry() {
+            NUnit.Framework.Assert.AreEqual("marker-end: MarkerArrow;", SvgTextUtil.FilterReferenceValue("marker-end: url(#MarkerArrow);"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueSimpleReference() {
+            NUnit.Framework.Assert.AreEqual("figure11", SvgTextUtil.FilterReferenceValue("#figure11"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueNoFilter() {
+            NUnit.Framework.Assert.AreEqual("circle", SvgTextUtil.FilterReferenceValue("circle"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueEmptyString() {
+            NUnit.Framework.Assert.AreEqual("", SvgTextUtil.FilterReferenceValue(""));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueNumberString() {
+            NUnit.Framework.Assert.AreEqual("16554245", SvgTextUtil.FilterReferenceValue("16554245"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFilterReferenceValueFilteredValues() {
+            NUnit.Framework.Assert.AreEqual("", SvgTextUtil.FilterReferenceValue("))url(####)"));
+        }
     }
 }

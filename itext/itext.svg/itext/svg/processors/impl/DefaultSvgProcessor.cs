@@ -172,11 +172,17 @@ namespace iText.Svg.Processors.Impl {
                 if (!rendererFactory.IsTagIgnored(element)) {
                     ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
                     if (renderer != null) {
-                        IDictionary<String, String> styles = cssResolver.ResolveStyles(node, cssContext);
+                        IDictionary<String, String> styles;
+                        if (cssResolver is SvgStyleResolver && OnlyNativeStylesShouldBeResolved(element)) {
+                            styles = ((SvgStyleResolver)cssResolver).ResolveNativeStyles(node, cssContext);
+                        }
+                        else {
+                            styles = cssResolver.ResolveStyles(node, cssContext);
+                        }
+                        // For inheritance
                         element.SetStyles(styles);
-                        //For inheritance
+                        // For drawing operations
                         renderer.SetAttributesAndStyles(styles);
-                        //For drawing operations
                         String attribute = renderer.GetAttribute(SvgConstants.Attributes.ID);
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);
@@ -208,6 +214,25 @@ namespace iText.Svg.Processors.Impl {
                     ProcessText((ITextNode)node);
                 }
             }
+        }
+
+        private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
+            return !SvgConstants.Tags.MARKER.Equals(element.Name()) && IsElementNested(element, SvgConstants.Tags.DEFS
+                ) && !IsElementNested(element, SvgConstants.Tags.MARKER);
+        }
+
+        private static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {
+            if (!(element.ParentNode() is IElementNode)) {
+                return false;
+            }
+            IElementNode parentElement = (IElementNode)element.ParentNode();
+            if (parentElement.Name().Equals(parentElementNameForSearch)) {
+                return true;
+            }
+            if (element.ParentNode() != null) {
+                return IsElementNested(parentElement, parentElementNameForSearch);
+            }
+            return false;
         }
 
         /// <summary>Create renderer based on the passed SVG tag and assign its parent</summary>

@@ -50,7 +50,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;polygon&gt; tag.
     /// </summary>
-    public class PolygonSvgNodeRenderer : PolylineSvgNodeRenderer {
+    public class PolygonSvgNodeRenderer : PolylineSvgNodeRenderer, IMarkerCapable {
         /// <summary>
         /// Calls setPoints(String) to set
         /// <see cref="PolylineSvgNodeRenderer.points"/>
@@ -74,7 +74,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             Point start = points[0];
             Point end = points[points.Count - 1];
-            if (JavaUtil.DoubleCompare(start.x, end.x) != 0 && JavaUtil.DoubleCompare(start.y, end.y) != 0) {
+            if (JavaUtil.DoubleCompare(start.x, end.x) != 0 || JavaUtil.DoubleCompare(start.y, end.y) != 0) {
                 points.Add(new Point(start.x, start.y));
             }
         }

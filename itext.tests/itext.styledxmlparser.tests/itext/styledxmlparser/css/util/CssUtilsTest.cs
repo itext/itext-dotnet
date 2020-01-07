@@ -130,28 +130,28 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void ValidateMetricValue() {
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1px"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1in"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1cm"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1mm"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1pc"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsMetricValue("1em"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsMetricValue("1rem"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsMetricValue("1ex"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsMetricValue("1pt"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsMetricValue("1inch"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsMetricValue("+1m"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1px"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1in"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1cm"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1mm"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1pc"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1em"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1rem"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1ex"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsMetricValue("1pt"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("1inch"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsMetricValue("+1m"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ValidateNumericValue() {
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsNumericValue("1"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsNumericValue("12"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsNumericValue("1.2"));
-            NUnit.Framework.Assert.AreEqual(true, CssUtils.IsNumericValue(".12"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsNumericValue("12f"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsNumericValue("f1.2"));
-            NUnit.Framework.Assert.AreEqual(false, CssUtils.IsNumericValue(".12f"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("1"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("12"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue("1.2"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNumericValue(".12"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue("12f"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue("f1.2"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNumericValue(".12f"));
         }
 
         [NUnit.Framework.Test]
@@ -259,6 +259,28 @@ namespace iText.StyledXmlParser.Css.Util {
             // with double values instead of float to improve precision and eliminate
             // the difference between java and .net. So the test verifies this fix
             NUnit.Framework.Assert.AreEqual(8.503937f, CssUtils.ParseAbsoluteLength("12q"), 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIsAngleCorrectValues() {
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("10deg"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("-20grad"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("30.5rad"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsAngleValue("0rad"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIsAngleNullValue() {
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestIsAngleIncorrectValues() {
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("deg"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("-20,6grad"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("0"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10in"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10px"));
         }
     }
 }

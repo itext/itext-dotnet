@@ -127,7 +127,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 27)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 27)]
         public virtual void ClipPathRulesCombined() {
             //TODO: update after DEVSIX-2377
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRulesCombined");

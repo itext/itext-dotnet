@@ -42,13 +42,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -69,76 +72,59 @@ namespace iText.Svg.Renderers.Impl {
         /// maintains its state
         /// </param>
         protected internal override void DoDraw(SvgDrawContext context) {
+            // if branch has no children, don't do anything
             if (GetChildren().Count > 0) {
-                // if branch has no children, don't do anything
                 PdfStream stream = new PdfStream();
                 stream.Put(PdfName.Type, PdfName.XObject);
                 stream.Put(PdfName.Subtype, PdfName.Form);
                 PdfFormXObject xObject = (PdfFormXObject)PdfXObject.MakeXObject(stream);
                 PdfCanvas newCanvas = new PdfCanvas(xObject, context.GetCurrentCanvas().GetDocument());
                 ApplyViewBox(context);
-                //Bounding box needs to be written after viewbox calculations to account for pdf syntax interaction
-                stream.Put(PdfName.BBox, new PdfArray(context.GetCurrentViewPort()));
+                bool overflowVisible = IsOverflowVisible(this);
+                // TODO (DEVSIX-3482) Currently overflow logic works only for markers.  Update this code after the ticket will be finished.
+                if (this is MarkerSvgNodeRenderer && overflowVisible) {
+                    WriteBBoxAccordingToVisibleOverflow(context, stream);
+                }
+                else {
+                    Rectangle bbBox = context.GetCurrentViewPort().Clone();
+                    stream.Put(PdfName.BBox, new PdfArray(bbBox));
+                }
+                if (this is MarkerSvgNodeRenderer) {
+                    ((MarkerSvgNodeRenderer)this).ApplyMarkerAttributes(context);
+                }
                 context.PushCanvas(newCanvas);
-                ApplyViewportClip(context);
+                // TODO (DEVSIX-3482) Currently overflow logic works only for markers. Update this code after the ticket will be finished.
+                if (!(this is MarkerSvgNodeRenderer) || !overflowVisible) {
+                    ApplyViewportClip(context);
+                }
                 ApplyViewportTranslationCorrection(context);
                 foreach (ISvgNodeRenderer child in GetChildren()) {
-                    newCanvas.SaveState();
-                    child.Draw(context);
-                    newCanvas.RestoreState();
+                    if (!(child is MarkerSvgNodeRenderer)) {
+                        newCanvas.SaveState();
+                        child.Draw(context);
+                        newCanvas.RestoreState();
+                    }
                 }
                 CleanUp(context);
+                // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
                 context.GetCurrentCanvas().AddXObject(xObject, 0, 0);
             }
         }
 
-        // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         internal virtual void ApplyViewBox(SvgDrawContext context) {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX
                 )) {
-                //Parse aspect ratio related stuff
-                String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
-                IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
-                float[] values = new float[valueStrings.Count];
-                for (int i = 0; i < values.Length; i++) {
-                    values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
-                }
+                float[] values = GetViewBoxValues();
                 Rectangle currentViewPort = context.GetCurrentViewPort();
-                String[] alignAndMeet = RetrieveAlignAndMeet();
-                String align = alignAndMeet[0];
-                String meetOrSlice = alignAndMeet[1];
-                float scaleWidth = currentViewPort.GetWidth() / values[2];
-                float scaleHeight = currentViewPort.GetHeight() / values[3];
-                bool forceUniformScaling = !(SvgConstants.Values.NONE.Equals(align));
-                if (forceUniformScaling) {
-                    //Scaling should preserve aspect ratio
-                    if (SvgConstants.Values.MEET.Equals(meetOrSlice)) {
-                        scaleWidth = Math.Min(scaleWidth, scaleHeight);
-                    }
-                    else {
-                        scaleWidth = Math.Max(scaleWidth, scaleHeight);
-                    }
-                    scaleHeight = scaleWidth;
-                }
-                AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
-                float[] scaledViewBoxValues = ScaleViewBoxValues(values, scaleWidth, scaleHeight);
-                AffineTransform transform = ProcessAspectRatioPosition(context, scaledViewBoxValues, align, scaleWidth, scaleHeight
-                    );
-                if (!scale.IsIdentity()) {
-                    context.GetCurrentCanvas().ConcatMatrix(scale);
-                    //Inverse scaling needs to be applied to viewport dimensions
-                    context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth).SetX(currentViewPort.GetX()
-                         / scaleWidth).SetHeight(currentViewPort.GetHeight() / scaleHeight).SetY(currentViewPort.GetY() / scaleHeight
-                        );
-                }
-                if (!transform.IsIdentity()) {
-                    context.GetCurrentCanvas().ConcatMatrix(transform);
-                    //Apply inverse translation to viewport to make it line up nicely
-                    context.GetCurrentViewPort().SetX(currentViewPort.GetX() + -1 * (float)transform.GetTranslateX()).SetY(currentViewPort
-                        .GetY() + -1 * (float)transform.GetTranslateY());
-                }
+                CalculateAndApplyViewBox(context, values, currentViewPort);
+            }
+            else {
+                float[] values = new float[] { 0, 0, context.GetCurrentViewPort().GetWidth(), context.GetCurrentViewPort()
+                    .GetHeight() };
+                Rectangle currentViewPort = context.GetCurrentViewPort();
+                CalculateAndApplyViewBox(context, values, currentViewPort);
             }
         }
 
@@ -153,6 +139,12 @@ namespace iText.Svg.Renderers.Impl {
                 if (aspectRatioValuesSplitValues.Count > 1) {
                     meetOrSlice = aspectRatioValuesSplitValues[1].ToLowerInvariant();
                 }
+            }
+            if (this is MarkerSvgNodeRenderer && !SvgConstants.Values.NONE.Equals(align) && SvgConstants.Values.MEET.Equals
+                (meetOrSlice)) {
+                // Browsers do not correctly display markers with 'meet' option in the preserveAspectRatio attribute.
+                // The Chrome, IE, and Firefox browsers set the align value to 'xMinYMin' regardless of the actual align.
+                align = SvgConstants.Values.XMIN_YMIN;
             }
             return new String[] { align, meetOrSlice };
         }
@@ -200,9 +192,11 @@ namespace iText.Svg.Renderers.Impl {
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
                 y = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
             }
+            if (!(this is MarkerSvgNodeRenderer)) {
+                x -= currentViewPort.GetX();
+                y -= currentViewPort.GetY();
+            }
             // need to consider previous (parent) translation before applying the current one
-            x -= currentViewPort.GetX();
-            y -= currentViewPort.GetY();
             switch (align.ToLowerInvariant()) {
                 case SvgConstants.Values.NONE: {
                     break;
@@ -318,6 +312,53 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        internal virtual void CalculateAndApplyViewBox(SvgDrawContext context, float[] values, Rectangle currentViewPort
+            ) {
+            String[] alignAndMeet = RetrieveAlignAndMeet();
+            String align = alignAndMeet[0];
+            String meetOrSlice = alignAndMeet[1];
+            float scaleWidth = currentViewPort.GetWidth() / values[2];
+            float scaleHeight = currentViewPort.GetHeight() / values[3];
+            bool forceUniformScaling = !(SvgConstants.Values.NONE.Equals(align));
+            if (forceUniformScaling) {
+                //Scaling should preserve aspect ratio
+                if (SvgConstants.Values.MEET.Equals(meetOrSlice)) {
+                    scaleWidth = Math.Min(scaleWidth, scaleHeight);
+                }
+                else {
+                    scaleWidth = Math.Max(scaleWidth, scaleHeight);
+                }
+                scaleHeight = scaleWidth;
+            }
+            AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
+            float[] scaledViewBoxValues = ScaleViewBoxValues(values, scaleWidth, scaleHeight);
+            AffineTransform transform = ProcessAspectRatioPosition(context, scaledViewBoxValues, align, scaleWidth, scaleHeight
+                );
+            if (!scale.IsIdentity()) {
+                context.GetCurrentCanvas().ConcatMatrix(scale);
+                //Inverse scaling needs to be applied to viewport dimensions
+                context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth).SetX(currentViewPort.GetX()
+                     / scaleWidth).SetHeight(currentViewPort.GetHeight() / scaleHeight).SetY(currentViewPort.GetY() / scaleHeight
+                    );
+            }
+            if (!transform.IsIdentity()) {
+                context.GetCurrentCanvas().ConcatMatrix(transform);
+                //Apply inverse translation to viewport to make it line up nicely
+                context.GetCurrentViewPort().SetX(currentViewPort.GetX() + -1 * (float)transform.GetTranslateX()).SetY(currentViewPort
+                    .GetY() + -1 * (float)transform.GetTranslateY());
+            }
+        }
+
+        internal virtual float[] GetViewBoxValues() {
+            String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
+            IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
+            float[] values = new float[valueStrings.Count];
+            for (int i = 0; i < values.Length; i++) {
+                values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+            }
+            return values;
+        }
+
         private static float[] ScaleViewBoxValues(float[] values, float scaleWidth, float scaleHeight) {
             float[] scaledViewBoxValues = new float[values.Length];
             scaledViewBoxValues[0] = values[0] * scaleWidth;
@@ -325,6 +366,65 @@ namespace iText.Svg.Renderers.Impl {
             scaledViewBoxValues[2] = values[2] * scaleWidth;
             scaledViewBoxValues[3] = values[3] * scaleHeight;
             return scaledViewBoxValues;
+        }
+
+        private static bool IsOverflowVisible(AbstractSvgNodeRenderer currentElement) {
+            return (CommonCssConstants.VISIBLE.Equals(currentElement.attributesAndStyles.Get(CommonCssConstants.OVERFLOW
+                )) || CommonCssConstants.AUTO.Equals(currentElement.attributesAndStyles.Get(CommonCssConstants.OVERFLOW
+                )));
+        }
+
+        /// <summary>
+        /// When in the svg element
+        /// <c>overflow</c>
+        /// is
+        /// <c>visible</c>
+        /// the corresponding formXObject
+        /// should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
+        /// that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
+        /// </summary>
+        /// <remarks>
+        /// When in the svg element
+        /// <c>overflow</c>
+        /// is
+        /// <c>visible</c>
+        /// the corresponding formXObject
+        /// should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
+        /// that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
+        /// To do this, we get the inverse matrix of all the current transformation matrix changes and apply it to the root viewPort.
+        /// This allows you to get the root rectangle in the final coordinate system.
+        /// </remarks>
+        /// <param name="context">current context to get canvases and view ports</param>
+        /// <param name="stream">stream to write a BBox</param>
+        private static void WriteBBoxAccordingToVisibleOverflow(SvgDrawContext context, PdfStream stream) {
+            IList<PdfCanvas> canvases = new List<PdfCanvas>();
+            int canvasesSize = context.Size();
+            for (int i = 0; i < canvasesSize; i++) {
+                canvases.Add(context.PopCanvas());
+            }
+            AffineTransform transform = new AffineTransform();
+            for (int i = canvases.Count - 1; i >= 0; i--) {
+                PdfCanvas canvas = canvases[i];
+                Matrix matrix = canvas.GetGraphicsState().GetCtm();
+                transform.Concatenate(new AffineTransform(matrix.Get(0), matrix.Get(1), matrix.Get(3), matrix.Get(4), matrix
+                    .Get(6), matrix.Get(7)));
+                context.PushCanvas(canvas);
+            }
+            try {
+                transform = transform.CreateInverse();
+            }
+            catch (NoninvertibleTransformException) {
+                // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
+                // for example with a, b, c, d in cm equal to 0
+                stream.Put(PdfName.BBox, new PdfArray(new Rectangle(0, 0, 0, 0)));
+                ILog logger = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+                logger.Warn(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
+                return;
+            }
+            Point[] points = context.GetRootViewPort().ToPointsArray();
+            transform.Transform(points, 0, points, 0, points.Length);
+            Rectangle bbox = Rectangle.CalculateBBox(JavaUtil.ArraysAsList(points));
+            stream.Put(PdfName.BBox, new PdfArray(bbox));
         }
     }
 }

@@ -50,35 +50,35 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void OverflowVisibleInMarkerElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2860 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInMarkerElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowHiddenInMarkerElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2860 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInMarkerElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowAutoInMarkerElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2860 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowAutoInMarkerElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowScrollInMarkerElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2860 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInMarkerElement"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowInitialInMarkerElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2860 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInMarkerElement"
                 );
         }

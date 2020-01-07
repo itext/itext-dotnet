@@ -2030,25 +2030,11 @@ namespace iText.Layout.Renderer {
         /// <param name="points">list of the points calculated bbox will enclose.</param>
         /// <returns>array of float values which denote left, bottom, right, top lines of bbox in this specific order</returns>
         protected internal virtual Rectangle CalculateBBox(IList<Point> points) {
-            double minX = double.MaxValue;
-            double minY = double.MaxValue;
-            double maxX = -double.MaxValue;
-            double maxY = -double.MaxValue;
-            foreach (Point p in points) {
-                minX = Math.Min(p.GetX(), minX);
-                minY = Math.Min(p.GetY(), minY);
-                maxX = Math.Max(p.GetX(), maxX);
-                maxY = Math.Max(p.GetY(), maxY);
-            }
-            return new Rectangle((float)minX, (float)minY, (float)(maxX - minX), (float)(maxY - minY));
+            return Rectangle.CalculateBBox(points);
         }
 
         protected internal virtual IList<Point> RectangleToPointsList(Rectangle rect) {
-            IList<Point> points = new List<Point>();
-            points.AddAll(JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect.GetRight()
-                , rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect.GetTop(
-                ))));
-            return points;
+            return JavaUtil.ArraysAsList(rect.ToPointsArray());
         }
 
         protected internal virtual IList<Point> TransformPoints(IList<Point> points, AffineTransform transform) {

@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
@@ -71,6 +72,14 @@ namespace iText.Svg.Utils {
                 }
             }
             return absoluteOperators;
+        }
+
+        /// <summary>Calculate the angle between two vectors</summary>
+        /// <param name="vectorA">first vector</param>
+        /// <param name="vectorB">second vector</param>
+        /// <returns>angle between vectors in radians units</returns>
+        public static double CalculateAngleBetweenTwoVectors(Vector vectorA, Vector vectorB) {
+            return Math.Acos((double)vectorA.Dot(vectorB) / ((double)vectorA.Length() * (double)vectorB.Length()));
         }
     }
 }

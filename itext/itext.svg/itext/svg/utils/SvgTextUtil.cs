@@ -186,5 +186,13 @@ namespace iText.Svg.Utils {
             }
             return fontSize;
         }
+
+        /// <summary>The reference value may contain a hashtag character or 'url' designation and this method will filter them.
+        ///     </summary>
+        /// <param name="name">value to be filtered</param>
+        /// <returns>filtered value</returns>
+        public static String FilterReferenceValue(String name) {
+            return name.Replace("#", "").Replace("url(", "").Replace(")", "").Trim();
+        }
     }
 }

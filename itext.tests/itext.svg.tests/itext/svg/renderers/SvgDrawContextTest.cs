@@ -75,20 +75,20 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DrawContextEmptyStackPeekTest() {
+        public virtual void DrawContextEmptyDequeGetFirstTest() {
             NUnit.Framework.Assert.That(() =>  {
                 context.GetCurrentCanvas();
             }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
 ;
         }
 
         [NUnit.Framework.Test]
-        public virtual void DrawContextEmptyStackPopTest() {
+        public virtual void DrawContextEmptyDequePopTest() {
             NUnit.Framework.Assert.That(() =>  {
                 context.PopCanvas();
             }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
 ;
         }
 

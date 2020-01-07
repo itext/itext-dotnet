@@ -57,6 +57,10 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
+        // TODO (DEVSIX-3397) Add MarkerVertexType.MARKER_MID after ticket will be finished.
+        private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
+            .MARKER_START, MarkerVertexType.MARKER_END };
+
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
@@ -232,6 +236,17 @@ namespace iText.Svg.Renderers.Impl {
                             if (!typeof(TextSvgBranchRenderer).IsInstanceOfType(this)) {
                                 currentCanvas.EndPath();
                             }
+                        }
+                    }
+                }
+                // Marker drawing
+                if (this is IMarkerCapable) {
+                    // TODO (DEVSIX-3397) add processing of 'marker' property (shorthand for a joint using of all other properties)
+                    foreach (MarkerVertexType markerVertexType in MARKER_VERTEX_TYPES) {
+                        if (attributesAndStyles.ContainsKey(markerVertexType.ToString())) {
+                            currentCanvas.SaveState();
+                            ((IMarkerCapable)this).DrawMarker(context, markerVertexType);
+                            currentCanvas.RestoreState();
                         }
                     }
                 }

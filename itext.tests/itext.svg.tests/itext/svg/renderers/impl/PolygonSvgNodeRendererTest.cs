@@ -150,5 +150,33 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ConnectPointsWithSameYCoordinateTest() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.AddNewPage();
+            ISvgNodeRenderer root = new PolygonSvgNodeRenderer();
+            IDictionary<String, String> polyLineAttributes = new Dictionary<String, String>();
+            polyLineAttributes.Put(SvgConstants.Attributes.POINTS, "100,100 100,200 150,200 150,100");
+            polyLineAttributes.Put(SvgConstants.Attributes.FILL, "none");
+            polyLineAttributes.Put(SvgConstants.Attributes.STROKE, "black");
+            root.SetAttributesAndStyles(polyLineAttributes);
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            PdfCanvas cv = new PdfCanvas(doc, 1);
+            context.PushCanvas(cv);
+            root.Draw(context);
+            doc.Close();
+            IList<Point> expectedPoints = new List<Point>();
+            expectedPoints.Add(new Point(75, 75));
+            expectedPoints.Add(new Point(75, 150));
+            expectedPoints.Add(new Point(112.5, 150));
+            expectedPoints.Add(new Point(112.5, 75));
+            expectedPoints.Add(new Point(75, 75));
+            IList<Point> attributePoints = ((PolygonSvgNodeRenderer)root).GetPoints();
+            NUnit.Framework.Assert.AreEqual(expectedPoints.Count, attributePoints.Count);
+            for (int x = 0; x < attributePoints.Count; x++) {
+                NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
+            }
+        }
     }
 }
