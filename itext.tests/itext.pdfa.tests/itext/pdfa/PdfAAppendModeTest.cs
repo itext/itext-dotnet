@@ -42,25 +42,24 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.Kernel.Events;
 using iText.Kernel.Font;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
-using iText.Layout;
-using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    public class PdfAPageEndEventTest : ExtendedITextTest {
+    public class PdfAAppendModeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/PdfAPageEndEventTest/";
+        public const String testDirName = "PdfAAppendModeTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfAPageEndEventTest/";
+        public static readonly String cmpFolder = sourceFolder + "cmp/" + testDirName;
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/pdfa/" + testDirName;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -68,44 +67,36 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckPageEndEvent() {
-            // TODO DEVSIX-2645
-            String outPdf = destinationFolder + "checkPageEndEvent.pdf";
-            String cmpPdf = sourceFolder + "cmp_checkPageEndEvent.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
+        public virtual void AddPageInAppendModeTest() {
+            String inputFile = destinationFolder + "in_addPageInAppendModeTest.pdf";
+            String outputFile = destinationFolder + "out_addPageInAppendModeTest.pdf";
+            String cmpFile = cmpFolder + "cmp_addPageInAppendModeTest.pdf";
+            CreateInputPdfADocument(inputFile);
+            PdfDocument pdfADocument = new PdfADocument(new PdfReader(inputFile), new PdfWriter(outputFile), new StampingProperties
+                ().UseAppendMode());
+            PdfCanvas canvas = new PdfCanvas(pdfADocument.AddNewPage());
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
+                , true), 16).ShowText("This page 2").EndText().RestoreState();
+            canvas.Release();
+            pdfADocument.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(inputFile));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outputFile));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void CreateInputPdfADocument(String docName) {
+            PdfWriter writer = new PdfWriter(docName);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
                 , FileMode.Open, FileAccess.Read)));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
-            PdfFont freesans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
-            pdfDoc.AddEventHandler(PdfDocumentEvent.END_PAGE, new PdfAPageEndEventTest.HeaderEventHandler(freesans));
-            Document document = new Document(pdfDoc, PageSize.A4);
-            // TODO fix header duplication on the first page
-            document.Add(new Paragraph("Hello World on page 1").SetFont(freesans));
-            document.Add(new AreaBreak());
-            document.Add(new Paragraph("Hello World on page 2").SetFont(freesans));
-            document.Add(new AreaBreak());
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
-                ));
-        }
-
-        internal class HeaderEventHandler : IEventHandler {
-            internal PdfFont font;
-
-            internal static int counter = 1;
-
-            public HeaderEventHandler(PdfFont font) {
-                this.font = font;
-            }
-
-            public virtual void HandleEvent(Event @event) {
-                PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
-                PdfPage page = pdfEvent.GetPage();
-                new PdfCanvas(page).BeginText().MoveText(10, page.GetPageSize().GetHeight() - 20).SetFontAndSize(font, 12.0f
-                    ).ShowText("Footer " + counter++).EndText();
-            }
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
+                , true), 16).ShowText("This page 1").EndText().RestoreState();
+            canvas.Release();
+            pdfDoc.Close();
         }
     }
 }

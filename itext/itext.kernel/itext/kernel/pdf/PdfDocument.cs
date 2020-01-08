@@ -69,6 +69,8 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
+        private static IPdfPageFactory pdfPageFactory = new PdfPageFactory();
+
         /// <summary>Currently active page.</summary>
         [System.ObsoleteAttribute(@"Will be removed in iText 7.2")]
         protected internal PdfPage currentPage = null;
@@ -381,7 +383,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>added page</returns>
         public virtual PdfPage AddNewPage(PageSize pageSize) {
             CheckClosingStatus();
-            PdfPage page = new PdfPage(this, pageSize);
+            PdfPage page = GetPageFactory().CreatePdfPage(this, pageSize);
             CheckAndAddPage(page);
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
@@ -401,7 +403,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>inserted page</returns>
         public virtual PdfPage AddNewPage(int index, PageSize pageSize) {
             CheckClosingStatus();
-            PdfPage page = new PdfPage(this, pageSize);
+            PdfPage page = GetPageFactory().CreatePdfPage(this, pageSize);
             CheckAndAddPage(index, page);
             currentPage = page;
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
@@ -2158,6 +2160,16 @@ namespace iText.Kernel.Pdf {
         [Obsolete]
         protected internal virtual IList<ICounter> GetCounters() {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
+        }
+
+        /// <summary>Returns the factory for creating page instances.</summary>
+        /// <returns>
+        /// implementation of
+        /// <see cref="IPdfPageFactory"/>
+        /// for current document
+        /// </returns>
+        protected internal virtual IPdfPageFactory GetPageFactory() {
+            return pdfPageFactory;
         }
 
         /// <summary>Gets iText version info.</summary>

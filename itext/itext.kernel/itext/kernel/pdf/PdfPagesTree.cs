@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf {
                     int parentIndex = FindPageParent(pageNum);
                     PdfObject pageObject = pageRefs[pageNum].GetRefersTo();
                     if (pageObject is PdfDictionary) {
-                        pdfPage = new PdfPage((PdfDictionary)pageObject);
+                        pdfPage = document.GetPageFactory().CreatePdfPage((PdfDictionary)pageObject);
                         pdfPage.parentPages = parents[parentIndex];
                     }
                     else {

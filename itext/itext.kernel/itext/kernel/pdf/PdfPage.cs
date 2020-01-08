@@ -508,7 +508,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
-            iText.Kernel.Pdf.PdfPage page = new iText.Kernel.Pdf.PdfPage(dictionary);
+            iText.Kernel.Pdf.PdfPage page = GetDocument().GetPageFactory().CreatePdfPage(dictionary);
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
                 if (annot.GetSubtype().Equals(PdfName.Link)) {
@@ -625,7 +625,6 @@ namespace iText.Kernel.Pdf {
         /// will be flushed.
         /// </param>
         public virtual void Flush(bool flushResourcesContentStreams) {
-            // TODO log warning in case of failed flush in pdfa document case
             if (IsFlushed()) {
                 return;
             }
