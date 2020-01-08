@@ -94,6 +94,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientNoAspectRatioPreservationTest() {
+            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientNoAspectRatioPreservationTest"
                 );
         }
@@ -120,6 +121,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathPreserveAspectRatioTest() {
+            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathPreserveAspectRatioTest");
         }
 
@@ -298,6 +300,13 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage("markerHeight has negative value. Marker will not be rendered.")]
         public virtual void MarkerEspecialMarkerWidthHeightValuesTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerEspecialMarkerWidthHeightValuesTest"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeformationWhenRotationAndPreserveAspectRationNone() {
+            // TODO (DEVSIX-3621) change cmp after fixing
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
         }
     }
