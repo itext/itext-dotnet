@@ -10,12 +10,12 @@
     <projectUrl>https://itextpdf.com/</projectUrl>
     <iconUrl>https://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>iText 7 represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText 7 can be a boon to nearly every workflow. iText 7 allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in Java and .NET.</description>
-    <summary>iText for .NET is a port of the iText open source java library for PDF generation written entirely in C# for the .NET platform.</summary>
+    <description>iText 7 represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText 7 can be a boon to nearly every workflow. iText 7 allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in .NET.</description>
+    <summary>iText for .NET is a library for PDF generation written entirely in C# for the .NET platform.</summary>
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2020 iText Group NV</copyright>
     <language>en-US</language>
-    <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core</tags>
+    <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core fdf xfa acroform forms svg digital-signatures signing security accessibility opensource open source</tags>
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Common.Logging" version="3.4.1" />
