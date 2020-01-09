@@ -16,6 +16,7 @@
     <copyright>Copyright (c) 1998-2020 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core fdf xfa acroform forms svg digital-signatures signing security accessibility opensource open source</tags>
+	<repository type="git" url="https://github.com/itext/itext7-dotnet.git"/>
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Common.Logging" version="3.4.1" />
