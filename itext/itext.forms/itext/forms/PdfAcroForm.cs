@@ -247,7 +247,9 @@ namespace iText.Forms {
             if (kids != null) {
                 ProcessKids(kids, fieldDic, page);
             }
-            GetFields().Add(fieldDic);
+            PdfArray fieldsArray = GetFields();
+            fieldsArray.Add(fieldDic);
+            fieldsArray.SetModified();
             fields.Put(field.GetFieldName().ToUnicodeString(), field);
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
@@ -886,8 +888,10 @@ namespace iText.Forms {
             }
             PdfDictionary parent = field.GetParent();
             if (parent != null) {
-                parent.GetAsArray(PdfName.Kids).Remove(fieldObject);
+                PdfArray kids = parent.GetAsArray(PdfName.Kids);
+                kids.Remove(fieldObject);
                 fields.JRemove(fieldName);
+                kids.SetModified();
                 parent.SetModified();
                 return true;
             }
@@ -895,6 +899,7 @@ namespace iText.Forms {
             if (fieldsPdfArray.Contains(fieldObject)) {
                 fieldsPdfArray.Remove(fieldObject);
                 this.fields.JRemove(fieldName);
+                fieldsPdfArray.SetModified();
                 SetModified();
                 return true;
             }
