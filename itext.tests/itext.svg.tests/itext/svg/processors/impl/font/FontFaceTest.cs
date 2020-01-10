@@ -138,11 +138,15 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1612")]
         public virtual void W3cProblemTest02() {
-            //TODO: In w3c test suite this font is labeled as invalid though and its loading failed in browser, though iText parses its as correct one and LOADS!
-            //See DirectoryTableOrder002Test in io for decompression details
-            RunTest("w3cProblemTest02");
+            try {
+                RunTest("w3cProblemTest02");
+            }
+            catch (OverflowException) {
+                return;
+            }
+            NUnit.Framework.Assert.Fail("In w3c test suite this font is labeled as invalid, " + "so the invalid negative value is expected while creating a glyph."
+                );
         }
 
         [NUnit.Framework.Test]
@@ -176,11 +180,15 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1612")]
         public virtual void W3cProblemTest07() {
-            //TODO: In w3c test suite this font is labeled as invalid though and its loading failed in browser, though iText parses its as correct one and LOADS!
-            //See ValidationOff012Test in io for decompression details
-            RunTest("w3cProblemTest07");
+            try {
+                RunTest("w3cProblemTest07");
+            }
+            catch (OverflowException) {
+                return;
+            }
+            NUnit.Framework.Assert.Fail("In w3c test suite this font is labeled as invalid, " + "so the invalid negative value is expected while creating a glyph."
+                );
         }
 
         [NUnit.Framework.Test]
