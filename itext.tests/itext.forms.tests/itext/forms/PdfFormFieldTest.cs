@@ -1046,7 +1046,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void FillUnmergedTextFormField() {
-            // TODO update cmp-file after DEVSIX-2622 fixed
             String file = sourceFolder + "fillUnmergedTextFormField.pdf";
             String outfile = destinationFolder + "fillUnmergedTextFormField.pdf";
             String text = "John";
