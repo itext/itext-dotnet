@@ -37,4 +37,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("7.1.10.0")]
 [assembly: AssemblyFileVersion("7.1.10.0")]
-[assembly: AssemblyInformationalVersion("7.1.10-SNAPSHOT")]
+[assembly: AssemblyInformationalVersion("7.1.10")]
