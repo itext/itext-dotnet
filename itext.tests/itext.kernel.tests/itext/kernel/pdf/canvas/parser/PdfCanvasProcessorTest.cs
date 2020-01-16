@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -55,72 +57,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void ContentStreamProcessorTest() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "yaxiststar.pdf"), new PdfWriter(new ByteArrayOutputStream
-                ()));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "tableWithImageAndText.pdf"), new PdfWriter
+                (new ByteArrayOutputStream()));
+            StringBuilder pageEventsLog = new StringBuilder();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_83());
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryHighLevelEventListener
+                    (pageEventsLog));
                 processor.ProcessPageContent(page);
             }
-        }
-
-        private sealed class _IEventListener_83 : IEventListener {
-            public _IEventListener_83() {
-            }
-
-            public void EventOccurred(IEventData data, EventType type) {
-                switch (type) {
-                    case EventType.BEGIN_TEXT: {
-                        System.Console.Out.WriteLine("-------- BEGIN TEXT CALLED ---------");
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_TEXT: {
-                        System.Console.Out.WriteLine("-------- RENDER TEXT CALLED --------");
-                        TextRenderInfo renderInfo = (TextRenderInfo)data;
-                        System.Console.Out.WriteLine("String: " + renderInfo.GetPdfString());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.END_TEXT: {
-                        System.Console.Out.WriteLine("-------- END TEXT CALLED -----------");
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_IMAGE: {
-                        System.Console.Out.WriteLine("-------- RENDER IMAGE CALLED---------");
-                        ImageRenderInfo renderInfo1 = (ImageRenderInfo)data;
-                        System.Console.Out.WriteLine("Image: " + renderInfo1.GetImage().GetPdfObject());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_PATH: {
-                        System.Console.Out.WriteLine("-------- RENDER PATH CALLED --------");
-                        PathRenderInfo renderinfo2 = (PathRenderInfo)data;
-                        System.Console.Out.WriteLine("Path: " + renderinfo2.GetPath());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.CLIP_PATH_CHANGED: {
-                        System.Console.Out.WriteLine("-------- CLIPPING PATH CALLED-------");
-                        ClippingPathInfo renderinfo3 = (ClippingPathInfo)data;
-                        System.Console.Out.WriteLine("Clipping path: " + renderinfo3.GetClippingPath());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-                }
-            }
-
-            public ICollection<EventType> GetSupportedEvents() {
-                return null;
-            }
+            byte[] logBytes = File.ReadAllBytes(Path.Combine(sourceFolder + "contentStreamProcessorTest_events_log.dat"
+                ));
+            String expectedPageEventsLog = iText.IO.Util.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding.UTF8
+                );
+            NUnit.Framework.Assert.AreEqual(expectedPageEventsLog, pageEventsLog.ToString());
         }
 
         [NUnit.Framework.Test]
@@ -147,8 +98,88 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 , resultantText);
         }
 
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-3608: this test currently throws StackOverflowError, which cannot be caught in .NET"
+            )]
+        public virtual void ParseCircularReferencesInResourcesTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String fileName = "circularReferencesInResources.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
+                PdfPage page = pdfDocument.GetFirstPage();
+                processor.ProcessPageContent(page);
+                pdfDocument.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<OutOfMemoryException>())
+;
+        }
+
         private class NoOpEventListener : IEventListener {
             public virtual void EventOccurred(IEventData data, EventType type) {
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
+        private class RecordEveryHighLevelEventListener : IEventListener {
+            private const String END_EVENT_OCCURRENCE = "------------------------------------";
+
+            private StringBuilder sb;
+
+            internal RecordEveryHighLevelEventListener(StringBuilder outStream) {
+                this.sb = outStream;
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                switch (type) {
+                    case EventType.BEGIN_TEXT: {
+                        sb.Append("-------- BEGIN TEXT ---------").Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_TEXT: {
+                        sb.Append("-------- RENDER TEXT --------").Append("\n");
+                        TextRenderInfo renderInfo = (TextRenderInfo)data;
+                        sb.Append("String: ").Append(renderInfo.GetPdfString().ToUnicodeString()).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.END_TEXT: {
+                        sb.Append("-------- END TEXT -----------").Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_IMAGE: {
+                        sb.Append("-------- RENDER IMAGE ---------").Append("\n");
+                        ImageRenderInfo imageRenderInfo = (ImageRenderInfo)data;
+                        sb.Append("Image: ").Append(imageRenderInfo.GetImageResourceName()).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_PATH: {
+                        sb.Append("-------- RENDER PATH --------").Append("\n");
+                        PathRenderInfo pathRenderInfo = (PathRenderInfo)data;
+                        sb.Append("Operation type: ").Append(pathRenderInfo.GetOperation()).Append("\n");
+                        sb.Append("Num of subpaths: ").Append(pathRenderInfo.GetPath().GetSubpaths().Count).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.CLIP_PATH_CHANGED: {
+                        sb.Append("-------- CLIPPING PATH ------").Append("\n");
+                        ClippingPathInfo clippingPathRenderInfo = (ClippingPathInfo)data;
+                        sb.Append("Num of subpaths: ").Append(clippingPathRenderInfo.GetClippingPath().GetSubpaths().Count).Append
+                            ("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+                }
             }
 
             public virtual ICollection<EventType> GetSupportedEvents() {

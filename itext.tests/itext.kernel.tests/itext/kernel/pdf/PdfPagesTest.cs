@@ -86,28 +86,6 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount);
         }
 
-        //    @Test
-        //    public void simpleClonePagesTest() throws IOException {
-        //        String filename = "simpleClonePagesTest.pdf";
-        //        int pageCount = 111;
-        //
-        //        FileOutputStream fos = new FileOutputStream(destinationFolder + filename);
-        //        PdfWriter writer = new PdfWriter(fos);
-        //        PdfDocument pdfDoc = new PdfDocument(writer);
-        //
-        //        for (int i = 0; i < pageCount; i++) {
-        //            PdfPage page = pdfDoc.addNewPage();
-        //            page.getPdfObject().put(PageNum, new PdfNumber(i + 1));
-        //        }
-        //        for (int i = 0; i < pageCount; i++) {
-        //            PdfPage page = pdfDoc.addPage((PdfPage)pdfDoc.getPage(i + 1).clone());
-        //            page.getPdfObject().put(PageNum, new PdfNumber(pageCount + i + 1));
-        //            pdfDoc.getPage(i + 1).flush();
-        //            page.flush();
-        //        }
-        //        pdfDoc.close();
-        //        verifyPagesOrder(destinationFolder + filename, pageCount);
-        //    }
         [NUnit.Framework.Test]
         public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
@@ -306,15 +284,29 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(10, gState.GetLineWidth());
         }
 
-        //    @Test(expected = PdfException.class)
-        //    public void testCircularReferencesInResources() throws IOException {
-        //        String inputFileName1 = sourceFolder + "circularReferencesInResources.pdf";
-        //        PdfReader reader1 = new PdfReader(inputFileName1);
-        //        PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
-        //        PdfPage page = inputPdfDoc1.getPage(1);
-        //        List<PdfFont> list = page.getResources().getFonts(true);
-        //    }
-        //
+        [NUnit.Framework.Test]
+        public virtual void ReadFormXObjectsWithCircularReferencesInResources() {
+            // given input file contains circular reference in resources of form xobjects
+            // (form xobjects are nested inside each other)
+            String input = sourceFolder + "circularReferencesInResources.pdf";
+            PdfReader reader1 = new PdfReader(input);
+            PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
+            PdfPage page = inputPdfDoc1.GetPage(1);
+            PdfResources resources = page.GetResources();
+            IList<PdfFormXObject> formXObjects = new List<PdfFormXObject>();
+            // We just try to work with resources in arbitrary way and make sure that circular reference
+            // doesn't block it. However it is expected that PdfResources doesn't try to "look in deep"
+            // and recursively resolves resources, so this test should never meet any issues.
+            foreach (PdfName xObjName in resources.GetResourceNames(PdfName.XObject)) {
+                PdfFormXObject form = resources.GetForm(xObjName);
+                if (form != null) {
+                    formXObjects.Add(form);
+                }
+            }
+            // ensure resources XObject entry is read correctly
+            NUnit.Framework.Assert.AreEqual(2, formXObjects.Count);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestInheritedResourcesUpdate() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"), new PdfWriter
