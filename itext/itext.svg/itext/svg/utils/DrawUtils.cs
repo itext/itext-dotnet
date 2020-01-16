@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
 
@@ -68,12 +69,33 @@ namespace iText.Svg.Utils {
         /// <param name="startAng">starting angle in degrees</param>
         /// <param name="extent">extent of the arc</param>
         /// <param name="cv">canvas to paint on</param>
+        [System.ObsoleteAttribute(@"In iText.Kernel.Pdf.Canvas.PdfCanvas most of the path drawing methods accept double . So it is preferable to use Arc(double, double, double, double, double, double, iText.Kernel.Pdf.Canvas.PdfCanvas) . This method will be removed in iText 7.2"
+            )]
         public static void Arc(float x1, float y1, float x2, float y2, float startAng, float extent, PdfCanvas cv) {
+            Arc((double)x1, (double)y1, (double)x2, (double)y2, (double)startAng, (double)extent, cv);
+        }
+
+        /// <summary>
+        /// Draw an arc on the passed canvas,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// </summary>
+        /// <remarks>
+        /// Draw an arc on the passed canvas,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// The arc starts at the passed starting angle and extends to the starting angle + extent
+        /// </remarks>
+        /// <param name="x1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="y1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="x2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="y2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="startAng">starting angle in degrees</param>
+        /// <param name="extent">extent of the arc</param>
+        /// <param name="cv">canvas to paint on</param>
+        public static void Arc(double x1, double y1, double x2, double y2, double startAng, double extent, PdfCanvas
+             cv) {
             IList<double[]> ar = PdfCanvas.BezierArc(x1, y1, x2, y2, startAng, extent);
             if (!ar.IsEmpty()) {
-                double[] pt;
-                for (int k = 0; k < ar.Count; ++k) {
-                    pt = ar[k];
+                foreach (double[] pt in ar) {
                     cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
                 }
             }

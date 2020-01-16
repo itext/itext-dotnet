@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,18 +90,79 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
         }
 
-        [NUnit.Framework.Ignore("works in non-deterministic way because of the bug in iText code, DEVSIX-3322")]
         [NUnit.Framework.Test]
-        public virtual void StampingFormXobjectInnerContentTaggedTest() {
-            //TODO update cmp-file after DEVSIX-3322 fixed
+        public virtual void StampingFormXObjectInnerContentTaggedTest() {
             String pdf = sourceFolder + "alreadyTaggedFormXObjectInnerContent.pdf";
-            String outPdf = destinationFolder + "stampingFormXobjectInnerContentTaggedTest.pdf";
-            String cmpPdf = sourceFolder + "cmp_stampingFormXobjectInnerContentTaggedTest.pdf";
+            String outPdf = destinationFolder + "stampingFormXObjectInnerContentTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_stampingFormXObjectInnerContentTaggedTest.pdf";
             PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
             taggedPdf.SetTagged();
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SeveralXObjectsOnOnePageTest() {
+            String pdf = sourceFolder + "severalXObjectsOnOnePageTest.pdf";
+            String outPdf = destinationFolder + "severalXObjectsOnOnePageTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_severalXObjectsOnOnePageTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.SetTagged();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EarlyFlushXObjectTaggedTest() {
+            String pdf = sourceFolder + "earlyFlushXObjectTaggedTest.pdf";
+            String outPdf = destinationFolder + "earlyFlushXObjectTaggedTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_earlyFlushXObjectTaggedTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDictionary resource = taggedPdf.GetFirstPage().GetResources().GetResource(PdfName.XObject);
+            resource.Get(new PdfName("Fm1")).Flush();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IdenticalMcidIdInOneStreamTest() {
+            String pdf = sourceFolder + "identicalMcidIdInOneStreamTest.pdf";
+            String outPdf = destinationFolder + "identicalMcidIdInOneStreamTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_identicalMcidIdInOneStreamTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.SetTagged();
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyPageWithFormXObjectTaggedTest() {
+            String cmpPdf = sourceFolder + "cmp_copyPageWithFormXobjectTaggedTest.pdf";
+            String outDoc = destinationFolder + "copyPageWithFormXobjectTaggedTest.pdf";
+            PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "copyFromFile.pdf"));
+            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "copyToFile.pdf"), new PdfWriter(outDoc)
+                );
+            outPdf.SetTagged();
+            srcPdf.CopyPagesTo(1, 1, outPdf);
+            srcPdf.Close();
+            outPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outDoc, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageWithFormXObjectTaggedTest() {
+            String cmpPdf = sourceFolder + "cmp_removePageWithFormXobjectTaggedTest.pdf";
+            String outDoc = destinationFolder + "removePageWithFormXobjectTaggedTest.pdf";
+            PdfDocument outPdf = new PdfDocument(new PdfReader(sourceFolder + "forRemovePage.pdf"), new PdfWriter(outDoc
+                ));
+            outPdf.SetTagged();
+            outPdf.RemovePage(1);
+            outPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outDoc, cmpPdf, destinationFolder));
         }
 
         [NUnit.Framework.Test]

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;polyline&gt; tag.
     /// </summary>
-    public class PolylineSvgNodeRenderer : AbstractSvgNodeRenderer {
+    public class PolylineSvgNodeRenderer : AbstractSvgNodeRenderer, IMarkerCapable {
         /// <summary>
         /// A List of
         /// <see cref="iText.Kernel.Geom.Point"/>
@@ -123,6 +123,47 @@ namespace iText.Svg.Renderers.Impl {
             PolylineSvgNodeRenderer copy = new PolylineSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
             return copy;
+        }
+
+        public virtual void DrawMarker(SvgDrawContext context, MarkerVertexType markerVertexType) {
+            Point point = null;
+            if (MarkerVertexType.MARKER_START.Equals(markerVertexType)) {
+                point = points[0];
+            }
+            else {
+                if (MarkerVertexType.MARKER_END.Equals(markerVertexType)) {
+                    point = points[points.Count - 1];
+                }
+            }
+            if (point != null) {
+                String moveX = SvgCssUtils.ConvertDoubleToString(SvgCssUtils.ConvertPtsToPx(point.x));
+                String moveY = SvgCssUtils.ConvertDoubleToString(SvgCssUtils.ConvertPtsToPx(point.y));
+                MarkerSvgNodeRenderer.DrawMarker(context, moveX, moveY, markerVertexType, this);
+            }
+        }
+
+        public virtual double GetAutoOrientAngle(MarkerSvgNodeRenderer marker, bool reverse) {
+            if (points.Count > 1) {
+                Vector v = new Vector(0, 0, 0);
+                if (SvgConstants.Attributes.MARKER_END.Equals(marker.attributesAndStyles.Get(SvgConstants.Tags.MARKER))) {
+                    Point lastPoint = points[points.Count - 1];
+                    Point secondToLastPoint = points[points.Count - 2];
+                    v = new Vector((float)(lastPoint.GetX() - secondToLastPoint.GetX()), (float)(lastPoint.GetY() - secondToLastPoint
+                        .GetY()), 0f);
+                }
+                else {
+                    if (SvgConstants.Attributes.MARKER_START.Equals(marker.attributesAndStyles.Get(SvgConstants.Tags.MARKER))) {
+                        Point firstPoint = points[0];
+                        Point secondPoint = points[1];
+                        v = new Vector((float)(secondPoint.GetX() - firstPoint.GetX()), (float)(secondPoint.GetY() - firstPoint.GetY
+                            ()), 0f);
+                    }
+                }
+                Vector xAxis = new Vector(1, 0, 0);
+                double rotAngle = SvgCoordinateUtils.CalculateAngleBetweenTwoVectors(xAxis, v);
+                return v.Get(1) >= 0 && !reverse ? rotAngle : rotAngle * -1f;
+            }
+            return 0;
         }
     }
 }

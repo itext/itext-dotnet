@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -156,6 +156,42 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ViewBoxTranslationTestMultipleViewBoxes() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxTranslationTestMultipleViewBoxes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationYMinMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed 
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMinMeetTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationYMidMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMidMeetTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationYMaxMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMaxMeetTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationXMinMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMinMeetTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationXMidMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMidMeetTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SvgTranslationXMaxMeetTest() {
+            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMaxMeetTest");
         }
     }
 }

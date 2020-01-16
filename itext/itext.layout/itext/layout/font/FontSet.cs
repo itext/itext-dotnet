@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -575,6 +575,7 @@ namespace iText.Layout.Font {
         /// <para />
         /// Note, the collection is unmodifiable.
         /// </remarks>
+        /// <returns>set of all available fonts</returns>
         public ICollection<FontInfo> GetFonts() {
             return GetFonts(null);
         }
@@ -585,7 +586,8 @@ namespace iText.Layout.Font {
         /// <para />
         /// Note, the collection is unmodifiable.
         /// </remarks>
-        /// <param name="tempFonts"/>
+        /// <param name="tempFonts">set of temporary fonts</param>
+        /// <returns>set of all available and temporary fonts</returns>
         public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet tempFonts) {
             return new FontSetCollection(fonts, tempFonts != null ? tempFonts.fonts : null);
         }

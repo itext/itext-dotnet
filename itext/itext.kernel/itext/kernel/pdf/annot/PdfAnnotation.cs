@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1363,7 +1363,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// which value is an annotation title or null if it isn't specifed.
+        /// which value is an annotation title or null if it isn't specified.
         /// </returns>
         public virtual PdfString GetTitle() {
             return GetPdfObject().GetAsString(PdfName.T);

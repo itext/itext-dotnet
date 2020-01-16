@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,19 +55,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// This method converts a
         /// <see cref="System.Collections.IList{E}"/>
         /// of
-        /// <see cref="CharacterRenderInfo"/>
-        /// ,
-        /// The data structure that gets returned contains both the plaintext,
-        /// as well as the mapping of indices (from the list to the string).
+        /// <see cref="CharacterRenderInfo"/>.
         /// </summary>
         /// <remarks>
         /// This method converts a
         /// <see cref="System.Collections.IList{E}"/>
         /// of
-        /// <see cref="CharacterRenderInfo"/>
-        /// ,
-        /// The data structure that gets returned contains both the plaintext,
-        /// as well as the mapping of indices (from the list to the string).
+        /// <see cref="CharacterRenderInfo"/>.
+        /// The returned data structure contains both the plaintext
+        /// and the mapping of indices (from the list to the string).
         /// These indices can differ; if there is sufficient spacing between two CharacterRenderInfo
         /// objects, this algorithm will decide to insert space. The inserted space will cause
         /// the indices to differ by at least 1.

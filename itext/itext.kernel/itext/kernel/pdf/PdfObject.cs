@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -319,14 +319,11 @@ namespace iText.Kernel.Pdf {
         ///     </summary>
         /// <remarks>
         /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
+        /// It is recommended to set this flag after changing any PDF object.
         /// <para />
-        /// This flag is meaningful only if the
-        /// <see cref="PdfDocument"/>
-        /// is opened in append mode
-        /// (see
+        /// For example flag is used in the append mode (see
         /// <see cref="StampingProperties.UseAppendMode()"/>
         /// ).
-        /// <para />
         /// In append mode the whole document is preserved as is, and only changes to the document are
         /// appended to the end of the document file. Because of this, only modified objects need to be flushed and are
         /// allowed to be flushed (i.e. to be written).

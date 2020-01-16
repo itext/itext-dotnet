@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -401,17 +401,31 @@ namespace iText.Svg {
             /// <summary>Attribute defining the unique id of an element.</summary>
             public const String ID = "id";
 
-            /// <summary>Attribute defining the radius of a circle.</summary>
-            public const String R = "r";
+            /// <summary>Attribute defining the marker to use at the end of a path, line, polygon or polyline</summary>
+            public const String MARKER_END = "marker-end";
 
-            /// <summary>Attribute defining the x-axis of an ellipse or the x-axis radius of rounded rectangles.</summary>
-            public const String RX = "rx";
+            /// <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
+            public const String MARKER_HEIGHT = "markerheight";
 
-            /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
-            public const String RY = "ry";
+            /// <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
+            ///     </summary>
+            public const String MARKER_MID = "marker-mid";
+
+            /// <summary>Attribute defining the marker to use at the start of a path, line, polygon or polyline</summary>
+            public const String MARKER_START = "marker-start";
+
+            /// <summary>Attribute defining the width of the viewport in which the marker is to be fitted</summary>
+            public const String MARKER_WIDTH = "markerwidth";
+
+            /// <summary>Attribute defining the coordinate system for attributes ‘markerWidth’, ‘markerHeight’ and the contents of the ‘marker’.
+            ///     </summary>
+            public const String MARKER_UNITS = "markerunits";
 
             /// <summary>Attribute defining the opacity of a group or graphic element.</summary>
             public const String OPACITY = "opacity";
+
+            /// <summary>Attribute defining the orientation of a marker</summary>
+            public const String ORIENT = "orient";
 
             /// <summary>Close Path Operator.</summary>
             public const String PATH_DATA_CLOSE_PATH = "Z";
@@ -488,6 +502,23 @@ namespace iText.Svg {
             /// <summary>Attribute defining how to preserve the aspect ratio when scaling.</summary>
             public const String PRESERVE_ASPECT_RATIO = "preserveaspectratio";
 
+            /// <summary>Attribute defining the radius of a circle.</summary>
+            public const String R = "r";
+
+            /// <summary>Attribute defining the x-axis coordinate of the reference point which is to be aligned exactly at the marker position.
+            ///     </summary>
+            public const String REFX = "refx";
+
+            /// <summary>Attribute defining the y-axis coordinate of the reference point which is to be aligned exactly at the marker position.
+            ///     </summary>
+            public const String REFY = "refy";
+
+            /// <summary>Attribute defining the x-axis of an ellipse or the x-axis radius of rounded rectangles.</summary>
+            public const String RX = "rx";
+
+            /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
+            public const String RY = "ry";
+
             /// <summary>Attribute defining the stroke color.</summary>
             public const String STROKE = "stroke";
 
@@ -557,6 +588,12 @@ namespace iText.Svg {
 
         /// <summary>Class containing the constants for values appearing in SVG tags and attributes</summary>
         public sealed class Values {
+            /// <summary>Value representing automatic orientation for the marker attribute orient.</summary>
+            public const String AUTO = "auto";
+
+            /// <summary>Value representing reverse automatic orientation for the start marker.</summary>
+            public const String AUTO_START_REVERSE = "auto-start-reverse";
+
             /// <summary>Value representing the default value for the stroke linecap.</summary>
             public const String BUTT = "butt";
 
@@ -594,6 +631,10 @@ namespace iText.Svg {
 
             /// <summary>Value representing the text-alignment start for text objects</summary>
             public const String TEXT_ANCHOR_START = "start";
+
+            /// <summary>The value for markerUnits that represent values in a coordinate system which has a single unit equal the size in user units of the current stroke width.
+            ///     </summary>
+            public const String STROKEWIDTH = "strokeWidth";
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";

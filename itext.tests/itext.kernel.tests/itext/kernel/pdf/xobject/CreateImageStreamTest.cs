@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -115,6 +115,12 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void ImgRgbIcc() {
             TestSingleImage("img_rgb_icc.png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddPngImageIndexedColorspaceTest() {
+            //TODO update cmp-file after DEVSIX-2865 will be fixed
+            TestSingleImage("pngImageIndexedColorspace.png");
         }
 
         private void TestSingleImage(String imgName) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,6 +57,10 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation.
     /// </summary>
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
+        // TODO (DEVSIX-3397) Add MarkerVertexType.MARKER_MID after ticket will be finished.
+        private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
+            .MARKER_START, MarkerVertexType.MARKER_END };
+
         /// <summary>Map that contains attributes and styles used for drawing operations</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
@@ -235,6 +239,17 @@ namespace iText.Svg.Renderers.Impl {
                         }
                     }
                 }
+                // Marker drawing
+                if (this is IMarkerCapable) {
+                    // TODO (DEVSIX-3397) add processing of 'marker' property (shorthand for a joint using of all other properties)
+                    foreach (MarkerVertexType markerVertexType in MARKER_VERTEX_TYPES) {
+                        if (attributesAndStyles.ContainsKey(markerVertexType.ToString())) {
+                            currentCanvas.SaveState();
+                            ((IMarkerCapable)this).DrawMarker(context, markerVertexType);
+                            currentCanvas.RestoreState();
+                        }
+                    }
+                }
             }
         }
 
@@ -292,7 +307,8 @@ namespace iText.Svg.Renderers.Impl {
                                 }
                                 currentCanvas.SetStrokeColor(rgbColor);
                                 String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                                float strokeWidth = 1f;
+                                // 1 px = 0,75 pt
+                                float strokeWidth = 0.75f;
                                 if (strokeWidthRawValue != null) {
                                     strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
                                 }

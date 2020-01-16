@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -68,6 +68,10 @@ namespace iText.Svg.Exceptions {
 
         public const String FONT_NOT_FOUND = "The font wasn't found.";
 
+        /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
+        [Obsolete]
+        public const String FONT_PROVIDER_CONTAINS_ZERO_FONTS = "Font Provider contains zero fonts. At least one font shall be present";
+
         public const String INODEROOTISNULL = "Input root value is null";
 
         public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before a move to operation (M)";
@@ -77,6 +81,14 @@ namespace iText.Svg.Exceptions {
         public const String INVALID_TRANSFORM_DECLARATION = "Transformation declaration is not formed correctly.";
 
         public const String LOOP = "Loop detected";
+
+        public const String MARKER_HEIGHT_IS_NEGATIVE_VALUE = "markerHeight has negative value. Marker will not be rendered.";
+
+        public const String MARKER_HEIGHT_IS_ZERO_VALUE = "markerHeight has zero value. Marker will not be rendered.";
+
+        public const String MARKER_WIDTH_IS_NEGATIVE_VALUE = "markerWidth has negative value. Marker will not be rendered.";
+
+        public const String MARKER_WIDTH_IS_ZERO_VALUE = "markerWidth has zero value. Marker will not be rendered.";
 
         public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not present, so browser default of 300px is used";
 
@@ -90,11 +102,13 @@ namespace iText.Svg.Exceptions {
 
         public const String NOROOT = "No root found";
 
+        public const String PATH_WRONG_NUMBER_OF_ARGUMENTS = "Path operator {0} has received {1} arguments, but expects between {2} and {3} arguments. \n Resulting SVG will be incorrect.";
+
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
 
-        public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
-
         public const String POINTS_ATTRIBUTE_INVALID_LIST = "Points attribute {0} on polyline tag does not contain a valid set of points";
+
+        public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 
         public const String TAGPARAMETERNULL = "Tag parameter must not be null";
 
@@ -107,18 +121,14 @@ namespace iText.Svg.Exceptions {
 
         public const String TRANSFORM_NULL = "The transformation value is null.";
 
-        public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
-
-        public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+        public const String UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT = "Unable to get inverse transformation matrix and thus calculate a viewport for the element because some of the transformation matrices, which are written to document, have a determinant of zero value. A bbox of zero values will be used as a viewport for this element.";
 
         public const String UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI = "Unable to retrieve stream with given base URI ({0}) and source path ({1})";
 
-        /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
-        [Obsolete]
-        public const String FONT_PROVIDER_CONTAINS_ZERO_FONTS = "Font Provider contains zero fonts. At least one font shall be present";
-
         public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
 
-        public const String PATH_WRONG_NUMBER_OF_ARGUMENTS = "Path operator {0} has received {1} arguments, but expects between {2} and {3} arguments. \n Resulting SVG will be incorrect.";
+        public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
+
+        public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
     }
 }

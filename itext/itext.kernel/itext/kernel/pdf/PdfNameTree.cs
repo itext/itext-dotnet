@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ namespace iText.Kernel.Pdf {
 
         private PdfCatalog catalog;
 
-        private IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>();
+        private IDictionary<String, PdfObject> items = new LinkedDictionary<String, PdfObject>();
 
         private PdfName treeType;
 
@@ -216,7 +216,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private IDictionary<String, PdfObject> ReadTree(PdfDictionary dictionary) {
-            IDictionary<String, PdfObject> items = new Dictionary<String, PdfObject>();
+            IDictionary<String, PdfObject> items = new LinkedDictionary<String, PdfObject>();
             if (dictionary != null) {
                 IterateItems(dictionary, items, null);
             }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,8 @@ using System;
 using System.IO;
 
 namespace iText.IO.Util {
-	public class IdelOutputStream : Stream
+    [System.ObsoleteAttribute(@"This output stream implementation will be removed in iText 7.2")]
+    public class IdelOutputStream : Stream
 	{
 	    public override void Flush()
 	    {

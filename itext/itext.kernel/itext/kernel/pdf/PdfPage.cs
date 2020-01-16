@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -508,7 +508,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, PAGE_EXCLUDED_KEYS, true);
-            iText.Kernel.Pdf.PdfPage page = new iText.Kernel.Pdf.PdfPage(dictionary);
+            iText.Kernel.Pdf.PdfPage page = GetDocument().GetPageFactory().CreatePdfPage(dictionary);
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
                 if (annot.GetSubtype().Equals(PdfName.Link)) {
@@ -625,7 +625,6 @@ namespace iText.Kernel.Pdf {
         /// will be flushed.
         /// </param>
         public virtual void Flush(bool flushResourcesContentStreams) {
-            // TODO log warning in case of failed flush in pdfa document case
             if (IsFlushed()) {
                 return;
             }
@@ -937,7 +936,7 @@ namespace iText.Kernel.Pdf {
             return GetContentStream(index).GetBytes();
         }
 
-        /// <summary>Calculates and returns next available MCID reference.</summary>
+        /// <summary>Calculates and returns the next available for this page's content stream MCID reference.</summary>
         /// <returns>calculated MCID reference.</returns>
         public virtual int GetNextMcid() {
             if (!GetDocument().IsTagged()) {

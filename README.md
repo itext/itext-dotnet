@@ -57,6 +57,6 @@ Contact [sales] for more info.
 [nuget]: https://www.nuget.org/packages/itext7
 [sales]: https://itextpdf.com/sales
 [gratis]: https://en.wikipedia.org/wiki/Gratis_versus_libre
-[rups]: https://github.com/itext/rups
+[rups]: https://github.com/itext/i7j-rups
 [pdfhtml]: https://github.com/itext/i7n-pdfhtml
 [pdfsweep]: https://github.com/itext/i7n-pdfsweep

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,5 +47,11 @@ namespace iText.Forms.Xfdf {
         public XfdfException(String message)
             : base(message) {
         }
+
+        /// <summary>Message in case one tries to add attribute with null name or value</summary>
+        public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
+
+        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
+        public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
     }
 }

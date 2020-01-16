@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -60,9 +60,9 @@ namespace iText.Svg.Renderers {
         private readonly IDictionary<String, ISvgNodeRenderer> namedObjects = new Dictionary<String, ISvgNodeRenderer
             >();
 
-        private readonly Stack<PdfCanvas> canvases = new Stack<PdfCanvas>();
+        private readonly LinkedList<PdfCanvas> canvases = new LinkedList<PdfCanvas>();
 
-        private readonly Stack<Rectangle> viewports = new Stack<Rectangle>();
+        private readonly LinkedList<Rectangle> viewports = new LinkedList<Rectangle>();
 
         private readonly Stack<String> useIds = new Stack<String>();
 
@@ -90,7 +90,7 @@ namespace iText.Svg.Renderers {
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
         public virtual PdfCanvas GetCurrentCanvas() {
-            return canvases.Peek();
+            return canvases.JGetFirst();
         }
 
         /// <summary>
@@ -99,7 +99,9 @@ namespace iText.Svg.Renderers {
         /// </summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
         public virtual PdfCanvas PopCanvas() {
-            return canvases.Pop();
+            PdfCanvas canvas = canvases.JGetFirst();
+            canvases.RemoveFirst();
+            return canvas;
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace iText.Svg.Renderers {
         /// </summary>
         /// <param name="canvas">the new top of the stack</param>
         public virtual void PushCanvas(PdfCanvas canvas) {
-            canvases.Push(canvas);
+            canvases.AddFirst(canvas);
         }
 
         /// <summary>
@@ -125,19 +127,25 @@ namespace iText.Svg.Renderers {
         /// <summary>Adds a viewbox to the context.</summary>
         /// <param name="viewPort">rectangle representing the current viewbox</param>
         public virtual void AddViewPort(Rectangle viewPort) {
-            this.viewports.Push(viewPort);
+            viewports.AddFirst(viewPort);
         }
 
         /// <summary>Get the current viewbox.</summary>
         /// <returns>the viewbox as it is currently set</returns>
         public virtual Rectangle GetCurrentViewPort() {
-            return this.viewports.Peek();
+            return viewports.JGetFirst();
+        }
+
+        /// <summary>Get the viewbox which is the root viewport for the current document.</summary>
+        /// <returns>root viewbox.</returns>
+        public virtual Rectangle GetRootViewPort() {
+            return viewports.JGetLast();
         }
 
         /// <summary>Remove the currently set view box.</summary>
         public virtual void RemoveCurrentViewPort() {
             if (this.viewports.Count > 0) {
-                this.viewports.Pop();
+                viewports.RemoveFirst();
             }
         }
 

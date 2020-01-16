@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -64,8 +64,10 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% ellipse\n");
             if (SetParameters()) {
-                cv.MoveTo(cx + rx, cy);
-                DrawUtils.Arc(cx - rx, cy - ry, cx + rx, cy + ry, 0, 360, cv);
+                // Use double type locally to have better precision of the result after applying arithmetic operations
+                cv.MoveTo((double)cx + (double)rx, cy);
+                DrawUtils.Arc((double)cx - (double)rx, (double)cy - (double)ry, (double)cx + (double)rx, (double)cy + (double
+                    )ry, 0, 360, cv);
             }
         }
 
@@ -88,17 +90,17 @@ namespace iText.Svg.Renderers.Impl {
                 rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
             }
             else {
+                //No drawing if rx is absent
                 return false;
             }
-            //No drawing if rx is absent
             if (GetAttribute(SvgConstants.Attributes.RY) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
                 .RY)) > 0) {
                 ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
             }
             else {
+                //No drawing if ry is absent
                 return false;
             }
-            //No drawing if ry is absent
             return true;
         }
 

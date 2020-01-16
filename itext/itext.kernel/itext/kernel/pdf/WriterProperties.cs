@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -87,7 +87,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="version">version for the document.</param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version) {
@@ -107,7 +107,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties UseSmartMode() {
@@ -128,7 +128,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddXmpMetadata() {
@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel) {
@@ -165,7 +165,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="fullCompressionMode">true - to enable full compression mode, false to disable it</param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool fullCompressionMode) {
@@ -174,58 +174,16 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the encryption options for the document.</summary>
-        /// <remarks>
-        /// Sets the encryption options for the document. The userPassword and the
-        /// ownerPassword can be null or have zero length. In this case the ownerPassword
-        /// is replaced by a random string. The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
-        /// The permissions can be combined by ORing them.
-        /// </remarks>
-        /// <param name="userPassword">the user password. Can be null or empty</param>
-        /// <param name="ownerPassword">the owner password. Can be null or empty</param>
-        /// <param name="permissions">the user permissions</param>
-        /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed to output the metadata in cleartext
+        /// <param name="userPassword">
+        /// the user password. Can be null or of zero length, which is equal to
+        /// omitting the user password
         /// </param>
-        /// <returns>
-        /// this
-        /// <c>WriterProperties</c>
-        /// instance
-        /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
-            , int permissions, int encryptionAlgorithm) {
-            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm);
-            return this;
-        }
-
-        /// <summary>Sets the certificate encryption options for the document.</summary>
-        /// <remarks>
-        /// Sets the certificate encryption options for the document. An array of one or more public certificates
-        /// must be provided together with an array of the same size for the permissions for each certificate.
+        /// <param name="ownerPassword">
+        /// the owner password. If it's null or empty, iText will generate
+        /// a random string to be used as the owner password
+        /// </param>
+        /// <param name="permissions">
+        /// the user permissions
         /// The open permissions for the document can be
         /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
         /// ,
@@ -242,10 +200,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
         /// and
         /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
-        /// The permissions can be combined by ORing them.
-        /// </remarks>
-        /// <param name="certs">the public certificates to be used for the encryption</param>
-        /// <param name="permissions">the user permissions for each of the certificates</param>
+        /// The permissions can be combined by ORing them
+        /// </param>
         /// <param name="encryptionAlgorithm">
         /// the type of encryption. It can be one of
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
@@ -257,11 +213,89 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed to output the metadata in cleartext
+        /// can be ORed
+        /// to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
         /// </param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
+            , int permissions, int encryptionAlgorithm) {
+            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm);
+            return this;
+        }
+
+        /// <summary>Sets the certificate encryption options for the document.</summary>
+        /// <remarks>
+        /// Sets the certificate encryption options for the document. An array of one or more public certificates
+        /// must be provided together with an array of the same size for the permissions for each certificate.
+        /// </remarks>
+        /// <param name="certs">the public certificates to be used for the encryption</param>
+        /// <param name="permissions">
+        /// the user permissions for each of the certificates
+        /// The open permissions for the document can be
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
+        /// The permissions can be combined by ORing them
+        /// </param>
+        /// <param name="encryptionAlgorithm">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed
+        /// to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions
@@ -281,7 +315,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="initialDocumentId">the new initial document id</param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetInitialDocumentId(PdfString initialDocumentId) {
@@ -298,7 +332,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="modifiedDocumentId">the new modified document id</param>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetModifiedDocumentId(PdfString modifiedDocumentId) {
@@ -314,7 +348,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties UseDebugMode() {
@@ -333,7 +367,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>
         /// this
-        /// <c>WriterProperties</c>
+        /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddUAXmpMetadata() {

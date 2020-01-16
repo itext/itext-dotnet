@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -296,7 +296,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.GetPage(1).GetResources().AddForm((PdfStream)pdfObject);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "datasheet_mode.pdf", 
-                sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"));
+                sourceFolder + "cmp_datasheet_mode.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -335,7 +335,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.GetFirstPage().AddAnnotation(textannot);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add_associated_files01.pdf"
-                , sourceFolder + "cmp_add_associated_files01.pdf", "d:/", "diff_"));
+                , sourceFolder + "cmp_add_associated_files01.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -358,7 +358,31 @@ namespace iText.Kernel.Pdf {
             pageCanvas.AddXObject(formXObject, 40, 100);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add_associated_files02.pdf"
-                , sourceFolder + "cmp_add_associated_files02.pdf", "d:/", "diff_"));
+                , sourceFolder + "cmp_add_associated_files02.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IgnoreTagStructureTest() {
+            String srcFile = sourceFolder + "ignoreTagStructureTest.pdf";
+            PdfDocument doNotIgnoreTagStructureDocument = new PdfDocument(new PdfReader(srcFile));
+            PdfDocumentTest.IgnoreTagStructurePdfDocument ignoreTagStructureDocument = new PdfDocumentTest.IgnoreTagStructurePdfDocument
+                (this, new PdfReader(srcFile));
+            NUnit.Framework.Assert.IsTrue(doNotIgnoreTagStructureDocument.IsTagged());
+            NUnit.Framework.Assert.IsFalse(ignoreTagStructureDocument.IsTagged());
+            doNotIgnoreTagStructureDocument.Close();
+            ignoreTagStructureDocument.Close();
+        }
+
+        private class IgnoreTagStructurePdfDocument : PdfDocument {
+            internal IgnoreTagStructurePdfDocument(PdfDocumentTest _enclosing, PdfReader reader)
+                : base(reader) {
+                this._enclosing = _enclosing;
+            }
+
+            protected internal override void TryInitTagStructure(PdfDictionary str) {
+            }
+
+            private readonly PdfDocumentTest _enclosing;
         }
     }
 }

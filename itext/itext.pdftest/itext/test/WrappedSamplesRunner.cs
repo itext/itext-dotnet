@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ namespace iText.Test {
         public virtual void RunSamples() {
             Assume.That(sampleClassParams.ignoreMessage == null, sampleClassParams.ignoreMessage);
 
-            sampleClass = sampleClassParams.sampleType;
+            InitClass();
             System.Console.Out.WriteLine("Starting test " + sampleClassParams);
             
             string oldCurrentDir = Directory.GetCurrentDirectory();
@@ -105,6 +105,10 @@ namespace iText.Test {
             }
             System.Console.Out.WriteLine("Test complete.");
 
+        }
+        
+        protected internal virtual void InitClass() {
+            sampleClass = sampleClassParams.sampleType;
         }
         
         /// <summary>Compares two PDF files using iText's CompareTool.</summary>

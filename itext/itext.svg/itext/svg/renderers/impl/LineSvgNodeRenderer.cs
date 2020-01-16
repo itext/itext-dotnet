@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,17 +42,19 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;line&gt; tag.
     /// </summary>
-    public class LineSvgNodeRenderer : AbstractSvgNodeRenderer {
+    public class LineSvgNodeRenderer : AbstractSvgNodeRenderer, IMarkerCapable {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% line\n");
@@ -93,6 +95,33 @@ namespace iText.Svg.Renderers.Impl {
             LineSvgNodeRenderer copy = new LineSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
             return copy;
+        }
+
+        public virtual void DrawMarker(SvgDrawContext context, MarkerVertexType markerVertexType) {
+            String moveX = null;
+            String moveY = null;
+            if (MarkerVertexType.MARKER_START.Equals(markerVertexType)) {
+                moveX = this.attributesAndStyles.Get(SvgConstants.Attributes.X1);
+                moveY = this.attributesAndStyles.Get(SvgConstants.Attributes.Y1);
+            }
+            else {
+                if (MarkerVertexType.MARKER_END.Equals(markerVertexType)) {
+                    moveX = this.attributesAndStyles.Get(SvgConstants.Attributes.X2);
+                    moveY = this.attributesAndStyles.Get(SvgConstants.Attributes.Y2);
+                }
+            }
+            if (moveX != null && moveY != null) {
+                MarkerSvgNodeRenderer.DrawMarker(context, moveX, moveY, markerVertexType, this);
+            }
+        }
+
+        public virtual double GetAutoOrientAngle(MarkerSvgNodeRenderer marker, bool reverse) {
+            Vector v = new Vector(GetAttribute(this.attributesAndStyles, SvgConstants.Attributes.X2) - GetAttribute(this
+                .attributesAndStyles, SvgConstants.Attributes.X1), GetAttribute(this.attributesAndStyles, SvgConstants.Attributes
+                .Y2) - GetAttribute(this.attributesAndStyles, SvgConstants.Attributes.Y1), 0f);
+            Vector xAxis = new Vector(1, 0, 0);
+            double rotAngle = SvgCoordinateUtils.CalculateAngleBetweenTwoVectors(xAxis, v);
+            return v.Get(1) >= 0 && !reverse ? rotAngle : rotAngle * -1f;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -315,6 +315,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant OVERFLOW_WRAP.</summary>
         public const String OVERFLOW_WRAP = "overflow-wrap";
 
+        /// <summary>The Constant OVERFLOW.</summary>
+        public const String OVERFLOW = "overflow";
+
         /// <summary>The Constant PADDING.</summary>
         public const String PADDING = "padding";
 
@@ -466,6 +469,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant DECIMAL_LEADING_ZERO.</summary>
         public const String DECIMAL_LEADING_ZERO = "decimal-leading-zero";
 
+        /// <summary>The Constant DEG.</summary>
+        public const String DEG = "deg";
+
         /// <summary>The Constant DISC.</summary>
         public const String DISC = "disc";
 
@@ -480,6 +486,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant GEORGIAN.</summary>
         public const String GEORGIAN = "georgian";
+
+        /// <summary>The Constant GRAD.</summary>
+        public const String GRAD = "grad";
 
         /// <summary>The Constant GROOVE.</summary>
         public const String GROOVE = "groove";
@@ -585,6 +594,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant PADDING_BOX.</summary>
         public const String PADDING_BOX = "padding-box";
+
+        /// <summary>The Constant RAD.</summary>
+        public const String RAD = "rad";
 
         /// <summary>The Constant REPEAT.</summary>
         public const String REPEAT = "repeat";
@@ -729,6 +741,11 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
         public static readonly IDictionary<String, String> FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES;
+
+        /// <summary>The Constant METRIC_MEASUREMENTS.</summary>
+        public static readonly String[] METRIC_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.PX, CommonCssConstants
+            .IN, CommonCssConstants.CM, CommonCssConstants.MM, CommonCssConstants.PC, CommonCssConstants.PT, CommonCssConstants
+            .Q };
 
         // pseudo-classes
         /// <summary>The Constant ACTIVE.</summary>

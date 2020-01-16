@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -500,6 +500,98 @@ namespace iText.Kernel.Pdf {
             }
             , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)))
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InsertIntermediateParentTest() {
+            String filename = "insertIntermediateParentTest.pdf";
+            PdfReader reader = new PdfReader(sourceFolder + filename);
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            PdfDocument pdfDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
+            PdfPage page = pdfDoc.GetFirstPage();
+            PdfPages pdfPages = new PdfPages(page.parentPages.GetFrom(), pdfDoc, page.parentPages);
+            page.parentPages.GetKids().Set(0, pdfPages.GetPdfObject());
+            page.parentPages.DecrementCount();
+            pdfPages.AddPage(page.GetPdfObject());
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsTrue(page.GetPdfObject().IsModified());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyPagesAreNotReadOnOpenTest() {
+            String srcFile = sourceFolder + "taggedOnePage.pdf";
+            PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
+            PdfDocument document = new PdfDocument(reader);
+            document.Close();
+            NUnit.Framework.Assert.IsFalse(reader.pagesAreRead);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadPagesInBlocksTest() {
+            String srcFile = sourceFolder + "docWithBalancedPageTree.pdf";
+            int maxAmountOfPagesReadAtATime = 0;
+            PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
+            PdfDocument document = new PdfDocument(reader);
+            for (int page = 1; page <= document.GetNumberOfPages(); page++) {
+                document.GetPage(page);
+                if (reader.numOfPagesRead > maxAmountOfPagesReadAtATime) {
+                    maxAmountOfPagesReadAtATime = reader.numOfPagesRead;
+                }
+                reader.numOfPagesRead = 0;
+            }
+            NUnit.Framework.Assert.AreEqual(111, document.GetNumberOfPages());
+            NUnit.Framework.Assert.AreEqual(10, maxAmountOfPagesReadAtATime);
+            document.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadSinglePageTest() {
+            String srcFile = sourceFolder + "allPagesAreLeaves.pdf";
+            PdfPagesTest.CustomPdfReader reader = new PdfPagesTest.CustomPdfReader(this, srcFile);
+            reader.SetMemorySavingMode(true);
+            PdfDocument document = new PdfDocument(reader);
+            int amountOfPages = document.GetNumberOfPages();
+            PdfPages pdfPages = document.catalog.GetPageTree().GetRoot();
+            PdfArray pageIndRefArray = ((PdfDictionary)pdfPages.GetPdfObject()).GetAsArray(PdfName.Kids);
+            document.GetPage(amountOfPages);
+            NUnit.Framework.Assert.AreEqual(1, GetAmountOfReadPages(pageIndRefArray));
+            document.GetPage(amountOfPages / 2);
+            NUnit.Framework.Assert.AreEqual(2, GetAmountOfReadPages(pageIndRefArray));
+            document.GetPage(1);
+            NUnit.Framework.Assert.AreEqual(3, GetAmountOfReadPages(pageIndRefArray));
+            document.Close();
+        }
+
+        private int GetAmountOfReadPages(PdfArray pageIndRefArray) {
+            int amountOfLoadedPages = 0;
+            for (int i = 0; i < pageIndRefArray.Size(); i++) {
+                if (((PdfIndirectReference)pageIndRefArray.Get(i, false)).refersTo != null) {
+                    amountOfLoadedPages++;
+                }
+            }
+            return amountOfLoadedPages;
+        }
+
+        private class CustomPdfReader : PdfReader {
+            public bool pagesAreRead = false;
+
+            public int numOfPagesRead = 0;
+
+            public CustomPdfReader(PdfPagesTest _enclosing, String filename)
+                : base(filename) {
+                this._enclosing = _enclosing;
+            }
+
+            protected internal override PdfObject ReadObject(PdfIndirectReference reference) {
+                PdfObject toReturn = base.ReadObject(reference);
+                if (toReturn is PdfDictionary && PdfName.Page.Equals(((PdfDictionary)toReturn).Get(PdfName.Type))) {
+                    this.numOfPagesRead++;
+                    this.pagesAreRead = true;
+                }
+                return toReturn;
+            }
+
+            private readonly PdfPagesTest _enclosing;
         }
     }
 }

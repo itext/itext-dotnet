@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -786,8 +786,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        //TODO update cmp-file after DEVSIX-3351 fixed
+        [LogMessage(iText.IO.LogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
-            //TODO update cmp-file after DEVSIX-3351 fixed
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));

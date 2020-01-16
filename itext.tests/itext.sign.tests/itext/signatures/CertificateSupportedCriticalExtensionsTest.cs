@@ -1,6 +1,6 @@
-﻿/*
+/*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -155,6 +155,16 @@ namespace iText.Signatures
             NUnit.Framework.Assert.That(() => {
                 SignUtils.HasUnsupportedCriticalExtension(null);
             }, NUnit.Framework.Throws.TypeOf<ArgumentException>());;
+        }
+        
+        [NUnit.Framework.Test]
+        public void CertificateHasNoExtensionsTest()
+        {
+            X509MockCertificate cert = new X509MockCertificate();
+            
+            cert.SetCriticalExtensions(null);
+
+            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
     }
 }

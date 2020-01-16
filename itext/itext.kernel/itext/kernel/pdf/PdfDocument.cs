@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -69,6 +69,8 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
+        private static IPdfPageFactory pdfPageFactory = new PdfPageFactory();
+
         /// <summary>Currently active page.</summary>
         [System.ObsoleteAttribute(@"Will be removed in iText 7.2")]
         protected internal PdfPage currentPage = null;
@@ -381,7 +383,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>added page</returns>
         public virtual PdfPage AddNewPage(PageSize pageSize) {
             CheckClosingStatus();
-            PdfPage page = new PdfPage(this, pageSize);
+            PdfPage page = GetPageFactory().CreatePdfPage(this, pageSize);
             CheckAndAddPage(page);
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.INSERT_PAGE, page));
@@ -401,7 +403,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>inserted page</returns>
         public virtual PdfPage AddNewPage(int index, PageSize pageSize) {
             CheckClosingStatus();
-            PdfPage page = new PdfPage(this, pageSize);
+            PdfPage page = GetPageFactory().CreatePdfPage(this, pageSize);
             CheckAndAddPage(index, page);
             currentPage = page;
             DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_PAGE, page));
@@ -2160,6 +2162,16 @@ namespace iText.Kernel.Pdf {
             return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }
 
+        /// <summary>Returns the factory for creating page instances.</summary>
+        /// <returns>
+        /// implementation of
+        /// <see cref="IPdfPageFactory"/>
+        /// for current document
+        /// </returns>
+        protected internal virtual IPdfPageFactory GetPageFactory() {
+            return pdfPageFactory;
+        }
+
         /// <summary>Gets iText version info.</summary>
         /// <returns>iText version info.</returns>
         internal VersionInfo GetVersionInfo() {
@@ -2180,7 +2192,7 @@ namespace iText.Kernel.Pdf {
             info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
         }
 
-        private void TryInitTagStructure(PdfDictionary str) {
+        protected internal virtual void TryInitTagStructure(PdfDictionary str) {
             try {
                 structTreeRoot = new PdfStructTreeRoot(str, this);
                 structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();

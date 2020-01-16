@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,9 +44,7 @@ using System;
 using iText.IO.Font.Woff2.W3c;
 
 namespace iText.IO.Font.Woff2.W3c.Format {
-    [NUnit.Framework.Ignore("DEVSIX-1612: different result in java and C#")]
     public class DirectoryTableOrder002Test : W3CWoff2DecodeTest {
-        //NOTE: Should be invalid by w3c test suite spec. See w3cProblemTest02 in html font-face test for more details.
         protected internal override String GetFontName() {
             return "directory-table-order-002";
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,6 +49,7 @@ using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Renderer implementing the use tag.</summary>
@@ -61,7 +62,7 @@ namespace iText.Svg.Renderers.Impl {
                     elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
                 }
                 if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
-                    String normalizedName = NormalizeName(elementToReUse);
+                    String normalizedName = SvgTextUtil.FilterReferenceValue(elementToReUse);
                     if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
                         ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
                         //Clone template
@@ -111,14 +112,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal override void PostDraw(SvgDrawContext context) {
-        }
-
-        /// <summary>The reference value will contain a hashtag character.</summary>
-        /// <remarks>The reference value will contain a hashtag character. This method will filter that value.</remarks>
-        /// <param name="name">value to be filtered</param>
-        /// <returns>filtered value</returns>
-        private String NormalizeName(String name) {
-            return name.Replace("#", "").Trim();
         }
 
         private bool IsValidHref(String name) {

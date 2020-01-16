@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -189,6 +189,13 @@ namespace iText.Kernel.Geom {
             double top = Enumerable.Max(ys);
             return new iText.Kernel.Geom.Rectangle((float)left, (float)bottom, (float)(right - left), (float)(top - bottom
                 ));
+        }
+
+        /// <summary>Convert rectangle to an array of points</summary>
+        /// <returns>array of four extreme points of rectangle</returns>
+        public virtual Point[] ToPointsArray() {
+            return new Point[] { new Point(x, y), new Point(x + width, y), new Point(x + width, y + height), new Point
+                (x, y + height) };
         }
 
         /// <summary>Get the rectangle representation of the intersection between this rectangle and the passed rectangle

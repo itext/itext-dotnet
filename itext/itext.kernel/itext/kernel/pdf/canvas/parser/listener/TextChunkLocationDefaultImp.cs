@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,33 +47,35 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     internal class TextChunkLocationDefaultImp : ITextChunkLocation {
         private const float DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION = 2;
 
-        /// <summary>the starting location of the chunk</summary>
+        /// <summary>The starting location of the chunk.</summary>
         private readonly Vector startLocation;
 
-        /// <summary>the ending location of the chunk</summary>
+        /// <summary>The ending location of the chunk.</summary>
         private readonly Vector endLocation;
 
-        /// <summary>unit vector in the orientation of the chunk</summary>
+        /// <summary>Unit vector in the orientation of the chunk.</summary>
         private readonly Vector orientationVector;
 
-        /// <summary>the orientation as a scalar for quick sorting</summary>
+        /// <summary>The orientation as a scalar for quick sorting.</summary>
         private readonly int orientationMagnitude;
 
-        /// <summary>
-        /// perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system)
-        /// we round to the nearest integer to handle the fuzziness of comparing floats
-        /// </summary>
+        /// <summary>Perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system).
+        ///     </summary>
+        /// <remarks>
+        /// Perpendicular distance to the orientation unit vector (i.e. the Y position in an unrotated coordinate system).
+        /// We round to the nearest integer to handle the fuzziness of comparing floats.
+        /// </remarks>
         private readonly int distPerpendicular;
 
-        /// <summary>distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
+        /// <summary>Distance of the start of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system).
         ///     </summary>
         private readonly float distParallelStart;
 
-        /// <summary>distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system)
+        /// <summary>Distance of the end of the chunk parallel to the orientation unit vector (i.e. the X position in an unrotated coordinate system).
         ///     </summary>
         private readonly float distParallelEnd;
 
-        /// <summary>the width of a single space character in the font of the chunk</summary>
+        /// <summary>The width of a single space character in the font of the chunk.</summary>
         private readonly float charSpaceWidth;
 
         public TextChunkLocationDefaultImp(Vector startLocation, Vector endLocation, float charSpaceWidth) {

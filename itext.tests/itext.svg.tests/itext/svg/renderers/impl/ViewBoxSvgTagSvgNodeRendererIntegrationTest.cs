@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -102,6 +102,27 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ViewBox400x200() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewbox_400x200");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioNoneValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioNoneValues"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues() {
+            //TODO (DEVSIX-3493) change cmp files after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues"
+                );
         }
     }
 }

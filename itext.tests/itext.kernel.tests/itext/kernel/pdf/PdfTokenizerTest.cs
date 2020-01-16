@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -216,17 +216,17 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.StartArray);
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-            NUnit.Framework.Assert.AreEqual(tok.IsHexString(), true);
+            NUnit.Framework.Assert.IsTrue(tok.IsHexString());
             PdfString str = new PdfString(tok.GetByteContent(), tok.IsHexString());
             NUnit.Framework.Assert.AreEqual("some hex string ", str.GetValue());
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-            NUnit.Framework.Assert.AreEqual(tok.IsHexString(), false);
+            NUnit.Framework.Assert.IsFalse(tok.IsHexString());
             str = new PdfString(tok.GetByteContent(), tok.IsHexString());
             NUnit.Framework.Assert.AreEqual("some simple string ", str.GetValue());
             tok.NextValidToken();
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.String);
-            NUnit.Framework.Assert.AreEqual(tok.IsHexString(), true);
+            NUnit.Framework.Assert.IsTrue(tok.IsHexString());
             str = new PdfString(tok.GetByteContent(), tok.IsHexString());
             NUnit.Framework.Assert.AreEqual("\u008C%G\u00D5\u008DK\u00D2\u00C6\u00F3\u00D3+\u0083\u000B\u00E3%\u009D "
                 , str.GetValue());

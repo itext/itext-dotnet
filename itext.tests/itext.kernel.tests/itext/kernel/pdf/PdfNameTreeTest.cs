@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -145,6 +145,25 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SetModifiedFlagAppendModeTest() {
             TestSetModified(true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckNamesOrder() {
+            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "namedDestinations.pdf"));
+            IList<String> expectedNames = new List<String>();
+            expectedNames.Add("Destination_1");
+            expectedNames.Add("Destination_2");
+            expectedNames.Add("Destination_3");
+            expectedNames.Add("Destination_4");
+            expectedNames.Add("Destination_5");
+            System.Console.Out.WriteLine("Expected names: " + expectedNames);
+            for (int i = 0; i < 10; i++) {
+                IDictionary<String, PdfObject> names = doc.GetCatalog().GetNameTree(PdfName.Dests).GetNames();
+                IList<String> actualNames = new List<String>(names.Keys);
+                System.Console.Out.WriteLine("Actual names:   " + actualNames);
+                NUnit.Framework.Assert.AreEqual(expectedNames, actualNames);
+            }
+            doc.Close();
         }
 
         private static void TestSetModified(bool isAppendMode) {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,32 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public abstract int GetMcid();
 
-        public abstract PdfDictionary GetPageObject();
+        public virtual PdfDictionary GetPageObject() {
+            PdfObject pageObject = GetPageIndirectReference().GetRefersTo();
+            if (pageObject is PdfDictionary) {
+                return (PdfDictionary)pageObject;
+            }
+            return null;
+        }
+
+        public virtual PdfIndirectReference GetPageIndirectReference() {
+            PdfObject page = null;
+            if (GetPdfObject() is PdfDictionary) {
+                page = ((PdfDictionary)GetPdfObject()).Get(PdfName.Pg, false);
+            }
+            if (page == null) {
+                page = parent.GetPdfObject().Get(PdfName.Pg, false);
+            }
+            if (page is PdfIndirectReference) {
+                return (PdfIndirectReference)page;
+            }
+            else {
+                if (page is PdfDictionary) {
+                    return page.GetIndirectReference();
+                }
+            }
+            return null;
+        }
 
         public virtual PdfName GetRole() {
             return parent.GetRole();

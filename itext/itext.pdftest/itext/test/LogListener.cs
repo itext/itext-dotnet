@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2019 iText Group NV
+Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,18 +52,23 @@ using NUnit.Framework.Interfaces;
 namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
-        private CapturingLoggerFactoryAdapter adapter;
+        private static CapturingLoggerFactoryAdapter adapter;
+
+        private ILoggerFactoryAdapter defaultLogAdapter;
 
         static LogListener() {
-            LogManager.Adapter = new ITextMemoryAddapter();
+            adapter = new ITextMemoryAddapter();
         }
 
         public override void BeforeTest(ITest testDetails) {
+            defaultLogAdapter = LogManager.Adapter;
+            LogManager.Adapter = adapter;
             Init();
         }
 
         public override void AfterTest(ITest testDetails) {
             CheckLogMessages(testDetails);
+            LogManager.Adapter = defaultLogAdapter;
         }
 
         public override ActionTargets Targets {
@@ -102,7 +107,6 @@ namespace iText.Test {
         }
 
         private void Init() {
-            adapter = LogManager.Adapter as CapturingLoggerFactoryAdapter;
             adapter.Clear();
         }
 
