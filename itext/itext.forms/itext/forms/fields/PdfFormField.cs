@@ -918,7 +918,7 @@ namespace iText.Forms.Fields {
             field.Put(PdfName.Opt, options);
             field.SetFieldFlags(flags);
             field.SetFieldName(name);
-            field.Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
+            ((PdfChoiceFormField)field).SetListSelected(new String[] { value }, false);
             if ((flags & PdfChoiceFormField.FF_COMBO) == 0) {
                 value = OptionsArrayToString(options);
             }
@@ -1703,10 +1703,9 @@ namespace iText.Forms.Fields {
             return SetValue(value, autoGenerateAppearance);
         }
 
-        /// <summary>Sets a value to the field and generating field appearance if needed.</summary>
+        /// <summary>Sets a value to the field and generates field appearance if needed.</summary>
         /// <param name="value">of the field</param>
-        /// <param name="generateAppearance">set this flat to false if you want to keep the appearance of the field generated before
-        ///     </param>
+        /// <param name="generateAppearance">if false, appearance won't be regenerated</param>
         /// <returns>the field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, bool generateAppearance) {
             PdfName formType = GetFormType();
@@ -1725,7 +1724,12 @@ namespace iText.Forms.Fields {
                         }
                     }
                 }
-                Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
+                if (PdfName.Ch.Equals(formType)) {
+                    ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, generateAppearance);
+                }
+                else {
+                    Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
+                }
             }
             else {
                 if (PdfName.Btn.Equals(formType)) {
@@ -1800,21 +1804,16 @@ namespace iText.Forms.Fields {
             }
             SetValue(display, true);
             PdfName formType = GetFormType();
-            if (PdfName.Tx.Equals(formType) || PdfName.Ch.Equals(formType)) {
-                Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
-            }
-            else {
-                if (PdfName.Btn.Equals(formType)) {
-                    if ((GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
-                        text = value;
-                    }
-                    else {
-                        Put(PdfName.V, new PdfName(value));
-                    }
+            if (PdfName.Btn.Equals(formType)) {
+                if ((GetFieldFlags() & PdfButtonFormField.FF_PUSH_BUTTON) != 0) {
+                    text = value;
                 }
                 else {
-                    Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
+                    Put(PdfName.V, new PdfName(value));
                 }
+            }
+            else {
+                Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
             }
             return this;
         }
@@ -2843,8 +2842,44 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>
+        /// Inserts the value into the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of this field and associates it with the specified key.
+        /// </summary>
+        /// <remarks>
+        /// Inserts the value into the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of this field and associates it with the specified key.
+        /// If the key is already present in this field dictionary,
+        /// this method will override the old value with the specified one.
+        /// </remarks>
+        /// <param name="key">key to insert or to override</param>
+        /// <param name="value">the value to associate with the specified key</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFormField"/>
+        /// instance
+        /// </returns>
         public virtual iText.Forms.Fields.PdfFormField Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
+            return this;
+        }
+
+        /// <summary>
+        /// Removes the specified key from the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of this field.
+        /// </summary>
+        /// <param name="key">key to be removed</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFormField"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormField Remove(PdfName key) {
+            GetPdfObject().Remove(key);
             SetModified();
             return this;
         }

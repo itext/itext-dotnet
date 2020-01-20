@@ -28,9 +28,10 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Forms {
-    public class PdfChoiceFieldTest {
+    public class PdfChoiceFieldTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/PdfChoiceFieldTest/";
 
@@ -39,7 +40,7 @@ namespace iText.Forms {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -69,6 +70,48 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChoiceFieldsSetValueTest() {
+            String srcPdf = sourceFolder + "choiceFieldsWithUnnecessaryIEntries.pdf";
+            String outPdf = destinationFolder + "choiceFieldsSetValueTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_choiceFieldsSetValueTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
+            form.GetField("First").SetValue("First");
+            form.GetField("Second").SetValue("Second");
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff01_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY, Count = 2)]
+        public virtual void MultiSelectByValueTest() {
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "multiSelectByValueTest.pdf"));
+            document.AddNewPage();
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+            PdfFormField choice = PdfFormField.CreateList(document, new Rectangle(336, 666, 50, 80), "choice", "two", 
+                new String[] { "one", "two", "three", "four" }, null, null).SetBorderColor(ColorConstants.BLACK);
+            ((PdfChoiceFormField)choice).SetMultiSelect(true);
+            ((PdfChoiceFormField)choice).SetListSelected(new String[] { "one", "three", "eins", "drei", null });
+            form.AddField(choice);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "multiSelectByValueTest.pdf"
+                , sourceFolder + "cmp_multiSelectByValueTest.pdf", destinationFolder, "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiSelectByIndexOutOfBoundsTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "multiSelectTest.pdf"), new PdfWriter(
+                destinationFolder + "multiSelectByIndexOutOfBoundsTest.pdf"));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(document, false);
+            PdfChoiceFormField field = (PdfChoiceFormField)form.GetField("choice");
+            field.SetListSelected(new int[] { 5 });
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "multiSelectByIndexOutOfBoundsTest.pdf"
+                , sourceFolder + "cmp_multiSelectByIndexOutOfBoundsTest.pdf", destinationFolder, "diff01_"));
         }
     }
 }

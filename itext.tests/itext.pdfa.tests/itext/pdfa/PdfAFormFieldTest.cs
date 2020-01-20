@@ -57,6 +57,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
@@ -185,6 +186,7 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
         public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
             String name = "pdfA1DocWithPdfA1ChoiceField";
             String fileName = destinationFolder + name + ".pdf";
@@ -225,6 +227,7 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfA1DocWithPdfA1ListFieldTest() {
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = destinationFolder + name + ".pdf";
