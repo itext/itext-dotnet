@@ -118,12 +118,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetIndices(PdfArray indices) {
-            if (IsIEntryRequired(indices.Size())) {
-                return (iText.Forms.Fields.PdfChoiceFormField)Put(PdfName.I, indices);
-            }
-            else {
-                return (iText.Forms.Fields.PdfChoiceFormField)Remove(PdfName.I);
-            }
+            return (iText.Forms.Fields.PdfChoiceFormField)Put(PdfName.I, indices);
         }
 
         /// <summary>Highlights the options.</summary>
@@ -162,6 +157,9 @@ namespace iText.Forms.Fields {
             PdfArray values = new PdfArray();
             IList<String> optionsToUnicodeNames = OptionsToUnicodeNames();
             foreach (String element in optionValues) {
+                if (element == null) {
+                    continue;
+                }
                 if (optionsToUnicodeNames.Contains(element)) {
                     int index = optionsToUnicodeNames.IndexOf(element);
                     indices.Add(new PdfNumber(index));
@@ -169,16 +167,19 @@ namespace iText.Forms.Fields {
                     values.Add(optByIndex.IsString() ? (PdfString)optByIndex : (PdfString)((PdfArray)optByIndex).Get(1));
                 }
                 else {
-                    if (element != null) {
+                    if (!(this.IsCombo() && this.IsEdit())) {
                         ILog logger = LogManager.GetLogger(this.GetType());
                         logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
                             , element, this.GetFieldName()));
-                        values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
                     }
+                    values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
                 }
             }
             if (indices.Size() > 0) {
                 SetIndices(indices);
+            }
+            else {
+                Remove(PdfName.I);
             }
             if (values.Size() == 1) {
                 Put(PdfName.V, values.Get(0));
@@ -234,6 +235,7 @@ namespace iText.Forms.Fields {
                 }
             }
             else {
+                Remove(PdfName.I);
                 Remove(PdfName.V);
             }
             RegenerateField();
@@ -370,40 +372,6 @@ namespace iText.Forms.Fields {
         /// <returns>whether or not to save changes immediately</returns>
         public virtual bool IsCommitOnSelChange() {
             return GetFieldFlag(FF_COMMIT_ON_SEL_CHANGE);
-        }
-
-        private bool IsIEntryRequired(int valueSize) {
-            if (!IsMultiSelect()) {
-                return false;
-            }
-            else {
-                if (valueSize > 1) {
-                    return true;
-                }
-                else {
-                    PdfArray options = GetOptions();
-                    LinkedDictionary<PdfString, LinkedHashSet<PdfString>> optionsExportedValues = new LinkedDictionary<PdfString
-                        , LinkedHashSet<PdfString>>(options.Size());
-                    foreach (PdfObject option in options) {
-                        if (option is PdfArray) {
-                            PdfString exportedValue = ((PdfArray)option).GetAsString(0);
-                            PdfString name = ((PdfArray)option).GetAsString(1);
-                            LinkedHashSet<PdfString> namesOfExportedValue = optionsExportedValues.Get(exportedValue);
-                            if (namesOfExportedValue == null) {
-                                namesOfExportedValue = new LinkedHashSet<PdfString>();
-                                namesOfExportedValue.Add(name);
-                                optionsExportedValues.Put(exportedValue, namesOfExportedValue);
-                            }
-                            else {
-                                if (namesOfExportedValue.Add(name)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
         }
 
         private IList<String> OptionsToUnicodeNames() {

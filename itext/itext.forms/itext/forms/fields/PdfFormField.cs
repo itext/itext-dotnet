@@ -1725,7 +1725,13 @@ namespace iText.Forms.Fields {
                     }
                 }
                 if (PdfName.Ch.Equals(formType)) {
-                    ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, generateAppearance);
+                    if (this is PdfChoiceFormField) {
+                        ((PdfChoiceFormField)this).SetListSelected(new String[] { value }, false);
+                    }
+                    else {
+                        PdfChoiceFormField choice = new PdfChoiceFormField(this.GetPdfObject());
+                        choice.SetListSelected(new String[] { value }, false);
+                    }
                 }
                 else {
                     Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
@@ -3208,18 +3214,20 @@ namespace iText.Forms.Fields {
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
-                PdfArray indices = GetPdfObject().GetAsArray(PdfName.I);
-                if (indices == null && this.GetKids() == null && this.GetParent() != null) {
-                    indices = this.GetParent().GetAsArray(PdfName.I);
-                }
-                if (indices != null && indices.Size() > 0) {
-                    foreach (PdfObject ind in indices) {
-                        if (!ind.IsNumber()) {
-                            continue;
-                        }
-                        if (((PdfNumber)ind).GetValue() == index) {
-                            paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                            paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
+                if (!this.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
+                    PdfArray indices = GetPdfObject().GetAsArray(PdfName.I);
+                    if (indices == null && this.GetKids() == null && this.GetParent() != null) {
+                        indices = this.GetParent().GetAsArray(PdfName.I);
+                    }
+                    if (indices != null && indices.Size() > 0) {
+                        foreach (PdfObject ind in indices) {
+                            if (!ind.IsNumber()) {
+                                continue;
+                            }
+                            if (((PdfNumber)ind).GetValue() == index) {
+                                paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
+                                paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
+                            }
                         }
                     }
                 }
@@ -4266,6 +4274,9 @@ namespace iText.Forms.Fields {
                         if (element.IsString()) {
                             sb.Append(((PdfString)element).ToUnicodeString()).Append('\n');
                         }
+                    }
+                    else {
+                        sb.Append('\n');
                     }
                 }
             }
