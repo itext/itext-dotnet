@@ -923,7 +923,7 @@ namespace iText.Forms.Fields {
                 value = OptionsArrayToString(options);
             }
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
-            field.DrawChoiceAppearance(rect, field.fontSize, value, xObject);
+            field.DrawChoiceAppearance(rect, field.fontSize, value, xObject, 0);
             annot.SetNormalAppearance(xObject.GetPdfObject());
             return (PdfChoiceFormField)field;
         }
@@ -3187,7 +3187,8 @@ namespace iText.Forms.Fields {
         /// <param name="rect">The location on the page for the list field</param>
         /// <param name="value">The initial value</param>
         /// <param name="appearance">The appearance</param>
-        private void DrawChoiceAppearance(Rectangle rect, float fontSize, String value, PdfFormXObject appearance) {
+        private void DrawChoiceAppearance(Rectangle rect, float fontSize, String value, PdfFormXObject appearance, 
+            int topIndex) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
@@ -3224,7 +3225,7 @@ namespace iText.Forms.Fields {
                             if (!ind.IsNumber()) {
                                 continue;
                             }
-                            if (((PdfNumber)ind).GetValue() == index) {
+                            if (((PdfNumber)ind).GetValue() == index + topIndex) {
                                 paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
                                 paragraph.SetFontColor(ColorConstants.LIGHT_GRAY);
                             }
@@ -4177,22 +4178,24 @@ namespace iText.Forms.Fields {
                 }
             }
             else {
+                int topIndex = 0;
                 if (!GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                    PdfNumber topIndex = this.GetPdfObject().GetAsNumber(PdfName.TI);
-                    if (topIndex == null && this.GetParent() != null) {
-                        topIndex = this.GetParent().GetAsNumber(PdfName.TI);
+                    PdfNumber topIndexNum = this.GetPdfObject().GetAsNumber(PdfName.TI);
+                    if (topIndexNum == null && this.GetParent() != null) {
+                        topIndexNum = this.GetParent().GetAsNumber(PdfName.TI);
                     }
                     PdfArray options = GetOptions();
                     if (null == options && this.GetParent() != null) {
                         options = this.GetParent().GetAsArray(PdfName.Opt);
                     }
                     if (null != options) {
-                        PdfArray visibleOptions = null != topIndex ? new PdfArray(options.SubList(topIndex.IntValue(), options.Size
-                            () - 1)) : (PdfArray)options.Clone();
+                        topIndex = null != topIndexNum ? topIndexNum.IntValue() : 0;
+                        PdfArray visibleOptions = topIndex > 0 ? new PdfArray(options.SubList(topIndex, options.Size())) : (PdfArray
+                            )options.Clone();
                         value = OptionsArrayToString(visibleOptions);
                     }
                 }
-                DrawChoiceAppearance(bboxRectangle, GetFontSize(bBox, value), value, appearance);
+                DrawChoiceAppearance(bboxRectangle, GetFontSize(bBox, value), value, appearance, topIndex);
             }
             PdfDictionary ap = new PdfDictionary();
             ap.Put(PdfName.N, appearance.GetPdfObject());

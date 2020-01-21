@@ -218,5 +218,20 @@ namespace iText.Forms {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TopIndexTest() {
+            String srcPdf = sourceFolder + "choiceFieldNotFittingTest.pdf";
+            String outPdf = destinationFolder + "topIndexTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_topIndexTest.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(document, false);
+            PdfChoiceFormField field = (PdfChoiceFormField)form.GetField("choice");
+            field.SetListSelected(new String[] { "seven" });
+            int topIndex = field.GetIndices().GetAsNumber(0).IntValue();
+            field.SetTopIndex(topIndex);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
     }
 }
