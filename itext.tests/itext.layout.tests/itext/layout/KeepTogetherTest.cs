@@ -75,10 +75,10 @@ namespace iText.Layout {
             PdfWriter writer = new PdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            for (int i = 0; i < 29; i++) {
+            for (int i = 0; i < 28; i++) {
                 doc.Add(new Paragraph("String number" + i));
             }
-            String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             Paragraph p1 = new Paragraph(str);
             p1.SetKeepTogether(true);
             doc.Add(p1);
