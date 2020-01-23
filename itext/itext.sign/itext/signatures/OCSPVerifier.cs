@@ -174,7 +174,7 @@ namespace iText.Signatures {
                 }
                 // check the status of the certificate
                 Object status = resp[i].GetCertStatus();
-                if (status == CertificateStatus.Good) {
+                if (status == null || status == CertificateStatus.Good) {
                     // check if the OCSP response was genuine
                     IsValidResponse(ocspResp, issuerCert, signDate);
                     return true;
