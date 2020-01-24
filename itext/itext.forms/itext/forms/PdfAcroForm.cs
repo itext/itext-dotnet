@@ -1025,7 +1025,8 @@ namespace iText.Forms {
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
-                    logger.Warn("Field {} was null", field);
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
+                        () == null ? field : field.GetIndirectReference()));
                     continue;
                 }
                 PdfString fieldName = formField.GetFieldName();

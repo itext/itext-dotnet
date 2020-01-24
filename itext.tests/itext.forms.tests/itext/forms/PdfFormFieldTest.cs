@@ -72,6 +72,16 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        // The first message for the case when the FormField is null,
+        // the second message when the FormField is a indirect reference to null.
+        [LogMessage(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
+        public virtual void NullFormFieldTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "nullFormField.pdf"));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FormFieldTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
