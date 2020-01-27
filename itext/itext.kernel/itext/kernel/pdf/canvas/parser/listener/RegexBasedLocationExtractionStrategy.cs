@@ -71,12 +71,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             IList<IPdfTextLocation> retval = new List<IPdfTextLocation>();
             CharacterRenderInfo.StringConversionInfo txt = CharacterRenderInfo.MapString(parseResult);
             Match mat = iText.IO.Util.StringUtil.Match(pattern, txt.text);
-            while (mat.Success) {
-                int? startIndex = txt.indexMap.Get(mat.Index);
-                int? endIndex = txt.indexMap.Get(mat.Index + mat.Length - 1);
-                foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value + 1))) {
-                    retval.Add(new DefaultPdfTextLocation(0, r, iText.IO.Util.StringUtil.Group(mat, 0)));
+            while (mat.Success)
+            {
+                int? startIndex = GetStartIndex(txt.indexMap, mat.Index, txt.text);
+                int? endIndex = GetEndIndex(txt.indexMap, mat.Index + mat.Length - 1);
+                if (startIndex != null && endIndex != null && startIndex <= endIndex)
+                {
+                    foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value + 1)))
+                    {
+                        retval.Add(new DefaultPdfTextLocation(0, r, iText.IO.Util.StringUtil.Group(mat, 0)));
+                    }
                 }
+
                 mat = mat.NextMatch();
             }
             /* sort
@@ -204,6 +210,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
             // return
             return retval;
+        }
+        
+        private static int? GetStartIndex(IDictionary<int, int?> indexMap, int index, String txt) {
+            while (!indexMap.ContainsKey(index) && index < txt.Length) {
+                index++;
+            }
+            return indexMap.Get(index);
+        }
+
+        private static int? GetEndIndex(IDictionary<int, int?> indexMap, int index) {
+            while (!indexMap.ContainsKey(index) && index >= 0) {
+                index--;
+            }
+            return indexMap.Get(index);
         }
     }
 }

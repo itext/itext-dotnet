@@ -83,12 +83,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                         // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
                         if (chunk.GetLocation().IsAtWordBoundary(lastChunk.GetLocation()) && !chunk.GetText().StartsWith(" ") && !
                             chunk.GetText().EndsWith(" ")) {
-                            PutCharsWithIndex(" ", i, indexMap, sb);
+                            sb.Append(' ');
                         }
                         PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                     else {
-                        PutCharsWithIndex("\n", i, indexMap, sb);
+                        // we insert a newline character in the resulting string if the chunks are placed on different lines
+                        sb.Append('\n');
                         PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                 }
