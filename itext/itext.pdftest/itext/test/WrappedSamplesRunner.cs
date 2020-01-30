@@ -194,7 +194,7 @@ namespace iText.Test {
             if (!IsInSearchPath(classType.FullName, searchConfig)) {
                 return null;
             }
-            if (IsIgnoredClassOrPackage(classType.FullName, searchConfig)) {
+            if (IsIgnoredClassOrPackage(classType, searchConfig)) {
                 return null;
             }
 
@@ -204,10 +204,10 @@ namespace iText.Test {
             return runnerParams;
         }
 
-        private static bool IsIgnoredClassOrPackage(String fullName, RunnerSearchConfig searchConfig) {
+        private static bool IsIgnoredClassOrPackage(Type type, RunnerSearchConfig searchConfig) {
+            String fullName = type.FullName;
             foreach (String ignoredPath in searchConfig.GetIgnoredPaths()) {
-                String filePath = Path.Combine(TestUtil.GetParentProjectDirectory(TestContext
-                        .CurrentContext.TestDirectory), 
+                String filePath = Path.Combine(TestUtil.GetParentProjectDirectory(type.GetAssembly().Location), 
                     ignoredPath.Replace(".", "\\"));
 
                 if ((Directory.Exists(filePath) && fullName.Contains(ignoredPath))
