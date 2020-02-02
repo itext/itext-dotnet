@@ -1002,7 +1002,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("<!doctype> <html> <head></head> <body> <p>Foo</p> </body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
                 .NormaliseWhitespace(doc.OuterHtml()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<!DOCTYPE \u0000>");
-            NUnit.Framework.Assert.AreEqual("<!doctype �> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
+            NUnit.Framework.Assert.AreEqual("<!doctype \ufffd> <html> <head></head> <body></body> </html>", iText.StyledXmlParser.Jsoup.Helper.StringUtil
                 .NormaliseWhitespace(doc.OuterHtml()));
         }
 
