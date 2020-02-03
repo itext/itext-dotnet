@@ -23,6 +23,12 @@
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+    <!--    
+     Explicitly add System.Net.Http v4.3.0 dependency.
+     Without this explicit dependency Rider IDE somehow cannot properly resolve it, which ends up in FileNotFound exception
+     in code that executes UrlUtil#OpenStream.
+    -->
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
