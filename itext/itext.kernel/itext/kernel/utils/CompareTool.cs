@@ -890,8 +890,11 @@ namespace iText.Kernel.Utils {
             System.Console.Out.WriteLine("Out xml: file:///" + UrlUtil.ToNormalizedURI(outXmlFile).AbsolutePath);
             System.Console.Out.WriteLine("Cmp xml: file:///" + UrlUtil.ToNormalizedURI(cmpXmlFile).AbsolutePath + "\n"
                 );
-            return XmlUtils.CompareXmls(new FileStream(outXmlFile, FileMode.Open, FileAccess.Read), new FileStream(cmpXmlFile
-                , FileMode.Open, FileAccess.Read));
+            using (Stream outXmlStream = FileUtil.GetInputStreamForFile(outXmlFile)) {
+                using (Stream cmpXmlStream = FileUtil.GetInputStreamForFile(cmpXmlFile)) {
+                    return XmlUtils.CompareXmls(outXmlStream, cmpXmlStream);
+                }
+            }
         }
 
         /// <summary>Compares document info dictionaries of two pdf documents.</summary>
