@@ -43,9 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
@@ -138,6 +140,20 @@ namespace iText.Kernel.Pdf.Canvas {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest03.pdf", sourceFolder
                  + "cmp_colorTest03.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Rgb16BitDepthImageTest() {
+            //TODO update expected value of Bpc in assert
+            String @out = destinationFolder + "rgb8Bit.pdf";
+            String cmp = sourceFolder + "cmp_rgb8Bit.pdf";
+            ImageData img = ImageDataFactory.Create(sourceFolder + "rgb16Bit.png");
+            PdfDocument pdfdoc = new PdfDocument(new PdfWriter(@out));
+            PdfPage page = pdfdoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.AddImage(img, new Rectangle(30, 500, 100, 100), false);
+            pdfdoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
         }
 
         [NUnit.Framework.Test]
