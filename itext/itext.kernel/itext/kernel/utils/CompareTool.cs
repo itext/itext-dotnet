@@ -719,6 +719,46 @@ namespace iText.Kernel.Utils {
             return null;
         }
 
+        /// <summary>Compares structures of two corresponding streams from out and cmp PDF documents.</summary>
+        /// <remarks>
+        /// Compares structures of two corresponding streams from out and cmp PDF documents. You can roughly
+        /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
+        /// <para />
+        /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outStream">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// from the output file, which is to be compared to cmp-file stream.
+        /// </param>
+        /// <param name="cmpStream">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// from the cmp-file file, which is to be compared to output file stream.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="CompareResult"/>
+        /// instance containing differences between the two streams,
+        /// or
+        /// <see langword="null"/>
+        /// if streams are equal.
+        /// </returns>
+        public virtual CompareTool.CompareResult CompareStreamsStructure(PdfStream outStream, PdfStream cmpStream) {
+            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpStream.GetIndirectReference(), outStream
+                .GetIndirectReference());
+            if (!CompareStreamsExtended(outStream, cmpStream, currentPath, compareResult)) {
+                System.Diagnostics.Debug.Assert(!compareResult.IsOk());
+                System.Console.Out.WriteLine(compareResult.GetReport());
+                return compareResult;
+            }
+            System.Diagnostics.Debug.Assert(compareResult.IsOk());
+            return null;
+        }
+
         /// <summary>Simple method that compares two given PdfStreams by content.</summary>
         /// <remarks>
         /// Simple method that compares two given PdfStreams by content. This is "deep" comparing, which means that all

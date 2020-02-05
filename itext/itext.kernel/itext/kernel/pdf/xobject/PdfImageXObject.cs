@@ -45,7 +45,9 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Colors;
+using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
@@ -228,7 +230,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// Note that this has nothing to do with the original type of the image. For instance, the return value
         /// of this method will never be
         /// <see cref="iText.IO.Image.ImageType.PNG"/>
-        /// as we loose this information when converting a
+        /// as we lose this information when converting a
         /// PNG image into something that can be put into a PDF file.
         /// The possible values are:
         /// <see cref="iText.IO.Image.ImageType.JPEG"/>
@@ -375,24 +377,26 @@ namespace iText.Kernel.Pdf.Xobject {
             if (decodeParms != null) {
                 stream.Put(PdfName.DecodeParms, decodeParms);
             }
-            PdfName colorSpace;
-            switch (image.GetColorSpace()) {
-                case 1: {
-                    colorSpace = PdfName.DeviceGray;
-                    break;
-                }
+            if (!(image is PngImageData)) {
+                PdfName colorSpace;
+                switch (image.GetColorSpace()) {
+                    case 1: {
+                        colorSpace = PdfName.DeviceGray;
+                        break;
+                    }
 
-                case 3: {
-                    colorSpace = PdfName.DeviceRGB;
-                    break;
-                }
+                    case 3: {
+                        colorSpace = PdfName.DeviceRGB;
+                        break;
+                    }
 
-                default: {
-                    colorSpace = PdfName.DeviceCMYK;
-                    break;
+                    default: {
+                        colorSpace = PdfName.DeviceCMYK;
+                        break;
+                    }
                 }
+                stream.Put(PdfName.ColorSpace, colorSpace);
             }
-            stream.Put(PdfName.ColorSpace, colorSpace);
             if (image.GetBpc() != 0) {
                 stream.Put(PdfName.BitsPerComponent, new PdfNumber(image.GetBpc()));
             }
@@ -405,7 +409,28 @@ namespace iText.Kernel.Pdf.Xobject {
             if (image.GetColorSpace() == -1) {
                 stream.Remove(PdfName.ColorSpace);
             }
-            PdfDictionary additional = CreateDictionaryFromMap(stream, image.GetImageAttributes());
+            PdfDictionary additional = null;
+            if (image is PngImageData) {
+                PngImageData pngImage = (PngImageData)image;
+                if (pngImage.IsIndexed()) {
+                    PdfArray colorspace = new PdfArray();
+                    colorspace.Add(PdfName.Indexed);
+                    colorspace.Add(GetColorSpaceInfo(pngImage));
+                    if ((pngImage.GetColorPalette() != null) && (pngImage.GetColorPalette().Length > 0)) {
+                        //Each palette entry is a three-byte series, so the number of entries is calculated as the length
+                        //of the stream divided by 3. The number below specifies the maximum valid index value (starting from 0 up)
+                        colorspace.Add(new PdfNumber(pngImage.GetColorPalette().Length / 3 - 1));
+                    }
+                    if (pngImage.GetColorPalette() != null) {
+                        colorspace.Add(new PdfString(PdfEncodings.ConvertToString(pngImage.GetColorPalette(), null)));
+                    }
+                    stream.Put(PdfName.ColorSpace, colorspace);
+                }
+                else {
+                    stream.Put(PdfName.ColorSpace, GetColorSpaceInfo(pngImage));
+                }
+            }
+            additional = CreateDictionaryFromMap(stream, image.GetImageAttributes());
             if (additional != null) {
                 stream.PutAll(additional);
             }
@@ -525,7 +550,7 @@ namespace iText.Kernel.Pdf.Xobject {
                         }
                         else {
                             if (value is String) {
-                                if (value.Equals("Mask")) {
+                                if (value.Equals(PngImageHelperConstants.MASK)) {
                                     dictionary.Put(PdfName.Mask, new PdfLiteral((String)value));
                                 }
                                 else {
@@ -614,6 +639,105 @@ namespace iText.Kernel.Pdf.Xobject {
                 throw new PdfException(PdfException.CannotCreatePdfImageXObjectByWmfImage);
             }
             return image;
+        }
+
+        private static PdfObject GetColorSpaceInfo(PngImageData pngImageData) {
+            if (pngImageData.GetProfile() != null) {
+                if (pngImageData.IsGrayscaleImage()) {
+                    return PdfName.DeviceGray;
+                }
+                else {
+                    return PdfName.DeviceRGB;
+                }
+            }
+            if (pngImageData.GetGamma() == 1f && !pngImageData.IsHasCHRM()) {
+                if (pngImageData.IsGrayscaleImage()) {
+                    return PdfName.DeviceGray;
+                }
+                else {
+                    return PdfName.DeviceRGB;
+                }
+            }
+            else {
+                PdfArray array = new PdfArray();
+                PdfDictionary map = new PdfDictionary();
+                if (pngImageData.IsGrayscaleImage()) {
+                    if (pngImageData.GetGamma() == 1f) {
+                        return PdfName.DeviceGray;
+                    }
+                    array.Add(PdfName.CalGray);
+                    map.Put(PdfName.Gamma, new PdfNumber(pngImageData.GetGamma()));
+                    map.Put(PdfName.WhitePoint, new PdfArray(new int[] { 1, 1, 1 }));
+                }
+                else {
+                    float[] wp = new float[] { 1, 1, 1 };
+                    array.Add(PdfName.CalRGB);
+                    float gamma = pngImageData.GetGamma();
+                    if (gamma != 1f) {
+                        float[] gm = new float[3];
+                        gm[0] = gamma;
+                        gm[1] = gamma;
+                        gm[2] = gamma;
+                        map.Put(PdfName.Gamma, new PdfArray(gm));
+                    }
+                    if (pngImageData.IsHasCHRM()) {
+                        PdfImageXObject.PngChromaticitiesHelper helper = new PdfImageXObject.PngChromaticitiesHelper();
+                        helper.ConstructMatrix(pngImageData);
+                        wp = helper.wp;
+                        map.Put(PdfName.Matrix, new PdfArray(helper.matrix));
+                    }
+                    map.Put(PdfName.WhitePoint, new PdfArray(wp));
+                }
+                array.Add(map);
+                return array;
+            }
+        }
+
+        private class PngChromaticitiesHelper {
+            internal float[] matrix = new float[9];
+
+            internal float[] wp = new float[3];
+
+            public virtual void ConstructMatrix(PngImageData pngImageData) {
+                PngChromaticities pngChromaticities = pngImageData.GetPngChromaticities();
+                float z = pngChromaticities.GetYW() * ((pngChromaticities.GetXG() - pngChromaticities.GetXB()) * pngChromaticities
+                    .GetYR() - (pngChromaticities.GetXR() - pngChromaticities.GetXB()) * pngChromaticities.GetYG() + (pngChromaticities
+                    .GetXR() - pngChromaticities.GetXG()) * pngChromaticities.GetYB());
+                float YA = pngChromaticities.GetYR() * ((pngChromaticities.GetXG() - pngChromaticities.GetXB()) * pngChromaticities
+                    .GetYW() - (pngChromaticities.GetXW() - pngChromaticities.GetXB()) * pngChromaticities.GetYG() + (pngChromaticities
+                    .GetXW() - pngChromaticities.GetXG()) * pngChromaticities.GetYB()) / z;
+                float XA = YA * pngChromaticities.GetXR() / pngChromaticities.GetYR();
+                float ZA = YA * ((1 - pngChromaticities.GetXR()) / pngChromaticities.GetYR() - 1);
+                float YB = -pngChromaticities.GetYG() * ((pngChromaticities.GetXR() - pngChromaticities.GetXB()) * pngChromaticities
+                    .GetYW() - (pngChromaticities.GetXW() - pngChromaticities.GetXB()) * pngChromaticities.GetYR() + (pngChromaticities
+                    .GetXW() - pngChromaticities.GetXR()) * pngChromaticities.GetYB()) / z;
+                float XB = YB * pngChromaticities.GetXG() / pngChromaticities.GetYG();
+                float ZB = YB * ((1 - pngChromaticities.GetXG()) / pngChromaticities.GetYG() - 1);
+                float YC = pngChromaticities.GetYB() * ((pngChromaticities.GetXR() - pngChromaticities.GetXG()) * pngChromaticities
+                    .GetYW() - (pngChromaticities.GetXW() - pngChromaticities.GetXG()) * pngChromaticities.GetYW() + (pngChromaticities
+                    .GetXW() - pngChromaticities.GetXR()) * pngChromaticities.GetYG()) / z;
+                float XC = YC * pngChromaticities.GetXB() / pngChromaticities.GetYB();
+                float ZC = YC * ((1 - pngChromaticities.GetXB()) / pngChromaticities.GetYB() - 1);
+                float XW = XA + XB + XC;
+                float YW = 1;
+                float ZW = ZA + ZB + ZC;
+                float[] wpa = new float[3];
+                wpa[0] = XW;
+                wpa[1] = YW;
+                wpa[2] = ZW;
+                this.wp = JavaUtil.ArraysCopyOf(wpa, 3);
+                float[] matrix = new float[9];
+                matrix[0] = XA;
+                matrix[1] = YA;
+                matrix[2] = ZA;
+                matrix[3] = XB;
+                matrix[4] = YB;
+                matrix[5] = ZB;
+                matrix[6] = XC;
+                matrix[7] = YC;
+                matrix[8] = ZC;
+                this.matrix = JavaUtil.ArraysCopyOf(matrix, 9);
+            }
         }
     }
 }

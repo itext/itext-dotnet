@@ -119,7 +119,6 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void AddPngImageIndexedColorspaceTest() {
-            //TODO update cmp-file after DEVSIX-2865 will be fixed
             TestSingleImage("pngImageIndexedColorspace.png");
         }
 

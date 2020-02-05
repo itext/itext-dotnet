@@ -14,6 +14,7 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(0, ((PngImageData)img).GetColorType());
         }
 
         [NUnit.Framework.Test]
@@ -25,6 +26,7 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(0, ((PngImageData)img).GetColorType());
         }
 
         [NUnit.Framework.Test]
@@ -35,6 +37,10 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(4, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageMask());
+            NUnit.Framework.Assert.AreEqual(1, img.GetImageMask().GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(8, img.GetImageMask().GetBpc());
         }
 
         [NUnit.Framework.Test]
@@ -66,6 +72,7 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(2, ((PngImageData)img).GetColorType());
         }
 
         [NUnit.Framework.Test]
@@ -76,6 +83,8 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(2, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNull(img.GetProfile());
         }
 
         [NUnit.Framework.Test]
@@ -86,6 +95,10 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(6, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageMask());
+            NUnit.Framework.Assert.AreEqual(1, img.GetImageMask().GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(8, img.GetImageMask().GetBpc());
         }
 
         [NUnit.Framework.Test]
@@ -97,16 +110,10 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
             NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void RgbaAddColorToAlphaImageTest() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "rgbaAddColorToAlpha.png");
-            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
-            NUnit.Framework.Assert.AreEqual(100, img.GetWidth(), 0);
-            NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
-            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
-            NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(6, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageMask());
+            NUnit.Framework.Assert.AreEqual(1, img.GetImageMask().GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(8, img.GetImageMask().GetBpc());
         }
 
         [NUnit.Framework.Test]
@@ -118,6 +125,7 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(2, img.GetBpc());
             //Indexed colorspace contains one component indeed
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(3, ((PngImageData)img).GetColorType());
         }
 
         [NUnit.Framework.Test]
@@ -129,6 +137,7 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(1, img.GetBpc());
             //Indexed colorspace contains one component indeed
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(3, ((PngImageData)img).GetColorType());
         }
 
         [NUnit.Framework.Test]
@@ -140,6 +149,34 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(2, img.GetBpc());
             //Indexed colorspace contains one component indeed
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(3, ((PngImageData)img).GetColorType());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GrayscaleSimpleTransparencyImageTest() {
+            ImageData img = ImageDataFactory.Create(sourceFolder + "grayscaleSimpleTransparencyImage.png");
+            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
+            NUnit.Framework.Assert.AreEqual(200, img.GetWidth(), 0);
+            NUnit.Framework.Assert.AreEqual(200, img.GetHeight(), 0);
+            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(0, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageAttributes());
+            NUnit.Framework.Assert.AreEqual("[0 0]", img.GetImageAttributes().Get(PngImageHelperConstants.MASK));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RgbSimpleTransparencyImageTest() {
+            ImageData img = ImageDataFactory.Create(sourceFolder + "rgbSimpleTransparencyImage.png");
+            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
+            NUnit.Framework.Assert.AreEqual(600, img.GetWidth(), 0);
+            NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
+            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            NUnit.Framework.Assert.AreEqual(3, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(2, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageAttributes());
+            NUnit.Framework.Assert.AreEqual("[255 255 0 0 0 0]", img.GetImageAttributes().Get(PngImageHelperConstants.
+                MASK));
         }
 
         [NUnit.Framework.Test]
@@ -151,6 +188,10 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(2, img.GetBpc());
             //Indexed colorspace contains one component indeed
             NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(3, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageAttributes());
+            NUnit.Framework.Assert.AreEqual(0, ((int[])img.GetImageAttributes().Get(PngImageHelperConstants.MASK))[0]);
+            NUnit.Framework.Assert.AreEqual(0, ((int[])img.GetImageAttributes().Get(PngImageHelperConstants.MASK))[1]);
         }
 
         [NUnit.Framework.Test]
@@ -201,6 +242,26 @@ namespace iText.IO.Image {
             NUnit.Framework.Assert.AreEqual(300, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(300, img.GetDpiX());
             NUnit.Framework.Assert.AreEqual(300, img.GetDpiY());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SRGBImageTest() {
+            ImageData img = ImageDataFactory.Create(sourceFolder + "sRGBImage.png");
+            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
+            NUnit.Framework.Assert.AreEqual(50, img.GetWidth(), 0);
+            NUnit.Framework.Assert.AreEqual(50, img.GetHeight(), 0);
+            NUnit.Framework.Assert.AreEqual(96, img.GetDpiX());
+            NUnit.Framework.Assert.AreEqual(96, img.GetDpiY());
+            NUnit.Framework.Assert.AreEqual(2.2, ((PngImageData)img).GetGamma(), 0.0001f);
+            PngChromaticities pngChromaticities = ((PngImageData)img).GetPngChromaticities();
+            NUnit.Framework.Assert.AreEqual(0.3127f, pngChromaticities.GetXW(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.329f, pngChromaticities.GetYW(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.64f, pngChromaticities.GetXR(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.33f, pngChromaticities.GetYR(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.3f, pngChromaticities.GetXG(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.6f, pngChromaticities.GetYG(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.15f, pngChromaticities.GetXB(), 0.0001f);
+            NUnit.Framework.Assert.AreEqual(0.06f, pngChromaticities.GetYB(), 0.0001f);
         }
     }
 }
