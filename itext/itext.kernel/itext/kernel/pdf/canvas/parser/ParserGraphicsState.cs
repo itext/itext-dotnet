@@ -41,9 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.Collections.Generic;
-using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
@@ -135,50 +132,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         private void TransformClippingPath(Matrix newCtm) {
-            Path path = new Path();
-            foreach (Subpath subpath in clippingPath.GetSubpaths()) {
-                Subpath transformedSubpath = TransformSubpath(subpath, newCtm);
-                path.AddSubpath(transformedSubpath);
-            }
-            clippingPath = path;
-        }
-
-        private Subpath TransformSubpath(Subpath subpath, Matrix newCtm) {
-            Subpath newSubpath = new Subpath();
-            newSubpath.SetClosed(subpath.IsClosed());
-            foreach (IShape segment in subpath.GetSegments()) {
-                IShape transformedSegment = TransformSegment(segment, newCtm);
-                newSubpath.AddSegment(transformedSegment);
-            }
-            return newSubpath;
-        }
-
-        private IShape TransformSegment(IShape segment, Matrix newCtm) {
-            IShape newSegment;
-            IList<Point> segBasePts = segment.GetBasePoints();
-            Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[segBasePts.Count]));
-            if (segment is BezierCurve) {
-                newSegment = new BezierCurve(JavaUtil.ArraysAsList(transformedPoints));
-            }
-            else {
-                newSegment = new Line(transformedPoints[0], transformedPoints[1]);
-            }
-            return newSegment;
-        }
-
-        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points) {
-            try {
-                AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix.Get(Matrix
-                    .I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.Get(Matrix.I22), transformationMatrix
-                    .Get(Matrix.I31), transformationMatrix.Get(Matrix.I32));
-                t = t.CreateInverse();
-                Point[] transformed = new Point[points.Length];
-                t.Transform(points, 0, transformed, 0, points.Length);
-                return transformed;
-            }
-            catch (NoninvertibleTransformException e) {
-                throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
-            }
+            clippingPath = ShapeTransformUtil.TransformPath(clippingPath, newCtm);
         }
     }
 }
