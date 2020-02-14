@@ -73,6 +73,22 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CellWithBigRowspanCompletedButRowNotCompletedOnThreePagesTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                fileName = "cellWithBigRowspanCompletedButRowNotCompletedOnThreePagesTest.pdf";
+                Document doc = CreateDocument();
+                Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorderCollapse(BorderCollapsePropertyValue
+                    .SEPARATE);
+                table.AddCell(new Cell(2, 1));
+                table.AddCell(new Cell(1, 1).SetHeight(2000).SetBackgroundColor(ColorConstants.RED));
+                doc.Add(table);
+                CloseDocumentAndCompareOutputs(doc);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
+
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1124")]
