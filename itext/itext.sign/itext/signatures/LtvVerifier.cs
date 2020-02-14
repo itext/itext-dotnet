@@ -246,7 +246,7 @@ namespace iText.Signatures {
             latestRevision = false;
             dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             DateTime cal = pkcs7.GetTimeStampDate();
-            if (cal == SignUtils.UNDEFINED_TIMESTAMP_DATE) {
+            if (cal == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
                 cal = pkcs7.GetSignDate();
             }
             // TODO: get date from signature
