@@ -123,14 +123,14 @@ namespace iText.Test.Pdfa {
             if (!detailsAttributes["failedRules"].Value.Equals("0")
                 || !detailsAttributes["failedChecks"].Value.Equals("0")) {
                 WriteToFile(output, reportDest);
-                return "VeraPDF verification failed. See verification results: file:///"
-                       + UrlUtil.ToNormalizedURI(reportDest).AbsolutePath;
+                return "VeraPDF verification failed. See verification results: " 
+                       + UrlUtil.GetNormalizedFileUriString(reportDest);
             }
 
             if (toReportSuccess) {
                 WriteToFile(output, reportDest);
-                Console.WriteLine("VeraPDF verification finished. See verification report: file:///"
-                                  + UrlUtil.ToNormalizedURI(reportDest).AbsolutePath);
+                Console.WriteLine("VeraPDF verification finished. See verification report: "
+                                  + UrlUtil.GetNormalizedFileUriString(reportDest));
             }
 
             return null;
