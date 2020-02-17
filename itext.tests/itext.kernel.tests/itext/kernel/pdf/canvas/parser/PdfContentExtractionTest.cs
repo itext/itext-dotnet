@@ -1,5 +1,6 @@
 using System;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
 
@@ -15,13 +16,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 String inputFileName = sourceFolder + "docWithBigCoordinates.pdf";
                 //In this document the CTM shrinks coordinates and this coordinates are large numbers.
                 // At the moment creation of this test clipper has a problem with handling large numbers
-                // since internally it deals with integers and has to multuply large numbers even more
+                // since internally it deals with integers and has to multiply large numbers even more
                 // for internal purposes
                 PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName));
                 PdfDocumentContentParser contentParser = new PdfDocumentContentParser(pdfDocument);
                 contentParser.ProcessContent(1, new LocationTextExtractionStrategy());
             }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+            , NUnit.Framework.Throws.InstanceOf<ClipperException>().With.Message.EqualTo(ClipperExceptionConstant.COORDINATE_OUTSIDE_ALLOWED_RANGE))
 ;
         }
     }
