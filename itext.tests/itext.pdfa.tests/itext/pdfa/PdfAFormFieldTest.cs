@@ -111,8 +111,8 @@ namespace iText.Pdfa {
             group.SetValue("v1", false);
             PdfAcroForm.GetAcroForm(pdf, true).AddField(group);
             pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp/PdfAFormFieldTest/cmp_"
+                 + file, destinationFolder, "diff_"));
         }
 
         internal class PdfAButtonFieldTestRenderer : ParagraphRenderer {
@@ -153,7 +153,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1ButtonFieldTest() {
             String name = "pdfA1DocWithPdfA1ButtonField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ButtonField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ButtonField.pdf";
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -172,7 +172,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1CheckBoxFieldTest() {
             String name = "pdfA1DocWithPdfA1CheckBoxField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1CheckBoxField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1CheckBoxField.pdf";
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -190,7 +190,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
             String name = "pdfA1DocWithPdfA1ChoiceField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
@@ -211,7 +211,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1ComboBoxFieldTest() {
             String name = "pdfA1DocWithPdfA1ComboBoxField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
             PdfFont fontCJK = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
                 , true);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
@@ -231,7 +231,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1ListFieldTest() {
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1ListField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ListField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
@@ -253,7 +253,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1PushButtonFieldTest() {
             String name = "pdfA1DocWithPdfA1PushButtonField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
@@ -271,7 +271,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1RadioButtonFieldTest() {
             String name = "pdfA1DocWithPdfA1RadioButtonField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1RadioButtonField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1RadioButtonField.pdf";
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -292,7 +292,7 @@ namespace iText.Pdfa {
         public virtual void PdfA1DocWithPdfA1TextFieldTest() {
             String name = "pdfA1DocWithPdfA1TextField";
             String fileName = destinationFolder + name + ".pdf";
-            String cmp = sourceFolder + "cmp_pdfA1DocWithPdfA1TextField.pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1TextField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
             fontFreeSans.SetSubset(false);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
@@ -302,6 +302,25 @@ namespace iText.Pdfa {
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             form.AddField(PdfFormField.CreateText(pdfDoc, new Rectangle(36, 466, 90, 20), "text", "textField", fontFreeSans
                 , 12, false, conformanceLevel).SetValue("iText"));
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA1DocWithPdfA1SignatureFieldTest() {
+            String name = "pdfA1DocWithPdfA1SignatureField";
+            String fileName = destinationFolder + name + ".pdf";
+            String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1SignatureField.pdf";
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            fontFreeSans.SetSubset(false);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
+            PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.AddField(PdfFormField.CreateSignature(pdfDoc, conformanceLevel).SetFieldName("signature").SetFont(fontFreeSans
+                ).SetFontSize(20));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, cmp, destinationFolder));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));

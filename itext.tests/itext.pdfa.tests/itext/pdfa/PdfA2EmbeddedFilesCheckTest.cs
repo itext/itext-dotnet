@@ -105,7 +105,7 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
-            FileStream fis = new FileStream(sourceFolder + "pdfa.pdf", FileMode.Open, FileAccess.Read);
+            FileStream fis = new FileStream(sourceFolder + "pdfs/pdfa.pdf", FileMode.Open, FileAccess.Read);
             MemoryStream os = new MemoryStream();
             byte[] buffer = new byte[1024];
             int length;
