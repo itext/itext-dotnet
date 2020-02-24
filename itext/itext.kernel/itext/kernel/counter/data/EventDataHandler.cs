@@ -245,7 +245,6 @@ namespace iText.Kernel.Counter.Data {
                 // > by an application that overrides the default policy, the runtime terminates the process
                 // > and no active try/finally blocks or finalizers are executed. This behavior ensures process
                 // > integrity if the finalizer cannot free or destroy resources.
-            }
-        }
+            }        }
     }
 }
