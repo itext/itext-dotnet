@@ -963,6 +963,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     }
                 }
             }
+            ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
+            logger.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE, JavaUtil.ArraysToString
+                ((Object[])operands.ToArray()), pdfColorSpace.GetPdfObject()));
             return null;
         }
 

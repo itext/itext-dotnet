@@ -45,9 +45,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -112,6 +115,70 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
             , NUnit.Framework.Throws.InstanceOf<OutOfMemoryException>())
 ;
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE)]
+        public virtual void PatternColorParsingNotValidPdfTest() {
+            String inputFile = sourceFolder + "patternColorParsingNotValidPdfTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
+                PdfPage page = pdfDocument.GetPage(i);
+                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                    ();
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
+                processor.ProcessPageContent(page);
+                Color renderInfo = colorParsingEventListener.GetEncounteredPath().GetFillColor();
+                NUnit.Framework.Assert.IsNull(renderInfo);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternColorParsingValidPdfTest() {
+            String inputFile = sourceFolder + "patternColorParsingValidPdfTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
+                PdfPage page = pdfDocument.GetPage(i);
+                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                    ();
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
+                processor.ProcessPageContent(page);
+                PathRenderInfo renderInfo = colorParsingEventListener.GetEncounteredPath();
+                PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
+                NUnit.Framework.Assert.IsTrue(colorSpace is PdfSpecialCs.Pattern);
+            }
+        }
+
+        private class ColorParsingEventListener : IEventListener {
+            private IList<IEventData> content = new List<IEventData>();
+
+            private const String pathDataExpected = "Path data expected.";
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                if (type.Equals(EventType.RENDER_PATH)) {
+                    PathRenderInfo pathRenderInfo = (PathRenderInfo)data;
+                    pathRenderInfo.PreserveGraphicsState();
+                    content.Add(data);
+                }
+            }
+
+            /// <summary>Get the last encountered PathRenderInfo, then clears the internal buffer</summary>
+            /// <returns>the PathRenderInfo object that was encountered when processing the last path rendering operation</returns>
+            internal virtual PathRenderInfo GetEncounteredPath() {
+                if (content.Count == 0) {
+                    return null;
+                }
+                IEventData eventData = content[0];
+                if (!(eventData is PathRenderInfo)) {
+                    throw new PdfException(pathDataExpected);
+                }
+                content.Clear();
+                return (PathRenderInfo)eventData;
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
         }
 
         private class NoOpEventListener : IEventListener {
