@@ -78,6 +78,36 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ProcessGraphicsStateResourceOperatorFillOpacityTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "transparentText.pdf"));
+            float? expOpacity = 0.5f;
+            IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                    (textRenderInfo));
+                processor.ProcessPageContent(page);
+            }
+            NUnit.Framework.Assert.AreEqual(expOpacity, textRenderInfo.Get("FillOpacity"), "Expected fill opacity not found"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessGraphicsStateResourceOperatorStrokeOpacityTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "hiddenText.pdf"));
+            float? expOpacity = 0.0f;
+            IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                    (textRenderInfo));
+                processor.ProcessPageContent(page);
+            }
+            NUnit.Framework.Assert.AreEqual(expOpacity, textRenderInfo.Get("StrokeOpacity"), "Expected stroke opacity not found"
+                );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestClosingEmptyPath() {
             String fileName = "closingEmptyPath.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
@@ -246,6 +276,27 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                         sb.Append(END_EVENT_OCCURRENCE).Append("\n");
                         break;
                     }
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
+        private class RecordEveryTextRenderEvent : IEventListener {
+            private IDictionary<String, Object> map;
+
+            internal RecordEveryTextRenderEvent(IDictionary<String, Object> map) {
+                this.map = map;
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                if (data is TextRenderInfo) {
+                    TextRenderInfo renderInfo = (TextRenderInfo)data;
+                    map.Put("String", renderInfo.GetPdfString().ToUnicodeString());
+                    map.Put("FillOpacity", renderInfo.GetGraphicsState().GetFillOpacity());
+                    map.Put("StrokeOpacity", renderInfo.GetGraphicsState().GetStrokeOpacity());
                 }
             }
 
