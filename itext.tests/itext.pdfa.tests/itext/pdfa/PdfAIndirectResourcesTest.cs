@@ -41,24 +41,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.IO;
-using iText.IO.Image;
-using iText.Kernel.Geom;
+using System.Collections.Generic;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas;
-using iText.Kernel.Pdf.Layer;
-using iText.Kernel.Utils;
-using iText.Layout.Element;
 using iText.Test;
-using iText.Test.Pdfa;
+using iText.Test.Attributes;
 
 namespace iText.Pdfa {
-    public class PdfA2LayoutOcgTest : ExtendedITextTest {
+    public class PdfAIndirectResourcesTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/pdfs/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA2LayoutOcgTest/";
+             + "/test/itext/pdfa/PdfAIndirectResourcesTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void Configure() {
@@ -66,31 +60,37 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckIfOcgForPdfA2Works() {
-            String fileName = "createdOcgPdfA.pdf";
-            Stream colorStream = new FileStream(sourceFolder + "color/sRGB_CS_profile.icm", FileMode.Open, FileAccess.Read
-                );
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + "cmp/PdfA2LayoutOcgTest/cmp_" + fileName;
-            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outFileName), PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
-                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", colorStream));
-            pdfDoc.SetTagged();
-            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
-            pdfDoc.AddNewPage();
-            iText.Layout.Element.Image image1 = new Image(ImageDataFactory.Create(sourceFolder + "images/manualTransparency_for_png.png"
-                ));
-            PdfCanvas pdfCanvas = new PdfCanvas(pdfDoc, 1);
-            iText.Layout.Canvas canvas1 = new iText.Layout.Canvas(pdfCanvas, pdfDoc, new Rectangle(0, 0, 590, 420));
-            PdfLayer imageLayer1 = new PdfLayer("*SomeTest_image$here@.1", pdfDoc);
-            imageLayer1.SetOn(true);
-            pdfCanvas.BeginLayer(imageLayer1);
-            canvas1.Add(image1);
-            pdfCanvas.EndLayer();
-            canvas1.Close();
+        [LogMessage(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY)]
+        public virtual void IndirectResources01Test() {
+            String fileName = destinationFolder + "indirectResources01Test.pdf";
+            PdfADocument pdfDoc = new PdfADocument(new PdfReader(sourceFolder + "indirectResources01.pdf"), new PdfWriter
+                (fileName));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff01_"));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outFileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectResources02Test() {
+            String fileName = destinationFolder + "indirectResources02Test.pdf";
+            PdfWriter writer = new PdfAIndirectResourcesTest.CustomPdfWriter(fileName, 19);
+            PdfADocument pdfDoc = new PdfADocument(new PdfReader(sourceFolder + "indirectResources02.pdf"), writer);
+            pdfDoc.Close();
+        }
+
+        private class CustomPdfWriter : PdfWriter {
+            private int objectToFlushNumber;
+
+            public CustomPdfWriter(String filename, int objectToFlushNumber)
+                : base(filename) {
+                this.objectToFlushNumber = objectToFlushNumber;
+            }
+
+            protected override void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
+                // Because of flushing order in PdfDocument is uncertain, flushWaitingObjects() method is overridden
+                // to simulate the issue when the certain PdfObject A, that exists in the Catalog entry and in the resources
+                // of another PdfObject B, is flushed before the flushing of the PdfObject B.
+                base.document.GetPdfObject(objectToFlushNumber).Flush();
+                base.FlushWaitingObjects(forbiddenToFlush);
+            }
         }
     }
 }
