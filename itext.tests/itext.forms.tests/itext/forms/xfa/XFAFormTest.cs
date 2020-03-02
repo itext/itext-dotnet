@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Xml;
+using System.Xml.Linq;
 using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -128,6 +130,16 @@ namespace iText.Forms.Xfa {
             XfaForm xfaForm = acroForm.GetXfaForm();
             String name = xfaForm.FindFieldName("TextField1");
             NUnit.Framework.Assert.IsNull(name);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractXFADataTest() {
+            String src = sourceFolder + "xfaFormWithDataSet.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(src));
+            XfaForm xfa = new XfaForm(pdfDocument);
+            XElement node = (XElement) xfa.FindDatasetsNode("Number1");
+            NUnit.Framework.Assert.IsNotNull(node);
+            NUnit.Framework.Assert.AreEqual("Number1", node.Name.LocalName);
         }
     }
 }
