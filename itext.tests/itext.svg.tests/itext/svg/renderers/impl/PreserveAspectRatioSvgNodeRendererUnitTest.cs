@@ -26,9 +26,10 @@ using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class PreserveAspectRatioSvgNodeRendererUnitTest {
+    public class PreserveAspectRatioSvgNodeRendererUnitTest : ExtendedITextTest {
         private static readonly Rectangle VIEWPORT_VALUE = PageSize.Default;
 
         private static readonly float[] VIEWBOX_VALUES = new float[] { 0, 0, 300, 400 };

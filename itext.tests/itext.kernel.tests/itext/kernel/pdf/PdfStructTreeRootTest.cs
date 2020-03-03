@@ -45,7 +45,7 @@ using System.IO;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class PdfStructTreeRootTest {
+    public class PdfStructTreeRootTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfStructTreeRootTest/";
 

@@ -23,9 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class SmartModePdfObjectsSerializerTest {
+    public class SmartModePdfObjectsSerializerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SmartModeObjectSelfReferencingTest() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
