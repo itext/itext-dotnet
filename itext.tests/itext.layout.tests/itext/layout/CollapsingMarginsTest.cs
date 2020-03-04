@@ -249,7 +249,10 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ColumnRendererTest() {
             NUnit.Framework.Assert.That(() =>  {
-                // TODO DEVSIX-2901 the exception should not be thrown
+                /* TODO DEVSIX-2901 the exception should not be thrown
+                if after DEVSIX-2901 the exception persists,
+                change the type of the expected exception to a more specific one to make the test stricter.
+                */
                 String outFileName = destinationFolder + "columnRendererTest.pdf";
                 String cmpFileName = sourceFolder + "cmp_columnRendererTest.pdf";
                 PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
@@ -274,7 +277,7 @@ namespace iText.Layout {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                     , "diff"));
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentOutOfRangeException>())
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
 ;
         }
 
