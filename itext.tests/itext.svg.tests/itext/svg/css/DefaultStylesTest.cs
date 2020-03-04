@@ -116,7 +116,7 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-1089")]
+        [NUnit.Framework.Ignore("DEVSIX-2289")]
         public virtual void InheritedDefaultStyleTest() {
             ICssResolver styleResolver = new SvgStyleResolver();
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag

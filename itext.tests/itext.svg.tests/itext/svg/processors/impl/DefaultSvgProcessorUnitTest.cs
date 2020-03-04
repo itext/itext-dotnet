@@ -190,7 +190,7 @@ namespace iText.Svg.Processors.Impl {
 ;
         }
 
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestNoPassedProperties() {
             //Setup nodes
@@ -210,7 +210,7 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.IsNull(rootActual);
         }
 
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestPassedPropertiesNull() {
             //Setup nodes
@@ -230,7 +230,7 @@ namespace iText.Svg.Processors.Impl {
             NUnit.Framework.Assert.IsNull(rootActual);
         }
 
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by RND-868\n")]
+        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
         [NUnit.Framework.Test]
         public virtual void DefaultProcessingTestPassedPropertiesReturnNullValues() {
             //Setup nodes
@@ -259,7 +259,7 @@ namespace iText.Svg.Processors.Impl {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-868")]
+        [NUnit.Framework.Ignore("DEVSIX-2253")]
         public virtual void ProcessWithNullPropertiesTest() {
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
