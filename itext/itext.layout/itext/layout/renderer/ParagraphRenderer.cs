@@ -71,6 +71,7 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
+        [Obsolete]
         protected internal float previousDescent = 0;
 
         protected internal IList<LineRenderer> lines = null;
@@ -161,6 +162,7 @@ namespace iText.Layout.Renderer {
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
+            float previousDescent = 0;
             float lastLineBottomLeadingIndent = 0;
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
