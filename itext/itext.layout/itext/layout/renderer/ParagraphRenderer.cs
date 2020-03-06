@@ -88,6 +88,17 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            ParagraphOrphansControl orphansControl = this.GetProperty<ParagraphOrphansControl>(Property.ORPHANS_CONTROL
+                );
+            ParagraphWidowsControl widowsControl = this.GetProperty<ParagraphWidowsControl>(Property.WIDOWS_CONTROL);
+            if (orphansControl != null || widowsControl != null) {
+                return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
+                    );
+            }
+            return DirectLayout(layoutContext);
+        }
+
+        protected internal virtual LayoutResult DirectLayout(LayoutContext layoutContext) {
             bool wasHeightClipped = false;
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();

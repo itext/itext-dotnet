@@ -234,6 +234,8 @@ namespace iText.IO {
 
         public const String OPENTYPE_GDEF_TABLE_ERROR = "OpenType GDEF table error: {0}";
 
+        public const String ORPHANS_CONSTRAINT_VIOLATED = "Orphans constraint violated for paragraph split at page {0}. Min number of orphans: {1}; actual: {2}. \nComment: {3}";
+
         public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
 
         public const String PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED = "The page passed to Canvas#enableAutoTagging(PdfPage) method shall be the one on which this canvas will be rendered. However the actual passed PdfPage instance sets not such page. This might lead to creation of malformed PDF document.";
@@ -251,6 +253,8 @@ namespace iText.IO {
         public const String PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS = "Png image has color profile with incompatible number of color components.";
 
         public const String POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION = "Popup entry in the markup annotations refers not to the annotation with Popup subtype.";
+
+        public const String PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD = "Premature call of handleViolation method.";
 
         public const String PROPERTY_IN_PERCENTS_NOT_SUPPORTED = "Property {0} in percents is not supported";
 
@@ -318,6 +322,8 @@ namespace iText.IO {
         public const String UNSUPPORTED_COLOR_IN_DA = "Unsupported color in FormField's DA";
 
         public const String VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY = "\"{0}\" entry in the \"{1}\" dictionary is a {2} and higher version feature. It is meaningless for the current {3} version.";
+
+        public const String WIDOWS_CONSTRAINT_VIOLATED = "Widows constraint violated for paragraph split at page {0}. Min number of widows: {1}; actual: {2}.\nComment: {3}";
 
         public const String WRITER_ENCRYPTION_IS_IGNORED_APPEND = "Writer encryption will be ignored, because append mode is used. Document will preserve the original encryption (or will stay unencrypted)";
 
