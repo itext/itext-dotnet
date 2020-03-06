@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -99,12 +100,13 @@ namespace iText.Layout {
             int overflowedToNextPageLinesNum = 2;
             ParagraphWidowsControl widowsControl = new ParagraphWidowsControl(minAllowedWidows, minAllowedWidows - overflowedToNextPageLinesNum
                 , false);
-            Paragraph widowsParagraph = new Paragraph(OrphansWidowsTestUtil.paraText).SetWidowsControl(widowsControl);
+            Paragraph widowsParagraph = new Paragraph(OrphansWidowsTestUtil.PARA_TEXT).SetWidowsControl(widowsControl);
             IRenderer paragraphRenderer = widowsParagraph.CreateRendererSubTree().SetParent(document.GetRenderer());
             Rectangle effectiveArea = document.GetPageEffectiveArea(pdfDocument.GetDefaultPageSize());
             float linesHeight = OrphansWidowsTestUtil.CalculateHeightForLinesNum(document, widowsParagraph, effectiveArea
                 .GetWidth(), overflowedToNextPageLinesNum, false);
-            Rectangle layoutAreaRect = new Rectangle(effectiveArea).SetHeight(linesHeight + 5);
+            Rectangle layoutAreaRect = new Rectangle(effectiveArea).SetHeight(linesHeight + OrphansWidowsTestUtil.LINES_SPACE_EPS
+                );
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, layoutAreaRect));
             LayoutResult firstLayoutResult = paragraphRenderer.Layout(layoutContext);
             LayoutResult secondLayoutResult = paragraphRenderer.Layout(layoutContext);
@@ -115,8 +117,15 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNotNull(firstSplitRenderer);
             NUnit.Framework.Assert.IsNotNull(secondSplitRenderer);
             NUnit.Framework.Assert.AreEqual(firstSplitRenderer.ToString(), secondSplitRenderer.ToString());
-            NUnit.Framework.Assert.IsNotNull(firstLayoutResult.GetOverflowRenderer());
-            NUnit.Framework.Assert.IsNotNull(secondLayoutResult.GetOverflowRenderer());
+            ParagraphRenderer firstOverflowRenderer = (ParagraphRenderer)firstLayoutResult.GetOverflowRenderer();
+            ParagraphRenderer secondOverflowRenderer = (ParagraphRenderer)secondLayoutResult.GetOverflowRenderer();
+            NUnit.Framework.Assert.IsNotNull(firstOverflowRenderer);
+            NUnit.Framework.Assert.IsNotNull(secondOverflowRenderer);
+            IList<IRenderer> firstOverflowRendererChildren = firstOverflowRenderer.GetChildRenderers();
+            IList<IRenderer> secondOverflowRendererChildren = secondOverflowRenderer.GetChildRenderers();
+            NUnit.Framework.Assert.IsNotNull(firstOverflowRendererChildren);
+            NUnit.Framework.Assert.IsNotNull(secondOverflowRendererChildren);
+            NUnit.Framework.Assert.AreEqual(firstOverflowRendererChildren.Count, secondOverflowRendererChildren.Count);
         }
 
         [NUnit.Framework.Test]
@@ -125,12 +134,13 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             int minAllowedWidows = 3;
             int overflowedToNextPageLinesNum = 5;
-            Paragraph widowsParagraph = new Paragraph(OrphansWidowsTestUtil.paraText);
+            Paragraph widowsParagraph = new Paragraph(OrphansWidowsTestUtil.PARA_TEXT);
             IRenderer paragraphRenderer = widowsParagraph.CreateRendererSubTree().SetParent(document.GetRenderer());
             Rectangle effectiveArea = document.GetPageEffectiveArea(pdfDocument.GetDefaultPageSize());
             float linesHeight = OrphansWidowsTestUtil.CalculateHeightForLinesNum(document, widowsParagraph, effectiveArea
                 .GetWidth(), overflowedToNextPageLinesNum, false);
-            Rectangle layoutAreaRect = new Rectangle(effectiveArea).SetHeight(linesHeight + 5);
+            Rectangle layoutAreaRect = new Rectangle(effectiveArea).SetHeight(linesHeight + OrphansWidowsTestUtil.LINES_SPACE_EPS
+                );
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, layoutAreaRect));
             LayoutResult noWidowsControlLayoutResult = paragraphRenderer.Layout(layoutContext);
             ParagraphWidowsControl widowsControl = new ParagraphWidowsControl(minAllowedWidows, 1, false);
@@ -146,6 +156,266 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(firstSplitRenderer.ToString(), secondSplitRenderer.ToString());
             NUnit.Framework.Assert.IsNotNull(noWidowsControlLayoutResult.GetOverflowRenderer());
             NUnit.Framework.Assert.IsNotNull(widowsControlLayoutResult.GetOverflowRenderer());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void MaxHeightLimitCausesOrphans() {
+            RunMaxHeightLimit("maxHeightLimitCausesOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void MaxHeightLimitCausesWidows() {
+            RunMaxHeightLimit("maxHeightLimitCausesWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanvasHeightCausesOrphansViolation() {
+            RunCanvasSize("canvasHeightCausesOrphansViolation", true);
+        }
+
+        /* NOTE in this test the last possibly fitting line is removed as if to fix widows violation!
+        * When the area is limited by highlevel conditions like paragraph's or div's size,
+        * there's no attempt to fix orphans or widows. In this test case on the lowlevel canvas limitation
+        * there is an attempt of fixing widows.
+        */
+        [NUnit.Framework.Test]
+        public virtual void CanvasHeightCausesWidowsViolation() {
+            RunCanvasSize("canvasHeightCausesWidowsViolation", false);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void DivSizeCausesOrphans() {
+            RunDivSize("divSizeCausesOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT)]
+        public virtual void DivSizeCausesWidows() {
+            RunDivSize("divSizeCausesWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherOrphans() {
+            RunKeepTogether("keepTogetherOrphans", true, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherWidows() {
+            RunKeepTogether("keepTogetherWidows", false, false);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherLargeParagraphOrphans() {
+            RunKeepTogether("keepTogetherLargeParagraphOrphans", true, true);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherLargeParagraphWidows() {
+            RunKeepTogether("keepTogetherLargeParagraphWidows", false, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineImageOrphans() {
+            RunInlineImage("inlineImageOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineImageWidows() {
+            RunInlineImage("inlineImageWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void HugeInlineImageOrphans() {
+            RunHugeInlineImage("hugeInlineImageOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        public virtual void HugeInlineImageWidows() {
+            RunHugeInlineImage("hugeInlineImageWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomParagraphAndRendererOrphans() {
+            RunCustomParagraphAndRendererTest("customParagraphAndRendererOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomParagraphAndRendererWidows() {
+            RunCustomParagraphAndRendererTest("customParagraphAndRendererWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnexpectedlyWideNextArea() {
+            RunUnexpectedWidthOfNextAreaTest("unexpectedlyWideNextArea", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnexpectedlyNarrowNextArea() {
+            RunUnexpectedWidthOfNextAreaTest("unexpectedlyNarrowNextArea", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineBlockOrphans() {
+            RunInlineBlockTest("inlineBlockOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineBlockWidows() {
+            RunInlineBlockTest("inlineBlockWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineFloatOrphans() {
+            RunInlineFloatTest("inlineFloatOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineFloatWidows() {
+            RunInlineFloatTest("inlineFloatWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatingDivOrphans() {
+            RunFloatingDiv("floatingDivOrphans", true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatingDivWidows() {
+            RunFloatingDiv("floatingDivWidows", false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SingleLineParagraphOrphans() {
+            RunOrphansWidowsBiggerThanLinesCount("singleLineParagraphOrphans", true, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SingleLineParagraphWidows() {
+            RunOrphansWidowsBiggerThanLinesCount("singleLineParagraphWidows", false, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TwoLinesParagraphMin3Orphans() {
+            RunOrphansWidowsBiggerThanLinesCount("twoLinesParagraphMin3Orphans", true, false);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED)]
+        public virtual void TwoLinesParagraphMin3Widows() {
+            RunOrphansWidowsBiggerThanLinesCount("twoLinesParagraphMin3Widows", false, false);
+        }
+
+        private static void RunMaxHeightLimit(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsAndMaxHeightLimitTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunCanvasSize(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsOnCanvasOfLimitedSizeTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunDivSize(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsWithinDivOfLimitedSizeTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunKeepTogether(String fileName, bool orphans, bool large) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsKeepTogetherTestCase(outPdf, orphans, large);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunInlineImage(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            String imagePath = sourceFolder + "bulb.gif";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsInlineImageTestCase(outPdf, imagePath, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunHugeInlineImage(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            String imagePath = sourceFolder + "imageA4.png";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsHugeInlineImageTestCase(outPdf, imagePath, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunCustomParagraphAndRendererTest(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTest.CustomParagraph customParagraph = new OrphansWidowsTest.CustomParagraph();
+            if (orphans) {
+                customParagraph.SetOrphansControl(new ParagraphOrphansControl(3));
+            }
+            else {
+                customParagraph.SetWidowsControl(new ParagraphWidowsControl(3, 1, false));
+            }
+            OrphansWidowsTestUtil.ProduceOrphansWidowsTestCase(outPdf, 2, orphans, customParagraph, false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunUnexpectedWidthOfNextAreaTest(String fileName, bool wide) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsUnexpectedWidthOfNextAreaTestCase(outPdf, wide);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunInlineBlockTest(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsInlineBlockTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunInlineFloatTest(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsInlineFloatTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunFloatingDiv(String fileName, bool orphans) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsFloatingDivTestCase(outPdf, orphans);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunOrphansWidowsBiggerThanLinesCount(String fileName, bool orphans, bool singleLine) {
+            String outPdf = destinationFolder + fileName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
+            OrphansWidowsTestUtil.ProduceOrphansWidowsBiggerThanLinesCountTestCase(outPdf, orphans, singleLine);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
         }
 
         private static void RunMinThreeOrphansTest(String testName, int linesLeft) {
@@ -188,6 +458,18 @@ namespace iText.Layout {
                 );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));
+        }
+
+        private class CustomParagraphRenderer : ParagraphRenderer {
+            public CustomParagraphRenderer(OrphansWidowsTest.CustomParagraph modelElement)
+                : base(modelElement) {
+            }
+        }
+
+        private class CustomParagraph : Paragraph {
+            protected internal override IRenderer MakeNewRenderer() {
+                return new OrphansWidowsTest.CustomParagraphRenderer(this);
+            }
         }
     }
 }
