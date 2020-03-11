@@ -46,7 +46,8 @@ namespace iText.Layout.Renderer {
         internal static float[] GetFontAscenderDescenderNormalized(AbstractRenderer renderer) {
             PdfFont font = renderer.ResolveFirstPdfFont();
             float fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE).GetValue();
-            float[] fontAscenderDescenderFromMetrics = CalculateFontAscenderDescenderFromFontMetrics(font);
+            float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             float fontAscender = fontAscenderDescenderFromMetrics[0] / FontProgram.UNITS_NORMALIZATION * fontSize;
             float fontDescender = fontAscenderDescenderFromMetrics[1] / FontProgram.UNITS_NORMALIZATION * fontSize;
             return new float[] { fontAscender, fontDescender };
@@ -73,22 +74,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return lineHeightValue;
-        }
-
-        internal static float[] CalculateFontAscenderDescenderFromFontMetrics(PdfFont font) {
-            FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
-            float ascender;
-            float descender;
-            if (fontMetrics.GetWinAscender() == 0 || fontMetrics.GetWinDescender() == 0 || fontMetrics.GetTypoAscender
-                () == fontMetrics.GetWinAscender() && fontMetrics.GetTypoDescender() == fontMetrics.GetWinDescender()) {
-                ascender = fontMetrics.GetTypoAscender();
-                descender = fontMetrics.GetTypoDescender();
-            }
-            else {
-                ascender = fontMetrics.GetWinAscender();
-                descender = fontMetrics.GetWinDescender();
-            }
-            return new float[] { ascender, descender };
         }
     }
 }

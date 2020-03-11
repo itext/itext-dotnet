@@ -368,7 +368,7 @@ namespace iText.Layout.Renderer {
                 if (childRenderer is ILeafElementRenderer && childResult.GetStatus() != LayoutResult.NOTHING) {
                     if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && 
                         childRenderer is TextRenderer) {
-                        float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender((AbstractRenderer)childRenderer);
+                        float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender((TextRenderer)childRenderer);
                         childAscent = ascenderDescender[0];
                         childDescent = ascenderDescender[1];
                     }

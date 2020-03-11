@@ -41,26 +41,32 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsCourierTest() {
-            float[] fontAscenderDescender = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(PdfFontFactory
-                .CreateFont(StandardFonts.COURIER));
-            NUnit.Framework.Assert.AreEqual(629.0f, fontAscenderDescender[0], EPS);
-            NUnit.Framework.Assert.AreEqual(-157.0f, fontAscenderDescender[1], EPS);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+            float[] fontAscenderDescender = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE);
+            NUnit.Framework.Assert.AreEqual(629.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[0], 
+                EPS);
+            NUnit.Framework.Assert.AreEqual(-157.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[1]
+                , EPS);
         }
 
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsTimesTest() {
-            float[] fontAscenderDescender = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(PdfFontFactory
-                .CreateFont(StandardFonts.TIMES_ROMAN));
-            NUnit.Framework.Assert.AreEqual(683.0f, fontAscenderDescender[0], EPS);
-            NUnit.Framework.Assert.AreEqual(-217.0f, fontAscenderDescender[1], EPS);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
+            float[] fontAscenderDescender = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE);
+            NUnit.Framework.Assert.AreEqual(683.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[0], 
+                EPS);
+            NUnit.Framework.Assert.AreEqual(-217.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[1]
+                , EPS);
         }
 
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsHelveticaTest() {
-            float[] fontAscenderDescender = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(PdfFontFactory
-                .CreateFont(StandardFonts.HELVETICA));
-            NUnit.Framework.Assert.AreEqual(718.0f, fontAscenderDescender[0], EPS);
-            NUnit.Framework.Assert.AreEqual(-207.0f, fontAscenderDescender[1], EPS);
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+            float[] fontAscenderDescender = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE);
+            NUnit.Framework.Assert.AreEqual(718.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[0], 
+                EPS);
+            NUnit.Framework.Assert.AreEqual(-207.0f * TextRenderer.TYPO_ASCENDER_SCALE_COEFF, fontAscenderDescender[1]
+                , EPS);
         }
 
         [NUnit.Framework.Test]
@@ -69,8 +75,8 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new Text("Hello"));
             textRenderer.SetParent(document.GetRenderer());
             float[] ascenderDescender = LineHeightHelper.GetFontAscenderDescenderNormalized(textRenderer);
-            NUnit.Framework.Assert.AreEqual(8.61600f, ascenderDescender[0], EPS);
-            NUnit.Framework.Assert.AreEqual(-2.483999f, ascenderDescender[1], EPS);
+            NUnit.Framework.Assert.AreEqual(10.33920f, ascenderDescender[0], EPS);
+            NUnit.Framework.Assert.AreEqual(-2.9808f, ascenderDescender[1], EPS);
         }
 
         [NUnit.Framework.Test]
@@ -160,15 +166,15 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new Text("Hello"));
             textRenderer.SetParent(document.GetRenderer());
             float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender(textRenderer);
-            NUnit.Framework.Assert.AreEqual(9.96599f, ascenderDescender[0], EPS);
-            NUnit.Framework.Assert.AreEqual(-3.83399f, ascenderDescender[1], EPS);
+            NUnit.Framework.Assert.AreEqual(10.57919f, ascenderDescender[0], EPS);
+            NUnit.Framework.Assert.AreEqual(-3.22079f, ascenderDescender[1], EPS);
         }
 
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsNotoEmojiFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "NotoEmoji-Regular.ttf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(1068.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-292.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -176,8 +182,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsNotoSansFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "NotoSans-Regular.ttf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(1068.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-292.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -185,8 +191,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsNotoColorEmojiFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "NotoColorEmoji.ttf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             System.Console.Out.WriteLine(ascenderDescenderFromFontMetrics[0]);
             System.Console.Out.WriteLine(ascenderDescenderFromFontMetrics[1]);
         }
@@ -194,8 +200,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsNotoSansCJKscRegularFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "NotoSansCJKsc-Regular.otf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(1160.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-320.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -203,8 +209,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsPuritan2FontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "Puritan2.otf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(860.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-232.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -212,8 +218,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsNotoSansCJKjpBoldFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "NotoSansCJKjp-Bold.otf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(1160.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-320.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -221,8 +227,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsFreeSansFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(FONTS + "FreeSans.ttf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(800.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-200.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
@@ -230,8 +236,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CalculateFontAscenderDescenderFromFontMetricsOpenSansRegularFontTest() {
             PdfFont font = PdfFontFactory.CreateFont(OPEN_SANS_FONTS + "OpenSans-Regular.ttf");
-            float[] ascenderDescenderFromFontMetrics = LineHeightHelper.CalculateFontAscenderDescenderFromFontMetrics(
-                font);
+            float[] ascenderDescenderFromFontMetrics = TextRenderer.CalculateAscenderDescender(font, RenderingMode.HTML_MODE
+                );
             NUnit.Framework.Assert.AreEqual(1068.0f, ascenderDescenderFromFontMetrics[0], EPS);
             NUnit.Framework.Assert.AreEqual(-292.0f, ascenderDescenderFromFontMetrics[1], EPS);
         }
