@@ -2203,8 +2203,13 @@ namespace iText.Layout.Renderer {
                     if (provider == null) {
                         throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
+                    FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
+                    if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                    }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return ResolveFirstPdfFont((String[])font, provider, fc);
+                    return provider.GetPdfFont(provider.GetFontSelector(JavaUtil.ArraysAsList((String[])font), fc, fontSet).BestMatch
+                        (), fontSet);
                 }
                 else {
                     throw new InvalidOperationException("String[] or PdfFont expected as value of FONT property");

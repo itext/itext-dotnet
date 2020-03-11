@@ -49,11 +49,12 @@ using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
-using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
-    public class TextRendererTest : ExtendedITextTest {
+    public class TextRendererTest : AbstractRendererUnitTest {
+        private const double EPS = 1e-5;
+
         [NUnit.Framework.Test]
         public virtual void NextRendererTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
@@ -113,6 +114,39 @@ namespace iText.Layout.Renderer {
             txt.SetFontFamily("Helvetica");
             doc.Add(new Paragraph().Add(txt));
             doc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetDescentTest() {
+            Document doc = CreateDocument();
+            TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
+            textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
+            NUnit.Framework.Assert.AreEqual(-2.980799674987793f, textRenderer.GetDescent(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetOccupiedAreaBBoxTest() {
+            Document doc = CreateDocument();
+            TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
+            textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 986.68f, 25.343998f, 13.32f).EqualsWithEpsilon(textRenderer
+                .GetOccupiedAreaBBox()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetInnerAreaBBoxTest() {
+            Document doc = CreateDocument();
+            TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
+            textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePointValue(20f));
+            textRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            NUnit.Framework.Assert.IsTrue(new Rectangle(0, 986.68f, 5.343998f, -26.68f).EqualsWithEpsilon(textRenderer
+                .GetInnerAreaBBox()));
         }
     }
 }

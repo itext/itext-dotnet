@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -114,6 +116,42 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(LayoutResult.FULL, result.GetStatus());
             NUnit.Framework.Assert.AreEqual(0, result.GetOccupiedArea().GetBBox().GetHeight(), EPS);
             NUnit.Framework.Assert.AreEqual(true, inlineBlockRenderer.GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AdjustChildrenYLineTextChildHtmlModeTest() {
+            Document document = CreateDocument();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 100, 200, 200));
+            lineRenderer.maxAscent = 100;
+            TextRenderer childTextRenderer = new TextRenderer(new Text("Hello"));
+            childTextRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            childTextRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 50, 200, 200));
+            childTextRenderer.yLineOffset = 100;
+            childTextRenderer.SetProperty(Property.TEXT_RISE, 0f);
+            lineRenderer.AddChild(childTextRenderer);
+            lineRenderer.AdjustChildrenYLine();
+            NUnit.Framework.Assert.AreEqual(100f, lineRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
+            NUnit.Framework.Assert.AreEqual(100f, childTextRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AdjustChildrenYLineImageChildHtmlModeTest() {
+            Document document = CreateDocument();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(50, 50, 200, 200));
+            lineRenderer.maxAscent = 100;
+            PdfFormXObject xObject = new PdfFormXObject(new Rectangle(200, 200));
+            Image img = new Image(xObject);
+            ImageRenderer childImageRenderer = new ImageRenderer(img);
+            childImageRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            childImageRenderer.occupiedArea = new LayoutArea(1, new Rectangle(50, 50, 200, 200));
+            lineRenderer.AddChild(childImageRenderer);
+            lineRenderer.AdjustChildrenYLine();
+            NUnit.Framework.Assert.AreEqual(50f, lineRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
+            NUnit.Framework.Assert.AreEqual(150.0, childImageRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
         }
     }
 }
