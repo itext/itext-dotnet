@@ -411,6 +411,76 @@ namespace iText.Layout.Testutil {
             document.Close();
         }
 
+        public static void ProduceOrphansOrWidowsTestCase(String outPdf, int linesLeft, bool orphans, Paragraph testPara
+            ) {
+            Document doc = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            PageSize pageSize = new PageSize(PageSize.A4.GetWidth(), PageSize.A5.GetHeight());
+            doc.GetPdfDocument().SetDefaultPageSize(pageSize);
+            testPara.SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232));
+            testPara.Add(PARA_TEXT);
+            String orphansOrWidows = orphans ? "orphans" : "widows";
+            String description = "Test " + orphansOrWidows + ".\n" + " This block height is adjusted in" + " such way as to leave "
+                 + (linesLeft.ToString()) + " line(s) on area break.\n" + " Configuration is identified by the file name.\n Reference example"
+                 + " without " + orphansOrWidows + " control can be found on the next page.";
+            float effectiveWidth;
+            float effectiveHeight;
+            doc.SetRenderer(new DocumentRenderer(doc));
+            Rectangle effectiveArea = doc.GetPageEffectiveArea(pageSize);
+            effectiveWidth = effectiveArea.GetWidth();
+            effectiveHeight = effectiveArea.GetHeight();
+            float linesHeight = CalculateHeightForLinesNum(doc, testPara, effectiveWidth, linesLeft, orphans);
+            float adjustmentHeight = effectiveHeight - linesHeight - LINES_SPACE_EPS;
+            doc.Add(new Paragraph().Add(new Text(description)).SetMargin(0).SetBorder(new SolidBorder(1)).SetHeight(adjustmentHeight
+                ));
+            doc.Add(testPara);
+            doc.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            doc.Add(new Paragraph("Reference example without orphans/widows control.").SetMargin(0).SetBorder(new SolidBorder
+                (1)).SetHeight(adjustmentHeight));
+            doc.Add(new Paragraph(PARA_TEXT).SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232)));
+            doc.Close();
+        }
+
+        public static void ProduceOrphansAndWidowsTestCase(String outPdf, Paragraph testPara) {
+            Document doc = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            PageSize pageSize = new PageSize(PageSize.A4.GetWidth(), PageSize.A5.GetHeight());
+            doc.GetPdfDocument().SetDefaultPageSize(pageSize);
+            Rectangle[] columns = InitUniformColumns(pageSize, 2);
+            doc.SetRenderer(new ColumnDocumentRenderer(doc, columns));
+            String paraText = "A one line string\n";
+            testPara.SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232));
+            testPara.Add(paraText);
+            float linesHeight = CalculateHeightForLinesNum(doc, testPara, columns[1].GetWidth(), 1, true);
+            float adjustmentHeight = columns[0].GetHeight() - linesHeight - LINES_SPACE_EPS;
+            String description = "Test orphans and widows case at once. This block height" + " is adjusted in such way that both orphans and widows cases occur.\n "
+                 + "The following paragraph contains as many fitting in one line text strings as needed" + " to reproduce the case with both orphans and widows\n"
+                 + "Reference example without orphans and widows" + " control can be found on the next page";
+            doc.Add(new Paragraph(description).SetMargin(0).SetBorder(new SolidBorder(1)).SetHeight(adjustmentHeight));
+            Paragraph tempPara = new Paragraph().SetMargin(0);
+            for (int i = 0; i < 50; i++) {
+                tempPara.Add(paraText);
+            }
+            ParagraphRenderer renderer = (ParagraphRenderer)tempPara.CreateRendererSubTree().SetParent(doc.GetRenderer
+                ());
+            LayoutResult layoutRes = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(columns[1].GetWidth
+                (), columns[1].GetHeight()))));
+            int numberOfLines = ((ParagraphRenderer)layoutRes.GetSplitRenderer()).GetLines().Count;
+            for (int i = 0; i <= numberOfLines; i++) {
+                testPara.Add(paraText);
+            }
+            doc.Add(testPara);
+            doc.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            doc.Add(new Paragraph("Reference example without orphans and widows control.").SetMargin(0).SetBorder(new 
+                SolidBorder(1)).SetHeight(adjustmentHeight));
+            Paragraph paragraph = new Paragraph();
+            for (int i = 0; i <= numberOfLines + 1; i++) {
+                paragraph.Add(paraText);
+            }
+            paragraph.SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232));
+            doc.Add(paragraph);
+            doc.Add(new Paragraph(paraText).SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232)));
+            doc.Close();
+        }
+
         public static float CalculateHeightForLinesNum(Document doc, Paragraph p, float width, float linesNum, bool
              orphans) {
             ParagraphRenderer renderer = (ParagraphRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer());

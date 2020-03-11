@@ -335,6 +335,27 @@ namespace iText.Layout {
             RunOrphansWidowsBiggerThanLinesCount("twoLinesParagraphMin3Widows", false, false);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OrphansAndWidowsTest() {
+            RunOrphansAndWidows("orphansAndWidowsTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidowsControlOnPagesTest() {
+            String testName = "widowsControlOnPagesTest";
+            Paragraph testPara = new Paragraph();
+            testPara.SetWidowsControl(new ParagraphWidowsControl(3, 1, true));
+            RunTestOnPage(testName, testPara, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OrphansControlOnPagesTest() {
+            String testName = "orphansControlOnPagesTest";
+            Paragraph testPara = new Paragraph();
+            testPara.SetOrphansControl(new ParagraphOrphansControl(3));
+            RunTestOnPage(testName, testPara, true);
+        }
+
         private static void RunMaxHeightLimit(String fileName, bool orphans) {
             String outPdf = destinationFolder + fileName + ".pdf";
             String cmpPdf = sourceFolder + "cmp_" + fileName + ".pdf";
@@ -466,6 +487,26 @@ namespace iText.Layout {
                 testPara.SetProperty(Property.FORCED_PLACEMENT, true);
             }
             RunTest(testName, linesLeft, false, testPara);
+        }
+
+        private static void RunOrphansAndWidows(String testName) {
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            Paragraph testPara = new Paragraph();
+            testPara.SetOrphansControl(new ParagraphOrphansControl(3)).SetWidowsControl(new ParagraphWidowsControl(3, 
+                1, true));
+            OrphansWidowsTestUtil.ProduceOrphansAndWidowsTestCase(outPdf, testPara);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
+
+        private static void RunTestOnPage(String testName, Paragraph testPara, bool orphans) {
+            String outPdf = destinationFolder + testName + ".pdf";
+            String cmpPdf = sourceFolder + "cmp_" + testName + ".pdf";
+            int linesLeft = 1;
+            OrphansWidowsTestUtil.ProduceOrphansOrWidowsTestCase(outPdf, linesLeft, orphans, testPara);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
         }
 
         private static void RunTest(String testName, int linesLeft, bool orphans, Paragraph testPara) {
