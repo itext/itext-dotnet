@@ -47,15 +47,15 @@ using System.Collections.Generic;
 namespace iText.Layout.Font {
     public class FontSetCollection : ICollection<FontInfo> {
         private ICollection<FontInfo> primary;
-        private ICollection<FontInfo> temporary;
+        private ICollection<FontInfo> additional;
 
-        public FontSetCollection(ICollection<FontInfo> primary, ICollection<FontInfo> temporary) {
+        public FontSetCollection(ICollection<FontInfo> primary, ICollection<FontInfo> additional) {
             this.primary = primary;
-            this.temporary = temporary;
+            this.additional = additional;
         }
 
         public IEnumerator<FontInfo> GetEnumerator() {
-            return new FontSetCollectionEnumerator(primary, temporary);
+            return new FontSetCollectionEnumerator(primary, additional);
         }
 
         IEnumerator IEnumerable.GetEnumerator() {
@@ -88,7 +88,7 @@ namespace iText.Layout.Font {
         }
 
         public int Count {
-            get { return primary.Count + (temporary != null ? temporary.Count : 0); }
+            get { return primary.Count + (additional != null ? additional.Count : 0); }
         }
 
         public bool IsReadOnly {
@@ -97,29 +97,29 @@ namespace iText.Layout.Font {
 
         private class FontSetCollectionEnumerator : IEnumerator<FontInfo> {
             private IEnumerator<FontInfo> primary;
-            private IEnumerator<FontInfo> temporary;
+            private IEnumerator<FontInfo> additional;
             private IEnumerator<FontInfo> currentIterator;
             private bool isPrimary = true;
 
 
             public FontSetCollectionEnumerator(ICollection<FontInfo> primary, ICollection<FontInfo> temporary) {
                 this.primary = primary.GetEnumerator();
-                this.temporary = temporary != null ? temporary.GetEnumerator() : null;
+                this.additional = temporary != null ? temporary.GetEnumerator() : null;
                 this.currentIterator = this.primary;
             }
 
             public void Dispose() {
                 primary.Dispose();
-                if (temporary != null) temporary.Dispose();
+                if (additional != null) additional.Dispose();
             }
 
             public bool MoveNext() {
                 if (currentIterator.MoveNext()) {
                     return true;
                 }
-                if (isPrimary && temporary != null) {
+                if (isPrimary && additional != null) {
                     isPrimary = false;
-                    currentIterator = temporary;
+                    currentIterator = additional;
                     return currentIterator.MoveNext();
                 }
                 return false;
@@ -127,7 +127,7 @@ namespace iText.Layout.Font {
 
             public void Reset() {
                 primary.Reset();
-                if (temporary != null) temporary.Reset();
+                if (additional != null) additional.Reset();
                 currentIterator = primary;
                 isPrimary = true;
             }

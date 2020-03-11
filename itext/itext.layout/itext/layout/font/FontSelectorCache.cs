@@ -67,16 +67,16 @@ namespace iText.Layout.Font {
             }
         }
 
-        internal virtual FontSelector Get(FontSelectorKey key, FontSet fontSet) {
-            if (fontSet == null) {
+        internal virtual FontSelector Get(FontSelectorKey key, FontSet additionalFonts) {
+            if (additionalFonts == null) {
                 return Get(key);
             }
             else {
-                FontSelectorCache.FontSetSelectors selectors = caches.Get(fontSet.GetId());
+                FontSelectorCache.FontSetSelectors selectors = caches.Get(additionalFonts.GetId());
                 if (selectors == null) {
-                    caches.Put(fontSet.GetId(), selectors = new FontSelectorCache.FontSetSelectors());
+                    caches.Put(additionalFonts.GetId(), selectors = new FontSelectorCache.FontSetSelectors());
                 }
-                if (Update(selectors, fontSet)) {
+                if (Update(selectors, additionalFonts)) {
                     return null;
                 }
                 else {

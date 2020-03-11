@@ -1255,8 +1255,9 @@ namespace iText.Layout.Renderer {
         }
 
         internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
-            ) {
-            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc);
+            , FontSet additionalFonts) {
+            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc, additionalFonts
+                );
             IList<Glyph> resolvedGlyphs;
             PdfFont currentFont;
             //try to find first font that can render at least one glyph.
@@ -1269,7 +1270,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return base.ResolveFirstPdfFont(font, provider, fc);
+            return base.ResolveFirstPdfFont(font, provider, fc, additionalFonts);
         }
 
         private static int NumberOfElementsLessThan(List<int> numbers, int n) {

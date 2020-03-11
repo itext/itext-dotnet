@@ -74,8 +74,8 @@ namespace iText.Layout.Font {
     /// <para />
     /// It is allowed to use only one
     /// <see cref="FontProvider"/>
-    /// per document. If temporary fonts per element needed,
-    /// additional
+    /// per document. If additional fonts per element needed,
+    /// another instance of
     /// <see cref="FontSet"/>
     /// can be used. For more details see
     /// <see cref="iText.Layout.Properties.Property.FONT_SET"/>
@@ -238,8 +238,8 @@ namespace iText.Layout.Font {
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
-             fc, FontSet additonalFonts) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, additonalFonts), this, additonalFonts
+             fc, FontSet additionalFonts) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, additionalFonts), this, additionalFonts
                 );
         }
 
@@ -289,19 +289,20 @@ namespace iText.Layout.Font {
         /// instance of
         /// <see cref="FontCharacteristics"/>.
         /// </param>
-        /// <param name="tempFonts">set of temporary fonts.</param>
+        /// <param name="additionalFonts">set of additional fonts.</param>
         /// <returns>
         /// an instance of
         /// <see cref="FontSelector"/>.
         /// </returns>
         /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
         ///     ">}</seealso>
-        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc, FontSet tempFonts) {
+        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc, FontSet additionalFonts
+            ) {
             FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
-            FontSelector fontSelector = fontSelectorCache.Get(key, tempFonts);
+            FontSelector fontSelector = fontSelectorCache.Get(key, additionalFonts);
             if (fontSelector == null) {
-                fontSelector = CreateFontSelector(fontSet.GetFonts(tempFonts), fontFamilies, fc);
-                fontSelectorCache.Put(key, fontSelector, tempFonts);
+                fontSelector = CreateFontSelector(fontSet.GetFonts(additionalFonts), fontFamilies, fc);
+                fontSelectorCache.Put(key, fontSelector, additionalFonts);
             }
             return fontSelector;
         }
@@ -363,19 +364,19 @@ namespace iText.Layout.Font {
         /// and
         /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </param>
-        /// <param name="tempFonts">Set of temporary fonts.</param>
+        /// <param name="additionalFonts">set of additional fonts to consider.</param>
         /// <returns>
         /// cached or new instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>.
         /// </returns>
-        public virtual PdfFont GetPdfFont(FontInfo fontInfo, FontSet tempFonts) {
+        public virtual PdfFont GetPdfFont(FontInfo fontInfo, FontSet additionalFonts) {
             if (pdfFonts.ContainsKey(fontInfo)) {
                 return pdfFonts.Get(fontInfo);
             }
             else {
                 FontProgram fontProgram = null;
-                if (tempFonts != null) {
-                    fontProgram = tempFonts.GetFontProgram(fontInfo);
+                if (additionalFonts != null) {
+                    fontProgram = additionalFonts.GetFontProgram(fontInfo);
                 }
                 if (fontProgram == null) {
                     fontProgram = fontSet.GetFontProgram(fontInfo);

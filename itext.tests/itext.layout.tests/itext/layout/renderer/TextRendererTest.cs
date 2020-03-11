@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Util;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -53,6 +55,9 @@ using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class TextRendererTest : AbstractRendererUnitTest {
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
+
         private const double EPS = 1e-5;
 
         [NUnit.Framework.Test]
@@ -147,6 +152,23 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
             NUnit.Framework.Assert.IsTrue(new Rectangle(0, 986.68f, 5.343998f, -26.68f).EqualsWithEpsilon(textRenderer
                 .GetInnerAreaBBox()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFirstPdfFontWithGlyphsAvailableOnlyInSecondaryFont() {
+            // Test that in TextRenderer the #resolveFirstPdfFont method is overloaded in such way
+            // that yielded font contains at least some of the glyphs for the text characters.
+            Text text = new Text("\u043A\u0456\u0440\u044B\u043B\u0456\u0446\u0430");
+            // "кірыліца"
+            // Puritan doesn't contain cyrillic symbols, while Noto Sans does.
+            text.SetFontFamily(JavaUtil.ArraysAsList("Puritan 2.0", "Noto Sans"));
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.AddFont(FONTS_FOLDER + "Puritan2.otf");
+            fontProvider.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf");
+            text.SetProperty(Property.FONT_PROVIDER, fontProvider);
+            TextRenderer renderer = (TextRenderer)new TextRenderer(text);
+            PdfFont pdfFont = renderer.ResolveFirstPdfFont();
+            NUnit.Framework.Assert.AreEqual("NotoSans", pdfFont.GetFontProgram().GetFontNames().GetFontName());
         }
     }
 }

@@ -586,10 +586,10 @@ namespace iText.Layout.Font {
         /// <para />
         /// Note, the collection is unmodifiable.
         /// </remarks>
-        /// <param name="tempFonts">set of temporary fonts</param>
+        /// <param name="additionalFonts">set of temporary fonts</param>
         /// <returns>set of all available and temporary fonts</returns>
-        public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet tempFonts) {
-            return new FontSetCollection(fonts, tempFonts != null ? tempFonts.fonts : null);
+        public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet additionalFonts) {
+            return new FontSetCollection(fonts, additionalFonts != null ? additionalFonts.fonts : null);
         }
 
         /// <summary>
