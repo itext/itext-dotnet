@@ -286,11 +286,10 @@ namespace iText.Kernel {
         }
 
         internal static bool IsVersionNumeric(String version) {
-            //I did not want to introduce an extra dependency on apache.commons in order to use StringUtils.
-            //This small method is not the most optimal, but it should do for release
             try {
-                Double.Parse(version, System.Globalization.CultureInfo.InvariantCulture);
-                return true;
+                int value = (int)Convert.ToInt32(version);
+                // parseInt accepts numbers which start with a plus sign, but for a version it's unacceptable
+                return value >= 0 && !version.Contains("+");
             }
             catch (FormatException) {
                 return false;
