@@ -66,6 +66,21 @@ namespace iText.IO.Image {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Graya8BpcDepthWithoutEmbeddedProfileImageTest() {
+            ImageData img = ImageDataFactory.Create(sourceFolder + "graya8BpcWithoutProfile.png");
+            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
+            NUnit.Framework.Assert.AreEqual(100, img.GetWidth(), 0);
+            NUnit.Framework.Assert.AreEqual(100, img.GetHeight(), 0);
+            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            NUnit.Framework.Assert.AreEqual(1, img.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(4, ((PngImageData)img).GetColorType());
+            NUnit.Framework.Assert.IsNotNull(img.GetImageMask());
+            NUnit.Framework.Assert.AreEqual(1, img.GetImageMask().GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(8, img.GetImageMask().GetBpc());
+            NUnit.Framework.Assert.IsNull(img.GetProfile());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Graya8BpcAddColorToAlphaImageTest() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "graya8BpcAddColorToAlpha.png");
             NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
