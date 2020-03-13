@@ -100,6 +100,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary><inheritDoc/></summary>
         public override void Write(byte[] b, int off, int len) {
+            // NOTE: in case this method is updated, the ManualCompressionTest should be run!
             if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) - b.Length > 0)) {
                 throw new IndexOutOfRangeException();
             }
