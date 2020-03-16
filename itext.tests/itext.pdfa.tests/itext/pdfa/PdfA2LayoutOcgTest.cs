@@ -80,7 +80,7 @@ namespace iText.Pdfa {
             iText.Layout.Element.Image image1 = new Image(ImageDataFactory.Create(sourceFolder + "images/manualTransparency_for_png.png"
                 ));
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDoc, 1);
-            iText.Layout.Canvas canvas1 = new iText.Layout.Canvas(pdfCanvas, pdfDoc, new Rectangle(0, 0, 590, 420));
+            iText.Layout.Canvas canvas1 = new iText.Layout.Canvas(pdfCanvas, new Rectangle(0, 0, 590, 420));
             PdfLayer imageLayer1 = new PdfLayer("*SomeTest_image$here@.1", pdfDoc);
             imageLayer1.SetOn(true);
             pdfCanvas.BeginLayer(imageLayer1);

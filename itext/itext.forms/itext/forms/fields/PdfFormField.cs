@@ -3083,8 +3083,8 @@ namespace iText.Forms.Fields {
                     x = rect.GetWidth() / 2;
                 }
             }
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
-                0, 2 * height));
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, 0, 2 * height)
+                );
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             Style paragraphStyle = new Style().SetFont(font).SetFontSize(fontSize);
             paragraphStyle.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 1));
@@ -3158,7 +3158,7 @@ namespace iText.Forms.Fields {
             DrawBorder(canvas, appearance, width, height);
             canvas.BeginVariableText();
             Rectangle areaRect = new Rectangle(0, 0, width, height);
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), areaRect);
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, areaRect);
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             Paragraph paragraph = CreateParagraphForTextFieldValue(value).SetFont(font).SetMargin(0).SetPadding(3).SetMultipliedLeading
                 (1);
@@ -3200,8 +3200,8 @@ namespace iText.Forms.Fields {
             DrawBorder(canvas, appearance, width, height);
             canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - widthBorder, height - heightBorder).Clip().
                 EndPath();
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
-                Max(0, width - widthBorder), Math.Max(0, height - heightBorder)));
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(3, 0, Math.Max(0, width - 
+                widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             for (int index = 0; index < strings.Count; index++) {
                 bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
@@ -3574,8 +3574,8 @@ namespace iText.Forms.Fields {
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);
-            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
-                width, 2 * height));
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(0, -height, width, 2 * height
+                ));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             modelCanvas.ShowTextAligned(paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE
                 );

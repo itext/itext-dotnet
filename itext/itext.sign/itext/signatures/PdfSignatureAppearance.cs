@@ -720,7 +720,7 @@ namespace iText.Signatures {
             PdfCanvas canvas;
             canvas = new PdfCanvas(n2, document);
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetMargin(0).SetMultipliedLeading(0.9f);
-            iText.Layout.Canvas layoutCanvas = new iText.Layout.Canvas(canvas, document, dataRect);
+            iText.Layout.Canvas layoutCanvas = new iText.Layout.Canvas(canvas, dataRect);
             paragraph.SetFontColor(layer2FontColor);
             if (layer2FontSize == 0) {
                 ApplyCopyFittingFontSize(paragraph, dataRect, layoutCanvas.GetRenderer());

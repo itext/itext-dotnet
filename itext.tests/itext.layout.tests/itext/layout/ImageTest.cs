@@ -745,7 +745,7 @@ namespace iText.Layout {
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas currentPdfCanvas = new PdfCanvas(page);
             Rectangle rc = new Rectangle(56.6929131f, 649.13385f, 481.889771f, 136.062988f);
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(currentPdfCanvas, pdfDoc, rc);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(currentPdfCanvas, rc);
             Table table = new Table(UnitValue.CreatePointArray(new float[] { 158f }));
             table.SetTextAlignment(TextAlignment.LEFT);
             iText.Layout.Element.Image logoImage = new iText.Layout.Element.Image(ImageDataFactory.Create(imageFileName

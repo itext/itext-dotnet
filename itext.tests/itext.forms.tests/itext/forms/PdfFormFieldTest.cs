@@ -489,8 +489,8 @@ namespace iText.Forms {
             PdfFormField field = fields.Get("Text1");
             field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
             field.SetValue("New value size must be 8, but with different font.");
-            new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph
-                ("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."));
+            new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), new Rectangle(30, 500, 500, 200)).Add(new Paragraph("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."
+                ));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");

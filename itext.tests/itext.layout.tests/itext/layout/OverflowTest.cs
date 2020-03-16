@@ -178,8 +178,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_overflowHiddenOnCanvasTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
-            iText.Layout.Canvas canvas = new Canvas(new PdfCanvas(page), pdfDocument, page.GetPageSize().Clone().ApplyMargins
-                (36, 36, 36, 36, false));
+            iText.Layout.Canvas canvas = new Canvas(new PdfCanvas(page), page.GetPageSize().Clone().ApplyMargins(36, 36
+                , 36, 36, false));
             AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.HIDDEN);
             canvas.Close();
             pdfDocument.Close();
@@ -208,8 +208,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_overflowVisibleOnCanvasTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(page), pdfDocument, page.GetPageSize().
-                Clone().ApplyMargins(36, 36, 36, 36, false));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(page), page.GetPageSize().Clone().ApplyMargins
+                (36, 36, 36, 36, false));
             AddParaWithImgSetOverflowX(canvas, OverflowPropertyValue.VISIBLE);
             canvas.Close();
             pdfDocument.Close();
