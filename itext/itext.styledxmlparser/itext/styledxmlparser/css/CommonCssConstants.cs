@@ -300,6 +300,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant OPACITY.</summary>
         public const String OPACITY = "opacity";
 
+        /// <summary>The Constant OPRPHANS.</summary>
+        public const String ORPHANS = "orphans";
+
         /// <summary>The Constant OUTLINE.</summary>
         public const String OUTLINE = "outline";
 
@@ -392,6 +395,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant WHITE_SPACE.</summary>
         public const String WHITE_SPACE = "white-space";
+
+        /// <summary>The Constant WIDOWS.</summary>
+        public const String WIDOWS = "widows";
 
         /// <summary>The Constant WIDTH.</summary>
         public const String WIDTH = "width";
