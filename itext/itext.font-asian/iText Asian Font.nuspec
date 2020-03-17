@@ -8,7 +8,7 @@
     <owners>iText Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>https://itextpdf.com/</projectUrl>
-    <iconUrl>https://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+    <icon>ITSC-avatar.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>iText Asian fonts for use in conjunction with iText 7, an open source PDF library</description>
     <summary></summary>
@@ -24,5 +24,6 @@
     <file src="bin\Release\netstandard1.6\itext.font_asian.xml" target="lib\netstandard1.6" />
     <file src="..\..\gnu-agpl-v3.0.md" target="" />
     <file src="..\..\LICENSE.md" target="" />
+	<file src="..\..\ITSC-avatar.png" target="" />
   </files>
 </package>
