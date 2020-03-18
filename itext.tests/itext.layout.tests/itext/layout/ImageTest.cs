@@ -777,5 +777,38 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        public virtual void CreateTiffImageTest() {
+            String outFileName = destinationFolder + "createTiffImageTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_createTiffImageTest.pdf";
+            String imgPath = sourceFolder + "group4Compression.tif";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            ImageData id = ImageDataFactory.Create(imgPath);
+            ImageData idAsTiff = ImageDataFactory.CreateTiff(UrlUtil.ToURL(imgPath), true, 1, true);
+            ImageData idAsTiffFalse = ImageDataFactory.CreateTiff(UrlUtil.ToURL(imgPath), false, 1, false);
+            document.Add(new iText.Layout.Element.Image(id));
+            document.Add(new iText.Layout.Element.Image(idAsTiff));
+            document.Add(new iText.Layout.Element.Image(idAsTiffFalse));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TiffImageWithoutCompressionTest() {
+            String outFileName = destinationFolder + "tiffImageWithoutCompression.pdf";
+            String cmpFileName = sourceFolder + "cmp_tiffImageWithoutCompression.pdf";
+            String imgPath = sourceFolder + "no-compression-tag.tiff";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            ImageData id = ImageDataFactory.Create(imgPath);
+            document.Add(new iText.Layout.Element.Image(id));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff02_"));
+        }
     }
 }
