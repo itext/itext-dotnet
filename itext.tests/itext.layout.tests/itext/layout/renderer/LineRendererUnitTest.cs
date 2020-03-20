@@ -153,5 +153,80 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(50f, lineRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
             NUnit.Framework.Assert.AreEqual(150.0, childImageRenderer.GetOccupiedAreaBBox().GetBottom(), EPS);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void HasChildRendererInHtmlModeTest() {
+            LineRenderer lineRenderer = new LineRenderer();
+            TextRenderer textRenderer1 = new TextRenderer(new Text("text1"));
+            TextRenderer textRenderer2 = new TextRenderer(new Text("text2"));
+            textRenderer2.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            lineRenderer.AddChild(textRenderer1);
+            lineRenderer.AddChild(textRenderer2);
+            NUnit.Framework.Assert.IsTrue(lineRenderer.HasChildRendererInHtmlMode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChildRendererInDefaultModeTest() {
+            LineRenderer lineRenderer = new LineRenderer();
+            TextRenderer textRenderer1 = new TextRenderer(new Text("text1"));
+            TextRenderer textRenderer2 = new TextRenderer(new Text("text2"));
+            textRenderer2.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
+            lineRenderer.AddChild(textRenderer1);
+            lineRenderer.AddChild(textRenderer2);
+            NUnit.Framework.Assert.IsFalse(lineRenderer.HasChildRendererInHtmlMode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HasChildRendererInHtmlModeNoChildrenTest() {
+            LineRenderer lineRenderer = new LineRenderer();
+            NUnit.Framework.Assert.IsFalse(lineRenderer.HasChildRendererInHtmlMode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndNoChildrenTest() {
+            Document document = CreateDocument();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            lineRenderer.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateNormalValue());
+            lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000)));
+            NUnit.Framework.Assert.AreEqual(0f, lineRenderer.maxAscent, 0f);
+            NUnit.Framework.Assert.AreEqual(0f, lineRenderer.maxDescent, 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndChildrenInDefaultModeTest() {
+            Document document = CreateDocument();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            lineRenderer.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateFixedValue(50));
+            TextRenderer textRenderer1 = new TextRenderer(new Text("text"));
+            textRenderer1.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
+            TextRenderer textRenderer2 = new TextRenderer(new Text("text"));
+            textRenderer2.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
+            lineRenderer.AddChild(textRenderer1);
+            lineRenderer.AddChild(textRenderer2);
+            lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000)));
+            NUnit.Framework.Assert.AreEqual(10.3392f, lineRenderer.maxAscent, EPS);
+            NUnit.Framework.Assert.AreEqual(-2.98079f, lineRenderer.maxDescent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndChildInHtmlModeTest() {
+            Document document = CreateDocument();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            lineRenderer.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateFixedValue(50));
+            TextRenderer textRenderer1 = new TextRenderer(new Text("text"));
+            textRenderer1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            TextRenderer textRenderer2 = new TextRenderer(new Text("text"));
+            lineRenderer.AddChild(textRenderer1);
+            lineRenderer.AddChild(textRenderer2);
+            lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000)));
+            NUnit.Framework.Assert.AreEqual(28.67920f, lineRenderer.maxAscent, EPS);
+            NUnit.Framework.Assert.AreEqual(-21.32080f, lineRenderer.maxDescent, EPS);
+        }
     }
 }

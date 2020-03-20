@@ -99,9 +99,10 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
+            UpdateChildrenParent();
             float curWidth = 0;
             if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasProperty
-                (Property.LINE_HEIGHT)) {
+                (Property.LINE_HEIGHT) && HasChildRendererInHtmlMode()) {
                 float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender(this);
                 maxAscent = ascenderDescender[0];
                 maxDescent = ascenderDescender[1];
@@ -123,7 +124,6 @@ namespace iText.Layout.Renderer {
             else {
                 widthHandler = new MaxSumWidthHandler(minMaxWidth);
             }
-            UpdateChildrenParent();
             ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
             BaseDirection? baseDirection = ApplyOtf();
@@ -917,6 +917,15 @@ namespace iText.Layout.Renderer {
             LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             return result.GetMinMaxWidth();
+        }
+
+        internal virtual bool HasChildRendererInHtmlMode() {
+            foreach (IRenderer childRenderer in childRenderers) {
+                if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         internal virtual float GetTopLeadingIndent(Leading leading) {
