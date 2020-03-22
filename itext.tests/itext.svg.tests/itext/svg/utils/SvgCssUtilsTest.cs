@@ -163,7 +163,6 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
-        [NUnit.Framework.Ignore("TODO: Check autoport for failing float comparisons. Blocked by DEVSIX-2387\n")]
         [NUnit.Framework.Test]
         public virtual void ConvertFloatMinimumToPdfTest() {
             float expected = 1.4E-45f;
