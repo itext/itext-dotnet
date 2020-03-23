@@ -58,6 +58,19 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SetRotationToPageTest() {
+            String outputFileName = destinationFolder + "setRotationToPage.pdf";
+            String cmpFileName = sourceFolder + "cmp_setRotationToPage.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "srcFileTestRotationInheritance.pdf"), new 
+                PdfWriter(outputFileName));
+            PdfPage page = pdfDoc.GetPage(1);
+            page.SetRotation(90);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MediaBoxInheritance() {
             String inputFileName = sourceFolder + "mediaBoxInheritanceTestSource.pdf";
             PdfDocument outFile = new PdfDocument(new PdfReader(inputFileName));
