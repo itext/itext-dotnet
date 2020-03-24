@@ -40,7 +40,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO.Font.Constants;
 using iText.IO.Util;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
@@ -227,6 +229,26 @@ namespace iText.Layout.Renderer {
             lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000)));
             NUnit.Framework.Assert.AreEqual(28.67920f, lineRenderer.maxAscent, EPS);
             NUnit.Framework.Assert.AreEqual(-21.32080f, lineRenderer.maxDescent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LineRendererLayoutInHtmlModeWithLineHeightPropertyNotSet() {
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(CreateDocument().GetRenderer());
+            lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            // Set fonts with different ascent/descent to line and text
+            lineRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
+            TextRenderer textRenderer = new TextRenderer(new Text("text"));
+            textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.COURIER));
+            lineRenderer.AddChild(textRenderer);
+            LayoutResult layoutResLineHeightNotSet = lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000
+                )));
+            lineRenderer.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateNormalValue());
+            LayoutResult layoutResLineHeightNormal = lineRenderer.Layout(new LayoutContext(CreateLayoutArea(1000, 1000
+                )));
+            Rectangle bboxLineHeightNotSet = layoutResLineHeightNotSet.GetOccupiedArea().GetBBox();
+            Rectangle bboxLineHeightNormal = layoutResLineHeightNormal.GetOccupiedArea().GetBBox();
+            NUnit.Framework.Assert.IsTrue(bboxLineHeightNotSet.EqualsWithEpsilon(bboxLineHeightNormal));
         }
     }
 }

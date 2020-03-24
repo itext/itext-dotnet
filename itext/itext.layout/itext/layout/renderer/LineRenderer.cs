@@ -101,8 +101,8 @@ namespace iText.Layout.Renderer {
                 GetHeight()).SetHeight(0).SetWidth(0));
             UpdateChildrenParent();
             float curWidth = 0;
-            if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasProperty
-                (Property.LINE_HEIGHT) && HasChildRendererInHtmlMode()) {
+            if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasChildRendererInHtmlMode
+                ()) {
                 float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender(this);
                 maxAscent = ascenderDescender[0];
                 maxDescent = ascenderDescender[1];
