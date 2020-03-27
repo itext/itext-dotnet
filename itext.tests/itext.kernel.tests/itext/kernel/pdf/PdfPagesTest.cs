@@ -554,6 +554,63 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ImplicitPagesTreeRebuildingTest() {
+            String inFileName = sourceFolder + "implicitPagesTreeRebuilding.pdf";
+            String outFileName = destinationFolder + "implicitPagesTreeRebuilding.pdf";
+            String cmpFileName = sourceFolder + "cmp_implicitPagesTreeRebuilding.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName), new PdfWriter(outFileName));
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
+        public virtual void BrokenPageTreeWithExcessiveLastPageTest() {
+            String inFileName = sourceFolder + "brokenPageTreeNullLast.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            IList<int> pages = JavaUtil.ArraysAsList(4);
+            ICollection<int> nullPages = new HashSet<int>(pages);
+            FindAndAssertNullPages(pdfDocument, nullPages);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE)]
+        public virtual void BrokenPageTreeWithExcessiveMiddlePageTest() {
+            String inFileName = sourceFolder + "brokenPageTreeNullMiddle.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            IList<int> pages = JavaUtil.ArraysAsList(3);
+            ICollection<int> nullPages = new HashSet<int>(pages);
+            FindAndAssertNullPages(pdfDocument, nullPages);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 7)]
+        public virtual void BrokenPageTreeWithExcessiveMultipleNegativePagesTest() {
+            String inFileName = sourceFolder + "brokenPageTreeNullMultipleSequence.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            IList<int> pages = JavaUtil.ArraysAsList(2, 3, 4, 6, 7, 8, 9);
+            ICollection<int> nullPages = new HashSet<int>(pages);
+            FindAndAssertNullPages(pdfDocument, nullPages);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE, Count = 2)]
+        public virtual void BrokenPageTreeWithExcessiveRangeNegativePagesTest() {
+            String inFileName = sourceFolder + "brokenPageTreeNullRangeNegative.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            IList<int> pages = JavaUtil.ArraysAsList(2, 4);
+            ICollection<int> nullPages = new HashSet<int>(pages);
+            FindAndAssertNullPages(pdfDocument, nullPages);
+        }
+
+        private static void FindAndAssertNullPages(PdfDocument pdfDocument, ICollection<int> nullPages) {
+            foreach (int? e in nullPages) {
+                NUnit.Framework.Assert.IsNull(pdfDocument.GetPage((int)e));
+            }
+        }
+
         private int GetAmountOfReadPages(PdfArray pageIndRefArray) {
             int amountOfLoadedPages = 0;
             for (int i = 0; i < pageIndRefArray.Size(); i++) {
