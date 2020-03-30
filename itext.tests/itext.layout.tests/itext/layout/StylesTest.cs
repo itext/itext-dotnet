@@ -47,6 +47,8 @@ using iText.Test;
 
 namespace iText.Layout {
     public class StylesTest : ExtendedITextTest {
+        public static float EPS = 0.0001f;
+
         [NUnit.Framework.Test]
         public virtual void StylesTest01() {
             Style myStyle = new Style();
@@ -77,6 +79,176 @@ namespace iText.Layout {
             p.AddStyle(myStyle2);
             NUnit.Framework.Assert.AreEqual(ColorConstants.GREEN, p.GetRenderer().GetProperty<TransparentColor>(Property
                 .FONT_COLOR).GetColor());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetMarginsTest() {
+            float expectedMarginTop = 92;
+            float expectedMarginRight = 90;
+            float expectedMarginBottom = 86;
+            float expectedMarginLeft = 88;
+            Style style = new Style();
+            style.SetMargins(expectedMarginTop, expectedMarginRight, expectedMarginBottom, expectedMarginLeft);
+            Paragraph p = new Paragraph("Hello, iText!");
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMarginTop), p.GetProperty<UnitValue>(Property
+                .MARGIN_TOP));
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMarginRight), p.GetProperty<UnitValue>(
+                Property.MARGIN_RIGHT));
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMarginBottom), p.GetProperty<UnitValue>
+                (Property.MARGIN_BOTTOM));
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMarginLeft), p.GetProperty<UnitValue>(Property
+                .MARGIN_LEFT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetMarginTopTest() {
+            float expectedMarginTop = 92;
+            Style style = new Style();
+            style.SetMarginTop(expectedMarginTop);
+            Paragraph p = new Paragraph("Hello, iText!");
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMarginTop), p.GetProperty<UnitValue>(Property
+                .MARGIN_TOP));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetVerticalAlignmentTest() {
+            VerticalAlignment? expectedAlignment = VerticalAlignment.MIDDLE;
+            Style style = new Style();
+            style.SetVerticalAlignment(expectedAlignment);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(expectedAlignment, p.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetSpacingRatioTest() {
+            float expectedSpacingRatio = 0.5f;
+            Style style = new Style();
+            style.SetSpacingRatio(expectedSpacingRatio);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(expectedSpacingRatio, (float)p.GetProperty<float?>(Property.SPACING_RATIO)
+                , EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherTrueTest() {
+            Style trueStyle = new Style();
+            trueStyle.SetKeepTogether(true);
+            Paragraph p1 = new Paragraph();
+            p1.AddStyle(trueStyle);
+            NUnit.Framework.Assert.AreEqual(true, p1.IsKeepTogether());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherFalseTest() {
+            Style falseStyle = new Style();
+            falseStyle.SetKeepTogether(false);
+            Paragraph p = new Paragraph();
+            p.AddStyle(falseStyle);
+            NUnit.Framework.Assert.AreEqual(false, p.GetProperty<bool?>(Property.KEEP_TOGETHER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetRotationAngleTest() {
+            float expectedRotationAngle = 20f;
+            Style style = new Style();
+            style.SetRotationAngle(expectedRotationAngle);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(expectedRotationAngle, (float)p.GetProperty<float?>(Property.ROTATION_ANGLE
+                ), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetWidthTest() {
+            float expectedWidth = 100;
+            Style style = new Style();
+            style.SetWidth(expectedWidth);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedWidth), p.GetProperty<UnitValue>(Property
+                .WIDTH));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetWidthUnitValueTest() {
+            float expectedWidth = 100;
+            Style style = new Style();
+            style.SetWidth(UnitValue.CreatePointValue(expectedWidth));
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedWidth), p.GetProperty<UnitValue>(Property
+                .WIDTH));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetAndGetHeightTest() {
+            float expectedHeight = 100;
+            Style style = new Style();
+            style.SetHeight(expectedHeight);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedHeight), p.GetProperty<UnitValue>(Property
+                .HEIGHT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetAndGetHeightUnitValueTest() {
+            float expectedHeight = 100;
+            Style style = new Style();
+            style.SetHeight(UnitValue.CreatePointValue(expectedHeight));
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedHeight), p.GetProperty<UnitValue>(Property
+                .HEIGHT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMaxHeightTest() {
+            float expectedMaxHeight = 80;
+            Style style = new Style();
+            style.SetMaxHeight(UnitValue.CreatePointValue(expectedMaxHeight));
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMaxHeight), p.GetProperty<UnitValue>(Property
+                .MAX_HEIGHT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMinHeightTest() {
+            float expectedMinHeight = 20;
+            Style style = new Style();
+            style.SetMinHeight(expectedMinHeight);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMinHeight), p.GetProperty<UnitValue>(Property
+                .MIN_HEIGHT));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMaxWidthTest() {
+            float expectedMaxWidth = 200;
+            Style style = new Style();
+            style.SetMaxWidth(expectedMaxWidth);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMaxWidth), p.GetProperty<UnitValue>(Property
+                .MAX_WIDTH));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMinWidthTest() {
+            float expectedMinWidth = 20;
+            Style style = new Style();
+            style.SetMinWidth(expectedMinWidth);
+            Paragraph p = new Paragraph();
+            p.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual(UnitValue.CreatePointValue(expectedMinWidth), p.GetProperty<UnitValue>(Property
+                .MIN_WIDTH));
         }
     }
 }
