@@ -41,9 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Kernel.Geom {
-    public class PointTest {
+    public class PointTest : ExtendedITextTest {
         private static double EPSILON_COMPARISON = 1E-12;
 
         [NUnit.Framework.Test]
