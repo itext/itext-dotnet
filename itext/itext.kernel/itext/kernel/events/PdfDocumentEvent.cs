@@ -46,7 +46,7 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Events {
     /// <summary>Event dispatched by PdfDocument.</summary>
-    public class PdfDocumentEvent : Event {
+    public class PdfDocumentEvent : iText.Kernel.Events.Event {
         /// <summary>Dispatched after page is created.</summary>
         public const String START_PAGE = "StartPdfPage";
 

@@ -195,7 +195,7 @@ namespace iText.Pdfa {
                 return counter;
             }
 
-            public virtual void HandleEvent(Event @event) {
+            public virtual void HandleEvent(iText.Kernel.Events.Event @event) {
                 counter++;
             }
         }

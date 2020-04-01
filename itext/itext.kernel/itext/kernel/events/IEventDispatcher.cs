@@ -53,7 +53,7 @@ namespace iText.Kernel.Events {
 
         /// <summary>Dispatches an event.</summary>
         /// <param name="event"/>
-        void DispatchEvent(Event @event);
+        void DispatchEvent(iText.Kernel.Events.Event @event);
 
         /// <summary>Dispatches a delayed event.</summary>
         /// <remarks>
@@ -63,7 +63,7 @@ namespace iText.Kernel.Events {
         /// </remarks>
         /// <param name="event"/>
         /// <param name="delayed"/>
-        void DispatchEvent(Event @event, bool delayed);
+        void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed);
 
         /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.</summary>
         /// <param name="type"/>

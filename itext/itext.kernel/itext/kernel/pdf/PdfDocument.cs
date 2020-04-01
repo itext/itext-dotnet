@@ -589,12 +589,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event) {
+        public virtual void DispatchEvent(iText.Kernel.Events.Event @event) {
             eventDispatcher.DispatchEvent(@event);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event, bool delayed) {
+        public virtual void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed) {
             eventDispatcher.DispatchEvent(@event, delayed);
         }
 
