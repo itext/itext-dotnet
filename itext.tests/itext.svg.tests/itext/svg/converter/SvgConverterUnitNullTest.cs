@@ -306,7 +306,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ConvertToXObjectDocWithRendererNullTest() {
             NUnit.Framework.Assert.That(() =>  {
-                ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is)).GetRootRenderer();
+                ISvgNodeRenderer renderer = SvgConverter.Process(SvgConverter.Parse(@is), null).GetRootRenderer();
                 SvgConverter.ConvertToXObject(renderer, null);
             }
             , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
@@ -377,15 +377,6 @@ namespace iText.Svg.Converter {
         public virtual void ParseStringPropsNullTest() {
             NUnit.Framework.Assert.That(() =>  {
                 SvgConverter.Parse(null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ProcessNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgConverter.Process(null);
             }
             , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;

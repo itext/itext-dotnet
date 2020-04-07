@@ -110,6 +110,7 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
+        [Obsolete]
         public virtual ISvgProcessorResult Process(INode root) {
             return Process(root, null);
         }
@@ -120,6 +121,9 @@ namespace iText.Svg.Processors.Impl {
             processorState = new ProcessorState();
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
+            }
+            else {
+                rendererFactory = new DefaultSvgNodeRendererFactory();
             }
             context = new SvgProcessorContext(converterProps);
             cssResolver = new SvgStyleResolver(root, context);

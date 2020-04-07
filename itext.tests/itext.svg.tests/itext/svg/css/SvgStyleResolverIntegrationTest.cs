@@ -71,8 +71,8 @@ namespace iText.Svg.Css {
                  + "</svg>\n";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];
@@ -96,8 +96,8 @@ namespace iText.Svg.Css {
                  + "</svg>\n";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];
@@ -121,8 +121,8 @@ namespace iText.Svg.Css {
                  + "    </style>\n" + "    <g >\n" + "        <path d=\"M0 100 L0 50 L70 50\"/>\n" + "    </g>\n" + "</svg>";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             PathSvgNodeRenderer pathSvgNodeRenderer = (PathSvgNodeRenderer)((IBranchSvgNodeRenderer)nodeRenderer.GetChildren
                 ()[0]).GetChildren()[0];
             IDictionary<String, String> actual = new Dictionary<String, String>();

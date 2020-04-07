@@ -63,7 +63,7 @@ namespace iText.Svg.Processors {
             Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
+            IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null).GetRootRenderer
                 ();
             IBranchSvgNodeRenderer expected = new SvgTagSvgNodeRenderer();
             ISvgNodeRenderer expectedEllipse = new EllipseSvgNodeRenderer();
@@ -83,7 +83,7 @@ namespace iText.Svg.Processors {
             Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
-            ISvgProcessorResult processorResult = new DefaultSvgProcessor().Process(root);
+            ISvgProcessorResult processorResult = new DefaultSvgProcessor().Process(root, null);
             IDictionary<String, ISvgNodeRenderer> actual = processorResult.GetNamedObjects();
             NUnit.Framework.Assert.AreEqual(1, actual.Count);
             NUnit.Framework.Assert.IsTrue(actual.ContainsKey("MyRect"));

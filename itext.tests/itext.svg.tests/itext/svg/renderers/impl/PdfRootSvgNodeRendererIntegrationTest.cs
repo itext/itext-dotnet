@@ -114,7 +114,7 @@ namespace iText.Svg.Renderers.Impl {
                 PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
                     (0)));
                 document.AddNewPage();
-                ISvgNodeRenderer processed = SvgConverter.Process(SvgConverter.Parse("<svg />")).GetRootRenderer();
+                ISvgNodeRenderer processed = SvgConverter.Process(SvgConverter.Parse("<svg />"), null).GetRootRenderer();
                 PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(processed);
                 PdfFormXObject pdfForm = new PdfFormXObject(new PdfStream());
                 PdfCanvas canvas = new PdfCanvas(pdfForm, document);

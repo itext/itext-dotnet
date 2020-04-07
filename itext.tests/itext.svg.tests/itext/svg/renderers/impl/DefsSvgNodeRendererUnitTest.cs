@@ -57,7 +57,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ProcessDefsNoChildrenTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithNoChildren.svg", FileMode.Open
                 , FileAccess.Read));
-            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg);
+            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().IsEmpty());
         }
 
@@ -65,7 +65,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ProcessDefsOneChildTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open
                 , FileAccess.Read));
-            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg);
+            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("circle1") is CircleSvgNodeRenderer);
         }
 
@@ -73,7 +73,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ProcessDefsMultipleChildrenTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithMultipleChildren.svg", FileMode.Open
                 , FileAccess.Read));
-            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg);
+            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("circle1") is CircleSvgNodeRenderer);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("line1") is LineSvgNodeRenderer);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("rect1") is RectangleSvgNodeRenderer);
@@ -83,7 +83,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ProcessDefsParentShouldBeNullTest() {
             INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open
                 , FileAccess.Read));
-            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg);
+            ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsNull(result.GetNamedObjects().Get("circle1").GetParent());
         }
     }

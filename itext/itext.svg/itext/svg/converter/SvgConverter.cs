@@ -1205,9 +1205,9 @@ namespace iText.Svg.Converter {
         /// </summary>
         /// <param name="root">the XML DOM tree</param>
         /// <returns>a node renderer tree corresponding to the passed XML DOM tree</returns>
+        [System.ObsoleteAttribute(@"will be removed in iText 7.2.")]
         public static ISvgProcessorResult Process(INode root) {
-            CheckNull(root);
-            return new DefaultSvgProcessor().Process(root);
+            return Process(root, null);
         }
 
         /// <summary>
