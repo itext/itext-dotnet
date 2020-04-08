@@ -42,6 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -128,43 +132,70 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues) {
+            return SetListSelected(optionValues, true);
+        }
+
+        /// <summary>Highlights the options and generates field appearance if needed..</summary>
+        /// <remarks>
+        /// Highlights the options and generates field appearance if needed.. If this method is used for Combo box, the first value in input array
+        /// will be the field value
+        /// </remarks>
+        /// <param name="optionValues">Array of options to be highlighted</param>
+        /// <param name="generateAppearance">if false, appearance won't be regenerated</param>
+        /// <returns>
+        /// current
+        /// <see cref="PdfChoiceFormField"/>
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues, bool generateAppearance
+            ) {
+            if (optionValues.Length > 1 && !IsMultiSelect()) {
+                ILog logger = LogManager.GetLogger(this.GetType());
+                logger.Warn(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+            }
             PdfArray options = GetOptions();
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();
+            IList<String> optionsToUnicodeNames = OptionsToUnicodeNames();
             foreach (String element in optionValues) {
-                for (int index = 0; index < options.Size(); index++) {
-                    PdfObject option = options.Get(index);
-                    PdfString value = null;
-                    if (option.IsString()) {
-                        value = (PdfString)option;
+                if (element == null) {
+                    continue;
+                }
+                if (optionsToUnicodeNames.Contains(element)) {
+                    int index = optionsToUnicodeNames.IndexOf(element);
+                    indices.Add(new PdfNumber(index));
+                    PdfObject optByIndex = options.Get(index);
+                    values.Add(optByIndex.IsString() ? (PdfString)optByIndex : (PdfString)((PdfArray)optByIndex).Get(1));
+                }
+                else {
+                    if (!(this.IsCombo() && this.IsEdit())) {
+                        ILog logger = LogManager.GetLogger(this.GetType());
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
+                            , element, this.GetFieldName()));
                     }
-                    else {
-                        if (option.IsArray()) {
-                            value = (PdfString)((PdfArray)option).Get(1);
-                        }
-                    }
-                    if (value != null && value.ToUnicodeString().Equals(element)) {
-                        indices.Add(new PdfNumber(index));
-                        values.Add(value);
-                    }
+                    values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
                 }
             }
             if (indices.Size() > 0) {
                 SetIndices(indices);
-                if (values.Size() == 1) {
-                    Put(PdfName.V, values.Get(0));
-                }
-                else {
-                    Put(PdfName.V, values);
-                }
             }
-            RegenerateField();
+            else {
+                Remove(PdfName.I);
+            }
+            if (values.Size() == 1) {
+                Put(PdfName.V, values.Get(0));
+            }
+            else {
+                Put(PdfName.V, values);
+            }
+            if (generateAppearance) {
+                RegenerateField();
+            }
             return this;
         }
 
         /// <summary>Highlights the options.</summary>
         /// <remarks>
-        /// Highlights the options. Is this method is used for Combo box, the first value in input array
+        /// Highlights the options. If this method is used for Combo box, the first value in input array
         /// will be the field value
         /// </remarks>
         /// <param name="optionNumbers">The option numbers</param>
@@ -173,6 +204,10 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfChoiceFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers) {
+            if (optionNumbers.Length > 1 && !IsMultiSelect()) {
+                ILog logger = LogManager.GetLogger(this.GetType());
+                logger.Warn(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+            }
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();
             PdfArray options = GetOptions();
@@ -198,6 +233,10 @@ namespace iText.Forms.Fields {
                 else {
                     Put(PdfName.V, values);
                 }
+            }
+            else {
+                Remove(PdfName.I);
+                Remove(PdfName.V);
             }
             RegenerateField();
             return this;
@@ -333,6 +372,25 @@ namespace iText.Forms.Fields {
         /// <returns>whether or not to save changes immediately</returns>
         public virtual bool IsCommitOnSelChange() {
             return GetFieldFlag(FF_COMMIT_ON_SEL_CHANGE);
+        }
+
+        private IList<String> OptionsToUnicodeNames() {
+            PdfArray options = GetOptions();
+            IList<String> optionsToUnicodeNames = new List<String>(options.Size());
+            for (int index = 0; index < options.Size(); index++) {
+                PdfObject option = options.Get(index);
+                PdfString value = null;
+                if (option.IsString()) {
+                    value = (PdfString)option;
+                }
+                else {
+                    if (option.IsArray()) {
+                        value = (PdfString)((PdfArray)option).Get(1);
+                    }
+                }
+                optionsToUnicodeNames.Add(value != null ? value.ToUnicodeString() : null);
+            }
+            return optionsToUnicodeNames;
         }
     }
 }

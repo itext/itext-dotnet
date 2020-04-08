@@ -589,12 +589,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event) {
+        public virtual void DispatchEvent(iText.Kernel.Events.Event @event) {
             eventDispatcher.DispatchEvent(@event);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event, bool delayed) {
+        public virtual void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed) {
             eventDispatcher.DispatchEvent(@event, delayed);
         }
 
@@ -944,6 +944,11 @@ namespace iText.Kernel.Pdf {
         /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">start of the range of pages to be copied.</param>
         /// <param name="pageTo">end of the range of pages to be copied.</param>
@@ -969,6 +974,11 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
@@ -1007,6 +1017,11 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
@@ -1034,6 +1049,11 @@ namespace iText.Kernel.Pdf {
         /// are included in list of copied pages.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pageFrom">1-based start of the range of pages to be copied.</param>
         /// <param name="pageTo">1-based end (inclusive) of the range of pages to be copied. This page is included in list of copied pages.
@@ -1060,6 +1080,11 @@ namespace iText.Kernel.Pdf {
         /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
@@ -1079,6 +1104,11 @@ namespace iText.Kernel.Pdf {
         /// <paramref name="toDocument"/>.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
@@ -1172,6 +1202,11 @@ namespace iText.Kernel.Pdf {
         /// appending copied pages to the end.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
@@ -1191,6 +1226,11 @@ namespace iText.Kernel.Pdf {
         /// appending copied pages to the end.
         /// Use this method if you want to copy pages across tagged documents.
         /// This will keep resultant PDF structure consistent.
+        /// <para />
+        /// If outlines destination names are the same in different documents, all
+        /// such outlines will lead to a single location in the resultant document.
+        /// In this case iText will log a warning. This can be avoided by renaming
+        /// destinations names in the source document.
         /// </remarks>
         /// <param name="pagesToCopy">list of pages to be copied.</param>
         /// <param name="toDocument">a document to copy pages to.</param>

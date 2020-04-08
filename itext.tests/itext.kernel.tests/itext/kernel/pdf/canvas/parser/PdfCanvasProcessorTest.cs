@@ -42,10 +42,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -55,72 +60,51 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void ContentStreamProcessorTest() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "yaxiststar.pdf"), new PdfWriter(new ByteArrayOutputStream
-                ()));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "tableWithImageAndText.pdf"), new PdfWriter
+                (new ByteArrayOutputStream()));
+            StringBuilder pageEventsLog = new StringBuilder();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new _IEventListener_83());
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryHighLevelEventListener
+                    (pageEventsLog));
                 processor.ProcessPageContent(page);
             }
+            byte[] logBytes = File.ReadAllBytes(Path.Combine(sourceFolder + "contentStreamProcessorTest_events_log.dat"
+                ));
+            String expectedPageEventsLog = iText.IO.Util.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding.UTF8
+                );
+            NUnit.Framework.Assert.AreEqual(expectedPageEventsLog, pageEventsLog.ToString());
         }
 
-        private sealed class _IEventListener_83 : IEventListener {
-            public _IEventListener_83() {
+        [NUnit.Framework.Test]
+        public virtual void ProcessGraphicsStateResourceOperatorFillOpacityTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "transparentText.pdf"));
+            float? expOpacity = 0.5f;
+            IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                    (textRenderInfo));
+                processor.ProcessPageContent(page);
             }
+            NUnit.Framework.Assert.AreEqual(expOpacity, textRenderInfo.Get("FillOpacity"), "Expected fill opacity not found"
+                );
+        }
 
-            public void EventOccurred(IEventData data, EventType type) {
-                switch (type) {
-                    case EventType.BEGIN_TEXT: {
-                        System.Console.Out.WriteLine("-------- BEGIN TEXT CALLED ---------");
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_TEXT: {
-                        System.Console.Out.WriteLine("-------- RENDER TEXT CALLED --------");
-                        TextRenderInfo renderInfo = (TextRenderInfo)data;
-                        System.Console.Out.WriteLine("String: " + renderInfo.GetPdfString());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.END_TEXT: {
-                        System.Console.Out.WriteLine("-------- END TEXT CALLED -----------");
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_IMAGE: {
-                        System.Console.Out.WriteLine("-------- RENDER IMAGE CALLED---------");
-                        ImageRenderInfo renderInfo1 = (ImageRenderInfo)data;
-                        System.Console.Out.WriteLine("Image: " + renderInfo1.GetImage().GetPdfObject());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.RENDER_PATH: {
-                        System.Console.Out.WriteLine("-------- RENDER PATH CALLED --------");
-                        PathRenderInfo renderinfo2 = (PathRenderInfo)data;
-                        System.Console.Out.WriteLine("Path: " + renderinfo2.GetPath());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-
-                    case EventType.CLIP_PATH_CHANGED: {
-                        System.Console.Out.WriteLine("-------- CLIPPING PATH CALLED-------");
-                        ClippingPathInfo renderinfo3 = (ClippingPathInfo)data;
-                        System.Console.Out.WriteLine("Clipping path: " + renderinfo3.GetClippingPath());
-                        System.Console.Out.WriteLine("------------------------------------");
-                        break;
-                    }
-                }
+        [NUnit.Framework.Test]
+        public virtual void ProcessGraphicsStateResourceOperatorStrokeOpacityTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "hiddenText.pdf"));
+            float? expOpacity = 0.0f;
+            IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                    (textRenderInfo));
+                processor.ProcessPageContent(page);
             }
-
-            public ICollection<EventType> GetSupportedEvents() {
-                return null;
-            }
+            NUnit.Framework.Assert.AreEqual(expOpacity, textRenderInfo.Get("StrokeOpacity"), "Expected stroke opacity not found"
+                );
         }
 
         [NUnit.Framework.Test]
@@ -147,8 +131,173 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 , resultantText);
         }
 
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-3608: this test currently throws StackOverflowError, which cannot be caught in .NET"
+            )]
+        public virtual void ParseCircularReferencesInResourcesTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String fileName = "circularReferencesInResources.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
+                PdfPage page = pdfDocument.GetFirstPage();
+                processor.ProcessPageContent(page);
+                pdfDocument.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<OutOfMemoryException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE)]
+        public virtual void PatternColorParsingNotValidPdfTest() {
+            String inputFile = sourceFolder + "patternColorParsingNotValidPdfTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
+                PdfPage page = pdfDocument.GetPage(i);
+                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                    ();
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
+                processor.ProcessPageContent(page);
+                Color renderInfo = colorParsingEventListener.GetEncounteredPath().GetFillColor();
+                NUnit.Framework.Assert.IsNull(renderInfo);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternColorParsingValidPdfTest() {
+            String inputFile = sourceFolder + "patternColorParsingValidPdfTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
+                PdfPage page = pdfDocument.GetPage(i);
+                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                    ();
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
+                processor.ProcessPageContent(page);
+                PathRenderInfo renderInfo = colorParsingEventListener.GetEncounteredPath();
+                PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
+                NUnit.Framework.Assert.IsTrue(colorSpace is PdfSpecialCs.Pattern);
+            }
+        }
+
+        private class ColorParsingEventListener : IEventListener {
+            private IList<IEventData> content = new List<IEventData>();
+
+            private const String pathDataExpected = "Path data expected.";
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                if (type.Equals(EventType.RENDER_PATH)) {
+                    PathRenderInfo pathRenderInfo = (PathRenderInfo)data;
+                    pathRenderInfo.PreserveGraphicsState();
+                    content.Add(data);
+                }
+            }
+
+            /// <summary>Get the last encountered PathRenderInfo, then clears the internal buffer</summary>
+            /// <returns>the PathRenderInfo object that was encountered when processing the last path rendering operation</returns>
+            internal virtual PathRenderInfo GetEncounteredPath() {
+                if (content.Count == 0) {
+                    return null;
+                }
+                IEventData eventData = content[0];
+                if (!(eventData is PathRenderInfo)) {
+                    throw new PdfException(pathDataExpected);
+                }
+                content.Clear();
+                return (PathRenderInfo)eventData;
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
         private class NoOpEventListener : IEventListener {
             public virtual void EventOccurred(IEventData data, EventType type) {
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
+        private class RecordEveryHighLevelEventListener : IEventListener {
+            private const String END_EVENT_OCCURRENCE = "------------------------------------";
+
+            private StringBuilder sb;
+
+            internal RecordEveryHighLevelEventListener(StringBuilder outStream) {
+                this.sb = outStream;
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                switch (type) {
+                    case EventType.BEGIN_TEXT: {
+                        sb.Append("-------- BEGIN TEXT ---------").Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_TEXT: {
+                        sb.Append("-------- RENDER TEXT --------").Append("\n");
+                        TextRenderInfo renderInfo = (TextRenderInfo)data;
+                        sb.Append("String: ").Append(renderInfo.GetPdfString().ToUnicodeString()).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.END_TEXT: {
+                        sb.Append("-------- END TEXT -----------").Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_IMAGE: {
+                        sb.Append("-------- RENDER IMAGE ---------").Append("\n");
+                        ImageRenderInfo imageRenderInfo = (ImageRenderInfo)data;
+                        sb.Append("Image: ").Append(imageRenderInfo.GetImageResourceName()).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.RENDER_PATH: {
+                        sb.Append("-------- RENDER PATH --------").Append("\n");
+                        PathRenderInfo pathRenderInfo = (PathRenderInfo)data;
+                        sb.Append("Operation type: ").Append(pathRenderInfo.GetOperation()).Append("\n");
+                        sb.Append("Num of subpaths: ").Append(pathRenderInfo.GetPath().GetSubpaths().Count).Append("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+
+                    case EventType.CLIP_PATH_CHANGED: {
+                        sb.Append("-------- CLIPPING PATH ------").Append("\n");
+                        ClippingPathInfo clippingPathRenderInfo = (ClippingPathInfo)data;
+                        sb.Append("Num of subpaths: ").Append(clippingPathRenderInfo.GetClippingPath().GetSubpaths().Count).Append
+                            ("\n");
+                        sb.Append(END_EVENT_OCCURRENCE).Append("\n");
+                        break;
+                    }
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+        }
+
+        private class RecordEveryTextRenderEvent : IEventListener {
+            private IDictionary<String, Object> map;
+
+            internal RecordEveryTextRenderEvent(IDictionary<String, Object> map) {
+                this.map = map;
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                if (data is TextRenderInfo) {
+                    TextRenderInfo renderInfo = (TextRenderInfo)data;
+                    map.Put("String", renderInfo.GetPdfString().ToUnicodeString());
+                    map.Put("FillOpacity", renderInfo.GetGraphicsState().GetFillOpacity());
+                    map.Put("StrokeOpacity", renderInfo.GetGraphicsState().GetStrokeOpacity());
+                }
             }
 
             public virtual ICollection<EventType> GetSupportedEvents() {

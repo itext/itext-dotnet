@@ -116,7 +116,10 @@ namespace iText.IO.Util.Collections
         }
 
         public bool Remove(T item) {
-            throw new NotSupportedException("Collection is read-only.");
+            // According to .NET this method should throw NotSupportedException, if IsReadOnly is true.
+            // However this collection is generally intended to be used in context of autoportable Java code, 
+            // and in Java analogous method simply returns false.
+            return false;
         }
 
         public int Count {

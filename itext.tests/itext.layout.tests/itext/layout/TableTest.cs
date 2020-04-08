@@ -66,12 +66,12 @@ namespace iText.Layout {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/TableTest/";
 
-        internal const String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
+        private const String TEXT_CONTENT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
 
-        internal const String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
+        private const String SHORT_TEXT_CONTENT = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
 
-        internal const String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
+        private const String MIDDLE_TEXT_CONTENT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -491,7 +491,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            doc.Add(new Paragraph(textContent));
+            doc.Add(new Paragraph(TEXT_CONTENT));
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
             String longText = "Long text, very long text. ";
@@ -516,15 +516,16 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
-                 + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
-                 + textContent))).AddCell(new Cell().Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
-                 + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new 
-                Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 2\n" + middleTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent)));
+                 + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + TEXT_CONTENT)))
+                .AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new iText.Layout.Element.Image(ImageDataFactory
+                .Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + SHORT_TEXT_CONTENT
+                ))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add
+                (new Paragraph("cell 5, 1\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n"
+                 + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell
+                (new Cell().Add(new Paragraph("cell 6, 1\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 6, 2\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + MIDDLE_TEXT_CONTENT
+                )));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -541,12 +542,12 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
                 (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
-                 + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
-                (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
-                ("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + middleTextContent))).AddCell(new Cell().Add(new 
-                Paragraph("cell 6, 2\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n" + middleTextContent
-                )));
+                 + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell
+                (new Cell().Add(new Paragraph("cell 5, 1\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
+                ("cell 5, 2\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + MIDDLE_TEXT_CONTENT
+                ))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add
+                (new Paragraph("cell 6, 2\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 6, 3\n"
+                 + MIDDLE_TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -2445,6 +2446,73 @@ namespace iText.Layout {
             table.AddCell(cellNum3);
             doc.Add(table);
             doc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellWithBigRowspanCompletedRowTooTest() {
+            // TODO DEVSIX-3716
+            String testName = "cellWithBigRowspanCompletedRowTooTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Div div = new Div();
+            div.SetHeight(700);
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(1));
+            table.SetHorizontalBorderSpacing(5);
+            table.SetVerticalBorderSpacing(5);
+            table.AddCell(new Cell(7, 1).Add(new Paragraph("Rowspan 7")).SetBackgroundColor(ColorConstants.RED));
+            for (int i = 0; i < 7; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Rowspan 1")));
+            }
+            // test separated borders when j == 0 and collapsed borders when j == 1
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            for (int j = 0; j < 2; j++) {
+                doc.Add(div);
+                doc.Add(table);
+                if (0 == j) {
+                    doc.Add(new AreaBreak());
+                    table.SetBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
+                }
+            }
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellWithBigRowspanCompletedRowNotTest() {
+            // TODO DEVSIX-3716
+            String testName = "cellWithBigRowspanCompletedRowNotTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Div div = new Div();
+            div.SetHeight(700);
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(1));
+            table.SetHorizontalBorderSpacing(5);
+            table.SetVerticalBorderSpacing(5);
+            table.AddCell(new Cell(7, 1).Add(new Paragraph("Rowspan 7")).SetBackgroundColor(ColorConstants.RED));
+            table.AddCell(new Cell().Add(new Paragraph(TEXT_CONTENT)));
+            for (int i = 0; i < 6; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Rowspan 1")));
+            }
+            // test separated borders when j == 0 and collapsed borders when j == 1
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            for (int j = 0; j < 2; j++) {
+                doc.Add(div);
+                doc.Add(table);
+                if (0 == j) {
+                    doc.Add(new AreaBreak());
+                    table.SetBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
+                }
+            }
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {

@@ -223,6 +223,42 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>
+        /// Sets orphans restriction on a
+        /// <see cref="Paragraph"/>.
+        /// </summary>
+        /// <param name="orphansControl">
+        /// an instance of
+        /// <see cref="iText.Layout.Properties.ParagraphOrphansControl"/>.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Layout.Element.Paragraph SetOrphansControl(ParagraphOrphansControl orphansControl) {
+            SetProperty(Property.ORPHANS_CONTROL, orphansControl);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets widows restriction on a
+        /// <see cref="Paragraph"/>.
+        /// </summary>
+        /// <param name="widowsControl">
+        /// an instance of
+        /// <see cref="iText.Layout.Properties.ParagraphWidowsControl"/>.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Paragraph"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Layout.Element.Paragraph SetWidowsControl(ParagraphWidowsControl widowsControl) {
+            SetProperty(Property.WIDOWS_CONTROL, widowsControl);
+            return this;
+        }
+
+        /// <summary>
         /// Sets the leading value, using the
         /// <see cref="iText.Layout.Properties.Leading.FIXED"/>
         /// strategy.

@@ -119,6 +119,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.WHITE_SPACE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.WIDTH, CommonCssConstants.AUTO);
+            defaultValues.Put(CommonCssConstants.ORPHANS, "2");
+            defaultValues.Put(CommonCssConstants.WIDOWS, "2");
         }
 
         // TODO not complete

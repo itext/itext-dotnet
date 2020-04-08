@@ -64,9 +64,9 @@ namespace iText.Layout.Font {
 
         private FontSelector selector;
 
-        public ComplexFontSelectorStrategy(String text, FontSelector selector, FontProvider provider, FontSet tempFonts
+        public ComplexFontSelectorStrategy(String text, FontSelector selector, FontProvider provider, FontSet additionalFonts
             )
-            : base(text, provider, tempFonts) {
+            : base(text, provider, additionalFonts) {
             this.font = null;
             this.selector = selector;
         }

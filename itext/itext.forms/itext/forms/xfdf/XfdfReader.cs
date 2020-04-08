@@ -206,8 +206,10 @@ namespace iText.Forms.Xfdf {
                             .GetAttributeValue(XfdfConstants.RECT)));
                         AddCommonAnnotationAttributes(pdfCircleAnnotation, annotObject);
                         AddMarkupAnnotationAttributes(pdfCircleAnnotation, annotObject);
-                        pdfCircleAnnotation.SetRectangleDifferences(XfdfObjectUtils.ConvertFringeFromString(annotObject.GetAttributeValue
-                            (XfdfConstants.FRINGE)));
+                        if (annotObject.GetAttributeValue(XfdfConstants.FRINGE) != null) {
+                            pdfCircleAnnotation.SetRectangleDifferences(XfdfObjectUtils.ConvertFringeFromString(annotObject.GetAttributeValue
+                                (XfdfConstants.FRINGE)));
+                        }
                         pdfDocument.GetPage(Convert.ToInt32(annotObject.GetAttribute(XfdfConstants.PAGE).GetValue())).AddAnnotation
                             (pdfCircleAnnotation);
                         break;
@@ -218,8 +220,10 @@ namespace iText.Forms.Xfdf {
                             .GetAttributeValue(XfdfConstants.RECT)));
                         AddCommonAnnotationAttributes(pdfSquareAnnotation, annotObject);
                         AddMarkupAnnotationAttributes(pdfSquareAnnotation, annotObject);
-                        pdfSquareAnnotation.SetRectangleDifferences(XfdfObjectUtils.ConvertFringeFromString(annotObject.GetAttributeValue
-                            (XfdfConstants.FRINGE)));
+                        if (annotObject.GetAttributeValue(XfdfConstants.FRINGE) != null) {
+                            pdfSquareAnnotation.SetRectangleDifferences(XfdfObjectUtils.ConvertFringeFromString(annotObject.GetAttributeValue
+                                (XfdfConstants.FRINGE)));
+                        }
                         pdfDocument.GetPage(Convert.ToInt32(annotObject.GetAttribute(XfdfConstants.PAGE).GetValue())).AddAnnotation
                             (pdfSquareAnnotation);
                         break;

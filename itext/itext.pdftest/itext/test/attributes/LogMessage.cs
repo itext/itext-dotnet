@@ -51,12 +51,14 @@ namespace iText.Test.Attributes
         private string messageTemplate;
         public int Count;
         public bool Ignore;
+        public int LogLevel;
 
         public LogMessageAttribute(string messageTemplate)
         {
             this.messageTemplate = messageTemplate;
             this.Count = 1;
             this.Ignore = false;
+            this.LogLevel = LogLevelConstants.UNKNOWN;
         }
 
         public string GetMessageTemplate()

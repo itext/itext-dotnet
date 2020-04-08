@@ -46,17 +46,22 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Events {
     /// <summary>Event dispatched by PdfDocument.</summary>
-    public class PdfDocumentEvent : Event {
+    public class PdfDocumentEvent : iText.Kernel.Events.Event {
         /// <summary>Dispatched after page is created.</summary>
         public const String START_PAGE = "StartPdfPage";
 
-        /// <summary>Dispatched after page is inserted/added into document.</summary>
+        /// <summary>Dispatched after page is inserted/added into a document.</summary>
         public const String INSERT_PAGE = "InsertPdfPage";
 
-        /// <summary>Dispatched after page is removed from document.</summary>
+        /// <summary>Dispatched after page is removed from a document.</summary>
         public const String REMOVE_PAGE = "RemovePdfPage";
 
-        /// <summary>Dispatched before page is closed and written.</summary>
+        /// <summary>Dispatched before page is flushed to a document.</summary>
+        /// <remarks>
+        /// Dispatched before page is flushed to a document.
+        /// This event isn't necessarily dispatched when a successive page has been created.
+        /// Keep it in mind when using with highlevel iText API.
+        /// </remarks>
         public const String END_PAGE = "EndPdfPage";
 
         /// <summary>The PdfPage associated with this event.</summary>

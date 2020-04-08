@@ -114,19 +114,5 @@ namespace iText.Svg.Css {
             , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
 ;
         }
-
-        [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("RND-1089")]
-        public virtual void InheritedDefaultStyleTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
-            iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("svg"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Element circle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("circle"), "");
-            INode svgNode = new JsoupElementNode(svg);
-            svgNode.AddChild(new JsoupElementNode(circle));
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode.ChildNodes()[0], null);
-            NUnit.Framework.Assert.AreEqual("black", resolvedStyles.Get(SvgConstants.Attributes.STROKE));
-        }
     }
 }

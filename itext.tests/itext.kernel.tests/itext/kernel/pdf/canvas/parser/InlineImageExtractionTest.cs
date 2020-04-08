@@ -28,6 +28,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -81,6 +82,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 ));
             expectedDict.Put(PdfName.ColorSpace, expectedIndexedCs.GetPdfObject());
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareDictionaries(inlineImages[0], expectedDict));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "docWithInlineImage.pdf"));
+            InlineImageExtractionTest.InlineImageEventListener listener = new InlineImageExtractionTest.InlineImageEventListener
+                ();
+            new PdfCanvasProcessor(listener).ProcessPageContent(pdfDocument.GetFirstPage());
+            IList<PdfStream> inlineImages = listener.GetInlineImages();
+            byte[] data = new PdfImageXObject(inlineImages[0]).GetImageBytes();
+            byte[] cmpImgBytes = File.ReadAllBytes(Path.Combine(sourceFolder, "docWithInlineImageBytes.dat"));
+            NUnit.Framework.Assert.AreEqual(cmpImgBytes, data);
         }
 
         private class InlineImageEventListener : IEventListener {

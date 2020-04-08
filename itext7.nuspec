@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.1.10</version>
+    <version>7.1.11</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>https://itextpdf.com/</projectUrl>
-    <iconUrl>https://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+	<icon>ITSC-avatar.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>iText 7 represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText 7 can be a boon to nearly every workflow. iText 7 allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in .NET.</description>
     <summary>iText for .NET is a library for PDF generation written entirely in C# for the .NET platform.</summary>
@@ -79,5 +79,6 @@
     <file src="itext\itext.svg\bin\Release\netstandard1.6\itext.svg.xml" target="lib\netstandard1.6" />
     <file src="gnu-agpl-v3.0.md" target="" />
     <file src="LICENSE.md" target="" />
+	<file src="ITSC-avatar.png" target="" />
   </files>
 </package>

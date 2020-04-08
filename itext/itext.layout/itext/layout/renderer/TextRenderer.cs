@@ -83,11 +83,11 @@ namespace iText.Layout.Renderer {
     public class TextRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal const float TEXT_SPACE_COEFF = FontProgram.UNITS_NORMALIZATION;
 
+        internal const float TYPO_ASCENDER_SCALE_COEFF = 1.2f;
+
         private const float ITALIC_ANGLE = 0.21256f;
 
         private const float BOLD_SIMULATION_STROKE_COEFF = 1 / 30f;
-
-        private const float TYPO_ASCENDER_SCALE_COEFF = 1.2f;
 
         protected internal float yLineOffset;
 
@@ -197,15 +197,24 @@ namespace iText.Layout.Renderer {
                  * fontSize.GetValue() : 0;
             line = new GlyphLine(text);
             line.start = line.end = -1;
-            float[] ascenderDescender = CalculateAscenderDescender(font);
-            float ascender = ascenderDescender[0];
-            float descender = ascenderDescender[1];
+            float ascender = 0;
+            float descender = 0;
             float currentLineAscender = 0;
             float currentLineDescender = 0;
             float currentLineHeight = 0;
             int initialLineTextPos = currentTextPos;
             float currentLineWidth = 0;
             int previousCharPos = -1;
+            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            float[] ascenderDescender = CalculateAscenderDescender(font, mode);
+            ascender = ascenderDescender[0];
+            descender = ascenderDescender[1];
+            if (RenderingMode.HTML_MODE.Equals(mode)) {
+                currentLineAscender = ascenderDescender[0];
+                currentLineDescender = ascenderDescender[1];
+                currentLineHeight = (currentLineAscender - currentLineDescender) * fontSize.GetValue() / TEXT_SPACE_COEFF 
+                    + textRise;
+            }
             savedWordBreakAtLineEnding = null;
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
@@ -494,6 +503,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
+            IncreaseYLineOffset(paddings, borders, margins);
             if (result == null) {
                 result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
                      : null);
@@ -535,6 +545,12 @@ namespace iText.Layout.Renderer {
             }
             result.SetMinMaxWidth(countedMinMaxWidth);
             return result;
+        }
+
+        private void IncreaseYLineOffset(UnitValue[] paddings, Border[] borders, UnitValue[] margins) {
+            yLineOffset += paddings[0] != null ? paddings[0].GetValue() : 0;
+            yLineOffset += borders[0] != null ? borders[0].GetWidth() : 0;
+            yLineOffset += margins[0] != null ? margins[0].GetValue() : 0;
         }
 
         public virtual void ApplyOtf() {
@@ -644,14 +660,11 @@ namespace iText.Layout.Renderer {
                 }
             }
             base.Draw(drawContext);
-            ApplyMargins(occupiedArea.GetBBox(), GetMargins(), false);
-            ApplyBorderBox(occupiedArea.GetBBox(), false);
-            ApplyPaddings(occupiedArea.GetBBox(), GetPaddings(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
-            float leftBBoxX = occupiedArea.GetBBox().GetX();
+            float leftBBoxX = GetInnerAreaBBox().GetX();
             if (line.end > line.start || savedWordBreakAtLineEnding != null) {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
@@ -748,7 +761,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_780();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_796();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -802,9 +815,6 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
-            ApplyPaddings(occupiedArea.GetBBox(), true);
-            ApplyBorderBox(occupiedArea.GetBBox(), true);
-            ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);
             if (isTagged && !isArtifact) {
                 if (isLastRendererForModelElement) {
                     taggingHelper.FinishTaggingHint(this);
@@ -813,8 +823,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_780 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_780() {
+        private sealed class _IGlyphLineFilter_796 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_796() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -916,7 +926,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Element.Text"/>
         /// </returns>
         public virtual float GetDescent() {
-            return -(occupiedArea.GetBBox().GetHeight() - yLineOffset - (float)this.GetPropertyAsFloat(Property.TEXT_RISE
+            return -(GetOccupiedAreaBBox().GetHeight() - yLineOffset - (float)this.GetPropertyAsFloat(Property.TEXT_RISE
                 ));
         }
 
@@ -1019,13 +1029,21 @@ namespace iText.Layout.Renderer {
         }
 
         internal static float[] CalculateAscenderDescender(PdfFont font) {
+            return CalculateAscenderDescender(font, RenderingMode.DEFAULT_LAYOUT_MODE);
+        }
+
+        internal static float[] CalculateAscenderDescender(PdfFont font, RenderingMode? mode) {
             FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
             float ascender;
             float descender;
+            float usedTypoAscenderScaleCoeff = TYPO_ASCENDER_SCALE_COEFF;
+            if (RenderingMode.HTML_MODE.Equals(mode) && !(font is PdfType1Font)) {
+                usedTypoAscenderScaleCoeff = 1;
+            }
             if (fontMetrics.GetWinAscender() == 0 || fontMetrics.GetWinDescender() == 0 || fontMetrics.GetTypoAscender
                 () == fontMetrics.GetWinAscender() && fontMetrics.GetTypoDescender() == fontMetrics.GetWinDescender()) {
-                ascender = fontMetrics.GetTypoAscender() * TYPO_ASCENDER_SCALE_COEFF;
-                descender = fontMetrics.GetTypoDescender() * TYPO_ASCENDER_SCALE_COEFF;
+                ascender = fontMetrics.GetTypoAscender() * usedTypoAscenderScaleCoeff;
+                descender = fontMetrics.GetTypoDescender() * usedTypoAscenderScaleCoeff;
             }
             else {
                 ascender = fontMetrics.GetWinAscender();
@@ -1144,8 +1162,9 @@ namespace iText.Layout.Renderer {
                 float yLine = GetYLine();
                 float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
                 float italicWidthSubstraction = .5f * fontSize * italicAngleTan;
-                canvas.MoveTo(occupiedArea.GetBBox().GetX(), underlineYPosition).LineTo(occupiedArea.GetBBox().GetX() + occupiedArea
-                    .GetBBox().GetWidth() - italicWidthSubstraction, underlineYPosition).Stroke();
+                Rectangle innerAreaBbox = GetInnerAreaBBox();
+                canvas.MoveTo(innerAreaBbox.GetX(), underlineYPosition).LineTo(innerAreaBbox.GetX() + innerAreaBbox.GetWidth
+                    () - italicWidthSubstraction, underlineYPosition).Stroke();
             }
             canvas.RestoreState();
         }
@@ -1240,8 +1259,9 @@ namespace iText.Layout.Renderer {
         }
 
         internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
-            ) {
-            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc);
+            , FontSet additionalFonts) {
+            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc, additionalFonts
+                );
             IList<Glyph> resolvedGlyphs;
             PdfFont currentFont;
             //try to find first font that can render at least one glyph.
@@ -1254,7 +1274,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return base.ResolveFirstPdfFont(font, provider, fc);
+            return base.ResolveFirstPdfFont(font, provider, fc, additionalFonts);
         }
 
         private static int NumberOfElementsLessThan(List<int> numbers, int n) {

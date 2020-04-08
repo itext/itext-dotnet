@@ -47,7 +47,6 @@ using System.IO;
 using System.Text;
 using Common.Logging;
 using iText.IO.Colors;
-using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -67,8 +66,6 @@ namespace iText.IO.Image {
             internal int height;
 
             internal int bitDepth;
-
-            internal int colorType;
 
             internal int compressionMethod;
 
@@ -106,28 +103,6 @@ namespace iText.IO.Image {
 
             // number of bytes per input pixel
             internal int bytesPerPixel;
-
-            internal byte[] colorTable;
-
-            internal float gamma = 1f;
-
-            internal bool hasCHRM = false;
-
-            internal float xW;
-
-            internal float yW;
-
-            internal float xR;
-
-            internal float yR;
-
-            internal float xG;
-
-            internal float yG;
-
-            internal float xB;
-
-            internal float yB;
 
             internal String intent;
 
@@ -179,8 +154,9 @@ namespace iText.IO.Image {
 
         private const int PNG_FILTER_PAETH = 4;
 
-        private static readonly String[] intents = new String[] { "/Perceptual", "/RelativeColorimetric", "/Saturation"
-            , "/AbsoluteColorimetric" };
+        private static readonly String[] intents = new String[] { PngImageHelperConstants.PERCEPTUAL, PngImageHelperConstants
+            .RELATIVE_COLORIMETRIC, PngImageHelperConstants.SATURATION, PngImageHelperConstants.ABSOLUTE_COLORMETRIC
+             };
 
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.PNG) {
@@ -214,6 +190,7 @@ namespace iText.IO.Image {
 
         private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png) {
             ReadPng(pngStream, png);
+            int colorType = png.image.GetColorType();
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
                 ) {
                 LogManager.GetLogger(typeof(PngImageHelper)).Warn(iText.IO.LogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
@@ -236,16 +213,16 @@ namespace iText.IO.Image {
                         }
                     }
                 }
-                if ((png.colorType & 4) != 0) {
+                if ((colorType & 4) != 0) {
                     png.palShades = true;
                 }
                 png.genBWMask = (!png.palShades && (pal0 > 1 || png.transRedGray >= 0));
                 if (!png.palShades && !png.genBWMask && pal0 == 1) {
-                    png.additional.Put("Mask", new int[] { palIdx, palIdx });
+                    png.additional.Put(PngImageHelperConstants.MASK, new int[] { palIdx, palIdx });
                 }
-                bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((png.colorType & 4) != 0) || png.
-                    palShades || png.genBWMask;
-                switch (png.colorType) {
+                bool needDecode = (png.interlaceMethod == 1) || (png.bitDepth == 16) || ((colorType & 4) != 0) || png.palShades
+                     || png.genBWMask;
+                switch (colorType) {
                     case 0: {
                         png.inputBands = 1;
                         break;
@@ -275,7 +252,7 @@ namespace iText.IO.Image {
                     DecodeIdat(png);
                 }
                 int components = png.inputBands;
-                if ((png.colorType & 4) != 0) {
+                if ((colorType & 4) != 0) {
                     --components;
                 }
                 int bpc = png.bitDepth;
@@ -283,7 +260,7 @@ namespace iText.IO.Image {
                     bpc = 8;
                 }
                 if (png.imageData != null) {
-                    if (png.colorType == 3) {
+                    if (png.image.IsIndexed()) {
                         RawImageHelper.UpdateRawImageParameters(png.image, png.width, png.height, components, bpc, png.imageData);
                     }
                     else {
@@ -296,17 +273,15 @@ namespace iText.IO.Image {
                         ());
                     png.image.SetDeflated(true);
                     IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
-                    decodeparms.Put("BitsPerComponent", png.bitDepth);
-                    decodeparms.Put("Predictor", 15);
-                    decodeparms.Put("Columns", png.width);
-                    decodeparms.Put("Colors", (png.colorType == 3 || (png.colorType & 2) == 0) ? 1 : 3);
+                    decodeparms.Put(PngImageHelperConstants.BITS_PER_COMPONENT, png.bitDepth);
+                    decodeparms.Put(PngImageHelperConstants.PREDICTOR, 15);
+                    decodeparms.Put(PngImageHelperConstants.COLUMNS, png.width);
+                    decodeparms.Put(PngImageHelperConstants.COLORS, (png.image.IsIndexed() || png.image.IsGrayscaleImage()) ? 
+                        1 : 3);
                     png.image.decodeParms = decodeparms;
                 }
-                if (png.additional.Get("ColorSpace") == null) {
-                    png.additional.Put("ColorSpace", GetColorspace(png));
-                }
                 if (png.intent != null) {
-                    png.additional.Put("Intent", png.intent);
+                    png.additional.Put(PngImageHelperConstants.INTENT, png.intent);
                 }
                 if (png.iccProfile != null) {
                     png.image.SetProfile(png.iccProfile);
@@ -331,88 +306,8 @@ namespace iText.IO.Image {
             }
         }
 
-        private static Object GetColorspace(PngImageHelper.PngParameters png) {
-            if (png.iccProfile != null) {
-                if ((png.colorType & 2) == 0) {
-                    return "/DeviceGray";
-                }
-                else {
-                    return "/DeviceRGB";
-                }
-            }
-            if (png.gamma == 1f && !png.hasCHRM) {
-                if ((png.colorType & 2) == 0) {
-                    return "/DeviceGray";
-                }
-                else {
-                    return "/DeviceRGB";
-                }
-            }
-            else {
-                Object[] array = new Object[2];
-                IDictionary<String, Object> map = new Dictionary<String, Object>();
-                if ((png.colorType & 2) == 0) {
-                    if (png.gamma == 1f) {
-                        return "/DeviceGray";
-                    }
-                    array[0] = "/CalGray";
-                    map.Put("Gamma", png.gamma);
-                    map.Put("WhitePoint", new int[] { 1, 1, 1 });
-                    array[1] = map;
-                }
-                else {
-                    float[] wp = new float[] { 1, 1, 1 };
-                    array[0] = "/CalRGB";
-                    if (png.gamma != 1f) {
-                        float[] gm = new float[3];
-                        gm[0] = png.gamma;
-                        gm[1] = png.gamma;
-                        gm[2] = png.gamma;
-                        map.Put("Gamma", gm);
-                    }
-                    if (png.hasCHRM) {
-                        float z = png.yW * ((png.xG - png.xB) * png.yR - (png.xR - png.xB) * png.yG + (png.xR - png.xG) * png.yB);
-                        float YA = png.yR * ((png.xG - png.xB) * png.yW - (png.xW - png.xB) * png.yG + (png.xW - png.xG) * png.yB)
-                             / z;
-                        float XA = YA * png.xR / png.yR;
-                        float ZA = YA * ((1 - png.xR) / png.yR - 1);
-                        float YB = -png.yG * ((png.xR - png.xB) * png.yW - (png.xW - png.xB) * png.yR + (png.xW - png.xR) * png.yB
-                            ) / z;
-                        float XB = YB * png.xG / png.yG;
-                        float ZB = YB * ((1 - png.xG) / png.yG - 1);
-                        float YC = png.yB * ((png.xR - png.xG) * png.yW - (png.xW - png.xG) * png.yW + (png.xW - png.xR) * png.yG)
-                             / z;
-                        float XC = YC * png.xB / png.yB;
-                        float ZC = YC * ((1 - png.xB) / png.yB - 1);
-                        float XW = XA + XB + XC;
-                        float YW = 1;
-                        float ZW = ZA + ZB + ZC;
-                        float[] wpa = new float[3];
-                        wpa[0] = XW;
-                        wpa[1] = YW;
-                        wpa[2] = ZW;
-                        wp = wpa;
-                        float[] matrix = new float[9];
-                        matrix[0] = XA;
-                        matrix[1] = YA;
-                        matrix[2] = ZA;
-                        matrix[3] = XB;
-                        matrix[4] = YB;
-                        matrix[5] = ZB;
-                        matrix[6] = XC;
-                        matrix[7] = YC;
-                        matrix[8] = ZC;
-                        map.Put("Matrix", matrix);
-                    }
-                    map.Put("WhitePoint", wp);
-                    array[1] = map;
-                }
-                return array;
-            }
-        }
-
         private static int GetExpectedNumberOfColorComponents(PngImageHelper.PngParameters png) {
-            return (png.colorType & 2) == 0 ? 1 : 3;
+            return png.image.IsGrayscaleImage() ? 1 : 3;
         }
 
         private static void ReadPng(Stream pngStream, PngImageHelper.PngParameters png) {
@@ -441,7 +336,7 @@ namespace iText.IO.Image {
                 }
                 else {
                     if (tRNS.Equals(marker)) {
-                        switch (png.colorType) {
+                        switch (png.image.GetColorType()) {
                             case 0: {
                                 if (len >= 2) {
                                     len -= 2;
@@ -450,7 +345,7 @@ namespace iText.IO.Image {
                                         png.transRedGray = gray;
                                     }
                                     else {
-                                        png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1}]", gray, gray));
+                                        png.additional.Put(PngImageHelperConstants.MASK, MessageFormatUtil.Format("[{0} {1}]", gray, gray));
                                     }
                                 }
                                 break;
@@ -468,8 +363,8 @@ namespace iText.IO.Image {
                                         png.transBlue = blue;
                                     }
                                     else {
-                                        png.additional.Put("Mask", MessageFormatUtil.Format("[{0} {1} {2} {3} {4} {5}]", red, red, green, green, blue
-                                            , blue));
+                                        png.additional.Put(PngImageHelperConstants.MASK, MessageFormatUtil.Format("[{0} {1} {2} {3} {4} {5}]", red
+                                            , red, green, green, blue, blue));
                                     }
                                 }
                                 break;
@@ -493,25 +388,19 @@ namespace iText.IO.Image {
                             png.width = GetInt(pngStream);
                             png.height = GetInt(pngStream);
                             png.bitDepth = pngStream.Read();
-                            png.colorType = pngStream.Read();
+                            png.image.SetColorType(pngStream.Read());
                             png.compressionMethod = pngStream.Read();
                             png.filterMethod = pngStream.Read();
                             png.interlaceMethod = pngStream.Read();
                         }
                         else {
                             if (PLTE.Equals(marker)) {
-                                if (png.colorType == 3) {
-                                    Object[] colorspace = new Object[4];
-                                    colorspace[0] = "/Indexed";
-                                    colorspace[1] = GetColorspace(png);
-                                    colorspace[2] = len / 3 - 1;
+                                if (png.image.IsIndexed()) {
                                     ByteBuffer colorTableBuf = new ByteBuffer();
                                     while ((len--) > 0) {
                                         colorTableBuf.Append(pngStream.Read());
                                     }
-                                    png.colorTable = colorTableBuf.ToByteArray();
-                                    colorspace[3] = PdfEncodings.ConvertToString(png.colorTable, null);
-                                    png.additional.Put("ColorSpace", colorspace);
+                                    png.image.SetColorPalette(colorTableBuf.ToByteArray());
                                 }
                                 else {
                                     StreamUtil.Skip(pngStream, len);
@@ -534,48 +423,34 @@ namespace iText.IO.Image {
                                 }
                                 else {
                                     if (cHRM.Equals(marker)) {
-                                        png.xW = GetInt(pngStream) / 100000f;
-                                        png.yW = GetInt(pngStream) / 100000f;
-                                        png.xR = GetInt(pngStream) / 100000f;
-                                        png.yR = GetInt(pngStream) / 100000f;
-                                        png.xG = GetInt(pngStream) / 100000f;
-                                        png.yG = GetInt(pngStream) / 100000f;
-                                        png.xB = GetInt(pngStream) / 100000f;
-                                        png.yB = GetInt(pngStream) / 100000f;
-                                        png.hasCHRM = !(Math.Abs(png.xW) < 0.0001f || Math.Abs(png.yW) < 0.0001f || Math.Abs(png.xR) < 0.0001f || 
-                                            Math.Abs(png.yR) < 0.0001f || Math.Abs(png.xG) < 0.0001f || Math.Abs(png.yG) < 0.0001f || Math.Abs(png
-                                            .xB) < 0.0001f || Math.Abs(png.yB) < 0.0001f);
+                                        PngChromaticities pngChromaticities = new PngChromaticities(GetInt(pngStream) / 100000f, GetInt(pngStream)
+                                             / 100000f, GetInt(pngStream) / 100000f, GetInt(pngStream) / 100000f, GetInt(pngStream) / 100000f, GetInt
+                                            (pngStream) / 100000f, GetInt(pngStream) / 100000f, GetInt(pngStream) / 100000f);
+                                        if (!(Math.Abs(pngChromaticities.GetXW()) < 0.0001f || Math.Abs(pngChromaticities.GetYW()) < 0.0001f || Math
+                                            .Abs(pngChromaticities.GetXR()) < 0.0001f || Math.Abs(pngChromaticities.GetYR()) < 0.0001f || Math.Abs
+                                            (pngChromaticities.GetXG()) < 0.0001f || Math.Abs(pngChromaticities.GetYG()) < 0.0001f || Math.Abs(pngChromaticities
+                                            .GetXB()) < 0.0001f || Math.Abs(pngChromaticities.GetYB()) < 0.0001f)) {
+                                            png.image.SetPngChromaticities(pngChromaticities);
+                                        }
                                     }
                                     else {
                                         if (sRGB.Equals(marker)) {
                                             int ri = pngStream.Read();
                                             png.intent = intents[ri];
-                                            png.gamma = 2.2f;
-                                            png.xW = 0.3127f;
-                                            png.yW = 0.329f;
-                                            png.xR = 0.64f;
-                                            png.yR = 0.33f;
-                                            png.xG = 0.3f;
-                                            png.yG = 0.6f;
-                                            png.xB = 0.15f;
-                                            png.yB = 0.06f;
-                                            png.hasCHRM = true;
+                                            png.image.SetGamma(2.2f);
+                                            PngChromaticities pngChromaticities = new PngChromaticities(0.3127f, 0.329f, 0.64f, 0.33f, 0.3f, 0.6f, 0.15f
+                                                , 0.06f);
+                                            png.image.SetPngChromaticities(pngChromaticities);
                                         }
                                         else {
                                             if (gAMA.Equals(marker)) {
                                                 int gm = GetInt(pngStream);
                                                 if (gm != 0) {
-                                                    png.gamma = 100000f / gm;
-                                                    if (!png.hasCHRM) {
-                                                        png.xW = 0.3127f;
-                                                        png.yW = 0.329f;
-                                                        png.xR = 0.64f;
-                                                        png.yR = 0.33f;
-                                                        png.xG = 0.3f;
-                                                        png.yG = 0.6f;
-                                                        png.xB = 0.15f;
-                                                        png.yB = 0.06f;
-                                                        png.hasCHRM = true;
+                                                    png.image.SetGamma(100000f / gm);
+                                                    if (!png.image.IsHasCHRM()) {
+                                                        PngChromaticities pngChromaticities = new PngChromaticities(0.3127f, 0.329f, 0.64f, 0.33f, 0.3f, 0.6f, 0.15f
+                                                            , 0.06f);
+                                                        png.image.SetPngChromaticities(pngChromaticities);
                                                     }
                                                 }
                                             }
@@ -646,7 +521,7 @@ namespace iText.IO.Image {
             }
             int size = -1;
             png.bytesPerPixel = (png.bitDepth == 16) ? 2 : 1;
-            switch (png.colorType) {
+            switch (png.image.GetColorType()) {
                 case 0: {
                     size = (nbitDepth * png.width + 7) / 8 * png.height;
                     break;
@@ -768,9 +643,10 @@ namespace iText.IO.Image {
              png) {
             int srcX;
             int dstX;
+            int colorType = png.image.GetColorType();
             int[] outPixel = GetPixel(curr, png);
             int sizes = 0;
-            switch (png.colorType) {
+            switch (colorType) {
                 case 0:
                 case 3:
                 case 4: {
@@ -793,7 +669,7 @@ namespace iText.IO.Image {
                 }
             }
             if (png.palShades) {
-                if ((png.colorType & 4) != 0) {
+                if ((colorType & 4) != 0) {
                     if (png.bitDepth == 16) {
                         for (int k = 0; k < width; ++k) {
                             outPixel[k * png.inputBands + sizes] = (int)(((uint)outPixel[k * png.inputBands + sizes]) >> 8);
@@ -827,7 +703,7 @@ namespace iText.IO.Image {
             }
             else {
                 if (png.genBWMask) {
-                    switch (png.colorType) {
+                    switch (colorType) {
                         case 3: {
                             int yStride = (png.width + 7) / 8;
                             int[] v = new int[1];

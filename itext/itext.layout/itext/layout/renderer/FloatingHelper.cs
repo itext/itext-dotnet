@@ -81,7 +81,7 @@ namespace iText.Layout.Renderer {
                     return topShift;
                 }
                 lastLeftAndRightBoxes = FindLastLeftAndRightBoxes(layoutBox, boxesAtYLevel);
-                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : float.MinValue;
+                left = lastLeftAndRightBoxes[0] != null ? lastLeftAndRightBoxes[0].GetRight() : float.Epsilon;
                 right = lastLeftAndRightBoxes[1] != null ? lastLeftAndRightBoxes[1].GetLeft() : float.MaxValue;
                 if (left > right || left > layoutBox.GetRight() || right < layoutBox.GetLeft()) {
                     left = layoutBox.GetLeft();

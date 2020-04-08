@@ -163,11 +163,10 @@ namespace iText.Svg.Utils {
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
-        [NUnit.Framework.Ignore("TODO: Check autoport for failing float comparisons. Blocked by RND-882\n")]
         [NUnit.Framework.Test]
         public virtual void ConvertFloatMinimumToPdfTest() {
             float expected = 1.4E-45f;
-            float actual = SvgCssUtils.ConvertPtsToPx(float.MinValue);
+            float actual = SvgCssUtils.ConvertPtsToPx(float.Epsilon);
             NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
         }
     }

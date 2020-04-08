@@ -40,13 +40,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using System.IO;
+using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -54,32 +53,32 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     public class TableRendererTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 13)]
+        [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 6)]
         public virtual void CalculateColumnWidthsNotPointValue() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream("table_out.pdf", FileMode.Create)));
-                Document doc = new Document(pdfDoc);
-                LayoutArea area = new LayoutArea(1, new Rectangle(0, 0, 100, 100));
-                LayoutContext layoutContext = new LayoutContext(area);
-                Rectangle layoutBox = area.GetBBox().Clone();
-                Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
-                table.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePercentValue(7));
-                table.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(7));
-                table.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePercentValue(7));
-                table.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePercentValue(7));
-                table.AddCell("Col a");
-                table.AddCell("Col b");
-                table.AddCell("Col c");
-                table.AddCell("Value a");
-                table.AddCell("Value b");
-                table.AddCell("This is a long description for column c. " + "It needs much more space hence we made sure that the third column is wider."
-                    );
-                doc.Add(table);
-                TableRenderer tableRenderer = (TableRenderer)table.GetRenderer();
-                tableRenderer.ApplyMarginsAndPaddingsAndCalculateColumnWidths(layoutBox);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Document doc = new Document(pdfDoc);
+            Rectangle layoutBox = new Rectangle(0, 0, 1000, 100);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            // Set margins and paddings in percents, which is not expected
+            table.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePercentValue(7));
+            table.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(7));
+            table.SetProperty(Property.PADDING_RIGHT, UnitValue.CreatePercentValue(7));
+            table.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePercentValue(7));
+            // Fill the table somehow. The layout area is wide enough to calculate the widths as expected
+            for (int i = 0; i < 3; i++) {
+                table.AddCell("Hello");
             }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            // Create a TableRenderer, the instance of which will be used to test the application of margins and paddings
+            TableRenderer tableRenderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
+            tableRenderer.bordersHandler = (TableBorders)new SeparatedTableBorders(tableRenderer.rows, 3, tableRenderer
+                .GetBorders(), 0);
+            tableRenderer.ApplyMarginsAndPaddingsAndCalculateColumnWidths(layoutBox);
+            // Specify that the render is not original in order not to recalculate the column widths
+            tableRenderer.isOriginalNonSplitRenderer = false;
+            MinMaxWidth minMaxWidth = tableRenderer.GetMinMaxWidth();
+            // TODO DEVSIX-3676: currently margins and paddings are still applied as if they are in points. After the mentioned ticket is fixed, the expected values should be updated.
+            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMaxWidth(), 332.46f, 0.001);
+            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMinWidth(), 332.46f, 0.001);
         }
 
         [NUnit.Framework.Test]

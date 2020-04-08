@@ -105,9 +105,24 @@ namespace iText.Layout {
         /// </param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
         public Canvas(PdfPage page, Rectangle rootArea)
-            : this(InitPdfCanvasOrThrowIfPageIsFlushed(page), page.GetDocument(), rootArea) {
+            : this(InitPdfCanvasOrThrowIfPageIsFlushed(page), rootArea) {
             this.EnableAutoTagging(page);
             this.isCanvasOfPage = true;
+        }
+
+        /// <summary>
+        /// Creates a new Canvas to manipulate a specific content stream, which might be for example a page
+        /// or
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// stream.
+        /// </summary>
+        /// <param name="pdfCanvas">the low-level content stream writer</param>
+        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        public Canvas(PdfCanvas pdfCanvas, Rectangle rootArea)
+            : base() {
+            this.pdfDocument = pdfCanvas.GetDocument();
+            this.pdfCanvas = pdfCanvas;
+            this.rootArea = rootArea;
         }
 
         /// <summary>
@@ -118,7 +133,12 @@ namespace iText.Layout {
         /// </summary>
         /// <param name="pdfCanvas">the low-level content stream writer</param>
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
-        /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
+        /// <param name="rootArea">
+        /// the maximum area that the Canvas may write upon
+        /// To be removed in 7.2
+        /// </param>
+        [System.ObsoleteAttribute(@"use Canvas(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Geom.Rectangle) instead."
+            )]
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
             : base() {
             this.pdfDocument = pdfDocument;
@@ -128,11 +148,25 @@ namespace iText.Layout {
 
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
         /// <param name="pdfCanvas">The low-level content stream writer</param>
-        /// <param name="pdfDocument">The document that the resulting content stream will be written to</param>
         /// <param name="rootArea">The maximum area that the Canvas may write upon</param>
         /// <param name="immediateFlush">Whether to flush the canvas immediately after operations, false otherwise</param>
+        public Canvas(PdfCanvas pdfCanvas, Rectangle rootArea, bool immediateFlush)
+            : this(pdfCanvas, rootArea) {
+            this.immediateFlush = immediateFlush;
+        }
+
+        /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
+        /// <param name="pdfCanvas">The low-level content stream writer</param>
+        /// <param name="pdfDocument">The document that the resulting content stream will be written to</param>
+        /// <param name="rootArea">The maximum area that the Canvas may write upon</param>
+        /// <param name="immediateFlush">
+        /// Whether to flush the canvas immediately after operations, false otherwise
+        /// To be removed in 7.2
+        /// </param>
+        [System.ObsoleteAttribute(@"use Canvas(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Geom.Rectangle, bool) instead."
+            )]
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool immediateFlush)
-            : this(pdfCanvas, pdfDocument, rootArea) {
+            : this(pdfCanvas, rootArea) {
             this.immediateFlush = immediateFlush;
         }
 
@@ -143,7 +177,7 @@ namespace iText.Layout {
         /// <param name="formXObject">the form</param>
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
-            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox().ToRectangle()) {
+            : this(new PdfCanvas(formXObject, pdfDocument), formXObject.GetBBox().ToRectangle()) {
         }
 
         /// <summary>

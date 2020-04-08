@@ -103,5 +103,16 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("Gs4", n4.GetValue());
             document.Close();
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNonExistentResourcesCategory() {
+            PdfResources resources = new PdfResources();
+            ICollection<PdfName> unknownResCategory = resources.GetResourceNames(new PdfName("UnknownResCategory"));
+            // assert returned value is properly functioning
+            PdfName randomResName = new PdfName("NonExistentResourceName");
+            NUnit.Framework.Assert.IsFalse(unknownResCategory.Contains(randomResName));
+            NUnit.Framework.Assert.IsFalse(unknownResCategory.Remove(randomResName));
+            NUnit.Framework.Assert.IsTrue(unknownResCategory.IsEmpty());
+        }
     }
 }

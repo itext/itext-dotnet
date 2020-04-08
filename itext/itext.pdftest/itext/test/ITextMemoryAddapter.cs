@@ -42,16 +42,39 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using Common.Logging;
 using Common.Logging.Simple;
 
 namespace iText.Test {
     public class ITextMemoryAddapter : CapturingLoggerFactoryAdapter {
+        private HashSet<String> expectedTemplates = new HashSet<string>();
+        
+        public void SetExpectedTemplates(HashSet<String> expectedTemplates) {
+            this.expectedTemplates.Clear();
+            this.expectedTemplates.UnionWith(expectedTemplates);
+        }
+        public void Clear() {
+            base.Clear();
+            expectedTemplates.Clear();
+        }
+        
         public override void AddEvent(CapturingLoggerEvent le) {
             Console.WriteLine(le.Source.Name + ": " + le.RenderedMessage);
-            if (le.Level >= LogLevel.Warn) {
+            if (le.Level >= LogLevel.Warn || IsExpectedMessage(le.RenderedMessage)) {
                 base.AddEvent(le);
             }
+        }
+        
+        private bool IsExpectedMessage(String message) {
+            if (message != null) {
+                foreach (var template in expectedTemplates) {
+                    if (LogListenerHelper.EqualsMessageByTemplate(message, template)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

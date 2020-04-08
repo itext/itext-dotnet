@@ -661,7 +661,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         void RangeTest(IntPoint Pt, ref bool useFullRange) {
             if (useFullRange) {
                 if (Pt.X > hiRange || Pt.Y > hiRange || -Pt.X > hiRange || -Pt.Y > hiRange)
-                    throw new ClipperException("Coordinate outside allowed range");
+                    throw new ClipperException(ClipperExceptionConstant.COORDINATE_OUTSIDE_ALLOWED_RANGE);
             } else if (Pt.X > loRange || Pt.Y > loRange || -Pt.X > loRange || -Pt.Y > loRange) {
                 useFullRange = true;
                 RangeTest(Pt, ref useFullRange);
@@ -4520,10 +4520,4 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         }
         //------------------------------------------------------------------------------
     }
-
-    class ClipperException : Exception {
-        public ClipperException(string description) : base(description) { }
-    }
-    //------------------------------------------------------------------------------
-
 } //end ClipperLib namespace

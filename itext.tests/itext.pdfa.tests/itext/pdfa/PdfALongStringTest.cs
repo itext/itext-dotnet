@@ -90,8 +90,8 @@ namespace iText.Pdfa {
                     }
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_" + file, destinationFolder
-                , "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp/PdfALongStringTest/cmp_"
+                 + file, destinationFolder, "diff_"));
         }
     }
 }

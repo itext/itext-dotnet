@@ -1024,6 +1024,11 @@ namespace iText.Forms {
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
+                if (formField == null) {
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, field.GetIndirectReference
+                        () == null ? field : field.GetIndirectReference()));
+                    continue;
+                }
                 PdfString fieldName = formField.GetFieldName();
                 String name;
                 if (fieldName == null) {

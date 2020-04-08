@@ -52,7 +52,6 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Extgstate;
-using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -402,47 +401,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
                     ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
-                canvas.Release();
-                page.Flush();
-            }
-            pdfDoc.Close();
-            PdfReader reader = new PdfReader(filename);
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
-            NUnit.Framework.Assert.AreEqual(author, info.Get(PdfName.Author).ToString(), "Author");
-            NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
-            NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
-            NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i = 1; i <= pageCount; i++) {
-                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
-                NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
-            }
-            pdfDocument.Close();
-        }
-
-#if !NETSTANDARD1_6
-        [NUnit.Framework.Timeout(0)]
-#endif
-        [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Too big result file. This test is for manual testing. -Xmx6g shall be set.")]
-        public virtual void HugeDocumentWithFullCompression() {
-            int pageCount = 800;
-            String filename = destinationFolder + "hugeDocumentWithFullCompression.pdf";
-            String author = "Alexander Chingarev";
-            String creator = "iText 6";
-            String title = "Empty iText 6 Document";
-            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetFullCompressionMode(true));
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++) {
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
-                    ), 72).ShowText(JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
-                PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Willaerts_Adam_The_Embarkation_of_the_Elector_Palantine_Oil_Canvas-huge.jpg"
-                    ));
-                canvas.AddXObject(xObject, 100, 500, 400);
                 canvas.Release();
                 page.Flush();
             }

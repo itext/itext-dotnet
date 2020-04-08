@@ -88,6 +88,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                         PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                     else {
+                        // we insert a newline character in the resulting string if the chunks are placed on different lines
+                        sb.Append('\n');
                         PutCharsWithIndex(chunk.GetText(), i, indexMap, sb);
                     }
                 }

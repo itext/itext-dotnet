@@ -56,6 +56,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Canvas.Parser.Util;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     /// <summary>Processor for a PDF content stream.</summary>
@@ -825,7 +826,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                         throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
                     }
                 }
-                // at this point, all we care about is the FONT entry in the GS dictionary TODO merge the whole gs dictionary
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);
                 if (fontParameter != null) {
                     PdfFont font = processor.GetFont(fontParameter.GetAsDictionary(0));
@@ -833,6 +833,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     processor.GetGraphicsState().SetFont(font);
                     processor.GetGraphicsState().SetFontSize(size);
                 }
+                PdfExtGState pdfExtGState = new PdfExtGState(gsDic.Clone(JavaCollectionsUtil.SingletonList(PdfName.Font)));
+                processor.GetGraphicsState().UpdateFromExtGState(pdfExtGState);
             }
         }
 
@@ -963,6 +965,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     }
                 }
             }
+            ILog logger = LogManager.GetLogger(typeof(PdfCanvasProcessor));
+            logger.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE, JavaUtil.ArraysToString
+                ((Object[])operands.ToArray()), pdfColorSpace.GetPdfObject()));
             return null;
         }
 

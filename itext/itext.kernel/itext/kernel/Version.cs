@@ -78,7 +78,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private const String release = "7.1.10";
+        private const String release = "7.1.11";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -99,7 +99,7 @@ namespace iText.Kernel {
             this.info = new VersionInfo(iTextProductName, release, producerLine, null);
         }
 
-        private Version(VersionInfo info, bool expired) {
+        internal Version(VersionInfo info, bool expired) {
             this.info = info;
             this.expired = expired;
         }
@@ -260,9 +260,45 @@ namespace iText.Kernel {
             return info;
         }
 
+        internal static String[] ParseVersionString(String version) {
+            String splitRegex = "\\.";
+            String[] split = iText.IO.Util.StringUtil.Split(version, splitRegex);
+            //Guard for empty versions and throw exceptions
+            if (split.Length == 0) {
+                throw new LicenseVersionException(LicenseVersionException.VERSION_STRING_IS_EMPTY_AND_CANNOT_BE_PARSED);
+            }
+            //Desired Format: X.Y.Z-....
+            //Also catch X, X.Y-...
+            String major = split[0];
+            //If no minor version is present, default to 0
+            String minor = "0";
+            if (split.Length > 1) {
+                minor = split[1].Substring(0);
+            }
+            //Check if both values are numbers
+            if (!IsVersionNumeric(major)) {
+                throw new LicenseVersionException(LicenseVersionException.MAJOR_VERSION_IS_NOT_NUMERIC);
+            }
+            if (!IsVersionNumeric(minor)) {
+                throw new LicenseVersionException(LicenseVersionException.MINOR_VERSION_IS_NOT_NUMERIC);
+            }
+            return new String[] { major, minor };
+        }
+
+        internal static bool IsVersionNumeric(String version) {
+            try {
+                int value = (int)Convert.ToInt32(version);
+                // parseInt accepts numbers which start with a plus sign, but for a version it's unacceptable
+                return value >= 0 && !version.Contains("+");
+            }
+            catch (FormatException) {
+                return false;
+            }
+        }
+
         /// <summary>Checks if the current object has been initialized with AGPL license.</summary>
         /// <returns>returns true if the current object has been initialized with AGPL license.</returns>
-        private bool IsAGPL() {
+        internal bool IsAGPL() {
             return GetVersion().IndexOf(AGPL, StringComparison.Ordinal) > 0;
         }
 
@@ -315,31 +351,6 @@ namespace iText.Kernel {
             }
         }
 
-        private static String[] ParseVersionString(String version) {
-            String splitRegex = "\\.";
-            String[] split = iText.IO.Util.StringUtil.Split(version, splitRegex);
-            //Guard for empty versions and throw exceptions
-            if (split.Length == 0) {
-                throw new LicenseVersionException(LicenseVersionException.VERSION_STRING_IS_EMPTY_AND_CANNOT_BE_PARSED);
-            }
-            //Desired Format: X.Y.Z-....
-            //Also catch X, X.Y-...
-            String major = split[0];
-            //If no minor version is present, default to 0
-            String minor = "0";
-            if (split.Length > 1) {
-                minor = split[1].Substring(0);
-            }
-            //Check if both values are numbers
-            if (!IsVersionNumeric(major)) {
-                throw new LicenseVersionException(LicenseVersionException.MAJOR_VERSION_IS_NOT_NUMERIC);
-            }
-            if (!IsVersionNumeric(minor)) {
-                throw new LicenseVersionException(LicenseVersionException.MINOR_VERSION_IS_NOT_NUMERIC);
-            }
-            return new String[] { major, minor };
-        }
-
         private static String[] GetLicenseeInfoFromLicenseKey(String validatorKey) {
             String licenseeInfoMethodName = "GetLicenseeInfoForVersion";
             Type klass = GetLicenseKeyClass();
@@ -364,18 +375,6 @@ namespace iText.Kernel {
             }
             //TODO: Log this exception?
             return result;
-        }
-
-        private static bool IsVersionNumeric(String version) {
-            //I did not want to introduce an extra dependency on apache.commons in order to use StringUtils.
-            //This small method is not the most optimal, but it should do for release
-            try {
-                Double.Parse(version, System.Globalization.CultureInfo.InvariantCulture);
-                return true;
-            }
-            catch (FormatException) {
-                return false;
-            }
         }
 
         private static iText.Kernel.Version AtomicSetVersion(iText.Kernel.Version newVersion) {

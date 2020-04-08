@@ -89,7 +89,7 @@ namespace iText.Kernel.Utils {
 
         private const String unexpectedNumberOfPages = "Unexpected number of pages for <filename>.";
 
-        private const String differentPages = "File file:///<filename> differs on page <pagenumber>.";
+        private const String differentPages = "File file://<filename> differs on page <pagenumber>.";
 
         private const String undefinedGsPath = "Path to GhostScript is not specified. Please use -DgsExec=<path_to_ghostscript> (e.g. -DgsExec=\"C:/Program Files/gs/gs9.14/bin/gswin32c.exe\")";
 
@@ -423,8 +423,8 @@ namespace iText.Kernel.Utils {
         public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas) {
             Init(outPdf, cmpPdf);
-            System.Console.Out.WriteLine("Out pdf: file:///" + UrlUtil.ToNormalizedURI(outPdf).AbsolutePath);
-            System.Console.Out.WriteLine("Cmp pdf: file:///" + UrlUtil.ToNormalizedURI(cmpPdf).AbsolutePath + "\n");
+            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
+            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
             return CompareVisually(outPath, differenceImagePrefix, ignoredAreas);
         }
 
@@ -597,8 +597,8 @@ namespace iText.Kernel.Utils {
         public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass) {
             Init(outPdf, cmpPdf);
-            System.Console.Out.WriteLine("Out pdf: file:///" + UrlUtil.ToNormalizedURI(outPdf).AbsolutePath);
-            System.Console.Out.WriteLine("Cmp pdf: file:///" + UrlUtil.ToNormalizedURI(cmpPdf).AbsolutePath + "\n");
+            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
+            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
             SetPassword(outPass, cmpPass);
             return CompareByContent(outPath, differenceImagePrefix, ignoredAreas);
         }
@@ -711,6 +711,46 @@ namespace iText.Kernel.Utils {
             CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpDict.GetIndirectReference(), outDict.GetIndirectReference
                 ());
             if (!CompareDictionariesExtended(outDict, cmpDict, currentPath, compareResult, excludedKeys)) {
+                System.Diagnostics.Debug.Assert(!compareResult.IsOk());
+                System.Console.Out.WriteLine(compareResult.GetReport());
+                return compareResult;
+            }
+            System.Diagnostics.Debug.Assert(compareResult.IsOk());
+            return null;
+        }
+
+        /// <summary>Compares structures of two corresponding streams from out and cmp PDF documents.</summary>
+        /// <remarks>
+        /// Compares structures of two corresponding streams from out and cmp PDF documents. You can roughly
+        /// imagine it as depth-first traversal of the two trees that represent pdf objects structure of the documents.
+        /// <para />
+        /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outStream">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// from the output file, which is to be compared to cmp-file stream.
+        /// </param>
+        /// <param name="cmpStream">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// from the cmp-file file, which is to be compared to output file stream.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="CompareResult"/>
+        /// instance containing differences between the two streams,
+        /// or
+        /// <see langword="null"/>
+        /// if streams are equal.
+        /// </returns>
+        public virtual CompareTool.CompareResult CompareStreamsStructure(PdfStream outStream, PdfStream cmpStream) {
+            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpStream.GetIndirectReference(), outStream
+                .GetIndirectReference());
+            if (!CompareStreamsExtended(outStream, cmpStream, currentPath, compareResult)) {
                 System.Diagnostics.Debug.Assert(!compareResult.IsOk());
                 System.Console.Out.WriteLine(compareResult.GetReport());
                 return compareResult;
@@ -847,11 +887,13 @@ namespace iText.Kernel.Utils {
         /// <param name="cmpXmlFile">absolute path to the cmp xml file to compare.</param>
         /// <returns>true if xml structures are identical, false otherwise.</returns>
         public virtual bool CompareXmls(String outXmlFile, String cmpXmlFile) {
-            System.Console.Out.WriteLine("Out xml: file:///" + UrlUtil.ToNormalizedURI(outXmlFile).AbsolutePath);
-            System.Console.Out.WriteLine("Cmp xml: file:///" + UrlUtil.ToNormalizedURI(cmpXmlFile).AbsolutePath + "\n"
-                );
-            return XmlUtils.CompareXmls(new FileStream(outXmlFile, FileMode.Open, FileAccess.Read), new FileStream(cmpXmlFile
-                , FileMode.Open, FileAccess.Read));
+            System.Console.Out.WriteLine("Out xml: " + UrlUtil.GetNormalizedFileUriString(outXmlFile));
+            System.Console.Out.WriteLine("Cmp xml: " + UrlUtil.GetNormalizedFileUriString(cmpXmlFile) + "\n");
+            using (Stream outXmlStream = FileUtil.GetInputStreamForFile(outXmlFile)) {
+                using (Stream cmpXmlStream = FileUtil.GetInputStreamForFile(cmpXmlFile)) {
+                    return XmlUtils.CompareXmls(outXmlStream, cmpXmlStream);
+                }
+            }
         }
 
         /// <summary>Compares document info dictionaries of two pdf documents.</summary>
@@ -1101,8 +1143,10 @@ namespace iText.Kernel.Utils {
                 if (equalPages != null && equalPages.Contains(i)) {
                     continue;
                 }
-                System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": file:///" + UrlUtil.
-                    ToNormalizedURI(imageFiles[i]).AbsolutePath + " ...");
+                System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
+                    (imageFiles[i].Name) + " ...");
+                System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
+                    (imageFiles[i].Name) + " ...");
                 FileStream is1 = new FileStream(imageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 FileStream is2 = new FileStream(cmpImageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 bool cmpResult = CompareStreams(is1, is2);
@@ -1224,9 +1268,9 @@ namespace iText.Kernel.Utils {
         }
 
         private void PrintOutCmpDirectories() {
-            System.Console.Out.WriteLine("Out file folder: file:///" + UrlUtil.ToNormalizedURI(new FileInfo(outPdf).DirectoryName
+            System.Console.Out.WriteLine("Out file folder: file://" + UrlUtil.ToNormalizedURI(new FileInfo(outPdf).DirectoryName
                 ).AbsolutePath);
-            System.Console.Out.WriteLine("Cmp file folder: file:///" + UrlUtil.ToNormalizedURI(new FileInfo(cmpPdf).DirectoryName
+            System.Console.Out.WriteLine("Cmp file folder: file://" + UrlUtil.ToNormalizedURI(new FileInfo(cmpPdf).DirectoryName
                 ).AbsolutePath);
         }
 

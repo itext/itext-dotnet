@@ -63,13 +63,14 @@ namespace iText.Layout.Font {
 
         protected internal readonly FontProvider provider;
 
+        [System.ObsoleteAttribute(@"This field will be renamed to additionalFonts in iText Core 7.2.")]
         protected internal readonly FontSet tempFonts;
 
-        protected internal FontSelectorStrategy(String text, FontProvider provider, FontSet tempFonts) {
+        protected internal FontSelectorStrategy(String text, FontProvider provider, FontSet additionalFonts) {
             this.text = text;
             this.index = 0;
             this.provider = provider;
-            this.tempFonts = tempFonts;
+            this.tempFonts = additionalFonts;
         }
 
         public virtual bool EndOfText() {

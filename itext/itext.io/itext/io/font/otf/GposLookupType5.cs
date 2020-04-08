@@ -58,10 +58,6 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            // TODO it seems that for complex cases (symbol1, symbol2, mark, symbol3) and (symbol1, symbol2, symbol3) compose a ligature,
-            // mark should be placed in the corresponding anchor of that ligature (second component's anchor).
-            // But for now we do not store all the substitution info and therefore not able to follow that logic.
-            // Place the mark symbol in the first available place for now.
             if (line.idx >= line.end) {
                 return false;
             }
@@ -70,41 +66,54 @@ namespace iText.IO.Font.Otf {
                 return false;
             }
             bool changed = false;
-            OpenTableLookup.GlyphIndexer gi = null;
+            OpenTableLookup.GlyphIndexer ligatureGlyphIndexer = null;
             foreach (GposLookupType5.MarkToLigature mb in marksligatures) {
                 OtfMarkRecord omr = mb.marks.Get(line.Get(line.idx).GetCode());
                 if (omr == null) {
                     continue;
                 }
-                if (gi == null) {
-                    gi = new OpenTableLookup.GlyphIndexer();
-                    gi.idx = line.idx;
-                    gi.line = line;
+                if (ligatureGlyphIndexer == null) {
+                    ligatureGlyphIndexer = new OpenTableLookup.GlyphIndexer();
+                    ligatureGlyphIndexer.idx = line.idx;
+                    ligatureGlyphIndexer.line = line;
                     while (true) {
-                        gi.PreviousGlyph(openReader, lookupFlag);
-                        if (gi.glyph == null) {
+                        ligatureGlyphIndexer.PreviousGlyph(openReader, lookupFlag);
+                        if (ligatureGlyphIndexer.glyph == null) {
                             break;
                         }
                         // not mark => ligature glyph
-                        if (!mb.marks.ContainsKey(gi.glyph.GetCode())) {
+                        if (!mb.marks.ContainsKey(ligatureGlyphIndexer.glyph.GetCode())) {
                             break;
                         }
                     }
-                    if (gi.glyph == null) {
+                    if (ligatureGlyphIndexer.glyph == null) {
                         break;
                     }
                 }
-                IList<GposAnchor[]> gpas = mb.ligatures.Get(gi.glyph.GetCode());
-                if (gpas == null) {
+                IList<GposAnchor[]> componentAnchors = mb.ligatures.Get(ligatureGlyphIndexer.glyph.GetCode());
+                if (componentAnchors == null) {
                     continue;
                 }
                 int markClass = omr.markClass;
-                for (int component = 0; component < gpas.Count; component++) {
-                    if (gpas[component][markClass] != null) {
-                        GposAnchor baseAnchor = gpas[component][markClass];
+                // TODO DEVSIX-3732 For complex cases like (glyph1, glyph2, mark, glyph3) and
+                //  (glyph1, mark, glyph2, glyph3) when the base glyphs compose a ligature and the mark
+                //  is attached to the ligature afterwards, mark should be placed in the corresponding anchor
+                //  of that ligature (by finding the right component's anchor).
+                //  Excerpt from Microsoft Docs: "For a given mark assigned to a particular class, the appropriate
+                //  base attachment point is determined by which ligature component the mark is associated with.
+                //  This is dependent on the original character string and subsequent character- or glyph-sequence
+                //  processing, not the font data alone. While a text-layout client is performing any character-based
+                //  preprocessing or any glyph-substitution operations using the GSUB table, the text-layout client
+                //  must keep track of the associations of marks to particular ligature-glyph components."
+                //  For now we do not store all the substitution info and therefore not able to follow that logic.
+                //  We place the mark symbol in the last available place for now (seems to be better default than
+                //  first available place).
+                for (int component = componentAnchors.Count - 1; component >= 0; component--) {
+                    if (componentAnchors[component][markClass] != null) {
+                        GposAnchor baseAnchor = componentAnchors[component][markClass];
                         GposAnchor markAnchor = omr.anchor;
-                        line.Add(line.idx, new Glyph(line.Get(line.idx), markAnchor.XCoordinate - baseAnchor.XCoordinate, markAnchor
-                            .YCoordinate - baseAnchor.YCoordinate, 0, 0, gi.idx - line.idx));
+                        line.Set(line.idx, new Glyph(line.Get(line.idx), baseAnchor.XCoordinate - markAnchor.XCoordinate, baseAnchor
+                            .YCoordinate - markAnchor.YCoordinate, 0, 0, ligatureGlyphIndexer.idx - line.idx));
                         changed = true;
                         break;
                     }
@@ -142,6 +151,8 @@ namespace iText.IO.Font.Otf {
         public class MarkToLigature {
             public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord>();
 
+            // Glyph id to list of components, each component has a separate list of attachment points
+            // defined for different mark classes
             public readonly IDictionary<int, IList<GposAnchor[]>> ligatures = new Dictionary<int, IList<GposAnchor[]>>
                 ();
         }

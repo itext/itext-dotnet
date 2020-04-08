@@ -124,7 +124,7 @@ namespace iText.Signatures {
         /// <returns>true if the verification succeeded</returns>
         public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate issuerCert, DateTime signDate
             ) {
-            if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE) {
+            if (crl == null || signDate == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
                 return false;
             }
             // We only check CRLs valid on the signing date for which the issuer matches

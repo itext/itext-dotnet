@@ -77,7 +77,7 @@ namespace iText.Layout {
             PdfCanvas pdfCanvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), pdf);
             Rectangle rectangle = new Rectangle(pageSize.GetX() + 36, pageSize.GetTop() - 80, pageSize.GetWidth() - 72
                 , 50);
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdf, rectangle);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, rectangle);
             canvas.Add(new Paragraph(new Link("Google link!", PdfAction.CreateURI("https://www.google.com")).SetUnderline
                 ().SetFontColor(ColorConstants.BLUE)));
             canvas.Close();

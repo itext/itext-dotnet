@@ -134,5 +134,15 @@ namespace iText.IO.Util {
         {
             return new FileInfo(filename).FullName;
         }
+        
+        /// <summary>
+        /// This method gets normalized uri string from a file.
+        /// </summary>
+        /// <param name="filename">a given filename</param>
+        /// <returns>a normalized uri string</returns>
+        public static String GetNormalizedFileUriString(String filename)
+        {
+            return "file://" + UrlUtil.ToNormalizedURI(filename).AbsolutePath;
+        }
     }
 }

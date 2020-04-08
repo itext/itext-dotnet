@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.pdftest</id>
-    <version>7.1.10</version>
+    <version>7.1.11</version>
     <title>iText 7 pdftest module</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
     <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>https://itextpdf.com/</projectUrl>
-    <iconUrl>https://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+    <icon>ITSC-avatar.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A special module for test purposes</description>
     <summary></summary>
@@ -27,5 +27,6 @@
 	<file src="itext7.pdftest.props" target="Build" />
     <file src="..\..\gnu-agpl-v3.0.md" target="" />
     <file src="..\..\LICENSE.md" target="" />
+	<file src="..\..\ITSC-avatar.png" target="" />
   </files>
 </package>

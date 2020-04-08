@@ -41,11 +41,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Codec;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Xobject {
@@ -123,6 +127,79 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void TestFlateCalRgb() {
             TestFile("img_calrgb.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractByteAlignedG4TiffImageTest() {
+            String inFileName = sourceFolder + "extractByteAlignedG4TiffImage.pdf";
+            String outImageFileName = destinationFolder + "extractedByteAlignedImage.png";
+            String cmpImageFileName = sourceFolder + "cmp_extractByteAlignedG4TiffImage.png";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+            processor.ProcessPageContent(pdfDocument.GetPage(1));
+            IList<byte[]> images = listener.GetImages();
+            NUnit.Framework.Assert.AreEqual(1, images.Count);
+            using (FileStream fos = new FileStream(outImageFileName, FileMode.Create)) {
+                fos.Write(images[0], 0, images.Count);
+            }
+            // expected and actual are swapped here for simplicity
+            int expectedLen = images[0].Length;
+            byte[] buf = new byte[expectedLen];
+            using (FileStream @is = new FileStream(cmpImageFileName, FileMode.Open, FileAccess.Read)) {
+                int read = @is.JRead(buf, 0, buf.Length);
+                NUnit.Framework.Assert.AreEqual(expectedLen, read);
+                read = @is.JRead(buf, 0, buf.Length);
+                NUnit.Framework.Assert.IsTrue(read <= 0);
+            }
+            NUnit.Framework.Assert.AreEqual(images[0], buf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExpectedByteAlignedTiffImageExtractionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //Byte-aligned image is expected in pdf file, but in fact it's not
+                String inFileName = sourceFolder + "expectedByteAlignedTiffImageExtraction.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+                GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+                processor.ProcessPageContent(pdfDocument.GetPage(1));
+            }
+            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines)))
+;
+        }
+
+        private class ImageExtractor : IEventListener {
+            private IList<byte[]> images = new List<byte[]>();
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                switch (type) {
+                    case EventType.RENDER_IMAGE: {
+                        ImageRenderInfo renderInfo = (ImageRenderInfo)data;
+                        byte[] bytes = renderInfo.GetImage().GetImageBytes();
+                        this.images.Add(bytes);
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
+            }
+
+            public virtual IList<byte[]> GetImages() {
+                return this.images;
+            }
+
+            internal ImageExtractor(GetImageBytesTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly GetImageBytesTest _enclosing;
         }
 
         private void TestFile(String filename, String objectid, String expectedImageFormat) {

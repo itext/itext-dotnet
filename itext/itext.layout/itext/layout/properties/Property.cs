@@ -203,6 +203,8 @@ namespace iText.Layout.Properties {
 
         public const int LINE_DRAWER = 35;
 
+        public const int LINE_HEIGHT = 124;
+
         public const int LINK_ANNOTATION = 88;
 
         public const int LIST_START = 36;
@@ -243,6 +245,8 @@ namespace iText.Layout.Properties {
 
         public const int OPACITY = 92;
 
+        public const int ORPHANS_CONTROL = 121;
+
         public const int OUTLINE = 106;
 
         public const int OUTLINE_OFFSET = 107;
@@ -266,6 +270,8 @@ namespace iText.Layout.Properties {
         public const int PAGE_NUMBER = 51;
 
         public const int POSITION = 52;
+
+        public const int RENDERING_MODE = 123;
 
         public const int RIGHT = 54;
 
@@ -330,6 +336,8 @@ namespace iText.Layout.Properties {
         /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;
 
+        public const int WIDOWS_CONTROL = 122;
+
         public const int WIDTH = 77;
 
         public const int WORD_SPACING = 78;
@@ -349,7 +357,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 119;
+        private const int MAX_INHERITED_PROPERTY_ID = 124;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -375,6 +383,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.NO_SOFT_WRAP_INLINE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.ORPHANS_CONTROL] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;
@@ -383,9 +392,12 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.WIDOWS_CONTROL] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TAGGING_HELPER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TYPOGRAPHY_CONFIG] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.RENDERING_MODE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_HEIGHT] = true;
         }
 
         /// <summary>

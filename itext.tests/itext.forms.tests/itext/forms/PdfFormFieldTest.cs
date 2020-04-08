@@ -72,6 +72,16 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        // The first message for the case when the FormField is null,
+        // the second message when the FormField is a indirect reference to null.
+        [LogMessage(iText.IO.LogMessageConstant.CANNOT_CREATE_FORMFIELD, Count = 2)]
+        public virtual void NullFormFieldTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "nullFormField.pdf"));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FormFieldTest01() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
@@ -479,8 +489,8 @@ namespace iText.Forms {
             PdfFormField field = fields.Get("Text1");
             field.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
             field.SetValue("New value size must be 8, but with different font.");
-            new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), pdfDoc, new Rectangle(30, 500, 500, 200)).Add(new Paragraph
-                ("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."));
+            new Canvas(new PdfCanvas(pdfDoc.GetFirstPage()), new Rectangle(30, 500, 500, 200)).Add(new Paragraph("The text font after modification it via PDF viewer (e.g. Acrobat) shall be preserved."
+                ));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
@@ -850,6 +860,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfWithDifferentFieldsTest() {
             String fileName = destinationFolder + "pdfWithDifferentFieldsTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
@@ -1080,6 +1091,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         public virtual void ChoiceFieldAutoSize02Test() {
             String filename = destinationFolder + "choiceFieldAutoSize02Test.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));

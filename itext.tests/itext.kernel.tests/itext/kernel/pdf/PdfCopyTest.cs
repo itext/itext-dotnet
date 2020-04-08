@@ -220,6 +220,47 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CopyPageNoRotationToDocWithRotationInKidsPageTest() {
+            String src = sourceFolder + "srcFileWithSetRotation.pdf";
+            String dest = destinationFolder + "copyPageNoRotationToDocWithRotationInKidsPage.pdf";
+            String cmp = sourceFolder + "cmp_copyPageNoRotationToDocWithRotationInKidsPage.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(sourceFolder + "noRotationProp.pdf"));
+            sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), pdfDoc);
+            sourceDoc.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyPageNoRotationToDocWithRotationInPagesDictTest() {
+            //TODO: update cmp-files when DEVSIX-3635 will be fixed
+            String src = sourceFolder + "indirectPageProps.pdf";
+            String dest = destinationFolder + "copyPageNoRotationToDocWithRotationInPagesDict.pdf";
+            String cmp = sourceFolder + "cmp_copyPageNoRotationToDocWithRotationInPagesDict.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(sourceFolder + "noRotationProp.pdf"));
+            sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), pdfDoc);
+            sourceDoc.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyPageWithRotationInPageToDocWithRotationInPagesDictTest() {
+            String src = sourceFolder + "indirectPageProps.pdf";
+            String dest = destinationFolder + "copyPageWithRotationInPageToDocWithRotationInPagesDict.pdf";
+            String cmp = sourceFolder + "cmp_copyPageWithRotationInPageToDocWithRotationInPagesDict.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(sourceFolder + "srcFileCopyPageWithSetRotationValueInKids.pdf"
+                ));
+            sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), pdfDoc);
+            sourceDoc.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CopySelfContainedObject() {
             ByteArrayOutputStream inputBytes = new ByteArrayOutputStream();
             PdfDocument prepInputDoc = new PdfDocument(new PdfWriter(inputBytes));

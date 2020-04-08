@@ -567,9 +567,9 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR, Count = 72)]
+        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void CorruptedTagStructureTest01() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "cocacola_corruptedTagStruct.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "invalidMcr.pdf"));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
             document.Close();
         }

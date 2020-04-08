@@ -99,9 +99,18 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
+            UpdateChildrenParent();
             float curWidth = 0;
-            maxAscent = 0;
-            maxDescent = 0;
+            if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasChildRendererInHtmlMode
+                ()) {
+                float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender(this);
+                maxAscent = ascenderDescender[0];
+                maxDescent = ascenderDescender[1];
+            }
+            else {
+                maxAscent = 0;
+                maxDescent = 0;
+            }
             maxTextAscent = 0;
             maxTextDescent = 0;
             maxBlockAscent = -1e20f;
@@ -115,7 +124,6 @@ namespace iText.Layout.Renderer {
             else {
                 widthHandler = new MaxSumWidthHandler(minMaxWidth);
             }
-            UpdateChildrenParent();
             ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
             BaseDirection? baseDirection = ApplyOtf();
@@ -358,8 +366,16 @@ namespace iText.Layout.Renderer {
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is ILeafElementRenderer && childResult.GetStatus() != LayoutResult.NOTHING) {
-                    childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
-                    childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
+                    if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && 
+                        childRenderer is TextRenderer) {
+                        float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender((TextRenderer)childRenderer);
+                        childAscent = ascenderDescender[0];
+                        childDescent = ascenderDescender[1];
+                    }
+                    else {
+                        childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
+                        childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
+                    }
                 }
                 else {
                     if (isInlineBlockChild && childResult.GetStatus() != LayoutResult.NOTHING) {
@@ -901,6 +917,15 @@ namespace iText.Layout.Renderer {
             LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             return result.GetMinMaxWidth();
+        }
+
+        internal virtual bool HasChildRendererInHtmlMode() {
+            foreach (IRenderer childRenderer in childRenderers) {
+                if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         internal virtual float GetTopLeadingIndent(Leading leading) {

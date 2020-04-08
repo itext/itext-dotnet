@@ -71,6 +71,7 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
+        [Obsolete]
         protected internal float previousDescent = 0;
 
         protected internal IList<LineRenderer> lines = null;
@@ -87,6 +88,17 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            ParagraphOrphansControl orphansControl = this.GetProperty<ParagraphOrphansControl>(Property.ORPHANS_CONTROL
+                );
+            ParagraphWidowsControl widowsControl = this.GetProperty<ParagraphWidowsControl>(Property.WIDOWS_CONTROL);
+            if (orphansControl != null || widowsControl != null) {
+                return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
+                    );
+            }
+            return DirectLayout(layoutContext);
+        }
+
+        protected internal virtual LayoutResult DirectLayout(LayoutContext layoutContext) {
             bool wasHeightClipped = false;
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
@@ -160,7 +172,7 @@ namespace iText.Layout.Renderer {
                 currentRenderer.AddChild(child);
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
-            Leading leading = this.GetProperty<Leading>(Property.LEADING);
+            float previousDescent = 0;
             float lastLineBottomLeadingIndent = 0;
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
@@ -231,12 +243,14 @@ namespace iText.Layout.Renderer {
                     .LEFT);
                 ApplyTextAlignment(textAlignment, result, processedRenderer, layoutBox, floatRendererAreas, onlyOverflowedFloatsLeft
                     , lineIndent);
+                Leading leading = RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)
+                    ) ? null : this.GetProperty<Leading>(Property.LEADING);
                 // could be false if e.g. line contains only floats
                 bool lineHasContent = processedRenderer != null && processedRenderer.GetOccupiedArea().GetBBox().GetHeight
                     () > 0;
-                bool doesNotFit = processedRenderer == null;
+                bool isFit = processedRenderer != null;
                 float deltaY = 0;
-                if (!doesNotFit) {
+                if (isFit && !RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
                     if (lineHasContent) {
                         float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
                             .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
@@ -256,10 +270,10 @@ namespace iText.Layout.Renderer {
                         deltaY = processedRenderer != null && leading != null ? -processedRenderer.GetTopLeadingIndent(leading) : 
                             0;
                     }
-                    doesNotFit = leading != null && processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY < layoutBox.
-                        GetY();
+                    isFit = leading == null || processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY >= layoutBox.GetY
+                        ();
                 }
-                if (doesNotFit && (null == processedRenderer || IsOverflowFit(overflowY))) {
+                if (!isFit && (null == processedRenderer || IsOverflowFit(overflowY))) {
                     if (currentAreaPos + 1 < areas.Count) {
                         layoutBox = areas[++currentAreaPos].Clone();
                         lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
@@ -384,12 +398,14 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            float moveDown = lastLineBottomLeadingIndent;
-            if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
-                moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();
+            if (!RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                float moveDown = lastLineBottomLeadingIndent;
+                if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
+                    moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();
+                }
+                occupiedArea.GetBBox().MoveDown(moveDown);
+                occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
-            occupiedArea.GetBBox().MoveDown(moveDown);
-            occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             if (marginsCollapsingEnabled) {
                 if (childRenderers.Count > 0 && notAllKidsAreFloats) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);

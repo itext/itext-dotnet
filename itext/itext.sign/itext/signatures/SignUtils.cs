@@ -71,8 +71,6 @@ using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace iText.Signatures {
     internal sealed class SignUtils {
-        internal static readonly DateTime UNDEFINED_TIMESTAMP_DATE = DateTime.MaxValue;
-
         internal static String GetPrivateKeyAlgorithm(ICipherParameters cp) {
             String algorithm;
             if (cp is RsaKeyParameters) {

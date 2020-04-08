@@ -55,11 +55,16 @@ using iText.Test;
 
 namespace iText.Layout {
     public class CollapsingMarginsTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/CollapsingMarginsTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/CollapsingMarginsTest/";
+
+        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -72,16 +77,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 4);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             doc.Add(new Paragraph("marker text").SetMargin(0));
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TEXT_BYRON);
             for (int i = 0; i < 5; i++) {
-                p.Add(textByron);
+                p.Add(TEXT_BYRON);
             }
             Div div1 = new Div();
             Div div2 = new Div();
@@ -105,16 +106,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             doc.Add(new Paragraph("marker text").SetMargin(0));
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TEXT_BYRON);
             for (int i = 0; i < 3; i++) {
-                p.Add(textByron);
+                p.Add(TEXT_BYRON);
             }
             p.Add("When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
@@ -141,16 +138,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             doc.Add(new Paragraph("marker text").SetMargin(0));
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TEXT_BYRON);
             for (int i = 0; i < 3; i++) {
-                p.Add(textByron);
+                p.Add(TEXT_BYRON);
             }
             p.Add("When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
@@ -175,16 +168,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             doc.Add(new Paragraph("marker text").SetMargin(0));
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TEXT_BYRON);
             for (int i = 0; i < 3; i++) {
-                p.Add(textByron);
+                p.Add(TEXT_BYRON);
             }
             p.Add("When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
@@ -212,20 +201,41 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest05.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 2);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
-            Paragraph p = new Paragraph(textByron).SetBackgroundColor(ColorConstants.YELLOW);
+            Paragraph p = new Paragraph(TEXT_BYRON).SetBackgroundColor(ColorConstants.YELLOW);
             for (int i = 0; i < 3; i++) {
-                p.Add(textByron);
+                p.Add(TEXT_BYRON);
             }
             doc.Add(p);
             p.SetMarginTop(80);
             Div div = new Div();
             div.Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementCollapsingMarginsTest01() {
+            String outFileName = destinationFolder + "elementCollapsingMarginsTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_elementCollapsingMarginsTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            DrawPageBorders(pdfDocument, 1);
+            Document doc = new Document(pdfDocument);
+            Paragraph markerText = new Paragraph("Margin between this paragraph and next block is expected to be 170pt."
+                ).SetBackgroundColor(new DeviceRgb(65, 151, 29));
+            // greenish
+            Div div = new Div();
+            Paragraph p = new Paragraph(TEXT_BYRON);
+            div.Add(p).SetBackgroundColor(new DeviceRgb(209, 247, 29));
+            // yellowish
+            div.SetProperty(Property.COLLAPSING_MARGINS, true);
+            markerText.SetMarginBottom(20);
+            p.SetMarginTop(50);
+            div.SetMarginTop(150);
+            doc.Add(markerText);
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -249,19 +259,18 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ColumnRendererTest() {
             NUnit.Framework.Assert.That(() =>  {
-                // TODO DEVSIX-2901 the exception should not be thrown
+                /* TODO DEVSIX-2901 the exception should not be thrown
+                if after DEVSIX-2901 the exception persists,
+                change the type of the expected exception to a more specific one to make the test stricter.
+                */
                 String outFileName = destinationFolder + "columnRendererTest.pdf";
                 String cmpFileName = sourceFolder + "cmp_columnRendererTest.pdf";
                 PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-                String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                     + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                     + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                     + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
                 Document doc = new Document(pdfDocument);
                 doc.SetProperty(Property.COLLAPSING_MARGINS, true);
                 Paragraph p = new Paragraph();
                 for (int i = 0; i < 10; i++) {
-                    p.Add(textByron);
+                    p.Add(TEXT_BYRON);
                 }
                 Div div = new Div().Add(p);
                 IList<Rectangle> areas = new List<Rectangle>();
@@ -274,7 +283,7 @@ namespace iText.Layout {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                     , "diff"));
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentOutOfRangeException>())
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
 ;
         }
 

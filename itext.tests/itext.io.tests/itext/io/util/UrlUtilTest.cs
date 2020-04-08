@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Text;
 using iText.Test;
 
 namespace iText.IO.Util {
@@ -72,10 +73,23 @@ namespace iText.IO.Util {
         }
 
         [NUnit.Framework.Test]
-        public void nullBaseUriTest() {
+        public void NullBaseUriTest() {
             String expected = "";
             FileInfo tempFile = null;
             NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+        }
+
+        [NUnit.Framework.Test]
+        public void OpenStreamTest() {
+            String projectFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory);
+            string resPath = projectFolder + "/resources/itext/io/util/textFile.dat";
+            Stream openStream = UrlUtil.OpenStream(new Uri(resPath));
+
+            byte[] bytes = StreamUtil.InputStreamToArray(openStream);
+            String actual = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            NUnit.Framework.Assert.AreEqual("Hello world from text file!", actual);
+            
         }
     }
 }

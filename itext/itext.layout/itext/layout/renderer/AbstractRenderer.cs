@@ -2181,9 +2181,39 @@ namespace iText.Layout.Renderer {
             return fc;
         }
 
-        // This method is intended to get first valid PdfFont in this renderer, based of font property.
-        // It is usually done for counting some layout characteristics like ascender or descender.
-        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
+        /// <summary>
+        /// Gets any valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// for this renderer, based on
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.FONT_PROVIDER"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.FONT_SET"/>
+        /// properties.
+        /// </summary>
+        /// <remarks>
+        /// Gets any valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// for this renderer, based on
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.FONT_PROVIDER"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.FONT_SET"/>
+        /// properties.
+        /// This method will not change font property of renderer. Also it is not guarantied that returned font will contain
+        /// all glyphs used in renderer or its children.
+        /// <para />
+        /// This method is usually needed for evaluating some layout characteristics like ascender or descender.
+        /// </remarks>
+        /// <returns>
+        /// a valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance based on renderer
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// property.
+        /// </returns>
         internal virtual PdfFont ResolveFirstPdfFont() {
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
@@ -2192,7 +2222,7 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String || font is String[]) {
                     if (font is String) {
-                        // TODO remove this if-clause before 7.2
+                        // TODO DEVSIX-3814 remove this if-clause before 7.2
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
                             );
@@ -2203,8 +2233,12 @@ namespace iText.Layout.Renderer {
                     if (provider == null) {
                         throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
                     }
+                    FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
+                    if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
+                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                    }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return ResolveFirstPdfFont((String[])font, provider, fc);
+                    return ResolveFirstPdfFont((String[])font, provider, fc, fontSet);
                 }
                 else {
                     throw new InvalidOperationException("String[] or PdfFont expected as value of FONT property");
@@ -2212,13 +2246,31 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // This method is intended to get first valid PdfFont described in font string,
-        // with specific FontCharacteristics with the help of specified font provider.
-        // This method is intended to be called from previous method that deals with Font Property.
-        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
-        // TODO this mechanism does not take text into account
-        internal virtual PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc) {
-            return provider.GetPdfFont(provider.GetFontSelector(JavaUtil.ArraysAsList(font), fc).BestMatch());
+        /// <summary>
+        /// Get first valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// for this renderer, based on given font-families, font provider and font characteristics.
+        /// </summary>
+        /// <remarks>
+        /// Get first valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// for this renderer, based on given font-families, font provider and font characteristics.
+        /// This method will not change font property of renderer. Also it is not guarantied that returned font will contain
+        /// all glyphs used in renderer or its children.
+        /// <para />
+        /// This method is usually needed for evaluating some layout characteristics like ascender or descender.
+        /// </remarks>
+        /// <returns>
+        /// a valid
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance based on renderer
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// property.
+        /// </returns>
+        internal virtual PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc, 
+            FontSet additionalFonts) {
+            FontSelector fontSelector = provider.GetFontSelector(JavaUtil.ArraysAsList(font), fc, additionalFonts);
+            return provider.GetPdfFont(fontSelector.BestMatch(), additionalFonts);
         }
 
         internal static Border[] GetBorders(IRenderer renderer) {

@@ -400,8 +400,8 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile)).SetTagged();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas pdfCanvas = new PdfCanvas(page);
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDoc, page.GetPageSize().ApplyMargins(36
-                , 36, 36, 36, false));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, page.GetPageSize().ApplyMargins(36, 36, 36
+                , 36, false));
             canvas.EnableAutoTagging(page);
             Div div = new Div().SetBackgroundColor(ColorConstants.RED);
             Div fDiv = new Div().SetBackgroundColor(ColorConstants.BLUE).SetWidth(200).SetHeight(200);

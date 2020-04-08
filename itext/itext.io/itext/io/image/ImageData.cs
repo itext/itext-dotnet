@@ -71,6 +71,7 @@ namespace iText.IO.Image {
 
         protected internal int bpc = 1;
 
+        /// <summary>is the number of components used to encode colorspace, not actual colorspace.</summary>
         protected internal int colorSpace = -1;
 
         protected internal float[] decode;
@@ -192,6 +193,8 @@ namespace iText.IO.Image {
             return originalType;
         }
 
+        /// <summary>Gets the number of components used to encode colorspace, not actual colorspace.</summary>
+        /// <returns>the number of components used to encode colorspace</returns>
         public virtual int GetColorSpace() {
             return colorSpace;
         }

@@ -481,7 +481,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets the names of all the added resources.</summary>
         /// <returns>the name of all the added resources.</returns>
         public virtual ICollection<PdfName> GetResourceNames() {
-            // TODO: isn't it better to use HashSet? Do we really need certain order?
             ICollection<PdfName> names = new SortedSet<PdfName>();
             foreach (PdfName resType in GetPdfObject().KeySet()) {
                 names.AddAll(GetResourceNames(resType));
@@ -530,8 +529,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual ICollection<PdfName> GetResourceNames(PdfName resType) {
             PdfDictionary resourceCategory = GetPdfObject().GetAsDictionary(resType);
-            // TODO: TreeSet or HashSet enough?
-            return resourceCategory == null ? new SortedSet<PdfName>() : resourceCategory.KeySet();
+            return resourceCategory == null ? JavaCollectionsUtil.EmptySet<PdfName>() : resourceCategory.KeySet();
         }
 
         /// <summary>

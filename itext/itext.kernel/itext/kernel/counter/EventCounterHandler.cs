@@ -164,6 +164,28 @@ namespace iText.Kernel.Counter {
         }
 
         /// <summary>
+        /// Checks whether the specified
+        /// <see cref="IEventCounterFactory"/>
+        /// is registered.
+        /// </summary>
+        /// <param name="factory">
+        /// 
+        /// <see cref="IEventCounterFactory"/>
+        /// to be checked
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified factory is registered
+        /// </returns>
+        public virtual bool IsRegistered(IEventCounterFactory factory) {
+            if (factory != null) {
+                return factories.ContainsKey(factory);
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Unregister specified
         /// <see cref="IEventCounterFactory"/>.
         /// </summary>

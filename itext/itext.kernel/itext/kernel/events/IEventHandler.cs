@@ -54,6 +54,6 @@ namespace iText.Kernel.Events {
         /// associated to the specified Event or, if available, the PdfPage instance.
         /// </remarks>
         /// <param name="event">the Event that needs to be processed</param>
-        void HandleEvent(Event @event);
+        void HandleEvent(iText.Kernel.Events.Event @event);
     }
 }

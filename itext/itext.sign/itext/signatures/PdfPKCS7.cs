@@ -446,7 +446,7 @@ namespace iText.Signatures {
         /// <returns>Value of property signDate.</returns>
         public virtual DateTime GetSignDate() {
             DateTime dt = GetTimeStampDate();
-            if (dt == SignUtils.UNDEFINED_TIMESTAMP_DATE) {
+            if (dt == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
                 return this.signDate;
             }
             else {
@@ -1291,11 +1291,17 @@ namespace iText.Signatures {
             return timeStampToken;
         }
 
-        /// <summary>Gets the timestamp date</summary>
-        /// <returns>a date</returns>
+        /// <summary>Gets the timestamp date.</summary>
+        /// <remarks>
+        /// Gets the timestamp date.
+        /// In case the signed document doesn't contain timestamp,
+        /// <see cref="TimestampConstants.UNDEFINED_TIMESTAMP_DATE"/>
+        /// will be returned.
+        /// </remarks>
+        /// <returns>the timestamp date</returns>
         public virtual DateTime GetTimeStampDate() {
             if (timeStampToken == null) {
-                return (DateTime)SignUtils.UNDEFINED_TIMESTAMP_DATE;
+                return (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
             }
             return SignUtils.GetTimeStampDate(timeStampToken);
         }

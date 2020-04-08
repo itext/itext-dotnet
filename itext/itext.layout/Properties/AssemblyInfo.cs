@@ -22,8 +22,8 @@ using Versions.Attributes;
 
 [assembly: Guid("fd0a08a8-0f82-4d6f-a3db-7b8f3f9302b4")]
 
-[assembly: TypographyVersion("2.0.5.0")]
+[assembly: TypographyVersion("2.0.6.0")]
 
-[assembly: AssemblyVersion("7.1.10.0")]
-[assembly: AssemblyFileVersion("7.1.10.0")]
-[assembly: AssemblyInformationalVersion("7.1.10")]
+[assembly: AssemblyVersion("7.1.11.0")]
+[assembly: AssemblyFileVersion("7.1.11.0")]
+[assembly: AssemblyInformationalVersion("7.1.11")]

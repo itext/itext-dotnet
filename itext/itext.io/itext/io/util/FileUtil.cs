@@ -134,6 +134,10 @@ namespace iText.IO.Util {
         public static FileStream GetFileOutputStream(FileInfo file) {
             return file.Open(FileMode.Create);
         }
+        
+        public static FileStream GetInputStreamForFile(String path) {
+            return new FileStream(path, FileMode.Open, FileAccess.Read);
+        }
 
         public static FileStream GetRandomAccessFile(FileInfo file) {
             return file.Open(FileMode.Open);

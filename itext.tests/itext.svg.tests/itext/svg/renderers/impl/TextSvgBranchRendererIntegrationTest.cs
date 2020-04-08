@@ -229,5 +229,23 @@ namespace iText.Svg.Renderers.Impl {
             , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TextFontSizeEmUnitsTest() {
+            // TODO (DEVSIX-3636) Change cmp after fixing
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFontSizeEmUnitsTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextFontSizeRemUnitsTest() {
+            // TODO (DEVSIX-3636) Change cmp after fixing
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFontSizeRemUnitsTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextFontSizeExUnitsTest() {
+            // TODO (DEVSIX-3636) Change cmp after fixing
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFontSizeExUnitsTest");
+        }
     }
 }

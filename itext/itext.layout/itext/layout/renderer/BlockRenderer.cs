@@ -769,7 +769,10 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }
                 else {
-                    if (IsOverflowFit(overflowY) && blockBottom < layoutBox.GetBottom()) {
+                    // Because of float precision inaccuracy, iText can incorrectly calculate that the block of fixed height
+                    // needs to be split. As a result, an empty block with a height equal to sum of paddings
+                    // may appear on the next area. To prevent such situations epsilon is used.
+                    if (IsOverflowFit(overflowY) && blockBottom + EPS < layoutBox.GetBottom()) {
                         float hDelta = occupiedArea.GetBBox().GetBottom() - layoutBox.GetBottom();
                         occupiedArea.GetBBox().IncreaseHeight(hDelta).SetY(layoutBox.GetBottom());
                         if (occupiedArea.GetBBox().GetHeight() < 0) {

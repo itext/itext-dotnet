@@ -101,7 +101,7 @@ namespace iText.Test {
         }
 
         public static void PrintPathToConsole(String path, String comment) {
-            Console.Out.WriteLine(comment + "file:///" + UrlUtil.ToNormalizedURI(new FileInfo(path)).AbsolutePath);
+            Console.Out.WriteLine(comment + "file://" + UrlUtil.ToNormalizedURI(new FileInfo(path)).AbsolutePath);
         }
 
         protected virtual byte[] ReadFile(String filename) {

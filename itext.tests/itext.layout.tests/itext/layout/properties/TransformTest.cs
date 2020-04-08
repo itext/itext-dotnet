@@ -21,9 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
+using iText.Test;
 
 namespace iText.Layout.Properties {
-    public class TransformTest {
+    public class TransformTest : ExtendedITextTest {
         // AffineTransform.TYPE_UNKNOWN
         private const float type = -1;
 
