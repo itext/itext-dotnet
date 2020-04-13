@@ -71,6 +71,21 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CopySeveralPagesToDocumentWithInheritedPageRotationTest() {
+            //TODO: update cmp-files when DEVSIX-3635 will be fixed
+            String outputFileName = destinationFolder + "copySeveralPagesToDocumentWithInheritedPageRotation.pdf";
+            String cmpFileName = sourceFolder + "cmp_copySeveralPagesToDocumentWithInheritedPageRotation.pdf";
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "noPagesRotation.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(sourceFolder + "addSeveralPagesToDocumentWithInheritedPageRotation.pdf"
+                ), new PdfWriter(outputFileName));
+            pdfDoc1.CopyPagesTo(1, 2, pdfDoc2);
+            pdfDoc1.Close();
+            pdfDoc2.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MediaBoxInheritance() {
             String inputFileName = sourceFolder + "mediaBoxInheritanceTestSource.pdf";
             PdfDocument outFile = new PdfDocument(new PdfReader(inputFileName));
