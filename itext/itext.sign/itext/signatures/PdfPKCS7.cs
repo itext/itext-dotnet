@@ -197,7 +197,7 @@ namespace iText.Signatures {
                 version = ((DerInteger)content[0]).Value.IntValue;
                 // the digestAlgorithms
                 digestalgos = new HashSet<String>();
-                IEnumerator e_1 = ((Asn1Set)content[1]).GetObjects();
+                IEnumerator e_1 = ((Asn1Set)content[1]).GetEnumerator();
                 while (e_1.MoveNext()) {
                     Asn1Sequence s = (Asn1Sequence)e_1.Current;
                     DerObjectIdentifier o = (DerObjectIdentifier)s[0];
@@ -220,12 +220,12 @@ namespace iText.Signatures {
                 certs = SignUtils.ReadAllCerts(contentsKey);
                 /*
                 The following workaround was provided by Alfonso Massa, but it doesn't always work either.
-                
+
                 ASN1Set certSet = null;
                 ASN1Set crlSet = null;
                 while (content.getObjectAt(next) instanceof ASN1TaggedObject) {
                 ASN1TaggedObject tagged = (ASN1TaggedObject)content.getObjectAt(next);
-                
+
                 switch (tagged.getTagNo()) {
                 case 0:
                 certSet = ASN1Set.getInstance(tagged, false);
@@ -239,7 +239,7 @@ namespace iText.Signatures {
                 ++next;
                 }
                 certs = new ArrayList<Certificate>(certSet.size());
-                
+
                 CertificateFactory certFact = CertificateFactory.getInstance("X.509", new BouncyCastleProvider());
                 for (Enumeration en = certSet.getObjects(); en.hasMoreElements();) {
                 ASN1Primitive obj = ((ASN1Encodable)en.nextElement()).toASN1Primitive();
