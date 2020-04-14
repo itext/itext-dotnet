@@ -856,6 +856,26 @@ namespace iText.Kernel.Pdf {
             CompareXrefTables(xrefString, expected);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ReadingXrefWithLotsOfFreeObjTest() {
+            String input = sourceFolder + "readingXrefWithLotsOfFreeObj.pdf";
+            String output = destinationFolder + "result_readingXrefWithLotsOfFreeObj.pdf";
+            //Test for array out of bounds when a pdf contains multiple free references
+            PdfDocument doc = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+            int actualNumberOfObj = doc.GetNumberOfPdfObjects();
+            NUnit.Framework.Assert.AreEqual(68, actualNumberOfObj);
+            NUnit.Framework.Assert.IsNull(doc.GetPdfObject(7));
+            PdfXrefTable xref = doc.GetXref();
+            int freeRefsCount = 0;
+            for (int i = 0; i < xref.Size(); i++) {
+                if (xref.Get(i).IsFree()) {
+                    freeRefsCount = freeRefsCount + 1;
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(31, freeRefsCount);
+            doc.Close();
+        }
+
         private void CompareXrefTables(String[] xrefString, String[] expected) {
             NUnit.Framework.Assert.AreEqual(expected.Length, xrefString.Length);
             for (int i = 0; i < xrefString.Length; ++i) {
