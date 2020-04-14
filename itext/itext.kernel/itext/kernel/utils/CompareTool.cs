@@ -42,10 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Common.Logging;
 using iText.IO.Font;
@@ -112,6 +114,7 @@ namespace iText.Kernel.Utils {
         private String gsExec;
 
         private String compareExec;
+        private bool compareExecIsLegacyIM;
 
         private String cmpPdf;
 
@@ -143,10 +146,122 @@ namespace iText.Kernel.Utils {
 
         private IMetaInfo metaInfo;
 
+        private class VersionInNameComparer : IComparer<string>
+        {
+            public int Compare(string a, string b)
+            {
+                string na = System.IO.Path.GetFileName(a);
+                na = Regex.Replace(na, @"[^\d]+", " ");
+                string[] p = na.Split(' ');
+
+                string nb = System.IO.Path.GetFileName(b);
+                nb = Regex.Replace(nb, @"[^\d]+", " ");
+                string[] q = nb.Split(' ');
+
+                for (int i = 0, len = Math.Max(p.Length, q.Length); i < len; i++)
+                {
+                    int va, vb;
+                    // Edge cases:
+                    // - evaluate "1" to be LESS than "1.0"
+                    // - evaluate any non-number-carrying string as LESS than any number carrying one, even when it's only "0"
+                    if (i < p.Length)
+                        int.TryParse(p[i], out va);
+                    else
+                        va = -1;
+                    if (i < q.Length)
+                        int.TryParse(q[i], out vb);
+                    else
+                        vb = -1;
+                    int diff = vb - va;
+                    if (diff != 0)
+                    {
+                        return diff;
+                    }
+                }
+                return String.Compare(a, b);
+            }
+        }
+
         /// <summary>Creates an instance of the CompareTool.</summary>
         public CompareTool() {
+            // Set up common code for both 'when not specified via environment variables, do try to find it on our own' code sections below:
+            //
+            Func<string, string, string[]> GetDirs = (path, wildcard) =>
+            {
+                try
+                {
+                    return Directory.GetDirectories(path, wildcard, SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex)
+                {
+                    string[] rv = { };
+                    return rv;
+                }
+            };
+            Func<List<string>, string, string, string> CheckForSuitableExe = (paths, exe1, exe2) =>
+            {
+                for (int i = 0, len = paths.Count(); i < len; i++)
+                {
+                    string p = System.IO.Path.Combine(paths[i], exe1);
+                    p = Regex.Replace(p, @"\\", @"/");
+                    string match = null;
+                    if (File.Exists(p) && new FileInfo(p).CanExecute())
+                    {
+                        // we've got a potential match, which can only be superceded by the second (optional!) exe being available as well:
+                        match = p;
+                    }
+                    if (exe2 != null)
+                    {
+                        // check whether the (optional!) second exe is available: we're fine with that and consider is equal to exe1
+                        p = System.IO.Path.Combine(paths[i], exe2);
+                        p = Regex.Replace(p, @"\\", @"/");
+                        if (File.Exists(p) && new FileInfo(p).CanExecute())
+                        {
+                            match = p;
+                        }
+                    }
+                    if (match != null)
+                    {
+                        return match;
+                    }
+                }
+                return null;
+            };
+
+            string dir = SystemUtil.GetEnvironmentVariable("ProgramFiles") ?? @"C:/Program Files";
+            dir = dir.Replace(" (x86)", "");   // make sure we always point at both 64 and 32 program directories
+            //
+            // --- done ---
+
             gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
+            if (gsExec == null) {
+                // attempt to locate GhostScript on this machine by ourselves: search both 64 and 32bit install directories
+                List<string> files = new List<string>(GetDirs(System.IO.Path.Combine(dir, "gs"), "gs*.*"));
+                files.AddRange(GetDirs(System.IO.Path.Combine(dir + " (x86)", "gs"), "gs*.*"));
+                // Now sort the paths so that the latest GhostScript version install directory ends up on top.
+                // When it exists, but has no suitable GhostScript binary inside, we consider it a b0rked/uninstalled remainder and try the next entry.
+                files.Sort(new VersionInNameComparer());
+                gsExec = CheckForSuitableExe(files, "bin/gswin32c.exe", "bin/gswin64c.exe");
+            }
+
             compareExec = SystemUtil.GetEnvironmentVariable("compareExec");
+            if (compareExec == null)
+            {
+                // attempt to locate ImageMagick on this machine by ourselves: search both 64 and 32bit install directories
+                List<string> files = new List<string>(GetDirs(dir, "ImageMagick*"));
+                files.AddRange(GetDirs(dir + " (x86)", "ImageMagick*.*"));
+                // Now sort the paths so that the latest ImageMagick version install directory ends up on top.
+                // When it exists, but has no suitable ImageMagick binary inside, we consider it a b0rked/uninstalled remainder and try the next entry.
+                files.Sort(new VersionInNameComparer());
+                compareExec = CheckForSuitableExe(files, "magick.exe", "compare.exe");
+            }
+
+            if (compareExec != null)
+            {
+                // Now detect whether this is a ImageMagick 7+ modern or 6- Legacy install.
+                // See also: https://imagemagick.org/script/porting.php
+                compareExecIsLegacyIM = !compareExec.ToLower().EndsWith("magick.exe"); // it's either 'magick compare' or 'compare', depending on IM version being used.
+            }
         }
 
         /// <summary>
@@ -321,7 +436,7 @@ namespace iText.Kernel.Utils {
         /// class description.
         /// </remarks>
         /// <returns>
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// instance to be passed later to the
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>
@@ -357,7 +472,7 @@ namespace iText.Kernel.Utils {
         /// class description.
         /// </remarks>
         /// <returns>
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
         /// instance to be passed later to the
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>
@@ -644,7 +759,7 @@ namespace iText.Kernel.Utils {
         /// from the cmp-file file, which is to be compared to output file dictionary.
         /// </param>
         /// <returns>
-        /// 
+        ///
         /// <see cref="CompareResult"/>
         /// instance containing differences between the two dictionaries,
         /// or
@@ -695,7 +810,7 @@ namespace iText.Kernel.Utils {
         /// which are to be skipped during comparison.
         /// </param>
         /// <returns>
-        /// 
+        ///
         /// <see cref="CompareResult"/>
         /// instance containing differences between the two dictionaries,
         /// or
@@ -739,7 +854,7 @@ namespace iText.Kernel.Utils {
         /// from the cmp-file file, which is to be compared to output file stream.
         /// </param>
         /// <returns>
-        /// 
+        ///
         /// <see cref="CompareResult"/>
         /// instance containing differences between the two streams,
         /// or
@@ -1159,8 +1274,8 @@ namespace iText.Kernel.Utils {
                         String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].FullName).Replace("<image2>", cmpImageFiles
                             [i].FullName).Replace("<difference>", outPath + differenceImagePrefix + JavaUtil.IntegerToString(i + 1
                             ) + ".png");
-                        if (!SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
-                            differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + JavaUtil.IntegerToString(i 
+                        if (!SystemUtil.RunProcessAndWait(compareExec, (compareExecIsLegacyIM ? "" : "compare ") + currCompareParams)) {
+                            differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + JavaUtil.IntegerToString(i
                                 + 1) + ".png for more details.";
                         }
                     }
@@ -1174,7 +1289,7 @@ namespace iText.Kernel.Utils {
                 String errorMessage = differentPages.Replace("<filename>", UrlUtil.ToNormalizedURI(outPdf).AbsolutePath).Replace
                     ("<pagenumber>", ListDiffPagesAsString(diffPages));
                 if (!compareExecIsOk) {
-                    errorMessage += "\nYou can optionally specify path to ImageMagick compare tool (e.g. -DcompareExec=\"C:/Program Files/ImageMagick-6.5.4-2/compare.exe\") to visualize differences.";
+                    errorMessage += "\nYou can optionally specify path to ImageMagick compare tool (e.g. -DcompareExec=\"C:/Program Files/ImageMagick-6.5.4-2/compare.exe\" or -DcompareExec=\"C:/Program Files/ImageMagick-7.0.10.Q16-HDRI/magick.exe\") to visualize differences.";
                 }
                 return errorMessage;
             }
@@ -1254,7 +1369,7 @@ namespace iText.Kernel.Utils {
         /// <param name="outPath">Path to the output folder.</param>
         private void RunGhostScriptImageGeneration(String outPath) {
             if (!FileUtil.DirectoryExists(outPath)) {
-                throw new CompareTool.CompareToolExecutionException(this, cannotOpenOutputDirectory.Replace("<filename>", 
+                throw new CompareTool.CompareToolExecutionException(this, cannotOpenOutputDirectory.Replace("<filename>",
                     outPdf));
             }
             String currGsParams = gsParams.Replace("<outputfile>", outPath + cmpImage).Replace("<inputfile>", cmpPdf);
@@ -1348,7 +1463,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private String CompareVisuallyAndCombineReports(String compareByFailContentReason, String outPath, String 
+        private String CompareVisuallyAndCombineReports(String compareByFailContentReason, String outPath, String
             differenceImagePrefix, IDictionary<int, IList<Rectangle>> ignoredAreas, IList<int> equalPages) {
             System.Console.Out.WriteLine("Fail");
             System.Console.Out.Flush();
@@ -1362,7 +1477,7 @@ namespace iText.Kernel.Utils {
             return message;
         }
 
-        private void LoadPagesFromReader(PdfDocument doc, IList<PdfDictionary> pages, IList<PdfIndirectReference> 
+        private void LoadPagesFromReader(PdfDocument doc, IList<PdfDictionary> pages, IList<PdfIndirectReference>
             pagesRef) {
             int numOfPages = doc.GetNumberOfPages();
             for (int i = 0; i < numOfPages; ++i) {
@@ -1677,7 +1792,7 @@ namespace iText.Kernel.Utils {
                 }
             }
             if (cmpDirectObj.IsDictionary()) {
-                return CompareDictionariesExtended((PdfDictionary)outDirectObj, (PdfDictionary)cmpDirectObj, currentPath, 
+                return CompareDictionariesExtended((PdfDictionary)outDirectObj, (PdfDictionary)cmpDirectObj, currentPath,
                     compareResult);
             }
             else {
@@ -1936,7 +2051,7 @@ namespace iText.Kernel.Utils {
             return bytes;
         }
 
-        private bool CompareBooleansExtended(PdfBoolean outBoolean, PdfBoolean cmpBoolean, CompareTool.ObjectPath 
+        private bool CompareBooleansExtended(PdfBoolean outBoolean, PdfBoolean cmpBoolean, CompareTool.ObjectPath
             currentPath, CompareTool.CompareResult compareResult) {
             if (cmpBoolean.GetValue() == outBoolean.GetValue()) {
                 return true;
@@ -2406,7 +2521,7 @@ namespace iText.Kernel.Utils {
             }
 
             public override bool Equals(Object obj) {
-                return obj.GetType() == GetType() && baseCmpObject.Equals(((CompareTool.ObjectPath)obj).baseCmpObject) && 
+                return obj.GetType() == GetType() && baseCmpObject.Equals(((CompareTool.ObjectPath)obj).baseCmpObject) &&
                     baseOutObject.Equals(((CompareTool.ObjectPath)obj).baseOutObject) && Enumerable.SequenceEqual(path, ((
                     CompareTool.ObjectPath)obj).path);
             }
