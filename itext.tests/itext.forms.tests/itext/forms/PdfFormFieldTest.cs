@@ -1034,13 +1034,10 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void AppendModeAppearance() {
-            //TODO DEVSIX-2822
+            // Acrobat removes /NeedAppearances flag when document is opened and suggests to resave the document at once.
             String inputFile = "appendModeAppearance.pdf";
             String outputFile = "appendModeAppearance.pdf";
             String line1 = "ABC";
-            // borders in with or without append mode are different
-            //PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile),
-            //          new PdfWriter(destinationFolder + outputFile));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + inputFile), new PdfWriter(destinationFolder
                  + outputFile), new StampingProperties().UseAppendMode());
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);

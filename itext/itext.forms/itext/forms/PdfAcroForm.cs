@@ -1178,6 +1178,16 @@ namespace iText.Forms {
             fields = null;
         }
 
+        public override PdfObjectWrapper<PdfDictionary> SetModified() {
+            if (GetPdfObject().GetIndirectReference() != null) {
+                base.SetModified();
+            }
+            else {
+                document.GetCatalog().SetModified();
+            }
+            return this;
+        }
+
         private static PdfDictionary CreateAcroFormDictionaryByFields(PdfArray fields) {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.Fields, fields);
