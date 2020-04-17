@@ -149,7 +149,8 @@ namespace iText.Layout.Margincollapse {
         }
 
         /// <summary>This method shall be called after child occupied area is included into parent occupied area.</summary>
-        /// <param name="layoutBox"/>
+        /// <param name="layoutBox">available area for child and its siblings layout. It might be adjusted inside the method
+        ///     </param>
         public virtual void EndChildMarginsHandling(Rectangle layoutBox) {
             int childIndex = processedChildrenNum - 1;
             if (RendererIsFloated(GetRendererChild(childIndex))) {

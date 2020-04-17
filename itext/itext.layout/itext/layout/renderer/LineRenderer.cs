@@ -802,6 +802,7 @@ namespace iText.Layout.Renderer {
         /// Gets the total lengths of characters in this line. Other elements (images, tables) are not taken
         /// into account.
         /// </remarks>
+        /// <returns>the total lengths of characters in this line.</returns>
         protected internal virtual int Length() {
             int length = 0;
             foreach (IRenderer child in childRenderers) {
@@ -813,6 +814,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Returns the number of base characters, i.e. non-mark characters</summary>
+        /// <returns>the number of base non-mark characters</returns>
         protected internal virtual int BaseCharactersCount() {
             int count = 0;
             foreach (IRenderer child in childRenderers) {

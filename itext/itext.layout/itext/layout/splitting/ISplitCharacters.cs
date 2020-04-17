@@ -46,11 +46,7 @@ using iText.IO.Font.Otf;
 namespace iText.Layout.Splitting {
     /// <summary>Interface for customizing the split character.</summary>
     public interface ISplitCharacters {
-        /// <summary>Returns <c>true</c> if the character can split a line.</summary>
-        /// <remarks>
-        /// Returns <c>true</c> if the character can split a line. The splitting implementation
-        /// is free to look ahead or look behind characters to make a decision.
-        /// </remarks>
+        /// <summary>The splitting implementation is free to look ahead or look behind characters to make a decision.</summary>
         /// <param name="glyphPos">
         /// the position of
         /// <see cref="iText.IO.Font.Otf.Glyph"/>
@@ -58,6 +54,7 @@ namespace iText.Layout.Splitting {
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// </param>
         /// <param name="text">an array of unicode char codes which represent current text</param>
+        /// <returns>true if the character can split a line.</returns>
         bool IsSplitCharacter(GlyphLine text, int glyphPos);
     }
 }

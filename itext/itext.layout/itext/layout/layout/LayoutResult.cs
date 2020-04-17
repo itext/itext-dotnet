@@ -192,7 +192,10 @@ namespace iText.Layout.Layout {
         /// Sets the status of
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>.
         /// </summary>
-        /// <param name="status"/>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </param>
         public virtual void SetStatus(int status) {
             this.status = status;
         }
@@ -230,7 +233,7 @@ namespace iText.Layout.Layout {
         /// Sets the split
         /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>.
         /// </summary>
-        /// <param name="splitRenderer"/>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
         public virtual void SetSplitRenderer(IRenderer splitRenderer) {
             this.splitRenderer = splitRenderer;
         }
@@ -251,7 +254,7 @@ namespace iText.Layout.Layout {
         /// Sets the overflow
         /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>.
         /// </summary>
-        /// <param name="overflowRenderer"/>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public virtual void SetOverflowRenderer(IRenderer overflowRenderer) {
             this.overflowRenderer = overflowRenderer;
         }
