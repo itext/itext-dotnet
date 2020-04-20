@@ -88,7 +88,9 @@ namespace iText.Svg {
             /// <summary>Tag defining a clipping path.</summary>
             /// <remarks>Tag defining a clipping path. A clipping path defines the region where can be drawn. Anything outside the path won't be drawn.
             ///     </remarks>
-            public const String CLIP_PATH = "clippath";
+            public static readonly String CLIP_PATH = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "clipPath".ToLowerInvariant();
 
             /// <summary>Tag defining the color profile to be used.</summary>
             public const String COLOR_PROFILE = "color-profile";
@@ -405,7 +407,9 @@ namespace iText.Svg {
             public const String MARKER_END = "marker-end";
 
             /// <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
-            public const String MARKER_HEIGHT = "markerheight";
+            public static readonly String MARKER_HEIGHT = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "markerHeight".ToLowerInvariant();
 
             /// <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
             ///     </summary>
@@ -415,11 +419,15 @@ namespace iText.Svg {
             public const String MARKER_START = "marker-start";
 
             /// <summary>Attribute defining the width of the viewport in which the marker is to be fitted</summary>
-            public const String MARKER_WIDTH = "markerwidth";
+            public static readonly String MARKER_WIDTH = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "markerWidth".ToLowerInvariant();
 
             /// <summary>Attribute defining the coordinate system for attributes ‘markerWidth’, ‘markerHeight’ and the contents of the ‘marker’.
             ///     </summary>
-            public const String MARKER_UNITS = "markerunits";
+            public static readonly String MARKER_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "markerUnits".ToLowerInvariant();
 
             /// <summary>Attribute defining the opacity of a group or graphic element.</summary>
             public const String OPACITY = "opacity";
@@ -500,18 +508,24 @@ namespace iText.Svg {
             public const String POINTS = "points";
 
             /// <summary>Attribute defining how to preserve the aspect ratio when scaling.</summary>
-            public const String PRESERVE_ASPECT_RATIO = "preserveaspectratio";
+            public static readonly String PRESERVE_ASPECT_RATIO = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "preserveAspectRatio".ToLowerInvariant();
 
             /// <summary>Attribute defining the radius of a circle.</summary>
             public const String R = "r";
 
             /// <summary>Attribute defining the x-axis coordinate of the reference point which is to be aligned exactly at the marker position.
             ///     </summary>
-            public const String REFX = "refx";
+            public static readonly String REFX = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "refX".ToLowerInvariant();
 
             /// <summary>Attribute defining the y-axis coordinate of the reference point which is to be aligned exactly at the marker position.
             ///     </summary>
-            public const String REFY = "refy";
+            public static readonly String REFY = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "refY".ToLowerInvariant();
 
             /// <summary>Attribute defining the x-axis of an ellipse or the x-axis radius of rounded rectangles.</summary>
             public const String RX = "rx";
@@ -553,7 +567,9 @@ namespace iText.Svg {
             public const String TRANSFORM = "transform";
 
             /// <summary>Attribute defining the viewbox of an element.</summary>
-            public const String VIEWBOX = "viewbox";
+            public static readonly String VIEWBOX = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "viewBox".ToLowerInvariant();
 
             /// <summary>Attribute defining the width of an element.</summary>
             public const String WIDTH = "width";
