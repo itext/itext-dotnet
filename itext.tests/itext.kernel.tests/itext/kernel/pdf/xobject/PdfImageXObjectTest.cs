@@ -101,8 +101,6 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void GrayAlphaPngWithoutEmbeddedProfileImageXObjectTest() {
-            // TODO DEVSIX-1313
-            // Update cmp file after the specified ticket will be resolved
             ConvertAndCompare(destinationFolder + "graya8BpcWithoutProfile.pdf", sourceFolder + "cmp_graya8BpcWithoutProfile.pdf"
                 , sourceFolder + "graya8BpcWithoutProfile.png");
         }
