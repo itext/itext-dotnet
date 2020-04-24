@@ -69,9 +69,10 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
         }
 
         /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-        /// <param name="line"/>
-        /// <param name="rule"/>
-        /// <param name="startIdx"/>
+        /// <param name="line">glyph line to be checked</param>
+        /// <param name="rule">rule to be compared with a given line</param>
+        /// <param name="startIdx">glyph line position</param>
+        /// <returns>true if given glyph line at the given position matches given rule</returns>
         protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, ContextualSubstRule rule, int
              startIdx) {
             int j;
@@ -88,8 +89,9 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
         }
 
         /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
-        /// <param name="line"/>
-        /// <param name="rule"/>
+        /// <param name="line">glyph line to be checked</param>
+        /// <param name="rule">rule to be compared with a given line</param>
+        /// <returns>true if given glyph line matches given rule</returns>
         protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, ContextualSubstRule rule) {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();

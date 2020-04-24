@@ -111,6 +111,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)</summary>
+        /// <returns>created font specific encoding</returns>
         public static iText.IO.Font.FontEncoding CreateFontSpecificEncoding() {
             iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.fontSpecific = true;
