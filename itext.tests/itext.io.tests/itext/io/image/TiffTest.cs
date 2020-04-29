@@ -101,7 +101,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void GetStringDataFromTiff() {
-            byte[] bytes = File.ReadAllBytes(Path.Combine(sourceFolder, "img_cmyk.tif"));
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "img_cmyk.tif"));
             TIFFDirectory dir = new TIFFDirectory(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
                 (bytes)), 0);
             String[] stringArray = new String[] { "iText? 7.1.7-SNAPSHOT ?2000-2019 iText Group NV (AGPL-version)\u0000"
