@@ -62,7 +62,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
         * @see com.itextpdf.styledxmlparser.css.validate.ICssDataTypeValidator#isValid(java.lang.String)
         */
         public virtual bool IsValid(String objectString) {
-            // TODO now the validation is very lenient. Make it more strict
+            // TODO DEVSIX-3969: now the validation is very lenient. Make it more strict
             if (objectString.Length >= 2 && objectString.StartsWith("--")) {
                 return false;
             }
