@@ -47,7 +47,7 @@ namespace iText.Forms.Xfdf {
     /// <remarks>
     /// Represents Dest element, a child of the link, GoTo, and GoToR elements.
     /// Corresponds to the Dest key in the link annotations dictionary.
-    /// For more details see paragraph 6.5.10 in Xfdf document specification.
+    /// For more details see paragraph 6.5.10 in XFDF document specification.
     /// Content model: ( Named | XYZ | Fit | FitH | FitV | FitR | FitB | FitBH | FitBV )
     /// </remarks>
     public class DestObject {
@@ -55,7 +55,7 @@ namespace iText.Forms.Xfdf {
         /// <remarks>
         /// Represents Name attribute of Named element, a child of Dest element.
         /// Allows a destination to be referred to indirectly by means of a name object or a byte string.
-        /// For more details see paragraph 6.5.25 in Xfdf document specification.
+        /// For more details see paragraph 6.5.25 in XFDF document specification.
         /// </remarks>
         private String name;
 
@@ -64,7 +64,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the XYZ element, a child of the Dest element.
         /// Corresponds to the XYZ key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
-        /// For more details see paragraph 6.5.32 in Xfdf document specification.
+        /// For more details see paragraph 6.5.32 in XFDF document specification.
         /// </remarks>
         private FitObject xyz;
 
@@ -73,7 +73,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the Fit element, a child of the Dest element.
         /// Corresponds to the Fit key in the destination syntax.
         /// Required attributes: Page.
-        /// For more details see paragraph 6.5.13 in Xfdf document specification.
+        /// For more details see paragraph 6.5.13 in XFDF document specification.
         /// </remarks>
         private FitObject fit;
 
@@ -82,7 +82,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitH element, a child of the Dest element.
         /// Corresponds to the FitH key in the destination syntax.
         /// Required attributes: Page, Top.
-        /// For more details see paragraph 6.5.17 in Xfdf document specification.
+        /// For more details see paragraph 6.5.17 in XFDF document specification.
         /// </remarks>
         private FitObject fitH;
 
@@ -91,7 +91,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitV element, a child of the Dest element.
         /// Corresponds to the FitV key in the destination syntax.
         /// Required attributes: Page, Left.
-        /// For more details see paragraph 6.5.19 in Xfdf document specification.
+        /// For more details see paragraph 6.5.19 in XFDF document specification.
         /// </remarks>
         private FitObject fitV;
 
@@ -100,7 +100,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitR element, a child of the Dest element.
         /// Corresponds to the FitR key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
-        /// For more details see paragraph 6.5.18 in Xfdf document specification.
+        /// For more details see paragraph 6.5.18 in XFDF document specification.
         /// </remarks>
         private FitObject fitR;
 
@@ -109,7 +109,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitB element, a child of the Dest element.
         /// Corresponds to the FitB key in the destination syntax.
         /// Required attributes: Page.
-        /// For more details see paragraph 6.5.14 in Xfdf document specification.
+        /// For more details see paragraph 6.5.14 in XFDF document specification.
         /// </remarks>
         private FitObject fitB;
 
@@ -118,7 +118,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitBH element, a child of the Dest element.
         /// Corresponds to the FitBH key in the destination syntax.
         /// Required attributes: Page, Top.
-        /// For more details see paragraph 6.5.15 in Xfdf document specification.
+        /// For more details see paragraph 6.5.15 in XFDF document specification.
         /// </remarks>
         private FitObject fitBH;
 
@@ -127,7 +127,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the FitBV element, a child of the Dest element.
         /// Corresponds to the FitBV key in the destination syntax.
         /// Required attributes: Page, Left.
-        /// For more details see paragraph 6.5.16 in Xfdf document specification.
+        /// For more details see paragraph 6.5.16 in XFDF document specification.
         /// </remarks>
         private FitObject fitBV;
 
@@ -135,21 +135,28 @@ namespace iText.Forms.Xfdf {
         }
 
         //create empty DestObject
-        /// <summary>Gets string value of the Name attribute of Named element, a child of Dest element.</summary>
+        /// <summary>Gets the Name attribute of Named element, a child of Dest element.</summary>
         /// <remarks>
-        /// Gets string value of the Name attribute of Named element, a child of Dest element.
+        /// Gets the Name attribute of Named element, a child of Dest element.
         /// Allows a destination to be referred to indirectly by means of a name object or a byte string.
-        /// For more details see paragraph 6.5.25 in Xfdf document specification.
+        /// For more details see paragraph 6.5.25 in XFDF document specification.
         /// </remarks>
+        /// <returns>string value of the Name attribute.</returns>
         public virtual String GetName() {
             return name;
         }
 
-        /// <summary>Sets string value of the Name attribute of Named element, a child of Dest element.</summary>
+        /// <summary>Sets the Name attribute of Named element, a child of Dest element.</summary>
         /// <remarks>
-        /// Sets string value of the Name attribute of Named element, a child of Dest element.
+        /// Sets the Name attribute of Named element, a child of Dest element.
         /// Allows a destination to be referred to indirectly by means of a name object or a byte string.
         /// </remarks>
+        /// <param name="name">string value of the Name attribute.</param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetName(String name) {
             this.name = name;
             return this;
@@ -160,8 +167,13 @@ namespace iText.Forms.Xfdf {
         /// Gets the XYZ element, a child of the Dest element.
         /// Corresponds to the XYZ key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
-        /// For more details see paragraph 6.5.32 in Xfdf document specification.
+        /// For more details see paragraph 6.5.32 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents XYZ of Dest element.
+        /// </returns>
         public virtual FitObject GetXyz() {
             return xyz;
         }
@@ -172,6 +184,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the XYZ key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
         /// </remarks>
+        /// <param name="xyz">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents XYZ of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetXyz(FitObject xyz) {
             this.xyz = xyz;
             return this;
@@ -182,8 +204,13 @@ namespace iText.Forms.Xfdf {
         /// Gets the Fit element, a child of the Dest element.
         /// Corresponds to the Fit key in the destination syntax.
         /// Required attributes: Page.
-        /// For more details see paragraph 6.5.13 in Xfdf document specification.
+        /// For more details see paragraph 6.5.13 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents Fit of Dest element.
+        /// </returns>
         public virtual FitObject GetFit() {
             return fit;
         }
@@ -194,6 +221,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the Fit key in the destination syntax.
         /// Required attributes: Page.
         /// </remarks>
+        /// <param name="fit">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents Fit of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFit(FitObject fit) {
             this.fit = fit;
             return this;
@@ -204,8 +241,13 @@ namespace iText.Forms.Xfdf {
         /// Gets the FitH element, a child of the Dest element.
         /// Corresponds to the FitH key in the destination syntax.
         /// Required attributes: Page, Top.
-        /// For more details see paragraph 6.5.17 in Xfdf document specification.
+        /// For more details see paragraph 6.5.17 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitH of Dest element.
+        /// </returns>
         public virtual FitObject GetFitH() {
             return fitH;
         }
@@ -216,6 +258,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the FitH key in the destination syntax.
         /// Required attributes: Page, Top.
         /// </remarks>
+        /// <param name="fitH">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitH of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitH(FitObject fitH) {
             this.fitH = fitH;
             return this;
@@ -226,8 +278,13 @@ namespace iText.Forms.Xfdf {
         /// Gets the FitV element, a child of the Dest element.
         /// Corresponds to the FitV key in the destination syntax.
         /// Required attributes: Page, Left.
-        /// For more details see paragraph 6.5.19 in Xfdf document specification.
+        /// For more details see paragraph 6.5.19 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitV of Dest element.
+        /// </returns>
         public virtual FitObject GetFitV() {
             return fitV;
         }
@@ -238,6 +295,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the FitV key in the destination syntax.
         /// Required attributes: Page, Left.
         /// </remarks>
+        /// <param name="fitV">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitV of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitV(FitObject fitV) {
             this.fitV = fitV;
             return this;
@@ -248,8 +315,13 @@ namespace iText.Forms.Xfdf {
         /// Gets the FitR element, a child of the Dest element.
         /// Corresponds to the FitR key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
-        /// For more details see paragraph 6.5.18 in Xfdf document specification.
+        /// For more details see paragraph 6.5.18 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitR of Dest element.
+        /// </returns>
         public virtual FitObject GetFitR() {
             return fitR;
         }
@@ -260,6 +332,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the FitR key in the destination syntax.
         /// Required attributes: Page, Left, Bottom, Right, Top.
         /// </remarks>
+        /// <param name="fitR">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitR of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitR(FitObject fitR) {
             this.fitR = fitR;
             return this;
@@ -270,8 +352,13 @@ namespace iText.Forms.Xfdf {
         /// Sets the FitB element, a child of the Dest element.
         /// Corresponds to the FitB key in the destination syntax.
         /// Required attributes: Page.
-        /// For more details see paragraph 6.5.14 in Xfdf document specification.
+        /// For more details see paragraph 6.5.14 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitB of Dest element.
+        /// </returns>
         public virtual FitObject GetFitB() {
             return fitB;
         }
@@ -281,7 +368,18 @@ namespace iText.Forms.Xfdf {
         /// Gets the FitB element, a child of the Dest element.
         /// Corresponds to the FitB key in the destination syntax.
         /// Required attributes: Page.
+        /// For more details see paragraph 6.5.14 in XFDF document specification.
         /// </remarks>
+        /// <param name="fitB">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitB of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitB(FitObject fitB) {
             this.fitB = fitB;
             return this;
@@ -292,8 +390,13 @@ namespace iText.Forms.Xfdf {
         /// Sets the FitBH element, a child of the Dest element.
         /// Corresponds to the FitBH key in the destination syntax.
         /// Required attributes: Page, Top.
-        /// For more details see paragraph 6.5.15 in Xfdf document specification.
+        /// For more details see paragraph 6.5.15 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitBH of Dest element.
+        /// </returns>
         public virtual FitObject GetFitBH() {
             return fitBH;
         }
@@ -304,6 +407,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the FitBH key in the destination syntax.
         /// Required attributes: Page, Top.
         /// </remarks>
+        /// <param name="fitBH">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitBH of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitBH(FitObject fitBH) {
             this.fitBH = fitBH;
             return this;
@@ -314,8 +427,13 @@ namespace iText.Forms.Xfdf {
         /// Sets the FitBV element, a child of the Dest element.
         /// Corresponds to the FitBV key in the destination syntax.
         /// Required attributes: Page, Left.
-        /// For more details see paragraph 6.5.16 in Xfdf document specification.
+        /// For more details see paragraph 6.5.16 in XFDF document specification.
         /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitBV of Dest element.
+        /// </returns>
         public virtual FitObject GetFitBV() {
             return fitBV;
         }
@@ -326,6 +444,16 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the FitBV key in the destination syntax.
         /// Required attributes: Page, Left.
         /// </remarks>
+        /// <param name="fitBV">
+        /// a
+        /// <see cref="FitObject"/>
+        /// that represents FitBV of Dest element.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="DestObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.DestObject SetFitBV(FitObject fitBV) {
             this.fitBV = fitBV;
             return this;

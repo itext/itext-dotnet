@@ -85,64 +85,87 @@ namespace iText.Forms.Xfdf {
         /// <summary>Encoded border style string.</summary>
         private String content;
 
+        /// <summary>Creates an instance that encapsulates BorderStyleAlt XFDF element data.</summary>
+        /// <param name="hCornerRadius">a float value specifying the horizontal corner radius of the rectangular border.
+        ///     </param>
+        /// <param name="vCornerRadius">a float value specifying the vertical corner radius of the rectangular border.
+        ///     </param>
+        /// <param name="width">a float value specifying the width of the rectangular border.</param>
         public BorderStyleAltObject(float hCornerRadius, float vCornerRadius, float width) {
             this.hCornerRadius = hCornerRadius;
             this.vCornerRadius = vCornerRadius;
             this.width = width;
         }
 
-        /// <summary>Gets a float value specifying the horizontal corner radius of the rectangular border.</summary>
+        /// <summary>Gets the horizontal corner radius of the rectangular border.</summary>
         /// <remarks>
-        /// Gets a float value specifying the horizontal corner radius of the rectangular border.
+        /// Gets the horizontal corner radius of the rectangular border.
         /// Corresponds to array index 0 in the Border key in the common annotation dictionary.
         /// </remarks>
+        /// <returns>a float value specifying the horizontal corner radius.</returns>
         public virtual float GetHCornerRadius() {
             return hCornerRadius;
         }
 
-        /// <summary>Gets a float value specifying the vertical corner radius of the rectangular border.</summary>
+        /// <summary>Gets the vertical corner radius of the rectangular border.</summary>
         /// <remarks>
-        /// Gets a float value specifying the vertical corner radius of the rectangular border.
+        /// Gets the vertical corner radius of the rectangular border.
         /// Corresponds to array index 1 in the Border key in the common annotation dictionary.
         /// </remarks>
+        /// <returns>a float value specifying the vertical corner radius.</returns>
         public virtual float GetVCornerRadius() {
             return vCornerRadius;
         }
 
-        /// <summary>Gets a float value specifying the width of the rectangular border.</summary>
+        /// <summary>Gets the width of the rectangular border.</summary>
         /// <remarks>
-        /// Gets a float value specifying the width of the rectangular border.
+        /// Gets the width of the rectangular border.
         /// Corresponds to array index 2 in the Border key in the common annotation dictionary.
         /// </remarks>
+        /// <returns>a float value specifying the width of the border.</returns>
         public virtual float GetWidth() {
             return width;
         }
 
-        /// <summary>Gets a array of numbers specifying the pattern of dashes and gaps of the border.</summary>
+        /// <summary>Gets the dash pattern of the border.</summary>
         /// <remarks>
-        /// Gets a array of numbers specifying the pattern of dashes and gaps of the border.
+        /// Gets the dash pattern of the border.
         /// Corresponds to array index 3 in the Border key in the common annotation dictionary.
         /// </remarks>
+        /// <returns>an array of numbers specifying the pattern of dashes and gaps of the border.</returns>
         public virtual float[] GetDashPattern() {
             return dashPattern;
         }
 
-        /// <summary>Sets a array of numbers specifying the pattern of dashes and gaps of the border.</summary>
+        /// <summary>Sets the dash pattern of the border.</summary>
         /// <remarks>
-        /// Sets a array of numbers specifying the pattern of dashes and gaps of the border.
+        /// Sets the dash pattern of the border.
         /// Corresponds to array index 3 in the Border key in the common annotation dictionary.
         /// </remarks>
+        /// <param name="dashPattern">an array of numbers specifying the pattern of dashes and gaps of the border.</param>
+        /// <returns>
+        /// this
+        /// <see cref="BorderStyleAltObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.BorderStyleAltObject SetDashPattern(float[] dashPattern) {
             this.dashPattern = dashPattern;
             return this;
         }
 
-        /// <summary>Gets an encoded border style string.</summary>
+        /// <summary>Gets border style.</summary>
+        /// <returns>an encoded border style as string.</returns>
         public virtual String GetContent() {
             return content;
         }
 
-        /// <summary>Sets an encoded border style string.</summary>
+        /// <summary>Sets border style.</summary>
+        /// <param name="content">an encoded border style as string.</param>
+        /// <returns>
+        /// this
+        /// <see cref="BorderStyleAltObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.BorderStyleAltObject SetContent(String content) {
             this.content = content;
             return this;

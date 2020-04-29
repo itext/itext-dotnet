@@ -43,11 +43,8 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Forms.Xfdf {
-    /// <summary>Class containing constants to be used in xfdf processing.</summary>
+    /// <summary>Class containing constants to be used in XFDF processing.</summary>
     public sealed class XfdfConstants {
-        private XfdfConstants() {
-        }
-
         public const String TEXT = "text";
 
         public const String HIGHLIGHT = "highlight";
@@ -290,8 +287,11 @@ namespace iText.Forms.Xfdf {
             )]
         public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
 
-        [System.ObsoleteAttribute(@"Use LogMessageConstant#UNSUPPORTED_ANNOTATION_ATTRIBUTE instead. The constant will be removed in 7.2."
+        [System.ObsoleteAttribute(@"Use iText.IO.LogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE instead. The constant will be removed in 7.2."
             )]
         public const String UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Unsupported attribute type";
+
+        private XfdfConstants() {
+        }
     }
 }

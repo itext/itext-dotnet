@@ -56,11 +56,19 @@ namespace iText.Forms.Xfdf {
         /// <summary>Represents a list of children annotations.</summary>
         private IList<AnnotObject> annotsList;
 
+        /// <summary>Creates an instance with the empty list of children annotations.</summary>
         public AnnotsObject() {
             annotsList = new List<AnnotObject>();
         }
 
-        /// <summary>Gets a list of children annotations.</summary>
+        /// <summary>Gets children annotations.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of
+        /// <see cref="AnnotObject"/>
+        /// each representing a child annotation of this annots tag.
+        /// </returns>
         public virtual IList<AnnotObject> GetAnnotsList() {
             return annotsList;
         }
@@ -75,6 +83,11 @@ namespace iText.Forms.Xfdf {
         /// <see cref="AnnotObject"/>
         /// containing info about pdf document annotation.
         /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="AnnotsObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.AnnotsObject AddAnnot(AnnotObject annot) {
             this.annotsList.Add(annot);
             return this;
