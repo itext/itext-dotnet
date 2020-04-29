@@ -525,14 +525,10 @@ namespace iText.Svg.Converter {
             root.SetAttribute("height", "400");
             ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
-            //TODO(RND-868): remove below checks
-            NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());
-            NUnit.Framework.Assert.AreEqual(0, actual.GetNamedObjects().Count);
-            NUnit.Framework.Assert.AreEqual("500", actual.GetRootRenderer().GetAttribute("width"));
+            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
+                .GetAttributeMapCopy());
         }
 
-        //TODO(RND-868): Switch test over to this logic
-        //Assert.assertEquals(expected,actual);
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessIOExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {
