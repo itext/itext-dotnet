@@ -57,16 +57,82 @@ namespace iText.Svg.Processors.Impl {
 
         private ISvgNodeRenderer root;
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
         private FontProvider fontProvider;
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
         private FontSet tempFonts;
 
+        private SvgProcessorContext context;
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="SvgProcessorResult"/>
+        /// entity.
+        /// </summary>
+        /// <param name="namedObjects">
+        /// a map of named-objects with their id's as
+        /// <see cref="System.String"/>
+        /// keys and
+        /// the
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// objects as values.
+        /// </param>
+        /// <param name="root">
+        /// a wrapped
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// root renderer.
+        /// </param>
+        /// <param name="fontProvider">
+        /// a
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// instance.
+        /// </param>
+        /// <param name="tempFonts">
+        /// a
+        /// <see cref="iText.Layout.Font.FontSet"/>
+        /// containing temporary fonts.
+        /// </param>
+        [System.ObsoleteAttribute(@"use SvgProcessorResult(System.Collections.Generic.IDictionary{K, V}, iText.Svg.Renderers.ISvgNodeRenderer, SvgProcessorContext) instead. Will be removed in 7.2."
+            )]
         public SvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root, FontProvider
              fontProvider, FontSet tempFonts) {
             this.namedObjects = namedObjects;
             this.root = root;
             this.fontProvider = fontProvider;
             this.tempFonts = tempFonts;
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="SvgProcessorResult"/>
+        /// entity.
+        /// </summary>
+        /// <param name="namedObjects">
+        /// a map of named-objects with their id's as
+        /// <see cref="System.String"/>
+        /// keys and
+        /// the
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// objects as values.
+        /// </param>
+        /// <param name="root">
+        /// a wrapped
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// root renderer.
+        /// </param>
+        /// <param name="context">
+        /// a
+        /// <see cref="SvgProcessorContext"/>
+        /// instance.
+        /// </param>
+        public SvgProcessorResult(IDictionary<String, ISvgNodeRenderer> namedObjects, ISvgNodeRenderer root, SvgProcessorContext
+             context) {
+            this.namedObjects = namedObjects;
+            this.root = root;
+            this.fontProvider = context.GetFontProvider();
+            this.tempFonts = context.GetTempFonts();
+            this.context = context;
         }
 
         public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
@@ -83,6 +149,22 @@ namespace iText.Svg.Processors.Impl {
 
         public virtual FontSet GetTempFonts() {
             return tempFonts;
+        }
+
+        /// <summary>
+        /// Gets processor context, containing
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// and
+        /// <see cref="iText.Layout.Font.FontSet"/>
+        /// of temporary fonts inside.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="SvgProcessorContext"/>
+        /// instance
+        /// </returns>
+        public virtual SvgProcessorContext GetContext() {
+            return context;
         }
 
         public override bool Equals(Object o) {

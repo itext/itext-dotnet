@@ -674,13 +674,24 @@ namespace iText.Svg.Converter {
                 writerProps = new WriterProperties();
             }
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(pdfDest, writerProps));
-            //TODO DEVSIX-2095
             //process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
             ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
             String baseUri = TryToExtractBaseUri(props);
-            SvgDrawContext drawContext = new SvgDrawContext(new ResourceResolver(baseUri), processorResult.GetFontProvider
-                ());
+            ResourceResolver resourceResolver = null;
+            if (processorResult is SvgProcessorResult) {
+                //TODO add assert after 7.2 cause now be have a null pointer on deprecated constructor
+                SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
+                if (context != null) {
+                    resourceResolver = context.GetResourceResolver();
+                }
+            }
+            //TODO remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
+            // ISvgNodeRenderer, FontProvider, FontSet) is removed
+            if (resourceResolver == null) {
+                resourceResolver = new ResourceResolver(baseUri);
+            }
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             //Add temp fonts
             drawContext.SetTempFonts(processorResult.GetTempFonts());
@@ -867,12 +878,8 @@ namespace iText.Svg.Converter {
         //Private converter for unification
         private static PdfFormXObject ConvertToXObject(ISvgProcessorResult processorResult, PdfDocument document, 
             ISvgConverterProperties props) {
-            String baseUri = "";
-            if (props != null) {
-                baseUri = props.GetBaseUri();
-            }
-            SvgDrawContext drawContext = new SvgDrawContext(new ResourceResolver(baseUri), processorResult.GetFontProvider
-                ());
+            ResourceResolver resourceResolver = GetResourceResolver(processorResult, props);
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
             drawContext.SetTempFonts(processorResult.GetTempFonts());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
@@ -1357,6 +1364,28 @@ namespace iText.Svg.Converter {
             res[0] = width;
             res[1] = height;
             return res;
+        }
+
+        internal static ResourceResolver GetResourceResolver(ISvgProcessorResult processorResult, ISvgConverterProperties
+             props) {
+            ResourceResolver resourceResolver = null;
+            if (processorResult is SvgProcessorResult) {
+                //TODO add assert after 7.2 cause now be have a null pointer on deprecated constructor
+                SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
+                if (context != null) {
+                    resourceResolver = context.GetResourceResolver();
+                }
+            }
+            //TODO remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
+            // ISvgNodeRenderer, FontProvider, FontSet) is removed
+            if (resourceResolver == null) {
+                String baseUri = "";
+                if (props != null) {
+                    baseUri = props.GetBaseUri();
+                }
+                resourceResolver = new ResourceResolver(baseUri);
+            }
+            return resourceResolver;
         }
 
         /// <summary>

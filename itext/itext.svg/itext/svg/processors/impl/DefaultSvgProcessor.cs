@@ -102,8 +102,7 @@ namespace iText.Svg.Processors.Impl {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
-                return new SvgProcessorResult(namedObjects, rootSvgRenderer, context.GetFontProvider(), context.GetTempFonts
-                    ());
+                return new SvgProcessorResult(namedObjects, rootSvgRenderer, context);
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);

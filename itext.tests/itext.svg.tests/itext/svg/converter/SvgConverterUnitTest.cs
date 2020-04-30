@@ -41,14 +41,19 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Processors.Impl;
 using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
+using iText.Svg.Processors;
+using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
@@ -288,6 +293,61 @@ namespace iText.Svg.Converter {
             }
             , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL))
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResourceResolverInstanceTest() {
+            DummySvgConverterProperties properties = new DummySvgConverterProperties();
+            SvgProcessorContext context = new SvgProcessorContext(properties);
+            ResourceResolver initialResolver = context.GetResourceResolver();
+            SvgProcessorResult svgProcessorResult = new SvgProcessorResult(new Dictionary<String, ISvgNodeRenderer>(), 
+                new SvgTagSvgNodeRenderer(), context);
+            ResourceResolver currentResolver = SvgConverter.GetResourceResolver(svgProcessorResult, properties);
+            NUnit.Framework.Assert.AreEqual(initialResolver, currentResolver);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResourceResolverInstanceCustomResolverTest() {
+            //TODO remove in version 7.2
+            DummySvgConverterProperties properties = new DummySvgConverterProperties();
+            SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
+                (this);
+            ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, properties);
+            NUnit.Framework.Assert.IsNotNull(currentResolver);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResourceResolverInstanceCustomResolverNullPropsTest() {
+            //TODO remove in version 7.2
+            SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
+                (this);
+            ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, null);
+            NUnit.Framework.Assert.IsNotNull(currentResolver);
+        }
+
+        //TODO remove in version 7.2
+        internal class TestSvgProcessorResult : ISvgProcessorResult {
+            public TestSvgProcessorResult(SvgConverterUnitTest _enclosing) {
+                this._enclosing = _enclosing;
+            }
+
+            public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
+                return null;
+            }
+
+            public virtual ISvgNodeRenderer GetRootRenderer() {
+                return null;
+            }
+
+            public virtual FontProvider GetFontProvider() {
+                return null;
+            }
+
+            public virtual FontSet GetTempFonts() {
+                return null;
+            }
+
+            private readonly SvgConverterUnitTest _enclosing;
         }
     }
 }
