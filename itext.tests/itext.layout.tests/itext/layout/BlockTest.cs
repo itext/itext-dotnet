@@ -538,7 +538,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1092")]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         public virtual void MarginsBordersPaddingOverflow01() {
             String outFileName = destinationFolder + "marginsBordersPaddingOverflow01.pdf";
             String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow01.pdf";
@@ -547,7 +547,6 @@ namespace iText.Layout {
             Div div = new Div();
             div.SetHeight(760).SetBackgroundColor(ColorConstants.DARK_GRAY);
             doc.Add(div);
-            // TODO overflow of this div on second page is of much bigger height than 1pt
             Div div1 = new Div().SetMarginTop(42).SetMarginBottom(42).SetBackgroundColor(ColorConstants.BLUE).SetHeight
                 (1);
             doc.Add(div1);
@@ -557,13 +556,12 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1092")]
         public virtual void MarginsBordersPaddingOverflow02() {
             String outFileName = destinationFolder + "marginsBordersPaddingOverflow02.pdf";
             String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            // TODO div with fixed height is bigger than 60pt
+            // TODO DEVSIX-1092 div with fixed height is bigger than 60pt
             Div div = new Div();
             div.SetHeight(60).SetBackgroundColor(ColorConstants.DARK_GRAY);
             Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
@@ -575,7 +573,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1092")]
         public virtual void MarginsBordersPaddingOverflow03() {
             String outFileName = destinationFolder + "marginsBordersPaddingOverflow03.pdf";
             String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow03.pdf";
@@ -584,17 +581,17 @@ namespace iText.Layout {
             Div div = new Div();
             div.SetHeight(710).SetBackgroundColor(ColorConstants.DARK_GRAY);
             doc.Add(div);
-            // TODO this element is below first page visible area
+            // TODO DEVSIX-1092 this element is below first page visible area
             Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
             doc.Add(div1);
             doc.Add(new AreaBreak());
-            // TODO same with this one the second page
+            // TODO DEVSIX-1092 same with this one the second page
             SolidBorder border = new SolidBorder(400);
             Div div2 = new Div().SetBorderTop(border).SetBorderBottom(border);
             doc.Add(div);
             doc.Add(div2);
             doc.Add(new AreaBreak());
-            // TODO same with this one the third page
+            // TODO DEVSIX-1092 same with this one the third page
             Div div3 = new Div().SetBorder(new SolidBorder(6)).SetPaddingTop(400).SetPaddingBottom(400);
             doc.Add(div);
             doc.Add(div3);
