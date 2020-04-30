@@ -42,7 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using System.Text;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -177,28 +176,22 @@ namespace iText.Layout {
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
             NUnit.Framework.Assert.AreEqual("Preface", text);
         }
-        
+
         [NUnit.Framework.Test]
-        public virtual void testType3FontWithDifferences()
-        {
+        public virtual void TestType3FontWithDifferences() {
             String sourcePdf = sourceFolder + "DocumentWithType3FontWithDifferences.pdf";
             String comparedTextFile = sourceFolder + "textFromDocWithType3FontWithDifferences.txt";
-
             PdfDocument pdf = new PdfDocument(new PdfReader(sourcePdf));
             String result = PdfTextExtractor.GetTextFromPage(pdf.GetPage(1), new LocationTextExtractionStrategy());
-
-            PdfDictionary pdfType3FontDict = (PdfDictionary) pdf.GetPdfObject(292);
-            PdfType3Font pdfType3Font = (PdfType3Font) PdfFontFactory.CreateFont(pdfType3FontDict);
-
+            PdfDictionary pdfType3FontDict = (PdfDictionary)pdf.GetPdfObject(292);
+            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
             pdf.Close();
-
-            NUnit.Framework.Assert.AreEqual(File.ReadAllText(comparedTextFile, Encoding.UTF8), result);
-
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(comparedTextFile));
+            NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.UTF8)
+                , result);
             NUnit.Framework.Assert.AreEqual(83, pdfType3Font.GetNumberOfGlyphs());
-
             NUnit.Framework.Assert.AreEqual("gA", pdfType3Font.GetFontEncoding().GetDifference(10));
             NUnit.Framework.Assert.AreEqual(41, pdfType3Font.GetFontProgram().GetGlyphByCode(10).GetUnicode());
-
             NUnit.Framework.Assert.AreEqual(".notdef", pdfType3Font.GetFontEncoding().GetDifference(210));
             NUnit.Framework.Assert.AreEqual(928, pdfType3Font.GetFontProgram().GetGlyphByCode(210).GetUnicode());
         }
@@ -294,7 +287,8 @@ namespace iText.Layout {
         private byte[] CreatePdfWithSupescript(String regularText, String superscriptText) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
-            document.Add(new Paragraph(regularText).Add(new Text(superscriptText).SetTextRise(7)));
+            document.Add(new Paragraph(regularText).Add(new iText.Layout.Element.Text(superscriptText).SetTextRise(7))
+                );
             document.Close();
             return byteStream.ToArray();
         }
