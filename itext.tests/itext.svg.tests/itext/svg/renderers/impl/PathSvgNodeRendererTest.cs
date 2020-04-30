@@ -89,7 +89,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
-            //TODO (RND-904) This test should fail when RND-904 (relative line operator l ) is implemented.
             String filename = "pathNodeRendererMoveToTest1.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
