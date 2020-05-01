@@ -130,6 +130,11 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestJPXDecode() {
+            TestFile("JPXDecode.pdf", "Im1", "jp2");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ExtractByteAlignedG4TiffImageTest() {
             String inFileName = sourceFolder + "extractByteAlignedG4TiffImage.pdf";
             String outImageFileName = destinationFolder + "extractedByteAlignedImage.png";
