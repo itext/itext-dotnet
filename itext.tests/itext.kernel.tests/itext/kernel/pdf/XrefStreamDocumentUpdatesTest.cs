@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -100,6 +101,32 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(0, expectGenNumber);
             NUnit.Framework.Assert.IsTrue(xref.Get(5).IsFree());
             pdfDoc1.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckEncryptionInXrefStmInIncrementsTest() {
+            String inFileName = sourceFolder + "encryptedDocWithXrefStm.pdf";
+            String outFileName = destinationFolder + "checkEncryptionInXrefStmInIncrements.pdf";
+            PdfReader pdfReader = new PdfReader(inFileName).SetUnethicalReading(true);
+            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(outFileName), new StampingProperties().
+                UseAppendMode().PreserveEncryption());
+            PdfDictionary xrefStm = (PdfDictionary)pdfDocument.GetPdfObject(6);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfName.XRef, xrefStm.Get(PdfName.Type));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HybridReferenceInIncrementsTest() {
+            String inFileName = sourceFolder + "hybridReferenceDocument.pdf";
+            String outFileName = destinationFolder + "hybridReferenceInIncrements.pdf";
+            PdfReader pdfReader = new PdfReader(inFileName);
+            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(outFileName), new StampingProperties().
+                UseAppendMode());
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
+                ));
         }
     }
 }
