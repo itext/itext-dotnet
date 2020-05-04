@@ -164,9 +164,14 @@ namespace iText.Kernel.Geom {
         /// <summary>Appends a cubic Bezier curve to the current path.</summary>
         /// <remarks>
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
-        /// the current point to the point <c>(x3, y3)</c> with the note that the current
-        /// point represents two control points.
+        /// the current point to the point <c>(x3, y3)</c> using the current point and
+        /// <c>(x2, y2)</c> as intermediate control points. Note that current point is both
+        /// used as the starting point and a control point
         /// </remarks>
+        /// <param name="x2">x-coordinate of the second intermediate control point</param>
+        /// <param name="y2">y-coordinate of the second intermediate control point</param>
+        /// <param name="x3">x-coordinate of the ending point</param>
+        /// <param name="y3">y-coordinate of the ending point</param>
         public virtual void CurveTo(float x2, float y2, float x3, float y3) {
             if (currentPoint == null) {
                 throw new Exception(START_PATH_ERR_MSG);
@@ -177,9 +182,14 @@ namespace iText.Kernel.Geom {
         /// <summary>Appends a cubic Bezier curve to the current path.</summary>
         /// <remarks>
         /// Appends a cubic Bezier curve to the current path. The curve shall extend from
-        /// the current point to the point <c>(x3, y3)</c> with the note that the (x3, y3)
-        /// point represents two control points.
+        /// the current point to the point <c>(x3, y3)</c> using <c>(x1, y1)</c> and
+        /// <c>(x3, y3)</c> as control points. Note that <c>(x3, y3)</c> is used both
+        /// as both a control point and an ending point
         /// </remarks>
+        /// <param name="x1">x-coordinate of the first intermediate control point</param>
+        /// <param name="y1">y-coordinate of the first intermediate control point</param>
+        /// <param name="x3">x-coordinate of the second intermediate control point (and ending point)</param>
+        /// <param name="y3">y-coordinate of the second intermediate control point (and ending point)</param>
         public virtual void CurveFromTo(float x1, float y1, float x3, float y3) {
             if (currentPoint == null) {
                 throw new Exception(START_PATH_ERR_MSG);
@@ -188,11 +198,16 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Appends a rectangle to the current path as a complete subpath.</summary>
+        /// <param name="rect">the rectangle to append to the current path</param>
         public virtual void Rectangle(iText.Kernel.Geom.Rectangle rect) {
             Rectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
         }
 
         /// <summary>Appends a rectangle to the current path as a complete subpath.</summary>
+        /// <param name="x">lower left x-coordinate of the rectangle</param>
+        /// <param name="y">lower left y-coordinate of the rectangle</param>
+        /// <param name="w">width of the rectangle</param>
+        /// <param name="h">height of the rectangle</param>
         public virtual void Rectangle(float x, float y, float w, float h) {
             MoveTo(x, y);
             LineTo(x + w, y);
@@ -243,6 +258,7 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Path is empty if it contains no subpaths.</summary>
+        /// <returns><c>true</c> in case the path is empty and <c>false</c> otherwise</returns>
         public virtual bool IsEmpty() {
             return subpaths.Count == 0;
         }
