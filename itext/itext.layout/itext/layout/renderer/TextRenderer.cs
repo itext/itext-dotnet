@@ -150,7 +150,7 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             if (null != text) {
                 // if text != null => font != null
-                text = ReplaceSpecialWhitespaceGlyphs(text, font);
+                text = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(text, font);
             }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
@@ -1224,8 +1224,8 @@ namespace iText.Layout.Renderer {
                         while (!strategy.EndOfText()) {
                             GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
                             PdfFont currentFont = strategy.GetCurrentFont();
-                            iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont
-                                ), currentFont);
+                            GlyphLine newGlyphs = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont);
+                            iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(newGlyphs, currentFont);
                             addTo.Add(textRenderer);
                         }
                     }
@@ -1400,52 +1400,6 @@ namespace iText.Layout.Renderer {
                 // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }
-        }
-
-        private static GlyphLine ReplaceSpecialWhitespaceGlyphs(GlyphLine line, PdfFont font) {
-            if (null != line) {
-                Glyph space = font.GetGlyph('\u0020');
-                Glyph glyph;
-                for (int i = 0; i < line.Size(); i++) {
-                    glyph = line.Get(i);
-                    int? xAdvance = GetSpecialWhitespaceXAdvance(glyph, space, font.GetFontProgram().GetFontMetrics().IsFixedPitch
-                        ());
-                    if (xAdvance != null) {
-                        Glyph newGlyph = new Glyph(space, glyph.GetUnicode());
-                        System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
-                        newGlyph.SetXAdvance((short)(int)xAdvance);
-                        line.Set(i, newGlyph);
-                    }
-                }
-            }
-            return line;
-        }
-
-        private static int? GetSpecialWhitespaceXAdvance(Glyph glyph, Glyph spaceGlyph, bool isMonospaceFont) {
-            if (glyph.GetCode() > 0) {
-                return null;
-            }
-            switch (glyph.GetUnicode()) {
-                // ensp
-                case '\u2002': {
-                    return isMonospaceFont ? 0 : 500 - spaceGlyph.GetWidth();
-                }
-
-                // emsp
-                case '\u2003': {
-                    return isMonospaceFont ? 0 : 1000 - spaceGlyph.GetWidth();
-                }
-
-                // thinsp
-                case '\u2009': {
-                    return isMonospaceFont ? 0 : 200 - spaceGlyph.GetWidth();
-                }
-
-                case '\t': {
-                    return 3 * spaceGlyph.GetWidth();
-                }
-            }
-            return null;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
