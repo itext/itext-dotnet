@@ -199,12 +199,10 @@ namespace iText.IO.Image {
         /// <returns>created ImageData</returns>
         [System.ObsoleteAttribute(@"will be removed in 7.2")]
         public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.BMP) {
-                ImageData image = new BmpImageData(url, noHeader, size);
-                BmpImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("BMP image expected.");
+            ValidateImageType(url, ImageType.BMP);
+            ImageData image = new BmpImageData(url, noHeader, size);
+            BmpImageHelper.ProcessImage(image);
+            return image;
         }
 
         /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
@@ -235,12 +233,10 @@ namespace iText.IO.Image {
         /// <param name="bytes">array containing the raw image data</param>
         /// <returns>GifImageData instance.</returns>
         public static GifImageData CreateGif(byte[] bytes) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
-                GifImageData image = new GifImageData(bytes);
-                GifImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("GIF image expected.");
+            ValidateImageType(bytes, ImageType.GIF);
+            GifImageData image = new GifImageData(bytes);
+            GifImageHelper.ProcessImage(image);
+            return image;
         }
 
         /// <summary>Returns a specified frame of the gif image</summary>
@@ -264,11 +260,9 @@ namespace iText.IO.Image {
         /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
-                GifImageData image = new GifImageData(bytes);
-                return ProcessGifImageAndExtractFrames(frameNumbers, image);
-            }
-            throw new ArgumentException("GIF image expected.");
+            ValidateImageType(bytes, ImageType.GIF);
+            GifImageData image = new GifImageData(bytes);
+            return ProcessGifImageAndExtractFrames(frameNumbers, image);
         }
 
         /// <summary>Returns <c>List</c> of gif image frames</summary>
@@ -276,133 +270,107 @@ namespace iText.IO.Image {
         /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
-                GifImageData image = new GifImageData(url);
-                return ProcessGifImageAndExtractFrames(frameNumbers, image);
-            }
-            throw new ArgumentException("GIF image expected.");
+            ValidateImageType(url, ImageType.GIF);
+            GifImageData image = new GifImageData(url);
+            return ProcessGifImageAndExtractFrames(frameNumbers, image);
         }
 
         /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
-                GifImageData image = new GifImageData(bytes);
-                GifImageHelper.ProcessImage(image);
-                return image.GetFrames();
-            }
-            throw new ArgumentException("GIF image expected.");
+            ValidateImageType(bytes, ImageType.GIF);
+            GifImageData image = new GifImageData(bytes);
+            GifImageHelper.ProcessImage(image);
+            return image.GetFrames();
         }
 
         /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
-                GifImageData image = new GifImageData(url);
-                GifImageHelper.ProcessImage(image);
-                return image.GetFrames();
-            }
-            throw new ArgumentException("GIF image expected.");
+            ValidateImageType(url, ImageType.GIF);
+            GifImageData image = new GifImageData(url);
+            GifImageHelper.ProcessImage(image);
+            return image.GetFrames();
         }
 
         public static ImageData CreateJbig2(Uri url, int page) {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.JBIG2) {
-                ImageData image = new Jbig2ImageData(url, page);
-                Jbig2ImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JBIG2 image expected.");
+            ValidateImageType(url, ImageType.JBIG2);
+            ImageData image = new Jbig2ImageData(url, page);
+            Jbig2ImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateJbig2(byte[] bytes, int page) {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JBIG2) {
-                ImageData image = new Jbig2ImageData(bytes, page);
-                Jbig2ImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JBIG2 image expected.");
+            ValidateImageType(bytes, ImageType.JBIG2);
+            ImageData image = new Jbig2ImageData(bytes, page);
+            Jbig2ImageHelper.ProcessImage(image);
+            return image;
         }
 
         /// <summary>Create a ImageData instance from a Jpeg image url</summary>
         /// <param name="url">URL</param>
         public static ImageData CreateJpeg(Uri url) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.JPEG) {
-                ImageData image = new JpegImageData(url);
-                JpegImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JPEG image expected.");
+            ValidateImageType(url, ImageType.JPEG);
+            ImageData image = new JpegImageData(url);
+            JpegImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateJpeg(byte[] bytes) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JPEG) {
-                ImageData image = new JpegImageData(bytes);
-                JpegImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JPEG image expected.");
+            ValidateImageType(bytes, ImageType.JPEG);
+            ImageData image = new JpegImageData(bytes);
+            JpegImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateJpeg2000(Uri url) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.JPEG2000) {
-                ImageData image = new Jpeg2000ImageData(url);
-                Jpeg2000ImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JPEG2000 image expected.");
+            ValidateImageType(url, ImageType.JPEG2000);
+            ImageData image = new Jpeg2000ImageData(url);
+            Jpeg2000ImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateJpeg2000(byte[] bytes) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JPEG2000) {
-                ImageData image = new Jpeg2000ImageData(bytes);
-                Jpeg2000ImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("JPEG2000 image expected.");
+            ValidateImageType(bytes, ImageType.JPEG2000);
+            ImageData image = new Jpeg2000ImageData(bytes);
+            Jpeg2000ImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreatePng(Uri url) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.PNG) {
-                ImageData image = new PngImageData(url);
-                PngImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("PNG image expected.");
+            ValidateImageType(url, ImageType.PNG);
+            ImageData image = new PngImageData(url);
+            PngImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreatePng(byte[] bytes) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.PNG) {
-                ImageData image = new PngImageData(bytes);
-                PngImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("PNG image expected.");
+            ValidateImageType(bytes, ImageType.PNG);
+            ImageData image = new PngImageData(bytes);
+            PngImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.TIFF) {
-                ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
-                TiffImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("TIFF image expected.");
+            ValidateImageType(url, ImageType.TIFF);
+            ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
+            TiffImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.TIFF) {
-                ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
-                TiffImageHelper.ProcessImage(image);
-                return image;
-            }
-            throw new ArgumentException("TIFF image expected.");
+            ValidateImageType(bytes, ImageType.TIFF);
+            ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
+            TiffImageHelper.ProcessImage(image);
+            return image;
         }
 
         public static ImageData CreateRawImage(byte[] bytes) {
@@ -595,6 +563,22 @@ namespace iText.IO.Image {
                 frames.Add(image.GetFrames()[frame - 1]);
             }
             return frames;
+        }
+
+        private static void ValidateImageType(byte[] image, ImageType expectedType) {
+            ImageType detectedType = ImageTypeDetector.DetectImageType(image);
+            if (detectedType != expectedType) {
+                throw new ArgumentException(expectedType.ToString() + " image expected. Detected image type: " + detectedType
+                    .ToString());
+            }
+        }
+
+        private static void ValidateImageType(Uri imageUrl, ImageType expectedType) {
+            ImageType detectedType = ImageTypeDetector.DetectImageType(imageUrl);
+            if (detectedType != expectedType) {
+                throw new ArgumentException(expectedType.ToString() + " image expected. Detected image type: " + detectedType
+                    .ToString());
+            }
         }
     }
 }
