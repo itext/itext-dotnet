@@ -52,27 +52,6 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public sealed class ImageDataFactory {
-        private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
-
-        private static readonly byte[] jpeg = new byte[] { (byte)0xFF, (byte)0xD8 };
-
-        private static readonly byte[] jpeg2000_1 = new byte[] { 0x00, 0x00, 0x00, 0x0c };
-
-        private static readonly byte[] jpeg2000_2 = new byte[] { (byte)0xff, (byte)0x4f, (byte)0xff, 0x51 };
-
-        private static readonly byte[] png = new byte[] { (byte)137, 80, 78, 71 };
-
-        private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
-
-        private static readonly byte[] bmp = new byte[] { (byte)'B', (byte)'M' };
-
-        private static readonly byte[] tiff_1 = new byte[] { (byte)'M', (byte)'M', 0, 42 };
-
-        private static readonly byte[] tiff_2 = new byte[] { (byte)'I', (byte)'I', 42, 0 };
-
-        private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)'B', (byte)'2', (byte)'\r'
-            , (byte)'\n', 0x1a, (byte)'\n' };
-
         private ImageDataFactory() {
         }
 
@@ -189,18 +168,16 @@ namespace iText.IO.Image {
 #if !NETSTANDARD1_6
         /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
         /// <param name="image">the java.awt.Image to convert</param>
-        /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
-        ///     </param>
+        /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
         /// <returns>RawImage</returns>
         public static ImageData Create(System.Drawing.Image image, Color? color) {
             return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
 
         /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
-        /// <param name="image">the <CODE>java.awt.Image</CODE> to convert</param>
-        /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
-        ///     </param>
-        /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white</param>
+        /// <param name="image">the <c>java.awt.Image</c> to convert</param>
+        /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
+        /// <param name="forceBW">if <c>true</c> the image is treated as black and white</param>
         /// <returns>RawImage</returns>
         public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
@@ -213,8 +190,7 @@ namespace iText.IO.Image {
         /// <param name="size">size of the image</param>
         /// <returns>created ImageData.</returns>
         public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, bmp)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.BMP) {
                 ImageData image = new BmpImageData(url, noHeader, size);
                 BmpImageHelper.ProcessImage(image);
                 return image;
@@ -228,8 +204,7 @@ namespace iText.IO.Image {
         /// <param name="size">size of the image</param>
         /// <returns>created ImageData.</returns>
         public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size) {
-            byte[] imageType = ReadImageType(bytes);
-            if (noHeader || ImageTypeIs(imageType, bmp)) {
+            if (noHeader || ImageTypeDetector.DetectImageType(bytes) == ImageType.BMP) {
                 ImageData image = new BmpImageData(bytes, noHeader, size);
                 BmpImageHelper.ProcessImage(image);
                 return image;
@@ -242,8 +217,7 @@ namespace iText.IO.Image {
         /// <param name="bytes">array containing the raw image data</param>
         /// <returns>GifImageData instance.</returns>
         public static GifImageData CreateGif(byte[] bytes) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image);
                 return image;
@@ -256,8 +230,7 @@ namespace iText.IO.Image {
         /// <param name="frame">number of frame to be returned</param>
         /// <returns>GifImageData instance.</returns>
         public static ImageData CreateGifFrame(Uri url, int frame) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
                 GifImageData image = new GifImageData(url);
                 GifImageHelper.ProcessImage(image, frame - 1);
                 return image.GetFrames()[frame - 1];
@@ -268,10 +241,9 @@ namespace iText.IO.Image {
         /// <summary>Returns a specified frame of the gif image</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frame">number of frame to be returned</param>
-        /// <returns>GifImageData instance.</returns>
+        /// <returns>GifImageData instance</returns>
         public static ImageData CreateGifFrame(byte[] bytes, int frame) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image, frame - 1);
                 return image.GetFrames()[frame - 1];
@@ -279,15 +251,14 @@ namespace iText.IO.Image {
             throw new ArgumentException("GIF image expected.");
         }
 
-        /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
-        /// <returns>All frames of gif image.</returns>
+        /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
                 GifImageData image = new GifImageData(bytes);
-                iText.IO.Util.JavaUtil.Sort(frameNumbers);
+                JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
                 foreach (int frame in frameNumbers) {
@@ -298,15 +269,14 @@ namespace iText.IO.Image {
             throw new ArgumentException("GIF image expected.");
         }
 
-        /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
-        /// <returns>All frames of gif image.</returns>
+        /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
                 GifImageData image = new GifImageData(url);
-                iText.IO.Util.JavaUtil.Sort(frameNumbers);
+                JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
                 foreach (int frame in frameNumbers) {
@@ -317,12 +287,11 @@ namespace iText.IO.Image {
             throw new ArgumentException("GIF image expected.");
         }
 
-        /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image);
                 return image.GetFrames();
@@ -330,12 +299,11 @@ namespace iText.IO.Image {
             throw new ArgumentException("GIF image expected.");
         }
 
-        /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
                 GifImageData image = new GifImageData(url);
                 GifImageHelper.ProcessImage(image);
                 return image.GetFrames();
@@ -347,8 +315,7 @@ namespace iText.IO.Image {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jbig2)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.JBIG2) {
                 ImageData image = new Jbig2ImageData(url, page);
                 Jbig2ImageHelper.ProcessImage(image);
                 return image;
@@ -360,8 +327,7 @@ namespace iText.IO.Image {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jbig2)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JBIG2) {
                 ImageData image = new Jbig2ImageData(bytes, page);
                 Jbig2ImageHelper.ProcessImage(image);
                 return image;
@@ -370,11 +336,9 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Create a ImageData instance from a Jpeg image url</summary>
-        /// <param name="url"/>
-        /// <returns/>
+        /// <param name="url">URL</param>
         public static ImageData CreateJpeg(Uri url) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jpeg)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.JPEG) {
                 ImageData image = new JpegImageData(url);
                 JpegImageHelper.ProcessImage(image);
                 return image;
@@ -383,8 +347,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreateJpeg(byte[] bytes) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jpeg)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JPEG) {
                 ImageData image = new JpegImageData(bytes);
                 JpegImageHelper.ProcessImage(image);
                 return image;
@@ -393,8 +356,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreateJpeg2000(Uri url) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.JPEG2000) {
                 ImageData image = new Jpeg2000ImageData(url);
                 Jpeg2000ImageHelper.ProcessImage(image);
                 return image;
@@ -403,8 +365,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreateJpeg2000(byte[] bytes) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.JPEG2000) {
                 ImageData image = new Jpeg2000ImageData(bytes);
                 Jpeg2000ImageHelper.ProcessImage(image);
                 return image;
@@ -413,8 +374,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreatePng(Uri url) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, png)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.PNG) {
                 ImageData image = new PngImageData(url);
                 PngImageHelper.ProcessImage(image);
                 return image;
@@ -423,8 +383,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreatePng(byte[] bytes) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, png)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.PNG) {
                 ImageData image = new PngImageData(bytes);
                 PngImageHelper.ProcessImage(image);
                 return image;
@@ -433,8 +392,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct) {
-            byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
+            if (ImageTypeDetector.DetectImageType(url) == ImageType.TIFF) {
                 ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
                 TiffImageHelper.ProcessImage(image);
                 return image;
@@ -443,8 +401,7 @@ namespace iText.IO.Image {
         }
 
         public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
+            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.TIFF) {
                 ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
                 TiffImageHelper.ProcessImage(image);
                 return image;
@@ -456,185 +413,181 @@ namespace iText.IO.Image {
             return new RawImageData(bytes, ImageType.RAW);
         }
 
-        /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.
+        /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.</summary>
+        /// <remarks>
+        /// Checks if the type of image (based on first 8 bytes) is supported by factory.
         /// <br />
-        /// <br />
-        /// <b>Note:</b>if this method returns <code>true</code> it doesn't means that <see cref="Create(byte[])"/> won't throw exception
-        /// </summary>
+        /// <b>Note:</b> if this method returns
+        /// <see langword="true"/>
+        /// it doesn't means that
+        /// <see cref="Create(byte[])"/>
+        /// won't throw exception
+        /// </remarks>
         /// <param name="source">image raw bytes</param>
-        /// <returns><code>true</code> if first eight bytes are recognised by factory as valid image type and <code>false</code> otherwise</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if first eight bytes are recognised by factory as valid image type and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public static bool IsSupportedType(byte[] source) {
             if (source == null) {
                 return false;
             }
-            byte[] imageType = ReadImageType(source);
-            return ImageTypeIs(imageType, gif) || ImageTypeIs(imageType, jpeg) || ImageTypeIs(imageType, jpeg2000_1)
-                   || ImageTypeIs(imageType, jpeg2000_2) || ImageTypeIs(imageType, png) || ImageTypeIs(imageType, bmp)
-                   || ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2) || ImageTypeIs(imageType, jbig2);
+            ImageType imageType = ImageTypeDetector.DetectImageType(source);
+            return IsSupportedType(imageType);
         }
 
-
-        /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.
+        /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.</summary>
+        /// <remarks>
+        /// Checks if the type of image (based on first 8 bytes) is supported by factory.
         /// <br />
-        /// <br />
-        /// <b>Note:</b>if this method returns <code>true</code> it doesn't means that <see cref="Create(byte[])"/> won't throw exception
-        /// </summary>
-        /// <param name="source">image raw bytes</param>
-        /// <returns><code>true</code> if first eight bytes are recognised by factory as valid image type and <code>false</code> otherwise</returns>
+        /// <b>Note:</b> if this method returns
+        /// <see langword="true"/>
+        /// it doesn't means that
+        /// <see cref="Create(byte[])"/>
+        /// won't throw exception
+        /// </remarks>
+        /// <param name="source">image URL</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if first eight bytes are recognised by factory as valid image type and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public static bool IsSupportedType(Uri source) {
             if (source == null) {
                 return false;
             }
-            byte[] imageType = ReadImageType(source);
-            return ImageTypeIs(imageType, gif) || ImageTypeIs(imageType, jpeg) || ImageTypeIs(imageType, jpeg2000_1)
-                   || ImageTypeIs(imageType, jpeg2000_2) || ImageTypeIs(imageType, png) || ImageTypeIs(imageType, bmp)
-                   || ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2) || ImageTypeIs(imageType, jbig2);
+            ImageType imageType = ImageTypeDetector.DetectImageType(source);
+            return IsSupportedType(imageType);
+        }
+
+        /// <summary>Checks if the type of image is supported by factory.</summary>
+        /// <remarks>
+        /// Checks if the type of image is supported by factory.
+        /// <br />
+        /// <b>Note:</b> if this method returns
+        /// <see langword="true"/>
+        /// it doesn't means that
+        /// <see cref="Create(byte[])"/>
+        /// won't throw exception
+        /// </remarks>
+        /// <param name="imageType">image type</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if image type is supported and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public static bool IsSupportedType(ImageType imageType) {
+            return imageType == ImageType.GIF || imageType == ImageType.JPEG || imageType == ImageType.JPEG2000 || imageType
+                 == ImageType.PNG || imageType == ImageType.BMP || imageType == ImageType.TIFF || imageType == ImageType
+                .JBIG2;
         }
 
         private static ImageData CreateImageInstance(Uri source, bool recoverImage) {
-            byte[] imageType = ReadImageType(source);
-            if (ImageTypeIs(imageType, gif)) {
-                GifImageData image = new GifImageData(source);
-                GifImageHelper.ProcessImage(image, 0);
-                return image.GetFrames()[0];
-            }
-            else {
-                if (ImageTypeIs(imageType, jpeg)) {
+            ImageType imageType = ImageTypeDetector.DetectImageType(source);
+            switch (imageType) {
+                case ImageType.GIF: {
+                    GifImageData image = new GifImageData(source);
+                    GifImageHelper.ProcessImage(image, 0);
+                    return image.GetFrames()[0];
+                }
+
+                case ImageType.JPEG: {
                     ImageData image = new JpegImageData(source);
                     JpegImageHelper.ProcessImage(image);
                     return image;
                 }
-                else {
-                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
-                        ImageData image = new Jpeg2000ImageData(source);
-                        Jpeg2000ImageHelper.ProcessImage(image);
-                        return image;
-                    }
-                    else {
-                        if (ImageTypeIs(imageType, png)) {
-                            ImageData image = new PngImageData(source);
-                            PngImageHelper.ProcessImage(image);
-                            return image;
-                        }
-                        else {
-                            if (ImageTypeIs(imageType, bmp)) {
-                                ImageData image = new BmpImageData(source, false, 0);
-                                BmpImageHelper.ProcessImage(image);
-                                return image;
-                            }
-                            else {
-                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
-                                    ImageData image = new TiffImageData(source, recoverImage, 1, false);
-                                    TiffImageHelper.ProcessImage(image);
-                                    return image;
-                                }
-                                else {
-                                    if (ImageTypeIs(imageType, jbig2)) {
-                                        ImageData image = new Jbig2ImageData(source, 1);
-                                        Jbig2ImageHelper.ProcessImage(image);
-                                        return image;
-                                    }
-                                }
-                            }
-                        }
-                    }
+
+                case ImageType.JPEG2000: {
+                    ImageData image = new Jpeg2000ImageData(source);
+                    Jpeg2000ImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.PNG: {
+                    ImageData image = new PngImageData(source);
+                    PngImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.BMP: {
+                    ImageData image = new BmpImageData(source, false, 0);
+                    BmpImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.TIFF: {
+                    ImageData image = new TiffImageData(source, recoverImage, 1, false);
+                    TiffImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.JBIG2: {
+                    ImageData image = new Jbig2ImageData(source, 1);
+                    Jbig2ImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                default: {
+                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
                 }
             }
-            throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
         private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage) {
-            byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif)) {
-                GifImageData image = new GifImageData(bytes);
-                GifImageHelper.ProcessImage(image, 0);
-                return image.GetFrames()[0];
-            }
-            else {
-                if (ImageTypeIs(imageType, jpeg)) {
+            ImageType imageType = ImageTypeDetector.DetectImageType(bytes);
+            switch (imageType) {
+                case ImageType.GIF: {
+                    GifImageData image = new GifImageData(bytes);
+                    GifImageHelper.ProcessImage(image, 0);
+                    return image.GetFrames()[0];
+                }
+
+                case ImageType.JPEG: {
                     ImageData image = new JpegImageData(bytes);
                     JpegImageHelper.ProcessImage(image);
                     return image;
                 }
-                else {
-                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
-                        ImageData image = new Jpeg2000ImageData(bytes);
-                        Jpeg2000ImageHelper.ProcessImage(image);
-                        return image;
-                    }
-                    else {
-                        if (ImageTypeIs(imageType, png)) {
-                            ImageData image = new PngImageData(bytes);
-                            PngImageHelper.ProcessImage(image);
-                            return image;
-                        }
-                        else {
-                            if (ImageTypeIs(imageType, bmp)) {
-                                ImageData image = new BmpImageData(bytes, false, 0);
-                                BmpImageHelper.ProcessImage(image);
-                                return image;
-                            }
-                            else {
-                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
-                                    ImageData image = new TiffImageData(bytes, recoverImage, 1, false);
-                                    TiffImageHelper.ProcessImage(image);
-                                    return image;
-                                }
-                                else {
-                                    if (ImageTypeIs(imageType, jbig2)) {
-                                        ImageData image = new Jbig2ImageData(bytes, 1);
-                                        Jbig2ImageHelper.ProcessImage(image);
-                                        return image;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
-        }
 
-        private static bool ImageTypeIs(byte[] imageType, byte[] compareWith) {
-            for (int i = 0; i < compareWith.Length; i++) {
-                if (imageType[i] != compareWith[i]) {
-                    return false;
+                case ImageType.JPEG2000: {
+                    ImageData image = new Jpeg2000ImageData(bytes);
+                    Jpeg2000ImageHelper.ProcessImage(image);
+                    return image;
                 }
-            }
-            return true;
-        }
 
-        private static byte[] ReadImageType(Uri source) {
-            Stream stream = null;
-            try {
-                stream = UrlUtil.OpenStream(source);
-                byte[] bytes = new byte[8];
-                stream.Read(bytes);
-                return bytes;
-            }
-            catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
-            finally {
-                if (stream != null) {
-                    try {
-                        stream.Dispose();
-                    }
-                    catch (System.IO.IOException) {
-                    }
+                case ImageType.PNG: {
+                    ImageData image = new PngImageData(bytes);
+                    PngImageHelper.ProcessImage(image);
+                    return image;
                 }
-            }
-        }
 
-        private static byte[] ReadImageType(byte[] source) {
-            try {
-                Stream stream = new MemoryStream(source);
-                byte[] bytes = new byte[8];
-                stream.Read(bytes);
-                return bytes;
-            }
-            catch (System.IO.IOException) {
-                return null;
+                case ImageType.BMP: {
+                    ImageData image = new BmpImageData(bytes, false, 0);
+                    BmpImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.TIFF: {
+                    ImageData image = new TiffImageData(bytes, recoverImage, 1, false);
+                    TiffImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                case ImageType.JBIG2: {
+                    ImageData image = new Jbig2ImageData(bytes, 1);
+                    Jbig2ImageHelper.ProcessImage(image);
+                    return image;
+                }
+
+                default: {
+                    throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
+                }
             }
         }
     }
