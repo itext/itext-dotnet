@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
@@ -58,7 +60,9 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenBmp2() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_gray.bmp");
+            // Test this a more specific entry point
+            ImageData img = ImageDataFactory.CreateBmp(UrlUtil.ToURL(sourceFolder + "WP_20140410_001_gray.bmp"), false
+                );
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
@@ -66,10 +70,15 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenBmp3() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_monochrome.bmp");
-            NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
-            NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
-            NUnit.Framework.Assert.AreEqual(1, img.GetBpc());
+            String imageFileName = sourceFolder + "WP_20140410_001_monochrome.bmp";
+            using (FileStream fis = new FileStream(imageFileName, FileMode.Open, FileAccess.Read)) {
+                byte[] imageBytes = StreamUtil.InputStreamToArray(fis);
+                // Test this a more specific entry point
+                ImageData img = ImageDataFactory.CreateBmp(imageBytes, false);
+                NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
+                NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
+                NUnit.Framework.Assert.AreEqual(1, img.GetBpc());
+            }
         }
     }
 }

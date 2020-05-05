@@ -49,19 +49,56 @@ namespace iText.IO.Image {
 
         private bool noHeader;
 
-        protected internal BmpImageData(Uri url, bool noHeader, int size)
+        /// <summary>
+        /// Creates instance of
+        /// <see cref="BmpImageData"/>
+        /// </summary>
+        /// <param name="url">url of the image</param>
+        /// <param name="noHeader">indicates that the source image does not have a header</param>
+        protected internal BmpImageData(Uri url, bool noHeader)
             : base(url, ImageType.BMP) {
             this.noHeader = noHeader;
+        }
+
+        /// <summary>
+        /// Creates instance of
+        /// <see cref="BmpImageData"/>
+        /// </summary>
+        /// <param name="url">url of the image</param>
+        /// <param name="noHeader">indicates that the source image does not have a header</param>
+        /// <param name="size">the size of the image (length of the byte array)</param>
+        [System.ObsoleteAttribute(@"will be removed in 7.2")]
+        protected internal BmpImageData(Uri url, bool noHeader, int size)
+            : this(url, noHeader) {
             this.size = size;
         }
 
-        protected internal BmpImageData(byte[] bytes, bool noHeader, int size)
+        /// <summary>
+        /// Creates instance of
+        /// <see cref="BmpImageData"/>
+        /// </summary>
+        /// <param name="bytes">contents of the image</param>
+        /// <param name="noHeader">indicates that the source image does not have a header</param>
+        protected internal BmpImageData(byte[] bytes, bool noHeader)
             : base(bytes, ImageType.BMP) {
             this.noHeader = noHeader;
+        }
+
+        /// <summary>
+        /// Creates instance of
+        /// <see cref="BmpImageData"/>
+        /// </summary>
+        /// <param name="bytes">contents of the image</param>
+        /// <param name="noHeader">indicates that the source image does not have a header</param>
+        /// <param name="size">the size of the image (length of the byte array)</param>
+        [System.ObsoleteAttribute(@"will be removed in 7.2")]
+        protected internal BmpImageData(byte[] bytes, bool noHeader, int size)
+            : this(bytes, noHeader) {
             this.size = size;
         }
 
         /// <returns>size of the image</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2")]
         public virtual int GetSize() {
             return size;
         }
