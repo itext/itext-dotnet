@@ -67,9 +67,9 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SetParent(ISvgNodeRenderer parent) {
         }
 
-        // TODO RND-986
+        // TODO DEVSIX-2283
         public virtual ISvgNodeRenderer GetParent() {
-            // TODO RND-986
+            // TODO DEVSIX-2283
             return null;
         }
 
