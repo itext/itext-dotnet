@@ -85,9 +85,10 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Method to decode LZW compressed data.</summary>
-        /// <param name="data">The compressed data.</param>
-        /// <param name="uncompData">Array to return the uncompressed data in.</param>
-        /// <param name="h">The number of rows the compressed data contains.</param>
+        /// <param name="data">The compressed data</param>
+        /// <param name="uncompData">Array to return the uncompressed data in</param>
+        /// <param name="h">The number of rows the compressed data contains</param>
+        /// <returns>The decoded data</returns>
         public virtual byte[] Decode(byte[] data, byte[] uncompData, int h) {
             if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
                 throw new iText.IO.IOException(iText.IO.IOException.Tiff50StyleLzwCodesAreNotSupported);
@@ -157,7 +158,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Write out the string just uncompressed.</summary>
-        /// <param name="str"/>
+        /// <param name="str">the byte string for uncompressed write out</param>
         public virtual void WriteString(byte[] str) {
             // Fix for broken tiff files
             int max = uncompData.Length - dstIndex;
@@ -169,8 +170,11 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Add a new string to the string table.</summary>
-        /// <param name="oldString"/>
-        /// <param name="newString"/>
+        /// <param name="oldString">
+        /// the byte string at the end of which the new string
+        /// will be written and which will be added to the string table
+        /// </param>
+        /// <param name="newString">the byte to be written to the end of the old string</param>
         public virtual void AddStringToTable(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];
@@ -194,7 +198,7 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Add a new string to the string table.</summary>
-        /// <param name="str"/>
+        /// <param name="str">the byte string which will be added to the string table</param>
         public virtual void AddStringToTable(byte[] str) {
             // Add this new String to the table
             stringTable[tableIndex++] = str;
@@ -214,8 +218,9 @@ namespace iText.IO.Codec {
         }
 
         /// <summary>Append <c>newString</c> to the end of <c>oldString</c>.</summary>
-        /// <param name="oldString"/>
-        /// <param name="newString"/>
+        /// <param name="oldString">the byte string at the end of which the new string will be written</param>
+        /// <param name="newString">the byte to be written to the end of the old string</param>
+        /// <returns>the byte string which is the sum of the new string and the old string</returns>
         public virtual byte[] ComposeString(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] str = new byte[length + 1];
