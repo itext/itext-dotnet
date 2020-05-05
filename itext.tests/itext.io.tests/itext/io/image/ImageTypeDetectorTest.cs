@@ -51,6 +51,11 @@ namespace iText.IO.Image {
             Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".tiff"), ImageType.TIFF);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestWmf() {
+            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".wmf"), ImageType.WMF);
+        }
+
         private void Test(Uri location, ImageType expectedType) {
             NUnit.Framework.Assert.AreEqual(expectedType, ImageTypeDetector.DetectImageType(location));
         }

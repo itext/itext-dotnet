@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using iText.IO.Codec;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
@@ -53,7 +54,10 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenTiff1() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.tif");
+            byte[] imageBytes = StreamUtil.InputStreamToArray(new FileStream(sourceFolder + "WP_20140410_001.tif", FileMode.Open
+                , FileAccess.Read));
+            // Test a more specific entry point
+            ImageData img = ImageDataFactory.CreateTiff(imageBytes, false, 1, false);
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
@@ -61,7 +65,9 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenTiff2() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_gray.tiff");
+            // Test a more specific entry point
+            ImageData img = ImageDataFactory.CreateTiff(UrlUtil.ToURL(sourceFolder + "WP_20140410_001_gray.tiff"), false
+                , 1, false);
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());

@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
@@ -50,15 +52,20 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenJpeg1() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.jpg");
-            NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
-            NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
-            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            using (FileStream fis = new FileStream(sourceFolder + "WP_20140410_001.jpg", FileMode.Open, FileAccess.Read
+                )) {
+                // Test this a more specific entry point
+                ImageData img = ImageDataFactory.CreateJpeg(StreamUtil.InputStreamToArray(fis));
+                NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
+                NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
+                NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_gray.jpg");
+            // Test this a more specific entry point
+            ImageData img = ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "WP_20140410_001_gray.jpg"));
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
@@ -66,10 +73,14 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenJpeg3() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001_monochrome.jpg");
-            NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
-            NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
-            NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            using (FileStream fis = new FileStream(sourceFolder + "WP_20140410_001_monochrome.jpg", FileMode.Open, FileAccess.Read
+                )) {
+                // Test this a more specific entry point
+                ImageData img = ImageDataFactory.Create(StreamUtil.InputStreamToArray(fis));
+                NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
+                NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
+                NUnit.Framework.Assert.AreEqual(8, img.GetBpc());
+            }
         }
 
         [NUnit.Framework.Test]

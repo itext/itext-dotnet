@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
@@ -51,8 +52,8 @@ namespace iText.IO.Image {
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2000_1() {
             try {
-                ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JP2");
-                Jpeg2000ImageHelper.ProcessImage(img);
+                // Test a more specific entry point
+                ImageDataFactory.CreateJpeg2000(UrlUtil.ToURL(sourceFolder + "WP_20140410_001.JP2"));
             }
             catch (iText.IO.IOException e) {
                 NUnit.Framework.Assert.AreEqual(iText.IO.IOException.UnsupportedBoxSizeEqEq0, e.Message);
@@ -62,7 +63,6 @@ namespace iText.IO.Image {
         [NUnit.Framework.Test]
         public virtual void OpenJpeg2000_2() {
             ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JPC");
-            Jpeg2000ImageHelper.ProcessImage(img);
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(1456, img.GetHeight(), 0);
             NUnit.Framework.Assert.AreEqual(8, img.GetBpc());

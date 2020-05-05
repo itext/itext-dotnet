@@ -131,24 +131,15 @@ namespace iText.IO.Image {
         }
 
         private static byte[] ReadImageType(Uri source) {
-            Stream stream = null;
             try {
-                stream = UrlUtil.OpenStream(source);
-                byte[] bytes = new byte[8];
-                stream.Read(bytes);
-                return bytes;
+                using (Stream stream = UrlUtil.OpenStream(source)) {
+                    byte[] bytes = new byte[8];
+                    stream.Read(bytes);
+                    return bytes;
+                }
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
-            finally {
-                if (stream != null) {
-                    try {
-                        stream.Dispose();
-                    }
-                    catch (System.IO.IOException) {
-                    }
-                }
             }
         }
 

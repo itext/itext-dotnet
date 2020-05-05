@@ -227,62 +227,40 @@ namespace iText.IO.Image {
 
         /// <summary>Returns a specified frame of the gif image</summary>
         /// <param name="url">url of gif image</param>
-        /// <param name="frame">number of frame to be returned</param>
+        /// <param name="frame">number of frame to be returned, 1-based</param>
         /// <returns>GifImageData instance.</returns>
         public static ImageData CreateGifFrame(Uri url, int frame) {
-            if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
-                GifImageData image = new GifImageData(url);
-                GifImageHelper.ProcessImage(image, frame - 1);
-                return image.GetFrames()[frame - 1];
-            }
-            throw new ArgumentException("GIF image expected.");
+            return CreateGifFrames(url, new int[] { frame })[0];
         }
 
         /// <summary>Returns a specified frame of the gif image</summary>
         /// <param name="bytes">byte array of gif image</param>
-        /// <param name="frame">number of frame to be returned</param>
+        /// <param name="frame">number of frame to be returned, 1-based</param>
         /// <returns>GifImageData instance</returns>
         public static ImageData CreateGifFrame(byte[] bytes, int frame) {
-            if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
-                GifImageData image = new GifImageData(bytes);
-                GifImageHelper.ProcessImage(image, frame - 1);
-                return image.GetFrames()[frame - 1];
-            }
-            throw new ArgumentException("GIF image expected.");
+            return CreateGifFrames(bytes, new int[] { frame })[0];
         }
 
         /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
-        /// <param name="frameNumbers">array of frame numbers of gif image</param>
+        /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers) {
             if (ImageTypeDetector.DetectImageType(bytes) == ImageType.GIF) {
                 GifImageData image = new GifImageData(bytes);
-                JavaUtil.Sort(frameNumbers);
-                GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
-                IList<ImageData> frames = new List<ImageData>();
-                foreach (int frame in frameNumbers) {
-                    frames.Add(image.GetFrames()[frame - 1]);
-                }
-                return frames;
+                return ProcessGifImageAndExtractFrames(frameNumbers, image);
             }
             throw new ArgumentException("GIF image expected.");
         }
 
         /// <summary>Returns <c>List</c> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
-        /// <param name="frameNumbers">array of frame numbers of gif image</param>
+        /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers) {
             if (ImageTypeDetector.DetectImageType(url) == ImageType.GIF) {
                 GifImageData image = new GifImageData(url);
-                JavaUtil.Sort(frameNumbers);
-                GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
-                IList<ImageData> frames = new List<ImageData>();
-                foreach (int frame in frameNumbers) {
-                    frames.Add(image.GetFrames()[frame - 1]);
-                }
-                return frames;
+                return ProcessGifImageAndExtractFrames(frameNumbers, image);
             }
             throw new ArgumentException("GIF image expected.");
         }
@@ -589,6 +567,16 @@ namespace iText.IO.Image {
                     throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
                 }
             }
+        }
+
+        private static IList<ImageData> ProcessGifImageAndExtractFrames(int[] frameNumbers, GifImageData image) {
+            JavaUtil.Sort(frameNumbers);
+            GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
+            IList<ImageData> frames = new List<ImageData>();
+            foreach (int frame in frameNumbers) {
+                frames.Add(image.GetFrames()[frame - 1]);
+            }
+            return frames;
         }
     }
 }
