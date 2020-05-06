@@ -130,7 +130,7 @@ namespace iText.Svg.Processors.Impl.Font {
         /// </param>
         /// <returns>true, if supported or unrecognized.</returns>
         private bool SupportedFontFormat(FontFace.FontFormat format) {
-            //TODO (RND-1065) code duplication
+            //TODO (DEVSIX-2230) code duplication
             switch (format) {
                 case FontFace.FontFormat.None:
                 case FontFace.FontFormat.TrueType:
