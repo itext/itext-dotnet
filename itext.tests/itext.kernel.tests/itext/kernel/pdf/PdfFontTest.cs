@@ -230,9 +230,11 @@ namespace iText.Kernel.Pdf {
             a.LineTo(300, 695);
             a.LineTo(595, 5);
             a.ClosePathFillStroke();
+            NUnit.Framework.Assert.AreEqual(600.0, GetContentWidth(type3, 'A'), 1e-5);
             Type3Glyph space = type3.AddGlyph(' ', 600, 0, 0, 600, 700);
             space.SetLineWidth(10);
             space.ClosePathFillStroke();
+            NUnit.Framework.Assert.AreEqual(600.0, GetContentWidth(type3, ' '), 1e-5);
             Type3Glyph e = type3.AddGlyph('E', 600, 0, 0, 600, 700);
             e.SetLineWidth(100);
             e.MoveTo(595, 5);
@@ -241,16 +243,19 @@ namespace iText.Kernel.Pdf {
             e.LineTo(5, 695);
             e.LineTo(595, 695);
             e.Stroke();
+            NUnit.Framework.Assert.AreEqual(600.0, GetContentWidth(type3, 'E'), 1e-5);
             Type3Glyph tilde = type3.AddGlyph('~', 600, 0, 0, 600, 700);
             tilde.SetLineWidth(100);
             tilde.MoveTo(595, 5);
             tilde.LineTo(5, 5);
             tilde.Stroke();
+            NUnit.Framework.Assert.AreEqual(600.0, GetContentWidth(type3, '~'), 1e-5);
             Type3Glyph symbol233 = type3.AddGlyph('\u00E9', 600, 0, 0, 600, 700);
             symbol233.SetLineWidth(100);
             symbol233.MoveTo(540, 5);
             symbol233.LineTo(5, 340);
             symbol233.Stroke();
+            NUnit.Framework.Assert.AreEqual(600.0, GetContentWidth(type3, '\u00E9'), 1e-5);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
@@ -1444,6 +1449,10 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder)
                 );
+        }
+
+        private float GetContentWidth(PdfType3Font type3, char glyph) {
+            return type3.GetContentWidth(new PdfString(new byte[] { (byte)type3.GetGlyph(glyph).GetCode() }));
         }
     }
 }
