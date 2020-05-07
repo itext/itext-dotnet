@@ -428,7 +428,6 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_fixedHeightOverflowTest01.pdf";
             String outFile = destinationFolder + "fixedHeightOverflowTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
-            pdfDoc.SetDefaultPageSize(PageSize.A4);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
             // specifying height definitely bigger than page height
@@ -440,6 +439,223 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void MarginCollapseKeptTogetherDivGoesBackTest01() {
+            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherDivGoesBackTest01.pdf";
+            String outFile = destinationFolder + "marginCollapseKeptTogetherDivGoesBackTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div div1 = new Div().SetMarginBottom(100).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
+                ("Bottom margin: 100"));
+            doc.Add(div1);
+            Div div2 = new Div().SetMarginTop(300).SetHeight(1000).SetBackgroundColor(ColorConstants.RED).Add(new Paragraph
+                ("Top margin: 300"));
+            div2.SetKeepTogether(true);
+            doc.Add(div2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void MarginCollapseKeptTogetherDivGoesBackTest02() {
+            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherDivGoesBackTest02.pdf";
+            String outFile = destinationFolder + "marginCollapseKeptTogetherDivGoesBackTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div div1 = new Div().SetMarginBottom(300).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
+                ("Bottom margin: 300"));
+            doc.Add(div1);
+            Div div2 = new Div().SetMarginTop(100).SetHeight(1000).SetBackgroundColor(ColorConstants.RED).Add(new Paragraph
+                ("Top margin: 100"));
+            div2.SetKeepTogether(true);
+            doc.Add(div2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest01() {
+            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
+            String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div div1 = new Div().SetMarginBottom(300).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
+                ("Bottom margin: 300"));
+            doc.Add(div1);
+            Div div2 = new Div().SetMarginTop(100).SetHeight(300).SetBackgroundColor(ColorConstants.RED).Add(new Paragraph
+                ("Top margin: 100"));
+            div2.SetKeepTogether(true);
+            doc.Add(div2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest02() {
+            // TODO
+            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
+            String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div div1 = new Div().SetMarginBottom(100).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
+                ("Bottom margin: 100"));
+            doc.Add(div1);
+            Div div2 = new Div().SetMarginTop(300).SetHeight(300).SetBackgroundColor(ColorConstants.RED).Add(new Paragraph
+                ("Top margin: 300"));
+            div2.SetKeepTogether(true);
+            doc.Add(div2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SmallFloatInsideKeptTogetherDivTest01() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherDivTest01.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherDivTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // specifying height definitely bigger than page height
+            int divHeight = 1000;
+            doc.Add(CreateKeptTogetherDivWithSmallFloat(divHeight));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SmallFloatInsideKeptTogetherDivTest02() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherDivTest02.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherDivTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
+            doc.Add(new Paragraph("Hello"));
+            // specifying height definitely bigger than page height
+            int divHeight = 1000;
+            doc.Add(CreateKeptTogetherDivWithSmallFloat(divHeight));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SmallFloatInsideKeptTogetherParagraphTest01() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherParagraphTest01.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherParagraphTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // specifying height definitely bigger than page height
+            int paragraphHeight = 1000;
+            doc.Add(CreateKeptTogetherParagraphWithSmallFloat(paragraphHeight));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SmallFloatInsideKeptTogetherParagraphTest02() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherParagraphTest02.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherParagraphTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
+            doc.Add(new Paragraph("Hello"));
+            // specifying height definitely bigger than page height
+            int paragraphHeight = 1000;
+            doc.Add(CreateKeptTogetherParagraphWithSmallFloat(paragraphHeight));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
+        public virtual void SmallFloatInsideKeptTogetherTableTest01() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // specifying num of rows which will definitely occupy more space than page height
+            int numOfRows = 20;
+            doc.Add(CreateKeptTogetherTableWithSmallFloat(numOfRows));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void SmallFloatInsideKeptTogetherTableTest02() {
+            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest02.pdf";
+            String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
+            doc.Add(new Paragraph("Hello"));
+            // specifying num of rows which will definitely occupy more space than page height
+            int numOfRows = 20;
+            doc.Add(CreateKeptTogetherTableWithSmallFloat(numOfRows));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        private static Div CreateKeptTogetherDivWithSmallFloat(int divHeight) {
+            // test keep-together processing on height-only overflow for blocks
+            Div div = new Div().SetHeight(divHeight).SetBorder(new SolidBorder(3));
+            div.SetKeepTogether(true);
+            Div floatDiv = new Div();
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            floatDiv.SetHeight(50);
+            floatDiv.SetWidth(50);
+            floatDiv.SetBackgroundColor(ColorConstants.RED);
+            div.Add(floatDiv);
+            return div;
+        }
+
+        private static Paragraph CreateKeptTogetherParagraphWithSmallFloat(int paragraphHeight) {
+            // test keep-together processing on height-only overflow for blocks
+            Paragraph paragraph = new Paragraph().SetHeight(paragraphHeight).SetBorder(new SolidBorder(3));
+            paragraph.SetKeepTogether(true);
+            Div floatDiv = new Div();
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            floatDiv.SetHeight(50);
+            floatDiv.SetWidth(50);
+            floatDiv.SetBackgroundColor(ColorConstants.RED);
+            paragraph.Add(floatDiv);
+            return paragraph;
+        }
+
+        private static Table CreateKeptTogetherTableWithSmallFloat(int numOfRows) {
+            // test keep-together processing on height-only overflow for blocks
+            Table table = new Table(1).SetBorder(new SolidBorder(3)).UseAllAvailableWidth();
+            table.SetKeepTogether(true);
+            Div floatDiv = new Div();
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            floatDiv.SetHeight(50);
+            floatDiv.SetWidth(50);
+            floatDiv.SetBackgroundColor(ColorConstants.RED);
+            for (int i = 0; i < numOfRows; i++) {
+                table.AddCell(new Cell().Add(floatDiv));
+            }
+            return table;
         }
     }
 }

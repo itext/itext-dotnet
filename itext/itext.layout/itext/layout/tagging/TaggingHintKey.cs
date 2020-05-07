@@ -71,10 +71,6 @@ namespace iText.Layout.Tagging {
             this.isFinished = true;
         }
 
-        internal void SetFinished(bool finished) {
-            this.isFinished = finished;
-        }
-
         internal bool IsArtifact() {
             return isArtifact;
         }

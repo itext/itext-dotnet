@@ -61,6 +61,8 @@ namespace iText.Layout {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/FloatTest/";
 
+        private const String shortText = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document. ";
+
         private const String text = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document. "
              + "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries. "
              + "Themes and styles also help keep your document coordinated. When you click Design and choose a new Theme, the pictures, charts, and SmartArt graphics change to match your new theme. When you apply styles, your headings change to match the new theme. "
@@ -1437,6 +1439,25 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void FloatsKeepTogetherOnPageSplit03() {
+            String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit03.pdf";
+            String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit03.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            document.Add(new Paragraph(text));
+            Div floatedKeptTogetherDiv = new Div().Add(new Paragraph(text + text)).SetBackgroundColor(ColorConstants.BLUE
+                ).SetWidth(200).SetKeepTogether(true);
+            floatedKeptTogetherDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            document.Add(floatedKeptTogetherDiv);
+            Div longKeptTogetherDiv = new Div().Add(new Paragraph(text + text + text + text + text + text)).SetKeepTogether
+                (true);
+            document.Add(longKeptTogetherDiv);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff39_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FloatsInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit01.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit01.pdf";
@@ -2456,7 +2477,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 2, false);
+            FillWithKeptTogetherElement(document, text, 2, false, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
@@ -2468,7 +2489,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 3, false);
+            FillWithKeptTogetherElement(document, text, 3, false, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
@@ -2480,7 +2501,19 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 4, false);
+            FillWithKeptTogetherElement(document, text, 4, false, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
+            String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, "Some short text", 4, false, true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
@@ -2492,7 +2525,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 2, true);
+            FillWithKeptTogetherElement(document, text, 2, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
@@ -2504,7 +2537,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 3, true);
+            FillWithKeptTogetherElement(document, text, 3, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
@@ -2516,17 +2549,18 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
-            FillWithKeptTogetherElement(document, 4, true);
+            FillWithKeptTogetherElement(document, text, 4, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff50_"));
         }
 
-        private static void FillWithKeptTogetherElement(Document doc, int textTimes, bool isInner) {
+        private static void FillWithKeptTogetherElement(Document doc, String floatText, int textTimes, bool isInner
+            , bool floatAsFirst) {
             Div floatedDiv = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether
                 (true);
             floatedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
-            floatedDiv.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
+            floatedDiv.Add(new Paragraph(floatText).SetFontColor(ColorConstants.LIGHT_GRAY));
             Paragraph keptTogetherParagraph = new Paragraph().SetKeepTogether(true);
             for (int i = 0; i < textTimes; i++) {
                 keptTogetherParagraph.Add(text);
@@ -2534,19 +2568,23 @@ namespace iText.Layout {
             if (isInner) {
                 Div container = new Div();
                 container.Add(floatedDiv);
-                container.Add(new Paragraph("Hello"));
-                container.Add(new Paragraph("Hello"));
-                container.Add(new Paragraph("Hello"));
-                container.Add(new Paragraph("Hello"));
+                if (!floatAsFirst) {
+                    container.Add(new Paragraph("Hello"));
+                    container.Add(new Paragraph("Hello"));
+                    container.Add(new Paragraph("Hello"));
+                    container.Add(new Paragraph("Hello"));
+                }
                 container.Add(keptTogetherParagraph);
                 doc.Add(container);
             }
             else {
                 doc.Add(floatedDiv);
-                doc.Add(new Paragraph("Hello"));
-                doc.Add(new Paragraph("Hello"));
-                doc.Add(new Paragraph("Hello"));
-                doc.Add(new Paragraph("Hello"));
+                if (!floatAsFirst) {
+                    doc.Add(new Paragraph("Hello"));
+                    doc.Add(new Paragraph("Hello"));
+                    doc.Add(new Paragraph("Hello"));
+                    doc.Add(new Paragraph("Hello"));
+                }
                 doc.Add(keptTogetherParagraph);
             }
         }

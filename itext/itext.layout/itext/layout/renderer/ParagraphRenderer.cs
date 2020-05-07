@@ -282,6 +282,7 @@ namespace iText.Layout.Renderer {
                     else {
                         bool keepTogether = IsKeepTogether();
                         if (keepTogether) {
+                            floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing
                                 () ? this : result.GetCauseOfNothing());
                         }
@@ -365,6 +366,7 @@ namespace iText.Layout.Renderer {
                                         }
                                     }
                                     else {
+                                        floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                                         return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing
                                             () ? this : result.GetCauseOfNothing());
                                     }
@@ -423,6 +425,7 @@ namespace iText.Layout.Renderer {
             }
             AbstractRenderer overflowRenderer = ApplyMinHeight(overflowY, layoutBox);
             if (overflowRenderer != null && IsKeepTogether()) {
+                floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             CorrectFixedLayout(layoutBox);
@@ -439,6 +442,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                            floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, this);
                         }
                     }

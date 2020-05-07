@@ -175,6 +175,7 @@ namespace iText.Layout.Renderer {
                                 .GetAreaBreak());
                         }
                         else {
+                            floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
                                 (result.GetAreaBreak());
                         }
@@ -314,6 +315,7 @@ namespace iText.Layout.Renderer {
                                             .GetAreaBreak());
                                     }
                                     else {
+                                        floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                                         return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
                                             (result.GetAreaBreak());
                                     }
@@ -369,6 +371,7 @@ namespace iText.Layout.Renderer {
             }
             bool minHeightOverflow = overflowRenderer_1 != null;
             if (minHeightOverflow && IsKeepTogether()) {
+                floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             // in this case layout result need to be changed
@@ -433,6 +436,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                            floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, this);
                         }
                     }
@@ -449,6 +453,7 @@ namespace iText.Layout.Renderer {
                 if (positionedRenderers.Count > 0) {
                     overflowRenderer_1.positionedRenderers = new List<IRenderer>(positionedRenderers);
                 }
+                floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                 return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer_1, causeOfNothing);
             }
         }

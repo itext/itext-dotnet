@@ -278,22 +278,20 @@ namespace iText.Layout.Tagging {
                 }
                 FinishDummyKids(GetKidsHint(hint));
             }
-            IList<TaggingHintKey> hintsToBeHeld = new List<TaggingHintKey>();
+            ICollection<TaggingHintKey> hintsToBeHeld = new HashSet<TaggingHintKey>();
             foreach (TaggingHintKey hint in allHints) {
                 if (!IsNonAccessibleHint(hint)) {
                     IList<TaggingHintKey> siblingsHints = GetAccessibleKidsHint(hint);
-                    if (null != siblingsHints) {
-                        bool holdTheFirstFinishedToBeFound = false;
-                        foreach (TaggingHintKey sibling in siblingsHints) {
-                            if (!sibling.IsFinished()) {
-                                holdTheFirstFinishedToBeFound = true;
-                            }
-                            else {
-                                if (holdTheFirstFinishedToBeFound) {
-                                    // here true == sibling.isFinished
-                                    hintsToBeHeld.Add(sibling);
-                                    holdTheFirstFinishedToBeFound = false;
-                                }
+                    bool holdTheFirstFinishedToBeFound = false;
+                    foreach (TaggingHintKey sibling in siblingsHints) {
+                        if (!sibling.IsFinished()) {
+                            holdTheFirstFinishedToBeFound = true;
+                        }
+                        else {
+                            if (holdTheFirstFinishedToBeFound) {
+                                // here true == sibling.isFinished
+                                hintsToBeHeld.Add(sibling);
+                                holdTheFirstFinishedToBeFound = false;
                             }
                         }
                     }
@@ -668,7 +666,7 @@ namespace iText.Layout.Tagging {
             return context.GetWaitingTagsManager().IsObjectAssociatedWithWaitingTag(tagHint);
         }
 
-        private void ReleaseHint(TaggingHintKey hint, IList<TaggingHintKey> hintsToBeHeld, bool checkContextIsFinished
+        private void ReleaseHint(TaggingHintKey hint, ICollection<TaggingHintKey> hintsToBeHeld, bool checkContextIsFinished
             ) {
             TaggingHintKey parentHint = parentHints.Get(hint);
             IList<TaggingHintKey> kidsHint = kidsHints.Get(hint);
