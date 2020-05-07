@@ -2449,5 +2449,106 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff03_"));
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
+            String outFile = destinationFolder + "keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 2, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
+            String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 3, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 4, false);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void InnerKeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
+            String cmpFileName = sourceFolder + "cmp_innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
+            String outFile = destinationFolder + "innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 2, true);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void InnerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
+            String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
+            String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 3, true);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void InnerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
+            String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
+            String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            FillWithKeptTogetherElement(document, 4, true);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff50_"));
+        }
+
+        private static void FillWithKeptTogetherElement(Document doc, int textTimes, bool isInner) {
+            Div floatedDiv = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether
+                (true);
+            floatedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            floatedDiv.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
+            Paragraph keptTogetherParagraph = new Paragraph().SetKeepTogether(true);
+            for (int i = 0; i < textTimes; i++) {
+                keptTogetherParagraph.Add(text);
+            }
+            if (isInner) {
+                Div container = new Div();
+                container.Add(floatedDiv);
+                container.Add(new Paragraph("Hello"));
+                container.Add(new Paragraph("Hello"));
+                container.Add(new Paragraph("Hello"));
+                container.Add(new Paragraph("Hello"));
+                container.Add(keptTogetherParagraph);
+                doc.Add(container);
+            }
+            else {
+                doc.Add(floatedDiv);
+                doc.Add(new Paragraph("Hello"));
+                doc.Add(new Paragraph("Hello"));
+                doc.Add(new Paragraph("Hello"));
+                doc.Add(new Paragraph("Hello"));
+                doc.Add(keptTogetherParagraph);
+            }
+        }
     }
 }
