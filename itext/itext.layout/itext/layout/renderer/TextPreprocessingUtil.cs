@@ -38,48 +38,53 @@ namespace iText.Layout.Renderer {
         /// <returns>old line with new special whitespace glyphs</returns>
         public static GlyphLine ReplaceSpecialWhitespaceGlyphs(GlyphLine line, PdfFont font) {
             if (null != line) {
+                bool isMonospaceFont = font.GetFontProgram().GetFontMetrics().IsFixedPitch();
                 Glyph space = font.GetGlyph('\u0020');
+                int spaceWidth = space.GetWidth();
                 Glyph glyph;
                 for (int i = 0; i < line.Size(); i++) {
                     glyph = line.Get(i);
-                    int? xAdvance = GetSpecialWhitespaceXAdvance(glyph, space, font.GetFontProgram().GetFontMetrics().IsFixedPitch
-                        ());
-                    if (xAdvance != null) {
+                    int xAdvance = 0;
+                    bool isSpecialWhitespaceGlyph = false;
+                    if (glyph.GetCode() <= 0) {
+                        switch (glyph.GetUnicode()) {
+                            // ensp
+                            case '\u2002': {
+                                xAdvance = isMonospaceFont ? 0 : 500 - spaceWidth;
+                                isSpecialWhitespaceGlyph = true;
+                                break;
+                            }
+
+                            // emsp
+                            case '\u2003': {
+                                xAdvance = isMonospaceFont ? 0 : 1000 - spaceWidth;
+                                isSpecialWhitespaceGlyph = true;
+                                break;
+                            }
+
+                            // thinsp
+                            case '\u2009': {
+                                xAdvance = isMonospaceFont ? 0 : 200 - spaceWidth;
+                                isSpecialWhitespaceGlyph = true;
+                                break;
+                            }
+
+                            case '\t': {
+                                xAdvance = 3 * spaceWidth;
+                                isSpecialWhitespaceGlyph = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isSpecialWhitespaceGlyph) {
                         Glyph newGlyph = new Glyph(space, glyph.GetUnicode());
                         System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
-                        newGlyph.SetXAdvance((short)(int)xAdvance);
+                        newGlyph.SetXAdvance((short)xAdvance);
                         line.Set(i, newGlyph);
                     }
                 }
             }
             return line;
-        }
-
-        private static int? GetSpecialWhitespaceXAdvance(Glyph glyph, Glyph spaceGlyph, bool isMonospaceFont) {
-            if (glyph.GetCode() > 0) {
-                return null;
-            }
-            switch (glyph.GetUnicode()) {
-                // ensp
-                case '\u2002': {
-                    return isMonospaceFont ? 0 : 500 - spaceGlyph.GetWidth();
-                }
-
-                // emsp
-                case '\u2003': {
-                    return isMonospaceFont ? 0 : 1000 - spaceGlyph.GetWidth();
-                }
-
-                // thinsp
-                case '\u2009': {
-                    return isMonospaceFont ? 0 : 200 - spaceGlyph.GetWidth();
-                }
-
-                case '\t': {
-                    return 3 * spaceGlyph.GetWidth();
-                }
-            }
-            return null;
         }
     }
 }
