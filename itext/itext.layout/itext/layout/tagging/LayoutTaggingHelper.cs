@@ -278,9 +278,30 @@ namespace iText.Layout.Tagging {
                 }
                 FinishDummyKids(GetKidsHint(hint));
             }
+            IList<TaggingHintKey> hintsToBeHeld = new List<TaggingHintKey>();
+            foreach (TaggingHintKey hint in allHints) {
+                if (!IsNonAccessibleHint(hint)) {
+                    IList<TaggingHintKey> siblingsHints = GetAccessibleKidsHint(hint);
+                    if (null != siblingsHints) {
+                        bool holdTheFirstFinishedToBeFound = false;
+                        foreach (TaggingHintKey sibling in siblingsHints) {
+                            if (!sibling.IsFinished()) {
+                                holdTheFirstFinishedToBeFound = true;
+                            }
+                            else {
+                                if (holdTheFirstFinishedToBeFound) {
+                                    // here true == sibling.isFinished
+                                    hintsToBeHeld.Add(sibling);
+                                    holdTheFirstFinishedToBeFound = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             foreach (TaggingHintKey hint in allHints) {
                 if (hint.IsFinished()) {
-                    ReleaseHint(hint, true);
+                    ReleaseHint(hint, hintsToBeHeld, true);
                 }
             }
         }
@@ -306,7 +327,7 @@ namespace iText.Layout.Tagging {
                 //                Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
                 //                logger.warn(LogMessageConstant.TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE);
                 //            }
-                ReleaseHint(hint, false);
+                ReleaseHint(hint, null, false);
             }
             System.Diagnostics.Debug.Assert(parentHints.IsEmpty());
             System.Diagnostics.Debug.Assert(kidsHints.IsEmpty());
@@ -647,7 +668,8 @@ namespace iText.Layout.Tagging {
             return context.GetWaitingTagsManager().IsObjectAssociatedWithWaitingTag(tagHint);
         }
 
-        private void ReleaseHint(TaggingHintKey hint, bool checkContextIsFinished) {
+        private void ReleaseHint(TaggingHintKey hint, IList<TaggingHintKey> hintsToBeHeld, bool checkContextIsFinished
+            ) {
             TaggingHintKey parentHint = parentHints.Get(hint);
             IList<TaggingHintKey> kidsHint = kidsHints.Get(hint);
             if (checkContextIsFinished && parentHint != null) {
@@ -657,6 +679,11 @@ namespace iText.Layout.Tagging {
             }
             if (checkContextIsFinished && kidsHint != null) {
                 if (IsSomeKidNotFinished(hint)) {
+                    return;
+                }
+            }
+            if (checkContextIsFinished && hintsToBeHeld != null) {
+                if (hintsToBeHeld.Contains(hint)) {
                     return;
                 }
             }
