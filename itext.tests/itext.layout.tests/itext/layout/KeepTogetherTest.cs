@@ -464,6 +464,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void MarginCollapseKeptTogetherDivGoesBackTest02() {
+            // TODO DEVSIX-3995 The margin between the divs occupies 100 points instead of 300. After a fix the cmp should be updated
             String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherDivGoesBackTest02.pdf";
             String outFile = destinationFolder + "marginCollapseKeptTogetherDivGoesBackTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
