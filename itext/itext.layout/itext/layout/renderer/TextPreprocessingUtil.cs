@@ -42,7 +42,8 @@ namespace iText.Layout.Renderer {
                 Glyph space = font.GetGlyph('\u0020');
                 int spaceWidth = space.GetWidth();
                 Glyph glyph;
-                for (int i = 0; i < line.Size(); i++) {
+                int lineSize = line.Size();
+                for (int i = 0; i < lineSize; i++) {
                     glyph = line.Get(i);
                     int xAdvance = 0;
                     bool isSpecialWhitespaceGlyph = false;
