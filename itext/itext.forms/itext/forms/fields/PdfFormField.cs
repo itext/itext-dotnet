@@ -3203,6 +3203,11 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(3, 0, Math.Max(0, width - 
                 widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            Div div = new Div();
+            if (GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
+                div.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+            }
+            div.SetHeight(Math.Max(0, height - heightBorder));
             for (int index = 0; index < strings.Count; index++) {
                 bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
                 if (true.Equals(isFull)) {
@@ -3232,8 +3237,9 @@ namespace iText.Forms.Fields {
                         }
                     }
                 }
-                modelCanvas.Add(paragraph);
+                div.Add(paragraph);
             }
+            modelCanvas.Add(div);
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }

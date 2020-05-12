@@ -96,10 +96,10 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ComboNoHighlightOfChosenFirstItemTest() {
-            String srcPdf = sourceFolder + "comboNoHighlightOfChosenFirstItemTest.pdf";
-            String outPdf = destinationFolder + "comboNoHighlightOfChosenFirstItemTest.pdf";
-            String cmpPdf = sourceFolder + "cmp_comboNoHighlightOfChosenFirstItemTest.pdf";
+        public virtual void ComboNoHighlightCenteredTextOfChosenFirstItemTest() {
+            String srcPdf = sourceFolder + "comboNoHighlightCenteredTextOfChosenFirstItemTest.pdf";
+            String outPdf = destinationFolder + "comboNoHighlightCenteredTextOfChosenFirstItemTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_comboNoHighlightCenteredTextOfChosenFirstItemTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
             form.GetField("First").SetValue("Default");
