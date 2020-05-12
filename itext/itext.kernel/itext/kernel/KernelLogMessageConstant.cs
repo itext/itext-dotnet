@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
@@ -51,5 +52,11 @@ namespace iText.Kernel {
         //Private constructor will prevent the instantiation of this class directly
         /// <summary>The Constant UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE</summary>
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
+
+        public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
+             + CompareTool.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
+
+        public const String COMPARE_COMMAND_SPECIFIED_INCORRECTLY = "ImageMagick comparison command specified incorrectly. Set the "
+             + CompareTool.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
     }
 }
