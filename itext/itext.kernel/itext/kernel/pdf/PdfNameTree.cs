@@ -78,9 +78,8 @@ namespace iText.Kernel.Pdf {
                 dictionary = dictionary.GetAsDictionary(treeType);
                 if (dictionary != null) {
                     items = ReadTree(dictionary);
-                    //@TODO It's done for auto porting to itextsharp, cuz u cannot change collection which you iterate
-                    // in for loop (even if you change only value of a Map entry) in .NET. Java doesn't have such a problem.
-                    // We should find a better solution in the future.
+                    // A separate collection for keys is used for auto porting to C#, because in C#
+                    // it is impossible to change the collection which you iterate in for loop
                     ICollection<String> keys = new HashSet<String>();
                     keys.AddAll(items.Keys);
                     foreach (String key in keys) {
