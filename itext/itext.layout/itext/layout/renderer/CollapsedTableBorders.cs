@@ -50,8 +50,16 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal class CollapsedTableBorders : TableBorders {
+        /// <summary>
+        /// The list of the cells' borders which should be collapsed
+        /// with the first border of this TableRenderer instance, to be drawn on the area.
+        /// </summary>
         private IList<Border> topBorderCollapseWith = new List<Border>();
 
+        /// <summary>
+        /// The list of the cells' borders which should be collapsed
+        /// with the last border of this TableRenderer instance, to be drawn on the area.
+        /// </summary>
         private IList<Border> bottomBorderCollapseWith = new List<Border>();
 
         // region constructors

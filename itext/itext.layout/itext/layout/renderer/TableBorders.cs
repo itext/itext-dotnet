@@ -50,27 +50,67 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal abstract class TableBorders {
+        /// <summary>Horizontal borders of the table.</summary>
+        /// <remarks>
+        /// Horizontal borders of the table.
+        /// It consists of a list, each item of which represents
+        /// a horizontal border of a row, each of them is a list of borders of the cells.
+        /// The amount of the lists is the number of rows + 1, the size of each of these lists
+        /// corresponds to the number of columns.
+        /// </remarks>
         protected internal IList<IList<Border>> horizontalBorders = new List<IList<Border>>();
 
+        /// <summary>Vertical borders of the table.</summary>
+        /// <remarks>
+        /// Vertical borders of the table.
+        /// It consists of a list, each item of which represents
+        /// a vertical border of a row, each of them is a list of borders of the cells.
+        /// The amount of the lists is the number of columns + 1, the size of each of these lists
+        /// corresponds to the number of rows.
+        /// </remarks>
         protected internal IList<IList<Border>> verticalBorders = new List<IList<Border>>();
 
+        /// <summary>The number of the table's columns.</summary>
         protected internal readonly int numberOfColumns;
 
+        /// <summary>The outer borders of the table (as body).</summary>
         protected internal Border[] tableBoundingBorders = new Border[4];
 
+        /// <summary>All the cells of the table.</summary>
+        /// <remarks>
+        /// All the cells of the table.
+        /// Each item of the list represents a row and consists of its cells.
+        /// </remarks>
         protected internal IList<CellRenderer[]> rows;
 
-        // Zero-based, inclusive
+        /// <summary>The first row, which should be processed on this area.</summary>
+        /// <remarks>
+        /// The first row, which should be processed on this area.
+        /// The value of this field varies from area to area.
+        /// It's zero-based and inclusive.
+        /// </remarks>
         protected internal int startRow;
 
-        // Zero-based, inclusive. The last border will have index (finishRow+1) because the number of borders is greater
-        // by one than the number of rows
+        /// <summary>The last row, which should be processed on this area.</summary>
+        /// <remarks>
+        /// The last row, which should be processed on this area.
+        /// The value of this field varies from area to area.
+        /// It's zero-based and inclusive. The last border will have index (finishRow+1) because
+        /// the number of borders is greater by one than the number of rows
+        /// </remarks>
         protected internal int finishRow;
 
+        /// <summary>The width of the widest left border.</summary>
         protected internal float leftBorderMaxWidth;
 
+        /// <summary>The width of the widest right border.</summary>
         protected internal float rightBorderMaxWidth;
 
+        /// <summary>The number of rows flushed to the table.</summary>
+        /// <remarks>
+        /// The number of rows flushed to the table.
+        /// Its value is zero for regular tables. The field makes sense only for large tables.
+        /// </remarks>
         protected internal int largeTableIndexOffset = 0;
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders) {
