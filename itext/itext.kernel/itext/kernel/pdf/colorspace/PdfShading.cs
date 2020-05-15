@@ -50,7 +50,7 @@ namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>The abstract PdfShading class that represents the Shading Dictionary PDF object.</summary>
     public abstract class PdfShading : PdfObjectWrapper<PdfDictionary> {
         /// <summary>constants of shading type (see ISO-320001 Table 78)</summary>
-        private class ShadingType {
+        internal sealed class ShadingType {
             /// <summary>The int value of function-based shading type</summary>
             public const int FUNCTION_BASED = 1;
 
@@ -71,6 +71,9 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             /// <summary>The int value of tensor-product patch meshes shading type</summary>
             public const int TENSOR_PRODUCT_PATCH_MESH = 7;
+
+            private ShadingType() {
+            }
         }
 
         /// <summary>
