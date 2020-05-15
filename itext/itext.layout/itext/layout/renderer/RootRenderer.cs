@@ -61,8 +61,6 @@ namespace iText.Layout.Renderer {
 
         protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
 
-        internal RootRendererAreaStateHandler rootRendererStateHandler;
-
         internal IList<Rectangle> floatRendererAreas;
 
         private IRenderer keepWithNextHangingRenderer;
@@ -106,9 +104,7 @@ namespace iText.Layout.Renderer {
             }
             // Static layout
             for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
-                if (null == rootRendererStateHandler) {
-                    rootRendererStateHandler = new RootRendererAreaStateHandler();
-                }
+                RootRendererAreaStateHandler rootRendererStateHandler = new RootRendererAreaStateHandler();
                 renderer = addedRenderers[i];
                 bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 bool clearanceOverflowsToNextPage = FloatingHelper.IsClearanceApplied(waitingNextPageRenderers, renderer.GetProperty
@@ -195,6 +191,9 @@ namespace iText.Layout.Renderer {
                                             ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
                                                 ));
+                                            if (!rendererIsFloat) {
+                                                rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
+                                            }
                                         }
                                         else {
                                             if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {

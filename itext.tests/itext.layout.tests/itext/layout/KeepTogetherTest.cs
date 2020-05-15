@@ -65,7 +65,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -212,15 +212,6 @@ namespace iText.Layout {
                 "diff"));
         }
 
-        private class KeepTogetherDiv : Div {
-            public override T1 GetDefaultProperty<T1>(int property) {
-                if (property == Property.KEEP_TOGETHER) {
-                    return (T1)(Object)true;
-                }
-                return base.GetDefaultProperty<T1>(property);
-            }
-        }
-
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1837: NPE")]
         public virtual void KeepTogetherInlineDiv01() {
@@ -350,32 +341,6 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
-        private class SpecialOddPagesDocumentRenderer : DocumentRenderer {
-            private PageSize firstPageSize;
-
-            public SpecialOddPagesDocumentRenderer(Document document, PageSize firstPageSize)
-                : base(document) {
-                this.firstPageSize = new PageSize(firstPageSize);
-            }
-
-            protected internal override PageSize AddNewPage(PageSize customPageSize) {
-                PageSize newPageSize = null;
-                switch (currentPageNumber % 2) {
-                    case 1: {
-                        newPageSize = firstPageSize;
-                        break;
-                    }
-
-                    case 0:
-                    default: {
-                        newPageSize = PageSize.A4;
-                        break;
-                    }
-                }
-                return base.AddNewPage(newPageSize);
-            }
-        }
-
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void UpdateHeightTest01() {
@@ -483,6 +448,54 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherNotEmptyPageTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherNotEmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherNotEmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            // Make page not empty to trigger KEEP_TOGETHER actual processing
+            doc.Add(new Paragraph("Just some content to make this page not empty."));
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            Div innerDiv = new Div();
+            innerDiv.SetBackgroundColor(ColorConstants.RED);
+            innerDiv.SetHeight(innerDivHeight);
+            // Set KEEP_TOGETHER on inner div
+            innerDiv.SetKeepTogether(true);
+            doc.Add(innerDiv);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherOnFirstInnerElementNotEmptyPageTest() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // Make page not empty to trigger KEEP_TOGETHER actual processing
+            doc.Add(new Paragraph("Just some content to make this page not empty."));
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            Div innerDiv = new Div();
+            innerDiv.SetBackgroundColor(ColorConstants.RED);
+            innerDiv.SetHeight(innerDivHeight);
+            // Set KEEP_TOGETHER on inner div
+            innerDiv.SetKeepTogether(true);
+            Div outerDiv = new Div();
+            outerDiv.Add(innerDiv);
+            outerDiv.Add(new Div().SetHeight(200).SetBackgroundColor(ColorConstants.BLUE));
+            doc.Add(outerDiv);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest01() {
             String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
             String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
@@ -503,7 +516,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest02() {
-            // TODO
             String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
             String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
@@ -516,6 +528,32 @@ namespace iText.Layout {
                 ("Top margin: 300"));
             div2.SetKeepTogether(true);
             doc.Add(div2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherOnSecondInnerElementNotEmptyPageTest() {
+            // TODO DEVSIX-4023 cmp should be updated
+            String cmpFileName = sourceFolder + "cmp_keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // Make page not empty to trigger KEEP_TOGETHER actual processing
+            doc.Add(new Paragraph("Just some content to make this page not empty."));
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            Div innerDiv = new Div();
+            innerDiv.SetBackgroundColor(ColorConstants.RED);
+            innerDiv.SetHeight(innerDivHeight);
+            // Set KEEP_TOGETHER on inner div
+            innerDiv.SetKeepTogether(true);
+            Div outerDiv = new Div();
+            outerDiv.Add(new Div().SetHeight(200).SetBackgroundColor(ColorConstants.BLUE));
+            outerDiv.Add(innerDiv);
+            doc.Add(outerDiv);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
@@ -580,6 +618,67 @@ namespace iText.Layout {
             // specifying height definitely bigger than page height
             int paragraphHeight = 1000;
             doc.Add(CreateKeptTogetherParagraphWithSmallFloat(paragraphHeight));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherOnInnerElementTestEmptyPageTest() {
+            // TODO DEVSIX-4023 cmp should be updated
+            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementTestEmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherOnInnerElementTestEmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            bool first = false;
+            AddDivs(doc, 200, new Style(), new Style(), first);
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            AddDivs(doc, innerDivHeight, new Style(), new Style(), first);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherOnInnerElementMargin01EmptyPageTest() {
+            // TODO DEVSIX-4023 cmp should be updated
+            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            bool first = false;
+            Style inner = new Style().SetMargin(40);
+            Style predefined = new Style().SetMargin(20);
+            AddDivs(doc, 200, inner, predefined, first);
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            AddDivs(doc, innerDivHeight, inner, predefined, first);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherOnInnerElementMargin02EmptyPageTest() {
+            // TODO DEVSIX-4023 cmp should be updated
+            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
+            String outFile = destinationFolder + "keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            bool first = false;
+            Style inner = new Style().SetMargin(20);
+            Style predefined = new Style().SetMargin(40);
+            AddDivs(doc, 200, inner, predefined, first);
+            // Specifying height definitely bigger than page height
+            float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
+            AddDivs(doc, innerDivHeight, inner, predefined, first);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
@@ -657,6 +756,64 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(floatDiv));
             }
             return table;
+        }
+
+        private static void AddDivs(Document doc, float innerDivHeight, Style inner, Style predefined, bool first) {
+            // Make page not empty to trigger KEEP_TOGETHER actual processing
+            doc.Add(new Paragraph("Just some content to make this page not empty."));
+            Div innerDiv = new Div();
+            innerDiv.SetBackgroundColor(ColorConstants.RED);
+            innerDiv.SetHeight(innerDivHeight);
+            // Set KEEP_TOGETHER on inner div
+            innerDiv.SetKeepTogether(true);
+            innerDiv.SetHeight(innerDivHeight);
+            innerDiv.AddStyle(inner);
+            Div outerDiv = new Div();
+            outerDiv.SetBorder(new SolidBorder(50));
+            if (first) {
+                outerDiv.Add(innerDiv);
+            }
+            outerDiv.Add(new Div().SetHeight(200).SetBackgroundColor(ColorConstants.BLUE).AddStyle(predefined));
+            if (!first) {
+                outerDiv.Add(innerDiv);
+            }
+            doc.Add(outerDiv);
+            doc.Add(new AreaBreak());
+        }
+
+        private class KeepTogetherDiv : Div {
+            public override T1 GetDefaultProperty<T1>(int property) {
+                if (property == Property.KEEP_TOGETHER) {
+                    return (T1)(Object)true;
+                }
+                return base.GetDefaultProperty<T1>(property);
+            }
+        }
+
+        private class SpecialOddPagesDocumentRenderer : DocumentRenderer {
+            private PageSize firstPageSize;
+
+            public SpecialOddPagesDocumentRenderer(Document document, PageSize firstPageSize)
+                : base(document) {
+                this.firstPageSize = new PageSize(firstPageSize);
+            }
+
+            protected internal override PageSize AddNewPage(PageSize customPageSize) {
+                PageSize newPageSize = null;
+                switch (currentPageNumber % 2) {
+                    case 1: {
+                        newPageSize = firstPageSize;
+                        break;
+                    }
+
+                    case 0:
+                    default: {
+                        newPageSize = PageSize.A4;
+                        break;
+                    }
+                }
+                return base.AddNewPage(newPageSize);
+            }
         }
     }
 }
