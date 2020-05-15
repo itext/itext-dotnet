@@ -504,7 +504,7 @@ namespace iText.Kernel.Geom {
         /// <see langword="true"/>
         /// the rectangle will expand, otherwise it will shrink
         /// </param>
-        /// <returns>the  rectanglewith applied margins</returns>
+        /// <returns>the rectangle with applied margins</returns>
         public virtual iText.Kernel.Geom.Rectangle ApplyMargins(float topIndent, float rightIndent, float bottomIndent
             , float leftIndent, bool reverse) {
             x += leftIndent * (reverse ? -1 : 1);
