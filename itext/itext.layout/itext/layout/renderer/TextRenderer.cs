@@ -966,7 +966,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         /// <param name="leftPos">the leftmost end of the GlyphLine</param>
         /// <param name="rightPos">the rightmost end of the GlyphLine</param>
-        [Obsolete]
+        [System.ObsoleteAttribute(@"use SetText(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead")]
         public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
             GlyphLine newText = new GlyphLine(text);
             newText.start = leftPos;
@@ -1248,7 +1248,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        [Obsolete]
+        [System.ObsoleteAttribute(@"use SetProcessedGlyphLineAndFont(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead"
+            )]
         protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
             SetProcessedGlyphLineAndFont(gl, font);
         }
