@@ -42,8 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -58,26 +58,6 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
             CreateOrClearDestinationFolder(destinationFolder);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GhostScriptIsSpecifiedInSystem() {
-            String gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
-            if (gsExec == null) {
-                gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
-            }
-            NUnit.Framework.Assert.IsTrue(CompareTool.IsVersionCommandExecutable(gsExec, CompareTool.GHOSTSCRIPT_KEYWORD
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MagickCompareIsSpecifiedInSystem() {
-            String compareExec = SystemUtil.GetEnvironmentVariable(CompareTool.MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
-            if (compareExec == null) {
-                compareExec = SystemUtil.GetEnvironmentVariable(CompareTool.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
-            }
-            NUnit.Framework.Assert.IsTrue(CompareTool.IsVersionCommandExecutable(compareExec, CompareTool.MAGICK_COMPARE_KEYWORD
-                ));
         }
 
         [NUnit.Framework.Test]
@@ -162,40 +142,48 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void GsEnvironmentVariableIsNotSpecifiedExceptionTest() {
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            new CompareTool(null, null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GsEnvironmentVariableSpecifiedIncorrectlyTest() {
             NUnit.Framework.Assert.That(() =>  {
                 String outPdf = sourceFolder + "simple_pdf.pdf";
                 String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-                new CompareTool("unspecified", "unspecified").CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+                new CompareTool("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
             }
-            , NUnit.Framework.Throws.InstanceOf<CompareTool.CompareToolExecutionException>().With.Message.EqualTo(CompareTool.CompareToolExecutionException.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
+            , NUnit.Framework.Throws.InstanceOf<CompareTool.CompareToolExecutionException>().With.Message.EqualTo(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
 ;
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.COMPARE_COMMAND_IS_NOT_SPECIFIED)]
         public virtual void CompareCommandIsNotSpecifiedTest() {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-            String gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+            String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
             if (gsExec == null) {
-                gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
+                gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
             }
             String result = new CompareTool(gsExec, null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
-            NUnit.Framework.Assert.IsTrue(result.Contains(CompareTool.UNABLE_TO_CREATE_DIFF_FILES_ERROR_MESSAGE));
+            NUnit.Framework.Assert.IsFalse(result.Contains(IoExceptionMessage.COMPARE_COMMAND_IS_NOT_SPECIFIED));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.COMPARE_COMMAND_SPECIFIED_INCORRECTLY)]
+        [LogMessage(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY)]
         public virtual void CompareCommandSpecifiedIncorrectlyTest() {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-            String gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+            String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
             if (gsExec == null) {
-                gsExec = SystemUtil.GetEnvironmentVariable(CompareTool.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
+                gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
             }
             String result = new CompareTool(gsExec, "unspecified").CompareVisually(outPdf, cmpPdf, destinationFolder, 
                 "diff_");
-            NUnit.Framework.Assert.IsTrue(result.Contains(CompareTool.UNABLE_TO_CREATE_DIFF_FILES_ERROR_MESSAGE));
+            NUnit.Framework.Assert.IsTrue(result.Contains(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY));
         }
 
         [NUnit.Framework.Test]

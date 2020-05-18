@@ -474,8 +474,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             CheckGraphicsState();
             if (singleCharString) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(@string);
-                return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
-                    () / 100f;
+                return (float)(((double)widthAndWordSpacing[0] * (double)gs.GetFontSize() + (double)gs.GetCharSpacing() + 
+                    (double)widthAndWordSpacing[1]) * (double)gs.GetHorizontalScaling() / 100f);
             }
             else {
                 float totalWidth = 0;

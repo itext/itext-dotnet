@@ -1,4 +1,5 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -42,22 +43,32 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel {
-    /// <summary>Class that bundles all the error message templates as constants.</summary>
-    public sealed class KernelLogMessageConstant {
-        private KernelLogMessageConstant() {
+namespace iText.IO.Util {
+    public sealed class CliCommandUtil {
+        private CliCommandUtil() {
         }
 
-        //Private constructor will prevent the instantiation of this class directly
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
-             + "in append mode but the original document has cross-reference table, not cross-reference stream. " 
-            + "Falling back to cross-reference table in appended document and switching full compression off";
-
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was " 
-            + "requested to be switched off in append mode but the original document has cross-reference stream, not "
-             + "cross-reference table. Falling back to cross-reference stream in appended document and switching full "
-             + "compression on";
-
-        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
+        /// <summary>
+        /// Checks if the command, passed as parameter, is executable and the output version text contains
+        /// expected text
+        /// </summary>
+        /// <param name="command">a string command to execute</param>
+        /// <param name="versionText">an expected version text line</param>
+        /// <returns>
+        /// boolean result of checking: true - the required command is executable and the output version
+        /// text is correct
+        /// </returns>
+        public static bool IsVersionCommandExecutable(String command, String versionText) {
+            if ((command == null) || (versionText == null)) {
+                return false;
+            }
+            try {
+                String result = SystemUtil.RunProcessAndGetOutput(command, "-version");
+                return result.Contains(versionText);
+            }
+            catch (Exception) {
+                return false;
+            }
+        }
     }
 }

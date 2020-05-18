@@ -216,7 +216,13 @@ namespace iText.Kernel.Geom {
             float ury = Math.Min(GetTop(), rect.GetTop());
             //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
             float width = urx - llx;
+            if (Math.Abs(width) < EPS) {
+                width = 0;
+            }
             float height = ury - lly;
+            if (Math.Abs(height) < EPS) {
+                height = 0;
+            }
             if (JavaUtil.FloatCompare(width, 0) >= 0 && JavaUtil.FloatCompare(height, 0) >= 0) {
                 if (JavaUtil.FloatCompare(width, 0) < 0) {
                     width = 0;
@@ -258,13 +264,13 @@ namespace iText.Kernel.Geom {
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
             // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
-            return !(this.GetX() + this.GetWidth() < rect.GetX() || 
+            return !((rect.GetX() - (this.GetX() + this.GetWidth()) > EPS) || 
                         // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
-                        this.GetY() + this.GetHeight() < rect.GetY() || 
+                        (rect.GetY() - (this.GetY() + this.GetHeight()) > EPS) || 
                         // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
-                        this.GetX() > rect.GetX() + rect.GetWidth() || 
+                        (this.GetX() - (rect.GetX() + rect.GetWidth()) > EPS) || 
                         // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
-                        this.GetY() > rect.GetY() + rect.GetHeight());
+                        (this.GetY() - (rect.GetY() + rect.GetHeight()) > EPS));
         }
 
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>

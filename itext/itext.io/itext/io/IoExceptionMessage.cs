@@ -1,4 +1,5 @@
 /*
+
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -41,23 +42,22 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 
-namespace iText.Kernel {
-    /// <summary>Class that bundles all the error message templates as constants.</summary>
-    public sealed class KernelLogMessageConstant {
-        private KernelLogMessageConstant() {
-        }
+namespace iText.IO {
+    /// <summary>Class containing constants to be used in exceptions in the IO module.</summary>
+    public sealed class IoExceptionMessage {
+        public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
+             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
 
-        //Private constructor will prevent the instantiation of this class directly
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
-             + "in append mode but the original document has cross-reference table, not cross-reference stream. " 
-            + "Falling back to cross-reference table in appended document and switching full compression off";
+        public const String COMPARE_COMMAND_SPECIFIED_INCORRECTLY = "ImageMagick comparison command specified incorrectly. Set the "
+             + ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE + " environment variable with the CLI command which can run the ImageMagic comparison. See BUILDING.MD in the root of the repository for more details.";
 
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was " 
-            + "requested to be switched off in append mode but the original document has cross-reference stream, not "
-             + "cross-reference table. Falling back to cross-reference stream in appended document and switching full "
-             + "compression on";
+        public const String GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED = "Ghostscript command is not specified or specified incorrectly. Set the "
+             + GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE + " environment variable to a CLI command that can run the Ghostscript application. See BUILDING.MD in the root of the repository for more details.";
 
-        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
+        public const String GHOSTSCRIPT_FAILED = "GhostScript failed for <filename>";
+
+        public const String CANNOT_OPEN_OUTPUT_DIRECTORY = "Cannot open output directory for <filename>";
     }
 }

@@ -93,9 +93,18 @@ namespace iText.IO.Util {
         }
 
         public static bool RunProcessAndWait(String exec, String @params) {
-            String processOutput = RunProcessAndGetOutput(exec, @params);
-            Console.WriteLine(processOutput);
-            return true;
+            return RunProcessAndGetExitCode(exec, @params) == 0;
+        }
+        
+        public static int RunProcessAndGetExitCode(String exec, String @params) {
+            using (Process proc = new Process())
+            {
+                SetProcessStartInfo(proc, exec, @params);
+                proc.Start();
+                Console.WriteLine(GetProcessOutput(proc));
+                proc.WaitForExit();
+                return proc.ExitCode;
+            }
         }
 
         public static String RunProcessAndGetOutput(String exec, String @params) {

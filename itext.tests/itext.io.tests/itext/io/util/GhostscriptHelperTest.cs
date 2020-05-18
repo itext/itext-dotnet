@@ -1,0 +1,153 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2020 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.IO;
+using iText.IO;
+using iText.Test;
+
+namespace iText.IO.Util {
+    public class GhostscriptHelperTest : ExtendedITextTest {
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/util/GhostscriptHelperTest/";
+
+        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/io/GhostscriptHelperTest/";
+
+        [NUnit.Framework.SetUp]
+        public virtual void SetUp() {
+            CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GhostScriptEnvVarIsDefault() {
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            NUnit.Framework.Assert.IsNotNull(ghostscriptHelper.GetCliExecutionCommand());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GhostScriptEnvVarIsExplicitlySpecified() {
+            String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+            if (gsExec == null) {
+                gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
+            }
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper(gsExec);
+            NUnit.Framework.Assert.IsNotNull(ghostscriptHelper.GetCliExecutionCommand());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GhostScriptEnvVarIsNull() {
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper(null);
+            NUnit.Framework.Assert.IsNotNull(ghostscriptHelper.GetCliExecutionCommand());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GhostScriptEnvVarIsIncorrect() {
+            NUnit.Framework.Assert.That(() =>  {
+                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper("-");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunGhostScriptIncorrectOutputDirectory() {
+            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String exceptionMessage = "Cannot open output directory for " + inputPdf;
+            NUnit.Framework.Assert.That(() =>  {
+                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, "-", "outputPageImage.png", "1");
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(exceptionMessage))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunGhostScriptIncorrectParams() {
+            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String exceptionMessage = "GhostScript failed for " + inputPdf;
+            NUnit.Framework.Assert.That(() =>  {
+                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "outputPageImage.png", "q@W");
+            }
+            , NUnit.Framework.Throws.InstanceOf<GhostscriptHelper.GhostscriptExecutionException>().With.Message.EqualTo(exceptionMessage))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunGhostScriptTestForSpecificPage() {
+            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "specificPage.png", "1");
+            NUnit.Framework.Assert.AreEqual(1, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "specificPage.png"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunGhostScriptTestForSeveralSpecificPages() {
+            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            String imageFileName = new FileInfo(inputPdf).Name + "_severalSpecificPages-%03d.png";
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, imageFileName, "1,3");
+            NUnit.Framework.Assert.AreEqual(2, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_severalSpecificPages-001.png"
+                ));
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_severalSpecificPages-002.png"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RunGhostScriptTestForAllPages() {
+            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            String imageFileName = new FileInfo(inputPdf).Name + "_allPages-%03d.png";
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, imageFileName);
+            NUnit.Framework.Assert.AreEqual(3, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-001.png"
+                ));
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-002.png"
+                ));
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-003.png"
+                ));
+        }
+    }
+}
