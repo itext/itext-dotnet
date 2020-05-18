@@ -91,7 +91,6 @@ namespace iText.Layout.Renderer {
 
         protected internal float yLineOffset;
 
-        // font should be stored only during converting original string to GlyphLine, however now it's not true
         private PdfFont font;
 
         protected internal GlyphLine text;
@@ -148,10 +147,6 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UpdateFontAndText();
-            if (null != text) {
-                // if text != null => font != null
-                text = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(text, font);
-            }
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
@@ -761,7 +756,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_796();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_791();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -823,8 +818,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_796 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_796() {
+        private sealed class _IGlyphLineFilter_791 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_791() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -964,22 +959,34 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
         }
 
-        /// <summary>
-        /// Manually sets a GlyphLine to be rendered with a specific start and end
-        /// point.
-        /// </summary>
+        /// <summary>Manually sets a GlyphLine to be rendered with a specific start and end point.</summary>
         /// <param name="text">
         /// a
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// </param>
         /// <param name="leftPos">the leftmost end of the GlyphLine</param>
         /// <param name="rightPos">the rightmost end of the GlyphLine</param>
+        [Obsolete]
         public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
-            this.strToBeConverted = null;
-            this.text = new GlyphLine(text);
-            this.text.start = leftPos;
-            this.text.end = rightPos;
-            this.otfFeaturesApplied = false;
+            GlyphLine newText = new GlyphLine(text);
+            newText.start = leftPos;
+            newText.end = rightPos;
+            if (this.font != null) {
+                newText = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(newText, this.font);
+            }
+            SetProcessedGlyphLineAndFont(newText, this.font);
+        }
+
+        /// <summary>Manually set a GlyphLine and PdfFont for rendering.</summary>
+        /// <param name="text">
+        /// the
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// </param>
+        /// <param name="font">the font</param>
+        public virtual void SetText(GlyphLine text, PdfFont font) {
+            GlyphLine newText = new GlyphLine(text);
+            newText = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(newText, font);
+            SetProcessedGlyphLineAndFont(newText, font);
         }
 
         public virtual GlyphLine GetText() {
@@ -1128,8 +1135,10 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual iText.Layout.Renderer.TextRenderer[] Split(int initialOverflowTextPos) {
             iText.Layout.Renderer.TextRenderer splitRenderer = CreateSplitRenderer();
-            splitRenderer.SetText(text, text.start, initialOverflowTextPos);
-            splitRenderer.font = font;
+            GlyphLine newText = new GlyphLine(text);
+            newText.start = text.start;
+            newText.end = initialOverflowTextPos;
+            splitRenderer.SetProcessedGlyphLineAndFont(newText, font);
             splitRenderer.line = line;
             splitRenderer.occupiedArea = occupiedArea.Clone();
             splitRenderer.parent = parent;
@@ -1138,8 +1147,10 @@ namespace iText.Layout.Renderer {
             splitRenderer.isLastRendererForModelElement = false;
             splitRenderer.AddAllProperties(GetOwnProperties());
             iText.Layout.Renderer.TextRenderer overflowRenderer = CreateOverflowRenderer();
-            overflowRenderer.SetText(text, initialOverflowTextPos, text.end);
-            overflowRenderer.font = font;
+            newText = new GlyphLine(text);
+            newText.start = initialOverflowTextPos;
+            newText.end = text.end;
+            overflowRenderer.SetProcessedGlyphLineAndFont(newText, font);
             overflowRenderer.otfFeaturesApplied = otfFeaturesApplied;
             overflowRenderer.parent = parent;
             overflowRenderer.AddAllProperties(GetOwnProperties());
@@ -1237,7 +1248,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        [Obsolete]
         protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
+            SetProcessedGlyphLineAndFont(gl, font);
+        }
+
+        protected internal virtual void SetProcessedGlyphLineAndFont(GlyphLine gl, PdfFont font) {
             this.text = gl;
             this.font = font;
             this.otfFeaturesApplied = false;
@@ -1247,7 +1263,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
             iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
-            copy.SetGlyphLineAndFont(gl, font);
+            copy.SetProcessedGlyphLineAndFont(gl, font);
             return copy;
         }
 
@@ -1375,19 +1391,20 @@ namespace iText.Layout.Renderer {
 
         private void UpdateFontAndText() {
             if (strToBeConverted != null) {
+                PdfFont newFont;
                 try {
-                    font = GetPropertyAsFont(Property.FONT);
+                    newFont = GetPropertyAsFont(Property.FONT);
                 }
                 catch (InvalidCastException) {
-                    font = ResolveFirstPdfFont();
+                    newFont = ResolveFirstPdfFont();
                     if (!String.IsNullOrEmpty(strToBeConverted)) {
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
                         logger.Error(iText.IO.LogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
                     }
                 }
-                text = ConvertToGlyphLine(strToBeConverted);
-                otfFeaturesApplied = false;
-                strToBeConverted = null;
+                GlyphLine newText = newFont.CreateGlyphLine(strToBeConverted);
+                newText = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(newText, newFont);
+                SetProcessedGlyphLineAndFont(newText, newFont);
             }
         }
 

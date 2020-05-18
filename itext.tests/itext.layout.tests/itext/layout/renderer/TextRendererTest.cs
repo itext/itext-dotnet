@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -90,6 +91,53 @@ namespace iText.Layout.Renderer {
             rend.SetProperty(Property.FONT, new String[] { fontName });
             rend.SetText(val);
             NUnit.Framework.Assert.AreEqual(val, rend.GetText().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetTextGlyphLineAndFontParamTest() {
+            TextRenderer renderer = new TextRenderer(new Text("Some text"));
+            String text = "\t";
+            PdfFont pdfFont = PdfFontFactory.CreateFont();
+            GlyphLine glyphLine = new GlyphLine();
+            for (int i = 0; i < text.Length; i++) {
+                int codePoint = iText.IO.Util.TextUtil.IsSurrogatePair(text, i) ? iText.IO.Util.TextUtil.ConvertToUtf32(text
+                    , i) : (int)text[i];
+                Glyph glyph = pdfFont.GetGlyph(codePoint);
+                glyphLine.Add(glyph);
+            }
+            renderer.SetText(glyphLine, pdfFont);
+            GlyphLine actualLine = renderer.GetText();
+            NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
+            Glyph glyph_1 = actualLine.Get(0);
+            Glyph space = pdfFont.GetGlyph('\u0020');
+            // Check that the glyph line has been processed using the replaceSpecialWhitespaceGlyphs method
+            NUnit.Framework.Assert.AreEqual(space.GetCode(), glyph_1.GetCode());
+            NUnit.Framework.Assert.AreEqual(space.GetWidth(), glyph_1.GetWidth());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetTextGlyphLineAndPositionsParamTest() {
+            TextRenderer renderer = new TextRenderer(new Text("Some text"));
+            String text = "\tsome";
+            PdfFont pdfFont = PdfFontFactory.CreateFont();
+            GlyphLine glyphLine = new GlyphLine();
+            for (int i = 0; i < text.Length; i++) {
+                int codePoint = iText.IO.Util.TextUtil.IsSurrogatePair(text, i) ? iText.IO.Util.TextUtil.ConvertToUtf32(text
+                    , i) : (int)text[i];
+                Glyph glyph = pdfFont.GetGlyph(codePoint);
+                glyphLine.Add(glyph);
+            }
+            renderer.SetText(new GlyphLine(), pdfFont);
+            renderer.SetText(glyphLine, 1, 2);
+            GlyphLine actualLine = renderer.GetText();
+            NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
+            Glyph glyph_1 = actualLine.Get(0);
+            Glyph space = pdfFont.GetGlyph('\u0020');
+            // Check that the glyph line has been processed using the replaceSpecialWhitespaceGlyphs method
+            NUnit.Framework.Assert.AreEqual(space.GetCode(), glyph_1.GetCode());
+            NUnit.Framework.Assert.AreEqual(space.GetWidth(), glyph_1.GetWidth());
+            NUnit.Framework.Assert.AreEqual(1, actualLine.start);
+            NUnit.Framework.Assert.AreEqual(2, actualLine.end);
         }
 
         /// <summary>
