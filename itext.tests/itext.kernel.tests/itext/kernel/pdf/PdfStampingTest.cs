@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -52,6 +53,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfStampingTest : ExtendedITextTest {
@@ -891,6 +893,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY)]
         public virtual void StampingAppend5() {
             String filename1 = destinationFolder + "stampingAppend5_1.pdf";
             String filename2 = destinationFolder + "stampingAppend5_2.pdf";
@@ -967,6 +970,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY)]
         public virtual void StampingAppend9() {
             String filename1 = destinationFolder + "stampingAppend9_1.pdf";
             String filename2 = destinationFolder + "stampingAppend9_2.pdf";
@@ -1005,6 +1009,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY)]
         public virtual void StampingAppend10() {
             String filename1 = destinationFolder + "stampingAppend10_1.pdf";
             String filename2 = destinationFolder + "stampingAppend10_2.pdf";

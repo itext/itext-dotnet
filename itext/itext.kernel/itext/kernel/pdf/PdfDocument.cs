@@ -2024,8 +2024,7 @@ namespace iText.Kernel.Pdf {
                     }
                     file.Close();
                     writer.Write((byte)'\n');
-                    //TODO log if full compression differs
-                    writer.properties.isFullCompression = reader.HasXrefStm();
+                    OverrideFullCompressionInWriterProperties(writer.properties, reader.HasXrefStm());
                     writer.crypto = reader.decrypt;
                     if (newPdfVersion != null) {
                         // In PDF 1.4, a PDF version can also be specified in the Version entry of the document catalog,
@@ -2406,10 +2405,6 @@ namespace iText.Kernel.Pdf {
             names.SetModified();
         }
 
-        private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
-            return xmpMeta.GetProperty(schemaNS, propName) != null;
-        }
-
         private long GetDocumentId() {
             return documentId;
         }
@@ -2474,6 +2469,25 @@ namespace iText.Kernel.Pdf {
                 buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
             }
+        }
+
+        private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
+            ) {
+            if (true == properties.isFullCompression && !readerHasXrefStream) {
+                ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
+            }
+            else {
+                if (false == properties.isFullCompression && readerHasXrefStream) {
+                    ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                    logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
+                }
+            }
+            properties.isFullCompression = readerHasXrefStream;
+        }
+
+        private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
+            return xmpMeta.GetProperty(schemaNS, propName) != null;
         }
 
         void System.IDisposable.Dispose() {
