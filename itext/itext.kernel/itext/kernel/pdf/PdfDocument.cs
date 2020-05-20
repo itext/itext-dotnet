@@ -526,15 +526,18 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageNum">the one-based index of the PdfPage to be removed</param>
         public virtual void RemovePage(int pageNum) {
             CheckClosingStatus();
-            PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNum);
+            PdfPage removedPage = GetPage(pageNum);
+            if (removedPage != null && removedPage.IsFlushed() && (IsTagged() || HasAcroForm())) {
+                throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED);
+            }
+            catalog.GetPageTree().RemovePage(pageNum);
             if (removedPage != null) {
                 catalog.RemoveOutlines(removedPage);
                 RemoveUnusedWidgetsFromFields(removedPage);
                 if (IsTagged()) {
                     GetTagStructureContext().RemovePageTags(removedPage);
                 }
-                // TODO should we remove everything (outlines, tags) if page won't be removed in the end, because it's already flushed? wouldn't tags be also flushed?
-                if (!removedPage.GetPdfObject().IsFlushed()) {
+                if (!removedPage.IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
                     removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 }
@@ -2215,6 +2218,10 @@ namespace iText.Kernel.Pdf {
         /// <returns>iText version info.</returns>
         internal VersionInfo GetVersionInfo() {
             return versionInfo;
+        }
+
+        internal virtual bool HasAcroForm() {
+            return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
 
         private void UpdateProducerInInfoDictionary() {

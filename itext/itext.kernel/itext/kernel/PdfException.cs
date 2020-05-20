@@ -267,6 +267,8 @@ namespace iText.Kernel {
 
         public const String FlushedPageCannotBeAddedOrInserted = "Flushed page cannot be added or inserted.";
 
+        public const String FLUSHED_PAGE_CANNOT_BE_REMOVED = "Flushed page cannot be removed from a document which is tagged or has an AcroForm";
+
         public const String FlushingHelperFLushingModeIsNotForDocReadingMode = "Flushing writes the object to the output stream and releases it from memory. It is only possible for documents that have a PdfWriter associated with them. Use PageFlushingHelper#releaseDeep method instead.";
 
         public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
@@ -282,6 +284,7 @@ namespace iText.Kernel {
 
         public const String FunctionIsNotCompatibleWitColorSpace = "Function is not compatible with ColorSpace.";
 
+        [Obsolete]
         public const String GivenAccessibleElementIsNotConnectedToAnyTag = "Given accessible element is not connected to any tag.";
 
         public const String IllegalCharacterInAsciihexdecode = "illegal character in ASCIIHexDecode.";

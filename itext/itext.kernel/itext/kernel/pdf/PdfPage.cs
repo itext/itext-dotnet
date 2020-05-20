@@ -528,8 +528,7 @@ namespace iText.Kernel.Pdf {
                 copier.Copy(this, page);
             }
             else {
-                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().GetCatalog().GetPdfObject().
-                    ContainsKey(PdfName.AcroForm)) {
+                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().HasAcroForm()) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                     logger.Warn(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
                     toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
