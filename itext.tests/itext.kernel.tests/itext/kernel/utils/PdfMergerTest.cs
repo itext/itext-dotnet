@@ -247,5 +247,33 @@ namespace iText.Kernel.Utils {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-1743. Update cmp file after fix
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergeWithAcroFormsTest() {
+            String pdfAcro1 = sourceFolder + "pdfSource1.pdf";
+            String pdfAcro2 = sourceFolder + "pdfSource2.pdf";
+            String outFileName = destinationFolder + "mergeWithAcroFormsTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_mergeWithAcroFormsTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(pdfAcro1));
+            sources.Add(new FileInfo(pdfAcro2));
+            MergePdfs(sources, outFileName);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        private void MergePdfs(IList<FileInfo> sources, String destination) {
+            PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
+            PdfMerger merger = new PdfMerger(mergedDoc);
+            foreach (FileInfo source in sources) {
+                PdfDocument sourcePdf = new PdfDocument(new PdfReader(source));
+                merger.Merge(sourcePdf, 1, sourcePdf.GetNumberOfPages()).SetCloseSourceDocuments(true);
+                sourcePdf.Close();
+            }
+            merger.Close();
+            mergedDoc.Close();
+        }
     }
 }
