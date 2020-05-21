@@ -135,7 +135,6 @@ namespace iText.StyledXmlParser.Resolver.Resource
             }
             if (baseUrl == null)
             {
-                // TODO Html2PdfException?
                 throw new ArgumentException(MessageFormatUtil.Format("Invalid base URI: {0}", @base));
             }
         }
