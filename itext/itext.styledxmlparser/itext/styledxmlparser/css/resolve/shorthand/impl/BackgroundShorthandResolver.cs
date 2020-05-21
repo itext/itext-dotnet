@@ -100,7 +100,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_ATTACHMENT, shorthandExpression));
             }
             IList<String> commaSeparatedExpressions = SplitMultipleBackgrounds(shorthandExpression);
-            // TODO ignore multiple backgrounds at the moment
+            //TODO: DEVSIX-2027 ignore multiple backgrounds at the moment
             String backgroundExpression = commaSeparatedExpressions[0];
             String[] resolvedProps = new String[8];
             String[] props = iText.IO.Util.StringUtil.Split(backgroundExpression, "\\s+");
