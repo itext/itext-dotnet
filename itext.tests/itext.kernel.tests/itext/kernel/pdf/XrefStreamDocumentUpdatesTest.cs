@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -127,6 +129,61 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XrefStmInWriteModeTest() {
+            //TODO: update assert condition after DEVSIX-3952 will be fixed
+            String fileName = destinationFolder + "xrefStmInWriteMode.pdf";
+            PdfWriter writer = new PdfWriter(fileName, new WriterProperties().SetFullCompressionMode(true).SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
+            textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
+            page.AddAnnotation(textannot);
+            pdfDocument.Close();
+            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            int x = 0;
+            for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
+                PdfObject obj = doc.GetPdfObject(i);
+                if (obj is PdfDictionary) {
+                    PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(i);
+                    PdfObject type = objStmDict.Get(PdfName.Type);
+                    if (type != null && type.Equals(PdfName.XRef)) {
+                        x++;
+                    }
+                }
+            }
+            doc.Close();
+            //expected number of objects with /Type /Xref should be 1
+            NUnit.Framework.Assert.AreEqual(0, x);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XrefStmInAppendModeTest() {
+            //TODO: update assert condition after DEVSIX-3952 will be fixed and update the input file
+            //where indirect reference of xref stream will be in the xref.
+            String fileName = destinationFolder + "xrefStmInAppendMode.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), new PdfWriter
+                (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
+                ());
+            pdfDocument.Close();
+            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            int x = 0;
+            for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
+                PdfObject obj = doc.GetPdfObject(i);
+                if (obj is PdfDictionary) {
+                    PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(i);
+                    PdfObject type = objStmDict.Get(PdfName.Type);
+                    if (type != null && type.Equals(PdfName.XRef)) {
+                        x++;
+                    }
+                }
+            }
+            doc.Close();
+            //expected number of objects with /Type /Xref should be 2
+            NUnit.Framework.Assert.AreEqual(0, x);
         }
     }
 }
