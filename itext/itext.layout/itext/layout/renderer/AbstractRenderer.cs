@@ -1707,11 +1707,12 @@ namespace iText.Layout.Renderer {
                         , logMessageArg));
                     return;
                 }
+                // If an element with a link annotation occupies more than two pages,
+                // then a NPE might occur, because of the annotation being partially flushed.
+                // That's why we create and use an annotation's copy.
+                PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
+                linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
-                if (linkAnnotation.GetPage() != null) {
-                    PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
-                    linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
-                }
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(pageNumber);
                 page.AddAnnotation(linkAnnotation);

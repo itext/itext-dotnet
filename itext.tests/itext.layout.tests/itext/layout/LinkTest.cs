@@ -287,23 +287,50 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SplitLinkTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                String outFileName = destinationFolder + "splitLinkTest01.pdf";
-                String cmpFileName = sourceFolder + "cmp_splitLinkTest01.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-                Document doc = new Document(pdfDocument);
-                PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
-                PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
-                Link linkByAnnotation = new Link(LONG_TEXT, annotation);
-                doc.Add(new Div().SetHeight(700).SetBackgroundColor(ColorConstants.RED));
-                // This paragraph is so long that it will be present on the first, second and third pages
-                doc.Add(new Paragraph(linkByAnnotation));
-                doc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                    ));
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            String outFileName = destinationFolder + "splitLinkTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_splitLinkTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
+            Link linkByAnnotation = new Link(LONG_TEXT, annotation);
+            doc.Add(new Div().SetHeight(700).SetBackgroundColor(ColorConstants.RED));
+            // This paragraph is so long that it will be present on the first, second and third pages
+            doc.Add(new Paragraph(linkByAnnotation));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotationOnDivSplitTest01() {
+            String outFileName = destinationFolder + "linkAnnotationOnDivSplitTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkAnnotationOnDivSplitTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
+            PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
+            Div div = new Div().SetHeight(2000).SetBackgroundColor(ColorConstants.RED);
+            div.SetProperty(Property.LINK_ANNOTATION, annotation);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkActionOnDivSplitTest01() {
+            String outFileName = destinationFolder + "linkActionOnDivSplitTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkActionOnDivSplitTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
+            Div div = new Div().SetHeight(2000).SetBackgroundColor(ColorConstants.RED);
+            div.SetAction(action);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
     }
 }
