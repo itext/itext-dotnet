@@ -71,7 +71,7 @@ namespace iText.Forms.Xfdf {
             else {
                 logger.Warn(iText.IO.LogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
             }
-            //TODO check for ids original/modified compatability with those in pdf document
+            //TODO DEVSIX-4026 check for ids original/modified compatability with those in pdf document
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false);
             if (form != null) {
                 MergeFields(xfdfObject.GetFields(), form);
@@ -136,7 +136,7 @@ namespace iText.Forms.Xfdf {
             if (annotName != null) {
                 switch (annotName) {
                     case XfdfConstants.TEXT: {
-                        //TODO add all attributes properly one by one
+                        //TODO DEVSIX-4027 add all attributes properly one by one
                         PdfTextAnnotation pdfTextAnnotation = new PdfTextAnnotation(XfdfObjectUtils.ConvertRectFromString(annotObject
                             .GetAttributeValue(XfdfConstants.RECT)));
                         AddCommonAnnotationAttributes(pdfTextAnnotation, annotObject);

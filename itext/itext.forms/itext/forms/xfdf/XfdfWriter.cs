@@ -243,7 +243,7 @@ namespace iText.Forms.Xfdf {
                 .GetWidth()));
             //optional attribute
             if (borderStyleAltObject.GetDashPattern() != null) {
-                //TODO add real conversion from PdfArray (PdfName.D in Border dictionary) to String
+                //TODO DEVSIX-4028 add real conversion from PdfArray (PdfName.D in Border dictionary) to String
                 borderStyleAlt.SetAttribute(XfdfConstants.DASH_PATTERN, JavaUtil.ArraysToString(borderStyleAltObject.GetDashPattern
                     ()));
             }
