@@ -91,7 +91,6 @@ namespace iText.StyledXmlParser.Css.Selector {
             if (lastSelectorItemInd < 0) {
                 return true;
             }
-            //TODO: Consider pseudo-elements in SVG
             bool isPseudoElement = element is CssPseudoElementNode;
             for (int i = lastSelectorItemInd; i >= 0; i--) {
                 if (isPseudoElement && selectorItems[lastSelectorItemInd] is CssPseudoElementSelectorItem && i < lastSelectorItemInd
