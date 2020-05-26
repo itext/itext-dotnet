@@ -93,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
                 preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO);
             }
             preserveAspectRatio = preserveAspectRatio.ToLowerInvariant();
-            if (!SvgConstants.Values.NONE.Equals(preserveAspectRatio)) {
+            if (!SvgConstants.Values.NONE.Equals(preserveAspectRatio) && !(width == 0 || height == 0)) {
                 float normalizedWidth;
                 float normalizedHeight;
                 if (xObject.GetWidth() / width > xObject.GetHeight() / height) {
