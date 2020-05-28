@@ -369,7 +369,7 @@ namespace iText.Layout.Renderer {
                         if (line.start == -1) {
                             line.start = currentTextPos;
                         }
-                        line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
+                        line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth);
                         // the line does not fit because of height - full overflow
                         iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
                         return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
