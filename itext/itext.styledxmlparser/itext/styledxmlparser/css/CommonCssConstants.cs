@@ -885,6 +885,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant DPCM.</summary>
         public const String DPCM = "dpcm";
 
+        /// <summary>The Constant DPI.</summary>
+        public const String DPI = "dpi";
+
         /// <summary>The Constant DPPX.</summary>
         public const String DPPX = "dppx";
     }

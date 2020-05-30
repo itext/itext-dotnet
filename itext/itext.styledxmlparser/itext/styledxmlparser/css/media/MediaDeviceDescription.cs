@@ -77,7 +77,6 @@ namespace iText.StyledXmlParser.Css.Media {
         /// <summary>The resolution in DPI.</summary>
         private float resolution;
 
-        // TODO change default units? If so, change CssUtils#parseResolution as well
         /// <summary>
         /// See
         /// <see cref="MediaType"/>

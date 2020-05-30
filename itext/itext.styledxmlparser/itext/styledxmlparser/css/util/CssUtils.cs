@@ -467,9 +467,8 @@ namespace iText.StyledXmlParser.Css.Util {
 
         /// <summary>Parses the resolution.</summary>
         /// <param name="resolutionStr">the resolution as a string</param>
-        /// <returns>a value in dpi (currently)</returns>
+        /// <returns>a value in dpi</returns>
         public static float ParseResolution(String resolutionStr) {
-            // TODO change default units? If so, change MediaDeviceDescription#resolutoin as well
             int pos = DeterminePositionBetweenValueAndUnit(resolutionStr);
             if (pos == 0) {
                 return 0f;
@@ -483,6 +482,12 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 if (unit.StartsWith(CommonCssConstants.DPPX)) {
                     f *= 96;
+                }
+                else {
+                    if (!unit.StartsWith(CommonCssConstants.DPI)) {
+                        throw new StyledXMLParserException(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
+                            );
+                    }
                 }
             }
             return (float)f;

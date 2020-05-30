@@ -282,5 +282,29 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10in"));
             NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10px"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDpiUnit() {
+            NUnit.Framework.Assert.AreEqual(10f, CssUtils.ParseResolution("10dpi"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDpcmUnit() {
+            NUnit.Framework.Assert.AreEqual(25.4f, CssUtils.ParseResolution("10dpcm"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDppxUnit() {
+            NUnit.Framework.Assert.AreEqual(960f, CssUtils.ParseResolution("10dppx"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionInvalidUnit() {
+            NUnit.Framework.Assert.That(() =>  {
+                CssUtils.ParseResolution("10incorrectUnit");
+            }
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE))
+;
+        }
     }
 }
