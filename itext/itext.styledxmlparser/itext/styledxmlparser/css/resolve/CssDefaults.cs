@@ -123,7 +123,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.WIDOWS, "2");
         }
 
-        // TODO not complete
+        // Other css properties default values will be added as needed
         /// <summary>Gets the default value of a property.</summary>
         /// <param name="property">the property</param>
         /// <returns>the default value</returns>
