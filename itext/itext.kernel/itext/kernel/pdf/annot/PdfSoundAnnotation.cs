@@ -56,13 +56,29 @@ namespace iText.Kernel.Pdf.Annot {
         /// Otherwise it will be broken. Other supporting file types don't have such problem.
         /// Sound annotations are deprecated in PDF 2.0.
         /// </remarks>
-        /// <param name="rect"/>
-        /// <param name="sound"/>
+        /// <param name="rect">the rectangle that specifies annotation position and bounds on page</param>
+        /// <param name="sound">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// with sound
+        /// </param>
         public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
             : base(rect) {
             Put(PdfName.Sound, sound);
         }
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="PdfSoundAnnotation"/>
+        /// instance based on
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// instance, that represents existing annotation object in the document.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// representing annotation object
+        /// </param>
         /// <seealso cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         protected internal PdfSoundAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -70,13 +86,21 @@ namespace iText.Kernel.Pdf.Annot {
 
         /// <summary>Creates a sound annotation.</summary>
         /// <remarks>Creates a sound annotation. Sound annotations are deprecated in PDF 2.0.</remarks>
-        /// <param name="document"/>
-        /// <param name="rect"/>
-        /// <param name="soundStream"/>
-        /// <param name="sampleRate"/>
-        /// <param name="encoding"/>
-        /// <param name="channels"/>
-        /// <param name="sampleSizeInBits"/>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to which annotation will be added
+        /// </param>
+        /// <param name="rect">the rectangle that specifies annotation position and bounds on page</param>
+        /// <param name="soundStream">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// with sound
+        /// </param>
+        /// <param name="sampleRate">the sampling rate, in samples per second</param>
+        /// <param name="encoding">the encoding format for the sample data</param>
+        /// <param name="channels">the number of sound channels</param>
+        /// <param name="sampleSizeInBits">the number of bits per sample value per channel</param>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
             : base(rect) {
