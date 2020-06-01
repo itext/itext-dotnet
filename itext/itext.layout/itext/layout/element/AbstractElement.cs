@@ -115,7 +115,14 @@ namespace iText.Layout.Element {
         /// <summary>Add a new style to this element.</summary>
         /// <remarks>
         /// Add a new style to this element. A style can be used as an effective way
-        /// to define multiple equal properties to several elements.
+        /// to define multiple equal properties to several elements, however its properties have
+        /// lower priority than properties, directly set on
+        /// <see cref="iText.Layout.ElementPropertyContainer{T}"/>
+        /// Note that if several Style objects are added, iText checks them one by one
+        /// in the order in which they were added and returns the property's value from
+        /// the last Style object, which contains this property. So, if there are two Style
+        /// objects added: the first has set width of 100 points and the second of 200 points,
+        /// iText will get 200 points as width value.
         /// </remarks>
         /// <param name="style">the style to be added</param>
         /// <returns>this element</returns>

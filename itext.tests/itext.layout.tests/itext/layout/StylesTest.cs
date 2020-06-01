@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -50,7 +51,7 @@ namespace iText.Layout {
         public static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
-        public virtual void StylesTest01() {
+        public virtual void AddingStyleBeforeSettingPropertyTest() {
             Style myStyle = new Style();
             myStyle.SetFontColor(ColorConstants.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(ColorConstants.GREEN);
@@ -59,7 +60,16 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void StylesTest02() {
+        public virtual void AddingStyleAfterSettingPropertyTest() {
+            Style myStyle = new Style();
+            myStyle.SetFontColor(ColorConstants.RED);
+            Paragraph p = new Paragraph("text").SetFontColor(ColorConstants.GREEN).AddStyle(myStyle);
+            NUnit.Framework.Assert.AreEqual(ColorConstants.GREEN, p.GetRenderer().GetProperty<TransparentColor>(Property
+                .FONT_COLOR).GetColor());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddingStyleTest() {
             Style myStyle = new Style();
             myStyle.SetFontColor(ColorConstants.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);
@@ -68,7 +78,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void StylesTest03() {
+        public virtual void AddingSeveralStyleTest() {
             Style myStyle = new Style();
             myStyle.SetFontColor(ColorConstants.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);
@@ -82,7 +92,23 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetMarginsTest() {
+        public virtual void AddNullAsStyleTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                // Sharpen mappings map NPE to NullReferenceException, however in .NET in this situation
+                // ArgumentNullException is thrown. In order not to introduce any porting issues,
+                // which unfortunately couldn't be handled in a convenient way, the most basic Exception
+                // is set to be expected.
+                Style myStyle = null;
+                Paragraph p = new Paragraph("text").AddStyle(myStyle);
+                // the following line should produce a NPE
+                p.GetRenderer().GetProperty<TransparentColor>(Property.FONT_COLOR);
+            }
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetMarginsViaStyleTest() {
             float expectedMarginTop = 92;
             float expectedMarginRight = 90;
             float expectedMarginBottom = 86;
@@ -102,7 +128,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetMarginTopTest() {
+        public virtual void SetMarginTopViaStyleTest() {
             float expectedMarginTop = 92;
             Style style = new Style();
             style.SetMarginTop(expectedMarginTop);
@@ -113,7 +139,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetVerticalAlignmentTest() {
+        public virtual void SetVerticalAlignmentViaStyleTest() {
             VerticalAlignment? expectedAlignment = VerticalAlignment.MIDDLE;
             Style style = new Style();
             style.SetVerticalAlignment(expectedAlignment);
@@ -124,7 +150,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetSpacingRatioTest() {
+        public virtual void SetSpacingRatioViaStyleTest() {
             float expectedSpacingRatio = 0.5f;
             Style style = new Style();
             style.SetSpacingRatio(expectedSpacingRatio);
@@ -135,7 +161,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void KeepTogetherTrueTest() {
+        public virtual void SetKeepTogetherTrueViaStyleTest() {
             Style trueStyle = new Style();
             trueStyle.SetKeepTogether(true);
             Paragraph p1 = new Paragraph();
@@ -144,16 +170,16 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void KeepTogetherFalseTest() {
+        public virtual void SetKeepTogetherFalseViaStyleTest() {
             Style falseStyle = new Style();
             falseStyle.SetKeepTogether(false);
             Paragraph p = new Paragraph();
             p.AddStyle(falseStyle);
-            NUnit.Framework.Assert.AreEqual(false, p.GetProperty<bool?>(Property.KEEP_TOGETHER));
+            NUnit.Framework.Assert.AreEqual(false, p.IsKeepTogether());
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetRotationAngleTest() {
+        public virtual void SetRotationAngleViaStyleTest() {
             float expectedRotationAngle = 20f;
             Style style = new Style();
             style.SetRotationAngle(expectedRotationAngle);
@@ -164,7 +190,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetWidthTest() {
+        public virtual void SetWidthViaStyleTest() {
             float expectedWidth = 100;
             Style style = new Style();
             style.SetWidth(expectedWidth);
@@ -175,7 +201,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetWidthUnitValueTest() {
+        public virtual void SetWidthInUnitValueViaStyleTest() {
             float expectedWidth = 100;
             Style style = new Style();
             style.SetWidth(UnitValue.CreatePointValue(expectedWidth));
@@ -186,7 +212,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetAndGetHeightTest() {
+        public virtual void SetHeightViaStyleTest() {
             float expectedHeight = 100;
             Style style = new Style();
             style.SetHeight(expectedHeight);
@@ -197,7 +223,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetAndGetHeightUnitValueTest() {
+        public virtual void SetHeightInUnitValueViaStyleTest() {
             float expectedHeight = 100;
             Style style = new Style();
             style.SetHeight(UnitValue.CreatePointValue(expectedHeight));
@@ -208,7 +234,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetMaxHeightTest() {
+        public virtual void SetMaxHeightViaStyleTest() {
             float expectedMaxHeight = 80;
             Style style = new Style();
             style.SetMaxHeight(UnitValue.CreatePointValue(expectedMaxHeight));
@@ -219,7 +245,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetMinHeightTest() {
+        public virtual void SetMinHeightViaStyleTest() {
             float expectedMinHeight = 20;
             Style style = new Style();
             style.SetMinHeight(expectedMinHeight);
@@ -230,7 +256,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetMaxWidthTest() {
+        public virtual void SetMaxWidthViaStyleTest() {
             float expectedMaxWidth = 200;
             Style style = new Style();
             style.SetMaxWidth(expectedMaxWidth);
@@ -241,7 +267,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetMinWidthTest() {
+        public virtual void SetMinWidthViaStyleTest() {
             float expectedMinWidth = 20;
             Style style = new Style();
             style.SetMinWidth(expectedMinWidth);

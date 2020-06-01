@@ -50,7 +50,10 @@ namespace iText.Layout {
     /// Container object for style properties of an element. A style can be used as
     /// an effective way to define multiple equal properties to several elements.
     /// Used in
-    /// <see cref="iText.Layout.Element.AbstractElement{T}"/>
+    /// <see cref="iText.Layout.Element.AbstractElement{T}"/>.
+    /// The properties set via Style have a lower priority than directly set properties.
+    /// For example, if the same property is set directly and added via Style, then,
+    /// no matter in which order they are set, the one set directly will be chosen.
     /// </remarks>
     public class Style : ElementPropertyContainer<Style> {
         /// <summary>Gets the current left margin width of the element.</summary>
