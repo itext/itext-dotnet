@@ -680,13 +680,13 @@ namespace iText.Svg.Converter {
             String baseUri = TryToExtractBaseUri(props);
             ResourceResolver resourceResolver = null;
             if (processorResult is SvgProcessorResult) {
-                //TODO add assert after 7.2 cause now be have a null pointer on deprecated constructor
+                //TODO DEVSIX-3814 add assert after 7.2 cause now be have a null pointer on deprecated constructor
                 SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
                 if (context != null) {
                     resourceResolver = context.GetResourceResolver();
                 }
             }
-            //TODO remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
+            //TODO DEVSIX-3814 remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
             // ISvgNodeRenderer, FontProvider, FontSet) is removed
             if (resourceResolver == null) {
                 resourceResolver = new ResourceResolver(baseUri);
@@ -1370,13 +1370,13 @@ namespace iText.Svg.Converter {
              props) {
             ResourceResolver resourceResolver = null;
             if (processorResult is SvgProcessorResult) {
-                //TODO add assert after 7.2 cause now be have a null pointer on deprecated constructor
+                //TODO DEVSIX-3814 add assert after 7.2 cause now be have a null pointer on deprecated constructor
                 SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
                 if (context != null) {
                     resourceResolver = context.GetResourceResolver();
                 }
             }
-            //TODO remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
+            //TODO DEVSIX-3814 remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
             // ISvgNodeRenderer, FontProvider, FontSet) is removed
             if (resourceResolver == null) {
                 String baseUri = "";
