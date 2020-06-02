@@ -196,7 +196,7 @@ namespace iText.Svg.Renderers.Impl {
                     foreach (ISvgTextNodeRenderer c in children) {
                         float childLength = c.GetTextContentLength(fontSize, font);
                         if (c.ContainsAbsolutePositionChange()) {
-                            //TODO(DEVSIX-2507) support rotate and other attributes
+                            //TODO: DEVSIX-2507 support rotate and other attributes
                             float[][] absolutePositions = c.GetAbsolutePositionChanges();
                             AffineTransform newTransform = GetTextTransform(absolutePositions, context);
                             //overwrite the last transformation stored in the context
@@ -277,9 +277,8 @@ namespace iText.Svg.Renderers.Impl {
             }
             if (font == null) {
                 try {
-                    // TODO (DEVSIX-2057)
-                    // TODO each call of createFont() create a new instance of PdfFont.
-                    // TODO FontProvider shall be used instead.
+                    // TODO: DEVSIX-2057 each call of createFont() create a new instance of PdfFont.
+                    // FontProvider shall be used instead.
                     font = PdfFontFactory.CreateFont();
                 }
                 catch (System.IO.IOException e) {
@@ -289,7 +288,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private void ResolveFontSize() {
-            //TODO (DEVSIX-2607) (re)move static variable
+            //TODO: DEVSIX-2607 (re)move static variable
             fontSize = (float)SvgTextUtil.ResolveFontSize(this, DEFAULT_FONT_SIZE);
         }
 
