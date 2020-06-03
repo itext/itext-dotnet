@@ -277,6 +277,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets XMPMetadata.</summary>
+        /// <returns>the XMPMetadata</returns>
         public virtual byte[] GetXmpMetadata() {
             return GetXmpMetadata(false);
         }
@@ -1398,6 +1399,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets static copy of cross reference table.</summary>
+        /// <returns>a static copy of cross reference table</returns>
         public virtual IList<PdfIndirectReference> ListIndirectReferences() {
             CheckClosingStatus();
             IList<PdfIndirectReference> indRefs = new List<PdfIndirectReference>(xref.Size());
@@ -1737,10 +1739,15 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// or load already created one.
         /// </summary>
-        /// <remarks>
-        /// Create a new instance of
+        /// <param name="dictionary">
+        /// 
+        /// <see cref="PdfDictionary"/>
+        /// that presents
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </param>
+        /// <returns>
+        /// instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// or load already created one.
         /// <para />
         /// Note, PdfFont which created with
         /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
@@ -1749,7 +1756,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// or
         /// <see cref="PdfResources"/>.
-        /// </remarks>
+        /// </returns>
         public virtual PdfFont GetFont(PdfDictionary dictionary) {
             System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
             if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
@@ -1801,6 +1808,11 @@ namespace iText.Kernel.Pdf {
         /// instance to this document so that this font is flushed automatically
         /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
         /// </remarks>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to add
+        /// </param>
         /// <returns>the same PdfFont instance.</returns>
         public virtual PdfFont AddFont(PdfFont font) {
             font.MakeIndirect(this);
@@ -2111,6 +2123,7 @@ namespace iText.Kernel.Pdf {
         /// Update XMP metadata values from
         /// <see cref="PdfDocumentInfo"/>.
         /// </summary>
+        /// <returns>the XMPMetadata</returns>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);

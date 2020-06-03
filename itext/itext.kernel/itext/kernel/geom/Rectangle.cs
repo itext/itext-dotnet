@@ -259,7 +259,7 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
-        /// <param name="rect"/>
+        /// <param name="rect">a rectangle which is to be checked if it overlaps the passed rectangle.</param>
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
