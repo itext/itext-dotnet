@@ -500,7 +500,7 @@ namespace iText.Pdfa.Checker {
                         configList.Add((PdfDictionary)config);
                     }
                 }
-                ICollection<PdfObject> ocgs = new HashSet<PdfObject>();
+                HashSet<PdfObject> ocgs = new HashSet<PdfObject>();
                 PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
                 if (ocgsArray != null) {
                     foreach (PdfObject ocg in ocgsArray) {
@@ -508,34 +508,8 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 HashSet<String> names = new HashSet<String>();
-                HashSet<PdfObject> order = new HashSet<PdfObject>();
                 foreach (PdfDictionary config in configList) {
-                    PdfString name = config.GetAsString(PdfName.Name);
-                    if (name == null) {
-                        throw new PdfAConformanceException(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
-                            );
-                    }
-                    if (!names.Add(name.ToUnicodeString())) {
-                        throw new PdfAConformanceException(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
-                            );
-                    }
-                    if (config.ContainsKey(PdfName.AS)) {
-                        throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
-                            );
-                    }
-                    PdfArray orderArray = config.GetAsArray(PdfName.Order);
-                    if (orderArray != null) {
-                        FillOrderRecursively(orderArray, order);
-                    }
-                }
-                if (order.Count != ocgs.Count) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
-                        );
-                }
-                order.RetainAll(ocgs);
-                if (order.Count != ocgs.Count) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
-                        );
+                    CheckCatalogConfig(config, ocgs, names);
                 }
             }
         }
@@ -964,6 +938,31 @@ namespace iText.Pdfa.Checker {
                 }
             }
             return altCSIsTheSame;
+        }
+
+        private void CheckCatalogConfig(PdfDictionary config, HashSet<PdfObject> ocgs, HashSet<String> names) {
+            PdfString name = config.GetAsString(PdfName.Name);
+            if (name == null) {
+                throw new PdfAConformanceException(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+                    );
+            }
+            if (!names.Add(name.ToUnicodeString())) {
+                throw new PdfAConformanceException(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+                    );
+            }
+            if (config.ContainsKey(PdfName.AS)) {
+                throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+                    );
+            }
+            PdfArray orderArray = config.GetAsArray(PdfName.Order);
+            if (orderArray != null) {
+                HashSet<PdfObject> order = new HashSet<PdfObject>();
+                FillOrderRecursively(orderArray, order);
+                if (!JavaUtil.SetEquals(order, ocgs)) {
+                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
+                        );
+                }
+            }
         }
 
         private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order) {

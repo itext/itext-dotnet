@@ -46,6 +46,7 @@ using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     public class PdfA2CatalogCheckTest : ExtendedITextTest {
@@ -60,57 +61,6 @@ namespace iText.Pdfa {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES))
-;
         }
 
         [NUnit.Framework.Test]
@@ -136,6 +86,7 @@ namespace iText.Pdfa {
             ocProperties.Put(PdfName.Configs, configs);
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             CompareResult(outPdf, cmpPdf);
         }
 
@@ -197,204 +148,8 @@ namespace iText.Pdfa {
             ocProperties.Put(PdfName.Configs, configs);
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             CompareResult(outPdf, cmpPdf);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck06() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                order.Add(orderItem1);
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck07() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                ocgs.Add(orderItem1);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck08() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                order.Add(orderItem1);
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                PdfDictionary orderItem2 = new PdfDictionary();
-                orderItem2.Put(PdfName.Name, new PdfString("CustomName4"));
-                ocgs.Add(orderItem2);
-                PdfDictionary orderItem3 = new PdfDictionary();
-                orderItem3.Put(PdfName.Name, new PdfString("CustomName5"));
-                ocgs.Add(orderItem3);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck09() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary names = new PdfDictionary();
-                names.Put(PdfName.AlternatePresentations, new PdfDictionary());
-                doc.GetCatalog().Put(PdfName.Names, names);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CatalogCheck10() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                doc.GetCatalog().Put(PdfName.Requirements, new PdfArray());
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CheckAbsenceOfOptionalConfigEntry() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO Remove expected exception when DEVSIX-3206 will be fixed
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                ocProperties.Put(PdfName.D, d);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CheckAbsenceOfOptionalOrderEntry() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO Remove expected exception when DEVSIX-3206 will be fixed
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {
