@@ -218,7 +218,7 @@ namespace iText.Kernel.Pdf.Collection {
                 }
             }
             throw new PdfException(PdfException._1IsNotAnAcceptableValueForTheField2).SetMessageParams(value, GetPdfObject
-                ().GetAsName(PdfName.N).GetValue());
+                ().GetAsString(PdfName.N).GetValue());
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
