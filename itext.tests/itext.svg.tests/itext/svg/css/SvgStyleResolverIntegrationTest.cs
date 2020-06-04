@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
@@ -174,19 +175,19 @@ namespace iText.Svg.Css {
         public virtual void SvgWithExternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
             // Take a note this method differs from the one used in Default Page test
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom");
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette", PageSize.A3.Rotate());
         }
     }
 }
