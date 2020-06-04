@@ -196,9 +196,7 @@ namespace iText.Svg.Renderers.Impl {
                     }
                 }
                 else {
-                    // TODO DEVSIX-2278
-                    startingControlPoint[0] = pathProperties[0];
-                    startingControlPoint[1] = pathProperties[1];
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE);
                 }
                 shapeCoordinates = Concatenate(startingControlPoint, pathProperties);
             }

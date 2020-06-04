@@ -192,5 +192,29 @@ namespace iText.Svg.Renderers.Impl {
             NUnit.Framework.Assert.AreEqual(3, path.GetShapes().Count);
             NUnit.Framework.Assert.IsTrue(((IList<IPathShape>)path.GetShapes())[2] is SmoothSCurveTo);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCurveAsFirstShapeTest1() {
+            NUnit.Framework.Assert.That(() =>  {
+                String instructions = "S 100 200 300 400";
+                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+                path.SetAttribute(SvgConstants.Attributes.D, instructions);
+                path.GetShapes();
+            }
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCurveAsFirstShapeTest2() {
+            NUnit.Framework.Assert.That(() =>  {
+                String instructions = "T 100,200";
+                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+                path.SetAttribute(SvgConstants.Attributes.D, instructions);
+                path.GetShapes();
+            }
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE))
+;
+        }
     }
 }
