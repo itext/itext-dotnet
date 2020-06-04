@@ -133,7 +133,6 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void XrefStmInWriteModeTest() {
-            //TODO: update assert condition after DEVSIX-3952 will be fixed
             String fileName = destinationFolder + "xrefStmInWriteMode.pdf";
             PdfWriter writer = new PdfWriter(fileName, new WriterProperties().SetFullCompressionMode(true).SetCompressionLevel
                 (CompressionConstants.NO_COMPRESSION));
@@ -144,46 +143,74 @@ namespace iText.Kernel.Pdf {
             page.AddAnnotation(textannot);
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(fileName));
-            int x = 0;
+            int xrefTableCounter = 0;
             for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
                 PdfObject obj = doc.GetPdfObject(i);
                 if (obj is PdfDictionary) {
                     PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(i);
                     PdfObject type = objStmDict.Get(PdfName.Type);
                     if (type != null && type.Equals(PdfName.XRef)) {
-                        x++;
+                        xrefTableCounter++;
                     }
                 }
             }
+            NUnit.Framework.Assert.AreEqual(((PdfNumber)doc.GetTrailer().Get(PdfName.Size)).IntValue(), doc.GetNumberOfPdfObjects
+                ());
             doc.Close();
-            //expected number of objects with /Type /Xref should be 1
-            NUnit.Framework.Assert.AreEqual(0, x);
+            NUnit.Framework.Assert.AreEqual(1, xrefTableCounter);
         }
 
         [NUnit.Framework.Test]
         public virtual void XrefStmInAppendModeTest() {
-            //TODO: update assert condition after DEVSIX-3952 will be fixed and update the input file
-            //where indirect reference of xref stream will be in the xref.
             String fileName = destinationFolder + "xrefStmInAppendMode.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), new PdfWriter
                 (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
                 ());
             pdfDocument.Close();
             PdfDocument doc = new PdfDocument(new PdfReader(fileName));
-            int x = 0;
+            int xrefTableCounter = 0;
             for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
                 PdfObject obj = doc.GetPdfObject(i);
                 if (obj is PdfDictionary) {
                     PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(i);
                     PdfObject type = objStmDict.Get(PdfName.Type);
                     if (type != null && type.Equals(PdfName.XRef)) {
-                        x++;
+                        xrefTableCounter++;
                     }
                 }
             }
+            NUnit.Framework.Assert.AreEqual(((PdfNumber)doc.GetTrailer().Get(PdfName.Size)).IntValue(), doc.GetNumberOfPdfObjects
+                ());
             doc.Close();
-            //expected number of objects with /Type /Xref should be 2
-            NUnit.Framework.Assert.AreEqual(0, x);
+            NUnit.Framework.Assert.AreEqual(2, xrefTableCounter);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CloseDocumentWithoutModificationsTest() {
+            String fileName = destinationFolder + "xrefStmInAppendMode.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "xrefStmInWriteMode.pdf"), new PdfWriter
+                (fileName).SetCompressionLevel(CompressionConstants.NO_COMPRESSION), new StampingProperties().UseAppendMode
+                ());
+            // Clear state for document info indirect reference so that there are no modified objects
+            // in the document due to which, the document will have only one href table.
+            pdfDocument.GetDocumentInfo().GetPdfObject().GetIndirectReference().ClearState(PdfObject.MODIFIED);
+            pdfDocument.Close();
+            PdfDocument doc = new PdfDocument(new PdfReader(fileName));
+            int xrefTableCounter = 0;
+            for (int i = 1; i < doc.GetNumberOfPdfObjects(); i++) {
+                PdfObject obj = doc.GetPdfObject(i);
+                if (obj is PdfDictionary) {
+                    PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(i);
+                    PdfObject type = objStmDict.Get(PdfName.Type);
+                    if (type != null && type.Equals(PdfName.XRef)) {
+                        xrefTableCounter++;
+                    }
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(((PdfNumber)doc.GetTrailer().Get(PdfName.Size)).IntValue(), doc.GetNumberOfPdfObjects
+                ());
+            doc.Close();
+            NUnit.Framework.Assert.AreEqual(1, xrefTableCounter);
         }
     }
 }

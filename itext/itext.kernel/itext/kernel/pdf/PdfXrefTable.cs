@@ -225,17 +225,22 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
+            PdfStream xrefStream = null;
+            if (writer.IsFullCompression()) {
+                xrefStream = new PdfStream();
+                xrefStream.MakeIndirect(document);
+            }
             IList<int> sections = CreateSections(document, false);
-            if (document.properties.appendMode && sections.Count == 0) {
-                // no modifications.
+            bool noModifiedObjects = (sections.Count == 0) || (xrefStream != null && sections.Count == 2 && sections[0
+                ] == count && sections[1] == 1);
+            if (document.properties.appendMode && noModifiedObjects) {
+                // No modifications in document
                 xref = null;
                 return;
             }
             long startxref = writer.GetCurrentPos();
             long xRefStmPos = -1;
-            if (writer.IsFullCompression()) {
-                PdfStream xrefStream = (PdfStream)new PdfStream().MakeIndirect(document);
-                xrefStream.MakeIndirect(document);
+            if (xrefStream != null) {
                 xrefStream.Put(PdfName.Type, PdfName.XRef);
                 xrefStream.Put(PdfName.ID, fileId);
                 if (crypto != null) {
@@ -257,6 +262,7 @@ namespace iText.Kernel.Pdf {
                     xrefStream.Put(PdfName.Prev, lastXref);
                 }
                 xrefStream.Put(PdfName.Index, index);
+                xrefStream.GetIndirectReference().SetOffset(startxref);
                 iText.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
                 for (int k = 0; k < sections.Count; k += 2) {
                     int first = (int)sections[k];
@@ -288,7 +294,8 @@ namespace iText.Kernel.Pdf {
             // For documents with hybrid cross-reference table, i.e. containing xref streams as well as regular xref sections,
             // we write additional regular xref section at the end of the document because the /Prev reference from
             // xref stream to a regular xref section doesn't seem to be valid
-            bool needsRegularXref = !writer.IsFullCompression() || document.properties.appendMode && document.reader.hybridXref;
+            bool needsRegularXref = !writer.IsFullCompression() || (document.properties.appendMode && document.reader.
+                hybridXref);
             if (needsRegularXref) {
                 startxref = writer.GetCurrentPos();
                 writer.WriteString("xref\n");
@@ -359,8 +366,8 @@ namespace iText.Kernel.Pdf {
             int len = 0;
             for (int i = 0; i < Size(); i++) {
                 PdfIndirectReference reference = xref[i];
-                if (document.properties.appendMode && reference != null && (!reference.CheckState(PdfObject.MODIFIED) || dropObjectsFromObjectStream
-                     && reference.GetObjStreamNumber() != 0)) {
+                if (document.properties.appendMode && reference != null && (!reference.CheckState(PdfObject.MODIFIED) || (
+                    dropObjectsFromObjectStream && reference.GetObjStreamNumber() != 0))) {
                     reference = null;
                 }
                 if (reference == null) {
