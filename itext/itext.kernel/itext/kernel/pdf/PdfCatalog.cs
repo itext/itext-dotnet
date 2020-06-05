@@ -193,7 +193,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method sets a page layout of the document</summary>
-        /// <param name="pageLayout"/>
+        /// <param name="pageLayout">page layout of the document</param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfCatalog"/>
+        /// instance with applied page layout
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
             if (PAGE_LAYOUTS.Contains(pageLayout)) {
                 return Put(PdfName.PageLayout, pageLayout);
@@ -209,7 +214,15 @@ namespace iText.Kernel.Pdf {
         /// This method sets the document viewer preferences, specifying the way the document shall be displayed on the
         /// screen
         /// </summary>
-        /// <param name="preferences"/>
+        /// <param name="preferences">
+        /// document's
+        /// <see cref="PdfViewerPreferences">viewer preferences</see>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfCatalog"/>
+        /// instance with applied viewer preferences
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
@@ -240,6 +253,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method returns the NumberTree of Page Labels</summary>
+        /// <param name="createIfNotExists">
+        /// defines whether the NumberTree of Page Labels should be created
+        /// if it didn't exist before
+        /// </param>
         /// <returns>
         /// returns
         /// <see cref="PdfNumTree"/>
@@ -257,6 +274,11 @@ namespace iText.Kernel.Pdf {
         /// to specify the Language attribute on a Tagged Pdf element.
         /// For the content usage dictionary, use PdfName.Language
         /// </remarks>
+        /// <param name="lang">
+        /// 
+        /// <see cref="PdfString">language</see>
+        /// to be set
+        /// </param>
         public virtual void SetLang(PdfString lang) {
             Put(PdfName.Lang, lang);
         }
@@ -309,7 +331,15 @@ namespace iText.Kernel.Pdf {
         /// Sets collection dictionary that a conforming reader shall use to enhance the presentation of file attachments
         /// stored in the PDF document.
         /// </summary>
-        /// <param name="collection"/>
+        /// <param name="collection">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Collection.PdfCollection">dictionary</see>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfCatalog"/>
+        /// instance with applied collection dictionary
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
             Put(PdfName.Collection, collection.GetPdfObject());
             return this;
@@ -335,6 +365,7 @@ namespace iText.Kernel.Pdf {
         /// True indicates that getOCProperties() was called, may have been modified,
         /// and thus its dictionary needs to be reconstructed.
         /// </summary>
+        /// <returns>boolean indicating if the dictionary needs to be reconstructed</returns>
         protected internal virtual bool IsOCPropertiesMayHaveChanged() {
             return ocProperties != null;
         }

@@ -1248,6 +1248,16 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <param name="gl">
+        /// 
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// glyph to be set
+        /// </param>
+        /// <param name="font">
+        /// 
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// font to be set
+        /// </param>
         [System.ObsoleteAttribute(@"use SetProcessedGlyphLineAndFont(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont) instead"
             )]
         protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
