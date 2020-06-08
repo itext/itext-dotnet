@@ -108,11 +108,24 @@ namespace iText.Kernel.Pdf {
         public virtual void GetNonExistentResourcesCategory() {
             PdfResources resources = new PdfResources();
             ICollection<PdfName> unknownResCategory = resources.GetResourceNames(new PdfName("UnknownResCategory"));
-            // assert returned value is properly functioning
+            // Assert returned value is properly functioning
             PdfName randomResName = new PdfName("NonExistentResourceName");
             NUnit.Framework.Assert.IsFalse(unknownResCategory.Contains(randomResName));
             NUnit.Framework.Assert.IsFalse(unknownResCategory.Remove(randomResName));
             NUnit.Framework.Assert.IsTrue(unknownResCategory.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResourcesCategoryDictionarySetModifiedTest() {
+            PdfDictionary pdfDict = new PdfDictionary();
+            pdfDict.Put(PdfName.ExtGState, new PdfDictionary());
+            PdfResources resources = new PdfResources(pdfDict);
+            PdfObject resourceCategoryDict = resources.GetPdfObject().Get(PdfName.ExtGState);
+            resourceCategoryDict.SetIndirectReference(new PdfIndirectReference(null, 1));
+            NUnit.Framework.Assert.IsFalse(resourceCategoryDict.IsModified());
+            resources.AddExtGState(new PdfExtGState());
+            // Check that when changing an existing resource category dictionary, the flag PdfObject.MODIFIED will be set for it
+            NUnit.Framework.Assert.IsTrue(resourceCategoryDict.IsModified());
         }
     }
 }
