@@ -843,8 +843,7 @@ namespace iText.Forms {
                     PdfArray kids = parent.GetAsArray(PdfName.Kids);
                     if (kids != null) {
                         kids.Remove(fieldObject);
-                        // TODO what if parent was in it's turn the only child of it's parent (parent of parent)?
-                        // shouldn't we remove them recursively? check it
+                        // TODO DEVSIX-2715 if parent was in it's turn the only child of it's parent, we should remove them recursively
                         if (kids.IsEmpty()) {
                             fFields.Remove(parent);
                         }
@@ -1121,7 +1120,7 @@ namespace iText.Forms {
             bool tagged = page.GetDocument().IsTagged();
             if (tagged) {
                 tagPointer = page.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                //TODO attributes?
+                //TODO DEVSIX-4117 PrintField attributes
                 tagPointer.AddTag(StandardRoles.FORM);
             }
             page.AddAnnotation(annot);
