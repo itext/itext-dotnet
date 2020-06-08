@@ -626,6 +626,9 @@ namespace iText.Kernel.Pdf {
             if (resourceCategory == null) {
                 GetPdfObject().Put(resType, resourceCategory = new PdfDictionary());
             }
+            else {
+                resourceCategory.SetModified();
+            }
             resourceCategory.Put(resName, resource);
             SetModified();
         }
