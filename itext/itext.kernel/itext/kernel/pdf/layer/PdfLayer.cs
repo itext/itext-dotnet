@@ -178,7 +178,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// Gets whether the layer is currently locked or not. If the layer is locked,
         /// it will not be possible to change its state (on/off) in a viewer.
         /// </remarks>
-        /// <returns>true of the layer is currently locked, false otherwise.</returns>
+        /// <returns>true if the layer is currently locked, false otherwise.</returns>
         public virtual bool IsLocked() {
             return locked;
         }
@@ -190,6 +190,7 @@ namespace iText.Kernel.Pdf.Layer {
         /// of a viewer application. Producers can use this entry to prevent the visibility
         /// of content that depends on these groups from being changed by users.
         /// </remarks>
+        /// <param name="locked">sets whether the layer is currently locked or not</param>
         public virtual void SetLocked(bool locked) {
             if (this.IsLocked() != locked) {
                 FetchOCProperties().SetModified();
@@ -442,6 +443,7 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         /// <summary>Gets the title of the layer if it is a title layer, or null if it is a usual layer.</summary>
+        /// <returns>the title of the layer if it is a title layer, or null if it is a usual layer</returns>
         public virtual String GetTitle() {
             return title;
         }

@@ -345,6 +345,13 @@ namespace iText.Kernel.Pdf.Tagging {
         /// lead to the ConcurrentModificationException, because returned collection is backed by the internal list of the
         /// actual page tags.
         /// </remarks>
+        /// <param name="page">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// to obtain unmodifiable collection of marked content references
+        /// </param>
+        /// <returns>the unmodifiable collection of marked content references on page, if no Mcrs defined returns null
+        ///     </returns>
         public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page) {
             ParentTreeHandler.PageMcrsContainer pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences(page);
             return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.GetAllMcrsAsCollection()) : 
