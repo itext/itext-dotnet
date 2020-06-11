@@ -49,6 +49,7 @@ using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     public class SvgStyleResolverIntegrationTest : SvgIntegrationTest {
@@ -188,6 +189,13 @@ namespace iText.Svg.Css {
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
             // TODO: update cmp files when DEVSIX-2286 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette", PageSize.A3.Rotate());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        public virtual void RelativeStyleInheritanceTest() {
+            // TODO DEVSIX-4140 update cmp, remove logger check
+            ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");
         }
     }
 }
