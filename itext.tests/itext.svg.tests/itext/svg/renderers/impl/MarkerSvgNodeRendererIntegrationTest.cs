@@ -309,5 +309,12 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerParentElementTest() {
+            // TODO DEVSIX-4130 fix after ticket will be completed
+            // Compare with Chrome browser
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElementTest");
+        }
     }
 }
