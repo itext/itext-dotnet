@@ -29,6 +29,13 @@ pipeline {
     }
 
     stages {
+	    stage('Abort possible previous builds') {
+            steps {
+                script {
+                    abortPreviousBuilds()
+                }
+            }
+        }
         stage('Clean workspace') {
             options {
                 timeout(time: 5, unit: 'MINUTES')
