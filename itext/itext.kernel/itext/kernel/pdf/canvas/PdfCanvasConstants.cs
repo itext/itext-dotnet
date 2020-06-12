@@ -44,6 +44,10 @@ address: sales@itextpdf.com
 namespace iText.Kernel.Pdf.Canvas {
     /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).</summary>
     public class PdfCanvasConstants {
+        private PdfCanvasConstants() {
+        }
+
+        // This private constructor will prevent the instantiation of this class
         /// <summary>
         /// The text rendering mode determines whether showing text causes glyph
         /// outlines to be stroked, filled, used as a clipping boundary, or some
@@ -101,6 +105,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// 8.4.3.3 "Line Cap Style".
         /// </remarks>
         public class LineCapStyle {
+            private LineCapStyle() {
+            }
+
+            // This private constructor will prevent the instantiation of this class
             /// <summary>The stroke is squared of at the endpoint of the path.</summary>
             /// <remarks>
             /// The stroke is squared of at the endpoint of the path. There is no
@@ -134,6 +142,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// 8.4.3.4 "Line Join Style".
         /// </remarks>
         public class LineJoinStyle {
+            private LineJoinStyle() {
+            }
+
+            // This private constructor will prevent the instantiation of this class
             /// <summary>
             /// The outer edges of the strokes for the two segments are extended
             /// until they meet at an angle, as in a picture frame.
@@ -167,6 +179,10 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         public class FillingRule {
+            private FillingRule() {
+            }
+
+            // This private constructor will prevent the instantiation of this class
             public const int NONZERO_WINDING = 1;
 
             public const int EVEN_ODD = 2;
