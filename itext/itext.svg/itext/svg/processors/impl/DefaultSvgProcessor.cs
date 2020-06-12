@@ -173,7 +173,8 @@ namespace iText.Svg.Processors.Impl {
             if (node is IElementNode) {
                 IElementNode element = (IElementNode)node;
                 if (!rendererFactory.IsTagIgnored(element)) {
-                    ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
+                    ISvgNodeRenderer parentRenderer = processorState.Top();
+                    ISvgNodeRenderer renderer = CreateRenderer(element, parentRenderer);
                     if (renderer != null) {
                         IDictionary<String, String> styles;
                         if (cssResolver is SvgStyleResolver && OnlyNativeStylesShouldBeResolved(element)) {
@@ -190,15 +191,21 @@ namespace iText.Svg.Processors.Impl {
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);
                         }
-                        // don't add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
-                        if (!(renderer is NoDrawOperationSvgNodeRenderer)) {
-                            if (processorState.Top() is IBranchSvgNodeRenderer) {
-                                ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
+                        if (renderer is NoDrawOperationSvgNodeRenderer) {
+                            // add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
+                            // only if the parent is NoDrawOperationSvgNodeRenderer itself
+                            if (parentRenderer is NoDrawOperationSvgNodeRenderer) {
+                                ((NoDrawOperationSvgNodeRenderer)parentRenderer).AddChild(renderer);
+                            }
+                        }
+                        else {
+                            if (parentRenderer is IBranchSvgNodeRenderer) {
+                                ((IBranchSvgNodeRenderer)parentRenderer).AddChild(renderer);
                             }
                             else {
-                                if (processorState.Top() is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
+                                if (parentRenderer is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
                                     //Text branch node renderers only accept ISvgTextNodeRenderers
-                                    ((TextSvgBranchRenderer)processorState.Top()).AddChild((ISvgTextNodeRenderer)renderer);
+                                    ((TextSvgBranchRenderer)parentRenderer).AddChild((ISvgTextNodeRenderer)renderer);
                                 }
                             }
                         }

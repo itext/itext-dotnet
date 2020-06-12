@@ -231,8 +231,13 @@ namespace iText.Svg {
             /// <since>7.1.2</since>
             public const String LINE = "line";
 
-            /// <summary>Tag defining a linear gradient</summary>
-            public const String LINEAR_GRADIENT = "linearGradient";
+            /// <summary>
+            /// Tag defining a
+            /// <see cref="iText.Svg.Renderers.Impl.LinearGradientSvgNodeRenderer">linear gradient</see>.
+            /// </summary>
+            public static readonly String LINEAR_GRADIENT = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "linearGradient".ToLowerInvariant();
 
             /// <summary>Tag defining a link</summary>
             public const String LINK = "link";
@@ -297,6 +302,12 @@ namespace iText.Svg {
 
             /// <summary>Tag defining the ramp of colors in a gradient.</summary>
             public const String STOP = "stop";
+
+            /// <summary>Tag defining the color in stop point of a gradient.</summary>
+            public const String STOP_COLOR = "stop-color";
+
+            /// <summary>Tag defining the opacity in stop point of a gradient.</summary>
+            public const String STOP_OPACITY = "stop-opacity";
 
             /// <summary>Tag defining the style to be.</summary>
             public const String STYLE = "style";
@@ -393,6 +404,16 @@ namespace iText.Svg {
             /// <summary>The Constant BOLD.</summary>
             public const String BOLD = "bold";
 
+            /// <summary>Attribute defining the units relation for a color gradient.</summary>
+            public static readonly String GRADIENT_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "gradientUnits".ToLowerInvariant();
+
+            /// <summary>Attribute defining the transformations for a color gradient.</summary>
+            public static readonly String GRADIENT_TRANSFORM = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "gradientTransform".ToLowerInvariant();
+
             /// <summary>Attribute defining the height.</summary>
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
             public const String HEIGHT = "height";
@@ -428,6 +449,9 @@ namespace iText.Svg {
             public static readonly String MARKER_UNITS = 
                         // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
                         "markerUnits".ToLowerInvariant();
+
+            /// <summary>Attribute defining the offset of a stop color for gradients.</summary>
+            public const String OFFSET = "offset";
 
             /// <summary>Attribute defining the opacity of a group or graphic element.</summary>
             public const String OPACITY = "opacity";
@@ -533,6 +557,11 @@ namespace iText.Svg {
             /// <summary>Attribute defining the y-axis of an ellipse or the y-axis radius of rounded rectangles.</summary>
             public const String RY = "ry";
 
+            /// <summary>Attribute defining the spread method for a color gradient.</summary>
+            public static readonly String SPREAD_METHOD = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "spreadMethod".ToLowerInvariant();
+
             /// <summary>Attribute defining the stroke color.</summary>
             public const String STROKE = "stroke";
 
@@ -625,6 +654,12 @@ namespace iText.Svg {
             /// <summary>Value representing the fill rule "nonzero".</summary>
             public const String FILL_RULE_NONZERO = "nonzero";
 
+            /// <summary>Value representing the gradient units relation "objectBoundingBox".</summary>
+            public const String GRADIENT_UNITS_OBJECT_BOUNDING_BOX = "objectBoundingBox";
+
+            /// <summary>Value representing the gradient units relation "userSpaceOnUse".</summary>
+            public const String GRADIENT_UNITS_USER_SPACE_ON_USE = "userSpaceOnUse";
+
             /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
             public const String MEET = "meet";
 
@@ -647,6 +682,15 @@ namespace iText.Svg {
 
             /// <summary>Value representing the text-alignment start for text objects</summary>
             public const String TEXT_ANCHOR_START = "start";
+
+            /// <summary>Value representing the gradient spread method "pad".</summary>
+            public const String SPREAD_METHOD_PAD = "pad";
+
+            /// <summary>Value representing the gradient spread method "repeat".</summary>
+            public const String SPREAD_METHOD_REPEAT = "repeat";
+
+            /// <summary>Value representing the gradient spread method "reflect".</summary>
+            public const String SPREAD_METHOD_REFLECT = "reflect";
 
             /// <summary>The value for markerUnits that represent values in a coordinate system which has a single unit equal the size in user units of the current stroke width.
             ///     </summary>

@@ -262,5 +262,20 @@ namespace iText.Svg.Renderers {
             textMove[0] += additionalMoveX;
             textMove[1] += additionalMoveY;
         }
+
+        /// <summary>Get the current canvas transformation</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// representing the current canvas transformation
+        /// </returns>
+        public virtual AffineTransform GetCurrentCanvasTransform() {
+            Matrix currentTransform = GetCurrentCanvas().GetGraphicsState().GetCtm();
+            if (currentTransform != null) {
+                return new AffineTransform(currentTransform.Get(0), currentTransform.Get(1), currentTransform.Get(3), currentTransform
+                    .Get(4), currentTransform.Get(6), currentTransform.Get(7));
+            }
+            return new AffineTransform();
+        }
     }
 }

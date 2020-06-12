@@ -45,6 +45,21 @@ using System;
 namespace iText.StyledXmlParser.Exceptions {
     /// <summary>Runtime exception that gets thrown if something goes wrong in the HTML to PDF conversion.</summary>
     public class StyledXMLParserException : Exception {
+        /// <summary>The Constant INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING.</summary>
+        public const String INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING = "Invalid direction string: {0}";
+
+        /// <summary>The Constant INVALID_GRADIENT_COLOR_STOP_VALUE.</summary>
+        public const String INVALID_GRADIENT_COLOR_STOP_VALUE = "Invalid color stop value: {0}";
+
+        /// <summary>The Constant NAN.</summary>
+        public const String NAN = "The passed value (@{0}) is not a number";
+
+        /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
+        public const String FontProviderContainsZeroFonts = "Font Provider contains zero fonts. At least one font shall be present";
+
+        /// <summary>The Constant UnsupportedEncodingException.</summary>
+        public const String UnsupportedEncodingException = "Unsupported encoding exception.";
+
         /// <summary>
         /// Creates a new
         /// <see cref="StyledXMLParserException"/>
@@ -54,11 +69,5 @@ namespace iText.StyledXmlParser.Exceptions {
         public StyledXMLParserException(String message)
             : base(message) {
         }
-
-        /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
-        public const String FontProviderContainsZeroFonts = "Font Provider contains zero fonts. At least one font shall be present";
-
-        /// <summary>The Constant UnsupportedEncodingException.</summary>
-        public const String UnsupportedEncodingException = "Unsupported encoding exception.";
     }
 }

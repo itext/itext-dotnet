@@ -41,10 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Googlecharts {
     public class GeoChartsTest : SvgIntegrationTest {
@@ -60,31 +58,26 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void GeoChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "geoChart");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void GeoColoredChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "geoColoredChart");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void GeoMarkerChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "geoMarkerChart");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void GeoPropontionalChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "geoPropontionalChart");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void GeoTextChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "geoTextChart");
         }

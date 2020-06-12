@@ -41,12 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class MaskTest : SvgIntegrationTest {
@@ -75,9 +73,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        //TODO: update after DEVSIX-2378 implementation
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void MaskWithGradient() {
+            //TODO: update after DEVSIX-2378 implementation
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradient", properties);
         }
     }

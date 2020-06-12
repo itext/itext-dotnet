@@ -184,7 +184,14 @@ namespace iText.StyledXmlParser.Css.Parse {
                             }
                             else {
                                 if (curChar == ',' && !inString && functionDepth == 0) {
-                                    return new CssDeclarationValueTokenizer.Token(",", CssDeclarationValueTokenizer.TokenType.COMMA);
+                                    if (buff.Length == 0) {
+                                        return new CssDeclarationValueTokenizer.Token(",", CssDeclarationValueTokenizer.TokenType.COMMA);
+                                    }
+                                    else {
+                                        --index;
+                                        return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.UNKNOWN
+                                            );
+                                    }
                                 }
                                 else {
                                     if (iText.IO.Util.TextUtil.IsWhiteSpace(curChar)) {

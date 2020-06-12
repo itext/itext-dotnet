@@ -163,8 +163,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (angle == null) {
                     angle = "null";
                 }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
-                    angle));
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, angle));
             }
             float floatValue = float.Parse(angle.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
                 );
@@ -236,8 +235,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (length == null) {
                     length = "null";
                 }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
-                    length));
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, length));
             }
             // Use double type locally to have better precision of the result after applying arithmetic operations
             double f = Double.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
@@ -505,7 +503,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// int position between the numeric value and unit or 0 if string is null or string started with a
         /// non-numeric value.
         /// </returns>
-        private static int DeterminePositionBetweenValueAndUnit(String @string) {
+        public static int DeterminePositionBetweenValueAndUnit(String @string) {
             if (@string == null) {
                 return 0;
             }

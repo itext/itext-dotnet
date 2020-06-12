@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using Common.Logging;
+using iText.IO.Util;
+using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
+using iText.Kernel.Geom;
+using iText.Svg;
+using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
+using iText.Svg.Utils;
+
+namespace iText.Svg.Renderers.Impl {
+    /// <summary>
+    /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+    /// abstract implementation for gradient tags
+    /// (&lt;linearGradient&gt;, &lt;radialGradient&gt;).
+    /// </summary>
+    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer {
+        protected internal override void DoDraw(SvgDrawContext context) {
+            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+        }
+
+        /// <summary>
+        /// Creates the
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// that represents the corresponding gradient for specified object box
+        /// </summary>
+        /// <param name="context">the current svg draw context</param>
+        /// <param name="objectBoundingBox">
+        /// the coloring object bounding box without any adjustments
+        /// (additional stroke width or others)
+        /// </param>
+        /// <param name="objectBoundingBoxMargin">
+        /// the objectBoundingBoxMargin of the object bounding box
+        /// to be colored (for example - the part of stroke width
+        /// that exceeds the object bounding box, i.e. the half of stroke
+        /// width value)
+        /// </param>
+        /// <param name="parentOpacity">current parent opacity modifier</param>
+        /// <returns>the created color</returns>
+        public abstract Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
+            , float parentOpacity);
+
+        /// <summary>Checks whether the gradient units values are on user space on use or object bounding box</summary>
+        /// <returns>
+        /// 
+        /// <see langword="false"/>
+        /// if the 'gradientUnits' value of the gradient tag equals
+        /// to 'userSpaceOnUse', otherwise
+        /// <see langword="true"/>
+        /// </returns>
+        protected internal virtual bool IsObjectBoundingBoxUnits() {
+            String gradientUnits = GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS);
+            if (SvgConstants.Values.GRADIENT_UNITS_USER_SPACE_ON_USE.Equals(gradientUnits)) {
+                return false;
+            }
+            else {
+                if (gradientUnits != null && !SvgConstants.Values.GRADIENT_UNITS_OBJECT_BOUNDING_BOX.Equals(gradientUnits)
+                    ) {
+                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
+                        , gradientUnits));
+                }
+            }
+            return true;
+        }
+
+        /// <summary>Evaluates the 'gradientTransform' transformations</summary>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// object representing the specified gradient transformation
+        /// </returns>
+        protected internal virtual AffineTransform GetGradientTransform() {
+            String gradientTransform = GetAttribute(SvgConstants.Attributes.GRADIENT_TRANSFORM);
+            if (gradientTransform != null && !String.IsNullOrEmpty(gradientTransform)) {
+                return TransformUtils.ParseTransform(gradientTransform);
+            }
+            return null;
+        }
+
+        /// <summary>Construct a list of child stop renderers</summary>
+        /// <returns>
+        /// a list of
+        /// <see cref="StopSvgNodeRenderer"/>
+        /// elements that represents the child stop values
+        /// </returns>
+        protected internal virtual IList<StopSvgNodeRenderer> GetChildStopRenderers() {
+            IList<StopSvgNodeRenderer> stopRenderers = new List<StopSvgNodeRenderer>();
+            foreach (ISvgNodeRenderer child in GetChildren()) {
+                if (child is StopSvgNodeRenderer) {
+                    stopRenderers.Add((StopSvgNodeRenderer)child);
+                }
+            }
+            return stopRenderers;
+        }
+
+        /// <summary>Parses the gradient spread method</summary>
+        /// <returns>
+        /// the parsed
+        /// <see cref="iText.Kernel.Colors.Gradients.GradientSpreadMethod"/>
+        /// specified in the gradient
+        /// </returns>
+        protected internal virtual GradientSpreadMethod ParseSpreadMethod() {
+            String spreadMethodValue = GetAttribute(SvgConstants.Attributes.SPREAD_METHOD);
+            if (spreadMethodValue == null) {
+                // returning svg default spread method
+                return GradientSpreadMethod.PAD;
+            }
+            switch (spreadMethodValue) {
+                case SvgConstants.Values.SPREAD_METHOD_PAD: {
+                    return GradientSpreadMethod.PAD;
+                }
+
+                case SvgConstants.Values.SPREAD_METHOD_REFLECT: {
+                    return GradientSpreadMethod.REFLECT;
+                }
+
+                case SvgConstants.Values.SPREAD_METHOD_REPEAT: {
+                    return GradientSpreadMethod.REPEAT;
+                }
+
+                default: {
+                    LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG
+                        , spreadMethodValue));
+                    return GradientSpreadMethod.PAD;
+                }
+            }
+        }
+    }
+}

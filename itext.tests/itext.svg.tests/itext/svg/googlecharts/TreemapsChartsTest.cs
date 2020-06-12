@@ -41,10 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Googlecharts {
     public class TreemapsChartsTest : SvgIntegrationTest {
@@ -60,13 +58,11 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void TreemapsChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "treemapsChart");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void Treemaps2Chart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "treemaps2Chart");
         }

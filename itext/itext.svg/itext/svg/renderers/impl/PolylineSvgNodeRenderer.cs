@@ -92,12 +92,39 @@ namespace iText.Svg.Renderers.Impl {
                 throw new SvgProcessingException(SvgLogMessageConstant.POINTS_ATTRIBUTE_INVALID_LIST).SetMessageParams(pointsAttribute
                     );
             }
+            this.points.Clear();
             float x;
             float y;
             for (int i = 0; i < points.Count; i = i + 2) {
                 x = CssUtils.ParseAbsoluteLength(points[i]);
                 y = CssUtils.ParseAbsoluteLength(points[i + 1]);
                 this.points.Add(new Point(x, y));
+            }
+        }
+
+        protected internal override Rectangle GetObjectBoundingBox() {
+            SetPoints(GetAttribute(SvgConstants.Attributes.POINTS));
+            if (points.Count > 1) {
+                Point firstPoint = points[0];
+                double minX = firstPoint.GetX();
+                double minY = firstPoint.GetY();
+                double maxX = minX;
+                double maxY = minY;
+                for (int i = 1; i < points.Count; ++i) {
+                    Point current = points[i];
+                    double currentX = current.GetX();
+                    minX = Math.Min(minX, currentX);
+                    maxX = Math.Max(maxX, currentX);
+                    double currentY = current.GetY();
+                    minY = Math.Min(minY, currentY);
+                    maxY = Math.Max(maxY, currentY);
+                }
+                double width = maxX - minX;
+                double height = maxY - minY;
+                return new Rectangle((float)minX, (float)minY, (float)width, (float)height);
+            }
+            else {
+                return base.GetObjectBoundingBox();
             }
         }
 

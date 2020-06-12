@@ -80,6 +80,7 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant RULE_IS_NOT_SUPPORTED.</summary>
         public const String RULE_IS_NOT_SUPPORTED = "The rule @{0} is unsupported. All selectors in this rule will be ignored.";
 
+        [System.ObsoleteAttribute(@"moved into iText.StyledXmlParser.Exceptions.StyledXMLParserException")]
         public const String NAN = "The passed value (@{0}) is not a number";
 
         /// <summary>The Constant UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI.</summary>

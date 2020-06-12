@@ -46,6 +46,8 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Layout.Properties;
+using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -86,6 +88,26 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual String GetAttribute(String key) {
             return attributesAndStyles.Get(key);
+        }
+
+        /// <summary>
+        /// Retrieves the property value for a given key name or default if the property value is
+        /// <see langword="null"/>
+        /// or missing.
+        /// </summary>
+        /// <param name="key">the name of the property to search for</param>
+        /// <param name="defaultValue">
+        /// the default value to be returned if the property is
+        /// <see langword="null"/>
+        /// or missing
+        /// </param>
+        /// <returns>
+        /// the value for this key, or
+        /// <paramref name="defaultValue"/>
+        /// </returns>
+        public virtual String GetAttributeOrDefault(String key, String defaultValue) {
+            String rawValue = GetAttribute(key);
+            return rawValue != null ? rawValue : defaultValue;
         }
 
         public virtual void SetAttribute(String key, String value) {
@@ -167,6 +189,16 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
 
+        /// <summary>Evaluate the current object bounding box</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// representing the current object's bounding box
+        /// </returns>
+        protected internal virtual Rectangle GetObjectBoundingBox() {
+            return null;
+        }
+
         internal static float GetAlphaFromRGBA(String value) {
             try {
                 return WebColors.GetRGBAColor(value)[3];
@@ -177,8 +209,10 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         /// <summary>Calculate the transformation for the viewport based on the context.</summary>
-        /// <remarks>Calculate the transformation for the viewport based on the context. Only used by elements that can create viewports
-        ///     </remarks>
+        /// <remarks>
+        /// Calculate the transformation for the viewport based on the context. Only used by elements that can create
+        /// viewports
+        /// </remarks>
         /// <param name="context">the SVG draw context</param>
         /// <returns>the transformation that needs to be applied to this renderer</returns>
         internal virtual AffineTransform CalculateViewPortTranslation(SvgDrawContext context) {
@@ -271,50 +305,54 @@ namespace iText.Svg.Renderers.Impl {
                     float generalOpacity = GetOpacity();
  {
                         // fill
-                        String fillRawValue = GetAttribute(SvgConstants.Attributes.FILL);
+                        String fillRawValue = GetAttributeOrDefault(SvgConstants.Attributes.FILL, "black");
                         this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
                         if (doFill && CanElementFill()) {
-                            Color rgbColor = ColorConstants.BLACK;
-                            float fillOpacity = generalOpacity;
-                            String opacityValue = GetAttribute(SvgConstants.Attributes.FILL_OPACITY);
-                            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                                fillOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
-                            }
-                            if (fillRawValue != null) {
-                                fillOpacity *= GetAlphaFromRGBA(fillRawValue);
-                                rgbColor = WebColors.GetRGBColor(fillRawValue);
+                            float fillOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.FILL_OPACITY, generalOpacity);
+                            Color fillColor = null;
+                            TransparentColor transparentColor = GetColorFromAttributeValue(context, fillRawValue, 0, fillOpacity);
+                            if (transparentColor != null) {
+                                fillColor = transparentColor.GetColor();
+                                fillOpacity = transparentColor.GetOpacity();
                             }
                             if (!CssUtils.CompareFloats(fillOpacity, 1f)) {
                                 opacityGraphicsState.SetFillOpacity(fillOpacity);
                             }
-                            currentCanvas.SetFillColor(rgbColor);
+                            // set default if no color has been parsed
+                            if (fillColor == null) {
+                                fillColor = ColorConstants.BLACK;
+                            }
+                            currentCanvas.SetFillColor(fillColor);
                         }
                     }
  {
                         // stroke
-                        String strokeRawValue = GetAttribute(SvgConstants.Attributes.STROKE);
+                        String strokeRawValue = GetAttributeOrDefault(SvgConstants.Attributes.STROKE, SvgConstants.Values.NONE);
                         if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
-                            if (strokeRawValue != null) {
-                                Color rgbColor = WebColors.GetRGBColor(strokeRawValue);
-                                float strokeOpacity = generalOpacity;
-                                String opacityValue = GetAttribute(SvgConstants.Attributes.STROKE_OPACITY);
-                                if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                                    strokeOpacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
-                                }
-                                strokeOpacity *= GetAlphaFromRGBA(strokeRawValue);
-                                if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
-                                    opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
-                                }
-                                currentCanvas.SetStrokeColor(rgbColor);
-                                String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                                // 1 px = 0,75 pt
-                                float strokeWidth = 0.75f;
-                                if (strokeWidthRawValue != null) {
-                                    strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
-                                }
-                                currentCanvas.SetLineWidth(strokeWidth);
-                                doStroke = true;
+                            String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
+                            // 1 px = 0,75 pt
+                            float strokeWidth = 0.75f;
+                            if (strokeWidthRawValue != null) {
+                                strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
                             }
+                            float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
+                            Color strokeColor = null;
+                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, strokeWidth / 2, strokeOpacity
+                                );
+                            if (transparentColor != null) {
+                                strokeColor = transparentColor.GetColor();
+                                strokeOpacity = transparentColor.GetOpacity();
+                            }
+                            if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
+                                opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
+                            }
+                            // as default value for stroke is 'none' we should not set
+                            // it in case when value obtaining fails
+                            if (strokeColor != null) {
+                                currentCanvas.SetStrokeColor(strokeColor);
+                            }
+                            currentCanvas.SetLineWidth(strokeWidth);
+                            doStroke = true;
                         }
                     }
  {
@@ -327,10 +365,54 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        private TransparentColor GetColorFromAttributeValue(SvgDrawContext context, String rawColorValue, float objectBoundingBoxMargin
+            , float parentOpacity) {
+            if (rawColorValue == null) {
+                return null;
+            }
+            CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(rawColorValue);
+            CssDeclarationValueTokenizer.Token token = tokenizer.GetNextValidToken();
+            if (token == null) {
+                return null;
+            }
+            String tokenValue = token.GetValue();
+            if (tokenValue.StartsWith("url(#") && tokenValue.EndsWith(")")) {
+                Color resolvedColor = null;
+                float resolvedOpacity = 1;
+                String normalizedName = tokenValue.JSubstring(5, tokenValue.Length - 1).Trim();
+                ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
+                if (colorRenderer is AbstractGradientSvgNodeRenderer) {
+                    resolvedColor = ((AbstractGradientSvgNodeRenderer)colorRenderer).CreateColor(context, GetObjectBoundingBox
+                        (), objectBoundingBoxMargin, parentOpacity);
+                }
+                if (resolvedColor != null) {
+                    return new TransparentColor(resolvedColor, resolvedOpacity);
+                }
+                token = tokenizer.GetNextValidToken();
+            }
+            // may become null after function parsing and reading the 2nd token
+            if (token != null) {
+                String value = token.GetValue();
+                if (!SvgConstants.Values.NONE.EqualsIgnoreCase(value)) {
+                    return new TransparentColor(WebColors.GetRGBColor(value), parentOpacity * GetAlphaFromRGBA(value));
+                }
+            }
+            return null;
+        }
+
+        private float GetOpacityByAttributeName(String attributeName, float generalOpacity) {
+            float opacity = generalOpacity;
+            String opacityValue = GetAttribute(attributeName);
+            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
+                opacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            return opacity;
+        }
+
         private bool DrawInClipPath(SvgDrawContext context) {
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
                 String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
-                ISvgNodeRenderer template = context.GetNamedObject(NormalizeClipPathName(clipPathName));
+                ISvgNodeRenderer template = context.GetNamedObject(NormalizeLocalUrlName(clipPathName));
                 //Clone template to avoid muddying the state
                 if (template is ClipPathSvgNodeRenderer) {
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
@@ -342,7 +424,7 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        private String NormalizeClipPathName(String name) {
+        private String NormalizeLocalUrlName(String name) {
             return name.Replace("url(#", "").Replace(")", "").Trim();
         }
 

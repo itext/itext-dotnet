@@ -84,6 +84,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MultiClipPathComplexTest() {
+            //TODO: update cmp file after DEVSIX-4044 will be fixed
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clippath_multi_complex");
         }
 

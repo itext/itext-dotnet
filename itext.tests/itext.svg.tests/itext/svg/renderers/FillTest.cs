@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg.Exceptions;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     public class FillTest : SvgIntegrationTest {
@@ -135,7 +134,6 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void InvalidUrlFillTest() {
             //TODO update cmp file after DEVSIX-3365 will be fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidUrlFillTest");

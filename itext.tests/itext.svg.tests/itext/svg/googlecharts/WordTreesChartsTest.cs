@@ -41,10 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Exceptions;
+using iText.Kernel.Geom;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Googlecharts {
     public class WordTreesChartsTest : SvgIntegrationTest {
@@ -65,21 +64,21 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees2Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2Chart");
+            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void WordTrees3Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3Chart");
+            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
         public virtual void WordTrees4Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4Chart");
+            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
+            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4Chart", PageSize.A1);
         }
     }
 }

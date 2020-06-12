@@ -65,11 +65,12 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void Convert(String svg, String output, PageSize size) {
-            PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
-            doc.AddNewPage(size);
-            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
-            SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
-            doc.Close();
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(
+                0)))) {
+                doc.AddNewPage(size);
+                ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
+                SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
+            }
         }
 
         public static PdfDocument ConvertWithResult(String svg, String output) {

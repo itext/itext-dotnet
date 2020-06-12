@@ -73,11 +73,13 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.G, typeof(GroupSvgNodeRenderer));
             result.Put(SvgConstants.Tags.IMAGE, typeof(ImageSvgNodeRenderer));
             result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.LINEAR_GRADIENT, typeof(LinearGradientSvgNodeRenderer));
             result.Put(SvgConstants.Tags.MARKER, typeof(MarkerSvgNodeRenderer));
             result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
             result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.STOP, typeof(StopSvgNodeRenderer));
             result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgBranchRenderer));
             result.Put(SvgConstants.Tags.TSPAN, typeof(TextSvgTSpanBranchRenderer));
@@ -129,13 +131,11 @@ namespace iText.Svg.Renderers.Factories {
             ignored.Add(SvgConstants.Tags.GLYPH);
             ignored.Add(SvgConstants.Tags.GLYPH_REF);
             ignored.Add(SvgConstants.Tags.HKERN);
-            ignored.Add(SvgConstants.Tags.LINEAR_GRADIENT);
             ignored.Add(SvgConstants.Tags.MASK);
             ignored.Add(SvgConstants.Tags.METADATA);
             ignored.Add(SvgConstants.Tags.MISSING_GLYPH);
             ignored.Add(SvgConstants.Tags.PATTERN);
             ignored.Add(SvgConstants.Tags.RADIAL_GRADIENT);
-            ignored.Add(SvgConstants.Tags.STOP);
             ignored.Add(SvgConstants.Tags.STYLE);
             ignored.Add(SvgConstants.Tags.TITLE);
             return ignored;

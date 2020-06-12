@@ -48,6 +48,7 @@ using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -498,8 +499,20 @@ namespace iText.Layout.Renderer {
                         if (backgroundXObject == null) {
                             backgroundXObject = backgroundImage.GetForm();
                         }
-                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject
-                            .GetHeight(), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
+                        // TODO: DEVSIX-3108 due to invalid logic of `PdfCanvas.addXObject(PdfXObject, Rectangle)`
+                        //  for PDfFormXObject (invalid scaling) for now the imageRectangle initialization
+                        //  for gradient uses width and height = 1. For all othe cases the logic left as it was.
+                        Rectangle imageRectangle;
+                        if (backgroundXObject == null) {
+                            backgroundXObject = CreateXObject(backgroundImage.GetLinearGradientBuilder(), backgroundArea, drawContext.
+                                GetDocument());
+                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
+                                (), 1, 1);
+                        }
+                        else {
+                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
+                                (), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
+                        }
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
@@ -533,6 +546,18 @@ namespace iText.Layout.Renderer {
                     drawContext.GetCanvas().CloseTag();
                 }
             }
+        }
+
+        public virtual PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle
+             xObjectArea, PdfDocument document) {
+            if (linearGradientBuilder == null) {
+                return null;
+            }
+            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
+            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
+            new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+            return xObject;
         }
 
         protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {
