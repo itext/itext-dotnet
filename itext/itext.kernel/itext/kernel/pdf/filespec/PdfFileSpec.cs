@@ -55,6 +55,20 @@ namespace iText.Kernel.Pdf.Filespec {
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Wrap the passed
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// to the specific
+        /// <see cref="PdfFileSpec"/>
+        /// object,
+        /// according to the type of the passed pdf object.
+        /// </summary>
+        /// <param name="fileSpecObject">object to wrap</param>
+        /// <returns>
+        /// wrapped
+        /// <see cref="PdfFileSpec"/>
+        /// instance
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec WrapFileSpecObject(PdfObject fileSpecObject) {
             if (fileSpecObject != null) {
                 if (fileSpecObject.IsString()) {
@@ -69,6 +83,24 @@ namespace iText.Kernel.Pdf.Filespec {
             return null;
         }
 
+        /// <summary>Create an external file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the external file</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document
+        /// that refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
             , PdfName afRelationshipValue) {
             PdfDictionary dict = new PdfDictionary();
@@ -85,6 +117,18 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
+        /// <summary>Create an external file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the external file</param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
             ) {
             return CreateExternalFileSpec(doc, filePath, null);
