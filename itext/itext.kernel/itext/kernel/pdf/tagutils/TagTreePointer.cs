@@ -216,8 +216,13 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// or
         /// <see langword="null"/>
-        /// if content stream tagging is finished.
+        /// if content stream tagging is finished
         /// </param>
+        /// <returns>
+        /// current
+        /// <see cref="TagTreePointer"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetContentStreamForTagging(PdfStream contentStream
             ) {
             this.contentStream = contentStream;
