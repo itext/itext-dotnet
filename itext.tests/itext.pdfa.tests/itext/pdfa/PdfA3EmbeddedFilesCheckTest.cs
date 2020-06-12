@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -79,7 +80,7 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
             MemoryStream txt = new MemoryStream();
-            StreamWriter @out = new StreamWriter(txt);
+            FormattingStreamWriter @out = new FormattingStreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
             pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
@@ -103,7 +104,7 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
             MemoryStream txt = new MemoryStream();
-            StreamWriter @out = new StreamWriter(txt);
+            FormattingStreamWriter @out = new FormattingStreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
             pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"
@@ -148,7 +149,7 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
                 ().RestoreState();
             MemoryStream txt = new MemoryStream();
-            StreamWriter @out = new StreamWriter(txt);
+            FormattingStreamWriter @out = new FormattingStreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
             @out.Dispose();
             pdfDocument.AddAssociatedFile("foo file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, txt.ToArray(), "foo file"

@@ -52,12 +52,12 @@ namespace iText.IO.Font {
     public sealed class Pfm2afm {
         private RandomAccessFileOrArray input;
 
-        private StreamWriter output;
+        private FormattingStreamWriter output;
 
         /// <summary>Creates a new instance of Pfm2afm</summary>
         private Pfm2afm(RandomAccessFileOrArray input, Stream output) {
             this.input = input;
-            this.output = (StreamWriter)FileUtil.CreatePrintWriter(output, "ISO-8859-1");
+            this.output = (FormattingStreamWriter)FileUtil.CreatePrintWriter(output, "ISO-8859-1");
         }
 
         /// <summary>Converts a PFM file into an AFM file.</summary>
