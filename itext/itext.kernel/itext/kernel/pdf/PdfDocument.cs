@@ -1362,8 +1362,13 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method returns a complete outline tree of the whole document.</summary>
         /// <param name="updateOutlines">
-        /// if the flag is true, the method read the whole document and creates outline tree.
-        /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
+        /// if the flag is
+        /// <see langword="true"/>
+        /// , the method reads the whole document and creates outline tree.
+        /// If the flag is
+        /// <see langword="false"/>
+        /// , the method gets cached outline tree
+        /// (if it was cached via calling getOutlines method before).
         /// </param>
         /// <returns>
         /// fully initialize

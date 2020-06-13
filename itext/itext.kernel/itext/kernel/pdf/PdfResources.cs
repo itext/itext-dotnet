@@ -121,7 +121,17 @@ namespace iText.Kernel.Pdf {
             : this(new PdfDictionary()) {
         }
 
-        /// <summary>Adds font to resources and register PdfFont in the document for further flushing.</summary>
+        /// <summary>Adds font to resources and registers PdfFont in the document for further flushing.</summary>
+        /// <param name="pdfDocument">
+        /// a
+        /// <see cref="PdfDocument"/>
+        /// instance to which the font is added for further flushing
+        /// </param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to be added
+        /// </param>
         /// <returns>added font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
             pdfDocument.AddFont(font);
@@ -391,6 +401,27 @@ namespace iText.Kernel.Pdf {
             return isModified;
         }
 
+        /// <summary>
+        /// Sets the 'modified' flag to this
+        /// <see cref="PdfResources"/>
+        /// indirect object.
+        /// </summary>
+        /// <remarks>
+        /// Sets the 'modified' flag to this
+        /// <see cref="PdfResources"/>
+        /// indirect object.
+        /// The flag denotes that the object was modified since the document opening.
+        /// </remarks>
+        /// <param name="isModified">
+        /// 
+        /// <see langword="true"/>
+        /// if this
+        /// <see cref="PdfResources"/>
+        /// indirect object has been modified,
+        /// otherwise
+        /// <see langword="false"/>.
+        /// </param>
+        /// <seealso cref="PdfObject.SetModified()"/>
         [System.ObsoleteAttribute(@"Please use SetModified() .")]
         protected internal virtual void SetModified(bool isModified) {
             this.isModified = isModified;

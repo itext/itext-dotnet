@@ -1188,6 +1188,15 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method gets outlines of a current page</summary>
+        /// <param name="updateOutlines">
+        /// if the flag is
+        /// <see langword="true"/>
+        /// , the method reads the whole document and creates outline tree.
+        /// If the flag is
+        /// <see langword="false"/>
+        /// , the method gets cached outline tree
+        /// (if it was cached via calling getOutlines method before).
+        /// </param>
         /// <returns>return all outlines of a current page</returns>
         public virtual IList<PdfOutline> GetOutlines(bool updateOutlines) {
             GetDocument().GetOutlines(updateOutlines);
@@ -1214,6 +1223,11 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
         ///     </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetIgnorePageRotationForContent(bool ignorePageRotationForContent) {
             this.ignorePageRotationForContent = ignorePageRotationForContent;
             return this;
