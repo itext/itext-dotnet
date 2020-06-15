@@ -107,6 +107,15 @@ namespace iText.Layout.Renderer {
 
         protected internal GlyphLine savedWordBreakAtLineEnding;
 
+        // if list is null, presence of special scripts in the TextRenderer#text hasn't been checked yet
+        // if list is empty, TextRenderer#text has been analyzed and no special scripts have been detected
+        // if list contains -1, TextRenderer#text contains special scripts, but no word break is possible within it
+        // Must remain ArrayList: once an instance is formed and filled prior to layouting on split of this TextRenderer,
+        // it's used to get element by index or passed to List.subList()
+        private IList<int> specialScriptsWordBreakPoints;
+
+        private int specialScriptFirstNotFittingIndex = -1;
+
         /// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
         /// <param name="textElement">
         /// the
@@ -143,6 +152,7 @@ namespace iText.Layout.Renderer {
             this.otfFeaturesApplied = other.otfFeaturesApplied;
             this.tabAnchorCharacterPosition = other.tabAnchorCharacterPosition;
             this.reversedRanges = other.reversedRanges;
+            this.specialScriptsWordBreakPoints = other.specialScriptsWordBreakPoints;
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
@@ -292,7 +302,8 @@ namespace iText.Layout.Renderer {
                         xAdvance = ScaleXAdvance(xAdvance, fontSize.GetValue(), hScale) / TEXT_SPACE_COEFF;
                     }
                     if (!noSoftWrap && (nonBreakablePartFullWidth + glyphWidth + xAdvance + italicSkewAddition + boldSimulationAddition
-                        ) > layoutBox.GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1) {
+                        ) > layoutBox.GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1 || ind == 
+                        specialScriptFirstNotFittingIndex) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
                         if (iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
                             wordBreakGlyphAtLineEnding = currentGlyph;
@@ -335,8 +346,11 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                     }
-                    if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
-                        (text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
+                    bool endOfWordBelongingToSpecialScripts = TextContainsSpecialScriptGlyphs(true) && FindPossibleBreaksSplitPosition
+                        (ind + 1, true) >= 0;
+                    if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind) || splitCharacters.IsSplitCharacter
+                        (text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1)) || endOfWordBelongingToSpecialScripts
+                        ) {
                         nonBreakablePartEnd = ind;
                         break;
                     }
@@ -432,14 +446,17 @@ namespace iText.Layout.Renderer {
                                 }
                             }
                         }
+                        bool specialScriptWordSplit = TextContainsSpecialScriptGlyphs(true) && !isSplitForcedByNewLine;
                         if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar
-                             || -1 != nonBreakingHyphenRelatedChunkStart) {
+                             || -1 != nonBreakingHyphenRelatedChunkStart || specialScriptWordSplit) {
                             // if the word is too long for a single line we will have to split it
+                            // we also need to split the word here if text contains glyphs from scripts
+                            // which require word wrapping for further processing in LineRenderer
                             if (line.start == -1) {
                                 line.start = currentTextPos;
                             }
                             if (!crlf) {
-                                currentTextPos = (forcePartialSplitOnFirstChar || IsOverflowFit(overflowX)) ? firstCharacterWhichExceedsAllowedWidth
+                                currentTextPos = (forcePartialSplitOnFirstChar || IsOverflowFit(overflowX) || specialScriptWordSplit) ? firstCharacterWhichExceedsAllowedWidth
                                      : nonBreakablePartEnd + 1;
                             }
                             line.end = Math.Max(line.end, currentTextPos);
@@ -756,7 +773,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_791();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_812();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -818,8 +835,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_791 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_791() {
+        private sealed class _IGlyphLineFilter_812 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_812() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1046,6 +1063,77 @@ namespace iText.Layout.Renderer {
             return font is PdfType0Font && font.GetFontProgram() is TrueTypeFont;
         }
 
+        /// <summary>
+        /// Analyzes/checks whether
+        /// <see cref="text"/>
+        /// , bounded by start and end,
+        /// contains glyphs belonging to special script.
+        /// </summary>
+        /// <remarks>
+        /// Analyzes/checks whether
+        /// <see cref="text"/>
+        /// , bounded by start and end,
+        /// contains glyphs belonging to special script.
+        /// Mind that the behavior of this method depends on the analyzeSpecialScriptsWordBreakPointsOnly parameter:
+        /// - pass
+        /// <see langword="false"/>
+        /// if you need to analyze the
+        /// <see cref="text"/>
+        /// by checking each of its glyphs
+        /// AND to fill
+        /// <see cref="specialScriptsWordBreakPoints"/>
+        /// list,
+        /// i.e. when analyzing a sequence of TextRenderers prior to layouting;
+        /// - pass
+        /// <see langword="true"/>
+        /// if you want to check if text contains glyphs belonging to special scripts,
+        /// according to the already filled
+        /// <see cref="specialScriptsWordBreakPoints"/>
+        /// list.
+        /// </remarks>
+        /// <param name="analyzeSpecialScriptsWordBreakPointsOnly">
+        /// false if analysis of each glyph is required,
+        /// true if analysis has already been performed earlier
+        /// and the results are stored in
+        /// <see cref="specialScriptsWordBreakPoints"/>
+        /// </param>
+        /// <returns>
+        /// true if
+        /// <see cref="text"/>
+        /// , bounded by start and end, contains glyphs belonging to special script, otherwise false
+        /// </returns>
+        /// <seealso cref="specialScriptsWordBreakPoints"/>
+        internal virtual bool TextContainsSpecialScriptGlyphs(bool analyzeSpecialScriptsWordBreakPointsOnly) {
+            if (specialScriptsWordBreakPoints != null) {
+                return !specialScriptsWordBreakPoints.IsEmpty();
+            }
+            if (!analyzeSpecialScriptsWordBreakPointsOnly) {
+                for (int i = text.start; i < text.end; i++) {
+                    int unicode = text.Get(i).GetUnicode();
+                    if (unicode > -1) {
+                        UnicodeScript? glyphScript = UnicodeScriptUtil.Of(unicode);
+                        if (UnicodeScript.THAI.Equals(glyphScript)) {
+                            return true;
+                        }
+                    }
+                }
+                specialScriptsWordBreakPoints = new List<int>();
+            }
+            return false;
+        }
+
+        internal virtual void SetSpecialScriptsWordBreakPoints(IList<int> specialScriptsWordBreakPoints) {
+            this.specialScriptsWordBreakPoints = specialScriptsWordBreakPoints;
+        }
+
+        internal virtual IList<int> GetSpecialScriptsWordBreakPoints() {
+            return this.specialScriptsWordBreakPoints;
+        }
+
+        internal virtual void SetSpecialScriptFirstNotFittingIndex(int lastFittingIndex) {
+            this.specialScriptFirstNotFittingIndex = lastFittingIndex;
+        }
+
         protected internal override Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
             return occupiedAreaWithMargins.MoveUp(textRise).DecreaseHeight(textRise);
@@ -1129,6 +1217,42 @@ namespace iText.Layout.Renderer {
             overflowRenderer.otfFeaturesApplied = otfFeaturesApplied;
             overflowRenderer.parent = parent;
             overflowRenderer.AddAllProperties(GetOwnProperties());
+            if (specialScriptsWordBreakPoints != null) {
+                if (specialScriptsWordBreakPoints.IsEmpty()) {
+                    splitRenderer.SetSpecialScriptsWordBreakPoints(new List<int>());
+                    overflowRenderer.SetSpecialScriptsWordBreakPoints(new List<int>());
+                }
+                else {
+                    if (specialScriptsWordBreakPoints[0] == -1) {
+                        IList<int> split = new List<int>(1);
+                        split.Add(-1);
+                        splitRenderer.SetSpecialScriptsWordBreakPoints(split);
+                        IList<int> overflow = new List<int>(1);
+                        overflow.Add(-1);
+                        overflowRenderer.SetSpecialScriptsWordBreakPoints(overflow);
+                    }
+                    else {
+                        int splitIndex = FindPossibleBreaksSplitPosition(initialOverflowTextPos, false);
+                        if (splitIndex > -1) {
+                            splitRenderer.SetSpecialScriptsWordBreakPoints(specialScriptsWordBreakPoints.SubList(0, splitIndex + 1));
+                        }
+                        else {
+                            IList<int> split = new List<int>(1);
+                            split.Add(-1);
+                            splitRenderer.SetSpecialScriptsWordBreakPoints(split);
+                        }
+                        if (splitIndex + 1 < specialScriptsWordBreakPoints.Count) {
+                            overflowRenderer.SetSpecialScriptsWordBreakPoints(specialScriptsWordBreakPoints.SubList(splitIndex + 1, specialScriptsWordBreakPoints
+                                .Count));
+                        }
+                        else {
+                            IList<int> split = new List<int>(1);
+                            split.Add(-1);
+                            overflowRenderer.SetSpecialScriptsWordBreakPoints(split);
+                        }
+                    }
+                }
+            }
             return new iText.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer };
         }
 
@@ -1244,6 +1368,7 @@ namespace iText.Layout.Renderer {
             this.font = font;
             this.otfFeaturesApplied = false;
             this.strToBeConverted = null;
+            this.specialScriptsWordBreakPoints = null;
             SetProperty(Property.FONT, font);
         }
 
@@ -1403,6 +1528,35 @@ namespace iText.Layout.Renderer {
                 // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }
+        }
+
+        // if amongPresentOnly is true, returns the index of specialScriptsWordBreakPoints's element
+        // or -1 if element wasn't found.
+        // if amongPresentOnly is false, returns the index of specialScriptsWordBreakPoints's element
+        // that is not greater than textStartBasedInitialOverflowTextPos
+        // if there's no such element in specialScriptsWordBreakPoints, -1 is returned
+        internal virtual int FindPossibleBreaksSplitPosition(int textStartBasedInitialOverflowTextPos, bool amongPresentOnly
+            ) {
+            int low = 0;
+            int high = specialScriptsWordBreakPoints.Count - 1;
+            while (low <= high) {
+                int middle = (int)(((uint)(low + high)) >> 1);
+                if (specialScriptsWordBreakPoints[middle].CompareTo(textStartBasedInitialOverflowTextPos) < 0) {
+                    low = middle + 1;
+                }
+                else {
+                    if (specialScriptsWordBreakPoints[middle].CompareTo(textStartBasedInitialOverflowTextPos) > 0) {
+                        high = middle - 1;
+                    }
+                    else {
+                        return middle;
+                    }
+                }
+            }
+            if (!amongPresentOnly && low > 0) {
+                return low - 1;
+            }
+            return -1;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
