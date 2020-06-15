@@ -472,7 +472,7 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     drawContext.GetCanvas().OpenTag(new CanvasArtifact());
                 }
-                Rectangle backgroundArea = ApplyMargins(bBox, false);
+                Rectangle backgroundArea = GetBackgroundArea(ApplyMargins(bBox, false));
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
@@ -558,6 +558,13 @@ namespace iText.Layout.Renderer {
             Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
             new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
             return xObject;
+        }
+
+        /// <summary>Evaluate the actual background</summary>
+        /// <param name="occupiedAreaWithMargins">the current occupied area with applied margins</param>
+        /// <returns>the actual background area</returns>
+        protected internal virtual Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
+            return occupiedAreaWithMargins;
         }
 
         protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {

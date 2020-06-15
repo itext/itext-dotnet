@@ -827,36 +827,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        public override void DrawBackground(DrawContext drawContext) {
-            Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
-            Rectangle bBox = GetOccupiedAreaBBox();
-            Rectangle backgroundArea = ApplyMargins(bBox, false);
-            float bottomBBoxY = backgroundArea.GetY();
-            float leftBBoxX = backgroundArea.GetX();
-            if (background != null) {
-                bool isTagged = drawContext.IsTaggingEnabled();
-                PdfCanvas canvas = drawContext.GetCanvas();
-                if (isTagged) {
-                    canvas.OpenTag(new CanvasArtifact());
-                }
-                bool backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
-                canvas.SaveState().SetFillColor(background.GetColor());
-                TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
-                backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
-                canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise - background.GetExtraBottom
-                    (), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea
-                    .GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());
-                canvas.Fill().RestoreState();
-                if (backgroundAreaIsClipped) {
-                    drawContext.GetCanvas().RestoreState();
-                }
-                if (isTagged) {
-                    canvas.CloseTag();
-                }
-            }
-        }
-
         /// <summary>
         /// Trims any whitespace characters from the start of the
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
@@ -1074,6 +1044,11 @@ namespace iText.Layout.Renderer {
 
         private bool HasOtfFont() {
             return font is PdfType0Font && font.GetFontProgram() is TrueTypeFont;
+        }
+
+        protected internal override Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
+            float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
+            return occupiedAreaWithMargins.MoveUp(textRise).DecreaseHeight(textRise);
         }
 
         protected internal override float? GetFirstYLineRecursively() {

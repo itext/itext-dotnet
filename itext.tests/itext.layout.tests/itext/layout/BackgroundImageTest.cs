@@ -100,6 +100,29 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BackgroundImageForText() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
+                );
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
+            String outFileName = destinationFolder + "backgroundImageForText.pdf";
+            String cmpFileName = sourceFolder + "cmp_backgroundImageForText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetFontSize(50);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatX() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
