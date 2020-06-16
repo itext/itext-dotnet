@@ -105,6 +105,29 @@ namespace iText.Kernel.Colors.Gradients {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BuildWithTwoStopsBeforeTheBeginningTest() {
+            Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
+            AbstractLinearGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
+                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+                .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.PAD).AddColorStop(new GradientColorStop(ColorConstants
+                .RED.GetColorValue(), -0.1d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
+                (ColorConstants.BLUE.GetColorValue(), -0.2d, GradientColorStop.OffsetType.RELATIVE));
+            GenerateAndComparePdfs("buildWithTwoStopsBeforeTheBeginningTest.pdf", targetBoundingBox, null, gradientBuilder
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BuildWithTwoStopsAfterTheEndTest() {
+            Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
+            AbstractLinearGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
+                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+                .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.PAD).AddColorStop(new GradientColorStop(ColorConstants
+                .RED.GetColorValue(), 1.2d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
+                (ColorConstants.BLUE.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE));
+            GenerateAndComparePdfs("buildWithTwoStopsAfterTheEndTest.pdf", targetBoundingBox, null, gradientBuilder);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PadCaseWithVeryCloseCornerStopsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
             AbstractLinearGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox

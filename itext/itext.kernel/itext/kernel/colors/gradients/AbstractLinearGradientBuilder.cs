@@ -279,11 +279,13 @@ namespace iText.Kernel.Colors.Gradients {
                 coordinatesDomain[0] = Math.Max(coordinatesDomain[0], stopsToConstruct[0].GetOffset());
                 coordinatesDomain[1] = Math.Min(coordinatesDomain[1], stopsToConstruct[stopsToConstruct.Count - 1].GetOffset
                     ());
+                coordinatesDomain[1] = Math.Max(coordinatesDomain[0], coordinatesDomain[1]);
             }
             // workaround for PAD case
             if (spreadMethod == GradientSpreadMethod.PAD) {
                 coordinatesDomain = ModifyNormalizedStopsForPad(stopsToConstruct, coordinatesDomain);
             }
+            System.Diagnostics.Debug.Assert(coordinatesDomain[0] <= coordinatesDomain[1]);
             Point[] actualCoordinates = CreateCoordinatesForNewDomain(coordinatesDomain, baseCoordinatesVector);
             PdfShading.Axial axial = new PdfShading.Axial(new PdfDeviceCs.Rgb(), CreateCoordsPdfArray(actualCoordinates
                 ), new PdfArray(coordinatesDomain), ConstructFunction(stopsToConstruct));
