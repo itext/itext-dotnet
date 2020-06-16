@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
@@ -48,6 +49,7 @@ using iText.Kernel.Colors;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -79,6 +81,31 @@ namespace iText.StyledXmlParser.Css.Util {
         /// instance.
         /// </summary>
         private CssUtils() {
+        }
+
+        /// <summary>
+        /// Extracts shorthand properties as list of string lists from a string, where the top level
+        /// list is shorthand property and the lower level list is properties included in shorthand property.
+        /// </summary>
+        /// <param name="str">the source string with shorthand properties</param>
+        /// <returns>the list of string lists</returns>
+        public static IList<IList<String>> ExtractShorthandProperties(String str) {
+            IList<IList<String>> result = new List<IList<String>>();
+            IList<String> currentLayer = new List<String>();
+            CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(str);
+            CssDeclarationValueTokenizer.Token currentToken = tokenizer.GetNextValidToken();
+            while (currentToken != null) {
+                if (currentToken.GetType() == CssDeclarationValueTokenizer.TokenType.COMMA) {
+                    result.Add(currentLayer);
+                    currentLayer = new List<String>();
+                }
+                else {
+                    currentLayer.Add(currentToken.GetValue());
+                }
+                currentToken = tokenizer.GetNextValidToken();
+            }
+            result.Add(currentLayer);
+            return result;
         }
 
         /// <summary>Normalizes a CSS property.</summary>

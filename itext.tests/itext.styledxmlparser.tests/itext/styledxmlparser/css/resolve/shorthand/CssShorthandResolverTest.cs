@@ -50,6 +50,40 @@ using iText.Test;
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
     public class CssShorthandResolverTest : ExtendedITextTest {
         [NUnit.Framework.Test]
+        public virtual void LinearGradientInlistStyleImageTest() {
+            String shorthandExpression = "inside linear-gradient(red, green, blue)";
+            ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("list-style-type: initial"
+                , "list-style-position: inside", "list-style-image: linear-gradient(red,green,blue)"));
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.LIST_STYLE);
+            NUnit.Framework.Assert.IsNotNull(resolver);
+            IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
+            CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RepeatingLinearGradientInlistStyleImageTest() {
+            String shorthandExpression = "square inside repeating-linear-gradient(45deg, blue 7%, red 10%)";
+            ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("list-style-type: square"
+                , "list-style-position: inside", "list-style-image: repeating-linear-gradient(45deg,blue 7%,red 10%)")
+                );
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.LIST_STYLE);
+            NUnit.Framework.Assert.IsNotNull(resolver);
+            IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
+            CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoneInlistStyleImageTest() {
+            String shorthandExpression = "circle none inside";
+            ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("list-style-type: circle"
+                , "list-style-position: inside", "list-style-image: none"));
+            IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.LIST_STYLE);
+            NUnit.Framework.Assert.IsNotNull(resolver);
+            IList<CssDeclaration> resolvedShorthandProps = resolver.ResolveShorthand(shorthandExpression);
+            CompareResolvedProps(resolvedShorthandProps, expectedResolvedProperties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FontTest01() {
             String shorthandExpression = "italic normal bold 12px/30px Georgia, serif";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("font-style: italic"

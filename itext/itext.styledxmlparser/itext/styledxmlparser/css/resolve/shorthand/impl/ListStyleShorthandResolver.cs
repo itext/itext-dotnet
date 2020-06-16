@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
+using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// <summary>
@@ -75,12 +76,13 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     new CssDeclaration(CommonCssConstants.LIST_STYLE_POSITION, shorthandExpression), new CssDeclaration(CommonCssConstants
                     .LIST_STYLE_IMAGE, shorthandExpression));
             }
-            String[] props = iText.IO.Util.StringUtil.Split(shorthandExpression, "\\s+");
+            IList<String> props = CssUtils.ExtractShorthandProperties(shorthandExpression)[0];
             String listStyleTypeValue = null;
             String listStylePositionValue = null;
             String listStyleImageValue = null;
             foreach (String value in props) {
-                if (value.Contains("url(") || CommonCssConstants.NONE.Equals(value) && listStyleTypeValue != null) {
+                if (value.Contains("url(") || CssGradientUtil.IsCssLinearGradientValue(value) || (CommonCssConstants.NONE.
+                    Equals(value) && listStyleTypeValue != null)) {
                     listStyleImageValue = value;
                 }
                 else {

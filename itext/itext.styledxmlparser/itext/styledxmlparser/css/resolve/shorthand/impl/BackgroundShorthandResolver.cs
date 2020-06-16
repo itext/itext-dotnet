@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Util;
 
@@ -100,14 +99,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     .BACKGROUND_ORIGIN, shorthandExpression), new CssDeclaration(CommonCssConstants.BACKGROUND_CLIP, shorthandExpression
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_ATTACHMENT, shorthandExpression));
             }
-            IList<String> props = new List<String>();
-            CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(shorthandExpression);
-            CssDeclarationValueTokenizer.Token nextToken = tokenizer.GetNextValidToken();
             // TODO: DEVSIX-2027 ignore multiple backgrounds at the moment (stop parsing after comma)
-            while (nextToken != null && nextToken.GetType() != CssDeclarationValueTokenizer.TokenType.COMMA) {
-                props.Add(nextToken.GetValue());
-                nextToken = tokenizer.GetNextValidToken();
-            }
+            IList<String> props = CssUtils.ExtractShorthandProperties(shorthandExpression)[0];
             String[] resolvedProps = new String[8];
             bool slashEncountered = false;
             foreach (String value in props) {
