@@ -146,6 +146,28 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        public virtual void EmptyParsedArguments1Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                String gradientValue = "linear-gradient()";
+                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
+            }
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST, "linear-gradient()")))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyParsedArguments2Test() {
+            NUnit.Framework.Assert.That(() =>  {
+                String gradientValue = "linear-gradient( , )";
+                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
+            }
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST, "linear-gradient( , )")))
+;
+        }
+
+        [NUnit.Framework.Test]
         public virtual void InvalidFirstArgumentTest() {
             NUnit.Framework.Assert.That(() =>  {
                 String gradientValue = "linear-gradient(not-angle-or-color, orange 100pt, red 150pt, green 200pt, blue 250pt)";

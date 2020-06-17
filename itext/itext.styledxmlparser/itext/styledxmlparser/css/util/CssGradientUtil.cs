@@ -111,6 +111,10 @@ namespace iText.StyledXmlParser.Css.Util {
                     if (buff.Length != 0) {
                         argumentsList.Add(buff.ToString().Trim());
                     }
+                    if (argumentsList.IsEmpty()) {
+                        throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST
+                            , cssGradientValue));
+                    }
                     return ParseCssLinearGradient(argumentsList, isRepeating, emValue, remValue);
                 }
             }

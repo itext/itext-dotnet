@@ -80,7 +80,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         protected internal override Point[] GetGradientVector(Rectangle targetBoundingBox, AffineTransform contextTransform
             ) {
-            return this.coordinates;
+            return new Point[] { this.coordinates[0].GetLocation(), this.coordinates[1].GetLocation() };
         }
 
         protected internal override AffineTransform GetCurrentSpaceToGradientVectorSpaceTransformation(Rectangle targetBoundingBox

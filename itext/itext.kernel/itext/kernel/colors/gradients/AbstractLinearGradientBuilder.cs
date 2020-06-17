@@ -116,22 +116,18 @@ namespace iText.Kernel.Colors.Gradients {
         /// <returns>
         /// the constructed
         /// <see cref="iText.Kernel.Colors.Color"/>
+        /// or
+        /// <see langword="null"/>
+        /// if no color to be applied
+        /// or base gradient vector has been specified
         /// </returns>
         public virtual Color BuildColor(Rectangle targetBoundingBox, AffineTransform contextTransform) {
-            Point[] coordinates = GetGradientVector(targetBoundingBox, contextTransform);
-            if (coordinates == null || this.stops.IsEmpty()) {
-                // Can not create gradient color with 0 stops
+            Point[] baseCoordinatesVector = GetGradientVector(targetBoundingBox, contextTransform);
+            if (baseCoordinatesVector == null || this.stops.IsEmpty()) {
+                // Can not create gradient color with 0 stops or null coordinates vector
                 return null;
             }
-            else {
-                if (this.stops.Count == 1 || coordinates[0].Equals(coordinates[1])) {
-                    // single stop and zero vector case
-                    float[] lastStopRgb = this.stops[this.stops.Count - 1].GetRgbArray();
-                    return new DeviceRgb(lastStopRgb[0], lastStopRgb[1], lastStopRgb[2]);
-                }
-            }
             // evaluate actual coordinates and transformation
-            Point[] baseCoordinatesVector = new Point[] { coordinates[0].GetLocation(), coordinates[1].GetLocation() };
             AffineTransform shadingTransform = new AffineTransform();
             if (contextTransform != null) {
                 shadingTransform.Concatenate(contextTransform);
@@ -156,6 +152,9 @@ namespace iText.Kernel.Colors.Gradients {
             }
             PdfShading.Axial axial = CreateAxialShading(baseCoordinatesVector, this.stops, this.spreadMethod, targetBoundingBox
                 );
+            if (axial == null) {
+                return null;
+            }
             PdfPattern.Shading shading = new PdfPattern.Shading(axial);
             if (!shadingTransform.IsIdentity()) {
                 double[] matrix = new double[6];
@@ -267,83 +266,57 @@ namespace iText.Kernel.Colors.Gradients {
 
         private static PdfShading.Axial CreateAxialShading(Point[] baseCoordinatesVector, IList<GradientColorStop>
              stops, GradientSpreadMethod spreadMethod, Rectangle targetBoundingBox) {
-            IList<GradientColorStop> stopsToConstruct = NormalizeStops(stops, baseCoordinatesVector);
+            double baseVectorLength = baseCoordinatesVector[1].Distance(baseCoordinatesVector[0]);
+            IList<GradientColorStop> stopsToConstruct = NormalizeStops(stops, baseVectorLength);
             double[] coordinatesDomain = new double[] { 0, 1 };
-            if (spreadMethod == GradientSpreadMethod.REPEAT || spreadMethod == GradientSpreadMethod.REFLECT) {
-                coordinatesDomain = EvaluateCoveringDomain(baseCoordinatesVector, targetBoundingBox);
-                stopsToConstruct = AdjustNormalizedStopsToCoverDomain(stopsToConstruct, coordinatesDomain, spreadMethod);
+            Point[] actualCoordinates;
+            if (baseVectorLength < ZERO_EPSILON || stopsToConstruct.Count == 1) {
+                // single color case
+                if (spreadMethod == GradientSpreadMethod.NONE) {
+                    return null;
+                }
+                actualCoordinates = new Point[] { new Point(targetBoundingBox.GetLeft(), targetBoundingBox.GetBottom()), new 
+                    Point(targetBoundingBox.GetRight(), targetBoundingBox.GetBottom()) };
+                GradientColorStop lastColorStop = stopsToConstruct[stopsToConstruct.Count - 1];
+                stopsToConstruct = JavaUtil.ArraysAsList(new GradientColorStop(lastColorStop, 0d, GradientColorStop.OffsetType
+                    .RELATIVE), new GradientColorStop(lastColorStop, 1d, GradientColorStop.OffsetType.RELATIVE));
             }
             else {
-                // to ensure that stops list covers the full domain. For repeat and reflect cases
-                // this is done by adjusting the initial stops to cover the evaluated domain
-                coordinatesDomain[0] = Math.Max(coordinatesDomain[0], stopsToConstruct[0].GetOffset());
-                coordinatesDomain[1] = Math.Min(coordinatesDomain[1], stopsToConstruct[stopsToConstruct.Count - 1].GetOffset
-                    ());
-                coordinatesDomain[1] = Math.Max(coordinatesDomain[0], coordinatesDomain[1]);
-            }
-            // workaround for PAD case
-            if (spreadMethod == GradientSpreadMethod.PAD) {
-                coordinatesDomain = ModifyNormalizedStopsForPad(stopsToConstruct, coordinatesDomain);
-            }
-            System.Diagnostics.Debug.Assert(coordinatesDomain[0] <= coordinatesDomain[1]);
-            Point[] actualCoordinates = CreateCoordinatesForNewDomain(coordinatesDomain, baseCoordinatesVector);
-            PdfShading.Axial axial = new PdfShading.Axial(new PdfDeviceCs.Rgb(), CreateCoordsPdfArray(actualCoordinates
-                ), new PdfArray(coordinatesDomain), ConstructFunction(stopsToConstruct));
-            // apply extended flag for PAD case
-            if (spreadMethod == GradientSpreadMethod.PAD) {
-                axial.SetExtend(true, true);
-            }
-            return axial;
-        }
-
-        private static double[] ModifyNormalizedStopsForPad(IList<GradientColorStop> stopsToConstruct, double[] coordinatesDomain
-            ) {
-            double[] newDomain = new double[] { coordinatesDomain[0], coordinatesDomain[1] };
-            double eps = Math.Max(1, (coordinatesDomain[1] - coordinatesDomain[0])) * 0.05;
-            for (int i = stopsToConstruct.Count - 1; i > 0; --i) {
-                GradientColorStop currentStop = stopsToConstruct[i];
-                double currentStopOffset = currentStop.GetOffset();
-                if (Math.Abs(currentStopOffset - coordinatesDomain[1]) < eps) {
-                    GradientColorStop prevStop = stopsToConstruct[i - 1];
-                    if ((prevStop.GetHintOffsetType() == GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS && prevStop.
-                        GetHintOffset() >= 1d - ZERO_EPSILON) || (prevStop.GetOffset() > currentStopOffset - eps)) {
-                        double lastOffset = currentStopOffset + eps;
-                        stopsToConstruct.Add(i + 1, new GradientColorStop(currentStop, lastOffset, GradientColorStop.OffsetType.RELATIVE
-                            ));
-                        newDomain[1] = lastOffset;
+                coordinatesDomain = EvaluateCoveringDomain(baseCoordinatesVector, targetBoundingBox);
+                if (spreadMethod == GradientSpreadMethod.REPEAT || spreadMethod == GradientSpreadMethod.REFLECT) {
+                    stopsToConstruct = AdjustNormalizedStopsToCoverDomain(stopsToConstruct, coordinatesDomain, spreadMethod);
+                }
+                else {
+                    if (spreadMethod == GradientSpreadMethod.PAD) {
+                        AdjustStopsForPadIfNeeded(stopsToConstruct, coordinatesDomain);
                     }
-                    break;
-                }
-                if (currentStopOffset < coordinatesDomain[1]) {
-                    break;
-                }
-            }
-            for (int i = 0; i < stopsToConstruct.Count - 1; ++i) {
-                GradientColorStop currentStop = stopsToConstruct[i];
-                double currentStopOffset = currentStop.GetOffset();
-                if (Math.Abs(currentStopOffset - coordinatesDomain[0]) < eps) {
-                    if ((currentStop.GetHintOffsetType() == GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS && currentStop
-                        .GetHintOffset() <= 0d + ZERO_EPSILON) || (stopsToConstruct[i + 1].GetOffset() < currentStopOffset + eps
-                        )) {
-                        double firstOffset = currentStopOffset - eps;
-                        stopsToConstruct.Add(i, new GradientColorStop(currentStop, firstOffset, GradientColorStop.OffsetType.RELATIVE
-                            ));
-                        newDomain[0] = firstOffset;
+                    else {
+                        // none case
+                        double firstStopOffset = stopsToConstruct[0].GetOffset();
+                        double lastStopOffset = stopsToConstruct[stopsToConstruct.Count - 1].GetOffset();
+                        if ((lastStopOffset - firstStopOffset < ZERO_EPSILON) || coordinatesDomain[1] <= firstStopOffset || coordinatesDomain
+                            [0] >= lastStopOffset) {
+                            return null;
+                        }
+                        coordinatesDomain[0] = Math.Max(coordinatesDomain[0], firstStopOffset);
+                        coordinatesDomain[1] = Math.Min(coordinatesDomain[1], lastStopOffset);
                     }
-                    break;
                 }
-                if (currentStopOffset > coordinatesDomain[0]) {
-                    break;
-                }
+                System.Diagnostics.Debug.Assert(coordinatesDomain[0] <= coordinatesDomain[1]);
+                actualCoordinates = CreateCoordinatesForNewDomain(coordinatesDomain, baseCoordinatesVector);
             }
-            return newDomain;
+            return new PdfShading.Axial(new PdfDeviceCs.Rgb(), CreateCoordsPdfArray(actualCoordinates), new PdfArray(coordinatesDomain
+                ), ConstructFunction(stopsToConstruct));
         }
 
         // the result list would have the same list of stop colors as the original one
         // with all offsets on coordinates domain dimension and adjusted for ascending values
-        private static IList<GradientColorStop> NormalizeStops(IList<GradientColorStop> toNormalize, Point[] coordinates
+        private static IList<GradientColorStop> NormalizeStops(IList<GradientColorStop> toNormalize, double baseVectorLength
             ) {
-            double baseVectorLength = coordinates[1].Distance(coordinates[0]);
+            if (baseVectorLength < ZERO_EPSILON) {
+                return JavaUtil.ArraysAsList(new GradientColorStop(toNormalize[toNormalize.Count - 1], 0d, GradientColorStop.OffsetType
+                    .RELATIVE));
+            }
             // get rid of all absolute on vector offsets and hint offsets
             IList<GradientColorStop> result = CopyStopsAndNormalizeAbsoluteOffsets(toNormalize, baseVectorLength);
             // normalize 1st stop as it may be a special case
@@ -481,6 +454,20 @@ namespace iText.Kernel.Colors.Gradients {
                 copy.Add(result);
             }
             return copy;
+        }
+
+        private static void AdjustStopsForPadIfNeeded(IList<GradientColorStop> stopsToConstruct, double[] coordinatesDomain
+            ) {
+            GradientColorStop firstStop = stopsToConstruct[0];
+            if (coordinatesDomain[0] < firstStop.GetOffset()) {
+                stopsToConstruct.Add(0, new GradientColorStop(firstStop, coordinatesDomain[0], GradientColorStop.OffsetType
+                    .RELATIVE));
+            }
+            GradientColorStop lastStop = stopsToConstruct[stopsToConstruct.Count - 1];
+            if (coordinatesDomain[1] > lastStop.GetOffset()) {
+                stopsToConstruct.Add(new GradientColorStop(lastStop, coordinatesDomain[1], GradientColorStop.OffsetType.RELATIVE
+                    ));
+            }
         }
 
         private static IList<GradientColorStop> AdjustNormalizedStopsToCoverDomain(IList<GradientColorStop> normalizedStops

@@ -554,9 +554,12 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
-            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            PdfFormXObject xObject = null;
             Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
-            new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+            if (gradientColor != null) {
+                xObject = new PdfFormXObject(formBBox);
+                new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+            }
             return xObject;
         }
 

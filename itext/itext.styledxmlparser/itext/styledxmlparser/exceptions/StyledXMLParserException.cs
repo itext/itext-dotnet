@@ -45,6 +45,9 @@ using System;
 namespace iText.StyledXmlParser.Exceptions {
     /// <summary>Runtime exception that gets thrown if something goes wrong in the HTML to PDF conversion.</summary>
     public class StyledXMLParserException : Exception {
+        /// <summary>The Constant INVALID_GRADIENT_VALUE.</summary>
+        public const String INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST = "Invalid gradient function arguments list: {0}";
+
         /// <summary>The Constant INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING.</summary>
         public const String INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING = "Invalid direction string: {0}";
 
