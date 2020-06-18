@@ -51,7 +51,7 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Geom {
     /// <summary>Class that represent rectangle object.</summary>
     public class Rectangle {
-        private static float EPS = 1e-4f;
+        internal static float EPS = 1e-4f;
 
         protected internal float x;
 
@@ -409,6 +409,32 @@ namespace iText.Kernel.Geom {
         /// </returns>
         public virtual iText.Kernel.Geom.Rectangle DecreaseHeight(float extra) {
             this.height -= extra;
+            return this;
+        }
+
+        /// <summary>Increases the width of rectangle by the given value.</summary>
+        /// <remarks>Increases the width of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra wudth to be added.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Geom.Rectangle IncreaseWidth(float extra) {
+            this.width += extra;
+            return this;
+        }
+
+        /// <summary>Decreases the width of rectangle by the given value.</summary>
+        /// <remarks>Decreases the width of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra width to be subtracted.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Geom.Rectangle DecreaseWidth(float extra) {
+            this.width -= extra;
             return this;
         }
 

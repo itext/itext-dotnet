@@ -611,5 +611,19 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.AreEqual(typeof(PageSize), copyAsPageSize.GetType());
             NUnit.Framework.Assert.AreEqual(typeof(PageSize), copyAsRectangle.GetType());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DecreaseWidthTest() {
+            Rectangle rectangle = new Rectangle(100, 200);
+            rectangle.DecreaseWidth(10);
+            NUnit.Framework.Assert.AreEqual(90, rectangle.GetWidth(), Rectangle.EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncreaseWidthTest() {
+            Rectangle rectangle = new Rectangle(100, 200);
+            rectangle.IncreaseWidth(10);
+            NUnit.Framework.Assert.AreEqual(110, rectangle.GetWidth(), Rectangle.EPS);
+        }
     }
 }
