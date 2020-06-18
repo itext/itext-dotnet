@@ -308,7 +308,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverTest() {
-            //TODO remove in version 7.2
+            //TODO DEVSIX-3814: remove in version 7.2
             DummySvgConverterProperties properties = new DummySvgConverterProperties();
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
                 (this);
@@ -318,14 +318,14 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverNullPropsTest() {
-            //TODO remove in version 7.2
+            //TODO DEVSIX-3814: remove in version 7.2
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
                 (this);
             ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, null);
             NUnit.Framework.Assert.IsNotNull(currentResolver);
         }
 
-        //TODO remove in version 7.2
+        //TODO DEVSIX-3814: remove in version 7.2
         internal class TestSvgProcessorResult : ISvgProcessorResult {
             public TestSvgProcessorResult(SvgConverterUnitTest _enclosing) {
                 this._enclosing = _enclosing;
