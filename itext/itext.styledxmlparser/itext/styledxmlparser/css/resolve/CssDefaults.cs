@@ -115,8 +115,10 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.QUOTES, "\"\\00ab\" \"\\00bb\"");
             defaultValues.Put(CommonCssConstants.TEXT_ALIGN, CommonCssConstants.START);
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_LINE, CommonCssConstants.NONE);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_STYLE, CommonCssConstants.SOLID);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_COLOR, CommonCssConstants.CURRENTCOLOR);
             defaultValues.Put(CommonCssConstants.TEXT_TRANSFORM, CommonCssConstants.NONE);
-            defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.WHITE_SPACE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.WIDTH, CommonCssConstants.AUTO);
             defaultValues.Put(CommonCssConstants.ORPHANS, "2");

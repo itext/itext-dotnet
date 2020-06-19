@@ -48,7 +48,8 @@ using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 
 namespace iText.Svg.Css.Impl {
-    /// <summary>Utility class for resolving parent-inheritance of style and attribute declarations</summary>
+    [System.ObsoleteAttribute(@"use iText.StyledXmlParser.Util.StyleUtil instead. Utility class for resolving parent-inheritance of style and attribute declarations"
+        )]
     public class StyleResolverUtil {
         private ICollection<IStyleInheritance> inheritanceRules;
 
@@ -90,8 +91,8 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             else {
-                if (CommonCssConstants.TEXT_DECORATION.Equals(styleProperty) && !CommonCssConstants.INLINE_BLOCK.Equals(styles
-                    .Get(CommonCssConstants.DISPLAY))) {
+                if ((CommonCssConstants.TEXT_DECORATION_LINE.Equals(styleProperty) || CommonCssConstants.TEXT_DECORATION.Equals
+                    (styleProperty)) && !CommonCssConstants.INLINE_BLOCK.Equals(styles.Get(CommonCssConstants.DISPLAY))) {
                     // Note! This property is formally not inherited, but the browsers behave very similar to inheritance here.
                     // Text decorations on inline boxes are drawn across the entire element,
                     // going across any descendant elements without paying any attention to their presence.

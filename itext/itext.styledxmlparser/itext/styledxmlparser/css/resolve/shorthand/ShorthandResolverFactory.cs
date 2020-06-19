@@ -68,9 +68,9 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             shorthandResolvers.Put(CommonCssConstants.MARGIN, new MarginShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.OUTLINE, new OutlineShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.PADDING, new PaddingShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.TEXT_DECORATION, new TextDecorationShorthandResolver());
         }
 
-        // TODO text-decoration is a shorthand in CSS3, however it is not yet supported in any major browsers
         /// <summary>Gets a shorthand resolver.</summary>
         /// <param name="shorthandProperty">the property</param>
         /// <returns>the shorthand resolver</returns>
