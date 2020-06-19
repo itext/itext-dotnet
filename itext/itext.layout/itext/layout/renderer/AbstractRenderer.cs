@@ -504,8 +504,8 @@ namespace iText.Layout.Renderer {
                         //  for gradient uses width and height = 1. For all othe cases the logic left as it was.
                         Rectangle imageRectangle;
                         if (backgroundXObject == null) {
-                            backgroundXObject = CreateXObject(backgroundImage.GetLinearGradientBuilder(), backgroundArea, drawContext.
-                                GetDocument());
+                            backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
+                                (), backgroundArea, drawContext.GetDocument());
                             imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
                                 (), 1, 1);
                         }
@@ -548,17 +548,24 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        public virtual PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle
-             xObjectArea, PdfDocument document) {
-            if (linearGradientBuilder == null) {
-                return null;
-            }
+        /// <summary>
+        /// Create a
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// with the given area and containing a linear gradient inside.
+        /// </summary>
+        /// <param name="linearGradientBuilder">the linear gradient builder</param>
+        /// <param name="xObjectArea">the result object area</param>
+        /// <param name="document">the pdf document</param>
+        /// <returns>the xObject with a specified area and a linear gradient</returns>
+        public static PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle 
+            xObjectArea, PdfDocument document) {
             Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
-            PdfFormXObject xObject = null;
-            Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
-            if (gradientColor != null) {
-                xObject = new PdfFormXObject(formBBox);
-                new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            if (linearGradientBuilder != null) {
+                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
+                if (gradientColor != null) {
+                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+                }
             }
             return xObject;
         }
