@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// method;
         /// </description></item>
         /// <item><description>convert image to
-        /// <see cref="Java.Awt.Image.BufferedImage"/>
+        /// <see cref="System.Drawing.Bitmap"/>
         /// with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
         /// ;
