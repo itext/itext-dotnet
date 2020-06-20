@@ -272,7 +272,8 @@ namespace iText.Forms.Xfdf {
                 switch (attributeName) {
                     case XfdfConstants.PAGE: {
                         //required
-                        annotObject.AddFdfAttributes(Convert.ToInt32(attributeNode.Value));
+                        annotObject.AddFdfAttributes(Convert.ToInt32(attributeNode.Value, System.Globalization.CultureInfo.InvariantCulture
+                            ));
                         break;
                     }
 

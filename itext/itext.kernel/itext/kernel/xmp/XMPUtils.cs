@@ -232,7 +232,7 @@ namespace iText.Kernel.XMP {
             value = value.ToLowerInvariant();
             try {
                 // First try interpretation as Integer (anything not 0 is true)
-                return Convert.ToInt32(value) != 0;
+                return Convert.ToInt32(value, System.Globalization.CultureInfo.InvariantCulture) != 0;
             }
             catch (FormatException) {
                 return "true".Equals(value) || "t".Equals(value) || "on".Equals(value) || "yes".Equals(value);
@@ -264,7 +264,7 @@ namespace iText.Kernel.XMP {
                     return Convert.ToInt32(rawValue.Substring(2), 16);
                 }
                 else {
-                    return Convert.ToInt32(rawValue);
+                    return Convert.ToInt32(rawValue, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             catch (FormatException) {
@@ -291,7 +291,7 @@ namespace iText.Kernel.XMP {
                     return Convert.ToInt64(rawValue.Substring(2), 16);
                 }
                 else {
-                    return Convert.ToInt64(rawValue);
+                    return Convert.ToInt64(rawValue, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             catch (FormatException) {

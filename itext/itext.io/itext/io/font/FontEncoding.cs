@@ -284,7 +284,7 @@ namespace iText.IO.Font {
                         orderK = order[1];
                     }
                     else {
-                        orderK = Convert.ToInt32(order);
+                        orderK = Convert.ToInt32(order, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     orderK %= 256;
                     unicodeToCode.Put(uni, orderK);
@@ -296,7 +296,7 @@ namespace iText.IO.Font {
             else {
                 int k = 0;
                 if (tok.HasMoreTokens()) {
-                    k = Convert.ToInt32(tok.NextToken());
+                    k = Convert.ToInt32(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                 }
                 while (tok.HasMoreTokens() && k < 256) {
                     String hex = tok.NextToken();

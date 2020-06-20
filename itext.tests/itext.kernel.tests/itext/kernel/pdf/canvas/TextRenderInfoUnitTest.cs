@@ -98,7 +98,7 @@ namespace iText.Kernel.Pdf.Canvas {
                  + " 361 572 484 715 571 490 465";
             PdfArray widthsArray = new PdfArray();
             foreach (String w in iText.IO.Util.StringUtil.Split(widths, " ")) {
-                widthsArray.Add(new PdfNumber(Convert.ToInt32(w)));
+                widthsArray.Add(new PdfNumber(Convert.ToInt32(w, System.Globalization.CultureInfo.InvariantCulture)));
             }
             fontDict.Put(PdfName.Widths, widthsArray);
             return fontDict;

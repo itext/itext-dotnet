@@ -310,8 +310,10 @@ namespace iText.IO.Source {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
                                 try {
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                        );
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                        );
                                 }
                                 catch (Exception) {
                                     //warn about incorrect reference number
@@ -328,8 +330,10 @@ namespace iText.IO.Source {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                        );
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                        );
                                     return;
                                 }
                             }
@@ -550,11 +554,11 @@ namespace iText.IO.Source {
         }
 
         public virtual long GetLongValue() {
-            return Convert.ToInt64(GetStringValue());
+            return Convert.ToInt64(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public virtual int GetIntValue() {
-            return Convert.ToInt32(GetStringValue());
+            return Convert.ToInt32(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public virtual bool IsHexString() {

@@ -140,7 +140,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 return null;
             }
             try {
-                return Convert.ToInt32(str);
+                return Convert.ToInt32(str, System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (FormatException) {
                 return null;
@@ -235,8 +235,10 @@ namespace iText.StyledXmlParser.Css.Util {
         public static int[] ParseAspectRatio(String str) {
             int indexOfSlash = str.IndexOf('/');
             try {
-                int first = Convert.ToInt32(str.JSubstring(0, indexOfSlash));
-                int second = Convert.ToInt32(str.Substring(indexOfSlash + 1));
+                int first = Convert.ToInt32(str.JSubstring(0, indexOfSlash), System.Globalization.CultureInfo.InvariantCulture
+                    );
+                int second = Convert.ToInt32(str.Substring(indexOfSlash + 1), System.Globalization.CultureInfo.InvariantCulture
+                    );
                 return new int[] { first, second };
             }
             catch (Exception) {

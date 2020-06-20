@@ -225,7 +225,7 @@ namespace iText.Barcodes {
                     if (code.Length < k) {
                         break;
                     }
-                    int subcode = Convert.ToInt32(code.JSubstring(0, k));
+                    int subcode = Convert.ToInt32(code.JSubstring(0, k), System.Globalization.CultureInfo.InvariantCulture);
                     n = ais.ContainsKey(subcode) ? (int)ais.Get(subcode) : 0;
                     if (n != 0) {
                         idlen = k;
@@ -688,7 +688,7 @@ namespace iText.Barcodes {
                     if (sai.Length < 2) {
                         throw new ArgumentException("AI is too short");
                     }
-                    int ai = Convert.ToInt32(sai);
+                    int ai = Convert.ToInt32(sai, System.Globalization.CultureInfo.InvariantCulture);
                     int len = (int)ais.Get(ai);
                     if (len == 0) {
                         throw new ArgumentException("AI not found");

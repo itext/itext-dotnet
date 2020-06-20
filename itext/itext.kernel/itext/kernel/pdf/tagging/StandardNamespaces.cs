@@ -158,7 +158,8 @@ namespace iText.Kernel.Pdf.Tagging {
         public static bool IsHnRole(String role) {
             if (role.StartsWith("H") && role.Length > 1 && role[1] != '0') {
                 try {
-                    return Convert.ToInt32(role.JSubstring(1, role.Length)) > 0;
+                    return Convert.ToInt32(role.JSubstring(1, role.Length), System.Globalization.CultureInfo.InvariantCulture)
+                         > 0;
                 }
                 catch (Exception) {
                 }
