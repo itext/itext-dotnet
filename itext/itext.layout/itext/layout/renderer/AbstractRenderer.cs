@@ -562,7 +562,7 @@ namespace iText.Layout.Renderer {
             Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
             PdfFormXObject xObject = new PdfFormXObject(formBBox);
             if (linearGradientBuilder != null) {
-                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null);
+                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null, document);
                 if (gradientColor != null) {
                     new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
                 }

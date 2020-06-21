@@ -46,7 +46,7 @@ namespace iText.Kernel.Colors.Gradients {
         public virtual void BuildWithNullArgumentsAndWithoutSettersTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
             AbstractLinearGradientBuilder gradientBuilder = new LinearGradientBuilder();
-            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null));
+            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null, null));
         }
 
         [NUnit.Framework.Test]
@@ -206,7 +206,7 @@ namespace iText.Kernel.Colors.Gradients {
             AbstractLinearGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
                 .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.PAD);
-            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(null, null));
+            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(null, null, null));
         }
 
         [NUnit.Framework.Test]
@@ -646,7 +646,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.NONE).AddColorStop(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), -10d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), -5d, GradientColorStop.OffsetType.RELATIVE));
-            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null));
+            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null, null));
         }
 
         [NUnit.Framework.Test]
@@ -657,7 +657,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.NONE).AddColorStop(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 5d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 10d, GradientColorStop.OffsetType.RELATIVE));
-            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null));
+            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null, null));
         }
 
         [NUnit.Framework.Test]
@@ -668,7 +668,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .GetTop() - 100f).SetSpreadMethod(GradientSpreadMethod.NONE).AddColorStop(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE));
-            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null));
+            NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null, null));
         }
 
         [NUnit.Framework.Test]
@@ -702,8 +702,8 @@ namespace iText.Kernel.Colors.Gradients {
                 if (transform != null) {
                     canvas.ConcatMatrix(transform);
                 }
-                canvas.SetFillColor(gradientBuilder.BuildColor(toDraw, transform)).SetStrokeColor(ColorConstants.BLACK).Rectangle
-                    (toDraw).FillStroke();
+                canvas.SetFillColor(gradientBuilder.BuildColor(toDraw, transform, pdfDoc)).SetStrokeColor(ColorConstants.BLACK
+                    ).Rectangle(toDraw).FillStroke();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdfPath, sourceFolder + "cmp_" + fileName
                 , destinationFolder, "diff"));
@@ -714,7 +714,7 @@ namespace iText.Kernel.Colors.Gradients {
             String outPdfPath = destinationFolder + fileName;
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileInfo(outPdfPath)))) {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-                canvas.SetFillColor(gradientBuilder.BuildColor(null, null)).SetStrokeColor(ColorConstants.BLACK).Rectangle
+                canvas.SetFillColor(gradientBuilder.BuildColor(null, null, pdfDoc)).SetStrokeColor(ColorConstants.BLACK).Rectangle
                     (toDraw).FillStroke();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdfPath, sourceFolder + "cmp_" + fileName

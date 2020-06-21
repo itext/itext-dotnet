@@ -54,7 +54,8 @@ namespace iText.Svg.Renderers.Impl {
                 );
             builder.SetCurrentSpaceToGradientVectorSpaceTransformation(gradientTransform);
             return builder.BuildColor(objectBoundingBox.ApplyMargins(objectBoundingBoxMargin, objectBoundingBoxMargin, 
-                objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform());
+                objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform(), context.
+                GetCurrentCanvas().GetDocument());
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {

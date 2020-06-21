@@ -51,7 +51,7 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void NoSettersTest() {
             NUnit.Framework.Assert.IsNull(new StrategyBasedLinearGradientBuilder().BuildColor(new Rectangle(50f, 450f, 
-                500f, 300f), null));
+                500f, 300f), null, null));
         }
 
         [NUnit.Framework.Test]
@@ -60,7 +60,7 @@ namespace iText.Kernel.Colors.Gradients {
                 ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE)).BuildColor(null, null
-                ));
+                , null));
         }
 
         [NUnit.Framework.Test]
@@ -253,8 +253,8 @@ namespace iText.Kernel.Colors.Gradients {
                     canvas.ConcatMatrix(transform);
                 }
                 Rectangle toDraw = new Rectangle(50f, 450f, 500f, 300f);
-                canvas.SetFillColor(gradientBuilder.BuildColor(toDraw, transform)).SetStrokeColor(ColorConstants.BLACK).Rectangle
-                    (toDraw).FillStroke();
+                canvas.SetFillColor(gradientBuilder.BuildColor(toDraw, transform, pdfDoc)).SetStrokeColor(ColorConstants.BLACK
+                    ).Rectangle(toDraw).FillStroke();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdfPath, sourceFolder + "cmp_" + fileName
                 , destinationFolder, "diff"));

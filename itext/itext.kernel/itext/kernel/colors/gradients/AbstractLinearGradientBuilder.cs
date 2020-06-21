@@ -113,6 +113,11 @@ namespace iText.Kernel.Colors.Gradients {
         /// if there is no transformation from base coordinates to current space
         /// specified, or it is equal to identity transformation.
         /// </param>
+        /// <param name="document">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// for which the linear gradient would be built.
+        /// </param>
         /// <returns>
         /// the constructed
         /// <see cref="iText.Kernel.Colors.Color"/>
@@ -121,7 +126,9 @@ namespace iText.Kernel.Colors.Gradients {
         /// if no color to be applied
         /// or base gradient vector has been specified
         /// </returns>
-        public virtual Color BuildColor(Rectangle targetBoundingBox, AffineTransform contextTransform) {
+        public virtual Color BuildColor(Rectangle targetBoundingBox, AffineTransform contextTransform, PdfDocument
+             document) {
+            // TODO: DEVSIX-4136 the document argument would be required for opaque gradients (as we would need to create a mask form xObject)
             Point[] baseCoordinatesVector = GetGradientVector(targetBoundingBox, contextTransform);
             if (baseCoordinatesVector == null || this.stops.IsEmpty()) {
                 // Can not create gradient color with 0 stops or null coordinates vector
