@@ -75,6 +75,98 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedWithTwoFigures");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CubicBezierTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CubicBezierInsideOtherCubicBezierTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierInsideOtherCubicBezier");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCubicBezierWithAbsoluteCoordinatesTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithAbsoluteCoordinates");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCubicBezierWithRelativeCoordinatesTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithRelativeCoordinates");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordWithMoveTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordWithMove");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordNoZOperator");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void QuadraticBezierTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void QuadraticBezierInsideOtherQuadraticBezierTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezierInsideOtherQuadraticBezier");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothQuadraticBezierWithAbsoluteCoordinatesTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithAbsoluteCoordinates");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothQuadraticBezierWithRelativeCoordinatesTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithRelativeCoordinates");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothQuadraticBezierAbsoluteAndRelativeCoordWithMoveTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierAbsoluteAndRelativeCoordWithMove"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperator"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsRelativeCoordinatesTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsRelativeCoordinates");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ArcInsideOtherEllipticalArcTest() {
+            // TODO: update cmp-file after DEVSIX-4018 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "arcInsideOtherEllipticalArc");
+        }
+
         // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void PolygonTest() {
