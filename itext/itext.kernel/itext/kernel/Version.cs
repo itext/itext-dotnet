@@ -373,7 +373,6 @@ namespace iText.Kernel {
             }
             catch (Exception) {
             }
-            //TODO: Log this exception?
             return result;
         }
 
