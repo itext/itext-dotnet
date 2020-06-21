@@ -61,6 +61,8 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         private Point startPoint;
 
+        private const double EPS = 0.00001;
+
         /// <summary>Creates an absolute Elliptical curveTo.</summary>
         public EllipticalCurveTo()
             : this(false) {
@@ -346,6 +348,297 @@ namespace iText.Svg.Renderers.Path.Impl {
             internal static double ToDegrees(double radians) {
                 return radians * 180.0 / Math.PI;
             }
+        }
+
+        public override Rectangle GetPathShapeRectangle(Point lastPoint) {
+            double[] points = GetEllipticalArcMinMaxPoints(lastPoint.GetX(), lastPoint.GetY(), GetCoordinate(0), GetCoordinate
+                (1), GetCoordinate(2), GetCoordinate(3) != 0, GetCoordinate(4) != 0, GetCoordinate(5), GetCoordinate(6
+                ));
+            return new Rectangle((float)CssUtils.ConvertPxToPts(points[0]), (float)CssUtils.ConvertPxToPts(points[1]), 
+                (float)CssUtils.ConvertPxToPts(points[2] - points[0]), (float)CssUtils.ConvertPxToPts(points[3] - points
+                [1]));
+        }
+
+        private double GetCoordinate(int index) {
+            // casting to double fot porting compatibility
+            return (double)CssUtils.ParseDouble(coordinates[index]);
+        }
+
+        /// <summary>
+        /// Algorithm to find elliptical arc bounding box:
+        /// 1.
+        /// </summary>
+        /// <remarks>
+        /// Algorithm to find elliptical arc bounding box:
+        /// 1. Compute extremes using parametric description of the whole ellipse
+        /// We use parametric description of ellipse:
+        /// x(theta) = cx + rx*cos(theta)*cos(phi) - ry*sin(theta)*sin(phi)
+        /// y(theta) = cy + rx*cos(theta)*sin(phi) + ry*sin(theta)*cos(phi)
+        /// After obtaining the derivative and equating it to zero, we get two solutions for x:
+        /// theta = -atan(ry*tan(phi)/rx) and theta = M_PI -atan(ry*tan(phi)/rx)
+        /// and two solutions for y:
+        /// theta = atan(ry/(tan(phi)*rx)) and theta = M_PI + atan(ry/(tan(phi)*rx))
+        /// Then to get theta values we need to know cx and cy - the coordinates of the center of the ellipse.
+        /// 2. Compute the center of the ellipse
+        /// Method
+        /// <see cref="GetEllipseCenterCoordinates(double, double, double, double, double, bool, bool, double, double)
+        ///     "/>
+        /// 3. Determine the bounding box of the whole ellipse
+        /// When we know cx and cy values we can get the bounding box of whole ellipse. That done in the method
+        /// <see cref="GetEllipseCenterCoordinates(double, double, double, double, double, bool, bool, double, double)
+        ///     "/>.
+        /// 4. Find tightest possible bounding box
+        /// Check that given points is on the arc using polar coordinates of points. Method
+        /// <see cref="IsPointOnTheArc(double, double, double, bool)"/>.
+        /// </remarks>
+        /// <param name="x1">x coordinate of the starting point</param>
+        /// <param name="y1">y coordinate of the starting point</param>
+        /// <param name="rx">x radius</param>
+        /// <param name="ry">y radius</param>
+        /// <param name="phi">x-axis rotation</param>
+        /// <param name="largeArc">large arc flag. If this is true, then one of the two larger arc sweeps will be chosen (greater than or equal to 180 degrees)
+        ///     </param>
+        /// <param name="sweep">sweep flag. If sweep flag is true, then the arc will be drawn in a "positive-angle" direction and if false - in a "negative-angle" direction
+        ///     </param>
+        /// <param name="x2">x coordinate of ending point</param>
+        /// <param name="y2">y coordinate of ending point</param>
+        /// <returns>array of {xMin, yMin, xMax, yMax} values</returns>
+        private double[] GetEllipticalArcMinMaxPoints(double x1, double y1, double rx, double ry, double phi, bool
+             largeArc, bool sweep, double x2, double y2) {
+            phi = MathUtil.ToRadians(phi);
+            rx = Math.Abs(rx);
+            ry = Math.Abs(ry);
+            if (rx == 0.0 || ry == 0.0) {
+                return new double[] { Math.Min(x1, x2), Math.Min(y1, y2), Math.Max(x1, x2), Math.Max(y1, y2) };
+            }
+            double[] centerCoordinatesAndRxRy = GetEllipseCenterCoordinates(x1, y1, rx, ry, phi, largeArc, sweep, x2, 
+                y2);
+            // the case when radicant is less than 0 and cannot be recalculated. See getEllipseCenterCoordinates() for more info.
+            if (centerCoordinatesAndRxRy == null) {
+                return new double[] { Math.Min(x1, x2), Math.Min(y1, y2), Math.Max(x1, x2), Math.Max(y1, y2) };
+            }
+            double cx = centerCoordinatesAndRxRy[0];
+            double cy = centerCoordinatesAndRxRy[1];
+            // rx and ry values returned cause they can be changed if radicant < 0
+            rx = centerCoordinatesAndRxRy[2];
+            ry = centerCoordinatesAndRxRy[3];
+            double[][] extremeCoordinatesAndThetas = GetExtremeCoordinatesAndAngles(rx, ry, phi, cx, cy);
+            double[] extremeCoordinates = extremeCoordinatesAndThetas[0];
+            double[] angles = extremeCoordinatesAndThetas[1];
+            double xMin = extremeCoordinates[0];
+            double yMin = extremeCoordinates[1];
+            double xMax = extremeCoordinates[2];
+            double yMax = extremeCoordinates[3];
+            double xMinAngle = angles[0];
+            double yMinAngle = angles[1];
+            double xMaxAngle = angles[2];
+            double yMaxAngle = angles[3];
+            // angles of starting and ending points calculated regarding to centre of ellipse
+            double angle1 = GetAngleBetweenVectors(x1 - cx, y1 - cy);
+            double angle2 = GetAngleBetweenVectors(x2 - cx, y2 - cy);
+            // In case the sweep flag is false,  the angles are decreasing when the ellipse is drawn.
+            // So we can just swap them to choose another arc.
+            if (!sweep) {
+                double temp = angle1;
+                angle1 = angle2;
+                angle2 = temp;
+            }
+            // We have difficulty with the fact that the angle of 0 radians is the same as the one of 2*M_PI radians.
+            // This passage through the 2*M_PI / 0 border is not very easy to handle directly.
+            // That is why we swap the points in case where angle1 > angle2 and will not look in this case for absence of the
+            // extreme points on the arc, but for their presence on the complement arc that would close the ellipse.
+            bool otherArc = angle1 > angle2;
+            if (otherArc) {
+                double temp = angle1;
+                angle1 = angle2;
+                angle2 = temp;
+            }
+            // If, for example, xMin does not lie on the arc, the new xMin will be the minimum
+            // of the x coordinates of the starting and ending points. The same is valid for all other cases.
+            if (!IsPointOnTheArc(xMinAngle, angle1, angle2, otherArc)) {
+                xMin = Math.Min(x1, x2);
+            }
+            if (!IsPointOnTheArc(xMaxAngle, angle1, angle2, otherArc)) {
+                xMax = Math.Max(x1, x2);
+            }
+            if (!IsPointOnTheArc(yMinAngle, angle1, angle2, otherArc)) {
+                yMin = Math.Min(y1, y2);
+            }
+            if (!IsPointOnTheArc(yMaxAngle, angle1, angle2, otherArc)) {
+                yMax = Math.Max(y1, y2);
+            }
+            return new double[] { xMin, yMin, xMax, yMax };
+        }
+
+        /// <summary>Calculate the center coordinates of the whole ellipse.</summary>
+        /// <remarks>
+        /// Calculate the center coordinates of the whole ellipse.
+        /// Also return rx, ry values since they can be changed in this method.
+        /// Algorithm for calculation centre coordinates: https://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
+        /// </remarks>
+        /// <param name="x1">x coordinate of the starting point</param>
+        /// <param name="y1">y coordinate of the starting point</param>
+        /// <param name="rx">x radius</param>
+        /// <param name="ry">y radius</param>
+        /// <param name="phi">x-axis rotation</param>
+        /// <param name="largeArc">large arc flag</param>
+        /// <param name="sweep">sweep flag</param>
+        /// <param name="x2">x coordinate of ending point</param>
+        /// <param name="y2">y coordinate of ending point</param>
+        /// <returns>the array of {cx, cy, rx, ry} values</returns>
+        private double[] GetEllipseCenterCoordinates(double x1, double y1, double rx, double ry, double phi, bool 
+            largeArc, bool sweep, double x2, double y2) {
+            double x1Prime = Math.Cos(phi) * (x1 - x2) / 2 + Math.Sin(phi) * (y1 - y2) / 2;
+            double y1Prime = -Math.Sin(phi) * (x1 - x2) / 2 + Math.Cos(phi) * (y1 - y2) / 2;
+            double radicant = (rx * rx * ry * ry - rx * rx * y1Prime * y1Prime - ry * ry * x1Prime * x1Prime);
+            radicant /= (rx * rx * y1Prime * y1Prime + ry * ry * x1Prime * x1Prime);
+            double cxPrime = 0.0;
+            double cyPrime = 0.0;
+            if (radicant < 0.0) {
+                double ratio = rx / ry;
+                radicant = y1Prime * y1Prime + x1Prime * x1Prime / (ratio * ratio);
+                if (radicant < 0.0) {
+                    return null;
+                }
+                ry = Math.Sqrt(radicant);
+                rx = ratio * ry;
+            }
+            else {
+                double factor = (largeArc == sweep ? -1.0 : 1.0) * Math.Sqrt(radicant);
+                cxPrime = factor * rx * y1Prime / ry;
+                cyPrime = -factor * ry * x1Prime / rx;
+            }
+            double cx = cxPrime * Math.Cos(phi) - cyPrime * Math.Sin(phi) + (x1 + x2) / 2;
+            double cy = cxPrime * Math.Sin(phi) + cyPrime * Math.Cos(phi) + (y1 + y2) / 2;
+            // rx and ry values returned cause they can be changed if radicant < 0
+            return new double[] { cx, cy, rx, ry };
+        }
+
+        /// <summary>Calculate extremes of the ellipse function and corresponding angles.</summary>
+        /// <remarks>
+        /// Calculate extremes of the ellipse function and corresponding angles.
+        /// Angles are calculated relative to the center of the ellipse.
+        /// </remarks>
+        /// <param name="rx">x radius</param>
+        /// <param name="ry">y radius</param>
+        /// <param name="phi">x-axis rotation</param>
+        /// <param name="cx">x coordinate of ellipse center</param>
+        /// <param name="cy">y coordinate of ellipse center</param>
+        /// <returns>array of extreme coordinate and array of angles corresponding to these coordinates.</returns>
+        private double[][] GetExtremeCoordinatesAndAngles(double rx, double ry, double phi, double cx, double cy) {
+            double xMin;
+            double yMin;
+            double xMax;
+            double yMax;
+            double xMinAngle;
+            double yMinAngle;
+            double xMaxAngle;
+            double yMaxAngle;
+            if (AnglesAreEquals(phi, 0) || AnglesAreEquals(phi, Math.PI)) {
+                xMin = cx - rx;
+                xMinAngle = GetAngleBetweenVectors(-rx, 0);
+                xMax = cx + rx;
+                xMaxAngle = GetAngleBetweenVectors(rx, 0);
+                yMin = cy - ry;
+                yMinAngle = GetAngleBetweenVectors(0, -ry);
+                yMax = cy + ry;
+                yMaxAngle = GetAngleBetweenVectors(0, ry);
+            }
+            else {
+                if (AnglesAreEquals(phi, Math.PI / 2.0) || AnglesAreEquals(phi, 3.0 * Math.PI / 2.0)) {
+                    xMin = cx - ry;
+                    xMinAngle = GetAngleBetweenVectors(-ry, 0);
+                    xMax = cx + ry;
+                    xMaxAngle = GetAngleBetweenVectors(ry, 0);
+                    yMin = cy - rx;
+                    yMinAngle = GetAngleBetweenVectors(0, -rx);
+                    yMax = cy + rx;
+                    yMaxAngle = GetAngleBetweenVectors(0, rx);
+                }
+                else {
+                    // get theta values
+                    double txMin = -Math.Atan(ry * Math.Tan(phi) / rx);
+                    double txMax = Math.PI - Math.Atan(ry * Math.Tan(phi) / rx);
+                    // get x values substituting theta and center coordinates to the ellipse function
+                    xMin = cx + rx * Math.Cos(txMin) * Math.Cos(phi) - ry * Math.Sin(txMin) * Math.Sin(phi);
+                    xMax = cx + rx * Math.Cos(txMax) * Math.Cos(phi) - ry * Math.Sin(txMax) * Math.Sin(phi);
+                    if (xMin > xMax) {
+                        double temp = xMin;
+                        xMin = xMax;
+                        xMax = temp;
+                        temp = txMin;
+                        txMin = txMax;
+                        txMax = temp;
+                    }
+                    // calculate angles corresponding to extremes
+                    double tempY = cy + rx * Math.Cos(txMin) * Math.Sin(phi) + ry * Math.Sin(txMin) * Math.Cos(phi);
+                    xMinAngle = GetAngleBetweenVectors(xMin - cx, tempY - cy);
+                    tempY = cy + rx * Math.Cos(txMax) * Math.Sin(phi) + ry * Math.Sin(txMax) * Math.Cos(phi);
+                    xMaxAngle = GetAngleBetweenVectors(xMax - cx, tempY - cy);
+                    // get theta values
+                    double tyMin = Math.Atan(ry / (Math.Tan(phi) * rx));
+                    double tyMax = Math.Atan(ry / (Math.Tan(phi) * rx)) + Math.PI;
+                    // get y values substituting theta and center coordinates to the ellipse function
+                    yMin = cy + rx * Math.Cos(tyMin) * Math.Sin(phi) + ry * Math.Sin(tyMin) * Math.Cos(phi);
+                    yMax = cy + rx * Math.Cos(tyMax) * Math.Sin(phi) + ry * Math.Sin(tyMax) * Math.Cos(phi);
+                    if (yMin > yMax) {
+                        double temp = yMin;
+                        yMin = yMax;
+                        yMax = temp;
+                        temp = tyMin;
+                        tyMin = tyMax;
+                        tyMax = temp;
+                    }
+                    // calculate angles corresponding to extremes
+                    double tmpX = cx + rx * Math.Cos(tyMin) * Math.Cos(phi) - ry * Math.Sin(tyMin) * Math.Sin(phi);
+                    yMinAngle = GetAngleBetweenVectors(tmpX - cx, yMin - cy);
+                    tmpX = cx + rx * Math.Cos(tyMax) * Math.Cos(phi) - ry * Math.Sin(tyMax) * Math.Sin(phi);
+                    yMaxAngle = GetAngleBetweenVectors(tmpX - cx, yMax - cy);
+                }
+            }
+            // extremes
+            double[] coordinates = new double[] { xMin, yMin, xMax, yMax };
+            // corresponding angles
+            double[] angles = new double[] { xMinAngle, yMinAngle, xMaxAngle, yMaxAngle };
+            return new double[][] { coordinates, angles };
+        }
+
+        /// <summary>Check that angle corresponding to extreme points is on the current arc.</summary>
+        /// <remarks>
+        /// Check that angle corresponding to extreme points is on the current arc.
+        /// For this we check that this angle is between the angles of starting and ending points.
+        /// </remarks>
+        /// <param name="pointAngle">angle to check</param>
+        /// <param name="angle1">angle of the first extreme point if ellipse(starting or ending)</param>
+        /// <param name="angle2">angle of the second extreme point if ellipse(starting or ending)</param>
+        /// <param name="otherArc">if we should check that point is placed on the other arc of the current ellipse</param>
+        /// <returns>true if point is on the arc</returns>
+        private bool IsPointOnTheArc(double pointAngle, double angle1, double angle2, bool otherArc) {
+            bool isThetaBetweenAngles = angle1 <= pointAngle && angle2 >= pointAngle;
+            // in case of other we should make sure that the point is not on the arc
+            return otherArc != isThetaBetweenAngles;
+        }
+
+        /// <summary>
+        /// Return the angle between the vector (1, 0) and the line specified by points (0, 0) and (bx, by) in range [ 0,
+        /// Pi/2 ] U [ 3*Pi/2, 2*Pi).
+        /// </summary>
+        /// <remarks>
+        /// Return the angle between the vector (1, 0) and the line specified by points (0, 0) and (bx, by) in range [ 0,
+        /// Pi/2 ] U [ 3*Pi/2, 2*Pi).
+        /// As the angle between vectors should cover the whole circle, i.e. [0, 2* Pi).
+        /// General formula to find angle between two vectors is formula F.6.5.4 on the https://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter.
+        /// </remarks>
+        /// <param name="bx">x coordinate of the vector ending point</param>
+        /// <param name="by">y coordinate of the vector ending point</param>
+        /// <returns>calculated angle between vectors</returns>
+        private double GetAngleBetweenVectors(double bx, double by) {
+            return (2 * Math.PI + (by > 0.0 ? 1.0 : -1.0) * Math.Acos(bx / Math.Sqrt(bx * bx + by * by))) % (2 * Math.
+                PI);
+        }
+
+        private bool AnglesAreEquals(double angle1, double angle2) {
+            return Math.Abs(angle1 - angle2) < EPS;
         }
     }
 }

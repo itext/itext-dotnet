@@ -41,8 +41,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -52,7 +56,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for drawing text to a canvas.
     /// </summary>
-    public class TextLeafSvgNodeRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
+    public class TextLeafSvgNodeRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer, ISvgTextNodeHelper {
         public override ISvgNodeRenderer CreateDeepCopy() {
             TextLeafSvgNodeRenderer copy = new TextLeafSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
@@ -88,6 +92,25 @@ namespace iText.Svg.Renderers.Impl {
         public virtual float[][] GetAbsolutePositionChanges() {
             float[] part = new float[] { 0f };
             return new float[][] { part, part };
+        }
+
+        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint) {
+            if (GetParent() is TextSvgBranchRenderer && basePoint != null) {
+                float parentFontSize = ((TextSvgBranchRenderer)GetParent()).GetFontSize();
+                PdfFont parentFont = ((TextSvgBranchRenderer)GetParent()).GetFont();
+                float textLength = GetTextContentLength(parentFontSize, parentFont);
+                float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode
+                    .HTML_MODE);
+                float fontAscender = fontAscenderDescenderFromMetrics[0] / FontProgram.UNITS_NORMALIZATION * parentFontSize;
+                float fontDescender = fontAscenderDescenderFromMetrics[1] / FontProgram.UNITS_NORMALIZATION * parentFontSize;
+                // TextRenderer#calculateAscenderDescender returns fontDescender as a negative value so we should subtract this value
+                float textHeight = fontAscender - fontDescender;
+                return new TextRectangle((float)basePoint.GetX(), (float)basePoint.GetY() - fontAscender, textLength, textHeight
+                    , (float)basePoint.GetY());
+            }
+            else {
+                return null;
+            }
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {

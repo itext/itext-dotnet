@@ -86,6 +86,15 @@ namespace iText.Svg.Renderers.Path.Impl {
             return CreatePoint(coordinates[coordinates.Length - 2], coordinates[coordinates.Length - 1]);
         }
 
+        /// <summary>Get bounding rectangle of the current path shape.</summary>
+        /// <param name="lastPoint">start point for this shape</param>
+        /// <returns>calculated rectangle</returns>
+        public virtual Rectangle GetPathShapeRectangle(Point lastPoint) {
+            // TODO DEVSIX-3814 - add method declaration into IPathShape and remove here in iText 7.2
+            return new Rectangle((float)CssUtils.ConvertPxToPts(GetEndingPoint().GetX()), (float)CssUtils.ConvertPxToPts
+                (GetEndingPoint().GetY()), 0, 0);
+        }
+
         public abstract void Draw(PdfCanvas arg1);
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);

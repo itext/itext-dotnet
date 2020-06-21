@@ -172,6 +172,13 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
+        /// <summary>Return font-size of the current element</summary>
+        /// <returns>absolute value of font-size</returns>
+        public virtual float GetCurrentFontSize() {
+            // TODO DEVSIX-4140 check work of this method with relative unit
+            return CssUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
+        }
+
         /// <summary>
         /// Make a deep copy of the styles and attributes of this renderer
         /// Helper method for deep copying logic
@@ -195,7 +202,9 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// representing the current object's bounding box
         /// </returns>
-        protected internal virtual Rectangle GetObjectBoundingBox() {
+        [Obsolete]
+        protected internal virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            // TODO DEVSIX-3814 move to ISvgNodeRenderer in 7.2
             return null;
         }
 
@@ -365,6 +374,37 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <summary>Parse absolute length.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// for parsing
+        /// </param>
+        /// <param name="percentRelativeValue">the value on which percent length is based on</param>
+        /// <param name="defaultValue">default value if length is not recognized</param>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>absolute value in points</returns>
+        protected internal virtual float ParseAbsoluteLength(String length, float percentRelativeValue, float defaultValue
+            , SvgDrawContext context) {
+            if (CssUtils.IsPercentageValue(length)) {
+                return CssUtils.ParseRelativeValue(length, percentRelativeValue);
+            }
+            else {
+                float em = GetCurrentFontSize();
+                float rem = context.GetRemValue();
+                UnitValue unitValue = CssUtils.ParseLengthValueToPt(length, em, rem);
+                if (unitValue != null && unitValue.IsPointValue()) {
+                    return unitValue.GetValue();
+                }
+                else {
+                    return defaultValue;
+                }
+            }
+        }
+
         private TransparentColor GetColorFromAttributeValue(SvgDrawContext context, String rawColorValue, float objectBoundingBoxMargin
             , float parentOpacity) {
             if (rawColorValue == null) {
@@ -383,7 +423,7 @@ namespace iText.Svg.Renderers.Impl {
                 ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
                 if (colorRenderer is AbstractGradientSvgNodeRenderer) {
                     resolvedColor = ((AbstractGradientSvgNodeRenderer)colorRenderer).CreateColor(context, GetObjectBoundingBox
-                        (), objectBoundingBoxMargin, parentOpacity);
+                        (context), objectBoundingBoxMargin, parentOpacity);
                 }
                 if (resolvedColor != null) {
                     return new TransparentColor(resolvedColor, resolvedOpacity);

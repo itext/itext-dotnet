@@ -374,6 +374,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="remValue">the root em value</param>
         /// <returns>the unit value</returns>
         public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
+            // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
             if (IsMetricValue(value) || IsNumericValue(value)) {
                 return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
             }
@@ -767,6 +768,38 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             return builder.Create();
+        }
+
+        /// <summary>Convert given point value to a pixel value.</summary>
+        /// <remarks>Convert given point value to a pixel value. 1 px is 0.75 pts.</remarks>
+        /// <param name="pts">float value to be converted to pixels</param>
+        /// <returns>float converted value pts/0.75f</returns>
+        public static float ConvertPtsToPx(float pts) {
+            return pts / 0.75f;
+        }
+
+        /// <summary>Convert given point value to a pixel value.</summary>
+        /// <remarks>Convert given point value to a pixel value. 1 px is 0.75 pts.</remarks>
+        /// <param name="pts">double value to be converted to pixels</param>
+        /// <returns>double converted value pts/0.75</returns>
+        public static double ConvertPtsToPx(double pts) {
+            return pts / 0.75;
+        }
+
+        /// <summary>Convert given point value to a point value.</summary>
+        /// <remarks>Convert given point value to a point value. 1 px is 0.75 pts.</remarks>
+        /// <param name="px">float value to be converted to pixels</param>
+        /// <returns>float converted value px*0.75</returns>
+        public static float ConvertPxToPts(float px) {
+            return px * 0.75f;
+        }
+
+        /// <summary>Convert given point value to a point value.</summary>
+        /// <remarks>Convert given point value to a point value. 1 px is 0.75 pts.</remarks>
+        /// <param name="px">double value to be converted to pixels</param>
+        /// <returns>double converted value px*0.75</returns>
+        public static double ConvertPxToPts(double px) {
+            return px * 0.75;
         }
 
         private static bool AddRange(RangeBuilder builder, String range) {

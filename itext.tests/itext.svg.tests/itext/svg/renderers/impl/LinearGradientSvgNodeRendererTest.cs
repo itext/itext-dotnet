@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -56,20 +57,21 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "line");
         }
 
-        // TODO: DEVSIX-4018 add tests for all other types of path components
-        // TODO: DEVSIX-4018 update cmp_ after fix (box for path is not implemented)
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBased");
         }
 
-        // TODO: DEVSIX-4018 update cmp_ after fix (box for path is not implemented)
+        [NUnit.Framework.Test]
+        public virtual void PathLinesBasedTransformedTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedTransformed");
+        }
+
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedWithMoveTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedWithMove");
         }
 
-        // TODO: DEVSIX-4018 update cmp_ after fix (box for path is not implemented)
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedWithTwoFiguresTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedWithTwoFigures");
@@ -77,93 +79,160 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void CubicBezierTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier");
         }
 
         [NUnit.Framework.Test]
+        public virtual void CubicBezier2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CubicBezier3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CubicBezier4Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier4");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CubicBezierZeroDiscriminantTest() {
+            // See CurveTo#calculateTValues to see which discriminant is mentioned.
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierZeroDiscriminant");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CubicBezierNegativeDiscriminantTest() {
+            // See CurveTo#calculateTValues to see which discriminant is mentioned.
+            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierNegativeDiscriminant");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CubicBezierInsideOtherCubicBezierTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierInsideOtherCubicBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierWithAbsoluteCoordinatesTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierWithRelativeCoordinatesTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordWithMoveTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordWithMove");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordNoZOperator");
         }
 
         [NUnit.Framework.Test]
         public virtual void QuadraticBezierTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier");
         }
 
         [NUnit.Framework.Test]
+        public virtual void QuadraticBezier2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void QuadraticBezier3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier3");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void QuadraticBezierInsideOtherQuadraticBezierTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezierInsideOtherQuadraticBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierWithAbsoluteCoordinatesTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierWithRelativeCoordinatesTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierAbsoluteAndRelativeCoordWithMoveTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierAbsoluteAndRelativeCoordWithMove"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperator"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcs");
         }
 
         [NUnit.Framework.Test]
+        public virtual void EllipticalArcsNegativeRxRyTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsNegativeRxRy");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcZeroRxRyTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcZeroRxRy");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhiTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi", PageSize.A3.Rotate());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhi0Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi0");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhi90Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi90");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhi180Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi180");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhi270Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi270");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhiRelativeTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhiRelative");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipticalArcsWithPhiAbsoluteTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhiAbsolute");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void EllipticalArcsRelativeCoordinatesTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void ArcInsideOtherEllipticalArcTest() {
-            // TODO: update cmp-file after DEVSIX-4018 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "arcInsideOtherEllipticalArc");
         }
 
@@ -246,11 +315,88 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "rectWithMultipleTransforms");
         }
 
-        // TODO: DEVSIX-4018 update cmp_ after fix (box for text is not implemented)
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TextTest() {
+            // TODO DEVSIX-4140 remove log message check and update cmp
             ConvertAndCompare(sourceFolder, destinationFolder, "text");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextNestedTSpansTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textNestedTSpansTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void TextRotatedTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textRotatedTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDxTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textDxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDyTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textDyTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextXYOffset() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textXYOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextXOffset() {
+            // TODO DEVSIX-4143 change cmp file after fixing
+            ConvertAndCompare(sourceFolder, destinationFolder, "textXOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextXYDxDyOffset() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textXYDxDyOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientEmUnits() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnits");
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-4140 update cmp file
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void TextGradientEmUnitsRelated() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelated");
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-4140 update cmp file
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
+        public virtual void TextGradientEmUnitsRelatedNotDefs() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedNotDefs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientEmUnitsRelatedDefault() {
+            // TODO DEVSIX-4140 update cmp file
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedDefault");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientExUnits() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientExUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientRemUnits() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientRemUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientRemUnitsNestedSvg() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientRemUnitsNestedSvg");
         }
 
         [NUnit.Framework.Test]
@@ -320,6 +466,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithUnitsRelativeToFontTest() {
+            // TODO DEVSIX-4140 update after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithUnitsRelativeToFont");
         }
 
@@ -331,7 +478,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseDiffRelativeUnitsInGradientTest() {
-            // TODO: DEVSIX-3596 update cmp_ after fix ("ch" "vmin"+"vmax"+"vw"+"vh" not implemented yet)
+            // TODO: DEVSIX-4140, DEVSIX-3596 update cmp_ after fix ("ch" "vmin"+"vmax"+"vw"+"vh" not implemented yet)
             ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseDiffRelativeUnitsInGradient");
         }
 
@@ -385,6 +532,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MatrixTransformInGradientWithObjectBoundingBoxUnitsTest() {
+            //TODO change cmp after DEVSIX-4143 is fixed (bug with only one absolute coordinate in tspan)
             ConvertAndCompare(sourceFolder, destinationFolder, "matrixTransformInGradientWithObjectBoundingBoxUnits");
         }
 

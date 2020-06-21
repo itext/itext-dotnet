@@ -155,6 +155,23 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            Point lastPoint = null;
+            Rectangle commonRectangle = null;
+            foreach (IPathShape item in GetShapes()) {
+                if (lastPoint == null) {
+                    lastPoint = item.GetEndingPoint();
+                }
+                // TODO DEVSIX-3814 - remove this check after moving method getPathShapeRectangle to IPathShape
+                if (item is AbstractPathShape) {
+                    Rectangle rectangle = ((AbstractPathShape)item).GetPathShapeRectangle(lastPoint);
+                    commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);
+                }
+                lastPoint = item.GetEndingPoint();
+            }
+            return commonRectangle;
+        }
+
         /// <summary>
         /// Gets the coordinates that shall be passed to
         /// <see cref="iText.Svg.Renderers.Path.IPathShape.SetCoordinates(System.String[], iText.Kernel.Geom.Point)"/>

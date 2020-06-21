@@ -227,8 +227,9 @@ namespace iText.Svg.Processors.Impl {
         }
 
         private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
-            return !SvgConstants.Tags.MARKER.Equals(element.Name()) && IsElementNested(element, SvgConstants.Tags.DEFS
-                ) && !IsElementNested(element, SvgConstants.Tags.MARKER);
+            return !SvgConstants.Tags.LINEAR_GRADIENT.Equals(element.Name()) && !SvgConstants.Tags.MARKER.Equals(element
+                .Name()) && IsElementNested(element, SvgConstants.Tags.DEFS) && !IsElementNested(element, SvgConstants.Tags
+                .MARKER);
         }
 
         private static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {

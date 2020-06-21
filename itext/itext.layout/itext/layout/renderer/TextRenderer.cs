@@ -1006,27 +1006,26 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.TextRenderer((Text)modelElement);
         }
 
-        internal virtual IList<int[]> GetReversedRanges() {
-            return reversedRanges;
-        }
-
-        internal virtual IList<int[]> InitReversedRanges() {
-            if (reversedRanges == null) {
-                reversedRanges = new List<int[]>();
-            }
-            return reversedRanges;
-        }
-
-        internal virtual iText.Layout.Renderer.TextRenderer RemoveReversedRanges() {
-            reversedRanges = null;
-            return this;
-        }
-
-        internal static float[] CalculateAscenderDescender(PdfFont font) {
+        /// <summary>Get ascender and descender from font metrics.</summary>
+        /// <remarks>
+        /// Get ascender and descender from font metrics.
+        /// If these values are obtained from typo metrics they are normalized with a scale coefficient.
+        /// </remarks>
+        /// <param name="font">from which metrics will be extracted</param>
+        /// <returns>array in which the first element is an ascender and the second is a descender</returns>
+        public static float[] CalculateAscenderDescender(PdfFont font) {
             return CalculateAscenderDescender(font, RenderingMode.DEFAULT_LAYOUT_MODE);
         }
 
-        internal static float[] CalculateAscenderDescender(PdfFont font, RenderingMode? mode) {
+        /// <summary>Get ascender and descender from font metrics.</summary>
+        /// <remarks>
+        /// Get ascender and descender from font metrics.
+        /// In RenderingMode.DEFAULT_LAYOUT_MODE if these values are obtained from typo metrics they are normalized with a scale coefficient.
+        /// </remarks>
+        /// <param name="font">from which metrics will be extracted</param>
+        /// <param name="mode">mode in which metrics will be obtained. Impact on the use of scale coefficient</param>
+        /// <returns>array in which the first element is an ascender and the second is a descender</returns>
+        public static float[] CalculateAscenderDescender(PdfFont font, RenderingMode? mode) {
             FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
             float ascender;
             float descender;
@@ -1044,6 +1043,22 @@ namespace iText.Layout.Renderer {
                 descender = fontMetrics.GetWinDescender();
             }
             return new float[] { ascender, descender };
+        }
+
+        internal virtual IList<int[]> GetReversedRanges() {
+            return reversedRanges;
+        }
+
+        internal virtual IList<int[]> InitReversedRanges() {
+            if (reversedRanges == null) {
+                reversedRanges = new List<int[]>();
+            }
+            return reversedRanges;
+        }
+
+        internal virtual iText.Layout.Renderer.TextRenderer RemoveReversedRanges() {
+            reversedRanges = null;
+            return this;
         }
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {

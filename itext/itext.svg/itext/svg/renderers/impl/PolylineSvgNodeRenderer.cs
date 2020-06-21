@@ -102,7 +102,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        protected internal override Rectangle GetObjectBoundingBox() {
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             SetPoints(GetAttribute(SvgConstants.Attributes.POINTS));
             if (points.Count > 1) {
                 Point firstPoint = points[0];
@@ -124,7 +124,7 @@ namespace iText.Svg.Renderers.Impl {
                 return new Rectangle((float)minX, (float)minY, (float)width, (float)height);
             }
             else {
-                return base.GetObjectBoundingBox();
+                return base.GetObjectBoundingBox(context);
             }
         }
 
@@ -163,8 +163,8 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             if (point != null) {
-                String moveX = SvgCssUtils.ConvertDoubleToString(SvgCssUtils.ConvertPtsToPx(point.x));
-                String moveY = SvgCssUtils.ConvertDoubleToString(SvgCssUtils.ConvertPtsToPx(point.y));
+                String moveX = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.x));
+                String moveY = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.y));
                 MarkerSvgNodeRenderer.DrawMarker(context, moveX, moveY, markerVertexType, this);
             }
         }

@@ -40,10 +40,23 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Geom;
+using iText.Svg.Renderers;
+
 namespace iText.Svg.Renderers.Impl {
     public class TextSvgTSpanBranchRenderer : TextSvgBranchRenderer {
         public TextSvgTSpanBranchRenderer() {
             this.performRootTransformations = false;
+        }
+
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            // TODO DEVSIX-3814 change to getParent().getObjectBoundingBox(context) in 7.2 update
+            if (GetParent() is AbstractSvgNodeRenderer) {
+                return ((AbstractSvgNodeRenderer)GetParent()).GetObjectBoundingBox(context);
+            }
+            else {
+                return null;
+            }
         }
     }
 }

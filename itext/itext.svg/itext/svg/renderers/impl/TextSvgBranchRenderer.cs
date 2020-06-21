@@ -58,7 +58,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;text&gt; and &lt;tspan&gt; tag.
     /// </summary>
-    public class TextSvgBranchRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
+    public class TextSvgBranchRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer, ISvgTextNodeHelper {
         /// <summary>Top level transformation to flip the y-axis results in the character glyphs being mirrored, this tf corrects for this behaviour
         ///     </summary>
         protected internal static readonly AffineTransform TEXTFLIP = new AffineTransform(1, 0, 0, -1, 0, 0);
@@ -150,6 +150,50 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual void MarkWhiteSpaceProcessed() {
             whiteSpaceProcessed = true;
+        }
+
+        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint) {
+            if (this.attributesAndStyles != null) {
+                ResolveFontSize();
+                ResolveFont(context);
+                double x = 0;
+                double y = 0;
+                if (GetAbsolutePositionChanges()[0] != null) {
+                    x = GetAbsolutePositionChanges()[0][0];
+                }
+                else {
+                    if (basePoint != null) {
+                        x = basePoint.GetX();
+                    }
+                }
+                if (GetAbsolutePositionChanges()[1] != null) {
+                    y = GetAbsolutePositionChanges()[1][0];
+                }
+                else {
+                    if (basePoint != null) {
+                        y = basePoint.GetY();
+                    }
+                }
+                basePoint = new Point(x, y);
+                basePoint.Translate(GetRelativeTranslation()[0], GetRelativeTranslation()[1]);
+                Rectangle commonRect = null;
+                foreach (ISvgTextNodeRenderer child in GetChildren()) {
+                    if (child is ISvgTextNodeHelper) {
+                        TextRectangle rectangle = ((ISvgTextNodeHelper)child).GetTextRectangle(context, basePoint);
+                        basePoint = rectangle.GetTextBaseLineRightPoint();
+                        commonRect = Rectangle.GetCommonRectangle(commonRect, rectangle);
+                    }
+                }
+                if (commonRect != null) {
+                    return new TextRectangle(commonRect.GetX(), commonRect.GetY(), commonRect.GetWidth(), commonRect.GetHeight
+                        (), (float)basePoint.GetY());
+                }
+            }
+            return null;
+        }
+
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            return GetTextRectangle(context, null);
         }
 
         /// <summary>
@@ -263,7 +307,7 @@ namespace iText.Svg.Renderers.Impl {
             return provider.GetFontSelector(stringArrayList, fontCharacteristics, tempFonts).BestMatch();
         }
 
-        private void ResolveFont(SvgDrawContext context) {
+        internal virtual void ResolveFont(SvgDrawContext context) {
             FontProvider provider = context.GetFontProvider();
             FontSet tempFonts = context.GetTempFonts();
             font = null;
@@ -287,9 +331,31 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private void ResolveFontSize() {
+        internal virtual void ResolveFontSize() {
             //TODO: DEVSIX-2607 (re)move static variable
             fontSize = (float)SvgTextUtil.ResolveFontSize(this, DEFAULT_FONT_SIZE);
+        }
+
+        /// <summary>Return the font used in this text element.</summary>
+        /// <remarks>
+        /// Return the font used in this text element.
+        /// Note that font should already be resolved with
+        /// <see cref="ResolveFont(iText.Svg.Renderers.SvgDrawContext)"/>.
+        /// </remarks>
+        /// <returns>font of the current text element</returns>
+        internal virtual PdfFont GetFont() {
+            return font;
+        }
+
+        /// <summary>Return the font size of this text element.</summary>
+        /// <remarks>
+        /// Return the font size of this text element.
+        /// Note that font size should already be resolved with
+        /// <see cref="ResolveFontSize()"/>.
+        /// </remarks>
+        /// <returns>font size of current text element.</returns>
+        internal virtual float GetFontSize() {
+            return fontSize;
         }
 
         private void ResolveTextPosition() {
