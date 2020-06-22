@@ -221,8 +221,8 @@ namespace iText.Kernel.Pdf.Xobject {
                     ).GetRefersTo() : obj));
                 NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
                 byte[] result = img.GetImageBytes(true);
-                byte[] cmpBytes = System.IO.File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, filename.JSubstring(0, 
-                    filename.Length - 4) + "." + expectedImageFormat));
+                byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, filename.JSubstring(0, filename.Length
+                     - 4) + "." + expectedImageFormat));
                 if (img.IdentifyImageFileExtension().Equals("tif")) {
                     CompareTiffImages(cmpBytes, result);
                 }

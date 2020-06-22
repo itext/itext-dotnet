@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             IList<PdfStream> inlineImages = eventListener.GetInlineImages();
             NUnit.Framework.Assert.AreEqual(1, inlineImages.Count);
             byte[] imgBytes = inlineImages[0].GetBytes();
-            byte[] cmpImgBytes = System.IO.File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "imgtest.dat"));
+            byte[] cmpImgBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "imgtest.dat"));
             NUnit.Framework.Assert.AreEqual(cmpImgBytes, imgBytes);
             PdfDictionary expectedDict = new PdfDictionary();
             expectedDict.Put(PdfName.BitsPerComponent, new PdfNumber(8));
@@ -92,8 +92,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             new PdfCanvasProcessor(listener).ProcessPageContent(pdfDocument.GetFirstPage());
             IList<PdfStream> inlineImages = listener.GetInlineImages();
             byte[] data = new PdfImageXObject(inlineImages[0]).GetImageBytes();
-            byte[] cmpImgBytes = System.IO.File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "docWithInlineImageBytes.dat"
-                ));
+            byte[] cmpImgBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "docWithInlineImageBytes.dat")
+                );
             NUnit.Framework.Assert.AreEqual(cmpImgBytes, data);
         }
 
