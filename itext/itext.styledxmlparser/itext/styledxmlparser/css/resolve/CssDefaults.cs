@@ -91,6 +91,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.FONT_STYLE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_VARIANT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.HEIGHT, CommonCssConstants.AUTO);
             defaultValues.Put(CommonCssConstants.HYPHENS, CommonCssConstants.MANUAL);
             defaultValues.Put(CommonCssConstants.LINE_HEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants.DISC);

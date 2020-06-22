@@ -411,6 +411,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant WIDTH.</summary>
         public const String WIDTH = "width";
 
+        /// <summary>The Constant HEIGHT.</summary>
+        public const String HEIGHT = "height";
+
         /// <summary>The Constant WORDWRAP.</summary>
         public const String WORDWRAP = "word-wrap";
 
