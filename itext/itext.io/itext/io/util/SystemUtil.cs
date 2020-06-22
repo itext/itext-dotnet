@@ -93,13 +93,21 @@ namespace iText.IO.Util {
         }
 
         public static bool RunProcessAndWait(String exec, String @params) {
-            return RunProcessAndGetExitCode(exec, @params) == 0;
+            return RunProcessAndWait(exec, @params, null);
         }
         
-        public static int RunProcessAndGetExitCode(String exec, String @params) {
-            using (Process proc = new Process())
-            {
-                SetProcessStartInfo(proc, exec, @params);
+        public static bool RunProcessAndWait(String exec, String @params, String workingDirPath) {
+            return RunProcessAndGetExitCode(exec, @params, workingDirPath) == 0;
+        }
+        
+        public static int RunProcessAndGetExitCode(String exec, String @params)
+        {
+            return RunProcessAndGetExitCode(exec, @params, null);
+        }
+        
+        public static int RunProcessAndGetExitCode(String exec, String @params, String workingDirPath) {
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, workingDirPath);
                 proc.Start();
                 Console.WriteLine(GetProcessOutput(proc));
                 proc.WaitForExit();
@@ -109,9 +117,8 @@ namespace iText.IO.Util {
 
         public static String RunProcessAndGetOutput(String exec, String @params) {
             String processOutput;
-            using (Process proc = new Process())
-            {
-                SetProcessStartInfo(proc, exec, @params);
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, null);
                 proc.Start();
                 processOutput = GetProcessOutput(proc);
                 proc.WaitForExit();
@@ -122,9 +129,8 @@ namespace iText.IO.Util {
 
         public static StringBuilder RunProcessAndCollectErrors(String exec, String @params) {
             StringBuilder errorsBuilder;
-            using (Process proc = new Process())
-            {
-                SetProcessStartInfo(proc, exec, @params);
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, null);
                 proc.Start();
                 errorsBuilder = GetProcessErrorsOutput(proc);
                 Console.Out.WriteLine(errorsBuilder.ToString());
@@ -135,12 +141,17 @@ namespace iText.IO.Util {
         }
 
         internal static void SetProcessStartInfo(Process proc, String exec, String @params) {
+            SetProcessStartInfo(proc, exec, @params, null);
+        }
+        
+        internal static void SetProcessStartInfo(Process proc, String exec, String @params, String workingDir) {
             String[] processArguments = PrepareProcessArguments(exec, @params);
             proc.StartInfo = new ProcessStartInfo(processArguments[0], processArguments[1]);
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.RedirectStandardError = true;
             proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.WorkingDirectory = workingDir;
         }
 
         internal static String[] PrepareProcessArguments(String exec, String @params) {

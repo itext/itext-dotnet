@@ -43,17 +43,25 @@ address: sales@itextpdf.com
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using iText.Test;
 
 namespace iText.IO.Util {
     public class SystemUtilTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework
-                                                          .TestContext
-                                                          .CurrentContext.TestDirectory) +
-                                                      "/resources/itext/io/util/SystemUtilTest/";
+            .TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/util/SystemUtilTest/";
+        
+
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+                                                           + "/test/itext/io/SystemUtilTest/";
 
         // This is empty file that used to check the logic for existed execution file
         public static readonly String STUB_EXEC_FILE = SOURCE_FOLDER + "folder with space/stubFile";
+        
+        [NUnit.Framework.SetUp]
+        public virtual void SetUp() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
         
         [NUnit.Framework.Test]
         public virtual void SetProcessStartInfoTest() {
@@ -124,6 +132,28 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.AreEqual(
                 "compare \"D:\\itext\\java\\itextcore\\kernel\\.\\target\\test\\com\\itextpdf\\kernel\\utils\\CompareToolTest\\simple_pdf.pdf-001.png\" \"D:\\itext\\java\\itextcore\\kernel\\.\\target\\test\\com\\itextpdf\\kernel\\utils\\CompareToolTest\\cmp_simple_pdf_with_space .pdf-001.png\"",
                 processArguments[1]);
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void RunProcessAndWaitWithWorkingDirectoryTest() {
+            String imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
+            if (imageMagickPath == null) {
+                imageMagickPath = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
+            }
+            String inputImage = "image.jpg";
+            String cmpImage = "cmp_image.jpg";
+            String diff = DESTINATION_FOLDER + "diff_differentImages.png";
+
+            StringBuilder currCompareParams = new StringBuilder();
+            currCompareParams
+                .Append("'")
+                .Append(inputImage).Append("' '")
+                .Append(cmpImage).Append("' '")
+                .Append(diff).Append("'");
+            bool result = SystemUtil.RunProcessAndWait(imageMagickPath, currCompareParams.ToString(), SOURCE_FOLDER);
+
+            NUnit.Framework.Assert.False(result);
+            NUnit.Framework.Assert.True(FileUtil.FileExists(diff));
         }
     }
 }
