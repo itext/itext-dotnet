@@ -149,8 +149,13 @@ namespace iText.Pdfa.Checker {
                     CanvasGraphicsState gState = new _CanvasGraphicsState_164(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
+                else {
+                    if (pattern is PdfPattern.Tiling) {
+                        CheckContentStream((PdfStream)pattern.GetPdfObject());
+                    }
+                }
             }
-            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
+            base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
         private sealed class _CanvasGraphicsState_164 : CanvasGraphicsState {
@@ -841,6 +846,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckContentStream(form);
         }
 
         private void CheckContentsForTransparency(PdfDictionary pageDict) {

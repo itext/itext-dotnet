@@ -137,6 +137,8 @@ namespace iText.Pdfa.Checker {
         protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace = new Dictionary<PdfObject
             , PdfColorSpace>();
 
+        private bool fullCheckMode = false;
+
         protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel) {
             this.conformanceLevel = conformanceLevel;
         }
@@ -188,13 +190,13 @@ namespace iText.Pdfa.Checker {
                     break;
                 }
 
-                case PdfObject.STREAM: {
-                    CheckPdfStream((PdfStream)obj);
+                case PdfObject.STRING: {
+                    CheckPdfString((PdfString)obj);
                     break;
                 }
 
-                case PdfObject.STRING: {
-                    CheckPdfString((PdfString)obj);
+                case PdfObject.ARRAY: {
+                    CheckArrayRecursively((PdfArray)obj);
                     break;
                 }
 
@@ -204,6 +206,14 @@ namespace iText.Pdfa.Checker {
                     if (PdfName.Filespec.Equals(type)) {
                         CheckFileSpec(dict);
                     }
+                    CheckDictionaryRecursively(dict);
+                    break;
+                }
+
+                case PdfObject.STREAM: {
+                    PdfStream stream = (PdfStream)obj;
+                    CheckPdfStream(stream);
+                    CheckDictionaryRecursively(stream);
                     break;
                 }
             }
@@ -217,6 +227,30 @@ namespace iText.Pdfa.Checker {
         /// <returns>the defined conformance level for this document.</returns>
         public virtual PdfAConformanceLevel GetConformanceLevel() {
             return conformanceLevel;
+        }
+
+        /// <summary>In full check mode all objects will be tested for ISO conformance.</summary>
+        /// <remarks>
+        /// In full check mode all objects will be tested for ISO conformance. If full check mode is
+        /// switched off objects which were not modified might be skipped to speed up the validation
+        /// of the document
+        /// </remarks>
+        /// <returns>true if full check mode is switched on</returns>
+        /// <seealso cref="iText.Kernel.Pdf.PdfObject.IsModified()"/>
+        public virtual bool IsFullCheckMode() {
+            return fullCheckMode;
+        }
+
+        /// <summary>In full check mode all objects will be tested for ISO conformance.</summary>
+        /// <remarks>
+        /// In full check mode all objects will be tested for ISO conformance. If full check mode is
+        /// switched off objects which were not modified might be skipped to speed up the validation
+        /// of the document
+        /// </remarks>
+        /// <param name="fullCheckMode">is a new value for full check mode switcher</param>
+        /// <seealso cref="iText.Kernel.Pdf.PdfObject.IsModified()"/>
+        public virtual void SetFullCheckMode(bool fullCheckMode) {
+            this.fullCheckMode = fullCheckMode;
         }
 
         /// <summary>
@@ -378,6 +412,27 @@ namespace iText.Pdfa.Checker {
         protected internal virtual void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources) {
         }
 
+        /// <summary>Attest content stream conformance with appropriate specification.</summary>
+        /// <remarks>
+        /// Attest content stream conformance with appropriate specification.
+        /// Throws PdfAConformanceException if any discrepancy was found
+        /// </remarks>
+        /// <param name="contentStream">is a content stream to validate</param>
+        protected internal virtual void CheckContentStream(PdfStream contentStream) {
+        }
+
+        /// <summary>
+        /// Verify the conformity of the operand of content stream with appropriate
+        /// specification.
+        /// </summary>
+        /// <remarks>
+        /// Verify the conformity of the operand of content stream with appropriate
+        /// specification. Throws PdfAConformanceException if any discrepancy was found
+        /// </remarks>
+        /// <param name="object">is an operand of content stream to validate</param>
+        protected internal virtual void CheckContentStreamObject(PdfObject @object) {
+        }
+
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
         protected internal abstract ICollection<PdfName> GetAllowedNamedActions();
@@ -502,6 +557,24 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        private void CheckArrayRecursively(PdfArray array) {
+            for (int i = 0; i < array.Size(); i++) {
+                PdfObject @object = array.Get(i, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
+            }
+        }
+
+        private void CheckDictionaryRecursively(PdfDictionary dictionary) {
+            foreach (PdfName name in dictionary.KeySet()) {
+                PdfObject @object = dictionary.Get(name, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
+            }
+        }
+
         private void CheckPages(PdfDocument document) {
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 CheckPage(document.GetPage(i));
@@ -521,7 +594,9 @@ namespace iText.Pdfa.Checker {
             CheckPageTransparency(pageDict, page.GetResources().GetPdfObject());
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
-                checkedObjects.Add(page.GetContentStream(j));
+                PdfStream contentStream = page.GetContentStream(j);
+                CheckContentStream(contentStream);
+                checkedObjects.Add(contentStream);
             }
         }
 

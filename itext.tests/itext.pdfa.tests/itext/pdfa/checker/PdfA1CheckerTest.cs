@@ -40,13 +40,23 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Xobject;
 using iText.Pdfa;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
     public class PdfA1CheckerTest : ExtendedITextTest {
         private PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformanceLevel.PDF_A_1B);
+
+        [NUnit.Framework.SetUp]
+        public virtual void Before() {
+            pdfA1Checker.SetFullCheckMode(true);
+        }
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutAAEntry() {
@@ -87,9 +97,271 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckValidCatalog() {
             pdfA1Checker.CheckCatalogValidEntries(new PdfDictionary());
         }
+
         // checkCatalogValidEntries doesn't change the state of any object
         // and doesn't return any value. The only result is exception which
         // was or wasn't thrown. Successful scenario is tested here therefore
         // no assertion is provided
+        [NUnit.Framework.Test]
+        public virtual void IndependentLongStringTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                PdfString longString = new PdfString(PdfACheckerTestUtils.GetLongString(testLength));
+                // An exception should be thrown as provided String is longer then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(longString);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentNormalStringTest() {
+            int testLength = pdfA1Checker.GetMaxStringLength();
+            NUnit.Framework.Assert.AreEqual(testLength, 65535);
+            PdfString longString = new PdfString(PdfACheckerTestUtils.GetLongString(testLength));
+            // An exception should not be thrown as provided String matches
+            // the limitations provided in specification
+            pdfA1Checker.CheckPdfObject(longString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInDictionaryTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                PdfDictionary dict = new PdfDictionary();
+                dict.Put(new PdfName("Key1"), new PdfString("value1"));
+                dict.Put(new PdfName("Key2"), new PdfString("value2"));
+                dict.Put(new PdfName("Key3"), new PdfString(PdfACheckerTestUtils.GetLongString(testLength)));
+                // An exception should be thrown as value for 'key3' is longer then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(dict);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalStringInDictionaryTest() {
+            int testLength = pdfA1Checker.GetMaxStringLength();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("Key1"), new PdfString("value1"));
+            dict.Put(new PdfName("Key2"), new PdfString("value2"));
+            dict.Put(new PdfName("Key3"), new PdfString(PdfACheckerTestUtils.GetLongString(testLength)));
+            // An exception should not be thrown as all values match the
+            // limitations provided in specification
+            pdfA1Checker.CheckPdfObject(dict);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInArrayTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                PdfArray array = new PdfArray();
+                array.Add(new PdfString("value1"));
+                array.Add(new PdfString("value2"));
+                array.Add(new PdfString(PdfACheckerTestUtils.GetLongString(testLength)));
+                // An exception should be thrown as 3rd element is longer then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(array);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalStringInArrayTest() {
+            int testLength = pdfA1Checker.GetMaxStringLength();
+            NUnit.Framework.Assert.AreEqual(testLength, 65535);
+            PdfArray array = new PdfArray();
+            array.Add(new PdfString("value1"));
+            array.Add(new PdfString("value2"));
+            array.Add(new PdfString(PdfACheckerTestUtils.GetLongString(testLength)));
+            // An exception should not be thrown as all elements match the
+            // limitations provided in specification
+            pdfA1Checker.CheckPdfObject(array);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfStream stream = new PdfStream(newContent);
+                // An exception should be thrown as content stream has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckContentStream(stream);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContentStreamIsNotCheckedForNotModifiedObjectTest() {
+            pdfA1Checker.SetFullCheckMode(false);
+            int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+            int testLength = maxAllowedLength + 1;
+            NUnit.Framework.Assert.AreEqual(testLength, 65536);
+            String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+            byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+            PdfStream stream = new PdfStream(newContent);
+            // An exception should not be thrown as content stream considered as not modified
+            // and won't be tested
+            pdfA1Checker.CheckContentStream(stream);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalStringInContentStreamTest() {
+            int testLength = pdfA1Checker.GetMaxStringLength();
+            NUnit.Framework.Assert.AreEqual(testLength, 65535);
+            String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+            byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+            PdfStream stream = new PdfStream(newContent);
+            // An exception should be thrown as  all strings inside content stream
+            // are not longer then it is allowed per specification
+            pdfA1Checker.CheckContentStream(stream);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInArrayInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongStringInArray(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfStream stream = new PdfStream(newContent);
+                // An exception should be thrown as content stream has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckContentStream(stream);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInDictionaryInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongStringInDictionary(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfStream stream = new PdfStream(newContent);
+                // An exception should be thrown as content stream has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckContentStream(stream);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInComplexStructureTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                PdfDictionary dict1 = new PdfDictionary();
+                dict1.Put(new PdfName("Key1"), new PdfString("value1"));
+                dict1.Put(new PdfName("Key2"), new PdfString("value2"));
+                dict1.Put(new PdfName("Key3"), new PdfString(PdfACheckerTestUtils.GetLongString(testLength)));
+                PdfArray array = new PdfArray();
+                array.Add(new PdfString("value3"));
+                array.Add(new PdfString("value4"));
+                array.Add(dict1);
+                PdfDictionary dict = new PdfDictionary();
+                dict.Put(new PdfName("Key4"), new PdfString("value5"));
+                dict.Put(new PdfName("Key5"), new PdfString("value6"));
+                dict.Put(new PdfName("Key6"), array);
+                // An exception should be thrown as there is a string element which
+                // doesn't match the limitations provided in specification
+                pdfA1Checker.CheckPdfObject(array);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInPdfFormXObjectTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfStream stream = new PdfStream(newContent);
+                PdfXObject xobject = new PdfFormXObject(stream);
+                // An exception should be thrown as form xobject content stream has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckFormXObject(xobject.GetPdfObject());
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInTilingPatternTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfPattern pattern = new PdfPattern.Tiling(200, 200);
+                ((PdfStream)pattern.GetPdfObject()).SetData(newContent);
+                Color color = new PatternColor(pattern);
+                // An exception should be thrown as tiling pattern's content stream has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckColor(color, new PdfDictionary(), true, null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInShadingPatternTest() {
+            int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+            int testLength = maxAllowedLength + 1;
+            NUnit.Framework.Assert.AreEqual(testLength, 65536);
+            String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+            byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+            PdfStream stream = new PdfStream(newContent);
+            PdfPattern pattern = new PdfPattern.Shading(stream);
+            // An exception should not be thrown as shading pattern doesn't have
+            // content stream to validate
+            pdfA1Checker.CheckPdfObject(pattern.GetPdfObject());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongStringInType3FontTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
+                int testLength = maxAllowedLength + 1;
+                NUnit.Framework.Assert.AreEqual(testLength, 65536);
+                String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
+                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+                PdfFont font = PdfFontFactory.CreateType3Font(null, true);
+                PdfDictionary charProcs = new PdfDictionary();
+                charProcs.Put(PdfName.A, new PdfStream(newContent));
+                PdfDictionary dictionary = font.GetPdfObject();
+                dictionary.Put(PdfName.Subtype, PdfName.Type3);
+                dictionary.Put(PdfName.CharProcs, charProcs);
+                // An exception should be thrown as content stream of type3 font has a string which
+                // is longer then it is allowed per specification
+                pdfA1Checker.CheckFont(font);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
     }
 }

@@ -45,7 +45,6 @@ using System.IO;
 using System.Text;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Test;
@@ -69,14 +68,14 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void RunTest() {
-            //TODO(DEVSIX-2978): Produces non-conforming PDF/A document
-            String file = "pdfALongString.pdf";
-            String filename = destinationFolder + file;
-            using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )) {
-                using (PdfADocument pdf = new PdfADocument(new PdfWriter(new FileStream(filename, FileMode.Create)), PdfAConformanceLevel
-                    .PDF_A_3U, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference", icm))) {
-                    using (Document document = new Document(pdf)) {
+            NUnit.Framework.Assert.That(() =>  {
+                String file = "pdfALongString.pdf";
+                String filename = destinationFolder + file;
+                using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                    )) {
+                    using (Document document = new Document(new PdfADocument(new PdfWriter(new FileStream(filename, FileMode.Create
+                        )), PdfAConformanceLevel.PDF_A_3U, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference"
+                        , icm)))) {
                         StringBuilder stringBuilder = new StringBuilder(LOREM_IPSUM);
                         while (stringBuilder.Length < STRING_LENGTH_LIMIT) {
                             stringBuilder.Append(stringBuilder.ToString());
@@ -90,8 +89,11 @@ namespace iText.Pdfa {
                     }
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp/PdfALongStringTest/cmp_"
-                 + file, destinationFolder, "diff_"));
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
         }
+        // when document is auto-closing, ISO conformance check is performed
+        // this document contain a string which is longer than it is allowed
+        // per specification. That is why conformance exception should be thrown
     }
 }

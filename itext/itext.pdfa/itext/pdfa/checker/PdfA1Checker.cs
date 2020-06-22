@@ -45,12 +45,15 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Font;
+using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser.Util;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa;
 
@@ -136,6 +139,12 @@ namespace iText.Pdfa.Checker {
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
             ) {
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
+            if (color is PatternColor) {
+                PdfPattern pattern = ((PatternColor)color).GetPattern();
+                if (pattern is PdfPattern.Tiling) {
+                    CheckContentStream((PdfStream)pattern.GetPdfObject());
+                }
+            }
         }
 
         public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
@@ -259,6 +268,57 @@ namespace iText.Pdfa.Checker {
                     CheckNonSymbolicTrueTypeFont(trueTypeFont);
                 }
             }
+            if (pdfFont is PdfType3Font) {
+                PdfDictionary charProcs = pdfFont.GetPdfObject().GetAsDictionary(PdfName.CharProcs);
+                foreach (PdfName charName in charProcs.KeySet()) {
+                    CheckContentStream(charProcs.GetAsStream(charName));
+                }
+            }
+        }
+
+        protected internal override void CheckContentStream(PdfStream contentStream) {
+            if (IsFullCheckMode() || contentStream.IsModified()) {
+                byte[] contentBytes = contentStream.GetBytes();
+                PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                    (contentBytes)));
+                PdfCanvasParser parser = new PdfCanvasParser(tokenizer);
+                IList<PdfObject> operands = new List<PdfObject>();
+                try {
+                    while (parser.Parse(operands).Count > 0) {
+                        foreach (PdfObject operand in operands) {
+                            CheckContentStreamObject(operand);
+                        }
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(PdfException.CannotParseContentStream, e);
+                }
+            }
+        }
+
+        protected internal override void CheckContentStreamObject(PdfObject @object) {
+            byte type = @object.GetObjectType();
+            switch (type) {
+                case PdfObject.STRING: {
+                    CheckPdfString((PdfString)@object);
+                    break;
+                }
+
+                case PdfObject.ARRAY: {
+                    foreach (PdfObject obj in (PdfArray)@object) {
+                        CheckContentStreamObject(obj);
+                    }
+                    break;
+                }
+
+                case PdfObject.DICTIONARY: {
+                    PdfDictionary dictionary = (PdfDictionary)@object;
+                    foreach (PdfObject obj in dictionary.Values()) {
+                        CheckContentStreamObject(obj);
+                    }
+                    break;
+                }
+            }
         }
 
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
@@ -333,6 +393,7 @@ namespace iText.Pdfa.Checker {
                     );
             }
             CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckContentStream(form);
         }
 
         protected internal override void CheckLogicalStructure(PdfDictionary catalog) {
