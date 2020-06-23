@@ -466,7 +466,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                     else {
                         if (mB.Success) {
                             a = 0;
-                            b = Convert.ToInt32(iText.IO.Util.StringUtil.Group(mB).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture);
+                            b = Convert.ToInt32(iText.IO.Util.StringUtil.Group(mB).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture
+                                );
                         }
                         else {
                             throw new Selector.SelectorParseException("Could not parse nth-index " + PortUtil.EscapedSingleBracket + "{0}"

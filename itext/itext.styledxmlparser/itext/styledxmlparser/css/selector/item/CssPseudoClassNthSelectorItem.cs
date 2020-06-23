@@ -98,7 +98,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                             }
                             String bParticle = arguments.Substring(indexOfN + 1).Trim();
                             if (!String.IsNullOrEmpty(bParticle)) {
-                                this.nthB = Convert.ToInt32(bParticle[0] + bParticle.Substring(1).Trim(), System.Globalization.CultureInfo.InvariantCulture);
+                                this.nthB = Convert.ToInt32(bParticle[0] + bParticle.Substring(1).Trim(), System.Globalization.CultureInfo.InvariantCulture
+                                    );
                             }
                             else {
                                 this.nthB = 0;

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -215,7 +216,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 50;
             int y = 0;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -227,7 +228,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 0;
             int y = 100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -239,7 +240,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 50;
             int y = 100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -251,7 +252,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = 0;
-            String destName = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}_{1}_{2}", name, x, y);
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -263,7 +264,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 0;
             int y = -100;
-            String destName = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}_{1}_{2}", name, x, y);
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -275,7 +276,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = -100;
-            String destName = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}_{1}_{2}", name, x, y);
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -287,7 +288,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = -50;
-            String destName = String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}_{1}_{2}", name, x, y);
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder

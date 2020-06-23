@@ -405,10 +405,10 @@ namespace iText.IO.Font {
                         }
 
                         case "B": {
-                            B = new int[] { Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture),
-                                Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture),
-                                Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture),
-                                Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture) };
+                            B = new int[] { Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture), Convert.ToInt32
+                                (tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture), Convert.ToInt32(tokc.NextToken(
+                                ), System.Globalization.CultureInfo.InvariantCulture), Convert.ToInt32(tokc.NextToken(), System.Globalization.CultureInfo.InvariantCulture
+                                ) };
                             break;
                         }
                     }
