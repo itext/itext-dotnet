@@ -305,7 +305,9 @@ namespace iText.Pdfa.Checker {
                 }
 
                 case PdfObject.ARRAY: {
-                    foreach (PdfObject obj in (PdfArray)@object) {
+                    PdfArray array = (PdfArray)@object;
+                    CheckPdfArray(array);
+                    foreach (PdfObject obj in array) {
                         CheckContentStreamObject(obj);
                     }
                     break;
@@ -313,6 +315,7 @@ namespace iText.Pdfa.Checker {
 
                 case PdfObject.DICTIONARY: {
                     PdfDictionary dictionary = (PdfDictionary)@object;
+                    CheckPdfDictionary(dictionary);
                     foreach (PdfObject obj in dictionary.Values()) {
                         CheckContentStreamObject(obj);
                     }
@@ -447,7 +450,20 @@ namespace iText.Pdfa.Checker {
             return 32767;
         }
 
+        protected internal override void CheckPdfArray(PdfArray array) {
+            if (array.Size() > GetMaxArrayCapacity()) {
+                throw new PdfAConformanceException(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED);
+            }
+        }
+
+        protected internal override void CheckPdfDictionary(PdfDictionary dictionary) {
+            if (dictionary.Size() > GetMaxDictionaryCapacity()) {
+                throw new PdfAConformanceException(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED);
+            }
+        }
+
         protected internal override void CheckPdfStream(PdfStream stream) {
+            CheckPdfDictionary(stream);
             if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream.ContainsKey(PdfName.FDecodeParams
                 )) {
                 throw new PdfAConformanceException(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
@@ -658,6 +674,14 @@ namespace iText.Pdfa.Checker {
                 }
             }
             return fields;
+        }
+
+        private int GetMaxArrayCapacity() {
+            return 8191;
+        }
+
+        private int GetMaxDictionaryCapacity() {
+            return 4095;
         }
     }
 }

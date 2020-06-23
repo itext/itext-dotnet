@@ -41,35 +41,53 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
 
 namespace iText.Pdfa.Checker {
     public class PdfACheckerTestUtils {
         private PdfACheckerTestUtils() {
         }
 
-        internal static String GetLongString(int length) {
+        internal static PdfString GetLongString(int length) {
             char charToFill = 'A';
             char[] array = new char[length];
             for (int i = 0; i < array.Length; i++) {
                 array[i] = charToFill;
             }
-            return new String(array);
+            return new PdfString(new String(array));
         }
 
-        internal static String GetStreamWithLongString(int length) {
-            return GetStreamWithValue("(" + GetLongString(length) + ")");
+        internal static PdfArray GetLongArray(int length) {
+            PdfArray array = new PdfArray();
+            for (int i = 0; i < length; i++) {
+                array.Add(new PdfNumber(i));
+            }
+            return array;
         }
 
-        internal static String GetStreamWithLongStringInArray(int length) {
-            return GetStreamWithValue("[(" + GetLongString(length) + "), (a)]");
+        internal static PdfDictionary GetLongDictionary(int length) {
+            PdfDictionary dict = new PdfDictionary();
+            for (int i = 0; i < length; i++) {
+                dict.Put(new PdfName("value #" + i), new PdfNumber(i));
+            }
+            return dict;
         }
 
-        internal static String GetStreamWithLongStringInDictionary(int length) {
-            return GetStreamWithValue("<</Value (" + GetLongString(length) + ")>>");
+        internal static PdfStream GetStreamWithLongDictionary(int length) {
+            PdfStream stream = new PdfStream("Hello, world!".GetBytes());
+            for (int i = 0; i < length; i++) {
+                stream.Put(new PdfName("value #" + i), new PdfNumber(i));
+            }
+            return stream;
         }
 
-        private static String GetStreamWithValue(String value) {
-            return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + value + " Tj\n" + "ET\n" + "Q";
+        internal static String GetStreamWithValue(PdfObject @object) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfOutputStream stream = new PdfOutputStream(baos);
+            stream.Write(@object);
+            return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + iText.IO.Util.JavaUtil.GetStringForBytes(baos.ToArray
+                ()) + " Tj\n" + "ET\n" + "Q";
         }
     }
 }

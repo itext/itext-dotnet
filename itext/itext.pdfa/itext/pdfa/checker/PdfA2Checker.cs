@@ -336,6 +336,14 @@ namespace iText.Pdfa.Checker {
             return 32767;
         }
 
+        protected internal override void CheckPdfArray(PdfArray array) {
+        }
+
+        // currently no validation for arrays is implemented for PDF/A 2
+        protected internal override void CheckPdfDictionary(PdfDictionary dictionary) {
+        }
+
+        // currently no validation for dictionaries is implemented for PDF/A 2
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null) {
@@ -558,6 +566,7 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal override void CheckPdfStream(PdfStream stream) {
+            CheckPdfDictionary(stream);
             if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream.ContainsKey(PdfName.FDecodeParams
                 )) {
                 throw new PdfAConformanceException(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS

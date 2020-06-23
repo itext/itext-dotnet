@@ -183,6 +183,10 @@ namespace iText.Pdfa {
 
         public const String LZWDECODE_FILTER_IS_NOT_PERMITTED = "LZWDecode filter is not permitted";
 
+        public const String MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED = "Maximum array capacity is exceeded";
+
+        public const String MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED = "Maximum dictionary capacity is exceeded";
+
         public const String MIME_TYPE_SHALL_BE_SPECIFIED_USING_THE_SUBTYPE_KEY_OF_THE_FILE_SPECIFICATION_STREAM_DICTIONARY
              = "Mime type shall be specified using the subtype key of the file specification stream dictionary";
 

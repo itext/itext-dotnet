@@ -196,7 +196,9 @@ namespace iText.Pdfa.Checker {
                 }
 
                 case PdfObject.ARRAY: {
-                    CheckArrayRecursively((PdfArray)obj);
+                    PdfArray array = (PdfArray)obj;
+                    CheckPdfArray(array);
+                    CheckArrayRecursively(array);
                     break;
                 }
 
@@ -206,6 +208,7 @@ namespace iText.Pdfa.Checker {
                     if (PdfName.Filespec.Equals(type)) {
                         CheckFileSpec(dict);
                     }
+                    CheckPdfDictionary(dict);
                     CheckDictionaryRecursively(dict);
                     break;
                 }
@@ -464,6 +467,10 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary pageResources);
 
         protected internal abstract void CheckPageSize(PdfDictionary page);
+
+        protected internal abstract void CheckPdfArray(PdfArray array);
+
+        protected internal abstract void CheckPdfDictionary(PdfDictionary dictionary);
 
         protected internal abstract void CheckPdfNumber(PdfNumber number);
 

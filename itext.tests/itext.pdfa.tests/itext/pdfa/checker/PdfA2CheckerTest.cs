@@ -40,7 +40,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf;
 using iText.Pdfa;
 using iText.Test;
@@ -278,39 +277,6 @@ namespace iText.Pdfa.Checker {
                 pdfA2Checker.CheckCatalogValidEntries(catalog);
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void IndependentLongStringTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
-                int testLength = maxAllowedLength + 1;
-                NUnit.Framework.Assert.AreEqual(testLength, 32768);
-                PdfString longString = new PdfString(PdfACheckerTestUtils.GetLongString(testLength));
-                // An exception should be thrown as provided String is longer then
-                // it is allowed per specification
-                pdfA2Checker.CheckPdfObject(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void LongStringInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                pdfA2Checker.SetFullCheckMode(true);
-                int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
-                int testLength = maxAllowedLength + 1;
-                NUnit.Framework.Assert.AreEqual(testLength, 32768);
-                String newContentString = PdfACheckerTestUtils.GetStreamWithLongString(testLength);
-                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
-                PdfStream stream = new PdfStream(newContent);
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                pdfA2Checker.CheckContentStream(stream);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
 ;
         }
     }
