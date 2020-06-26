@@ -143,6 +143,12 @@ namespace iText.Kernel.Pdf {
                 )o).value, value) == 0;
         }
 
+        /// <summary>Checks if string representation of the value contains decimal point.</summary>
+        /// <returns>true if contains so the number must be real not integer</returns>
+        public virtual bool HasDecimalPoint() {
+            return this.ToString().Contains(".");
+        }
+
         public override int GetHashCode() {
             if (changed) {
                 //if the instance was modified, hashCode also will be changed, it may cause inconsistency.

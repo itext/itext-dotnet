@@ -176,6 +176,8 @@ namespace iText.Pdfa {
         public const String IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
              = "If specified rendering shall be one of the following relativecolorimetric absolutecolorimetric perceptual or saturation";
 
+        public const String INTEGER_NUMBER_IS_OUT_OF_RANGE = "Integer number is out of range";
+
         public const String THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
              = "If the document does not contain a OutputIntent, then page with transparency shall include the dictionary with Group key that include a CS with blending colour space";
 

@@ -67,24 +67,34 @@ namespace iText.Pdfa.Checker {
             int maxStringLength = pdfA1Checker.GetMaxStringLength();
             int maxArrayCapacity = MAX_ARRAY_CAPACITY;
             int maxDictionaryCapacity = MAX_DICTIONARY_CAPACITY;
-            NUnit.Framework.Assert.AreEqual(maxStringLength, 65535);
+            long maxIntegerValue = pdfA1Checker.GetMaxIntegerValue();
+            long minIntegerValue = pdfA1Checker.GetMinIntegerValue();
+            double maxRealValue = pdfA1Checker.GetMaxRealValue();
+            NUnit.Framework.Assert.AreEqual(65535, maxStringLength);
             PdfString longString = PdfACheckerTestUtils.GetLongString(maxStringLength);
             PdfArray longArray = PdfACheckerTestUtils.GetLongArray(maxArrayCapacity);
             PdfDictionary longDictionary = PdfACheckerTestUtils.GetLongDictionary(maxDictionaryCapacity);
-            PdfObject[] longObjects = new PdfObject[] { longString, longArray, longDictionary };
+            NUnit.Framework.Assert.AreEqual(2147483647, maxIntegerValue);
+            NUnit.Framework.Assert.AreEqual(-2147483648, minIntegerValue);
+            NUnit.Framework.Assert.AreEqual(32767, maxRealValue, 0.001);
+            PdfNumber largeInteger = new PdfNumber(maxIntegerValue);
+            PdfNumber negativeInteger = new PdfNumber(minIntegerValue);
+            PdfNumber largeReal = new PdfNumber(maxRealValue - 0.001);
+            PdfObject[] largeObjects = new PdfObject[] { longString, longArray, longDictionary, largeInteger, negativeInteger
+                , largeReal };
             // No exceptions should not be thrown as all values match the
             // limitations provided in specification
-            foreach (PdfObject longObject in longObjects) {
-                pdfA1Checker.CheckPdfObject(longObject);
-                CheckInArray(longObject);
-                CheckInDictionary(longObject);
-                CheckInComplexStructure(longObject);
-                CheckInContentStream(longObject);
-                CheckInArrayInContentStream(longObject);
-                CheckInDictionaryInContentStream(longObject);
-                CheckInFormXObject(longObject);
-                CheckInTilingPattern(longObject);
-                CheckInType3Font(longObject);
+            foreach (PdfObject largeObject in largeObjects) {
+                pdfA1Checker.CheckPdfObject(largeObject);
+                CheckInArray(largeObject);
+                CheckInDictionary(largeObject);
+                CheckInComplexStructure(largeObject);
+                CheckInContentStream(largeObject);
+                CheckInArrayInContentStream(largeObject);
+                CheckInDictionaryInContentStream(largeObject);
+                CheckInFormXObject(largeObject);
+                CheckInTilingPattern(largeObject);
+                CheckInType3Font(largeObject);
             }
         }
 
@@ -106,6 +116,38 @@ namespace iText.Pdfa.Checker {
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentLargeIntegerTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
+                // An exception should be thrown as provided integer is larger then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(largeNumber);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentLargeNegativeIntegerTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
+                // An exception should be thrown as provided integer is smaller then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(largeNumber);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentLargeRealTest() {
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxRealValue() + 1.0);
+            // TODO DEVSIX-4182
+            // An exception is not thrown as any number greater then 32767 is considered as Integer
+            pdfA1Checker.CheckPdfObject(largeNumber);
         }
 
         [NUnit.Framework.Test]
@@ -178,6 +220,38 @@ namespace iText.Pdfa.Checker {
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LargeIntegerInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
+                // An exception should be thrown as provided integer is larger then
+                // it is allowed per specification
+                CheckInContentStream(largeNumber);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LargeNegativeIntegerInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
+                // An exception should be thrown as provided integer is smaller then
+                // it is allowed per specification
+                CheckInContentStream(largeNumber);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LargeRealInContentStreamTest() {
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxRealValue() + 1.0);
+            // TODO DEVSIX-4182
+            // An exception is not thrown as any number greater then 32767 is considered as Integer
+            CheckInContentStream(largeNumber);
         }
 
         [NUnit.Framework.Test]
@@ -334,7 +408,7 @@ namespace iText.Pdfa.Checker {
         private PdfString BuildLongString() {
             int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
             int testLength = maxAllowedLength + 1;
-            NUnit.Framework.Assert.AreEqual(testLength, 65536);
+            NUnit.Framework.Assert.AreEqual(65536, testLength);
             return PdfACheckerTestUtils.GetLongString(testLength);
         }
 

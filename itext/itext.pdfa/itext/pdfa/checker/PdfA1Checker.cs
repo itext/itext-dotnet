@@ -304,6 +304,11 @@ namespace iText.Pdfa.Checker {
                     break;
                 }
 
+                case PdfObject.NUMBER: {
+                    CheckPdfNumber((PdfNumber)@object);
+                    break;
+                }
+
                 case PdfObject.ARRAY: {
                     PdfArray array = (PdfArray)@object;
                     CheckPdfArray(array);
@@ -441,13 +446,34 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal override void CheckPdfNumber(PdfNumber number) {
-            if (Math.Abs(number.LongValue()) > GetMaxRealValue() && number.ToString().Contains(".")) {
-                throw new PdfAConformanceException(PdfAConformanceException.REAL_NUMBER_IS_OUT_OF_RANGE);
+            if (number.HasDecimalPoint()) {
+                if (Math.Abs(number.LongValue()) > GetMaxRealValue()) {
+                    throw new PdfAConformanceException(PdfAConformanceException.REAL_NUMBER_IS_OUT_OF_RANGE);
+                }
+            }
+            else {
+                if (number.LongValue() > GetMaxIntegerValue() || number.LongValue() < GetMinIntegerValue()) {
+                    throw new PdfAConformanceException(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE);
+                }
             }
         }
 
+        /// <summary>Retrieve maximum allowed real value.</summary>
+        /// <returns>maximum allowed real number</returns>
         protected internal virtual double GetMaxRealValue() {
             return 32767;
+        }
+
+        /// <summary>Retrieve maximal allowed integer value.</summary>
+        /// <returns>maximal allowed integer number</returns>
+        protected internal virtual long GetMaxIntegerValue() {
+            return int.MaxValue;
+        }
+
+        /// <summary>Retrieve minimal allowed integer value.</summary>
+        /// <returns>minimal allowed integer number</returns>
+        protected internal virtual long GetMinIntegerValue() {
+            return int.MinValue;
         }
 
         protected internal override void CheckPdfArray(PdfArray array) {

@@ -107,5 +107,17 @@ namespace iText.Pdfa.Checker {
             // and stream in PDFA 2
             pdfA2Checker.CheckPdfObject(longStream);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentLargeRealTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfNumber largeNumber = new PdfNumber(pdfA2Checker.GetMaxRealValue());
+                // TODO DEVSIX-4182
+                // An exception is thrown as any number greater then 32767 is considered as Integer
+                pdfA2Checker.CheckPdfObject(largeNumber);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
+;
+        }
     }
 }
