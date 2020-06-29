@@ -54,6 +54,8 @@ namespace iText.Svg.Renderers.Factories {
     /// <see cref="DefaultSvgNodeRendererFactory"/>
     /// to allow customizability in client code, and dependency injection in tests.
     /// </remarks>
+    [System.ObsoleteAttribute(@"The interface will be removed in 7.2, while its implementation (DefaultSvgNodeRendererMapper ) will be used as our internal class. Users should override ISvgNodeRendererFactory (or at least DefaultSvgNodeRendererFactory ) and should not deal with the mapping class as it's more of an implementation detail."
+        )]
     public interface ISvgNodeRendererMapper {
         /// <summary>Gets the map from tag names to Renderer classes.</summary>
         /// <returns>

@@ -63,6 +63,8 @@ namespace iText.Svg.Renderers.Factories {
     /// of the default implementations, provided by this project for the standard SVG
     /// tags as defined in the SVG Specification.
     /// </remarks>
+    [System.ObsoleteAttribute(@"The public access to this class will be removed in 7.2. The class itself can become either package private or the inner private static class for the DefaultSvgNodeRendererFactory . Users should override ISvgNodeRendererFactory (or at least DefaultSvgNodeRendererFactory ) and should not deal with the mapping class as it's more of an implementation detail."
+        )]
     public class DefaultSvgNodeRendererMapper : ISvgNodeRendererMapper {
         public virtual IDictionary<String, Type> GetMapping() {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
