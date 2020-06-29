@@ -161,10 +161,10 @@ namespace iText.IO.Codec {
         /// </tr>
         /// </table>
         /// </remarks>
-        /// <param name="tag">The tag</param>
-        /// <param name="type"/>
-        /// <param name="count"/>
-        /// <param name="data"/>
+        /// <param name="tag">the tag number</param>
+        /// <param name="type">the tag type</param>
+        /// <param name="count">the number of data items present in the field</param>
+        /// <param name="data">the field data</param>
         public TIFFField(int tag, int type, int count, Object data) {
             this.tag = tag;
             this.type = type;
@@ -237,6 +237,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SSHORT.
         /// </remarks>
+        /// <returns>TIFF_SSHORT data as an array of shorts (signed 16-bit integers).</returns>
         public virtual short[] GetAsShorts() {
             return (short[])data;
         }
@@ -251,6 +252,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SLONG.
         /// </remarks>
+        /// <returns>TIFF_SLONG data as an array of ints (signed 32-bit integers).</returns>
         public virtual int[] GetAsInts() {
             return (int[])data;
         }
@@ -265,6 +267,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_LONG.
         /// </remarks>
+        /// <returns>TIFF_LONG data as an array of longs (signed 64-bit integers).</returns>
         public virtual long[] GetAsLongs() {
             return (long[])data;
         }
@@ -275,6 +278,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_FLOAT.
         /// </remarks>
+        /// <returns>TIFF_FLOAT data as an array of floats.</returns>
         public virtual float[] GetAsFloats() {
             return (float[])data;
         }
@@ -285,6 +289,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_DOUBLE.
         /// </remarks>
+        /// <returns>TIFF_DOUBLE data as an array of doubles.</returns>
         public virtual double[] GetAsDoubles() {
             return (double[])data;
         }
@@ -295,6 +300,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_ASCII.
         /// </remarks>
+        /// <returns>TIFF_ASCII data as an array of strings.</returns>
         public virtual String[] GetAsStrings() {
             return (String[])data;
         }
@@ -305,6 +311,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SRATIONAL.
         /// </remarks>
+        /// <returns>TIFF_SRATIONAL data as an array of 2-element arrays of ints.</returns>
         public virtual int[][] GetAsSRationals() {
             return (int[][])data;
         }
@@ -315,6 +322,7 @@ namespace iText.IO.Codec {
         /// <para /> A ClassCastException will be thrown if the field is not
         /// of type TIFF_RATTIONAL.
         /// </remarks>
+        /// <returns>TIFF_RATIONAL data as an array of 2-element arrays of longs.</returns>
         public virtual long[][] GetAsRationals() {
             return (long[][])data;
         }
@@ -335,6 +343,10 @@ namespace iText.IO.Codec {
         /// TIFF_SSHORT, or TIFF_SLONG.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>
+        /// data in TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT, TIFF_SSHORT,
+        /// or TIFF_SLONG format as an int.
+        /// </returns>
         public virtual int GetAsInt(int index) {
             switch (type) {
                 case TIFF_BYTE:
@@ -380,6 +392,10 @@ namespace iText.IO.Codec {
         /// TIFF_SSHORT, TIFF_SLONG, or TIFF_LONG.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>
+        /// data in TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT, TIFF_SSHORT, TIFF_SLONG,
+        /// or TIFF_LONG format as a long.
+        /// </returns>
         public virtual long GetAsLong(int index) {
             switch (type) {
                 case TIFF_BYTE:
@@ -415,16 +431,17 @@ namespace iText.IO.Codec {
 
         /// <summary>Returns data in any numerical format as a float.</summary>
         /// <remarks>
-        /// Returns data in any numerical format as a float.  Data in
+        /// Returns data in any numerical format as a float. Data in
         /// TIFF_SRATIONAL or TIFF_RATIONAL format are evaluated by
         /// dividing the numerator into the denominator using
         /// double-precision arithmetic and then truncating to single
-        /// precision.  Data in TIFF_SLONG, TIFF_LONG, or TIFF_DOUBLE
+        /// precision. Data in TIFF_SLONG, TIFF_LONG, or TIFF_DOUBLE
         /// format may suffer from truncation.
         /// <para /> A ClassCastException will be thrown if the field is
         /// of type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>data in any numerical format as a float.</returns>
         public virtual float GetAsFloat(int index) {
             switch (type) {
                 case TIFF_BYTE: {
@@ -475,9 +492,9 @@ namespace iText.IO.Codec {
             }
         }
 
-        /// <summary>Returns data in any numerical format as a float.</summary>
+        /// <summary>Returns data in any numerical format as a double.</summary>
         /// <remarks>
-        /// Returns data in any numerical format as a float.  Data in
+        /// Returns data in any numerical format as a double. Data in
         /// TIFF_SRATIONAL or TIFF_RATIONAL format are evaluated by
         /// dividing the numerator into the denominator using
         /// double-precision arithmetic.
@@ -485,6 +502,7 @@ namespace iText.IO.Codec {
         /// type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>data in any numerical format as a double.</returns>
         public virtual double GetAsDouble(int index) {
             switch (type) {
                 case TIFF_BYTE: {
@@ -542,6 +560,7 @@ namespace iText.IO.Codec {
         /// of type TIFF_ASCII.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>a TIFF_ASCII data item as a String.</returns>
         public virtual String GetAsString(int index) {
             return ((String[])data)[index];
         }
@@ -557,6 +576,7 @@ namespace iText.IO.Codec {
         /// of type TIFF_SRATIONAL.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>a TIFF_SRATIONAL data item as a two-element array of ints.</returns>
         public virtual int[] GetAsSRational(int index) {
             return ((int[][])data)[index];
         }
@@ -572,6 +592,7 @@ namespace iText.IO.Codec {
         /// of type TIFF_RATIONAL.
         /// </remarks>
         /// <param name="index">The index</param>
+        /// <returns>a TIFF_RATIONAL data item as a two-element array of ints</returns>
         public virtual long[] GetAsRational(int index) {
             if (type == TIFF_LONG) {
                 return GetAsLongs();
