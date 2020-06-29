@@ -686,7 +686,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         public virtual void SmallFloatInsideKeptTogetherTableTest01() {
             String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
             String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest01.pdf";

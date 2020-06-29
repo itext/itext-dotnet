@@ -475,7 +475,7 @@ namespace iText.Layout.Renderer {
                 Rectangle backgroundArea = GetBackgroundArea(ApplyMargins(bBox, false));
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
+                    logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
                         ));
                 }
                 else {
@@ -515,7 +515,7 @@ namespace iText.Layout.Renderer {
                         }
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                            logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
                                 ));
                         }
                         else {

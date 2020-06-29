@@ -95,7 +95,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 1)]
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";

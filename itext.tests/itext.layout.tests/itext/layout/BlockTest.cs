@@ -538,7 +538,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         public virtual void MarginsBordersPaddingOverflow01() {
             String outFileName = destinationFolder + "marginsBordersPaddingOverflow01.pdf";
             String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow01.pdf";

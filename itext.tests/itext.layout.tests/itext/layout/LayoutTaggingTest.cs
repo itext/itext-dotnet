@@ -739,7 +739,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         public virtual void EmptyDivTest() {
             PdfWriter writer = new PdfWriter(destinationFolder + "emptyDivTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);

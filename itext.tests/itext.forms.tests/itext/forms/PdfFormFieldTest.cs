@@ -1088,7 +1088,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
         public virtual void ChoiceFieldAutoSize02Test() {
             String filename = destinationFolder + "choiceFieldAutoSize02Test.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
