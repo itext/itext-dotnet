@@ -41,7 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Function;
 using iText.Pdfa;
 using iText.Test;
 
@@ -118,6 +121,48 @@ namespace iText.Pdfa.Checker {
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWithMoreThan32Components() {
+            NUnit.Framework.Assert.That(() =>  {
+                CheckColorspace(BuildDeviceNColorspace(34));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWithLessThan32Components() {
+            CheckColorspace(BuildDeviceNColorspace(16));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWith32Components() {
+            CheckColorspace(BuildDeviceNColorspace(32));
+        }
+
+        private void CheckColorspace(PdfColorSpace colorSpace) {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            pdfA2Checker.CheckColorSpace(colorSpace, currentColorSpaces, true, false);
+        }
+
+        private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {
+            IList<String> tmpArray = new List<String>(numberOfComponents);
+            float[] transformArray = new float[numberOfComponents * 2];
+            for (int i = 0; i < numberOfComponents; i++) {
+                tmpArray.Add("MyColor" + i + 1);
+                transformArray[i * 2] = 0;
+                transformArray[i * 2 + 1] = 1;
+            }
+            PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
+                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            //TODO DEVSIX-4205 Replace with a constructor with 4 parameters or use a setter for attributes dictionary
+            PdfArray deviceNAsArray = ((PdfArray)(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function))
+                .GetPdfObject());
+            PdfDictionary attributes = new PdfDictionary();
+            deviceNAsArray.Add(attributes);
+            return new PdfSpecialCs.DeviceN(deviceNAsArray);
         }
     }
 }

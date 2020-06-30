@@ -41,10 +41,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Function;
 using iText.Kernel.Pdf.Xobject;
 using iText.Pdfa;
 using iText.Test;
@@ -405,6 +407,25 @@ namespace iText.Pdfa.Checker {
 ;
         }
 
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWithMoreThan8Components() {
+            NUnit.Framework.Assert.That(() =>  {
+                CheckColorspace(BuildDeviceNColorspace(10));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWith8Components() {
+            CheckColorspace(BuildDeviceNColorspace(8));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceNColorspaceWithLessThan8Components() {
+            CheckColorspace(BuildDeviceNColorspace(2));
+        }
+
         private PdfString BuildLongString() {
             int maxAllowedLength = pdfA1Checker.GetMaxStringLength();
             int testLength = maxAllowedLength + 1;
@@ -511,6 +532,24 @@ namespace iText.Pdfa.Checker {
             dictionary.Put(PdfName.Subtype, PdfName.Type3);
             dictionary.Put(PdfName.CharProcs, charProcs);
             pdfA1Checker.CheckFont(font);
+        }
+
+        private void CheckColorspace(PdfColorSpace colorSpace) {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            pdfA1Checker.CheckColorSpace(colorSpace, currentColorSpaces, false, false);
+        }
+
+        private PdfColorSpace BuildDeviceNColorspace(int numberOfComponents) {
+            IList<String> tmpArray = new List<String>(numberOfComponents);
+            float[] transformArray = new float[numberOfComponents * 2];
+            for (int i = 0; i < numberOfComponents; i++) {
+                tmpArray.Add("MyColor" + i + 1);
+                transformArray[i * 2] = 0;
+                transformArray[i * 2 + 1] = 1;
+            }
+            PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
+                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            return new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function);
         }
     }
 }

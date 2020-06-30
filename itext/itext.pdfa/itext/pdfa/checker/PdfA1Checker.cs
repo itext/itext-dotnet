@@ -90,6 +90,8 @@ namespace iText.Pdfa.Checker {
         protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
 
+        private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 8;
+
         /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
         /// the required conformance level, <c>a</c> or
@@ -154,7 +156,12 @@ namespace iText.Pdfa.Checker {
             }
             else {
                 if (colorSpace is PdfSpecialCs.DeviceN) {
-                    colorSpace = ((PdfSpecialCs.DeviceN)colorSpace).GetBaseCs();
+                    PdfSpecialCs.DeviceN deviceNColorspace = (PdfSpecialCs.DeviceN)colorSpace;
+                    if (deviceNColorspace.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
+                        throw new PdfAConformanceException(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+                            , MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS);
+                    }
+                    colorSpace = deviceNColorspace.GetBaseCs();
                 }
             }
             if (colorSpace is PdfDeviceCs.Rgb) {
