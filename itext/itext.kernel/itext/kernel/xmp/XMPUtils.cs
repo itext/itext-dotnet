@@ -36,12 +36,12 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <param name="separator">
         /// The string to be used to separate the items in the catenated
-        /// string. Defaults to &quot;; &quot;, ASCII semicolon and space
+        /// string. Defaults to &amp;quot;; &amp;quot;, ASCII semicolon and space
         /// (U+003B, U+0020).
         /// </param>
         /// <param name="quotes">
         /// The characters to be used as quotes around array items that
-        /// contain a separator. Defaults to '&quot;'
+        /// contain a separator. Defaults to '&amp;quot;'
         /// </param>
         /// <param name="allowCommas">Option flag to control the catenation.</param>
         /// <returns>Returns the string containing the catenated array items.</returns>
@@ -215,13 +215,13 @@ namespace iText.Kernel.XMP {
         /// and
         /// <see cref="XMPConst.FALSESTR"/>
         /// </description></item>
-        /// <item><description>&quot;t&quot; and &quot;f&quot;
+        /// <item><description>&amp;quot;t&amp;quot; and &amp;quot;f&amp;quot;
         /// </description></item>
-        /// <item><description>&quot;on&quot; and &quot;off&quot;
+        /// <item><description>&amp;quot;on&amp;quot; and &amp;quot;off&amp;quot;
         /// </description></item>
-        /// <item><description>&quot;yes&quot; and &quot;no&quot;
+        /// <item><description>&amp;quot;yes&amp;quot; and &amp;quot;no&amp;quot;
         /// </description></item>
-        /// <item><description>&quot;value &lt;&gt; 0&quot; and &quot;value == 0&quot;
+        /// <item><description>&amp;quot;value &lt;&gt; 0&amp;quot; and &amp;quot;value == 0&amp;quot;
         /// </description></item>
         /// </list>
         /// </returns>

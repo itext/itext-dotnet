@@ -36,7 +36,7 @@ namespace iText.Kernel.XMP.Options {
     /// </summary>
     /// <since>24.01.2006</since>
     public sealed class ParseOptions : iText.Kernel.XMP.Options.Options {
-        /// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.</summary>
+        /// <summary>Require a surrounding &amp;quot;x:xmpmeta&amp;quot; element in the xml-document.</summary>
         public const int REQUIRE_XMP_META = 0x0001;
 
         /// <summary>Do not reconcile alias differences, throw an exception instead.</summary>

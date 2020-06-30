@@ -52,22 +52,22 @@ namespace iText.Kernel.XMP {
     /// <para />
     /// <blockquote>
     /// <pre>
-    /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &quot;Struct&quot;, fieldNS,
-    /// &quot;Array&quot;);
-    /// String path += XMPPathFactory.composeArrayItemPath (schemaNS, &quot;Array&quot; index);
+    /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &amp;quot;Struct&amp;quot;, fieldNS,
+    /// &amp;quot;Array&amp;quot;);
+    /// String path += XMPPathFactory.composeArrayItemPath (schemaNS, &amp;quot;Array&amp;quot; index);
     /// PropertyInteger result = xmpObj.getPropertyAsInteger(schemaNS, path);
     /// </pre>
     /// </blockquote> You could also use this code if you want the string form of the integer:
     /// <blockquote>
     /// <pre>
-    /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &quot;Struct&quot;, fieldNS,
-    /// &quot;Array&quot;);
+    /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &amp;quot;Struct&amp;quot;, fieldNS,
+    /// &amp;quot;Array&amp;quot;);
     /// PropertyText xmpObj.getArrayItem (schemaNS, path, index);
     /// </pre>
     /// </blockquote>
     /// <para />
     /// <em>Note:</em> It might look confusing that the schemaNS is passed in all of the calls above.
-    /// This is because the XMP toolkit keeps the top level &quot;schema&quot; namespace separate from
+    /// This is because the XMP toolkit keeps the top level &amp;quot;schema&amp;quot; namespace separate from
     /// the rest of the path expression.
     /// <em>Note:</em> These methods are much simpler than in the C++-API, they don't check the given
     /// path or array indices.
@@ -90,8 +90,8 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <returns>
         /// Returns the composed path basing on fullPath. This will be of the form
-        /// <tt>ns:arrayName[i]</tt>, where &quot;ns&quot; is the prefix for schemaNS and
-        /// &quot;i&quot; is the decimal representation of itemIndex.
+        /// <tt>ns:arrayName[i]</tt>, where &amp;quot;ns&amp;quot; is the prefix for schemaNS and
+        /// &amp;quot;i&amp;quot; is the decimal representation of itemIndex.
         /// </returns>
         public static String ComposeArrayItemPath(String arrayName, int itemIndex) {
             if (itemIndex > 0) {
@@ -122,8 +122,8 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <returns>
         /// Returns the composed path. This will be of the form
-        /// <tt>ns:structName/fNS:fieldName</tt>, where &quot;ns&quot; is the prefix for
-        /// schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
+        /// <tt>ns:structName/fNS:fieldName</tt>, where &amp;quot;ns&amp;quot; is the prefix for
+        /// schemaNS and &amp;quot;fNS&amp;quot; is the prefix for fieldNS.
         /// </returns>
         public static String ComposeStructFieldPath(String fieldNS, String fieldName) {
             AssertFieldNS(fieldNS);
@@ -146,8 +146,8 @@ namespace iText.Kernel.XMP {
         /// </param>
         /// <returns>
         /// Returns the composed path. This will be of the form
-        /// <tt>ns:propName/?qNS:qualName</tt>, where &quot;ns&quot; is the prefix for
-        /// schemaNS and &quot;qNS&quot; is the prefix for qualNS.
+        /// <tt>ns:propName/?qNS:qualName</tt>, where &amp;quot;ns&amp;quot; is the prefix for
+        /// schemaNS and &amp;quot;qNS&amp;quot; is the prefix for qualNS.
         /// </returns>
         public static String ComposeQualifierPath(String qualNS, String qualName) {
             AssertQualNS(qualNS);
@@ -162,7 +162,7 @@ namespace iText.Kernel.XMP {
         /// <summary>Compose the path expression to select an alternate item by language.</summary>
         /// <remarks>
         /// Compose the path expression to select an alternate item by language. The
-        /// path syntax allows two forms of &quot;content addressing&quot; that may
+        /// path syntax allows two forms of &amp;quot;content addressing&amp;quot; that may
         /// be used to select an item in an array of alternatives. The form used in
         /// ComposeLangSelector lets you select an item in an alt-text array based on
         /// the value of its <tt>xml:lang</tt> qualifier. The other form of content
@@ -181,7 +181,7 @@ namespace iText.Kernel.XMP {
         /// <returns>
         /// Returns the composed path. This will be of the form
         /// <tt>ns:arrayName[@xml:lang='langName']</tt>, where
-        /// &quot;ns&quot; is the prefix for schemaNS.
+        /// &amp;quot;ns&amp;quot; is the prefix for schemaNS.
         /// </returns>
         public static String ComposeLangSelector(String arrayName, String langName) {
             return arrayName + "[?xml:lang=\"" + iText.Kernel.XMP.Impl.Utils.NormalizeLangValue(langName) + "\"]";
@@ -190,7 +190,7 @@ namespace iText.Kernel.XMP {
         /// <summary>Compose the path expression to select an alternate item by a field's value.</summary>
         /// <remarks>
         /// Compose the path expression to select an alternate item by a field's value. The path syntax
-        /// allows two forms of &quot;content addressing&quot; that may be used to select an item in an
+        /// allows two forms of &amp;quot;content addressing&amp;quot; that may be used to select an item in an
         /// array of alternatives. The form used in ComposeFieldSelector lets you select an item in an
         /// array of structs based on the value of one of the fields in the structs. The other form of
         /// content addressing is shown in ComposeLangSelector. For example, consider a simple struct
@@ -200,9 +200,9 @@ namespace iText.Kernel.XMP {
         /// <para />
         /// <blockquote>
         /// <pre>
-        /// String path = composeFieldSelector ( schemaNS, &quot;Downloads&quot;, fieldNS,
-        /// &quot;City&quot;, chosenCity );
-        /// XMPProperty prop = xmpObj.getStructField ( schemaNS, path, fieldNS, &quot;URI&quot; );
+        /// String path = composeFieldSelector ( schemaNS, &amp;quot;Downloads&amp;quot;, fieldNS,
+        /// &amp;quot;City&amp;quot;, chosenCity );
+        /// XMPProperty prop = xmpObj.getStructField ( schemaNS, path, fieldNS, &amp;quot;URI&amp;quot; );
         /// </pre>
         /// </blockquote>
         /// </remarks>
@@ -222,8 +222,8 @@ namespace iText.Kernel.XMP {
         /// <param name="fieldValue">The desired value of the field.</param>
         /// <returns>
         /// Returns the composed path. This will be of the form
-        /// <tt>ns:arrayName[fNS:fieldName='fieldValue']</tt>, where &quot;ns&quot; is the
-        /// prefix for schemaNS and &quot;fNS&quot; is the prefix for fieldNS.
+        /// <tt>ns:arrayName[fNS:fieldName='fieldValue']</tt>, where &amp;quot;ns&amp;quot; is the
+        /// prefix for schemaNS and &amp;quot;fNS&amp;quot; is the prefix for fieldNS.
         /// </returns>
         public static String ComposeFieldSelector(String arrayName, String fieldNS, String fieldName, String fieldValue
             ) {

@@ -50,7 +50,7 @@ namespace iText.Kernel.XMP.Options {
         /// Use a compact form of RDF.
         /// The compact form is the default serialization format (this flag is technically ignored).
         /// To serialize to the canonical form, set the flag USE_CANONICAL_FORMAT.
-        /// If both flags &quot;compact&quot; and &quot;canonical&quot; are set, canonical is used.
+        /// If both flags &amp;quot;compact&amp;quot; and &amp;quot;canonical&amp;quot; are set, canonical is used.
         /// </remarks>
         public const int USE_COMPACT_FORMAT = 0x0040;
 

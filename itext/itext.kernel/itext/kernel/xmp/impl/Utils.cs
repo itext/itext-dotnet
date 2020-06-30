@@ -164,8 +164,8 @@ namespace iText.Kernel.XMP.Impl {
         /// <param name="schema">a schema namespace</param>
         /// <param name="prop">an XMP Property</param>
         /// <returns>
-        /// Returns true if the property is defined as &quot;Internal
-        /// Property&quot;, see XMP Specification.
+        /// Returns true if the property is defined as &amp;quot;Internal
+        /// Property&amp;quot;, see XMP Specification.
         /// </returns>
         internal static bool IsInternalProperty(String schema, String prop) {
             bool isInternal = false;

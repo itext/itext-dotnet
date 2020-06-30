@@ -69,7 +69,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <tr><td><c>[attr]</c></td><td>elements with an attribute named "attr" (with any value)</td><td><c>a[href]</c>, <c>[title]</c></td></tr>
     /// <tr><td><c>[^attrPrefix]</c></td><td>elements with an attribute name starting with "attrPrefix". Use to find elements with HTML5 datasets</td><td><c>[^data-]</c>, <c>div[^data-]</c></td></tr>
     /// <tr><td><c>[attr=val]</c></td><td>elements with an attribute named "attr", and value equal to "val"</td><td><c>img[width=500]</c>, <c>a[rel=nofollow]</c></td></tr>
-    /// <tr><td><c>[attr=&quot;val&quot;]</c></td><td>elements with an attribute named "attr", and value equal to "val"</td><td><c>span[hello="Cleveland"][goodbye="Columbus"]</c>, <c>a[rel=&quot;nofollow&quot;]</c></td></tr>
+    /// <tr><td><c>[attr=&amp;quot;val&amp;quot;]</c></td><td>elements with an attribute named "attr", and value equal to "val"</td><td><c>span[hello="Cleveland"][goodbye="Columbus"]</c>, <c>a[rel=&amp;quot;nofollow&amp;quot;]</c></td></tr>
     /// <tr><td><c>[attr^=valPrefix]</c></td><td>elements with an attribute named "attr", and value starting with "valPrefix"</td><td><c>a[href^=http:]</c></td></tr>
     /// <tr><td><c>[attr$=valSuffix]</c></td><td>elements with an attribute named "attr", and value ending with "valSuffix"</td><td><c>img[src$=.png]</c></td></tr>
     /// <tr><td><c>[attr*=valContaining]</c></td><td>elements with an attribute named "attr", and value containing "valContaining"</td><td><c>a[href*=/search/]</c></td></tr>
@@ -78,9 +78,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <tr><td colspan="3"><h3>Combinators</h3></td></tr>
     /// <tr><td><c>E F</c></td><td>an F element descended from an E element</td><td><c>div a</c>, <c>.logo h1</c></td></tr>
     /// <tr><td><c>E
-    /// <literal>&gt;</literal>
+    /// <c>&gt;</c>
     /// F</c></td><td>an F direct child of E</td><td><c>ol
-    /// <literal>&gt;</literal>
+    /// <c>&gt;</c>
     /// li</c></td></tr>
     /// <tr><td><c>E + F</c></td><td>an F element immediately preceded by sibling E</td><td><c>li + li</c>, <c>div.head + div</c></td></tr>
     /// <tr><td><c>E ~ F</c></td><td>an F element preceded by sibling E</td><td><c>h1 ~ p</c></td></tr>
@@ -106,14 +106,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
     /// <tr><td><c>:nth-of-type(<em>a</em>n+<em>b</em>)</c></td><td>pseudo-class notation represents an element that has <c><em>a</em>n+<em>b</em>-1</c> siblings with the same expanded element name <em>before</em> it in the document tree, for any zero or positive integer value of n, and has a parent element</td><td><c>img:nth-of-type(2n+1)</c></td></tr>
     /// <tr><td><c>:nth-last-of-type(<em>a</em>n+<em>b</em>)</c></td><td>pseudo-class notation represents an element that has <c><em>a</em>n+<em>b</em>-1</c> siblings with the same expanded element name <em>after</em> it in the document tree, for any zero or positive integer value of n, and has a parent element</td><td><c>img:nth-last-of-type(2n+1)</c></td></tr>
     /// <tr><td><c>:first-child</c></td><td>elements that are the first child of some other element.</td><td><c>div
-    /// <literal>&gt;</literal>
+    /// <c>&gt;</c>
     /// p:first-child</c></td></tr>
     /// <tr><td><c>:last-child</c></td><td>elements that are the last child of some other element.</td><td><c>ol
-    /// <literal>&gt;</literal>
+    /// <c>&gt;</c>
     /// li:last-child</c></td></tr>
     /// <tr><td><c>:first-of-type</c></td><td>elements that are the first sibling of its type in the list of children of its parent element</td><td><c>dl dt:first-of-type</c></td></tr>
     /// <tr><td><c>:last-of-type</c></td><td>elements that are the last sibling of its type in the list of children of its parent element</td><td><c>tr
-    /// <literal>&gt;</literal>
+    /// <c>&gt;</c>
     /// td:last-of-type</c></td></tr>
     /// <tr><td><c>:only-child</c></td><td>elements that have a parent element and whose parent element hasve no other element children</td><td></td></tr>
     /// <tr><td><c>:only-of-type</c></td><td> an element that has a parent element and whose parent element has no other element children with the same expanded element name</td><td></td></tr>

@@ -601,7 +601,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <para />
         /// If the element has an ID, returns #id;
         /// otherwise returns the parent (if any) CSS selector, followed by
-        /// <literal>'&gt;'</literal>
+        /// <c>'&gt;'</c>
         /// ,
         /// followed by a unique selector for the element (tag.class.class:nth-child(n)).
         /// </remarks>

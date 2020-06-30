@@ -128,9 +128,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="name">named entity (e.g. "lt" or "amp")</param>
         /// <returns>
         /// the Character value of the named entity (e.g. '
-        /// <literal></literal>
+        /// <c>&lt;</c>
         /// ' or '
-        /// <literal>&</literal>
+        /// <c>&amp;</c>
         /// ')
         /// </returns>
         public static char? GetCharacterByName(String name) {

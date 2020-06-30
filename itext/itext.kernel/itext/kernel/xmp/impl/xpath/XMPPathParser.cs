@@ -66,15 +66,15 @@ namespace iText.Kernel.XMP.Impl.XPath {
         /// </term>
         /// <description> The last element of an array.
         /// </description></item>
-        /// <item><term>[fieldName=&quot;value&quot;]
+        /// <item><term>[fieldName=&amp;quot;value&amp;quot;]
         /// </term>
         /// <description> An element in an array of structs, chosen by a field value.
         /// </description></item>
-        /// <item><term>[@xml:lang=&quot;value&quot;]
+        /// <item><term>[@xml:lang=&amp;quot;value&amp;quot;]
         /// </term>
         /// <description> An element in an alt-text array, chosen by the xml:lang qualifier.
         /// </description></item>
-        /// <item><term>[?qualName=&quot;value&quot;]
+        /// <item><term>[?qualName=&amp;quot;value&amp;quot;]
         /// </term>
         /// <description> An element in an array, chosen by a qualifier value.
         /// </description></item>
