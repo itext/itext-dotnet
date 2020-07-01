@@ -156,11 +156,6 @@ namespace iText.Pdfa {
             CheckIsoConformance(obj, key, null, null);
         }
 
-        [Obsolete]
-        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources) {
-            CheckIsoConformance(obj, key, resources, null);
-        }
-
         public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
             CanvasGraphicsState gState;
