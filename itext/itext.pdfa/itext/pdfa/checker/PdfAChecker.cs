@@ -185,6 +185,11 @@ namespace iText.Pdfa.Checker {
         /// <param name="obj">the COS object that must be checked</param>
         public virtual void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {
+                case PdfObject.NAME: {
+                    CheckPdfName((PdfName)obj);
+                    break;
+                }
+
                 case PdfObject.NUMBER: {
                     CheckPdfNumber((PdfNumber)obj);
                     break;
@@ -472,6 +477,8 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckPdfDictionary(PdfDictionary dictionary);
 
+        protected internal abstract void CheckPdfName(PdfName name);
+
         protected internal abstract void CheckPdfNumber(PdfNumber number);
 
         protected internal abstract void CheckPdfStream(PdfStream stream);
@@ -575,6 +582,7 @@ namespace iText.Pdfa.Checker {
 
         private void CheckDictionaryRecursively(PdfDictionary dictionary) {
             foreach (PdfName name in dictionary.KeySet()) {
+                CheckPdfName(name);
                 PdfObject @object = dictionary.Get(name, false);
                 if (@object != null && !@object.IsIndirect()) {
                     CheckPdfObject(@object);

@@ -217,6 +217,8 @@ namespace iText.Pdfa {
         public const String OVERPRINT_MODE_SHALL_NOT_BE_ONE_WHEN_AN_ICCBASED_CMYK_COLOUR_SPACE_IS_USED_AND_WHEN_OVERPRINTING_IS_SET_TO_TRUE
              = "Overprint mode shall not be one when an ICCBased CMYK colour space is used and when overprinting is set to true";
 
+        public const String PDF_NAME_IS_TOO_LONG = "PdfName is too long";
+
         public const String PDF_STRING_IS_TOO_LONG = "PdfString is too long";
 
         public const String PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR = 

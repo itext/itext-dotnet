@@ -306,6 +306,11 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckContentStreamObject(PdfObject @object) {
             byte type = @object.GetObjectType();
             switch (type) {
+                case PdfObject.NAME: {
+                    CheckPdfName((PdfName)@object);
+                    break;
+                }
+
                 case PdfObject.STRING: {
                     CheckPdfString((PdfString)@object);
                     break;
@@ -328,6 +333,10 @@ namespace iText.Pdfa.Checker {
                 case PdfObject.DICTIONARY: {
                     PdfDictionary dictionary = (PdfDictionary)@object;
                     CheckPdfDictionary(dictionary);
+                    foreach (PdfName name in dictionary.KeySet()) {
+                        CheckPdfName(name);
+                        CheckPdfObject(dictionary.Get(name, false));
+                    }
                     foreach (PdfObject obj in dictionary.Values()) {
                         CheckContentStreamObject(obj);
                     }
@@ -517,6 +526,18 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
+        }
+
+        protected internal override void CheckPdfName(PdfName name) {
+            if (name.GetValue().Length > GetMaxNameLength()) {
+                throw new PdfAConformanceException(PdfAConformanceException.PDF_NAME_IS_TOO_LONG);
+            }
+        }
+
+        /// <summary>Retrieve maximum allowed length of the name object.</summary>
+        /// <returns>maximum allowed length of the name</returns>
+        protected internal virtual int GetMaxNameLength() {
+            return 127;
         }
 
         protected internal override void CheckPdfString(PdfString @string) {

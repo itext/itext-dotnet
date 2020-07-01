@@ -66,6 +66,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void ValidObjectsTest() {
+            int maxNameLength = pdfA1Checker.GetMaxNameLength();
             int maxStringLength = pdfA1Checker.GetMaxStringLength();
             int maxArrayCapacity = MAX_ARRAY_CAPACITY;
             int maxDictionaryCapacity = MAX_DICTIONARY_CAPACITY;
@@ -73,7 +74,9 @@ namespace iText.Pdfa.Checker {
             long minIntegerValue = pdfA1Checker.GetMinIntegerValue();
             double maxRealValue = pdfA1Checker.GetMaxRealValue();
             NUnit.Framework.Assert.AreEqual(65535, maxStringLength);
+            NUnit.Framework.Assert.AreEqual(127, maxNameLength);
             PdfString longString = PdfACheckerTestUtils.GetLongString(maxStringLength);
+            PdfName longName = PdfACheckerTestUtils.GetLongName(maxNameLength);
             PdfArray longArray = PdfACheckerTestUtils.GetLongArray(maxArrayCapacity);
             PdfDictionary longDictionary = PdfACheckerTestUtils.GetLongDictionary(maxDictionaryCapacity);
             NUnit.Framework.Assert.AreEqual(2147483647, maxIntegerValue);
@@ -82,8 +85,8 @@ namespace iText.Pdfa.Checker {
             PdfNumber largeInteger = new PdfNumber(maxIntegerValue);
             PdfNumber negativeInteger = new PdfNumber(minIntegerValue);
             PdfNumber largeReal = new PdfNumber(maxRealValue - 0.001);
-            PdfObject[] largeObjects = new PdfObject[] { longString, longArray, longDictionary, largeInteger, negativeInteger
-                , largeReal };
+            PdfObject[] largeObjects = new PdfObject[] { longName, longString, longArray, longDictionary, largeInteger
+                , negativeInteger, largeReal };
             // No exceptions should not be thrown as all values match the
             // limitations provided in specification
             foreach (PdfObject largeObject in largeObjects) {
@@ -117,6 +120,18 @@ namespace iText.Pdfa.Checker {
                 pdfA1Checker.CheckPdfObject(longString);
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndependentLongNameTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfName longName = BuildLongName();
+                // An exception should be thrown as provided name is longer then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(longName);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
 ;
         }
 
@@ -201,6 +216,22 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void LongNameAsKeyInDictionaryTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfName longName = BuildLongName();
+                PdfDictionary dict = new PdfDictionary();
+                dict.Put(new PdfName("Key1"), new PdfString("value1"));
+                dict.Put(new PdfName("Key2"), new PdfString("value2"));
+                dict.Put(longName, new PdfString("value3"));
+                // An exception should be thrown as dictionary contains key which is longer then
+                // it is allowed per specification
+                pdfA1Checker.CheckPdfObject(dict);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LongStringInArrayTest() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfString longString = BuildLongString();
@@ -221,6 +252,18 @@ namespace iText.Pdfa.Checker {
                 CheckInContentStream(longString);
             }
             , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongNameInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfName longName = BuildLongName();
+                // An exception should be thrown as content stream has a name which
+                // is longer then it is allowed per specification
+                CheckInContentStream(longName);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
 ;
         }
 
@@ -328,6 +371,22 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void LongNameAsKeyInDictionaryInContentStreamTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfName longName = BuildLongName();
+                PdfDictionary dict = new PdfDictionary();
+                dict.Put(new PdfName("Key1"), new PdfString("value1"));
+                dict.Put(new PdfName("Key2"), new PdfString("value2"));
+                dict.Put(longName, new PdfString("value3"));
+                // An exception should be thrown as content stream has a string which
+                // is longer then it is allowed per specification
+                CheckInContentStream(dict);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
+;
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LongStringInComplexStructureTest() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfString longString = BuildLongString();
@@ -431,6 +490,13 @@ namespace iText.Pdfa.Checker {
             int testLength = maxAllowedLength + 1;
             NUnit.Framework.Assert.AreEqual(65536, testLength);
             return PdfACheckerTestUtils.GetLongString(testLength);
+        }
+
+        private PdfName BuildLongName() {
+            int maxAllowedLength = pdfA1Checker.GetMaxNameLength();
+            int testLength = maxAllowedLength + 1;
+            NUnit.Framework.Assert.AreEqual(128, testLength);
+            return PdfACheckerTestUtils.GetLongName(testLength);
         }
 
         private PdfArray BuildLongArray() {

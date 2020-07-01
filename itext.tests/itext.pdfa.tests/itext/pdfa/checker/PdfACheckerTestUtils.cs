@@ -50,12 +50,11 @@ namespace iText.Pdfa.Checker {
         }
 
         internal static PdfString GetLongString(int length) {
-            char charToFill = 'A';
-            char[] array = new char[length];
-            for (int i = 0; i < array.Length; i++) {
-                array[i] = charToFill;
-            }
-            return new PdfString(new String(array));
+            return new PdfString(GetLongPlainString(length));
+        }
+
+        internal static PdfName GetLongName(int length) {
+            return new PdfName(GetLongPlainString(length));
         }
 
         internal static PdfArray GetLongArray(int length) {
@@ -88,6 +87,15 @@ namespace iText.Pdfa.Checker {
             stream.Write(@object);
             return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + iText.IO.Util.JavaUtil.GetStringForBytes(baos.ToArray
                 ()) + " Tj\n" + "ET\n" + "Q";
+        }
+
+        private static String GetLongPlainString(int length) {
+            char charToFill = 'A';
+            char[] array = new char[length];
+            for (int i = 0; i < array.Length; i++) {
+                array[i] = charToFill;
+            }
+            return new String(array);
         }
     }
 }
