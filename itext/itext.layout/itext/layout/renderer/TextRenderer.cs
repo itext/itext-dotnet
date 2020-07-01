@@ -347,7 +347,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     bool endOfWordBelongingToSpecialScripts = TextContainsSpecialScriptGlyphs(true) && FindPossibleBreaksSplitPosition
-                        (ind + 1, true) >= 0;
+                        (specialScriptsWordBreakPoints, ind + 1, true) >= 0;
                     if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind) || splitCharacters.IsSplitCharacter
                         (text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1)) || endOfWordBelongingToSpecialScripts
                         ) {
@@ -773,7 +773,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_812();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_813();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -835,8 +835,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_812 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_812() {
+        private sealed class _IGlyphLineFilter_813 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_813() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -856,6 +856,22 @@ namespace iText.Layout.Renderer {
                 while (text.start < text.end && iText.IO.Util.TextUtil.IsWhitespace(glyph = text.Get(text.start)) && !iText.IO.Util.TextUtil
                     .IsNewLine(glyph)) {
                     text.start++;
+                }
+            }
+            /*  Between two sentences separated by one or more whitespaces,
+            icu allows to break right after the last whitespace.
+            Therefore we need to carefully edit specialScriptsWordBreakPoints list after trimming:
+            if a break is allowed to happen right before the first glyph of an already trimmed text,
+            we need to remove this point from the list
+            (or replace it with -1 thus marking that text contains special scripts,
+            in case if the removed break point was the only possible break point).
+            */
+            if (TextContainsSpecialScriptGlyphs(true) && specialScriptsWordBreakPoints[0] == text.start) {
+                if (specialScriptsWordBreakPoints.Count == 1) {
+                    specialScriptsWordBreakPoints[0] = -1;
+                }
+                else {
+                    specialScriptsWordBreakPoints.JRemoveAt(0);
                 }
             }
         }
@@ -1097,7 +1113,7 @@ namespace iText.Layout.Renderer {
         /// by checking each of its glyphs
         /// AND to fill
         /// <see cref="specialScriptsWordBreakPoints"/>
-        /// list,
+        /// list afterwards,
         /// i.e. when analyzing a sequence of TextRenderers prior to layouting;
         /// - pass
         /// <see langword="true"/>
@@ -1122,18 +1138,31 @@ namespace iText.Layout.Renderer {
             if (specialScriptsWordBreakPoints != null) {
                 return !specialScriptsWordBreakPoints.IsEmpty();
             }
-            if (!analyzeSpecialScriptsWordBreakPointsOnly) {
-                for (int i = text.start; i < text.end; i++) {
-                    int unicode = text.Get(i).GetUnicode();
-                    if (unicode > -1) {
-                        UnicodeScript? glyphScript = UnicodeScriptUtil.Of(unicode);
-                        if (UnicodeScript.THAI.Equals(glyphScript)) {
-                            return true;
+            if (analyzeSpecialScriptsWordBreakPointsOnly) {
+                return false;
+            }
+            for (int i = text.start; i < text.end; i++) {
+                int unicode = text.Get(i).GetUnicode();
+                if (unicode > -1) {
+                    if (CodePointIsOfSpecialScript(unicode)) {
+                        return true;
+                    }
+                }
+                else {
+                    char[] chars = text.Get(i).GetChars();
+                    if (chars != null) {
+                        foreach (char ch in chars) {
+                            if (CodePointIsOfSpecialScript(ch)) {
+                                return true;
+                            }
                         }
                     }
                 }
-                specialScriptsWordBreakPoints = new List<int>();
             }
+            // if we've reached this point, it means we've analyzed the entire TextRenderer#text
+            // and haven't found special scripts, therefore we define specialScriptsWordBreakPoints
+            // as an empty list to mark, it's already been analyzed
+            specialScriptsWordBreakPoints = new List<int>();
             return false;
         }
 
@@ -1247,7 +1276,8 @@ namespace iText.Layout.Renderer {
                         overflowRenderer.SetSpecialScriptsWordBreakPoints(overflow);
                     }
                     else {
-                        int splitIndex = FindPossibleBreaksSplitPosition(initialOverflowTextPos, false);
+                        int splitIndex = FindPossibleBreaksSplitPosition(specialScriptsWordBreakPoints, initialOverflowTextPos, false
+                            );
                         if (splitIndex > -1) {
                             splitRenderer.SetSpecialScriptsWordBreakPoints(specialScriptsWordBreakPoints.SubList(0, splitIndex + 1));
                         }
@@ -1545,22 +1575,23 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // if amongPresentOnly is true, returns the index of specialScriptsWordBreakPoints's element
-        // or -1 if element wasn't found.
-        // if amongPresentOnly is false, returns the index of specialScriptsWordBreakPoints's element
+        // if amongPresentOnly is true,
+        // returns the index of lists's element which equals textStartBasedInitialOverflowTextPos
+        // or -1 if textStartBasedInitialOverflowTextPos wasn't found in the list.
+        // if amongPresentOnly is false, returns the index of list's element
         // that is not greater than textStartBasedInitialOverflowTextPos
-        // if there's no such element in specialScriptsWordBreakPoints, -1 is returned
-        internal virtual int FindPossibleBreaksSplitPosition(int textStartBasedInitialOverflowTextPos, bool amongPresentOnly
-            ) {
+        // if there's no such element in the list, -1 is returned
+        internal static int FindPossibleBreaksSplitPosition(IList<int> list, int textStartBasedInitialOverflowTextPos
+            , bool amongPresentOnly) {
             int low = 0;
-            int high = specialScriptsWordBreakPoints.Count - 1;
+            int high = list.Count - 1;
             while (low <= high) {
                 int middle = (int)(((uint)(low + high)) >> 1);
-                if (specialScriptsWordBreakPoints[middle].CompareTo(textStartBasedInitialOverflowTextPos) < 0) {
+                if (list[middle].CompareTo(textStartBasedInitialOverflowTextPos) < 0) {
                     low = middle + 1;
                 }
                 else {
-                    if (specialScriptsWordBreakPoints[middle].CompareTo(textStartBasedInitialOverflowTextPos) > 0) {
+                    if (list[middle].CompareTo(textStartBasedInitialOverflowTextPos) > 0) {
                         high = middle - 1;
                     }
                     else {
@@ -1572,6 +1603,11 @@ namespace iText.Layout.Renderer {
                 return low - 1;
             }
             return -1;
+        }
+
+        private bool CodePointIsOfSpecialScript(int codePoint) {
+            UnicodeScript? glyphScript = UnicodeScriptUtil.Of(codePoint);
+            return UnicodeScript.THAI == glyphScript || UnicodeScript.KHMER == glyphScript || UnicodeScript.LAO == glyphScript;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {

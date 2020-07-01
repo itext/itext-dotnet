@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -46,6 +47,9 @@ namespace iText.Layout.Renderer {
 
         public static readonly String REGULAR_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSans-Regular.ttf";
+
+        public static readonly String KHMER_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/KhmerOS.ttf";
 
         // หากอากาศดีในวันพรุ่งนี้เราจะไปปิกนิก - one sentence, multiple words.
         public const String THAI_TEXT = "\u0E2B\u0E32\u0E01\u0E2D\u0E32\u0E01\u0E32\u0E28\u0E14\u0E35" + "\u0E43\u0E19\u0E27\u0E31\u0E19\u0E1E\u0E23\u0E38\u0E48\u0E07\u0E19\u0E35\u0E49"
@@ -285,9 +289,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(5, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
-            float occupiedAreaWidth = lastFittingChildRendererData.childLayoutResult.GetOccupiedArea().GetBBox().GetWidth
-                ();
-            NUnit.Framework.Assert.AreEqual(500, occupiedAreaWidth, 0.0001);
+            NUnit.Framework.Assert.IsNull(lastFittingChildRendererData.childLayoutResult.GetOccupiedArea());
         }
 
         [NUnit.Framework.Test]
@@ -595,8 +597,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CurWidthZeroDecrement() {
             int oldNewChildPos = 1;
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(oldNewChildPos, oldNewChildPos, new LayoutResult
-                (0, null, null, null), new Dictionary<int, LayoutResult>());
+            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(oldNewChildPos, oldNewChildPos, new Dictionary
+                <int, LayoutResult>());
             NUnit.Framework.Assert.AreEqual(0.0f, decrement, 0.0001);
         }
 
@@ -605,7 +607,6 @@ namespace iText.Layout.Renderer {
             float widthOfNewNothingResult = 500;
             LayoutArea occupiedArea = new LayoutArea(1, new Rectangle(0, 0, widthOfNewNothingResult, 0));
             LayoutResult oldResult = new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
-            LayoutResult newResult = new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, null);
             float simpleWidth = 200;
             LayoutResult simpleDecrement = new LayoutResult(LayoutResult.FULL, new LayoutArea(1, new Rectangle(0, 0, simpleWidth
                 , 0)), null, null);
@@ -613,18 +614,15 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(0, oldResult);
             // leave specialScriptLayoutResults.get(1) null, as if childRenderers.get(1) is floating
             specialScriptLayoutResults.Put(2, simpleDecrement);
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, newResult, specialScriptLayoutResults
-                );
-            NUnit.Framework.Assert.AreEqual(2 * widthOfNewNothingResult + simpleWidth, decrement, 0.00001);
+            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, specialScriptLayoutResults);
+            NUnit.Framework.Assert.AreEqual(widthOfNewNothingResult + simpleWidth, decrement, 0.00001);
         }
 
         [NUnit.Framework.Test]
         public virtual void CurWidthLayoutResultPartial() {
             float widthOfNewPartialResult = 500;
             LayoutArea oldOccupiedArea = new LayoutArea(1, new Rectangle(0, 0, widthOfNewPartialResult, 0));
-            LayoutArea newOccupiedArea = new LayoutArea(1, new Rectangle(0, 0, widthOfNewPartialResult / 2, 0));
             LayoutResult oldResult = new LayoutResult(LayoutResult.FULL, oldOccupiedArea, null, null);
-            LayoutResult newResult = new LayoutResult(LayoutResult.PARTIAL, newOccupiedArea, null, null);
             float simpleWidth = 200;
             LayoutResult simpleDecrement = new LayoutResult(LayoutResult.FULL, new LayoutArea(1, new Rectangle(0, 0, simpleWidth
                 , 0)), null, null);
@@ -632,8 +630,7 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(0, oldResult);
             // leave specialScriptLayoutResults.get(1) null, as if childRenderers.get(1) is floating
             specialScriptLayoutResults.Put(2, simpleDecrement);
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, newResult, specialScriptLayoutResults
-                );
+            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, specialScriptLayoutResults);
             NUnit.Framework.Assert.AreEqual(widthOfNewPartialResult + simpleWidth, decrement, 0.00001);
         }
 
@@ -658,6 +655,54 @@ namespace iText.Layout.Renderer {
             lineRenderer.UpdateFloatsOverflowedToNextLine(floatsOverflowedToNextLineIRenderers, indicesOfFloats, 1);
             NUnit.Framework.Assert.AreEqual(1, floatsOverflowedToNextLineIRenderers.Count);
             NUnit.Framework.Assert.AreEqual(onlyFloatToRemain, floatsOverflowedToNextLineIRenderers[0]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PossibleBreakWithinActualText() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
+            IList<Glyph> glyphs = new List<Glyph>();
+            glyphs.Add(new Glyph(629, 378, new char[] { '\u17c3' }));
+            glyphs.Add(new Glyph(578, 756, new char[] { '\u1790' }));
+            glyphs.Add(new Glyph(386, 0, new char[] { '\u17d2', '\u1784' }));
+            glyphs.Add(new Glyph(627, 378, new char[] { '\u17c1' }));
+            glyphs.Add(new Glyph(581, 756, new char[] { '\u1793' }));
+            glyphs.Add(new Glyph(633, 512, new char[] { '\u17c7' }));
+            GlyphLine glyphLine = new GlyphLine(glyphs);
+            glyphLine.SetActualText(0, 3, "\u1790\u17d2\u1784\u17c3");
+            glyphLine.SetActualText(3, 6, "\u1793\u17c1\u17c7");
+            textRenderer.SetText(glyphLine, PdfFontFactory.CreateFont(KHMER_FONT, PdfEncodings.IDENTITY_H));
+            lineRenderer.AddChild(textRenderer);
+            IList<int> possibleBreakPoints = new List<int>(JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6, 7));
+            lineRenderer.DistributePossibleBreakPointsOverSequentialTextRenderers(0, 1, possibleBreakPoints, new List<
+                int>());
+            IList<int> distributed = ((TextRenderer)lineRenderer.GetChildRenderers()[0]).GetSpecialScriptsWordBreakPoints
+                ();
+            NUnit.Framework.Assert.AreEqual(new List<int>(JavaUtil.ArraysAsList(3, 6)), distributed);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TrimFirstOnePossibleBreak() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            PdfFont pdfFont = PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H);
+            // " อากาศ"
+            String thai = "\u0020" + THAI_WORD;
+            TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
+            textRenderer.SetProperty(Property.FONT, pdfFont);
+            textRenderer.SetText(thai);
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(1)));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(textRenderer);
+            lineRenderer.TrimFirst();
+            TextRenderer childTextRenderer = (TextRenderer)lineRenderer.GetChildRenderers()[0];
+            NUnit.Framework.Assert.IsNotNull(childTextRenderer.GetSpecialScriptsWordBreakPoints());
+            NUnit.Framework.Assert.AreEqual(1, childTextRenderer.GetSpecialScriptsWordBreakPoints().Count);
+            NUnit.Framework.Assert.AreEqual(-1, (int)childTextRenderer.GetSpecialScriptsWordBreakPoints()[0]);
         }
     }
 }

@@ -426,8 +426,8 @@ namespace iText.Layout.Renderer {
                         )childRenderers[childPos]).TextContainsSpecialScriptGlyphs(true)) {
                         LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
                             (childPos, specialScriptLayoutResults, wasParentsHeightClipped, floatsOverflowedToNextLine);
-                        curWidth -= GetCurWidthSpecialScriptsDecrement(childPos, lastFittingChildRendererData.childIndex, lastFittingChildRendererData
-                            .childLayoutResult, specialScriptLayoutResults);
+                        curWidth -= GetCurWidthSpecialScriptsDecrement(childPos, lastFittingChildRendererData.childIndex, specialScriptLayoutResults
+                            );
                         childPos = lastFittingChildRendererData.childIndex;
                         childResult = lastFittingChildRendererData.childLayoutResult;
                     }
@@ -1223,7 +1223,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>Trim first child text renderers.</summary>
         /// <returns>total number of trimmed glyphs.</returns>
-        private int TrimFirst() {
+        internal virtual int TrimFirst() {
             int totalNumberOfTrimmedGlyphs = 0;
             foreach (IRenderer renderer in childRenderers) {
                 if (FloatingHelper.IsRendererFloating(renderer)) {
@@ -1288,8 +1288,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal static float GetCurWidthSpecialScriptsDecrement(int childPos, int newChildPos, LayoutResult newLayoutResult
-            , IDictionary<int, LayoutResult> specialScriptLayoutResults) {
+        internal static float GetCurWidthSpecialScriptsDecrement(int childPos, int newChildPos, IDictionary<int, LayoutResult
+            > specialScriptLayoutResults) {
             float decrement = 0.0f;
             // if childPos == newChildPos, curWidth doesn't include width of the current childRenderer yet, so no decrement is needed
             if (childPos != newChildPos) {
@@ -1297,11 +1297,6 @@ namespace iText.Layout.Renderer {
                     if (specialScriptLayoutResults.Get(i) != null) {
                         decrement += specialScriptLayoutResults.Get(i).GetOccupiedArea().GetBBox().GetWidth();
                     }
-                }
-                // when LayoutResult.NOTHING has artificially been created in getIndexOfRendererWithLastFullyFittingWord,
-                // it's occupiedArea isn't 0.0x0.0 as it should be, so we need to subtract it here twice, because it'll be added later
-                if (newLayoutResult.GetStatus() == LayoutResult.NOTHING) {
-                    decrement += specialScriptLayoutResults.Get(newChildPos).GetOccupiedArea().GetBBox().GetWidth();
                 }
             }
             return decrement;
@@ -1373,26 +1368,30 @@ namespace iText.Layout.Renderer {
 
         internal virtual void DistributePossibleBreakPointsOverSequentialTextRenderers(int childPos, int numberOfSequentialTextRenderers
             , IList<int> possibleBreakPointsGlobal, IList<int> indicesOfFloating) {
-            int alreadyProcessedNumberOfGlyphs = 0;
+            int alreadyProcessedNumberOfCharsWithinGlyphLines = 0;
             int indexToBeginWith = 0;
             for (int i = 0; i < numberOfSequentialTextRenderers; i++) {
                 if (!indicesOfFloating.Contains(i)) {
                     TextRenderer childTextRenderer = (TextRenderer)childRenderers[childPos + i];
-                    int length = childTextRenderer.Length();
+                    IList<int> amountOfCharsBetweenTextStartAndActualTextChunk = new List<int>();
+                    IList<int> glyphLineBasedIndicesOfActualTextChunkEnds = new List<int>();
+                    FillActualTextChunkRelatedLists(childTextRenderer.GetText(), amountOfCharsBetweenTextStartAndActualTextChunk
+                        , glyphLineBasedIndicesOfActualTextChunkEnds);
                     IList<int> possibleBreakPoints = new List<int>();
                     for (int j = indexToBeginWith; j < possibleBreakPointsGlobal.Count; j++) {
-                        int shiftedBreakPoint = possibleBreakPointsGlobal[j] - alreadyProcessedNumberOfGlyphs;
-                        if (shiftedBreakPoint > length) {
+                        int shiftedBreakPoint = possibleBreakPointsGlobal[j] - alreadyProcessedNumberOfCharsWithinGlyphLines;
+                        int amountOfCharsBetweenTextStartAndTextEnd = amountOfCharsBetweenTextStartAndActualTextChunk[amountOfCharsBetweenTextStartAndActualTextChunk
+                            .Count - 1];
+                        if (shiftedBreakPoint > amountOfCharsBetweenTextStartAndTextEnd) {
                             indexToBeginWith = j;
-                            alreadyProcessedNumberOfGlyphs += length;
+                            alreadyProcessedNumberOfCharsWithinGlyphLines += amountOfCharsBetweenTextStartAndTextEnd;
                             break;
                         }
-                        possibleBreakPoints.Add(shiftedBreakPoint + childTextRenderer.text.start);
+                        possibleBreakPoints.Add(shiftedBreakPoint);
                     }
-                    if (possibleBreakPoints.IsEmpty()) {
-                        possibleBreakPoints.Add(-1);
-                    }
-                    childTextRenderer.SetSpecialScriptsWordBreakPoints(possibleBreakPoints);
+                    IList<int> glyphLineBasedPossibleBreakPoints = ConvertPossibleBreakPointsToGlyphLineBased(possibleBreakPoints
+                        , amountOfCharsBetweenTextStartAndActualTextChunk, glyphLineBasedIndicesOfActualTextChunkEnds);
+                    childTextRenderer.SetSpecialScriptsWordBreakPoints(glyphLineBasedPossibleBreakPoints);
                 }
             }
         }
@@ -1433,8 +1432,8 @@ namespace iText.Layout.Renderer {
                 if (fittingLengthWithTrailingRightSideSpaces > 0) {
                     IList<int> breakPoints = textRenderer.GetSpecialScriptsWordBreakPoints();
                     if (breakPoints != null && breakPoints.Count > 0 && breakPoints[0] != -1) {
-                        int possibleBreakPointPosition = textRenderer.FindPossibleBreaksSplitPosition(fittingLengthWithTrailingRightSideSpaces
-                             + textRenderer.text.start, false);
+                        int possibleBreakPointPosition = TextRenderer.FindPossibleBreaksSplitPosition(textRenderer.GetSpecialScriptsWordBreakPoints
+                            (), fittingLengthWithTrailingRightSideSpaces + textRenderer.text.start, false);
                         if (possibleBreakPointPosition > -1) {
                             splitPosition = breakPoints[possibleBreakPointPosition] - amountOfTrailingRightSideSpaces;
                             needToSplitRendererContainingLastFullyFittingWord = splitPosition != textRenderer.text.end;
@@ -1490,9 +1489,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    LayoutArea occupiedArea = specialScriptLayoutResults.Get(indexOfRendererContainingLastFullyFittingWord).GetOccupiedArea
-                        ();
-                    returnLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, childRenderer);
+                    returnLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
                 }
             }
             return new LineRenderer.LastFittingChildRendererData(this, indexOfRendererContainingLastFullyFittingWord, 
@@ -1579,6 +1576,52 @@ namespace iText.Layout.Renderer {
 
         private bool IsInlineBlockChild(IRenderer child) {
             return child is BlockRenderer || child is TableRenderer;
+        }
+
+        // ActualTextChunk is either an ActualText or a single independent glyph
+        private static void FillActualTextChunkRelatedLists(GlyphLine glyphLine, IList<int> amountOfCharsBetweenTextStartAndActualTextChunk
+            , IList<int> glyphLineBasedIndicesOfActualTextChunkEnds) {
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            int amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = 0;
+            while (actualTextIterator.HasNext()) {
+                GlyphLine.GlyphLinePart part = actualTextIterator.Next();
+                int amountOfCharsWithinCurrentActualTextOrGlyph = 0;
+                if (part.actualText != null) {
+                    amountOfCharsWithinCurrentActualTextOrGlyph = part.actualText.Length;
+                    int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;
+                    amountOfCharsBetweenTextStartAndActualTextChunk.Add(nextAmountOfChars);
+                    glyphLineBasedIndicesOfActualTextChunkEnds.Add(part.end);
+                    amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = nextAmountOfChars;
+                }
+                else {
+                    for (int j = part.start; j < part.end; j++) {
+                        char[] chars = glyphLine.Get(j).GetChars();
+                        amountOfCharsWithinCurrentActualTextOrGlyph = chars != null ? chars.Length : 0;
+                        int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;
+                        amountOfCharsBetweenTextStartAndActualTextChunk.Add(nextAmountOfChars);
+                        glyphLineBasedIndicesOfActualTextChunkEnds.Add(j + 1);
+                        amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = nextAmountOfChars;
+                    }
+                }
+            }
+        }
+
+        private static IList<int> ConvertPossibleBreakPointsToGlyphLineBased(IList<int> possibleBreakPoints, IList
+            <int> amountOfChars, IList<int> indices) {
+            if (possibleBreakPoints.IsEmpty()) {
+                possibleBreakPoints.Add(-1);
+                return possibleBreakPoints;
+            }
+            else {
+                IList<int> glyphLineBased = new List<int>();
+                foreach (int j in possibleBreakPoints) {
+                    int found = TextRenderer.FindPossibleBreaksSplitPosition(amountOfChars, j, true);
+                    if (found >= 0) {
+                        glyphLineBased.Add(indices[found]);
+                    }
+                }
+                return glyphLineBased;
+            }
         }
 
         internal class RendererGlyph {
