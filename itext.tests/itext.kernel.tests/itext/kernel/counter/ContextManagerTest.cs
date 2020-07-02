@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,41 +41,29 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Test;
 
 namespace iText.Kernel.Counter {
-    public class NamespaceConstant {
-        public const String ITEXT = "iText";
+    public class ContextManagerTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void GetRecognisedNamespaceForSpecificNamespaceTest() {
+            String outerNamespaces = NamespaceConstant.PDF_OCR.ToLowerInvariant();
+            String innerNamespaces = NamespaceConstant.PDF_OCR_TESSERACT4.ToLowerInvariant();
+            // Since both NamespaceConstant.PDF_OCR and NamespaceConstant.PDF_OCR_TESSERACT4 are registered
+            // and the latter one begins with the former, we should check that correct namespaces are
+            // recognized for each of them
+            NUnit.Framework.Assert.IsTrue(innerNamespaces.StartsWith(outerNamespaces));
+            NUnit.Framework.Assert.AreEqual(outerNamespaces, ContextManager.GetInstance().GetRecognisedNamespace(outerNamespaces
+                ));
+            NUnit.Framework.Assert.AreEqual(innerNamespaces, ContextManager.GetInstance().GetRecognisedNamespace(innerNamespaces
+                ));
+        }
 
-        //Core
-        public const String CORE_IO = ITEXT + ".IO";
-
-        public const String CORE_KERNEL = ITEXT + ".Kernel";
-
-        public const String CORE_LAYOUT = ITEXT + ".Layout";
-
-        public const String CORE_BARCODES = ITEXT + ".Barcodes";
-
-        public const String CORE_PDFA = ITEXT + ".Pdfa";
-
-        public const String CORE_SIGN = ITEXT + ".Signatures";
-
-        public const String CORE_FORMS = ITEXT + ".Forms";
-
-        public const String CORE_SXP = ITEXT + ".StyledXmlParser";
-
-        public const String CORE_SVG = ITEXT + ".Svg";
-
-        //Addons
-        public const String PDF_DEBUG = ITEXT + ".PdfDebug";
-
-        public const String PDF_HTML = ITEXT + ".Html2pdf";
-
-        public const String PDF_INVOICE = ITEXT + ".Zugferd";
-
-        public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
-		
-		public const String PDF_OCR = ITEXT + ".Pdfocr";
-
-        public const String PDF_OCR_TESSERACT4 = PDF_OCR + ".Tesseract4";
+        [NUnit.Framework.Test]
+        public virtual void NotRegisteredNamespaceTest() {
+            String notRegisteredNamespace = "com.hello.world";
+            NUnit.Framework.Assert.AreEqual(null, ContextManager.GetInstance().GetRecognisedNamespace(notRegisteredNamespace
+                ));
+        }
     }
 }
