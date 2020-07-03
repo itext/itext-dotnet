@@ -55,7 +55,6 @@ using iText.Kernel.Crypto;
 using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Kernel.Log;
 using iText.Kernel.Numbering;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -863,9 +862,6 @@ namespace iText.Kernel.Pdf {
                         .GetIsoBytes(modifiedDocumentId.GetValue()));
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
-                    foreach (ICounter counter in GetCounters()) {
-                        counter.OnDocumentWritten(writer.GetCurrentPos());
-                    }
                 }
                 catalog.GetPageTree().ClearPageRefs();
                 RemoveAllHandlers();
@@ -1969,9 +1965,6 @@ namespace iText.Kernel.Pdf {
                         encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
                         embeddedStreamsSavedOnReading = true;
                     }
-                    foreach (ICounter counter in GetCounters()) {
-                        counter.OnDocumentRead(reader.GetFileLength());
-                    }
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
                     ReadDocumentIds();
@@ -2223,21 +2216,6 @@ namespace iText.Kernel.Pdf {
             if (closed) {
                 throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
             }
-        }
-
-        /// <summary>
-        /// Gets all
-        /// <see cref="iText.Kernel.Log.ICounter"/>
-        /// instances.
-        /// </summary>
-        /// <returns>
-        /// list of
-        /// <see cref="iText.Kernel.Log.ICounter"/>
-        /// instances.
-        /// </returns>
-        [Obsolete]
-        protected internal virtual IList<ICounter> GetCounters() {
-            return CounterManager.GetInstance().GetCounters(typeof(iText.Kernel.Pdf.PdfDocument));
         }
 
         /// <summary>Returns the factory for creating page instances.</summary>
