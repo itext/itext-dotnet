@@ -94,6 +94,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="iText.Kernel.Geom.Path"/>
         /// object.
         /// </summary>
+        /// <param name="result">
+        /// 
+        /// <see cref="PolyTree"/>
+        /// object to convert
+        /// </param>
+        /// <returns>
+        /// resultant
+        /// <see cref="iText.Kernel.Geom.Path"/>
+        /// object
+        /// </returns>
         public static Path ConvertToPath(PolyTree result) {
             Path path = new Path();
             PolyNode node = result.GetFirst();
@@ -145,6 +155,44 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// object with one
         /// note: it doesn't add degenerate subpaths.
         /// </summary>
+        /// <param name="offset">
+        /// the
+        /// <see cref="ClipperOffset"/>
+        /// object to add all iText
+        /// <see cref="iText.Kernel.Geom.Subpath"/>
+        /// s that are not degenerated.
+        /// </param>
+        /// <param name="path">
+        /// 
+        /// <see cref="iText.Kernel.Geom.Path"/>
+        /// object, containing the required
+        /// <see cref="iText.Kernel.Geom.Subpath"/>
+        /// s
+        /// </param>
+        /// <param name="joinType">
+        /// 
+        /// <see cref="Clipper"/>
+        /// join type. The value could be
+        /// <see cref="JoinType.BEVEL"/>
+        /// ,
+        /// <see cref="JoinType.ROUND"/>
+        /// ,
+        /// <see cref="JoinType.MITER"/>
+        /// </param>
+        /// <param name="endType">
+        /// 
+        /// <see cref="Clipper"/>
+        /// end type. The value could be
+        /// <see cref="EndType.CLOSED_POLYGON"/>
+        /// ,
+        /// <see cref="EndType.CLOSED_LINE"/>
+        /// ,
+        /// <see cref="EndType.OPEN_BUTT"/>
+        /// ,
+        /// <see cref="EndType.OPEN_SQUARE"/>
+        /// ,
+        /// <see cref="EndType.OPEN_ROUND"/>
+        /// </param>
         /// <returns>
         /// 
         /// <see cref="System.Collections.IList{E}"/>
@@ -182,6 +230,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects.
         /// </summary>
+        /// <param name="points">
+        /// the list of
+        /// <see cref="IntPoint"/>
+        /// objects to convert
+        /// </param>
+        /// <returns>
+        /// the resultant list of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// objects.
+        /// </returns>
         public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points) {
             IList<Point> convertedPoints = new List<Point>(points.Count);
             foreach (IntPoint point in points) {
@@ -197,6 +255,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="IntPoint"/>
         /// objects.
         /// </summary>
+        /// <param name="points">
+        /// the list of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// objects to convert
+        /// </param>
+        /// <returns>
+        /// the resultant list of
+        /// <see cref="IntPoint"/>
+        /// objects.
+        /// </returns>
         public static IList<IntPoint> ConvertToLongPoints(IList<Point> points) {
             IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
             foreach (Point point in points) {
@@ -382,6 +450,35 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             }
         }
 
+        /// <summary>
+        /// Adds rectangle path based on array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// (internally converting
+        /// them by
+        /// <see cref="ConvertToLongPoints(System.Collections.Generic.IList{E})"/>
+        /// ) and adds this path to
+        /// <see cref="Clipper"/>
+        /// instance.
+        /// </summary>
+        /// <param name="clipper">
+        /// 
+        /// <see cref="Clipper"/>
+        /// instance to which the created rectangle path will be added.
+        /// </param>
+        /// <param name="rectVertices">
+        /// an array of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// which will be internally converted
+        /// to clipper path and added to the clipper instance.
+        /// </param>
+        /// <param name="polyType">
+        /// either
+        /// <see cref="PolyType.SUBJECT"/>
+        /// or
+        /// <see cref="PolyType.CLIP"/>
+        /// denoting whether added
+        /// path is a subject of clipping or a part of the clipping polygon.
+        /// </param>
         [System.ObsoleteAttribute(@"use AddPolygonToClipper(Clipper, iText.Kernel.Geom.Point[], PolyType) instead."
             )]
         public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
