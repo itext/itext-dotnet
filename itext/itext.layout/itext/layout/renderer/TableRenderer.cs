@@ -1241,8 +1241,6 @@ namespace iText.Layout.Renderer {
             splitRenderer.rowRange = rowRange;
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
-            // TODO childRenderers will be populated twice during the relayout.
-            // We should probably clean them before #layout().
             splitRenderer.childRenderers = childRenderers;
             splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.headerRenderer = headerRenderer;
@@ -1548,7 +1546,7 @@ namespace iText.Layout.Renderer {
             // correct last height
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
-            // TODO Correct for collapsed borders only
+            // It's width will be considered only for collapsed borders
             Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
             bordersHandler.SetFinishRow(finish);
             if (skip) {
