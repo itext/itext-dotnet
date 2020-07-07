@@ -2515,6 +2515,28 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void InheritHeaderPropsWhileMinMaxWidthCalculationsTest() {
+            String filename = "inheritHeaderPropsWhileMinMaxWidthCalculations.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            Document document = new Document(pdf);
+            Paragraph p = new Paragraph("Some text is placed at the beginning" + " of the page, so that page isn't being empty."
+                );
+            document.Add(p);
+            Table table = new Table(new float[1]);
+            // The header's text is longer than the body's text, hence the width
+            // of the table will be calculated by the header.
+            table.AddHeaderCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("He")));
+            // If this property is not inherited while calculating min/max widths,
+            // then while layouting header will request more space than the layout box's width
+            table.GetHeader().SetBold();
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff"));
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 
