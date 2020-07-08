@@ -182,7 +182,9 @@ namespace iText.Kernel.Pdf.Function {
                 PdfDictionary dictionary = new PdfDictionary();
                 dictionary.Put(PdfName.FunctionType, new PdfNumber(3));
                 dictionary.Put(PdfName.Domain, domain);
-                dictionary.Put(PdfName.Range, range);
+                if (range != null) {
+                    dictionary.Put(PdfName.Range, range);
+                }
                 dictionary.Put(PdfName.Functions, functions);
                 dictionary.Put(PdfName.Bounds, bounds);
                 dictionary.Put(PdfName.Encode, encode);

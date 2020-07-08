@@ -107,7 +107,15 @@ namespace iText.Kernel.Geom {
             : base(box.GetX(), box.GetY(), box.GetWidth(), box.GetHeight()) {
         }
 
-        /// <summary>Rotates PageSize clockwise.</summary>
+        /// <summary>
+        /// Rotates
+        /// <see cref="PageSize"/>
+        /// clockwise.
+        /// </summary>
+        /// <returns>
+        /// the rotated
+        /// <see cref="PageSize"/>.
+        /// </returns>
         public virtual iText.Kernel.Geom.PageSize Rotate() {
             return new iText.Kernel.Geom.PageSize(height, width);
         }

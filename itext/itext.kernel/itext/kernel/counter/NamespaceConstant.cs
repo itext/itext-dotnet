@@ -74,5 +74,9 @@ namespace iText.Kernel.Counter {
         public const String PDF_INVOICE = ITEXT + ".Zugferd";
 
         public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
+		
+		public const String PDF_OCR = ITEXT + ".Pdfocr";
+
+        public const String PDF_OCR_TESSERACT4 = PDF_OCR + ".Tesseract4";
     }
 }

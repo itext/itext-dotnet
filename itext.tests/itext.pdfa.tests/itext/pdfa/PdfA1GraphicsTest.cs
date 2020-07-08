@@ -235,11 +235,8 @@ namespace iText.Pdfa {
                 PdfFormXObject xObject = new PdfFormXObject(new Rectangle(100, 100));
                 PdfCanvas xObjCanvas = new PdfCanvas(xObject, doc);
                 xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
-                //imitating transparency group
-                //todo replace with real transparency group logic when implemented
-                PdfDictionary group = new PdfDictionary();
-                group.Put(PdfName.S, PdfName.Transparency);
-                xObject.Put(PdfName.Group, group);
+                PdfTransparencyGroup group = new PdfTransparencyGroup();
+                xObject.SetGroup(group);
                 canvas.AddXObject(xObject, new Rectangle(300, 300));
                 doc.Close();
             }

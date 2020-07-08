@@ -74,7 +74,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 ();
             NUnit.Framework.Assert.AreEqual(2, el.Attributes().Size());
             NUnit.Framework.Assert.AreEqual("bar\r\nqux", el.Attr("foo"));
-            // currently preserves newlines in quoted attributes. todo confirm if should.
             NUnit.Framework.Assert.AreEqual("two", el.Attr("bar"));
         }
 

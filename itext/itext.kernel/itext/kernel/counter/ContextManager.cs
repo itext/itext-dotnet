@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Counter.Context;
@@ -53,8 +52,8 @@ namespace iText.Kernel.Counter {
         private static readonly iText.Kernel.Counter.ContextManager instance = new iText.Kernel.Counter.ContextManager
             ();
 
-        private readonly IDictionary<String, IContext> contextMappings = new ConcurrentDictionary<String, IContext
-            >();
+        private readonly SortedDictionary<String, IContext> contextMappings = new SortedDictionary<String, IContext
+            >(new ContextManager.LengthComparator());
 
         private ContextManager() {
             RegisterGenericContext(JavaUtil.ArraysAsList(NamespaceConstant.CORE_IO, NamespaceConstant.CORE_KERNEL, NamespaceConstant
@@ -69,6 +68,10 @@ namespace iText.Kernel.Counter {
                 .SingletonList(NamespaceConstant.PDF_INVOICE));
             RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
                 .SingletonList(NamespaceConstant.PDF_SWEEP));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil
+                .SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4));
+            RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR), JavaCollectionsUtil.EmptyList
+                <String>());
         }
 
         /// <summary>Gets the singelton instance of this class</summary>
@@ -115,8 +118,11 @@ namespace iText.Kernel.Counter {
             return GetNamespaceMapping(GetRecognisedNamespace(className));
         }
 
-        private String GetRecognisedNamespace(String className) {
+        internal virtual String GetRecognisedNamespace(String className) {
             if (className != null) {
+                // If both "a" and "a.b" namespaces are registered,
+                // iText should consider the context of "a.b" for an "a.b" event,
+                // that's why the contexts are sorted by the length of the namespace
                 foreach (String @namespace in contextMappings.Keys) {
                     //Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
                     if (className.ToLowerInvariant().StartsWith(@namespace)) {
@@ -144,6 +150,18 @@ namespace iText.Kernel.Counter {
 
         private void RegisterContext(String @namespace, IContext context) {
             contextMappings.Put(@namespace, context);
+        }
+
+        private class LengthComparator : IComparer<String> {
+            public virtual int Compare(String o1, String o2) {
+                int lengthComparison = -JavaUtil.IntegerCompare(o1.Length, o2.Length);
+                if (0 != lengthComparison) {
+                    return lengthComparison;
+                }
+                else {
+                    return string.CompareOrdinal(o1, o2);
+                }
+            }
         }
     }
 }

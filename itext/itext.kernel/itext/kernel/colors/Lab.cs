@@ -46,7 +46,6 @@ using iText.Kernel.Pdf.Colorspace;
 namespace iText.Kernel.Colors {
     public class Lab : Color {
         public Lab(PdfCieBasedCs.Lab cs)
-            // TODO if zero is outside of the Range, default value should be the nearest to the zero valid value
             : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 

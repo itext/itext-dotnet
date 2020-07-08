@@ -376,7 +376,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        //TODO log reasonless call of method
+        // TODO DEVSIX-4020. Log reasonless call of method
         /// <summary>
         /// Checks if this <c>PdfObject</c> is of the type
         /// <c>PdfNull</c>.

@@ -177,6 +177,15 @@ namespace iText.Kernel.Pdf {
         /// The iText is not responsible if you decide to change the
         /// value of this parameter.
         /// </summary>
+        /// <param name="unethicalReading">
+        /// true to enable unethicalReading, false to disable it.
+        /// By default unethicalReading is disabled.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfReader"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfReader SetUnethicalReading(bool unethicalReading) {
             this.unethicalReading = unethicalReading;
             return this;
@@ -291,6 +300,11 @@ namespace iText.Kernel.Pdf {
         /// Reads, decrypt and optionally decode stream bytes.
         /// Note, this method doesn't store actual bytes in any internal structures.
         /// </remarks>
+        /// <param name="stream">
+        /// a
+        /// <see cref="PdfStream"/>
+        /// stream instance to be read and optionally decoded.
+        /// </param>
         /// <param name="decode">true if to get decoded stream bytes, false if to leave it originally encoded.</param>
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode) {
@@ -308,6 +322,11 @@ namespace iText.Kernel.Pdf {
         /// Reads and decrypt stream bytes.
         /// Note, this method doesn't store actual bytes in any internal structures.
         /// </remarks>
+        /// <param name="stream">
+        /// a
+        /// <see cref="PdfStream"/>
+        /// stream instance to be read
+        /// </param>
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
@@ -366,14 +385,19 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Reads, decrypt and optionally decode stream bytes into
+        /// Reads, decrypts and optionally decodes stream bytes into
         /// <see cref="System.IO.MemoryStream"/>.
         /// </summary>
         /// <remarks>
-        /// Reads, decrypt and optionally decode stream bytes into
+        /// Reads, decrypts and optionally decodes stream bytes into
         /// <see cref="System.IO.MemoryStream"/>.
         /// User is responsible for closing returned stream.
         /// </remarks>
+        /// <param name="stream">
+        /// a
+        /// <see cref="PdfStream"/>
+        /// stream instance to be read
+        /// </param>
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
         /// <returns>
         /// InputStream or
@@ -555,6 +579,11 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets encryption algorithm and access permissions.</summary>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// value corresponding to a certain type of encryption.
+        /// </returns>
         /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
@@ -657,6 +686,19 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Checks if the
+        /// <see cref="PdfDocument"/>
+        /// read with this
+        /// <see cref="PdfReader"/>
+        /// is encrypted.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// is the document is encrypted, otherwise
+        /// <see langword="false"/>.
+        /// </returns>
         public virtual bool IsEncrypted() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
                 throw new PdfException(PdfException.DocumentHasNotBeenReadYet);

@@ -105,24 +105,23 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance from the given
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents annotation object.
+        /// that represents existing annotation object in the document.
         /// </summary>
         /// <remarks>
         /// Creates a
         /// <see cref="PdfLineAnnotation"/>
         /// instance from the given
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents annotation object. This method is useful for property reading in reading mode or
-        /// modifying in stamping mode.
+        /// that represents existing annotation object in the document.
+        /// This method is useful for property reading in reading mode or modifying in stamping mode.
         /// TrapNet annotations are deprecated in PDF 2.0.
         /// </remarks>
         /// <param name="pdfObject">
-        /// a
+        /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents existing annotation in the document.
-        /// see
-        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// representing annotation object
         /// </param>
+        /// <seealso cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         protected internal PdfTrapNetworkAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -177,8 +176,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// An unordered array of all objects present in the page description at the time the trap networks
         /// were generated and that, if changed, could affect the appearance of the page.
-        /// <para />
-        /// <para />
+        /// <br /><br />
         /// This entry is required if /AnnotStates (
         /// <see cref="GetAnnotStates()"/>
         /// ) is present;
@@ -240,8 +238,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// should be
         /// <see cref="iText.Kernel.Pdf.PdfNull"/>.
         /// No appearance state shall be included for the trap network annotation itself.
-        /// <para />
-        /// <para />
+        /// <br /><br />
         /// Required if /Version (
         /// <see cref="GetVersion()"/>
         /// ) is present; shall be absent if /LastModified

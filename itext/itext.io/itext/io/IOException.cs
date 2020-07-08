@@ -64,7 +64,7 @@ namespace iText.IO {
 
         public const String BytesCanBeResetInByteArrayOutputStreamOnly = "Bytes can be reset in ByteArrayOutputStream only.";
 
-        public const String CannotFind1Frame = "Cannot find {0} frame.";
+        public const String CannotFind1Frame = "Cannot find frame number {0} (zero-based)";
 
         public const String CannotGetTiffImageColor = "Cannot get TIFF image color.";
 

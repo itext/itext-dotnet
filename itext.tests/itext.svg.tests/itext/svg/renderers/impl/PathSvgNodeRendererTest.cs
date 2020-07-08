@@ -89,7 +89,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
-            //TODO (RND-904) This test should fail when RND-904 (relative line operator l ) is implemented.
             String filename = "pathNodeRendererMoveToTest1.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
@@ -202,7 +201,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
@@ -220,7 +219,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
@@ -238,7 +237,7 @@ namespace iText.Svg.Renderers.Impl {
             Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag).GetRootRenderer();
+            IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);

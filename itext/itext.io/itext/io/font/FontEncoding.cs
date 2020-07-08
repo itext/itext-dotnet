@@ -111,6 +111,7 @@ namespace iText.IO.Font {
         }
 
         /// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)</summary>
+        /// <returns>created font specific encoding</returns>
         public static iText.IO.Font.FontEncoding CreateFontSpecificEncoding() {
             iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.fontSpecific = true;
@@ -283,7 +284,7 @@ namespace iText.IO.Font {
                         orderK = order[1];
                     }
                     else {
-                        orderK = Convert.ToInt32(order);
+                        orderK = Convert.ToInt32(order, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     orderK %= 256;
                     unicodeToCode.Put(uni, orderK);
@@ -295,7 +296,7 @@ namespace iText.IO.Font {
             else {
                 int k = 0;
                 if (tok.HasMoreTokens()) {
-                    k = Convert.ToInt32(tok.NextToken());
+                    k = Convert.ToInt32(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                 }
                 while (tok.HasMoreTokens() && k < 256) {
                     String hex = tok.NextToken();

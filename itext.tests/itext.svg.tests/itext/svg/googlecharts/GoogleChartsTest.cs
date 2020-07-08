@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Utils;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Googlecharts {
     public class GoogleChartsTest : SvgIntegrationTest {
@@ -68,7 +66,6 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void AnnotationChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "annotationChart");
         }
@@ -92,9 +89,8 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
         public virtual void CalendarChart() {
-            //TODO update cmp file after DEVSIX-3347  and DEVSIX-2086 will be fixed
+            //TODO update cmp file after DEVSIX-3347 will be fixed
             PageSize pageSize = PageSize.A4;
             TestUtils.ConvertSVGtoPDF(destinationFolder + "calendarChart.pdf", sourceFolder + "calendarChart.svg", 1, 
                 pageSize);
@@ -117,7 +113,6 @@ namespace iText.Svg.Googlecharts {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
         public virtual void DiffChart() {
             ConvertAndCompare(sourceFolder, destinationFolder, "diffChart");
         }

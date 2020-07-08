@@ -670,7 +670,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             cb.Rectangle(xDest, yDest, destWidth, destHeight);
                             cb.Clip();
                             cb.EndPath();
-                            ImageData bmpImage = ImageDataFactory.CreateBmp(b, true, b.Length);
+                            ImageData bmpImage = ImageDataFactory.CreateBmp(b, true);
                             PdfImageXObject imageXObject = new PdfImageXObject(bmpImage);
                             float width = destWidth * bmpImage.GetWidth() / srcWidth;
                             float height = -destHeight * bmpImage.GetHeight() / srcHeight;

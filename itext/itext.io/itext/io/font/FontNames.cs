@@ -226,7 +226,7 @@ namespace iText.IO.Font {
         /// <para />
         /// <see cref="iText.IO.Font.Constants.FontMacStyleFlags"/>
         /// </remarks>
-        /// <param name="macStyle"/>
+        /// <param name="macStyle">macStyle flag</param>
         protected internal virtual void SetMacStyle(int macStyle) {
             this.macStyle = macStyle;
         }

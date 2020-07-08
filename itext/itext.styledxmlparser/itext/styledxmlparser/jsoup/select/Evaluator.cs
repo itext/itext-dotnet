@@ -295,7 +295,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>
         /// Evaluator for matching by sibling index number (e
-        /// <literal></literal>
+        /// <c>&lt;</c>
         /// idx)
         /// </summary>
         public sealed class IndexLessThan : Evaluator.IndexEvaluator {
@@ -315,7 +315,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         /// <summary>
         /// Evaluator for matching by sibling index number (e
-        /// <literal>&gt;</literal>
+        /// <c>&gt;</c>
         /// idx)
         /// </summary>
         public sealed class IndexGreaterThan : Evaluator.IndexEvaluator {

@@ -55,6 +55,20 @@ namespace iText.Kernel.Pdf.Filespec {
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Wrap the passed
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// to the specific
+        /// <see cref="PdfFileSpec"/>
+        /// object,
+        /// according to the type of the passed pdf object.
+        /// </summary>
+        /// <param name="fileSpecObject">object to wrap</param>
+        /// <returns>
+        /// wrapped
+        /// <see cref="PdfFileSpec"/>
+        /// instance
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec WrapFileSpecObject(PdfObject fileSpecObject) {
             if (fileSpecObject != null) {
                 if (fileSpecObject.IsString()) {
@@ -69,6 +83,24 @@ namespace iText.Kernel.Pdf.Filespec {
             return null;
         }
 
+        /// <summary>Create an external file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the external file</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document
+        /// that refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
             , PdfName afRelationshipValue) {
             PdfDictionary dict = new PdfDictionary();
@@ -85,21 +117,52 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
+        /// <summary>Create an external file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the external file</param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
             ) {
             return CreateExternalFileSpec(doc, filePath, null);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="description">file description</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="mimeType">mime-type of the file</param>
-        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
-        ///     </param>
-        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="fileParameter">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing fil parameters
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document
+        /// that refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
@@ -118,66 +181,139 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
-        ///     </param>
-        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        /// <param name="fileParameter">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing fil parameters
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document
+        /// that refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfDictionary fileParameter, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, fileStore, description, fileDisplay, null, fileParameter, afRelationshipValue
                 );
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
-        ///     </param>
-        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        /// <param name="fileParameter">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing fil parameters
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String fileDisplay, PdfDictionary fileParameter, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, fileStore, null, fileDisplay, null, fileParameter, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
-        ///     </param>
-        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, fileStore, null, fileDisplay, null, null, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
         /// <param name="fileStore">byte[] containing the file</param>
         /// <param name="description">file description</param>
         /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <c>null</c>, @see AFRelationshipValue.Unspecified will be added.
-        ///     </param>
-        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, fileStore, description, fileDisplay, null, null, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="filePath"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="mimeType"/>
-        /// <param name="fileParameter"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the file to embed</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="fileParameter">dictionary with file parameters</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
@@ -193,48 +329,110 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="filePath"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="mimeType"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the file to embed</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, mimeType, null, afRelationshipValue
                 );
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="filePath"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">file specification string, describing the path to the file to embed</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// @return
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, description, fileDisplay, null, null, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="filePath"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="filePath">path to the file to embed</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, filePath, null, fileDisplay, null, null, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="is"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="mimeType"/>
-        /// <param name="fileParameter"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="is">stream containing the file to embed</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="fileParameter">dictionary with file parameters</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
              description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
@@ -250,25 +448,59 @@ namespace iText.Kernel.Pdf.Filespec {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="is"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="mimeType"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="is">stream containing the file to embed</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
              description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, @is, description, fileDisplay, mimeType, null, afRelationshipValue);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="stream"/>
-        /// <param name="description"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="mimeType"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="stream">an embedded file stream dictionary</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">
+        /// subtype of the embedded file. The value of this entry shall conform
+        /// to the MIME media type names
+        /// </param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue) {
             PdfDictionary dict = new PdfDictionary();
@@ -299,11 +531,25 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
-        /// <summary>Embed a file to a PdfDocument.</summary>
-        /// <param name="doc"/>
-        /// <param name="stream"/>
-        /// <param name="fileDisplay"/>
-        /// <param name="afRelationshipValue"/>
+        /// <summary>Create an embedded file specification.</summary>
+        /// <param name="doc">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to make this file specification indirect
+        /// </param>
+        /// <param name="stream">an embedded file stream dictionary</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="afRelationshipValue">
+        /// value that represents the relationship between the component of the passed PDF document that
+        /// refers to this file specification and the associated file. If <c>null</c>,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
+        /// will be added.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfFileSpec"/>
+        /// containing the file specification of the file
+        /// </returns>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
             , String description, String fileDisplay, PdfName afRelationshipValue) {
             return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, null, afRelationshipValue);

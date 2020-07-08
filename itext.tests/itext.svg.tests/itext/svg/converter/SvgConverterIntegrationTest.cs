@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -120,7 +121,7 @@ namespace iText.Svg.Converter {
         /// <summary>Convert a SVG file defining all ignored tags currently defined in the project.</summary>
         /// <result>There will be no <c>Exception</c> during the process and PDF output is generated.</result>
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 32)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 31)]
         public virtual void ConvertFileWithAllIgnoredTags() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "ignored_tags");
         }
@@ -133,7 +134,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 14)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 12)]
         public virtual void CaseSensitiveTagTest() {
             String contents = "<svg width='100pt' height='100pt'>" + "<altGlyph /><altglyph />" + "<feMergeNode /><femergeNode /><feMergenode /><femergenode />"
                  + "<foreignObject /><foreignobject />" + "<glyphRef /><glyphref />" + "<linearGradient /><lineargradient />"
@@ -215,7 +216,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 50;
             int y = 0;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -227,7 +228,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 0;
             int y = 100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -239,7 +240,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 50;
             int y = 100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -251,7 +252,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = 0;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -263,7 +264,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = 0;
             int y = -100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -275,7 +276,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = -100;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -287,7 +288,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             int x = -50;
             int y = -50;
-            String destName = name + "_" + x + "_" + y;
+            String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
             FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
@@ -525,14 +526,10 @@ namespace iText.Svg.Converter {
             root.SetAttribute("height", "400");
             ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
-            //TODO(RND-868): remove below checks
-            NUnit.Framework.Assert.AreEqual(typeof(SvgTagSvgNodeRenderer), actual.GetRootRenderer().GetType());
-            NUnit.Framework.Assert.AreEqual(0, actual.GetNamedObjects().Count);
-            NUnit.Framework.Assert.AreEqual("500", actual.GetRootRenderer().GetAttribute("width"));
+            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
+                .GetAttributeMapCopy());
         }
 
-        //TODO(RND-868): Switch test over to this logic
-        //Assert.assertEquals(expected,actual);
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessIOExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {

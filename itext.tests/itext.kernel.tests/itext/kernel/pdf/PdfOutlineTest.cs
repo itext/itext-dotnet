@@ -388,5 +388,33 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveOneOutlineTest() {
+            String filename = "removeOneOutline.pdf";
+            String input = sourceFolder + "outlineTree.pdf";
+            String output = destinationFolder + "cmp_" + filename;
+            String cmp = sourceFolder + "cmp_" + filename;
+            PdfReader reader = new PdfReader(input);
+            PdfWriter writer = new PdfWriter(output);
+            PdfDocument pdfDocument = new PdfDocument(reader, writer);
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            PdfOutline toRemove = root.GetAllChildren()[2];
+            toRemove.RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReinitializingOutlines() {
+            String input = sourceFolder + "outlineTree.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input));
+            PdfOutline root = pdfDocument.GetOutlines(false);
+            NUnit.Framework.Assert.AreEqual(4, root.GetAllChildren().Count);
+            pdfDocument.GetCatalog().GetPdfObject().Remove(PdfName.Outlines);
+            root = pdfDocument.GetOutlines(true);
+            NUnit.Framework.Assert.IsNull(root);
+            pdfDocument.Close();
+        }
     }
 }

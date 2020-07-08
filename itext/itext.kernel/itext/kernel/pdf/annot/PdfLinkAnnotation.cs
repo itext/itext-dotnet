@@ -62,9 +62,18 @@ namespace iText.Kernel.Pdf.Annot {
         public static readonly PdfName Push = PdfName.P;
 
         /// <summary>
-        /// see
-        /// <see cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
+        /// Instantiates a new
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance based on
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// instance, that represents existing annotation object in the document.
         /// </summary>
+        /// <param name="pdfObject">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// representing annotation object
+        /// </param>
+        /// <seealso cref="PdfAnnotation.MakeAnnotation(iText.Kernel.Pdf.PdfObject)"/>
         protected internal PdfLinkAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

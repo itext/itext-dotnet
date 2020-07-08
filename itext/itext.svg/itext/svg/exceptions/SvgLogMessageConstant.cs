@@ -72,6 +72,10 @@ namespace iText.Svg.Exceptions {
         [Obsolete]
         public const String FONT_PROVIDER_CONTAINS_ZERO_FONTS = "Font Provider contains zero fonts. At least one font shall be present";
 
+        public const String GRADIENT_INVALID_GRADIENT_UNITS_LOG = "Could not recognize gradient units value {0}";
+
+        public const String GRADIENT_INVALID_SPREAD_METHOD_LOG = "Could not recognize gradient spread method value {0}";
+
         public const String INODEROOTISNULL = "Input root value is null";
 
         public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before a move to operation (M)";

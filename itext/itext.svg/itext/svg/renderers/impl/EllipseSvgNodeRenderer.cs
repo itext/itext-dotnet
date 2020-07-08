@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
@@ -71,9 +72,18 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            if (SetParameters()) {
+                return new Rectangle(cx - rx, cy - ry, rx + rx, ry + ry);
+            }
+            else {
+                return base.GetObjectBoundingBox(context);
+            }
+        }
+
         /// <summary>
-        /// Fetches a map of String values by calling getAttribute(Strng s) method
-        /// and maps it's values to arc parmateter cx, cy , rx, ry respectively
+        /// Fetches a map of String values by calling getAttribute(String s) method
+        /// and maps it's values to arc parameter cx, cy , rx, ry respectively
         /// </summary>
         /// <returns>boolean values to indicate whether all values exit or not</returns>
         protected internal virtual bool SetParameters() {

@@ -102,14 +102,14 @@ namespace iText.Svg.Processors.Impl {
                 //Iterate over children
                 ExecuteDepthFirstTraversal(svgRoot);
                 ISvgNodeRenderer rootSvgRenderer = CreateResultAndClean();
-                return new SvgProcessorResult(namedObjects, rootSvgRenderer, context.GetFontProvider(), context.GetTempFonts
-                    ());
+                return new SvgProcessorResult(namedObjects, rootSvgRenderer, context);
             }
             else {
                 throw new SvgProcessingException(SvgLogMessageConstant.NOROOT);
             }
         }
 
+        [Obsolete]
         public virtual ISvgProcessorResult Process(INode root) {
             return Process(root, null);
         }
@@ -121,10 +121,13 @@ namespace iText.Svg.Processors.Impl {
             if (converterProps.GetRendererFactory() != null) {
                 rendererFactory = converterProps.GetRendererFactory();
             }
+            else {
+                rendererFactory = new DefaultSvgNodeRendererFactory();
+            }
             context = new SvgProcessorContext(converterProps);
             cssResolver = new SvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
-            //TODO RND-1042
+            //TODO DEVSIX-2264
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
             cssContext = new SvgCssContext();
         }
@@ -170,7 +173,8 @@ namespace iText.Svg.Processors.Impl {
             if (node is IElementNode) {
                 IElementNode element = (IElementNode)node;
                 if (!rendererFactory.IsTagIgnored(element)) {
-                    ISvgNodeRenderer renderer = CreateRenderer(element, processorState.Top());
+                    ISvgNodeRenderer parentRenderer = processorState.Top();
+                    ISvgNodeRenderer renderer = CreateRenderer(element, parentRenderer);
                     if (renderer != null) {
                         IDictionary<String, String> styles;
                         if (cssResolver is SvgStyleResolver && OnlyNativeStylesShouldBeResolved(element)) {
@@ -187,15 +191,21 @@ namespace iText.Svg.Processors.Impl {
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);
                         }
-                        // don't add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
-                        if (!(renderer is NoDrawOperationSvgNodeRenderer)) {
-                            if (processorState.Top() is IBranchSvgNodeRenderer) {
-                                ((IBranchSvgNodeRenderer)processorState.Top()).AddChild(renderer);
+                        if (renderer is NoDrawOperationSvgNodeRenderer) {
+                            // add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
+                            // only if the parent is NoDrawOperationSvgNodeRenderer itself
+                            if (parentRenderer is NoDrawOperationSvgNodeRenderer) {
+                                ((NoDrawOperationSvgNodeRenderer)parentRenderer).AddChild(renderer);
+                            }
+                        }
+                        else {
+                            if (parentRenderer is IBranchSvgNodeRenderer) {
+                                ((IBranchSvgNodeRenderer)parentRenderer).AddChild(renderer);
                             }
                             else {
-                                if (processorState.Top() is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
+                                if (parentRenderer is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
                                     //Text branch node renderers only accept ISvgTextNodeRenderers
-                                    ((TextSvgBranchRenderer)processorState.Top()).AddChild((ISvgTextNodeRenderer)renderer);
+                                    ((TextSvgBranchRenderer)parentRenderer).AddChild((ISvgTextNodeRenderer)renderer);
                                 }
                             }
                         }
@@ -217,8 +227,9 @@ namespace iText.Svg.Processors.Impl {
         }
 
         private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
-            return !SvgConstants.Tags.MARKER.Equals(element.Name()) && IsElementNested(element, SvgConstants.Tags.DEFS
-                ) && !IsElementNested(element, SvgConstants.Tags.MARKER);
+            return !SvgConstants.Tags.LINEAR_GRADIENT.Equals(element.Name()) && !SvgConstants.Tags.MARKER.Equals(element
+                .Name()) && IsElementNested(element, SvgConstants.Tags.DEFS) && !IsElementNested(element, SvgConstants.Tags
+                .MARKER);
         }
 
         private static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {

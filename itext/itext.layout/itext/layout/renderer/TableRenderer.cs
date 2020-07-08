@@ -731,6 +731,13 @@ namespace iText.Layout.Renderer {
                         // apply the difference to set footer and table left/right margins identical
                         bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, true);
                         PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
+                        // We've already layouted footer one time in order to know how much place it occupies.
+                        // That time, however, we didn't know with which border the top footer's border should be collapsed.
+                        // And now, when we possess such knowledge, we are performing the second attempt, but we need to nullify results
+                        // from the previous attempt
+                        if (bordersHandler is CollapsedTableBorders) {
+                            ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null);
+                        }
                         bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, hasContent || 0 != childRenderers.Count
                             );
                         if (bordersHandler is CollapsedTableBorders) {
@@ -1234,8 +1241,6 @@ namespace iText.Layout.Renderer {
             splitRenderer.rowRange = rowRange;
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
-            // TODO childRenderers will be populated twice during the relayout.
-            // We should probably clean them before #layout().
             splitRenderer.childRenderers = childRenderers;
             splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.headerRenderer = headerRenderer;
@@ -1462,7 +1467,12 @@ namespace iText.Layout.Renderer {
             if (isTopTablePart) {
                 bordersHandler.DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas(), countedColumnWidth);
             }
-            if (isBottomTablePart && isComplete) {
+            //!isLastRendererForModelElement is a check that this is a split render. This is the case with the splitting of
+            // one cell when part of the cell moves to the next page. Therefore, if such a splitting occurs, a bottom border
+            // should be drawn. However, this should not be done for empty renderers that are also created during splitting,
+            // but this splitting, if the table does not fit on the page and the next cell is added to the next page.
+            // In this case, this code should not be processed, since the border in the above code has already been drawn.
+            if (isBottomTablePart && (isComplete || (!isLastRendererForModelElement && !IsEmptyTableRenderer()))) {
                 bordersHandler.DrawHorizontalBorder(heights.Count, startX, y1, drawContext.GetCanvas(), countedColumnWidth
                     );
             }
@@ -1474,6 +1484,10 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
+        }
+
+        private bool IsEmptyTableRenderer() {
+            return rows.IsEmpty() && heights.Count == 1 && heights[0] == 0;
         }
 
         private void ApplyFixedXOrYPosition(bool isXPosition, Rectangle layoutBox) {
@@ -1532,7 +1546,7 @@ namespace iText.Layout.Renderer {
             // correct last height
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
-            // TODO Correct for collapsed borders only
+            // It's width will be considered only for collapsed borders
             Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
             bordersHandler.SetFinishRow(finish);
             if (skip) {
@@ -1790,8 +1804,8 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsFooterRendererOfLargeTable() {
-            return IsFooterRenderer() && (!GetTable().IsComplete() || 0 != ((iText.Layout.Renderer.TableRenderer)parent
-                ).GetTable().GetLastRowBottomBorder().Count);
+            return IsFooterRenderer() && (!((iText.Layout.Renderer.TableRenderer)parent).GetTable().IsComplete() || 0 
+                != ((iText.Layout.Renderer.TableRenderer)parent).GetTable().GetLastRowBottomBorder().Count);
         }
 
         private bool IsTopTablePart() {

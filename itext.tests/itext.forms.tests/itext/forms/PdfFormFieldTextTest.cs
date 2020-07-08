@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
+using iText.IO.Font;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -34,6 +36,8 @@ namespace iText.Forms {
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldTextTest/";
+
+        private const String TEXT = "Some text in Russian \u0442\u0435\u043A\u0441\u0442 (text)";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -69,6 +73,70 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontsResourcesHelvFontTest() {
+            String filename = "fontsResourcesHelvFontTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelv.pdf"), new PdfWriter(destinationFolder
+                 + filename));
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, true
+                );
+            font.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            form.GetField("description").SetValue(TEXT, font, 12f);
+            pdfDoc.Close();
+            PdfDocument document = new PdfDocument(new PdfReader(destinationFolder + filename));
+            PdfDictionary actualDocumentFonts = PdfAcroForm.GetAcroForm(document, false).GetPdfObject().GetAsDictionary
+                (PdfName.DR).GetAsDictionary(PdfName.Font);
+            // Note that we know the structure of the expected pdf file
+            PdfString expectedFieldsDAFont = new PdfString("/F2 12 Tf");
+            PdfObject actualFieldDAFont = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsArray
+                (PdfName.Fields).GetAsDictionary(0).Get(PdfName.DA);
+            NUnit.Framework.Assert.AreEqual(new PdfName("Helvetica"), actualDocumentFonts.GetAsDictionary(new PdfName(
+                "F1")).Get(PdfName.BaseFont), "There is no Helvetica font within DR key");
+            NUnit.Framework.Assert.AreEqual(new PdfName("NotoSans"), actualDocumentFonts.GetAsDictionary(new PdfName("F2"
+                )).Get(PdfName.BaseFont), "There is no NotoSans font within DR key.");
+            NUnit.Framework.Assert.AreEqual(expectedFieldsDAFont, actualFieldDAFont, "There is no NotoSans(/F2) font within Fields DA key"
+                );
+            document.Close();
+            ExtendedITextTest.PrintOutputPdfNameAndDir(destinationFolder + filename);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontsResourcesHelvCourierNotoFontTest() {
+            String filename = "fontsResourcesHelvCourierNotoFontTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelvAndCourier.pdf"), new PdfWriter
+                (destinationFolder + filename));
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, true
+                );
+            font.SetSubset(false);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+            form.GetField("description").SetFont(font);
+            form.GetField("description").SetValue(TEXT);
+            pdfDoc.Close();
+            PdfDocument document = new PdfDocument(new PdfReader(destinationFolder + filename));
+            // Note that we know the structure of the expected pdf file
+            PdfString expectedAcroformDAFont = new PdfString("/F1 0 Tf 0 g ");
+            PdfString expectedFieldsDAFont = new PdfString("/F3 12 Tf");
+            PdfObject actualAcroFormDAFont = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).Get
+                (PdfName.DA);
+            PdfDictionary actualDocumentFonts = PdfAcroForm.GetAcroForm(document, false).GetPdfObject().GetAsDictionary
+                (PdfName.DR).GetAsDictionary(PdfName.Font);
+            PdfObject actualFieldDAFont = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsArray
+                (PdfName.Fields).GetAsDictionary(0).Get(PdfName.DA);
+            NUnit.Framework.Assert.AreEqual(new PdfName("Helvetica"), actualDocumentFonts.GetAsDictionary(new PdfName(
+                "F1")).Get(PdfName.BaseFont), "There is no Helvetica font within DR key");
+            NUnit.Framework.Assert.AreEqual(new PdfName("Courier"), actualDocumentFonts.GetAsDictionary(new PdfName("F2"
+                )).Get(PdfName.BaseFont), "There is no Courier font within DR key.");
+            NUnit.Framework.Assert.AreEqual(new PdfName("NotoSans"), actualDocumentFonts.GetAsDictionary(new PdfName("F3"
+                )).Get(PdfName.BaseFont), "There is no NotoSans font within DR key.");
+            NUnit.Framework.Assert.AreEqual(expectedAcroformDAFont, actualAcroFormDAFont, "There is no Helvetica(/F1) font within AcroForm DA key"
+                );
+            NUnit.Framework.Assert.AreEqual(expectedFieldsDAFont, actualFieldDAFont, "There is no NotoSans(/F3) font within Fields DA key"
+                );
+            document.Close();
+            ExtendedITextTest.PrintOutputPdfNameAndDir(destinationFolder + filename);
         }
     }
 }

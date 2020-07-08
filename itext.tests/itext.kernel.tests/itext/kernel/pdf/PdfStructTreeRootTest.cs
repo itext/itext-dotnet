@@ -41,7 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using iText.Kernel.Pdf.Tagging;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -54,7 +56,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -70,6 +72,25 @@ namespace iText.Kernel.Pdf {
                 (new MemoryStream()));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
             document.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SeveralSameElementsInStructTreeRootTest() {
+            String inFile = sourceFolder + "severalSameElementsInStructTreeRoot.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(inFile), new PdfWriter(new MemoryStream()));
+            PdfStructTreeRoot structTreeRoot = doc.GetStructTreeRoot();
+            IList<PdfStructElem> kidsOfStructTreeRootKids = new List<PdfStructElem>();
+            foreach (IStructureNode kid in structTreeRoot.GetKids()) {
+                foreach (IStructureNode kidOfKid in kid.GetKids()) {
+                    if (kidOfKid is PdfStructElem) {
+                        kidsOfStructTreeRootKids.Add((PdfStructElem)kidOfKid);
+                    }
+                }
+            }
+            structTreeRoot.Flush();
+            foreach (PdfStructElem kidsOfStructTreeRootKid in kidsOfStructTreeRootKids) {
+                NUnit.Framework.Assert.IsTrue(kidsOfStructTreeRootKid.IsFlushed());
+            }
         }
     }
 }

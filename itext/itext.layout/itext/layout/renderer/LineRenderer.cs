@@ -136,6 +136,7 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> floatsToNextPageOverflowRenderers = new List<IRenderer>();
             IList<IRenderer> floatsOverflowedToNextLine = new List<IRenderer>();
             int lastTabIndex = 0;
+            IDictionary<int, LayoutResult> specialScriptLayoutResults = new Dictionary<int, LayoutResult>();
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult childResult = null;
@@ -329,8 +330,13 @@ namespace iText.Layout.Renderer {
                         wasXOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
+                    if (TypographyUtils.IsPdfCalligraphAvailable() && IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
+                        (childRenderer)) {
+                        SpecialScriptPreLayoutProcessing(childPos);
+                    }
                     childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                         ), bbox), wasParentsHeightClipped));
+                    UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, childRenderer, childPos, childResult);
                     // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
                     if (childResult is MinMaxWidthLayoutResult && null != childBlockMinMaxWidth) {
                         MinMaxWidth childResultMinMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
@@ -398,8 +404,11 @@ namespace iText.Layout.Renderer {
                     ());
                 bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
                 bool wordWasSplitAndItWillFitOntoNextLine = false;
+                // if childRenderer contains scripts which require word wrapping,
+                // we don't need to attempt to relayout it and see if the split word could fit the next line
+                // word wrapping is handled on shouldBreakLayouting
                 if (shouldBreakLayouting && childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit
-                    ()) {
+                    () && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true)) {
                     if (wasXOverflowChanged) {
                         SetProperty(Property.OVERFLOW_X, oldXOverflow);
                     }
@@ -410,6 +419,17 @@ namespace iText.Layout.Renderer {
                     }
                     if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
                         wordWasSplitAndItWillFitOntoNextLine = true;
+                    }
+                }
+                else {
+                    if (shouldBreakLayouting && !newLineOccurred && childRenderers[childPos] is TextRenderer && ((TextRenderer
+                        )childRenderers[childPos]).TextContainsSpecialScriptGlyphs(true)) {
+                        LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
+                            (childPos, specialScriptLayoutResults, wasParentsHeightClipped, floatsOverflowedToNextLine);
+                        curWidth -= GetCurWidthSpecialScriptsDecrement(childPos, lastFittingChildRendererData.childIndex, specialScriptLayoutResults
+                            );
+                        childPos = lastFittingChildRendererData.childIndex;
+                        childResult = lastFittingChildRendererData.childLayoutResult;
                     }
                 }
                 if (!wordWasSplitAndItWillFitOntoNextLine) {
@@ -517,7 +537,7 @@ namespace iText.Layout.Renderer {
                         split[1] = null;
                     }
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
-                        () : childRenderer;
+                        () : childRenderers[childPos];
                     if (split[1] == null) {
                         result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing);
                     }
@@ -802,6 +822,7 @@ namespace iText.Layout.Renderer {
         /// Gets the total lengths of characters in this line. Other elements (images, tables) are not taken
         /// into account.
         /// </remarks>
+        /// <returns>the total lengths of characters in this line.</returns>
         protected internal virtual int Length() {
             int length = 0;
             foreach (IRenderer child in childRenderers) {
@@ -813,6 +834,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Returns the number of base characters, i.e. non-mark characters</summary>
+        /// <returns>the number of base non-mark characters</returns>
         protected internal virtual int BaseCharactersCount() {
             int count = 0;
             foreach (IRenderer child in childRenderers) {
@@ -1201,7 +1223,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>Trim first child text renderers.</summary>
         /// <returns>total number of trimmed glyphs.</returns>
-        private int TrimFirst() {
+        internal virtual int TrimFirst() {
             int totalNumberOfTrimmedGlyphs = 0;
             foreach (IRenderer renderer in childRenderers) {
                 if (FloatingHelper.IsRendererFloating(renderer)) {
@@ -1242,6 +1264,247 @@ namespace iText.Layout.Renderer {
             return baseDirection;
         }
 
+        internal static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer) {
+            return childRenderer is TextRenderer && ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints() ==
+                 null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false);
+        }
+
+        internal static bool IsChildFloating(IRenderer childRenderer) {
+            FloatPropertyValue? kidFloatPropertyVal = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
+            return childRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(childRenderer, kidFloatPropertyVal
+                );
+        }
+
+        internal static void UpdateSpecialScriptLayoutResults(IDictionary<int, LayoutResult> specialScriptLayoutResults
+            , IRenderer childRenderer, int childPos, LayoutResult childResult) {
+            if ((childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true))
+                ) {
+                specialScriptLayoutResults.Put(childPos, childResult);
+            }
+            else {
+                if (!specialScriptLayoutResults.IsEmpty() && !IsChildFloating(childRenderer)) {
+                    specialScriptLayoutResults.Clear();
+                }
+            }
+        }
+
+        internal static float GetCurWidthSpecialScriptsDecrement(int childPos, int newChildPos, IDictionary<int, LayoutResult
+            > specialScriptLayoutResults) {
+            float decrement = 0.0f;
+            // if childPos == newChildPos, curWidth doesn't include width of the current childRenderer yet, so no decrement is needed
+            if (childPos != newChildPos) {
+                for (int i = childPos - 1; i >= newChildPos; i--) {
+                    if (specialScriptLayoutResults.Get(i) != null) {
+                        decrement += specialScriptLayoutResults.Get(i).GetOccupiedArea().GetBBox().GetWidth();
+                    }
+                }
+            }
+            return decrement;
+        }
+
+        /// <summary>
+        /// Preprocess a continuous sequence of TextRenderer containing special scripts
+        /// prior to layouting the first TextRenderer in the sequence.
+        /// </summary>
+        /// <remarks>
+        /// Preprocess a continuous sequence of TextRenderer containing special scripts
+        /// prior to layouting the first TextRenderer in the sequence.
+        /// In this method we preprocess a sequence containing special scripts only,
+        /// skipping floating renderers as they're not part of a regular layout flow,
+        /// and breaking the prelayout processing once a non-special script containing renderer occurs.
+        /// Prelayout processing includes the following steps:
+        /// -
+        /// <see cref="GetSpecialScriptsContainingTextRendererSequenceInfo(int)"/>
+        /// : determine boundaries of the sequence
+        /// and concatenate its TextRenderer#text fields converted to a String representation;
+        /// - get the String analyzed with WordWrapper#getPossibleBreaks and
+        /// receive a zero-based array of points where the String is allowed to got broken in lines;
+        /// -
+        /// <see cref="DistributePossibleBreakPointsOverSequentialTextRenderers(int, int, System.Collections.Generic.IList{E}, System.Collections.Generic.IList{E})
+        ///     "/>
+        /// :
+        /// distribute the list over the TextRenderer#specialScriptsWordBreakPoints, preliminarily having the points shifted,
+        /// so that each TextRenderer#specialScriptsWordBreakPoints is based on the first element of TextRenderer#text.
+        /// </remarks>
+        /// <param name="childPos">
+        /// index of the childRenderer in LineRenderer#childRenderers
+        /// from which the a continuous sequence of TextRenderer containing special scripts starts
+        /// </param>
+        internal virtual void SpecialScriptPreLayoutProcessing(int childPos) {
+            LineRenderer.SpecialScriptsContainingTextRendererSequenceInfo info = GetSpecialScriptsContainingTextRendererSequenceInfo
+                (childPos);
+            int numberOfSequentialTextRenderers = info.numberOfSequentialTextRenderers;
+            String sequentialTextContent = info.sequentialTextContent;
+            IList<int> indicesOfFloating = info.indicesOfFloating;
+            IList<int> possibleBreakPointsGlobal = TypographyUtils.GetPossibleBreaks(sequentialTextContent);
+            DistributePossibleBreakPointsOverSequentialTextRenderers(childPos, numberOfSequentialTextRenderers, possibleBreakPointsGlobal
+                , indicesOfFloating);
+        }
+
+        internal virtual LineRenderer.SpecialScriptsContainingTextRendererSequenceInfo GetSpecialScriptsContainingTextRendererSequenceInfo
+            (int childPos) {
+            StringBuilder sequentialTextContentBuilder = new StringBuilder();
+            int numberOfSequentialTextRenderers = 0;
+            IList<int> indicesOfFloating = new List<int>();
+            for (int i = childPos; i < childRenderers.Count; i++) {
+                if (IsChildFloating(childRenderers[i])) {
+                    numberOfSequentialTextRenderers++;
+                    indicesOfFloating.Add(i);
+                }
+                else {
+                    if (childRenderers[i] is TextRenderer && ((TextRenderer)childRenderers[i]).TextContainsSpecialScriptGlyphs
+                        (false)) {
+                        sequentialTextContentBuilder.Append(((TextRenderer)childRenderers[i]).text.ToString());
+                        numberOfSequentialTextRenderers++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return new LineRenderer.SpecialScriptsContainingTextRendererSequenceInfo(this, numberOfSequentialTextRenderers
+                , sequentialTextContentBuilder.ToString(), indicesOfFloating);
+        }
+
+        internal virtual void DistributePossibleBreakPointsOverSequentialTextRenderers(int childPos, int numberOfSequentialTextRenderers
+            , IList<int> possibleBreakPointsGlobal, IList<int> indicesOfFloating) {
+            int alreadyProcessedNumberOfCharsWithinGlyphLines = 0;
+            int indexToBeginWith = 0;
+            for (int i = 0; i < numberOfSequentialTextRenderers; i++) {
+                if (!indicesOfFloating.Contains(i)) {
+                    TextRenderer childTextRenderer = (TextRenderer)childRenderers[childPos + i];
+                    IList<int> amountOfCharsBetweenTextStartAndActualTextChunk = new List<int>();
+                    IList<int> glyphLineBasedIndicesOfActualTextChunkEnds = new List<int>();
+                    FillActualTextChunkRelatedLists(childTextRenderer.GetText(), amountOfCharsBetweenTextStartAndActualTextChunk
+                        , glyphLineBasedIndicesOfActualTextChunkEnds);
+                    IList<int> possibleBreakPoints = new List<int>();
+                    for (int j = indexToBeginWith; j < possibleBreakPointsGlobal.Count; j++) {
+                        int shiftedBreakPoint = possibleBreakPointsGlobal[j] - alreadyProcessedNumberOfCharsWithinGlyphLines;
+                        int amountOfCharsBetweenTextStartAndTextEnd = amountOfCharsBetweenTextStartAndActualTextChunk[amountOfCharsBetweenTextStartAndActualTextChunk
+                            .Count - 1];
+                        if (shiftedBreakPoint > amountOfCharsBetweenTextStartAndTextEnd) {
+                            indexToBeginWith = j;
+                            alreadyProcessedNumberOfCharsWithinGlyphLines += amountOfCharsBetweenTextStartAndTextEnd;
+                            break;
+                        }
+                        possibleBreakPoints.Add(shiftedBreakPoint);
+                    }
+                    IList<int> glyphLineBasedPossibleBreakPoints = ConvertPossibleBreakPointsToGlyphLineBased(possibleBreakPoints
+                        , amountOfCharsBetweenTextStartAndActualTextChunk, glyphLineBasedIndicesOfActualTextChunkEnds);
+                    childTextRenderer.SetSpecialScriptsWordBreakPoints(glyphLineBasedPossibleBreakPoints);
+                }
+            }
+        }
+
+        internal virtual LineRenderer.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
+            (int childPos, IDictionary<int, LayoutResult> specialScriptLayoutResults, bool wasParentsHeightClipped
+            , IList<IRenderer> floatsOverflowedToNextLine) {
+            int indexOfRendererContainingLastFullyFittingWord = childPos;
+            int splitPosition = 0;
+            bool needToSplitRendererContainingLastFullyFittingWord = false;
+            int fittingLengthWithTrailingRightSideSpaces = 0;
+            int amountOfTrailingRightSideSpaces = 0;
+            ICollection<int> indicesOfFloats = new HashSet<int>();
+            LayoutResult childPosLayoutResult = specialScriptLayoutResults.Get(childPos);
+            LayoutResult returnLayoutResult = null;
+            for (int analyzedTextRendererIndex = childPos; analyzedTextRendererIndex >= 0; analyzedTextRendererIndex--
+                ) {
+                // get the number of fitting glyphs in the renderer being analyzed
+                TextRenderer textRenderer = (TextRenderer)childRenderers[analyzedTextRendererIndex];
+                if (analyzedTextRendererIndex != childPos) {
+                    fittingLengthWithTrailingRightSideSpaces = textRenderer.Length();
+                }
+                else {
+                    if (childPosLayoutResult.GetSplitRenderer() != null) {
+                        TextRenderer splitTextRenderer = (TextRenderer)childPosLayoutResult.GetSplitRenderer();
+                        GlyphLine splitText = splitTextRenderer.text;
+                        if (splitTextRenderer.Length() > 0) {
+                            fittingLengthWithTrailingRightSideSpaces = splitTextRenderer.Length();
+                            while (splitText.end + amountOfTrailingRightSideSpaces < splitText.Size() && iText.IO.Util.TextUtil.IsWhitespace
+                                (splitText.Get(splitText.end + amountOfTrailingRightSideSpaces))) {
+                                fittingLengthWithTrailingRightSideSpaces++;
+                                amountOfTrailingRightSideSpaces++;
+                            }
+                        }
+                    }
+                }
+                // check if line break can happen in this renderer relying on its specialScriptsWordBreakPoints list
+                if (fittingLengthWithTrailingRightSideSpaces > 0) {
+                    IList<int> breakPoints = textRenderer.GetSpecialScriptsWordBreakPoints();
+                    if (breakPoints != null && breakPoints.Count > 0 && breakPoints[0] != -1) {
+                        int possibleBreakPointPosition = TextRenderer.FindPossibleBreaksSplitPosition(textRenderer.GetSpecialScriptsWordBreakPoints
+                            (), fittingLengthWithTrailingRightSideSpaces + textRenderer.text.start, false);
+                        if (possibleBreakPointPosition > -1) {
+                            splitPosition = breakPoints[possibleBreakPointPosition] - amountOfTrailingRightSideSpaces;
+                            needToSplitRendererContainingLastFullyFittingWord = splitPosition != textRenderer.text.end;
+                            if (!needToSplitRendererContainingLastFullyFittingWord) {
+                                analyzedTextRendererIndex++;
+                                while (analyzedTextRendererIndex <= childPos && IsChildFloating(childRenderers[analyzedTextRendererIndex])
+                                    ) {
+                                    analyzedTextRendererIndex++;
+                                }
+                            }
+                            indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex;
+                            break;
+                        }
+                    }
+                }
+                int amountOfFloating = 0;
+                while (analyzedTextRendererIndex - 1 >= 0 && IsChildFloating(childRenderers[analyzedTextRendererIndex - 1]
+                    )) {
+                    indicesOfFloats.Add(analyzedTextRendererIndex - 1);
+                    analyzedTextRendererIndex--;
+                    amountOfFloating++;
+                }
+                // move to the previous renderer if line break isn't allowed to happen within the renderer being analyzed
+                if (analyzedTextRendererIndex == 0 || !(childRenderers[analyzedTextRendererIndex - 1] is TextRenderer)) {
+                    // possible breaks haven't been found, can't move back
+                    // forced split on the latter renderer having either Full or Partial result
+                    if (childPosLayoutResult.GetStatus() != LayoutResult.NOTHING) {
+                        returnLayoutResult = childPosLayoutResult;
+                    }
+                    indexOfRendererContainingLastFullyFittingWord = childPos;
+                    break;
+                }
+                // possible breaks haven't been found, can't move back
+                // move the entire renderer on the next line
+                if (!((TextRenderer)childRenderers[analyzedTextRendererIndex - 1]).TextContainsSpecialScriptGlyphs(true)) {
+                    indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex + amountOfFloating;
+                    break;
+                }
+            }
+            UpdateFloatsOverflowedToNextLine(floatsOverflowedToNextLine, indicesOfFloats, indexOfRendererContainingLastFullyFittingWord
+                );
+            if (returnLayoutResult == null) {
+                returnLayoutResult = childPosLayoutResult;
+                TextRenderer childRenderer = (TextRenderer)childRenderers[indexOfRendererContainingLastFullyFittingWord];
+                if (needToSplitRendererContainingLastFullyFittingWord) {
+                    int amountOfFitOnTheFirstLayout = fittingLengthWithTrailingRightSideSpaces - amountOfTrailingRightSideSpaces
+                         + childRenderer.text.start;
+                    if (amountOfFitOnTheFirstLayout != splitPosition) {
+                        LayoutArea layoutArea = childRenderer.GetOccupiedArea();
+                        childRenderer.SetSpecialScriptFirstNotFittingIndex(splitPosition);
+                        returnLayoutResult = childRenderer.Layout(new LayoutContext(layoutArea, wasParentsHeightClipped));
+                        childRenderer.SetSpecialScriptFirstNotFittingIndex(-1);
+                    }
+                }
+                else {
+                    returnLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
+                }
+            }
+            return new LineRenderer.LastFittingChildRendererData(this, indexOfRendererContainingLastFullyFittingWord, 
+                returnLayoutResult);
+        }
+
+        internal virtual void UpdateFloatsOverflowedToNextLine(IList<IRenderer> floatsOverflowedToNextLine, ICollection
+            <int> indicesOfFloats, int indexOfRendererContainingLastFullyFittingWord) {
+            foreach (int index in indicesOfFloats) {
+                if (index > indexOfRendererContainingLastFullyFittingWord) {
+                    floatsOverflowedToNextLine.Remove(childRenderers[index]);
+                }
+            }
+        }
+
         private void UpdateBidiLevels(int totalNumberOfTrimmedGlyphs, BaseDirection? baseDirection) {
             if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
                 levels = JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
@@ -1277,11 +1540,11 @@ namespace iText.Layout.Renderer {
         /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
         private void ResolveChildrenFonts() {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);
-            bool updateChildRendrers = false;
+            bool updateChildRenderers = false;
             foreach (IRenderer child in childRenderers) {
                 if (child is TextRenderer) {
                     if (((TextRenderer)child).ResolveFonts(newChildRenderers)) {
-                        updateChildRendrers = true;
+                        updateChildRenderers = true;
                     }
                 }
                 else {
@@ -1289,7 +1552,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             // this mean, that some TextRenderer has been replaced.
-            if (updateChildRendrers) {
+            if (updateChildRenderers) {
                 childRenderers = newChildRenderers;
             }
         }
@@ -1315,6 +1578,52 @@ namespace iText.Layout.Renderer {
             return child is BlockRenderer || child is TableRenderer;
         }
 
+        // ActualTextChunk is either an ActualText or a single independent glyph
+        private static void FillActualTextChunkRelatedLists(GlyphLine glyphLine, IList<int> amountOfCharsBetweenTextStartAndActualTextChunk
+            , IList<int> glyphLineBasedIndicesOfActualTextChunkEnds) {
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            int amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = 0;
+            while (actualTextIterator.HasNext()) {
+                GlyphLine.GlyphLinePart part = actualTextIterator.Next();
+                int amountOfCharsWithinCurrentActualTextOrGlyph = 0;
+                if (part.actualText != null) {
+                    amountOfCharsWithinCurrentActualTextOrGlyph = part.actualText.Length;
+                    int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;
+                    amountOfCharsBetweenTextStartAndActualTextChunk.Add(nextAmountOfChars);
+                    glyphLineBasedIndicesOfActualTextChunkEnds.Add(part.end);
+                    amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = nextAmountOfChars;
+                }
+                else {
+                    for (int j = part.start; j < part.end; j++) {
+                        char[] chars = glyphLine.Get(j).GetChars();
+                        amountOfCharsWithinCurrentActualTextOrGlyph = chars != null ? chars.Length : 0;
+                        int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;
+                        amountOfCharsBetweenTextStartAndActualTextChunk.Add(nextAmountOfChars);
+                        glyphLineBasedIndicesOfActualTextChunkEnds.Add(j + 1);
+                        amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = nextAmountOfChars;
+                    }
+                }
+            }
+        }
+
+        private static IList<int> ConvertPossibleBreakPointsToGlyphLineBased(IList<int> possibleBreakPoints, IList
+            <int> amountOfChars, IList<int> indices) {
+            if (possibleBreakPoints.IsEmpty()) {
+                possibleBreakPoints.Add(-1);
+                return possibleBreakPoints;
+            }
+            else {
+                IList<int> glyphLineBased = new List<int>();
+                foreach (int j in possibleBreakPoints) {
+                    int found = TextRenderer.FindPossibleBreaksSplitPosition(amountOfChars, j, true);
+                    if (found >= 0) {
+                        glyphLineBased.Add(indices[found]);
+                    }
+                }
+                return glyphLineBased;
+            }
+        }
+
         internal class RendererGlyph {
             public Glyph glyph;
 
@@ -1324,6 +1633,43 @@ namespace iText.Layout.Renderer {
                 this.glyph = glyph;
                 this.renderer = textRenderer;
             }
+        }
+
+        // numberOfSequentialTextRenderers - number of sequential TextRenderers containing special scripts,
+        // plus number of ignored floating renderers occurring amidst the sequence;
+        // sequentialTextContent - converted to String and concatenated TextRenderer#text-s;
+        // indicesOfFloating - indices of ignored floating child renderers of this LineRenderer
+        internal class SpecialScriptsContainingTextRendererSequenceInfo {
+            public int numberOfSequentialTextRenderers;
+
+            public String sequentialTextContent;
+
+            internal IList<int> indicesOfFloating;
+
+            public SpecialScriptsContainingTextRendererSequenceInfo(LineRenderer _enclosing, int numberOfSequentialTextRenderers
+                , String sequentialTextContent, IList<int> indicesOfFloating) {
+                this._enclosing = _enclosing;
+                this.numberOfSequentialTextRenderers = numberOfSequentialTextRenderers;
+                this.sequentialTextContent = sequentialTextContent;
+                this.indicesOfFloating = indicesOfFloating;
+            }
+
+            private readonly LineRenderer _enclosing;
+        }
+
+        internal class LastFittingChildRendererData {
+            public int childIndex;
+
+            public LayoutResult childLayoutResult;
+
+            public LastFittingChildRendererData(LineRenderer _enclosing, int childIndex, LayoutResult childLayoutResult
+                ) {
+                this._enclosing = _enclosing;
+                this.childIndex = childIndex;
+                this.childLayoutResult = childLayoutResult;
+            }
+
+            private readonly LineRenderer _enclosing;
         }
     }
 }

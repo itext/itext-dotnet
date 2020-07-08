@@ -89,8 +89,21 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.S, role);
         }
 
-        /// <summary>Method to to distinguish struct elements from other elements of the logical tree (like mcr or struct tree root).
+        /// <summary>Method to distinguish struct elements from other elements of the logical tree (like mcr or struct tree root).
         ///     </summary>
+        /// <param name="dictionary">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check on containing struct elements
+        /// </param>
+        /// <returns>
+        /// if the type of
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// is StructElem or
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// contains the required key S
+        /// then true, otherwise false
+        /// </returns>
         public static bool IsStructElem(PdfDictionary dictionary) {
             // S is required key of the struct elem
             return (PdfName.StructElem.Equals(dictionary.GetAsName(PdfName.Type)) || dictionary.ContainsKey(PdfName.S)
@@ -540,8 +553,8 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         /// <summary>Returns files associated with structure element.</summary>
-        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
-        /// <returns>associated files array.</returns>
+        /// <param name="create">defines whether AF arrays will be created if it doesn't exist</param>
+        /// <returns>associated files array</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {

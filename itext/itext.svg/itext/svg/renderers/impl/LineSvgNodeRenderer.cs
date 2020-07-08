@@ -55,27 +55,32 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;line&gt; tag.
     /// </summary>
     public class LineSvgNodeRenderer : AbstractSvgNodeRenderer, IMarkerCapable {
+        private float x1 = 0f;
+
+        private float y1 = 0f;
+
+        private float x2 = 0f;
+
+        private float y2 = 0f;
+
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% line\n");
-            if (attributesAndStyles.Count > 0) {
-                float x1 = 0f;
-                float y1 = 0f;
-                float x2 = 0f;
-                float y2 = 0f;
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
-                    x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
-                    y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
-                    x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
-                    y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
-                }
+            if (SetParameterss()) {
                 canvas.MoveTo(x1, y1).LineTo(x2, y2);
+            }
+        }
+
+        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            if (SetParameterss()) {
+                float x = Math.Min(x1, x2);
+                float y = Math.Min(y1, y2);
+                float width = Math.Abs(x1 - x2);
+                float height = Math.Abs(y1 - y2);
+                return new Rectangle(x, y, width, height);
+            }
+            else {
+                return base.GetObjectBoundingBox(context);
             }
         }
 
@@ -122,6 +127,25 @@ namespace iText.Svg.Renderers.Impl {
             Vector xAxis = new Vector(1, 0, 0);
             double rotAngle = SvgCoordinateUtils.CalculateAngleBetweenTwoVectors(xAxis, v);
             return v.Get(1) >= 0 && !reverse ? rotAngle : rotAngle * -1f;
+        }
+
+        private bool SetParameterss() {
+            if (attributesAndStyles.Count > 0) {
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
+                    this.x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
+                    this.y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
+                    this.x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
+                }
+                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
+                    this.y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

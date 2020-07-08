@@ -684,17 +684,20 @@ namespace iText.IO.Codec {
 
         /// <summary>
         /// Returns a boolean indicating whether the byte order used in the
-        /// the TIFF file is big-endian (i.e. whether the byte order is from
+        /// TIFF file is big-endian (i.e. whether the byte order is from
         /// the most significant to the least significant)
         /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the byte order used in the TIFF file is big-endian
+        /// </returns>
         public virtual bool IsBigEndian() {
             return isBigEndian;
         }
 
-        /// <summary>
-        /// Returns the offset of the IFD corresponding to this
-        /// <c>TIFFDirectory</c>.
-        /// </summary>
+        /// <summary>Returns the offset of the IFD corresponding to this <c>TIFFDirectory</c>.</summary>
+        /// <returns>the offset of the IFD corresponding to this <c>TIFFDirectory</c>.</returns>
         public virtual long GetIFDOffset() {
             return IFDOffset;
         }
@@ -703,6 +706,10 @@ namespace iText.IO.Codec {
         /// Returns the offset of the next IFD after the IFD corresponding to this
         /// <c>TIFFDirectory</c>.
         /// </summary>
+        /// <returns>
+        /// the offset of the next IFD after the IFD corresponding to this
+        /// <c>TIFFDirectory</c>.
+        /// </returns>
         public virtual long GetNextIFDOffset() {
             return nextIFDOffset;
         }

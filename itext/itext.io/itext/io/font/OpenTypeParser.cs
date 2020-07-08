@@ -280,7 +280,8 @@ namespace iText.IO.Font {
             String ttcName = GetTTCName(name);
             this.fileName = ttcName;
             if (ttcName.Length < name.Length) {
-                ttcIndex = Convert.ToInt32(name.Substring(ttcName.Length + 1));
+                ttcIndex = Convert.ToInt32(name.Substring(ttcName.Length + 1), System.Globalization.CultureInfo.InvariantCulture
+                    );
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
             InitializeSfntTables();

@@ -56,7 +56,6 @@ namespace iText.Layout.Renderer {
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
                 cellModelSideBorder = cellModel.GetProperty<Border>(Property.BORDER);
                 if (null == cellModelSideBorder && !cellModel.HasProperty(Property.BORDER)) {
-                    // TODO Maybe we need to foresee the possibility of default side border property
                     cellModelSideBorder = cellModel.GetDefaultProperty<Border>(Property.BORDER);
                 }
             }

@@ -126,10 +126,6 @@ namespace iText.StyledXmlParser.Resolver.Resource
         /// <param name="base">the base URI</param>
         private void ResolveBaseUrlOrPath(String @base)
         {
-            //TODO: RND-1019
-            // this method produces
-            // a behavior that is not consistant in java vs .Net
-            //when resolving some characters ex. scaped backwards lash
             @base = @base.Trim();
             @base = UriEncodeUtil.Encode(@base);
             baseUrl = BaseUriAsUrl(@base);
@@ -139,7 +135,6 @@ namespace iText.StyledXmlParser.Resolver.Resource
             }
             if (baseUrl == null)
             {
-                // TODO Html2PdfException?
                 throw new ArgumentException(MessageFormatUtil.Format("Invalid base URI: {0}", @base));
             }
         }

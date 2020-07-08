@@ -130,6 +130,11 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestJPXDecode() {
+            TestFile("JPXDecode.pdf", "Im1", "jp2");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ExtractByteAlignedG4TiffImageTest() {
             String inFileName = sourceFolder + "extractByteAlignedG4TiffImage.pdf";
             String outImageFileName = destinationFolder + "extractedByteAlignedImage.png";
@@ -216,8 +221,8 @@ namespace iText.Kernel.Pdf.Xobject {
                     ).GetRefersTo() : obj));
                 NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
                 byte[] result = img.GetImageBytes(true);
-                byte[] cmpBytes = File.ReadAllBytes(Path.Combine(sourceFolder, filename.JSubstring(0, filename.Length - 4)
-                     + "." + expectedImageFormat));
+                byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, filename.JSubstring(0, filename.Length
+                     - 4) + "." + expectedImageFormat));
                 if (img.IdentifyImageFileExtension().Equals("tif")) {
                     CompareTiffImages(cmpBytes, result);
                 }

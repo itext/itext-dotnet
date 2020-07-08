@@ -176,12 +176,18 @@ namespace iText.Pdfa {
         public const String IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
              = "If specified rendering shall be one of the following relativecolorimetric absolutecolorimetric perceptual or saturation";
 
+        public const String INTEGER_NUMBER_IS_OUT_OF_RANGE = "Integer number is out of range";
+
         public const String THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
              = "If the document does not contain a OutputIntent, then page with transparency shall include the dictionary with Group key that include a CS with blending colour space";
 
         public const String JPEG2000_ENUMERATED_COLOUR_SPACE_19_CIEJAB_SHALL_NOT_BE_USED = "jpeg2000 enumerated colour space 19 (CIEJab) shall not be used";
 
         public const String LZWDECODE_FILTER_IS_NOT_PERMITTED = "LZWDecode filter is not permitted";
+
+        public const String MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED = "Maximum array capacity is exceeded";
+
+        public const String MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED = "Maximum dictionary capacity is exceeded";
 
         public const String MIME_TYPE_SHALL_BE_SPECIFIED_USING_THE_SUBTYPE_KEY_OF_THE_FILE_SPECIFICATION_STREAM_DICTIONARY
              = "Mime type shall be specified using the subtype key of the file specification stream dictionary";
@@ -211,6 +217,8 @@ namespace iText.Pdfa {
         public const String OVERPRINT_MODE_SHALL_NOT_BE_ONE_WHEN_AN_ICCBASED_CMYK_COLOUR_SPACE_IS_USED_AND_WHEN_OVERPRINTING_IS_SET_TO_TRUE
              = "Overprint mode shall not be one when an ICCBased CMYK colour space is used and when overprinting is set to true";
 
+        public const String PDF_NAME_IS_TOO_LONG = "PdfName is too long";
+
         public const String PDF_STRING_IS_TOO_LONG = "PdfString is too long";
 
         public const String PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR = 
@@ -236,6 +244,8 @@ namespace iText.Pdfa {
              = "The f keys print flag bit shall be set to 1 and its hidden invisible noview and togglenoview flag bits shall be set to 0";
 
         public const String THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY = "The interactive form dictionary shall not contain the xfa key";
+
+        public const String THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED = "The number of color components in DeviceN colorspace should not exceed {0}";
 
         public const String THE_NUMBER_OF_COLOUR_CHANNELS_IN_THE_JPEG2000_DATA_SHALL_BE_1_3_OR_4 = "The number of colour channels in the jpeg2000 data shall be 1, 3 or 4";
 

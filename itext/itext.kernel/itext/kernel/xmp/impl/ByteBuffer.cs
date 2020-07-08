@@ -143,10 +143,17 @@ namespace iText.Kernel.XMP.Impl {
             buffer[length++] = b;
         }
 
-        /// <summary>Appends a byte array or part of to the buffer.</summary>
+        /// <summary>Appends a part of byte array to the buffer.</summary>
+        /// <remarks>
+        /// Appends a part of byte array to the buffer. Elements on positions
+        /// <paramref name="offset"/>
+        /// through
+        /// <c>offset+len-1</c>
+        /// of provided array will be copied
+        /// </remarks>
         /// <param name="bytes">a byte array</param>
-        /// <param name="offset">an offset with</param>
-        /// <param name="len"/>
+        /// <param name="offset">is a position of the first element to copy</param>
+        /// <param name="len">the number of array elements to be added</param>
         public virtual void Append(byte[] bytes, int offset, int len) {
             EnsureCapacity(length + len);
             Array.Copy(bytes, offset, buffer, length, len);

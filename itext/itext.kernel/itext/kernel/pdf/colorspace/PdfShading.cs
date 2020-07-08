@@ -50,7 +50,7 @@ namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>The abstract PdfShading class that represents the Shading Dictionary PDF object.</summary>
     public abstract class PdfShading : PdfObjectWrapper<PdfDictionary> {
         /// <summary>constants of shading type (see ISO-320001 Table 78)</summary>
-        private class ShadingType {
+        internal sealed class ShadingType {
             /// <summary>The int value of function-based shading type</summary>
             public const int FUNCTION_BASED = 1;
 
@@ -71,6 +71,9 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             /// <summary>The int value of tensor-product patch meshes shading type</summary>
             public const int TENSOR_PRODUCT_PATCH_MESH = 7;
+
+            private ShadingType() {
+            }
         }
 
         /// <summary>
@@ -477,7 +480,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <param name="coords">
             /// the
             /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-            /// of four number four numbers [x0 y0 x1 y1] that specified the starting
+            /// of four numbers [x0 y0 x1 y1] that specified the starting
             /// and the endings coordinates of thew axis, expressed in the shading's target coordinate space.
             /// </param>
             /// <param name="function">
@@ -486,8 +489,41 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// object, that is used to calculate color transitions.
             /// </param>
             public Axial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
+                : this(cs, coords, null, function) {
+            }
+
+            /// <summary>Creates the new instance of the class.</summary>
+            /// <param name="cs">
+            /// the
+            /// <see cref="PdfColorSpace"/>
+            /// object in which colour values shall be expressed.
+            /// The special Pattern space isn't excepted.
+            /// </param>
+            /// <param name="coords">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of four numbers [x0 y0 x1 y1] that specified
+            /// the starting and the endings coordinates of thew axis, expressed
+            /// in the shading's target coordinate space.
+            /// </param>
+            /// <param name="domain">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of two numbers [t0 t1] specifying the limiting values
+            /// of a parametric variable t which is considered to vary linearly between
+            /// these two values and becomes the input argument to the colour function.
+            /// </param>
+            /// <param name="function">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// object, that is used to calculate color transitions.
+            /// </param>
+            public Axial(PdfColorSpace cs, PdfArray coords, PdfArray domain, PdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs) {
                 SetCoords(coords);
+                if (domain != null) {
+                    SetDomain(domain);
+                }
                 SetFunction(function);
             }
 

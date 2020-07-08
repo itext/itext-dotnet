@@ -65,6 +65,11 @@ namespace iText.Kernel.Pdf.Layer {
     /// </remarks>
     public class PdfLayerMembership : PdfObjectWrapper<PdfDictionary>, IPdfOCG {
         /// <summary>Creates a new, empty membership layer.</summary>
+        /// <param name="doc">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// where a new empty membership layer creates
+        /// </param>
         public PdfLayerMembership(PdfDocument doc)
             : base(new PdfDictionary()) {
             MakeIndirect(doc);
@@ -83,6 +88,11 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         /// <summary>Gets the collection of the layers this layer membership operates with.</summary>
+        /// <returns>
+        /// list of
+        /// <see cref="PdfLayer">layers</see>
+        /// this layer membership operates with
+        /// </returns>
         public virtual ICollection<PdfLayer> GetLayers() {
             PdfObject layers = GetPdfObject().Get(PdfName.OCGs);
             if (layers is PdfDictionary) {
@@ -138,10 +148,8 @@ namespace iText.Kernel.Pdf.Layer {
             GetPdfObject().SetModified();
         }
 
-        /// <summary>
-        /// Gets the visibility policy for content belonging to this
-        /// optional content membership dictionary.
-        /// </summary>
+        /// <summary>Gets the visibility policy for content belonging to this optional content membership dictionary.</summary>
+        /// <returns>the visibility policy for content belonging to this membership dictionary</returns>
         public virtual PdfName GetVisibilityPolicy() {
             PdfName visibilityPolicy = GetPdfObject().GetAsName(PdfName.P);
             if (visibilityPolicy == null || !visibilityPolicy.Equals(PdfName.AllOn) && !visibilityPolicy.Equals(PdfName
@@ -165,10 +173,10 @@ namespace iText.Kernel.Pdf.Layer {
             GetPdfObject().SetModified();
         }
 
-        /// <summary>
-        /// Gets the visibility expression for content belonging to this
-        /// optional content membership dictionary.
-        /// </summary>
+        /// <summary>Gets the visibility expression for content belonging to this optional content membership dictionary.
+        ///     </summary>
+        /// <returns>the visibility expression for content belonging to this membership dictionary, if not set return null
+        ///     </returns>
         public virtual PdfVisibilityExpression GetVisibilityExpression() {
             PdfArray ve = GetPdfObject().GetAsArray(PdfName.VE);
             return ve != null ? new PdfVisibilityExpression(ve) : null;

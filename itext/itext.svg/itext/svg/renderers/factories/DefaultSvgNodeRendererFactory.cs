@@ -62,9 +62,9 @@ namespace iText.Svg.Renderers.Factories {
         private ICollection<String> ignoredTags = new HashSet<String>();
 
         /// <summary>
-        /// Default constructor which uses the default
-        /// <see cref="ISvgNodeRendererMapper"/>
-        /// implementation.
+        /// Default constructor with default
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// creation logic.
         /// </summary>
         public DefaultSvgNodeRendererFactory()
             : this(new DefaultSvgNodeRendererMapper()) {
@@ -80,6 +80,9 @@ namespace iText.Svg.Renderers.Factories {
         /// back to the
         /// <see cref="DefaultSvgNodeRendererMapper"/>
         /// </param>
+        /// <see>DefaultSvgNodeRendererFactory} extension) to create extensions of the factory.</see>
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the custom"
+            )]
         public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
             if (mapper != null) {
                 rendererMap.AddAll(mapper.GetMapping());

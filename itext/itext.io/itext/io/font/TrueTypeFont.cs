@@ -183,6 +183,7 @@ namespace iText.IO.Font {
         /// The offset from the start of the file to the table directory.
         /// It is 0 for TTF and may vary for TTC depending on the chosen font.
         /// </remarks>
+        /// <returns>directory Offset</returns>
         public virtual int GetDirectoryOffset() {
             return fontParser.directoryOffset;
         }

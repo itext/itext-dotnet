@@ -99,11 +99,9 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     .BACKGROUND_ORIGIN, shorthandExpression), new CssDeclaration(CommonCssConstants.BACKGROUND_CLIP, shorthandExpression
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_ATTACHMENT, shorthandExpression));
             }
-            IList<String> commaSeparatedExpressions = SplitMultipleBackgrounds(shorthandExpression);
-            // TODO ignore multiple backgrounds at the moment
-            String backgroundExpression = commaSeparatedExpressions[0];
+            // TODO: DEVSIX-2027 ignore multiple backgrounds at the moment (stop parsing after comma)
+            IList<String> props = CssUtils.ExtractShorthandProperties(shorthandExpression)[0];
             String[] resolvedProps = new String[8];
-            String[] props = iText.IO.Util.StringUtil.Split(backgroundExpression, "\\s+");
             bool slashEncountered = false;
             foreach (String value in props) {
                 int slashCharInd = value.IndexOf('/');
@@ -138,7 +136,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         /// <param name="value">the value</param>
         /// <returns>the property type value</returns>
         private int ResolvePropertyType(String value) {
-            if (value.Contains("url(") || CommonCssConstants.NONE.Equals(value)) {
+            if (value.Contains("url(") || CssGradientUtil.IsCssLinearGradientValue(value) || CommonCssConstants.NONE.Equals
+                (value)) {
                 return BACKGROUND_IMAGE_TYPE;
             }
             else {
@@ -204,36 +203,6 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             else {
                 resolvedProps[type] = value;
             }
-        }
-
-        /// <summary>Splits multiple backgrounds.</summary>
-        /// <param name="shorthandExpression">the shorthand expression</param>
-        /// <returns>the list of backgrounds</returns>
-        private IList<String> SplitMultipleBackgrounds(String shorthandExpression) {
-            IList<String> commaSeparatedExpressions = new List<String>();
-            bool isInsideParentheses = false;
-            // in order to avoid split inside rgb/rgba color definition
-            int prevStart = 0;
-            for (int i = 0; i < shorthandExpression.Length; ++i) {
-                if (shorthandExpression[i] == ',' && !isInsideParentheses) {
-                    commaSeparatedExpressions.Add(shorthandExpression.JSubstring(prevStart, i));
-                    prevStart = i + 1;
-                }
-                else {
-                    if (shorthandExpression[i] == '(') {
-                        isInsideParentheses = true;
-                    }
-                    else {
-                        if (shorthandExpression[i] == ')') {
-                            isInsideParentheses = false;
-                        }
-                    }
-                }
-            }
-            if (commaSeparatedExpressions.IsEmpty()) {
-                commaSeparatedExpressions.Add(shorthandExpression);
-            }
-            return commaSeparatedExpressions;
         }
     }
 }

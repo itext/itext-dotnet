@@ -128,8 +128,8 @@ namespace iText.Test {
                 return null;
             }
             int i = dest.LastIndexOf("/");
-            int j = dest.LastIndexOf("/chapter");
-            return "../../cmpfiles/" + dest.Substring(j, (i + 1) - j) + "cmp_" + dest.Substring(i + 1);
+            int j = dest.IndexOf("/") + 1;
+            return "../../../cmpfiles/" + dest.Substring(j, (i + 1) - j) + "cmp_" + dest.Substring(i + 1);
         }
 
         protected internal virtual String GetOutPath(String dest) {

@@ -310,8 +310,10 @@ namespace iText.IO.Source {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
                                 try {
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                        );
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                        );
                                 }
                                 catch (Exception) {
                                     //warn about incorrect reference number
@@ -328,8 +330,10 @@ namespace iText.IO.Source {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1), System.Globalization.CultureInfo.InvariantCulture
+                                        );
+                                    generation = Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2), System.Globalization.CultureInfo.InvariantCulture
+                                        );
                                     return;
                                 }
                             }
@@ -550,11 +554,11 @@ namespace iText.IO.Source {
         }
 
         public virtual long GetLongValue() {
-            return Convert.ToInt64(GetStringValue());
+            return Convert.ToInt64(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public virtual int GetIntValue() {
-            return Convert.ToInt32(GetStringValue());
+            return Convert.ToInt32(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public virtual bool IsHexString() {
@@ -576,14 +580,15 @@ namespace iText.IO.Source {
         /// <summary>Resolve escape symbols or hexadecimal symbols.</summary>
         /// <remarks>
         /// Resolve escape symbols or hexadecimal symbols.
-        /// <br />
+        /// <para />
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
-        /// <param name="content"/>
-        /// <param name="from"/>
-        /// <param name="to"/>
-        /// <param name="hexWriting"/>
+        /// <param name="content">string bytes to be decoded</param>
+        /// <param name="from">given start index</param>
+        /// <param name="to">given end index</param>
+        /// <param name="hexWriting">true if given string is hex-encoded, e.g. '<69546578…>'. False otherwise, e.g. '((iText( some version)…)'
+        ///     </param>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>.
@@ -704,8 +709,9 @@ namespace iText.IO.Source {
         /// NOTE Due to PdfReference 1.7 part 3.2.3 String value contain ASCII characters,
         /// so we can convert it directly to byte array.
         /// </remarks>
-        /// <param name="content"/>
-        /// <param name="hexWriting"/>
+        /// <param name="content">string bytes to be decoded</param>
+        /// <param name="hexWriting">true if given string is hex-encoded, e.g. '<69546578…>'. False otherwise, e.g. '((iText( some version)…)'
+        ///     </param>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>.
@@ -796,8 +802,12 @@ namespace iText.IO.Source {
         /// The same as calling
         /// <see cref="ReadLineSegment(ByteBuffer, bool)">readLineSegment(input, true)</see>.
         /// </remarks>
-        /// <param name="buffer">@see ByteBuffer</param>
-        /// <returns>boolean</returns>
+        /// <param name="buffer">
+        /// a
+        /// <see cref="ByteBuffer"/>
+        /// to which the result of reading will be saved
+        /// </param>
+        /// <returns>true, if something was read or if the end of the input stream is not reached</returns>
         public virtual bool ReadLineSegment(ByteBuffer buffer) {
             return ReadLineSegment(buffer, true);
         }
@@ -811,13 +821,17 @@ namespace iText.IO.Source {
         /// <see cref="IsWhitespace(int, bool)">isWhiteSpace(int, boolean)</see>
         /// for a list of whitespace characters.
         /// </remarks>
-        /// <param name="buffer">@see ByteBuffer</param>
+        /// <param name="buffer">
+        /// a
+        /// <see cref="ByteBuffer"/>
+        /// to which the result of reading will be saved
+        /// </param>
         /// <param name="isNullWhitespace">
         /// boolean to indicate whether '0' is whitespace or not.
         /// If in doubt, use true or overloaded method
         /// <see cref="ReadLineSegment(ByteBuffer)">readLineSegment(input)</see>
         /// </param>
-        /// <returns>boolean</returns>
+        /// <returns>true, if something was read or if the end of the input stream is not reached</returns>
         public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace) {
             int c;
             bool eol = false;

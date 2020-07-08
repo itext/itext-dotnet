@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
 using iText.IO.Util;
@@ -48,6 +49,7 @@ using iText.Kernel.Colors;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -79,6 +81,31 @@ namespace iText.StyledXmlParser.Css.Util {
         /// instance.
         /// </summary>
         private CssUtils() {
+        }
+
+        /// <summary>
+        /// Extracts shorthand properties as list of string lists from a string, where the top level
+        /// list is shorthand property and the lower level list is properties included in shorthand property.
+        /// </summary>
+        /// <param name="str">the source string with shorthand properties</param>
+        /// <returns>the list of string lists</returns>
+        public static IList<IList<String>> ExtractShorthandProperties(String str) {
+            IList<IList<String>> result = new List<IList<String>>();
+            IList<String> currentLayer = new List<String>();
+            CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(str);
+            CssDeclarationValueTokenizer.Token currentToken = tokenizer.GetNextValidToken();
+            while (currentToken != null) {
+                if (currentToken.GetType() == CssDeclarationValueTokenizer.TokenType.COMMA) {
+                    result.Add(currentLayer);
+                    currentLayer = new List<String>();
+                }
+                else {
+                    currentLayer.Add(currentToken.GetValue());
+                }
+                currentToken = tokenizer.GetNextValidToken();
+            }
+            result.Add(currentLayer);
+            return result;
         }
 
         /// <summary>Normalizes a CSS property.</summary>
@@ -113,7 +140,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 return null;
             }
             try {
-                return Convert.ToInt32(str);
+                return Convert.ToInt32(str, System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (FormatException) {
                 return null;
@@ -163,8 +190,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (angle == null) {
                     angle = "null";
                 }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
-                    angle));
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, angle));
             }
             float floatValue = float.Parse(angle.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
                 );
@@ -209,8 +235,10 @@ namespace iText.StyledXmlParser.Css.Util {
         public static int[] ParseAspectRatio(String str) {
             int indexOfSlash = str.IndexOf('/');
             try {
-                int first = Convert.ToInt32(str.JSubstring(0, indexOfSlash));
-                int second = Convert.ToInt32(str.Substring(indexOfSlash + 1));
+                int first = Convert.ToInt32(str.JSubstring(0, indexOfSlash), System.Globalization.CultureInfo.InvariantCulture
+                    );
+                int second = Convert.ToInt32(str.Substring(indexOfSlash + 1), System.Globalization.CultureInfo.InvariantCulture
+                    );
                 return new int[] { first, second };
             }
             catch (Exception) {
@@ -236,8 +264,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 if (length == null) {
                     length = "null";
                 }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, 
-                    length));
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, length));
             }
             // Use double type locally to have better precision of the result after applying arithmetic operations
             double f = Double.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
@@ -347,6 +374,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="remValue">the root em value</param>
         /// <returns>the unit value</returns>
         public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
+            // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
             if (IsMetricValue(value) || IsNumericValue(value)) {
                 return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
             }
@@ -467,9 +495,8 @@ namespace iText.StyledXmlParser.Css.Util {
 
         /// <summary>Parses the resolution.</summary>
         /// <param name="resolutionStr">the resolution as a string</param>
-        /// <returns>a value in dpi (currently)</returns>
+        /// <returns>a value in dpi</returns>
         public static float ParseResolution(String resolutionStr) {
-            // TODO change default units? If so, change MediaDeviceDescription#resolutoin as well
             int pos = DeterminePositionBetweenValueAndUnit(resolutionStr);
             if (pos == 0) {
                 return 0f;
@@ -483,6 +510,12 @@ namespace iText.StyledXmlParser.Css.Util {
             else {
                 if (unit.StartsWith(CommonCssConstants.DPPX)) {
                     f *= 96;
+                }
+                else {
+                    if (!unit.StartsWith(CommonCssConstants.DPI)) {
+                        throw new StyledXMLParserException(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
+                            );
+                    }
                 }
             }
             return (float)f;
@@ -500,7 +533,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// int position between the numeric value and unit or 0 if string is null or string started with a
         /// non-numeric value.
         /// </returns>
-        private static int DeterminePositionBetweenValueAndUnit(String @string) {
+        public static int DeterminePositionBetweenValueAndUnit(String @string) {
             if (@string == null) {
                 return 0;
             }
@@ -735,6 +768,38 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             return builder.Create();
+        }
+
+        /// <summary>Convert given point value to a pixel value.</summary>
+        /// <remarks>Convert given point value to a pixel value. 1 px is 0.75 pts.</remarks>
+        /// <param name="pts">float value to be converted to pixels</param>
+        /// <returns>float converted value pts/0.75f</returns>
+        public static float ConvertPtsToPx(float pts) {
+            return pts / 0.75f;
+        }
+
+        /// <summary>Convert given point value to a pixel value.</summary>
+        /// <remarks>Convert given point value to a pixel value. 1 px is 0.75 pts.</remarks>
+        /// <param name="pts">double value to be converted to pixels</param>
+        /// <returns>double converted value pts/0.75</returns>
+        public static double ConvertPtsToPx(double pts) {
+            return pts / 0.75;
+        }
+
+        /// <summary>Convert given point value to a point value.</summary>
+        /// <remarks>Convert given point value to a point value. 1 px is 0.75 pts.</remarks>
+        /// <param name="px">float value to be converted to pixels</param>
+        /// <returns>float converted value px*0.75</returns>
+        public static float ConvertPxToPts(float px) {
+            return px * 0.75f;
+        }
+
+        /// <summary>Convert given point value to a point value.</summary>
+        /// <remarks>Convert given point value to a point value. 1 px is 0.75 pts.</remarks>
+        /// <param name="px">double value to be converted to pixels</param>
+        /// <returns>double converted value px*0.75</returns>
+        public static double ConvertPxToPts(double px) {
+            return px * 0.75;
         }
 
         private static bool AddRange(RangeBuilder builder, String range) {

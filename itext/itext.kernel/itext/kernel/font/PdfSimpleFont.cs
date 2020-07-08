@@ -401,7 +401,7 @@ namespace iText.Kernel.Font {
                         //prevent lost of widths info
                         int uni = fontEncoding.GetUnicode(k);
                         Glyph glyph = uni > -1 ? GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
-                        wd.Add(new PdfNumber(glyph != null ? glyph.GetWidth() : 0));
+                        wd.Add(new PdfNumber(GetGlyphWidth(glyph)));
                     }
                 }
                 GetPdfObject().Put(PdfName.Widths, wd);
@@ -470,6 +470,10 @@ namespace iText.Kernel.Font {
 
         protected internal virtual void SetFontProgram(T fontProgram) {
             this.fontProgram = fontProgram;
+        }
+
+        protected internal virtual double GetGlyphWidth(Glyph glyph) {
+            return glyph != null ? glyph.GetWidth() : 0;
         }
     }
 }

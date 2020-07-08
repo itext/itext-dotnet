@@ -51,6 +51,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="out">the output stream to serialize to</param>
 		/// <param name="options">serialization options, can be <code>null</code> for default.
 		/// 	</param>
+		/// <exception cref="iText.Kernel.XMP.XMPException">if serialization failed</exception>
 		public static void Serialize(XMPMetaImpl xmp, Stream output, SerializeOptions options
 			)
 		{
@@ -76,6 +77,7 @@ namespace iText.Kernel.XMP.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a string containing the serialized RDF.</returns>
+		/// <exception cref="iText.Kernel.XMP.XMPException">on serialization errors.</exception>
 		public static String SerializeToString(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			// forces the encoding to be UTF-16 to get the correct string length
@@ -85,10 +87,12 @@ namespace iText.Kernel.XMP.Impl
 			MemoryStream output = new MemoryStream(2048);
 			Serialize(xmp, output, options);
 
-			try {
+			try
+			{
 				return new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())).GetString(output.GetBuffer());
 			}
-			catch (Exception) {
+			catch (Exception)
+			{
 				// cannot happen as UTF-8/16LE/BE is required to be implemented in
 				// Java
 				return GetString(output.GetBuffer());
@@ -103,6 +107,7 @@ namespace iText.Kernel.XMP.Impl
 		/// ).
 		/// </param>
 		/// <returns>Returns a byte buffer containing the serialized RDF.</returns>
+		/// <exception cref="iText.Kernel.XMP.XMPException">on serialization errors.</exception>
 		public static byte[] SerializeToBuffer(XMPMetaImpl xmp, SerializeOptions options)
 		{
 			MemoryStream output = new MemoryStream(2048);

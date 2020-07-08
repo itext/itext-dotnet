@@ -70,7 +70,7 @@ namespace iText.Layout.Properties {
         }
 
         /// <summary>Creates a copy of UnitValue object.</summary>
-        /// <param name="unitValue"/>
+        /// <param name="unitValue">the value to be stored</param>
         public UnitValue(iText.Layout.Properties.UnitValue unitValue)
             : this(unitValue.unitType, unitValue.value) {
         }

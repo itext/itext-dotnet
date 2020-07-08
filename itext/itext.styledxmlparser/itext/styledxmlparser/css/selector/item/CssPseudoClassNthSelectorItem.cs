@@ -81,7 +81,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                         int indexOfN = arguments.IndexOf('n');
                         if (indexOfN == -1) {
                             this.nthA = 0;
-                            this.nthB = Convert.ToInt32(arguments);
+                            this.nthB = Convert.ToInt32(arguments, System.Globalization.CultureInfo.InvariantCulture);
                         }
                         else {
                             String aParticle = arguments.JSubstring(0, indexOfN).Trim();
@@ -93,12 +93,13 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                                     this.nthA = aParticle.Equals("+") ? 1 : -1;
                                 }
                                 else {
-                                    this.nthA = Convert.ToInt32(aParticle);
+                                    this.nthA = Convert.ToInt32(aParticle, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                             }
                             String bParticle = arguments.Substring(indexOfN + 1).Trim();
                             if (!String.IsNullOrEmpty(bParticle)) {
-                                this.nthB = Convert.ToInt32(bParticle[0] + bParticle.Substring(1).Trim());
+                                this.nthB = Convert.ToInt32(bParticle[0] + bParticle.Substring(1).Trim(), System.Globalization.CultureInfo.InvariantCulture
+                                    );
                             }
                             else {
                                 this.nthB = 0;

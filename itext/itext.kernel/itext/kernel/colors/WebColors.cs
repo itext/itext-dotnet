@@ -342,7 +342,8 @@ namespace iText.Kernel.Colors {
                 return ParsePercentValue(rgbChannel);
             }
             else {
-                return (float)(Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
+                return (float)(Convert.ToInt32(rgbChannel, System.Globalization.CultureInfo.InvariantCulture) / RGB_MAX_VAL
+                    );
             }
         }
 

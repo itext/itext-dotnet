@@ -176,6 +176,16 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Updates current transformation matrix.</summary>
+        /// <remarks>
+        /// Updates current transformation matrix.
+        /// The third column will always be [0 0 1]
+        /// </remarks>
+        /// <param name="a">element at (1,1) of the transformation matrix</param>
+        /// <param name="b">element at (1,2) of the transformation matrix</param>
+        /// <param name="c">element at (2,1) of the transformation matrix</param>
+        /// <param name="d">element at (2,2) of the transformation matrix</param>
+        /// <param name="e">element at (3,1) of the transformation matrix</param>
+        /// <param name="f">element at (3,2) of the transformation matrix</param>
         public virtual void UpdateCtm(float a, float b, float c, float d, float e, float f) {
             UpdateCtm(new Matrix(a, b, c, d, e, f));
         }

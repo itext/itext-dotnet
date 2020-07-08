@@ -69,8 +69,8 @@ namespace iText.Kernel.Utils {
     /// <para />
     /// For visual comparison it uses external tools: Ghostscript and ImageMagick, which
     /// should be installed on your machine. To allow CompareTool to use them, you need
-    /// to pass either java properties or environment variables with names "gsExec" and
-    /// "compareExec", which would contain the paths to the executables of correspondingly
+    /// to pass either java properties or environment variables with names "ITEXT_GS_EXEC" and
+    /// "ITEXT_MAGICK_COMPARE_EXEC", which would contain the commands to execute the
     /// Ghostscript and ImageMagick tools.
     /// <para />
     /// CompareTool class was mainly designed for the testing purposes of iText in order to
@@ -83,35 +83,21 @@ namespace iText.Kernel.Utils {
     /// for the content of the cmpDoc and "but was" part stands for the content of the outDoc.
     /// </remarks>
     public class CompareTool {
-        private const String cannotOpenOutputDirectory = "Cannot open output directory for <filename>.";
+        private const String UNEXPECTED_NUMBER_OF_PAGES = "Unexpected number of pages for <filename>.";
 
-        private const String gsFailed = "GhostScript failed for <filename>.";
+        private const String DIFFERENT_PAGES = "File file:///<filename> differs on page <pagenumber>.";
 
-        private const String unexpectedNumberOfPages = "Unexpected number of pages for <filename>.";
+        private const String IGNORED_AREAS_PREFIX = "ignored_areas_";
 
-        private const String differentPages = "File file://<filename> differs on page <pagenumber>.";
+        private const String VERSION_REGEXP = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d+\\.)+\\d+(-SNAPSHOT)?";
 
-        private const String undefinedGsPath = "Path to GhostScript is not specified. Please use -DgsExec=<path_to_ghostscript> (e.g. -DgsExec=\"C:/Program Files/gs/gs9.14/bin/gswin32c.exe\")";
+        private const String VERSION_REPLACEMENT = "iText\u00ae <version>";
 
-        private const String ignoredAreasPrefix = "ignored_areas_";
+        private const String COPYRIGHT_REGEXP = "\u00a9\\d+-\\d+ iText Group NV";
 
-        private const String gsParams = " -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile='<outputfile>' '<inputfile>'";
-
-        private const String compareParams = " '<image1>' '<image2>' '<difference>'";
-
-        private const String versionRegexp = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d+\\.)+\\d+(-SNAPSHOT)?";
-
-        private const String versionReplacement = "iText\u00ae <version>";
-
-        private const String copyrightRegexp = "\u00a9\\d+-\\d+ iText Group NV";
-
-        private const String copyrightReplacement = "\u00a9<copyright years> iText Group NV";
+        private const String COPYRIGHT_REPLACEMENT = "\u00a9<copyright years> iText Group NV";
 
         private const String NEW_LINES = "\\r|\\n";
-
-        private String gsExec;
-
-        private String compareExec;
 
         private String cmpPdf;
 
@@ -143,10 +129,16 @@ namespace iText.Kernel.Utils {
 
         private IMetaInfo metaInfo;
 
-        /// <summary>Creates an instance of the CompareTool.</summary>
+        private String gsExec;
+
+        private String compareExec;
+
         public CompareTool() {
-            gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
-            compareExec = SystemUtil.GetEnvironmentVariable("compareExec");
+        }
+
+        internal CompareTool(String gsExec, String compareExec) {
+            this.gsExec = gsExec;
+            this.compareExec = compareExec;
         }
 
         /// <summary>
@@ -1055,8 +1047,8 @@ namespace iText.Kernel.Utils {
         }
 
         internal virtual String ConvertProducerLine(String producer) {
-            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, versionRegexp, versionReplacement
-                ), copyrightRegexp, copyrightReplacement);
+            return iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.StringUtil.ReplaceAll(producer, VERSION_REGEXP, VERSION_REPLACEMENT
+                ), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
         }
 
         private void Init(String outPdf, String cmpPdf) {
@@ -1089,13 +1081,6 @@ namespace iText.Kernel.Utils {
 
         private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
             >> ignoredAreas, IList<int> equalPages) {
-            if (gsExec == null) {
-                throw new CompareTool.CompareToolExecutionException(this, undefinedGsPath);
-            }
-            if (!(new FileInfo(gsExec).CanExecute())) {
-                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(gsExec).FullName + " is not an executable program"
-                    );
-            }
             if (!outPath.EndsWith("/")) {
                 outPath = outPath + "/";
             }
@@ -1112,7 +1097,15 @@ namespace iText.Kernel.Utils {
             if (ignoredAreas != null && !ignoredAreas.IsEmpty()) {
                 CreateIgnoredAreasPdfs(outPath, ignoredAreas);
             }
-            RunGhostScriptImageGeneration(outPath);
+            GhostscriptHelper ghostscriptHelper = null;
+            try {
+                ghostscriptHelper = new GhostscriptHelper(gsExec);
+            }
+            catch (ArgumentException e) {
+                throw new CompareTool.CompareToolExecutionException(this, e.Message);
+            }
+            ghostscriptHelper.RunGhostScriptImageGeneration(outPdf, outPath, outImage);
+            ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, outPath, cmpImage);
             return CompareImagesOfPdfs(outPath, differenceImagePrefix, equalPages);
         }
 
@@ -1132,13 +1125,20 @@ namespace iText.Kernel.Utils {
             }
             JavaUtil.Sort(imageFiles, new CompareTool.ImageNameComparator(this));
             JavaUtil.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
-            String differentPagesFail = null;
-            bool compareExecIsOk = compareExec != null && new FileInfo(compareExec).CanExecute();
-            if (compareExec != null && !compareExecIsOk) {
-                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(compareExec).FullName + " is not an executable program"
-                    );
+            bool compareExecIsOk;
+            String imageMagickInitError = null;
+            ImageMagickHelper imageMagickHelper = null;
+            try {
+                imageMagickHelper = new ImageMagickHelper(compareExec);
+                compareExecIsOk = true;
+            }
+            catch (ArgumentException e) {
+                compareExecIsOk = false;
+                imageMagickInitError = e.Message;
+                LogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).Warn(e.Message);
             }
             IList<int> diffPages = new List<int>();
+            String differentPagesFail = null;
             for (int i = 0; i < cnt; i++) {
                 if (equalPages != null && equalPages.Contains(i)) {
                     continue;
@@ -1156,12 +1156,12 @@ namespace iText.Kernel.Utils {
                     differentPagesFail = "Page is different!";
                     diffPages.Add(i + 1);
                     if (compareExecIsOk) {
-                        String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].FullName).Replace("<image2>", cmpImageFiles
-                            [i].FullName).Replace("<difference>", outPath + differenceImagePrefix + JavaUtil.IntegerToString(i + 1
-                            ) + ".png");
-                        if (!SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
-                            differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + JavaUtil.IntegerToString(i 
-                                + 1) + ".png for more details.";
+                        String diffName = outPath + differenceImagePrefix + JavaUtil.IntegerToString(i + 1) + ".png";
+                        if (!imageMagickHelper.RunImageMagickImageCompare(imageFiles[i].FullName, cmpImageFiles[i].FullName, diffName
+                            )) {
+                            FileInfo diffFile = new FileInfo(diffName);
+                            differentPagesFail += "\nPlease, examine " + "file:///" + UrlUtil.ToNormalizedURI(diffFile).AbsolutePath +
+                                 " for more details.";
                         }
                     }
                     System.Console.Out.WriteLine(differentPagesFail);
@@ -1171,16 +1171,16 @@ namespace iText.Kernel.Utils {
                 }
             }
             if (differentPagesFail != null) {
-                String errorMessage = differentPages.Replace("<filename>", UrlUtil.ToNormalizedURI(outPdf).AbsolutePath).Replace
-                    ("<pagenumber>", ListDiffPagesAsString(diffPages));
+                String errorMessage = DIFFERENT_PAGES.Replace("<filename>", UrlUtil.ToNormalizedURI(outPdf).AbsolutePath).
+                    Replace("<pagenumber>", ListDiffPagesAsString(diffPages));
                 if (!compareExecIsOk) {
-                    errorMessage += "\nYou can optionally specify path to ImageMagick compare tool (e.g. -DcompareExec=\"C:/Program Files/ImageMagick-6.5.4-2/compare.exe\") to visualize differences.";
+                    errorMessage += "\n" + imageMagickInitError;
                 }
                 return errorMessage;
             }
             else {
                 if (bUnexpectedNumberOfPages) {
-                    return unexpectedNumberOfPages.Replace("<filename>", outPdf);
+                    return UNEXPECTED_NUMBER_OF_PAGES.Replace("<filename>", outPdf);
                 }
             }
             return null;
@@ -1199,8 +1199,8 @@ namespace iText.Kernel.Utils {
         }
 
         private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int, IList<Rectangle>> ignoredAreas) {
-            PdfWriter outWriter = new PdfWriter(outPath + ignoredAreasPrefix + outPdfName);
-            PdfWriter cmpWriter = new PdfWriter(outPath + ignoredAreasPrefix + cmpPdfName);
+            PdfWriter outWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + outPdfName);
+            PdfWriter cmpWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + cmpPdfName);
             StampingProperties properties = new StampingProperties();
             properties.SetEventCountingMetaInfo(metaInfo);
             PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter, properties);
@@ -1223,7 +1223,7 @@ namespace iText.Kernel.Utils {
             }
             pdfOutDoc.Close();
             pdfCmpDoc.Close();
-            Init(outPath + ignoredAreasPrefix + outPdfName, outPath + ignoredAreasPrefix + cmpPdfName);
+            Init(outPath + IGNORED_AREAS_PREFIX + outPdfName, outPath + IGNORED_AREAS_PREFIX + cmpPdfName);
         }
 
         private void PrepareOutputDirs(String outPath, String differenceImagePrefix) {
@@ -1247,23 +1247,6 @@ namespace iText.Kernel.Utils {
                 foreach (FileInfo file in diffFiles) {
                     file.Delete();
                 }
-            }
-        }
-
-        /// <summary>Runs ghostscript to create images of pdfs.</summary>
-        /// <param name="outPath">Path to the output folder.</param>
-        private void RunGhostScriptImageGeneration(String outPath) {
-            if (!FileUtil.DirectoryExists(outPath)) {
-                throw new CompareTool.CompareToolExecutionException(this, cannotOpenOutputDirectory.Replace("<filename>", 
-                    outPdf));
-            }
-            String currGsParams = gsParams.Replace("<outputfile>", outPath + cmpImage).Replace("<inputfile>", cmpPdf);
-            if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", cmpPdf));
-            }
-            currGsParams = gsParams.Replace("<outputfile>", outPath + outImage).Replace("<inputfile>", outPdf);
-            if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", outPdf));
             }
         }
 
@@ -1588,8 +1571,8 @@ namespace iText.Kernel.Utils {
             return null;
         }
 
-        private bool CompareObjects(PdfObject outObj, PdfObject cmpObj, CompareTool.ObjectPath currentPath, CompareTool.CompareResult
-             compareResult) {
+        protected internal virtual bool CompareObjects(PdfObject outObj, PdfObject cmpObj, CompareTool.ObjectPath 
+            currentPath, CompareTool.CompareResult compareResult) {
             PdfObject outDirectObj = null;
             PdfObject cmpDirectObj = null;
             if (outObj != null) {
@@ -2234,13 +2217,13 @@ namespace iText.Kernel.Utils {
             /// <summary>Creates ObjectPath with corresponding base objects in two documents.</summary>
             /// <param name="baseCmpObject">base object in cmp document.</param>
             /// <param name="baseOutObject">base object in out document.</param>
-            protected internal ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject) {
+            public ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject) {
                 this.baseCmpObject = baseCmpObject;
                 this.baseOutObject = baseOutObject;
                 indirects.Push(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject, baseOutObject));
             }
 
-            private ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject, Stack<CompareTool.ObjectPath.LocalPathItem
+            public ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject, Stack<CompareTool.ObjectPath.LocalPathItem
                 > path, Stack<CompareTool.ObjectPath.IndirectPathItem> indirects) {
                 this.baseCmpObject = baseCmpObject;
                 this.baseOutObject = baseOutObject;
@@ -2715,7 +2698,16 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>
+        /// Exceptions thrown when errors occur during generation and comparison of images obtained on the basis of pdf
+        /// files.
+        /// </summary>
         public class CompareToolExecutionException : Exception {
+            /// <summary>
+            /// Creates a new
+            /// <see cref="CompareToolExecutionException"/>.
+            /// </summary>
+            /// <param name="msg">the detail message.</param>
             public CompareToolExecutionException(CompareTool _enclosing, String msg)
                 : base(msg) {
                 this._enclosing = _enclosing;

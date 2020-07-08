@@ -247,5 +247,11 @@ namespace iText.Svg.Renderers.Impl {
             // TODO (DEVSIX-3636) Change cmp after fixing
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFontSizeExUnitsTest");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanWithOneAbsoluteCoordinateTest() {
+            // TODO change cmp after DEVSIX-4143 is fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanWithOneAbsoluteCoordinateTest");
+        }
     }
 }

@@ -44,7 +44,9 @@ address: sales@itextpdf.com
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -52,8 +54,10 @@ namespace iText.IO.Util {
     /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public class SystemUtil {
+        private const String SPLIT_REGEX = "((\".+?\"|[^'\\s]|'.+?')+)\\s*";
 
-        [System.ObsoleteAttribute(@"To be removed in iText version 7.2. For time-based seed, please use {@link #getTimeBasedSeed()} instead.")]
+        [System.ObsoleteAttribute(
+            @"To be removed in iText version 7.2. For time-based seed, please use {@link #getTimeBasedSeed()} instead.")]
         public static long GetSystemTimeTicks() {
             return DateTime.Now.Ticks / 10000 + Environment.TickCount;
         }
@@ -63,7 +67,7 @@ namespace iText.IO.Util {
         }
 
         public static int GetTimeBasedIntSeed() {
-            return unchecked((int)DateTime.Now.Ticks) + Environment.TickCount;
+            return unchecked((int) DateTime.Now.Ticks) + Environment.TickCount;
         }
 
         /// <summary>
@@ -88,54 +92,124 @@ namespace iText.IO.Util {
             return Environment.GetEnvironmentVariable(name);
         }
 
-        public static bool RunProcessAndWait(String execPath, String @params) {
-            Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.Start();
-
-            PrintProcessOutput(p);
-            p.WaitForExit();
-            return true;
+        public static bool RunProcessAndWait(String exec, String @params) {
+            return RunProcessAndWait(exec, @params, null);
         }
-
-        private static void PrintProcessOutput(Process p) {
-            StringBuilder bri = new StringBuilder();
-            StringBuilder bre = new StringBuilder();
-            while (!p.HasExited) {
-                bri.Append(p.StandardOutput.ReadToEnd());
-                bre.Append(p.StandardError.ReadToEnd());
-            }
-            System.Console.Out.WriteLine(bri.ToString());
-            System.Console.Out.WriteLine(bre.ToString());
+        
+        public static bool RunProcessAndWait(String exec, String @params, String workingDirPath) {
+            return RunProcessAndGetExitCode(exec, @params, workingDirPath) == 0;
         }
-
-        public static StringBuilder RunProcessAndCollectErrors(String execPath, String @params)
+        
+        public static int RunProcessAndGetExitCode(String exec, String @params)
         {
-            Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.Start();
+            return RunProcessAndGetExitCode(exec, @params, null);
+        }
+        
+        public static int RunProcessAndGetExitCode(String exec, String @params, String workingDirPath) {
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, workingDirPath);
+                proc.Start();
+                Console.WriteLine(GetProcessOutput(proc));
+                proc.WaitForExit();
+                return proc.ExitCode;
+            }
+        }
 
-            StringBuilder errorsBuilder = PrintProcessErrorsOutput(p);
-            p.WaitForExit();
+        public static String RunProcessAndGetOutput(String exec, String @params) {
+            String processOutput;
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, null);
+                proc.Start();
+                processOutput = GetProcessOutput(proc);
+                proc.WaitForExit();
+            }
+
+            return processOutput;
+        }
+
+        public static StringBuilder RunProcessAndCollectErrors(String exec, String @params) {
+            StringBuilder errorsBuilder;
+            using (Process proc = new Process()) {
+                SetProcessStartInfo(proc, exec, @params, null);
+                proc.Start();
+                errorsBuilder = GetProcessErrorsOutput(proc);
+                Console.Out.WriteLine(errorsBuilder.ToString());
+                proc.WaitForExit();
+            }
+
             return errorsBuilder;
         }
 
-        private static StringBuilder PrintProcessErrorsOutput(Process p)
-        {
+        internal static void SetProcessStartInfo(Process proc, String exec, String @params) {
+            SetProcessStartInfo(proc, exec, @params, null);
+        }
+        
+        internal static void SetProcessStartInfo(Process proc, String exec, String @params, String workingDir) {
+            String[] processArguments = PrepareProcessArguments(exec, @params);
+            proc.StartInfo = new ProcessStartInfo(processArguments[0], processArguments[1]);
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.WorkingDirectory = workingDir;
+        }
+
+        internal static String[] PrepareProcessArguments(String exec, String @params) {
+            bool isExcitingFile;
+            try
+            {
+                isExcitingFile = new FileInfo(exec).Exists;
+            }
+            catch (Exception)
+            {
+                isExcitingFile = false;
+            }
+
+            return isExcitingFile
+                ? new[] {exec, @params.Replace("'", "\"")}
+                : SplitIntoProcessArguments(exec, @params);
+        }
+
+        internal static String[] SplitIntoProcessArguments(String command, String @params) {
+            Regex regex = new Regex(SPLIT_REGEX);
+            MatchCollection matches = regex.Matches(command);
+            String processCommand = "";
+            String processArguments = "";
+            if (matches.Count > 0)
+            {
+                processCommand = matches[0].Value.Trim();
+                for (int i = 1; i < matches.Count; i++)
+                {
+                    Match match = matches[i];
+                    processArguments += match.Value;
+                }
+
+                processArguments = processArguments + " " + @params;
+                processArguments = processArguments.Replace("'", "\"").Trim();
+            }
+
+            return new[] {processCommand, processArguments};
+        }
+
+        internal static String GetProcessOutput(Process p) {
+            StringBuilder bri = new StringBuilder();
             StringBuilder bre = new StringBuilder();
-            while (!p.HasExited)
+            do
+            {
+                bri.Append(p.StandardOutput.ReadToEnd());
+                bre.Append(p.StandardError.ReadToEnd());
+            } while (!p.HasExited);
+
+            return bri.ToString() + '\n' + bre.ToString();
+        }
+
+        internal static StringBuilder GetProcessErrorsOutput(Process p) {
+            StringBuilder bre = new StringBuilder();
+            do
             {
                 bre.Append(p.StandardError.ReadToEnd());
-            }
-            System.Console.Out.WriteLine(bre.ToString());
+            } while (!p.HasExited);
+
             return bre;
         }
     }

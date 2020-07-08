@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Util;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
@@ -50,7 +51,6 @@ using iText.Svg.Dummy.Renderers.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Renderers;
-using iText.Svg.Renderers.Factories;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
 using iText.Test.Attributes;
@@ -184,35 +184,28 @@ namespace iText.Svg.Processors.Impl {
         public virtual void DummyProcessingTestNullInput() {
             NUnit.Framework.Assert.That(() =>  {
                 DefaultSvgProcessor processor = new DefaultSvgProcessor();
-                processor.Process(null);
+                processor.Process(null, null);
             }
             , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
         [NUnit.Framework.Test]
-        public virtual void DefaultProcessingTestNoPassedProperties() {
-            //Setup nodes
+        public virtual void ProcessWithNullPropertiesTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("circle"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("path"), "");
             INode root = new JsoupElementNode(jsoupSVGRoot);
-            root.AddChild(new JsoupElementNode(jsoupSVGCircle));
-            root.AddChild(new JsoupElementNode(jsoupSVGPath));
-            //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgNodeRenderer rootActual = processor.Process(root).GetRootRenderer();
-            //Compare
-            NUnit.Framework.Assert.IsNull(rootActual);
+            SvgConverterProperties convProps = new SvgConverterProperties();
+            convProps.SetRendererFactory(null);
+            convProps.SetCharset(null);
+            ISvgNodeRenderer rootRenderer = processor.Process(root, convProps).GetRootRenderer();
+            NUnit.Framework.Assert.IsTrue(rootRenderer is SvgTagSvgNodeRenderer);
+            NUnit.Framework.Assert.AreEqual(0, ((SvgTagSvgNodeRenderer)rootRenderer).GetChildren().Count);
         }
 
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
         [NUnit.Framework.Test]
-        public virtual void DefaultProcessingTestPassedPropertiesNull() {
+        public virtual void DefaultProcessingCorrectlyNestedRenderersTest() {
             //Setup nodes
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
@@ -225,30 +218,13 @@ namespace iText.Svg.Processors.Impl {
             root.AddChild(new JsoupElementNode(jsoupSVGPath));
             //Run
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgNodeRenderer rootActual = processor.Process(root, null).GetRootRenderer();
-            //Compare
-            NUnit.Framework.Assert.IsNull(rootActual);
-        }
-
-        [NUnit.Framework.Ignore("TODO: Implement Tree comparison. Blocked by DEVSIX-2253\n")]
-        [NUnit.Framework.Test]
-        public virtual void DefaultProcessingTestPassedPropertiesReturnNullValues() {
-            //Setup nodes
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("svg"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("circle"), "");
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGPath = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("path"), "");
-            INode root = new JsoupElementNode(jsoupSVGRoot);
-            root.AddChild(new JsoupElementNode(jsoupSVGCircle));
-            root.AddChild(new JsoupElementNode(jsoupSVGPath));
-            //Run
-            DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            ISvgConverterProperties convProps = new DefaultSvgProcessorUnitTest.EmptySvgConverterProperties();
-            ISvgNodeRenderer rootActual = processor.Process(root, convProps).GetRootRenderer();
-            //Compare
-            NUnit.Framework.Assert.IsNull(rootActual);
+            SvgConverterProperties convProps = new SvgConverterProperties();
+            ISvgNodeRenderer rootRenderer = processor.Process(root, convProps).GetRootRenderer();
+            NUnit.Framework.Assert.IsTrue(rootRenderer is SvgTagSvgNodeRenderer);
+            IList<ISvgNodeRenderer> children = ((SvgTagSvgNodeRenderer)rootRenderer).GetChildren();
+            NUnit.Framework.Assert.AreEqual(2, children.Count);
+            NUnit.Framework.Assert.IsTrue(children[0] is CircleSvgNodeRenderer);
+            NUnit.Framework.Assert.IsTrue(children[1] is PathSvgNodeRenderer);
         }
 
         [NUnit.Framework.Test]
@@ -256,18 +232,6 @@ namespace iText.Svg.Processors.Impl {
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IElementNode actual = processor.FindFirstElement(null, "name");
             NUnit.Framework.Assert.IsNull(actual);
-        }
-
-        [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-2253")]
-        public virtual void ProcessWithNullPropertiesTest() {
-            DefaultSvgProcessor processor = new DefaultSvgProcessor();
-            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("svg"), "");
-            INode root = new JsoupElementNode(jsoupSVGRoot);
-            ISvgProcessorResult actual = processor.Process(root, null);
-            ISvgProcessorResult expected = processor.Process(root);
-            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer(), actual.GetRootRenderer());
         }
 
         [NUnit.Framework.Test]
@@ -327,16 +291,6 @@ namespace iText.Svg.Processors.Impl {
 
         private static ISvgProcessor Processor() {
             return new DefaultSvgProcessor();
-        }
-
-        private class EmptySvgConverterProperties : SvgConverterProperties {
-            public override ISvgNodeRendererFactory GetRendererFactory() {
-                return null;
-            }
-
-            public override String GetCharset() {
-                return null;
-            }
         }
     }
 }

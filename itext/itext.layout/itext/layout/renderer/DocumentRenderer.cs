@@ -84,7 +84,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
-            FlushWaitingDrawingElements();
+            FlushWaitingDrawingElements(false);
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {
                 taggingHelper.ReleaseFinishedHints();

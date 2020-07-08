@@ -453,11 +453,16 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Removes annotation content item from the tag structure.
         /// If annotation is not added to the document or is not tagged, nothing will happen.
         /// </remarks>
+        /// <param name="annotation">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// that will be removed from the tag structure
+        /// </param>
         /// <returns>
         /// 
         /// <see cref="TagTreePointer"/>
         /// instance which points at annotation tag parent if annotation was removed,
-        /// otherwise returns null.
+        /// otherwise returns null
         /// </returns>
         public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation) {
             PdfStructElem structElem = null;
@@ -514,7 +519,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>
         /// current
         /// <see cref="TagStructureContext"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemovePageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
@@ -543,7 +548,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// these tags are considered
         /// as not yet finished ones, and they and their children won't be flushed.
         /// </remarks>
-        /// <param name="page">a page which tags will be flushed.</param>
+        /// <param name="page">a page which tags will be flushed</param>
+        /// <returns>
+        /// current
+        /// <see cref="TagStructureContext"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);

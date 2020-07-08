@@ -272,7 +272,8 @@ namespace iText.Forms.Xfdf {
                 switch (attributeName) {
                     case XfdfConstants.PAGE: {
                         //required
-                        annotObject.AddFdfAttributes(Convert.ToInt32(attributeNode.Value));
+                        annotObject.AddFdfAttributes(Convert.ToInt32(attributeNode.Value, System.Globalization.CultureInfo.InvariantCulture
+                            ));
                         break;
                     }
 
@@ -444,7 +445,7 @@ namespace iText.Forms.Xfdf {
             ) {
         }
 
-        //tODO implement update, refactor createXfdfAnnotation() method to accomodate the change
+        //TODO DEVSIX-4132 implement update, refactor createXfdfAnnotation() method to accommodate the change
         private static void AddCommonAnnotationAttributes(AnnotObject annot, PdfAnnotation pdfAnnotation) {
             annot.SetName(pdfAnnotation.GetSubtype().GetValue().ToLowerInvariant());
             if (pdfAnnotation.GetColorObject() != null) {
@@ -516,7 +517,7 @@ namespace iText.Forms.Xfdf {
                 annot.AddAttribute(XfdfConstants.STYLE, pdfCircleAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
             }
             if (pdfCircleAnnotation.GetBorderEffect() != null) {
-                //TODO how to map intensity?
+                //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
                 //annot.addAttribute(new AttributeObject("intensity", pdfCircleAnnotation.getBorderEffect().getAsString()));
                 annot.AddAttribute(XfdfConstants.STYLE, pdfCircleAnnotation.GetBorderEffect().GetAsString(PdfName.Style));
             }
@@ -545,7 +546,7 @@ namespace iText.Forms.Xfdf {
                 annot.AddAttribute(XfdfConstants.STYLE, pdfSquareAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
             }
             if (pdfSquareAnnotation.GetBorderEffect() != null) {
-                //TODO how to map intensity?
+                //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
                 //annot.addAttribute(new AttributeObject("intensity", pdfCircleAnnotation.getBorderEffect().getAsString()));
                 annot.AddAttribute(XfdfConstants.STYLE, pdfSquareAnnotation.GetBorderEffect().GetAsString(PdfName.Style));
             }
@@ -603,7 +604,7 @@ namespace iText.Forms.Xfdf {
                     ));
                 annot.AddAttribute(XfdfConstants.STYLE, pdfFreeTextAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
             }
-            //TODO add rotation optional attribute
+            //TODO DEVSIX-4134 add rotation optional attribute
             //annot.addAttribute(new AttributeObject("rotation", pdfFreeTextAnnotation.));
             annot.AddAttribute(new AttributeObject(XfdfConstants.JUSTIFICATION, pdfFreeTextAnnotation.GetJustification
                 ().ToString()));
@@ -614,7 +615,7 @@ namespace iText.Forms.Xfdf {
             if (pdfFreeTextAnnotation.GetContents() != null) {
                 annot.SetContents(pdfFreeTextAnnotation.GetContents());
             }
-            //TODO add contents-richtext
+            //TODO DEVSIX-3215 add contents-richtext
             if (pdfFreeTextAnnotation.GetDefaultAppearance() != null) {
                 annot.SetDefaultAppearance(pdfFreeTextAnnotation.GetDefaultAppearance().GetValue());
             }
@@ -778,7 +779,7 @@ namespace iText.Forms.Xfdf {
                 annot.AddAttribute(XfdfConstants.STYLE, pdfPolyGeomAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
             }
             if (pdfPolyGeomAnnotation.GetBorderEffect() != null) {
-                //TODO how to map intensity?
+                //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
                 //annot.addAttribute(new AttributeObject("intensity", pdfCircleAnnotation.getBorderEffect().getAsString()));
                 annot.AddAttribute(XfdfConstants.STYLE, pdfPolyGeomAnnotation.GetBorderEffect().GetAsString(PdfName.Style)
                     );
@@ -815,7 +816,7 @@ namespace iText.Forms.Xfdf {
             AnnotObject annot = new AnnotObject();
             annot.SetRef(pdfAnnotation.GetPdfObject().GetIndirectReference());
             annot.AddFdfAttributes(pageNumber);
-            //TODO move here all common methods like addFDFAttributes and Add common annotations
+            //TODO DEVSIX-4135 move here all common methods like addFDFAttributes and Add common annotations
             if (pdfAnnotation is PdfTextMarkupAnnotation) {
                 CreateTextMarkupAnnotation(pdfAnnotation, annot, pageNumber);
             }

@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.StyledXmlParser.Css.Resolve;
+using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
@@ -53,10 +55,7 @@ namespace iText.Svg.Css.Impl {
     /// objects
     /// </summary>
     public class SvgNodeRendererInheritanceResolver {
-        private StyleResolverUtil sru;
-
         public SvgNodeRendererInheritanceResolver() {
-            sru = new StyleResolverUtil();
         }
 
         /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree</summary>
@@ -89,8 +88,12 @@ namespace iText.Svg.Css.Impl {
                 if (parentFontSize == null) {
                     parentFontSize = "0";
                 }
+                ICollection<IStyleInheritance> inheritanceRules = new HashSet<IStyleInheritance>();
+                inheritanceRules.Add(new CssInheritance());
+                inheritanceRules.Add(new SvgAttributeInheritance());
                 foreach (KeyValuePair<String, String> parentAttribute in parentStyles) {
-                    sru.MergeParentStyleDeclaration(childStyles, parentAttribute.Key, parentAttribute.Value, parentFontSize);
+                    childStyles = StyleUtil.MergeParentStyleDeclaration(childStyles, parentAttribute.Key, parentAttribute.Value
+                        , parentFontSize, inheritanceRules);
                 }
                 child.SetAttributesAndStyles(childStyles);
             }

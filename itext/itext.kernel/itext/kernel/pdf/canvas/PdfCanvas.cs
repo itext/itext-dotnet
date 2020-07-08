@@ -837,7 +837,7 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Appends a B&#xea;zier curve to the path, starting from the current point.</summary>
+        /// <summary>Appends a B&amp;#xea;zier curve to the path, starting from the current point.</summary>
         /// <param name="x1">x coordinate of the first control point.</param>
         /// <param name="y1">y coordinate of the first control point.</param>
         /// <param name="x2">x coordinate of the second control point.</param>

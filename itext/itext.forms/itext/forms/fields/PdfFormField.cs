@@ -3203,6 +3203,11 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, new Rectangle(3, 0, Math.Max(0, width - 
                 widthBorder), Math.Max(0, height - heightBorder)));
             modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            Div div = new Div();
+            if (GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
+                div.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+            }
+            div.SetHeight(Math.Max(0, height - heightBorder));
             for (int index = 0; index < strings.Count; index++) {
                 bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
                 if (true.Equals(isFull)) {
@@ -3232,8 +3237,9 @@ namespace iText.Forms.Fields {
                         }
                     }
                 }
-                modelCanvas.Add(paragraph);
+                div.Add(paragraph);
             }
+            modelCanvas.Add(div);
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
@@ -3447,6 +3453,7 @@ namespace iText.Forms.Fields {
             widget.SetNormalAppearance(normalAppearance);
         }
 
+        /// <summary>Draws PDF/A-1 compliant check appearance.</summary>
         /// <param name="width">width of the checkbox</param>
         /// <param name="height">height of the checkbox</param>
         /// <param name="selectedValue">the selected value of the checkbox which determines the appearance of the checkbox
@@ -3468,8 +3475,6 @@ namespace iText.Forms.Fields {
         [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
             int checkType) {
-            // TODO when removing the method: check {@link #drawCheckBox(PdfCanvas, float, float, float, boolean)} and consider
-            //  removing last redundant "on" parameter
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             Rectangle rect = new Rectangle(0, 0, width, height);

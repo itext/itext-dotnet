@@ -47,10 +47,10 @@ using System.Text.RegularExpressions;
 namespace iText.Layout.Font {
 
     /// <summary>
-    /// Split css font-family string into list of font-families or generic-families
+    /// Split CSS font-family string into list of font-families or generic-families
     /// </summary>
     /// <depricated>
-    /// Will be removed in iText 7.2.
+    /// Will be moved to styled-xml-parser module in iText 7.2.
     /// </depricated>
     [Obsolete]
     public sealed class FontFamilySplitter {
@@ -67,6 +67,7 @@ namespace iText.Layout.Font {
             String[] names = iText.IO.Util.StringUtil.Split(fontFamily, ",");
             IList<String> result = new List<String>(names.Length);
             foreach (String name in names) {
+                // TODO DEVSIX-2534 improve pattern matching according to CSS specification. E.g. unquoted font-families with spaces.
                 if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN, name).Success) {
                     result.Add(name.Trim());
                 }

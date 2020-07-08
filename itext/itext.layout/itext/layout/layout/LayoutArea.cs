@@ -89,7 +89,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Kernel.Geom.Rectangle">box</see>
         /// which bounds the area.
         /// </summary>
-        /// <param name="bbox"/>
+        /// <param name="bbox">the area's bounding box</param>
         public virtual void SetBBox(Rectangle bbox) {
             this.bBox = bbox;
         }

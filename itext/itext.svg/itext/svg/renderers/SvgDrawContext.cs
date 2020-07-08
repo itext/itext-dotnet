@@ -45,9 +45,13 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Resolve;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers {
     /// <summary>
@@ -72,11 +76,38 @@ namespace iText.Svg.Renderers {
 
         private FontSet tempFonts;
 
+        // value of root element font-size in points
+        private float remValue;
+
         private AffineTransform lastTextTransform = new AffineTransform();
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
-        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider) {
+        /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
+        /// <param name="resourceResolver">
+        /// instance of
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// </param>
+        /// <param name="fontProvider">
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// </param>
+        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider)
+            : this(resourceResolver, fontProvider, null) {
+        }
+
+        /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
+        /// <param name="resourceResolver">
+        /// instance of
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// </param>
+        /// <param name="fontProvider">
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// </param>
+        /// <param name="svgRootRenderer">svg element that is root for current file</param>
+        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider, ISvgNodeRenderer svgRootRenderer
+            ) {
             if (resourceResolver == null) {
                 resourceResolver = new ResourceResolver("");
             }
@@ -85,6 +116,13 @@ namespace iText.Svg.Renderers {
                 fontProvider = new BasicFontProvider();
             }
             this.fontProvider = fontProvider;
+            if (svgRootRenderer is AbstractSvgNodeRenderer) {
+                remValue = ((AbstractSvgNodeRenderer)svgRootRenderer).GetCurrentFontSize();
+            }
+            else {
+                // default font-size value
+                remValue = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(CommonCssConstants.FONT_SIZE));
+            }
         }
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
@@ -261,6 +299,27 @@ namespace iText.Svg.Renderers {
         public virtual void AddTextMove(float additionalMoveX, float additionalMoveY) {
             textMove[0] += additionalMoveX;
             textMove[1] += additionalMoveY;
+        }
+
+        /// <summary>Get the current canvas transformation</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// representing the current canvas transformation
+        /// </returns>
+        public virtual AffineTransform GetCurrentCanvasTransform() {
+            Matrix currentTransform = GetCurrentCanvas().GetGraphicsState().GetCtm();
+            if (currentTransform != null) {
+                return new AffineTransform(currentTransform.Get(0), currentTransform.Get(1), currentTransform.Get(3), currentTransform
+                    .Get(4), currentTransform.Get(6), currentTransform.Get(7));
+            }
+            return new AffineTransform();
+        }
+
+        /// <summary>Return the value of root svg element font-size</summary>
+        /// <returns>rem value</returns>
+        public virtual float GetRemValue() {
+            return remValue;
         }
     }
 }

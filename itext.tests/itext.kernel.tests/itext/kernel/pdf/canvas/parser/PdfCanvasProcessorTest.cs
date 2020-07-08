@@ -70,7 +70,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     (pageEventsLog));
                 processor.ProcessPageContent(page);
             }
-            byte[] logBytes = File.ReadAllBytes(Path.Combine(sourceFolder + "contentStreamProcessorTest_events_log.dat"
+            byte[] logBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder + "contentStreamProcessorTest_events_log.dat"
                 ));
             String expectedPageEventsLog = iText.IO.Util.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding.UTF8
                 );

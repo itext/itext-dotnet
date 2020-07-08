@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.IO;
 using iText.IO.Util;
 
 namespace iText.IO.Codec {
@@ -256,7 +255,7 @@ namespace iText.IO.Codec {
             }
         }
 
-        public virtual void Dump(StreamWriter output) {
+        public virtual void Dump(FormattingStreamWriter output) {
             int i;
             for (i = 258; i < numStrings_; ++i) {
                 output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + JavaUtil.IntegerToHexString(strChr_

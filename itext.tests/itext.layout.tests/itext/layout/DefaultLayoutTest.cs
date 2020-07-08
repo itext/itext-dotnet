@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -52,6 +53,8 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class DefaultLayoutTest : ExtendedITextTest {
+        public static float EPS = 0.001f;
+
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/DefaultLayoutTest/";
 
@@ -92,7 +95,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 1)]
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
@@ -172,6 +174,30 @@ namespace iText.Layout {
             Paragraph p = new Paragraph();
             p.Add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                 );
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void AddWordOnShortPageTest01() {
+            String outFileName = destinationFolder + "addWordOnShortPageTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_addWordOnShortPageTest01.pdf";
+            // Default font size
+            float defaultFontSize = 12;
+            // Use the default font to get the width which will be occupied by two letters
+            float contentWidth = PdfFontFactory.CreateFont().GetWidth("he", defaultFontSize);
+            // Not enough height to place letters without FORCED_PLACEMENT
+            float shortHeight = 15;
+            // The sum of either top and bottom page margins, or left and right page margins
+            float margins = 36 + 36;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(margins + contentWidth + EPS, margins + shortHeight));
+            Paragraph p = new Paragraph("hello");
+            // The area's height is not enough to place the paragraph.
+            // The area's width is enough to place 2 characters.
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

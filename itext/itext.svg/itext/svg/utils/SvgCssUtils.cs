@@ -72,6 +72,7 @@ namespace iText.Svg.Utils {
         ///<summary>Converts a float pts values to pixels </summary>
         ///<param name="v"> the value to be converted pixels</param>
         ///<returns>float converted value pts/0.75f</returns>
+        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils#convertPtsToPx(float) in update 7.2.")]
         public static float ConvertPtsToPx(float v)
         {
             return v / 0.75f;
@@ -80,6 +81,7 @@ namespace iText.Svg.Utils {
         ///<summary>Converts a double pts values to pixels </summary>
         ///<param name="v"> the value to be converted pixels</param>
         ///<returns>double converted value pts/0.75</returns>
+        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils#convertPtsToPx(float) in update 7.2.")]
         public static double ConvertPtsToPx(double v)
         {
             return v / 0.75;

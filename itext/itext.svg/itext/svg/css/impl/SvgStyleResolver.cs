@@ -51,6 +51,7 @@ using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
@@ -68,9 +69,6 @@ namespace iText.Svg.Css.Impl {
 
         /// <summary>The list of fonts.</summary>
         private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
-
-        /// <summary>The style-resolver util responsible for resolving inheritance rules</summary>
-        private StyleResolverUtil sru = new StyleResolverUtil();
 
         /// <summary>The resource resolver</summary>
         private ResourceResolver resourceResolver = new ResourceResolver("");
@@ -124,13 +122,17 @@ namespace iText.Svg.Css.Impl {
                     ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
                     logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
                 }
+                ICollection<IStyleInheritance> inheritanceRules = new HashSet<IStyleInheritance>();
+                inheritanceRules.Add(new CssInheritance());
+                inheritanceRules.Add(new SvgAttributeInheritance());
                 if (parentStyles != null) {
                     foreach (KeyValuePair<String, String> entry in parentStyles) {
                         String parentFontSizeString = parentStyles.Get(CommonCssConstants.FONT_SIZE);
                         if (parentFontSizeString == null) {
                             parentFontSizeString = "0";
                         }
-                        sru.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeString);
+                        styles = StyleUtil.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeString, inheritanceRules
+                            );
                     }
                 }
             }
@@ -202,14 +204,13 @@ namespace iText.Svg.Css.Impl {
                             ()[0] is ITextNode)) {
                             String styleData;
                             if (currentNode.ChildNodes()[0] is IDataNode) {
-                                // TODO (RND-865)
                                 styleData = ((IDataNode)currentNode.ChildNodes()[0]).GetWholeData();
                             }
                             else {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO(RND-863): media query wrap
+                            //TODO (DEVSIX-2263): media query wrap
                             //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             this.css.AppendCssStyleSheet(styleSheet);
                         }

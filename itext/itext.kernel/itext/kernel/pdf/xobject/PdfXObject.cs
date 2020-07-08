@@ -136,7 +136,8 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         /// <summary>Returns files associated with XObject.</summary>
-        /// <returns>associated files array.</returns>
+        /// <param name="create">defines whether AF arrays will be created if it doesn't exist</param>
+        /// <returns>associated files array</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {

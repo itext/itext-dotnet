@@ -591,6 +591,11 @@ namespace iText.Forms.Xfdf {
         /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
         /// . Used for attaching popups in case of reading data from pdf file.
         /// </remarks>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
+        /// of the source annotation object.
+        /// </returns>
         public virtual PdfIndirectReference GetRef() {
             return @ref;
         }
@@ -604,6 +609,16 @@ namespace iText.Forms.Xfdf {
         /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
         /// . Used for attaching popups in case of reading data from pdf file.
         /// </remarks>
+        /// <param name="ref">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
+        /// of the source annotation object.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="AnnotObject"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetRef(PdfIndirectReference @ref) {
             this.@ref = @ref;
             return this;

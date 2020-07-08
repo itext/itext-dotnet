@@ -87,7 +87,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// delegates
         /// along with their filters.
         /// </remarks>
-        /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
+        /// <param name="delegate_">a delegate that will be called when all the corresponding filters for an event pass
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>
@@ -115,7 +115,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// instances and parsing the content stream multiple times. This is useful, for instance, when you want
         /// to extract content from multiple regions of a page.
         /// </remarks>
-        /// <param name="delegate_">a delegate that fill be called when all the corresponding filters for an event pass
+        /// <typeparam name="T">the type of the delegate</typeparam>
+        /// <param name="delegate_">a delegate that will be called when all the corresponding filters for an event pass
         ///     </param>
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>

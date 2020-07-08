@@ -184,7 +184,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return false;
         }
 
-        /// <returns>the marked content associated with the TextRenderInfo instance.</returns>
+        /// <summary>
+        /// Gets the marked-content identifier associated with this
+        /// <see cref="TextRenderInfo"/>
+        /// instance
+        /// </summary>
+        /// <returns>associated marked-content identifier or -1 in case content is unmarked</returns>
         public virtual int GetMcid() {
             foreach (CanvasTag tag in canvasTagHierarchy) {
                 if (tag.HasMcid()) {
@@ -469,8 +474,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             CheckGraphicsState();
             if (singleCharString) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(@string);
-                return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
-                    () / 100f;
+                return (float)(((double)widthAndWordSpacing[0] * (double)gs.GetFontSize() + (double)gs.GetCharSpacing() + 
+                    (double)widthAndWordSpacing[1]) * (double)gs.GetHorizontalScaling() / 100f);
             }
             else {
                 float totalWidth = 0;

@@ -206,6 +206,11 @@ namespace iText.Kernel.Pdf.Layer {
         /// Gets the list of all the layers currently registered in the OCProperties.
         /// Note that this is just a new list and modifications to it will not affect anything.
         /// </remarks>
+        /// <returns>
+        /// list of all the
+        /// <see cref="PdfLayer">layers</see>
+        /// currently registered in the OCProperties
+        /// </returns>
         public virtual IList<PdfLayer> GetLayers() {
             return new List<PdfLayer>(layers);
         }

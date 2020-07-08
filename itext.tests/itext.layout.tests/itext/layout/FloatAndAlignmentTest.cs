@@ -414,6 +414,193 @@ namespace iText.Layout {
                 , "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TableWithAlignmentNextToRightFloatTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithAlignmentNextToRightFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithAlignmentNextToRightFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER);
+            Div div = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.RIGHT, UnitValue.CreatePointValue
+                (200));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithAlignmentNextToLeftFloatTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithAlignmentNextToLeftFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithAlignmentNextToLeftFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER);
+            Div div = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.LEFT, UnitValue.CreatePointValue
+                (200));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithAlignmentBetweenFloatsTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithAlignmentBetweenFloats.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithAlignmentBetweenFloats.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT).SetWidth(250);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT).SetWidth(250);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER).SetWidth(250);
+            Div div1 = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.LEFT, UnitValue.CreatePointValue
+                (100));
+            Div div2 = CreateDiv(ColorConstants.BLUE, ClearPropertyValue.NONE, FloatPropertyValue.RIGHT, UnitValue.CreatePointValue
+                (100));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithBigLeftMarginAfterFloatTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithBigLeftMarginAfterFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithBigLeftMarginAfterFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT);
+            table1.SetMarginLeft(300);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT);
+            table2.SetMarginLeft(300);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER);
+            table3.SetMarginLeft(300);
+            Div div = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.RIGHT, UnitValue.CreatePointValue
+                (200));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithBigRightMarginAfterFloatTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithBigRightMarginAfterFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithBigRightMarginAfterFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT);
+            table1.SetMarginRight(300);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT);
+            table2.SetMarginRight(300);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER);
+            table3.SetMarginRight(300);
+            Div div = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.LEFT, UnitValue.CreatePointValue
+                (200));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableWithSideMarginsBetweenFloatTest() {
+            //TODO DEVSIX-4021 update cmp file after fix
+            String outFileName = destinationFolder + "tableWithSideMarginsBetweenFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_tableWithSideMarginsBetweenFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table1 = CreateTable(HorizontalAlignment.RIGHT);
+            table1.SetMarginRight(150).SetMarginLeft(150);
+            Table table2 = CreateTable(HorizontalAlignment.LEFT);
+            table2.SetMarginRight(300);
+            Table table3 = CreateTable(HorizontalAlignment.CENTER);
+            table3.SetMarginLeft(300);
+            Div div1 = CreateDiv(ColorConstants.GREEN, ClearPropertyValue.NONE, FloatPropertyValue.LEFT, UnitValue.CreatePointValue
+                (100));
+            Div div2 = CreateDiv(ColorConstants.BLUE, ClearPropertyValue.NONE, FloatPropertyValue.RIGHT, UnitValue.CreatePointValue
+                (100));
+            Div spaceDiv = new Div();
+            spaceDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+            spaceDiv.Add(new Paragraph("Space Div").SetFontColor(ColorConstants.BLUE));
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table1);
+            document.Add(spaceDiv);
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table2);
+            document.Add(spaceDiv);
+            document.Add(div1);
+            document.Add(div2);
+            document.Add(table3);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
         private Div CreateParentDiv(HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue
             , UnitValue width) {
             Div divParent1 = new Div().SetBorder(new SolidBorder(5)).SetWidth(width);
@@ -431,9 +618,30 @@ namespace iText.Layout {
             div.SetHorizontalAlignment(horizontalAlignment);
             div.SetProperty(Property.CLEAR, clearPropertyValue);
             div.SetProperty(Property.FLOAT, floatPropertyValue);
-            div.Add(new Paragraph("Div with HorizontalAlignment." + horizontalAlignment + ", ClearPropertyValue." + clearPropertyValue
-                 + ", FloatPropertyValue." + floatPropertyValue));
+            String cont = "Div with HorizontalAlignment." + horizontalAlignment + ", ClearPropertyValue." + clearPropertyValue
+                 + ", FloatPropertyValue." + floatPropertyValue;
+            div.Add(new Paragraph(cont));
             return div;
+        }
+
+        private static Div CreateDiv(Color color, ClearPropertyValue? clearPropertyValue, FloatPropertyValue? floatPropertyValue
+            , UnitValue width) {
+            Div div = new Div().SetBorder(new SolidBorder(color, 1)).SetBackgroundColor(color, 0.3f).SetMargins(10, 10
+                , 10, 10).SetWidth(width);
+            div.SetProperty(Property.CLEAR, clearPropertyValue);
+            div.SetProperty(Property.FLOAT, floatPropertyValue);
+            String cont = "Div with ClearPropertyValue." + clearPropertyValue + ", FloatPropertyValue." + floatPropertyValue;
+            div.Add(new Paragraph(cont));
+            return div;
+        }
+
+        private static Table CreateTable(HorizontalAlignment? horizontalAlignment) {
+            Table table = new Table(3);
+            table.AddCell("Align" + horizontalAlignment.ToString());
+            table.AddCell("Cell number two");
+            table.AddCell("Cell number three");
+            table.SetHorizontalAlignment(horizontalAlignment);
+            return table;
         }
     }
 }

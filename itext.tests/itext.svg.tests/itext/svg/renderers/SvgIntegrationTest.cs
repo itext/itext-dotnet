@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Svg.Converter;
@@ -60,11 +61,16 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void Convert(String svg, String output) {
-            PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
-            doc.AddNewPage();
-            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
-            SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
-            doc.Close();
+            Convert(svg, output, PageSize.Default);
+        }
+
+        public virtual void Convert(String svg, String output, PageSize size) {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(
+                0)))) {
+                doc.AddNewPage(size);
+                ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
+                SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
+            }
         }
 
         public static PdfDocument ConvertWithResult(String svg, String output) {
@@ -108,7 +114,11 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void ConvertAndCompare(String src, String dest, String fileName) {
-            Convert(src + fileName + ".svg", dest + fileName + ".pdf");
+            ConvertAndCompare(src, dest, fileName, PageSize.Default);
+        }
+
+        public virtual void ConvertAndCompare(String src, String dest, String fileName, PageSize size) {
+            Convert(src + fileName + ".svg", dest + fileName + ".pdf", size);
             Compare(fileName, src, dest);
         }
 

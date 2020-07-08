@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -51,6 +53,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class BackgroundImageTest : ExtendedITextTest {
@@ -73,6 +76,50 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
             BackgroundImageGenericTest("backgroundImage", backgroundImage);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientTest() {
+            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
+                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(gradientBuilder
+                );
+            BackgroundImageGenericTest("backgroundImageWithLinearGradient", backgroundImage);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void BackgroundImageWithLinearGradientAndTransformTest() {
+            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
+                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(gradientBuilder
+                );
+            BackgroundImageGenericTest("backgroundImageWithLinearGradientAndTransform", backgroundImage, Math.PI / 4);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageForText() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
+                );
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+            NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
+            String outFileName = destinationFolder + "backgroundImageForText.pdf";
+            String cmpFileName = sourceFolder + "cmp_backgroundImageForText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetFontSize(50);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         [NUnit.Framework.Test]
@@ -212,6 +259,11 @@ namespace iText.Layout {
 
         private void BackgroundImageGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
             ) {
+            BackgroundImageGenericTest(filename, backgroundImage, null);
+        }
+
+        private void BackgroundImageGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
+            , double? angle) {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
             String outFileName = destinationFolder + filename + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + filename + ".pdf";
@@ -222,6 +274,9 @@ namespace iText.Layout {
                  + "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
                  + "officia deserunt mollit anim id est laborum. ";
             Div div = new Div().Add(new Paragraph(text + text + text));
+            if (angle != null) {
+                div.SetRotationAngle(angle.Value);
+            }
             div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
             doc.Add(div);
             pdfDocument.Close();

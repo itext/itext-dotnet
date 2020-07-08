@@ -528,8 +528,7 @@ namespace iText.Kernel.Pdf {
                 copier.Copy(this, page);
             }
             else {
-                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().GetCatalog().GetPdfObject().
-                    ContainsKey(PdfName.AcroForm)) {
+                if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().HasAcroForm()) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                     logger.Warn(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
                     toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
@@ -1189,6 +1188,15 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method gets outlines of a current page</summary>
+        /// <param name="updateOutlines">
+        /// if the flag is
+        /// <see langword="true"/>
+        /// , the method reads the whole document and creates outline tree.
+        /// If the flag is
+        /// <see langword="false"/>
+        /// , the method gets cached outline tree
+        /// (if it was cached via calling getOutlines method before).
+        /// </param>
         /// <returns>return all outlines of a current page</returns>
         public virtual IList<PdfOutline> GetOutlines(bool updateOutlines) {
             GetDocument().GetOutlines(updateOutlines);
@@ -1215,6 +1223,11 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
         ///     </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetIgnorePageRotationForContent(bool ignorePageRotationForContent) {
             this.ignorePageRotationForContent = ignorePageRotationForContent;
             return this;
@@ -1523,8 +1536,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns files associated with PDF page.</summary>
-        /// <param name="create">iText will create AF array if it doesn't exist and create value is true</param>
-        /// <returns>associated files array.</returns>
+        /// <param name="create">defines whether AF arrays will be created if it doesn't exist</param>
+        /// <returns>associated files array</returns>
         public virtual PdfArray GetAssociatedFiles(bool create) {
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null && create) {

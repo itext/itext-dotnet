@@ -91,6 +91,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.FONT_STYLE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_VARIANT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.FONT_WEIGHT, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.HEIGHT, CommonCssConstants.AUTO);
             defaultValues.Put(CommonCssConstants.HYPHENS, CommonCssConstants.MANUAL);
             defaultValues.Put(CommonCssConstants.LINE_HEIGHT, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants.DISC);
@@ -115,15 +116,17 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.QUOTES, "\"\\00ab\" \"\\00bb\"");
             defaultValues.Put(CommonCssConstants.TEXT_ALIGN, CommonCssConstants.START);
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_LINE, CommonCssConstants.NONE);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_STYLE, CommonCssConstants.SOLID);
+            defaultValues.Put(CommonCssConstants.TEXT_DECORATION_COLOR, CommonCssConstants.CURRENTCOLOR);
             defaultValues.Put(CommonCssConstants.TEXT_TRANSFORM, CommonCssConstants.NONE);
-            defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.WHITE_SPACE, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.WIDTH, CommonCssConstants.AUTO);
             defaultValues.Put(CommonCssConstants.ORPHANS, "2");
             defaultValues.Put(CommonCssConstants.WIDOWS, "2");
         }
 
-        // TODO not complete
+        // Other css properties default values will be added as needed
         /// <summary>Gets the default value of a property.</summary>
         /// <param name="property">the property</param>
         /// <returns>the default value</returns>

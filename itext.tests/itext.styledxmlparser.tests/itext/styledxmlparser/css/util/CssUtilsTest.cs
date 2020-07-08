@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
@@ -52,12 +53,49 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
+        public virtual void ExtractShorthandPropertiesFromEmptyStringTest() {
+            String sourceString = "";
+            IList<IList<String>> expected = new List<IList<String>>();
+            expected.Add(new List<String>());
+            NUnit.Framework.Assert.AreEqual(expected, CssUtils.ExtractShorthandProperties(sourceString));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractShorthandPropertiesFromStringWithOnePropertyTest() {
+            String sourceString = "square inside url('sqpurple.gif')";
+            IList<IList<String>> expected = new List<IList<String>>();
+            IList<String> layer = new List<String>();
+            layer.Add("square");
+            layer.Add("inside");
+            layer.Add("url('sqpurple.gif')");
+            expected.Add(layer);
+            NUnit.Framework.Assert.AreEqual(expected, CssUtils.ExtractShorthandProperties(sourceString));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractShorthandPropertiesFromStringWithMultiplyPropertiesTest() {
+            String sourceString = "center no-repeat url('sqpurple.gif'), #eee 35% url('sqpurple.gif')";
+            IList<IList<String>> expected = new List<IList<String>>();
+            IList<String> layer = new List<String>();
+            layer.Add("center");
+            layer.Add("no-repeat");
+            layer.Add("url('sqpurple.gif')");
+            expected.Add(layer);
+            layer = new List<String>();
+            layer.Add("#eee");
+            layer.Add("35%");
+            layer.Add("url('sqpurple.gif')");
+            expected.Add(layer);
+            NUnit.Framework.Assert.AreEqual(expected, CssUtils.ExtractShorthandProperties(sourceString));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFromNAN() {
             NUnit.Framework.Assert.That(() =>  {
                 String value = "Definitely not a number";
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "Definitely not a number")))
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "Definitely not a number")))
 ;
         }
 
@@ -67,7 +105,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 String value = null;
                 CssUtils.ParseAbsoluteLength(value);
             }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.NAN, "null")))
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "null")))
 ;
         }
 
@@ -281,6 +319,30 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("0"));
             NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10in"));
             NUnit.Framework.Assert.IsFalse(CssUtils.IsAngleValue("10px"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDpiUnit() {
+            NUnit.Framework.Assert.AreEqual(10f, CssUtils.ParseResolution("10dpi"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDpcmUnit() {
+            NUnit.Framework.Assert.AreEqual(25.4f, CssUtils.ParseResolution("10dpcm"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionValidDppxUnit() {
+            NUnit.Framework.Assert.AreEqual(960f, CssUtils.ParseResolution("10dppx"), 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseResolutionInvalidUnit() {
+            NUnit.Framework.Assert.That(() =>  {
+                CssUtils.ParseResolution("10incorrectUnit");
+            }
+            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE))
+;
         }
     }
 }

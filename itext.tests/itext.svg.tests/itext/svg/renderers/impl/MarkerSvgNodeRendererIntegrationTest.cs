@@ -163,6 +163,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerRefXYTest() {
+            // TODO DEVSIX-4140 update cmp
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerRefXYTest");
         }
 
@@ -188,7 +189,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO: update when DEVSIX-3432 will be fixed
+        // TODO: update when DEVSIX-3432 and DEVSIX-4140 will be fixed
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 3)]
         public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues"
@@ -237,13 +238,12 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void FontRelativeValueInRefX() {
-            // This file is rendered differently in different browsers.
-            // Look at MarkerSvgNOdeRenderer#parseFontRelativeOrAbsoluteLengthOnMarker to see the processing of font-relative unit .
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fontRelativeValueInRefX");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontRelativeValueInRefXDefault() {
+            // TODO DEVSIX-4140 update cmp
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fontRelativeValueInRefXDefault");
         }
 
@@ -308,6 +308,13 @@ namespace iText.Svg.Renderers.Impl {
             // TODO (DEVSIX-3621) change cmp after fixing
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerParentElementTest() {
+            // TODO DEVSIX-4130 fix after ticket will be completed
+            // Compare with Chrome browser
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElementTest");
         }
     }
 }

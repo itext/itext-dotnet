@@ -366,6 +366,15 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant TEXT_DECORATION.</summary>
         public const String TEXT_DECORATION = "text-decoration";
 
+        /// <summary>The Constant TEXT_DECORATION_LINE.</summary>
+        public const String TEXT_DECORATION_LINE = "text-decoration-line";
+
+        /// <summary>The Constant TEXT_DECORATION_STYLE.</summary>
+        public const String TEXT_DECORATION_STYLE = "text-decoration-style";
+
+        /// <summary>The Constant TEXT_DECORATION_COLOR.</summary>
+        public const String TEXT_DECORATION_COLOR = "text-decoration-color";
+
         /// <summary>The Constant TEXT_INDENT.</summary>
         public const String TEXT_INDENT = "text-indent";
 
@@ -402,6 +411,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant WIDTH.</summary>
         public const String WIDTH = "width";
 
+        /// <summary>The Constant HEIGHT.</summary>
+        public const String HEIGHT = "height";
+
         /// <summary>The Constant WORDWRAP.</summary>
         public const String WORDWRAP = "word-wrap";
 
@@ -426,6 +438,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant AUTO.</summary>
         public const String AUTO = "auto";
+
+        /// <summary>The Constant BLINK.</summary>
+        public const String BLINK = "blink";
 
         /// <summary>The Constant BOLD.</summary>
         public const String BOLD = "bold";
@@ -541,6 +556,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant LIGHTER.</summary>
         public const String LIGHTER = "lighter";
 
+        /// <summary>The Constant value LINE_THROUGH.</summary>
+        public const String LINE_THROUGH = "line-through";
+
         /// <summary>The Constant LOCAL.</summary>
         public const String LOCAL = "local";
 
@@ -597,6 +615,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant OUTSET.</summary>
         public const String OUTSET = "outset";
+
+        /// <summary>The Constant value OVERLINE.</summary>
+        public const String OVERLINE = "overline";
 
         /// <summary>The Constant PADDING_BOX.</summary>
         public const String PADDING_BOX = "padding-box";
@@ -691,6 +712,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant TRANSPARENT.</summary>
         public const String TRANSPARENT = "transparent";
 
+        /// <summary>The Constant value UNDERLINE</summary>
+        public const String UNDERLINE = "underline";
+
         /// <summary>The Constant UPPER_ALPHA.</summary>
         public const String UPPER_ALPHA = "upper-alpha";
 
@@ -702,6 +726,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant value VISIBLE.</summary>
         public const String VISIBLE = "visible";
+
+        /// <summary>The Constant value WAVY.</summary>
+        public const String WAVY = "wavy";
 
         /// <summary>The Constant X_LARGE.</summary>
         public const String X_LARGE = "x-large";
@@ -884,6 +911,9 @@ namespace iText.StyledXmlParser.Css {
         // units of resolution
         /// <summary>The Constant DPCM.</summary>
         public const String DPCM = "dpcm";
+
+        /// <summary>The Constant DPI.</summary>
+        public const String DPI = "dpi";
 
         /// <summary>The Constant DPPX.</summary>
         public const String DPPX = "dppx";

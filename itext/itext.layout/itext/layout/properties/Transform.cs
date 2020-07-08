@@ -106,6 +106,10 @@ namespace iText.Layout.Properties {
         ///     </param>
         /// <param name="height">the height of available area, the point value of which is equivalent to 100% for percentage resolving
         ///     </param>
+        /// <returns>
+        /// resulting affine transformation instance, accumulated from
+        /// <see cref="Transform"/>
+        /// </returns>
         public static AffineTransform GetAffineTransform(iText.Layout.Properties.Transform t, float width, float height
             ) {
             IList<Transform.SingleTransform> multipleTransform = t.GetMultipleTransform();

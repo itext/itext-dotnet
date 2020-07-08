@@ -131,5 +131,11 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void CircleSkewYTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewY");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CircleWithBigStrokeWidthTest() {
+            // TODO: DEVSIX-3932 update cmp_ after fix
+            ConvertAndCompare(sourceFolder, destinationFolder, "circleWithBigStrokeWidth");
+        }
     }
 }

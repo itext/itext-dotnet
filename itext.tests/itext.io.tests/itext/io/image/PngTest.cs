@@ -21,11 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.IO.Image {
     public class PngTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/image/PngTest/";
 
         [NUnit.Framework.Test]
@@ -273,7 +275,8 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void Size300Px300DpiImageTest() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "size300Px300Dpi.png");
+            // Test a more specific entry point
+            ImageData img = ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "size300Px300Dpi.png"));
             NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
             NUnit.Framework.Assert.AreEqual(300, img.GetWidth(), 0);
             NUnit.Framework.Assert.AreEqual(300, img.GetHeight(), 0);
@@ -283,22 +286,26 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void SRGBImageTest() {
-            ImageData img = ImageDataFactory.Create(sourceFolder + "sRGBImage.png");
-            NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
-            NUnit.Framework.Assert.AreEqual(50, img.GetWidth(), 0);
-            NUnit.Framework.Assert.AreEqual(50, img.GetHeight(), 0);
-            NUnit.Framework.Assert.AreEqual(96, img.GetDpiX());
-            NUnit.Framework.Assert.AreEqual(96, img.GetDpiY());
-            NUnit.Framework.Assert.AreEqual(2.2, ((PngImageData)img).GetGamma(), 0.0001f);
-            PngChromaticities pngChromaticities = ((PngImageData)img).GetPngChromaticities();
-            NUnit.Framework.Assert.AreEqual(0.3127f, pngChromaticities.GetXW(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.329f, pngChromaticities.GetYW(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.64f, pngChromaticities.GetXR(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.33f, pngChromaticities.GetYR(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.3f, pngChromaticities.GetXG(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.6f, pngChromaticities.GetYG(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.15f, pngChromaticities.GetXB(), 0.0001f);
-            NUnit.Framework.Assert.AreEqual(0.06f, pngChromaticities.GetYB(), 0.0001f);
+            using (FileStream fis = new FileStream(sourceFolder + "sRGBImage.png", FileMode.Open, FileAccess.Read)) {
+                byte[] imageBytes = StreamUtil.InputStreamToArray(fis);
+                // Test a more specific entry point
+                ImageData img = ImageDataFactory.CreatePng(imageBytes);
+                NUnit.Framework.Assert.AreEqual(ImageType.PNG, img.GetOriginalType());
+                NUnit.Framework.Assert.AreEqual(50, img.GetWidth(), 0);
+                NUnit.Framework.Assert.AreEqual(50, img.GetHeight(), 0);
+                NUnit.Framework.Assert.AreEqual(96, img.GetDpiX());
+                NUnit.Framework.Assert.AreEqual(96, img.GetDpiY());
+                NUnit.Framework.Assert.AreEqual(2.2, ((PngImageData)img).GetGamma(), 0.0001f);
+                PngChromaticities pngChromaticities = ((PngImageData)img).GetPngChromaticities();
+                NUnit.Framework.Assert.AreEqual(0.3127f, pngChromaticities.GetXW(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.329f, pngChromaticities.GetYW(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.64f, pngChromaticities.GetXR(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.33f, pngChromaticities.GetYR(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.3f, pngChromaticities.GetXG(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.6f, pngChromaticities.GetYG(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.15f, pngChromaticities.GetXB(), 0.0001f);
+                NUnit.Framework.Assert.AreEqual(0.06f, pngChromaticities.GetYB(), 0.0001f);
+            }
         }
     }
 }

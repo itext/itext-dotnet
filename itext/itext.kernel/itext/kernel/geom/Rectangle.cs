@@ -51,7 +51,7 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Geom {
     /// <summary>Class that represent rectangle object.</summary>
     public class Rectangle {
-        private static float EPS = 1e-4f;
+        internal static float EPS = 1e-4f;
 
         protected internal float x;
 
@@ -216,7 +216,13 @@ namespace iText.Kernel.Geom {
             float ury = Math.Min(GetTop(), rect.GetTop());
             //If width or height is non-negative, there is overlap and we can construct the intersection rectangle
             float width = urx - llx;
+            if (Math.Abs(width) < EPS) {
+                width = 0;
+            }
             float height = ury - lly;
+            if (Math.Abs(height) < EPS) {
+                height = 0;
+            }
             if (JavaUtil.FloatCompare(width, 0) >= 0 && JavaUtil.FloatCompare(height, 0) >= 0) {
                 if (JavaUtil.FloatCompare(width, 0) < 0) {
                     width = 0;
@@ -253,18 +259,18 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
-        /// <param name="rect"/>
+        /// <param name="rect">a rectangle which is to be checked if it overlaps the passed rectangle.</param>
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
             // Two rectangles do not overlap if any of the following holds
             // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
-            return !(this.GetX() + this.GetWidth() < rect.GetX() || 
+            return !((rect.GetX() - (this.GetX() + this.GetWidth()) > EPS) || 
                         // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
-                        this.GetY() + this.GetHeight() < rect.GetY() || 
+                        (rect.GetY() - (this.GetY() + this.GetHeight()) > EPS) || 
                         // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
-                        this.GetX() > rect.GetX() + rect.GetWidth() || 
+                        (this.GetX() - (rect.GetX() + rect.GetWidth()) > EPS) || 
                         // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
-                        this.GetY() > rect.GetY() + rect.GetHeight());
+                        (this.GetY() - (rect.GetY() + rect.GetHeight()) > EPS));
         }
 
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
@@ -406,6 +412,32 @@ namespace iText.Kernel.Geom {
             return this;
         }
 
+        /// <summary>Increases the width of rectangle by the given value.</summary>
+        /// <remarks>Increases the width of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra wudth to be added.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Geom.Rectangle IncreaseWidth(float extra) {
+            this.width += extra;
+            return this;
+        }
+
+        /// <summary>Decreases the width of rectangle by the given value.</summary>
+        /// <remarks>Decreases the width of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra width to be subtracted.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Geom.Rectangle DecreaseWidth(float extra) {
+            this.width -= extra;
+            return this;
+        }
+
         /// <summary>Gets the X coordinate of the left edge of the rectangle.</summary>
         /// <remarks>
         /// Gets the X coordinate of the left edge of the rectangle. Same as:
@@ -504,7 +536,7 @@ namespace iText.Kernel.Geom {
         /// <see langword="true"/>
         /// the rectangle will expand, otherwise it will shrink
         /// </param>
-        /// <returns>the  rectanglewith applied margins</returns>
+        /// <returns>the rectangle with applied margins</returns>
         public virtual iText.Kernel.Geom.Rectangle ApplyMargins(float topIndent, float rightIndent, float bottomIndent
             , float leftIndent, bool reverse) {
             x += leftIndent * (reverse ? -1 : 1);

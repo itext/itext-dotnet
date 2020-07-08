@@ -117,7 +117,7 @@ namespace iText.IO.Util {
         }
 
         public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
-            return new StreamWriter(output, EncodingUtil.GetEncoding(encoding));
+            return new FormattingStreamWriter(output, EncodingUtil.GetEncoding(encoding));
         }
 
         public static Stream GetBufferedOutputStream(String filename) {

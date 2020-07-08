@@ -42,12 +42,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     public class SvgStyleResolverIntegrationTest : SvgIntegrationTest {
@@ -71,8 +73,8 @@ namespace iText.Svg.Css {
                  + "</svg>\n";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];
@@ -96,8 +98,8 @@ namespace iText.Svg.Css {
                  + "</svg>\n";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             IDictionary<String, String> actual = new Dictionary<String, String>();
             //Traverse to ellipse
             ISvgNodeRenderer ellipse = nodeRenderer.GetChildren()[0];
@@ -121,8 +123,8 @@ namespace iText.Svg.Css {
                  + "    </style>\n" + "    <g >\n" + "        <path d=\"M0 100 L0 50 L70 50\"/>\n" + "    </g>\n" + "</svg>";
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg);
-            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root).GetRootRenderer
-                ();
+            IBranchSvgNodeRenderer nodeRenderer = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null
+                ).GetRootRenderer();
             PathSvgNodeRenderer pathSvgNodeRenderer = (PathSvgNodeRenderer)((IBranchSvgNodeRenderer)nodeRenderer.GetChildren
                 ()[0]).GetChildren()[0];
             IDictionary<String, String> actual = new Dictionary<String, String>();
@@ -174,19 +176,26 @@ namespace iText.Svg.Css {
         public virtual void SvgWithExternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
             // Take a note this method differs from the one used in Default Page test
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom");
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
             // TODO: update cmp files when DEVSIX-2286 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette");
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette", PageSize.A3.Rotate());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        public virtual void RelativeStyleInheritanceTest() {
+            // TODO DEVSIX-4140 update cmp, remove logger check
+            ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");
         }
     }
 }

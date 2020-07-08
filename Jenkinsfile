@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 @Library('pipeline-library')_
 
-def schedule = env.BRANCH_NAME.contains('master') ? '@monthly' : env.BRANCH_NAME == 'develop' ? '@midnight' : ''
+def vars = setBranchDependentVars(env.BRANCH_NAME)
 
 pipeline {
 
@@ -9,7 +9,14 @@ pipeline {
 
     options {
         ansiColor('xterm')
-        buildDiscarder(logRotator(artifactNumToKeepStr: '1'))
+        buildDiscarder(
+            logRotator(
+                numToKeepStr: vars.buildNumToKeep,
+                artifactNumToKeepStr: vars.buildArtifactNumToKeep,
+                daysToKeepStr: vars.buildDaysToKeep,
+                artifactDaysToKeepStr: vars.buildArtifactDaysToKeep
+            )
+        )
         parallelsAlwaysFailFast()
         retry(1)
         skipStagesAfterUnstable()
@@ -18,10 +25,17 @@ pipeline {
     }
 
     triggers {
-        cron(schedule)
+        cron(vars.schedule)
     }
 
     stages {
+	    stage('Abort possible previous builds') {
+            steps {
+                script {
+                    abortPreviousBuilds()
+                }
+            }
+        }
         stage('Clean workspace') {
             options {
                 timeout(time: 5, unit: 'MINUTES')
@@ -141,14 +155,14 @@ pipeline {
         }
         fixed {
             script {
-                if ((env.BRANCH_NAME == 'master') || (env.BRANCH_NAME == 'develop')) {
+                if (vars.notifySlack) {
                     slackNotifier("#ci", currentBuild.currentResult, "${env.BRANCH_NAME} - Back to normal")
                 }
             }
         }
         regression {
             script {
-                if ((env.BRANCH_NAME == 'master') || (env.BRANCH_NAME == 'develop')) {
+                if (vars.notifySlack) {
                     slackNotifier("#ci", currentBuild.currentResult, "${env.BRANCH_NAME} - First failure")
                 }
             }

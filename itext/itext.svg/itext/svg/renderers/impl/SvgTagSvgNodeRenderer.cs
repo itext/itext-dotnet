@@ -40,7 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -51,6 +54,14 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;svg&gt; tag.
     /// </summary>
     public class SvgTagSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+        public override float GetCurrentFontSize() {
+            String fontSizeValue = GetAttribute(SvgConstants.Attributes.FONT_SIZE);
+            if (fontSizeValue == null) {
+                fontSizeValue = CssDefaults.GetDefaultValue(CommonCssConstants.FONT_SIZE);
+            }
+            return CssUtils.ParseAbsoluteFontSize(fontSizeValue);
+        }
+
         protected internal override void DoDraw(SvgDrawContext context) {
             context.AddViewPort(this.CalculateViewPort(context));
             base.DoDraw(context);

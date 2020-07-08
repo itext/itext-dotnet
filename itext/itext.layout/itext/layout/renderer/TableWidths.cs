@@ -216,7 +216,6 @@ namespace iText.Layout.Renderer {
         }
 
         internal void ProcessColumns() {
-            //TODO add colgroup information.
             for (int i = 0; i < numberOfColumns; i++) {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
                 if (colWidth != null && colWidth.GetValue() > 0) {

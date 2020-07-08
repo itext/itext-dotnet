@@ -238,7 +238,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return canvasTagHierarchy;
         }
 
-        /// <returns>the marked content associated with the TextRenderInfo instance.</returns>
+        /// <summary>
+        /// Gets the marked-content identifier associated with this
+        /// <see cref="PathRenderInfo"/>
+        /// instance
+        /// </summary>
+        /// <returns>associated marked-content identifier or -1 in case content is unmarked</returns>
         public virtual int GetMcid() {
             foreach (CanvasTag tag in canvasTagHierarchy) {
                 if (tag.HasMcid()) {

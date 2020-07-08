@@ -63,15 +63,38 @@ namespace iText.Kernel.Pdf {
         /// Defines the password which will be used if the document is encrypted with standard encryption.
         /// This could be either user or owner password.
         /// </remarks>
-        /// <param name="password">the password to use in order to open the document.</param>
+        /// <param name="password">the password to use in order to open the document</param>
+        /// <returns>
+        /// this
+        /// <see cref="ReaderProperties"/>
+        /// instance
+        /// </returns>
         public virtual ReaderProperties SetPassword(byte[] password) {
             ClearEncryptionParams();
             this.password = password;
             return this;
         }
 
-        /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
-        ///     </summary>
+        /// <summary>
+        /// Defines the certificate which will be used if the document is encrypted with public key
+        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+        /// </summary>
+        /// <param name="certificate">
+        /// the recipient
+        /// <see cref="Org.BouncyCastle.X509.X509Certificate"/>
+        /// ,
+        /// serves as recipient identifier
+        /// </param>
+        /// <param name="certificateKey">
+        /// the recipient private
+        /// <see cref="Org.BouncyCastle.Crypto.ICipherParameters"/>
+        /// to the certificate
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="ReaderProperties"/>
+        /// instance
+        /// </returns>
         public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate, ICipherParameters 
             certificateKey) {
             ClearEncryptionParams();
@@ -80,8 +103,21 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
-        ///     </summary>
+        /// <summary>
+        /// Defines the certificate which will be used if the document is encrypted with public key
+        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+        /// </summary>
+        /// <param name="certificate">
+        /// the recipient
+        /// <see cref="Org.BouncyCastle.X509.X509Certificate"/>
+        /// ,
+        /// serves as recipient identifier
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="ReaderProperties"/>
+        /// instance
+        /// </returns>
         public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate) {
             ClearEncryptionParams();
             this.certificate = certificate;
@@ -94,13 +130,13 @@ namespace iText.Kernel.Pdf {
             this.certificateKey = null;
         }
 
-        /// <summary>Sets the memory handler which will be used to handle decompressed pdf streams.</summary>
-        /// <param name="memoryLimitsAwareHandler">the memory handler which will be used to handle decompressed pdf streams
+        /// <summary>Sets the memory handler which will be used to handle decompressed PDF streams.</summary>
+        /// <param name="memoryLimitsAwareHandler">the memory handler which will be used to handle decompressed PDF streams
         ///     </param>
         /// <returns>
         /// this
         /// <see cref="ReaderProperties"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual ReaderProperties SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler memoryLimitsAwareHandler
             ) {

@@ -67,11 +67,15 @@ namespace iText.Layout.Renderer {
 
         private const String BIDI_ALGORITHM = "Bidi.BidiAlgorithm,iText.Typography";
 
+        private const String WORD_WRAPPER = "WordWrapper,iText.Typography";
+
         private const String APPLY_OTF_SCRIPT = "ApplyOtfScript";
 
         private const String APPLY_KERNING = "ApplyKerning";
 
         private const String GET_SUPPORTED_SCRIPTS = "GetSupportedScripts";
+
+        private const String GET_POSSIBLE_BREAKS = "GetPossibleBreaks";
 
         private const String GET_CHARACTER_TYPES = "GetCharacterTypes";
 
@@ -270,6 +274,11 @@ namespace iText.Layout.Renderer {
                 return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, (Object)
                     null, new Type[] { typeof(Object) }, typographyConfig);
             }
+        }
+
+        internal static IList<int> GetPossibleBreaks(String str) {
+            return (IList<int>)CallMethod(TYPOGRAPHY_PACKAGE + WORD_WRAPPER, GET_POSSIBLE_BREAKS, new Type[] { typeof(
+                String) }, str);
         }
 
         private static Object CallMethod(String className, String methodName, Type[] parameterTypes, params Object

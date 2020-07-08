@@ -78,7 +78,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private const String release = "7.1.11";
+        private const String release = "7.1.12";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -287,7 +287,7 @@ namespace iText.Kernel {
 
         internal static bool IsVersionNumeric(String version) {
             try {
-                int value = (int)Convert.ToInt32(version);
+                int value = (int)Convert.ToInt32(version, System.Globalization.CultureInfo.InvariantCulture);
                 // parseInt accepts numbers which start with a plus sign, but for a version it's unacceptable
                 return value >= 0 && !version.Contains("+");
             }
@@ -331,10 +331,10 @@ namespace iText.Kernel {
         private static void CheckLicenseVersion(String coreVersionString, String licenseVersionString) {
             String[] coreVersions = ParseVersionString(coreVersionString);
             String[] licenseVersions = ParseVersionString(licenseVersionString);
-            int coreMajor = Convert.ToInt32(coreVersions[0]);
-            int coreMinor = Convert.ToInt32(coreVersions[1]);
-            int licenseMajor = Convert.ToInt32(licenseVersions[0]);
-            int licenseMinor = Convert.ToInt32(licenseVersions[1]);
+            int coreMajor = Convert.ToInt32(coreVersions[0], System.Globalization.CultureInfo.InvariantCulture);
+            int coreMinor = Convert.ToInt32(coreVersions[1], System.Globalization.CultureInfo.InvariantCulture);
+            int licenseMajor = Convert.ToInt32(licenseVersions[0], System.Globalization.CultureInfo.InvariantCulture);
+            int licenseMinor = Convert.ToInt32(licenseVersions[1], System.Globalization.CultureInfo.InvariantCulture);
             //Major version check
             if (licenseMajor < coreMajor) {
                 throw new LicenseVersionException(LicenseVersionException.THE_MAJOR_VERSION_OF_THE_LICENSE_0_IS_LOWER_THAN_THE_MAJOR_VERSION_1_OF_THE_CORE_LIBRARY
@@ -373,7 +373,6 @@ namespace iText.Kernel {
             }
             catch (Exception) {
             }
-            //TODO: Log this exception?
             return result;
         }
 

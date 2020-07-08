@@ -47,9 +47,9 @@ namespace iText.Forms.Xfdf {
     /// <remarks>
     /// Represents the field element, a child of the fields and field elements.
     /// The field element corresponds to a form field.
-    /// Content model: ( field* | value* | ( value? & value-richtext? )).
+    /// Content model: ( field* | value* | ( value? &amp; value-richtext? )).
     /// Required attributes: name.
-    /// For more details see paragraph 6.3.2 in Xfdf document specification.
+    /// For more details see paragraph 6.3.2 in XFDF document specification.
     /// </remarks>
     public class FieldObject {
         /// <summary>Represents the name attribute of the field element.</summary>
@@ -57,7 +57,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the name attribute of the field element.
         /// Corresponds to the T key in the field dictionary.
         /// In a hierarchical form field, the name is the partial field name.
-        /// For more details see paragraph 6.3.2.2 in Xfdf document specification.
+        /// For more details see paragraph 6.3.2.2 in XFDF document specification.
         /// </remarks>
         private String name;
 
@@ -70,7 +70,7 @@ namespace iText.Forms.Xfdf {
         /// vary depending on the field type.
         /// Corresponds to the V key in the FDF field dictionary.
         /// Content model: text string.
-        /// For more details see paragraph 6.3.3 in Xfdf document specification.
+        /// For more details see paragraph 6.3.3 in XFDF document specification.
         /// </remarks>
         private String value;
 
@@ -84,7 +84,7 @@ namespace iText.Forms.Xfdf {
         /// Corresponds to the RV key in the variable text field dictionary.
         /// Content model: text strign or rich text string.
         /// Attributes: none.
-        /// For more details see paragraph 6.3.4 in Xfdf document specification.
+        /// For more details see paragraph 6.3.4 in XFDF document specification.
         /// </remarks>
         private String richTextValue;
 
@@ -113,7 +113,7 @@ namespace iText.Forms.Xfdf {
         /// Gets the string value of the name attribute of the field element.
         /// Corresponds to the T key in the field dictionary.
         /// In a hierarchical form field, the name is the partial field name.
-        /// For more details see paragraph 6.3.2.2 in Xfdf document specification.
+        /// For more details see paragraph 6.3.2.2 in XFDF document specification.
         /// </remarks>
         public virtual String GetName() {
             return name;
@@ -130,26 +130,26 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>
-        /// Gets the string representation of the value element, a child of the field element and contains the field's value, whose format may
-        /// vary depending on the field type.
+        /// Gets the string representation of the value element, a child of the field element and contains the field's value,
+        /// whose format may vary depending on the field type.
         /// </summary>
         /// <remarks>
-        /// Gets the string representation of the value element, a child of the field element and contains the field's value, whose format may
-        /// vary depending on the field type.
+        /// Gets the string representation of the value element, a child of the field element and contains the field's value,
+        /// whose format may vary depending on the field type.
         /// Corresponds to the V key in the FDF field dictionary.
-        /// For more details see paragraph 6.3.3 in Xfdf document specification.
+        /// For more details see paragraph 6.3.3 in XFDF document specification.
         /// </remarks>
         public virtual String GetValue() {
             return value;
         }
 
         /// <summary>
-        /// Sets the string representation of the value element, a child of the field element and contains the field's value, whose format may
-        /// vary depending on the field type.
+        /// Sets the string representation of the value element, a child of the field element and contains the field's value,
+        /// whose format may vary depending on the field type.
         /// </summary>
         /// <remarks>
-        /// Sets the string representation of the value element, a child of the field element and contains the field's value, whose format may
-        /// vary depending on the field type.
+        /// Sets the string representation of the value element, a child of the field element and contains the field's value,
+        /// whose format may vary depending on the field type.
         /// Corresponds to the V key in the FDF field dictionary.
         /// </remarks>
         public virtual void SetValue(String value) {
@@ -157,27 +157,27 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>
-        /// Gets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
-        /// rich text string.
+        /// Gets the string representation of the value-richtext element, a child of the field element and contains the
+        /// field's value formatted as a rich text string.
         /// </summary>
         /// <remarks>
-        /// Gets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
-        /// rich text string.
+        /// Gets the string representation of the value-richtext element, a child of the field element and contains the
+        /// field's value formatted as a rich text string.
         /// Corresponds to the RV key in the variable text field dictionary.
         /// Content model: text strign or rich text string.
-        /// For more details see paragraph 6.3.4 in Xfdf document specification.
+        /// For more details see paragraph 6.3.4 in XFDF document specification.
         /// </remarks>
         public virtual String GetRichTextValue() {
             return richTextValue;
         }
 
         /// <summary>
-        /// Sets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
-        /// rich text string.
+        /// Sets the string representation of the value-richtext element, a child of the field element and contains the
+        /// field's value formatted as a rich text string.
         /// </summary>
         /// <remarks>
-        /// Sets the string representation of the value-richtext element, a child of the field element and contains the field's value formatted as a
-        /// rich text string.
+        /// Sets the string representation of the value-richtext element, a child of the field element and contains the
+        /// field's value formatted as a rich text string.
         /// Corresponds to the RV key in the variable text field dictionary.
         /// Content model: text strign or rich text string.
         /// </remarks>

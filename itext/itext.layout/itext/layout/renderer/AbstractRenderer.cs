@@ -48,6 +48,7 @@ using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -471,10 +472,10 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     drawContext.GetCanvas().OpenTag(new CanvasArtifact());
                 }
-                Rectangle backgroundArea = ApplyMargins(bBox, false);
+                Rectangle backgroundArea = GetBackgroundArea(ApplyMargins(bBox, false));
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
+                    logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"
                         ));
                 }
                 else {
@@ -498,11 +499,23 @@ namespace iText.Layout.Renderer {
                         if (backgroundXObject == null) {
                             backgroundXObject = backgroundImage.GetForm();
                         }
-                        Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject
-                            .GetHeight(), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
+                        // TODO: DEVSIX-3108 due to invalid logic of `PdfCanvas.addXObject(PdfXObject, Rectangle)`
+                        //  for PDfFormXObject (invalid scaling) for now the imageRectangle initialization
+                        //  for gradient uses width and height = 1. For all othe cases the logic left as it was.
+                        Rectangle imageRectangle;
+                        if (backgroundXObject == null) {
+                            backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
+                                (), backgroundArea, drawContext.GetDocument());
+                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
+                                (), 1, 1);
+                        }
+                        else {
+                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
+                                (), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
+                        }
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                            logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
                                 ));
                         }
                         else {
@@ -533,6 +546,35 @@ namespace iText.Layout.Renderer {
                     drawContext.GetCanvas().CloseTag();
                 }
             }
+        }
+
+        /// <summary>
+        /// Create a
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// with the given area and containing a linear gradient inside.
+        /// </summary>
+        /// <param name="linearGradientBuilder">the linear gradient builder</param>
+        /// <param name="xObjectArea">the result object area</param>
+        /// <param name="document">the pdf document</param>
+        /// <returns>the xObject with a specified area and a linear gradient</returns>
+        public static PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle 
+            xObjectArea, PdfDocument document) {
+            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
+            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            if (linearGradientBuilder != null) {
+                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null, document);
+                if (gradientColor != null) {
+                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+                }
+            }
+            return xObject;
+        }
+
+        /// <summary>Evaluate the actual background</summary>
+        /// <param name="occupiedAreaWithMargins">the current occupied area with applied margins</param>
+        /// <returns>the actual background area</returns>
+        protected internal virtual Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
+            return occupiedAreaWithMargins;
         }
 
         protected internal virtual bool ClipBorderArea(DrawContext drawContext, Rectangle outerBorderBox) {
@@ -1707,11 +1749,12 @@ namespace iText.Layout.Renderer {
                         , logMessageArg));
                     return;
                 }
+                // If an element with a link annotation occupies more than two pages,
+                // then a NPE might occur, because of the annotation being partially flushed.
+                // That's why we create and use an annotation's copy.
+                PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
+                linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
-                if (linkAnnotation.GetPage() != null) {
-                    PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
-                    linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
-                }
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(pageNumber);
                 page.AddAnnotation(linkAnnotation);

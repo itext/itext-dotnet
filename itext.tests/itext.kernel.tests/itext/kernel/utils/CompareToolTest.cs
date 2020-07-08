@@ -41,7 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
+using iText.IO;
+using iText.IO.Util;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Utils {
     public class CompareToolTest : ExtendedITextTest {
@@ -64,8 +68,9 @@ namespace iText.Kernel.Utils {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
-            System.Console.Out.WriteLine(result);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
                  + "cmp_report01.xml"), "CompareTool report differs from the reference one");
@@ -79,8 +84,9 @@ namespace iText.Kernel.Utils {
             String outPdf = sourceFolder + "tagged_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_tagged_pdf.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
-            System.Console.Out.WriteLine(result);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("Compare by content fails. No visual differences"));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "tagged_pdf.report.xml", sourceFolder
                  + "cmp_report02.xml"), "CompareTool report differs from the reference one");
@@ -94,8 +100,9 @@ namespace iText.Kernel.Utils {
             String outPdf = sourceFolder + "screenAnnotation.pdf";
             String cmpPdf = sourceFolder + "cmp_screenAnnotation.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
-            System.Console.Out.WriteLine(result);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("Compare by content fails. No visual differences"));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "screenAnnotation.report.xml", sourceFolder
                  + "cmp_report03.xml"), "CompareTool report differs from the reference one");
@@ -110,8 +117,9 @@ namespace iText.Kernel.Utils {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf_with_space .pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
-            System.Console.Out.WriteLine(result);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
             NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
                  + "cmp_report01.xml"), "CompareTool report differs from the reference one");
@@ -130,6 +138,63 @@ namespace iText.Kernel.Utils {
             String initial = "iText® 1.10.10-SNAPSHOT (licensed to iText) ©2000-2018 iText Group NV";
             String replacedExpected = "iText® <version> (licensed to iText) ©<copyright years> iText Group NV";
             NUnit.Framework.Assert.AreEqual(replacedExpected, new CompareTool().ConvertProducerLine(initial));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GsEnvironmentVariableIsNotSpecifiedExceptionTest() {
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            new CompareTool(null, null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GsEnvironmentVariableSpecifiedIncorrectlyTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String outPdf = sourceFolder + "simple_pdf.pdf";
+                String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+                new CompareTool("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+            }
+            , NUnit.Framework.Throws.InstanceOf<CompareTool.CompareToolExecutionException>().With.Message.EqualTo(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareCommandIsNotSpecifiedTest() {
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+            if (gsExec == null) {
+                gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
+            }
+            String result = new CompareTool(gsExec, null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+            NUnit.Framework.Assert.IsFalse(result.Contains(IoExceptionMessage.COMPARE_COMMAND_IS_NOT_SPECIFIED));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY)]
+        public virtual void CompareCommandSpecifiedIncorrectlyTest() {
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+            if (gsExec == null) {
+                gsExec = SystemUtil.GetEnvironmentVariable("gsExec");
+            }
+            String result = new CompareTool(gsExec, "unspecified").CompareVisually(outPdf, cmpPdf, destinationFolder, 
+                "diff_");
+            NUnit.Framework.Assert.IsTrue(result.Contains(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyDiffTestTest() {
+            String outPdf = sourceFolder + "compareVisuallyDiffTestTest1.pdf";
+            String cmpPdf = sourceFolder + "compareVisuallyDiffTestTest2.pdf";
+            String result = new CompareTool().CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
+            NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_2.png").Exists);
         }
     }
 }

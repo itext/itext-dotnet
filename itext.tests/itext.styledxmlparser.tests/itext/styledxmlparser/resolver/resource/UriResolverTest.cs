@@ -304,8 +304,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 //            NUnit.Framework.Assert.AreNotEqual(uriRoot + "test/folder/folder2/innerTest2", resolver.ResolveAgainstBaseUri
 //                ("//folder2/innerTest2").ToExternalForm());
         }
-
-        // the whitespace characters are
+        
         [NUnit.Framework.Test]
         public virtual void UriResolverTest16C() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToString();

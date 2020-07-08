@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
@@ -61,9 +60,11 @@ namespace iText.Svg.Renderers.Impl {
             float[] markerWidthHeight = GetMarkerWidthHeightValues();
             float markerWidth = markerWidthHeight[0];
             float markerHeight = markerWidthHeight[1];
-            Rectangle markerViewport = new Rectangle(CssUtils.ParseAbsoluteLength(this.GetAttribute(SvgConstants.Attributes
-                .X)), CssUtils.ParseAbsoluteLength(this.GetAttribute(SvgConstants.Attributes.Y)), markerWidth, markerHeight
-                );
+            String xAttribute = this.GetAttribute(SvgConstants.Attributes.X);
+            String yAttribute = this.GetAttribute(SvgConstants.Attributes.Y);
+            float x = xAttribute != null ? CssUtils.ParseAbsoluteLength(xAttribute) : 0f;
+            float y = yAttribute != null ? CssUtils.ParseAbsoluteLength(yAttribute) : 0f;
+            Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }
 
@@ -153,57 +154,6 @@ namespace iText.Svg.Renderers.Impl {
             return isCorrect;
         }
 
-        private ISvgNodeRenderer GetSvgRootElement(ISvgNodeRenderer element) {
-            if (element is SvgTagSvgNodeRenderer && element.GetParent() is PdfRootSvgNodeRenderer) {
-                return element;
-            }
-            if (element.GetParent() != null) {
-                return GetSvgRootElement(element.GetParent());
-            }
-            return null;
-        }
-
-        // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
-        private float ParseFontRelativeOrAbsoluteLengthOnMarker(String length) {
-            float value = 0f;
-            if (CssUtils.IsMetricValue(length) || CssUtils.IsNumericValue(length)) {
-                value = CssUtils.ParseAbsoluteLength(length);
-            }
-            else {
-                if (CssUtils.IsFontRelativeValue(length)) {
-                    // Defaut font-size is medium
-                    value = CssUtils.ParseRelativeValue(length, CssUtils.ParseAbsoluteFontSize(CommonCssConstants.MEDIUM));
-                    // Different browsers process font-relative units for markers differently.
-                    // We do it according to the css specification.
-                    if (CssUtils.IsRemValue(length)) {
-                        ISvgNodeRenderer rootElement = GetSvgRootElement(GetParent());
-                        if (rootElement != null && rootElement.GetAttribute(CommonCssConstants.FONT_SIZE) != null) {
-                            value = CssUtils.ParseRelativeValue(length, CssUtils.ParseAbsoluteFontSize(rootElement.GetAttribute(CommonCssConstants
-                                .FONT_SIZE)));
-                        }
-                    }
-                    else {
-                        if (CssUtils.IsEmValue(length)) {
-                            ISvgNodeRenderer parentElement = this.GetParent();
-                            if (parentElement != null && parentElement.GetAttribute(CommonCssConstants.FONT_SIZE) != null) {
-                                value = CssUtils.ParseRelativeValue(length, CssUtils.ParseAbsoluteFontSize(parentElement.GetAttribute(CommonCssConstants
-                                    .FONT_SIZE)));
-                            }
-                        }
-                        else {
-                            if (CssUtils.IsExValue(length)) {
-                                if (this.GetAttribute(CommonCssConstants.FONT_SIZE) != null) {
-                                    value = CssUtils.ParseRelativeValue(length, CssUtils.ParseAbsoluteFontSize(this.GetAttribute(CommonCssConstants
-                                        .FONT_SIZE)));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return value;
-        }
-
         private void ApplyRotation(SvgDrawContext context) {
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.ORIENT)) {
                 String orient = this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT);
@@ -237,18 +187,13 @@ namespace iText.Svg.Renderers.Impl {
                 .Equals(this.attributesAndStyles.Get(SvgConstants.Attributes.MARKER_UNITS))) {
                 String parentValue = this.GetParent().GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                 if (parentValue != null) {
-                    float strokeWidthScale;
-                    if (CssUtils.IsPercentageValue(parentValue)) {
-                        // If stroke width is a percentage value is always computed as a percentage of the normalized viewBox diagonal length.
-                        double rootViewPortHeight = context.GetRootViewPort().GetHeight();
-                        double rootViewPortWidth = context.GetRootViewPort().GetWidth();
-                        double viewBoxDiagonalLength = Math.Sqrt(rootViewPortHeight * rootViewPortHeight + rootViewPortWidth * rootViewPortWidth
-                            );
-                        strokeWidthScale = CssUtils.ParseRelativeValue(parentValue, (float)viewBoxDiagonalLength);
-                    }
-                    else {
-                        strokeWidthScale = SvgCssUtils.ConvertPtsToPx(ParseFontRelativeOrAbsoluteLengthOnMarker(parentValue));
-                    }
+                    // If stroke width is a percentage value is always computed as a percentage of the normalized viewBox diagonal length.
+                    double rootViewPortHeight = context.GetRootViewPort().GetHeight();
+                    double rootViewPortWidth = context.GetRootViewPort().GetWidth();
+                    double viewBoxDiagonalLength = CssUtils.ConvertPxToPts(Math.Sqrt(rootViewPortHeight * rootViewPortHeight +
+                         rootViewPortWidth * rootViewPortWidth));
+                    float strokeWidthScale = CssUtils.ConvertPtsToPx(ParseAbsoluteLength(parentValue, (float)viewBoxDiagonalLength
+                        , 1f, context));
                     context.GetCurrentCanvas().ConcatMatrix(AffineTransform.GetScaleInstance(strokeWidthScale, strokeWidthScale
                         ));
                 }
@@ -269,24 +214,14 @@ namespace iText.Svg.Renderers.Impl {
             float moveX = DEFAULT_REF_X;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFX)) {
                 String refX = this.attributesAndStyles.Get(SvgConstants.Attributes.REFX);
-                if (CssUtils.IsPercentageValue(refX)) {
-                    moveX = CssUtils.ParseRelativeValue(refX, context.GetRootViewPort().GetWidth());
-                }
-                else {
-                    moveX = ParseFontRelativeOrAbsoluteLengthOnMarker(refX);
-                }
+                moveX = ParseAbsoluteLength(refX, context.GetRootViewPort().GetWidth(), moveX, context);
                 //Apply scale
                 moveX *= -1 * xScale;
             }
             float moveY = DEFAULT_REF_Y;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFY)) {
                 String refY = this.attributesAndStyles.Get(SvgConstants.Attributes.REFY);
-                if (CssUtils.IsPercentageValue(refY)) {
-                    moveY = CssUtils.ParseRelativeValue(refY, context.GetRootViewPort().GetHeight());
-                }
-                else {
-                    moveY = ParseFontRelativeOrAbsoluteLengthOnMarker(refY);
-                }
+                moveY = ParseAbsoluteLength(refY, context.GetRootViewPort().GetHeight(), moveY, context);
                 moveY *= -1 * yScale;
             }
             AffineTransform translation = AffineTransform.GetTranslateInstance(moveX, moveY);

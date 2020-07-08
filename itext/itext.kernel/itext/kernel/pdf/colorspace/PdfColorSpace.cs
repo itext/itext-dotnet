@@ -108,6 +108,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                                                     }
                                                     else {
                                                         if (PdfName.DeviceN.Equals(csType)) {
+                                                            //TODO DEVSIX-4205 Fix colorspace creation
                                                             return array.Size() == 4 ? new PdfSpecialCs.DeviceN(array) : new PdfSpecialCs.NChannel(array);
                                                         }
                                                         else {

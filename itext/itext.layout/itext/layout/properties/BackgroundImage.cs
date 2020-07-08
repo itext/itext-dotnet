@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Layout.Properties {
@@ -49,6 +50,8 @@ namespace iText.Layout.Properties {
         protected internal bool repeatX;
 
         protected internal bool repeatY;
+
+        protected internal AbstractLinearGradientBuilder linearGradientBuilder;
 
         private BackgroundImage(PdfXObject image, bool repeatX, bool repeatY) {
             this.image = image;
@@ -72,6 +75,12 @@ namespace iText.Layout.Properties {
             : this((PdfXObject)image, repeatX, repeatY) {
         }
 
+        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder) {
+            this.linearGradientBuilder = linearGradientBuilder;
+            this.repeatX = false;
+            this.repeatY = false;
+        }
+
         public virtual PdfImageXObject GetImage() {
             return image is PdfImageXObject ? (PdfImageXObject)image : null;
         }
@@ -80,8 +89,12 @@ namespace iText.Layout.Properties {
             return image is PdfFormXObject ? (PdfFormXObject)image : null;
         }
 
+        public virtual AbstractLinearGradientBuilder GetLinearGradientBuilder() {
+            return this.linearGradientBuilder;
+        }
+
         public virtual bool IsBackgroundSpecified() {
-            return image is PdfFormXObject || image is PdfImageXObject;
+            return image is PdfFormXObject || image is PdfImageXObject || linearGradientBuilder != null;
         }
 
         public virtual bool IsRepeatX() {

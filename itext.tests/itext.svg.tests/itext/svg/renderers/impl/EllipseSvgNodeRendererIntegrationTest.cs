@@ -171,5 +171,11 @@ namespace iText.Svg.Renderers.Impl {
                  + "123.22 252.14 125.24 250.13 127.72 250.13 c\n" + "130.21 250.13 132.22 252.14 132.22 254.63 c";
             NUnit.Framework.Assert.IsTrue(pageContentBytes.Contains(expectedResult));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EllipseWithBigStrokeWidthTest() {
+            // TODO: DEVSIX-3932 update cmp_ after fix
+            ConvertAndCompare(sourceFolder, destinationFolder, "ellipseWithBigStrokeWidth");
+        }
     }
 }

@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -53,8 +54,8 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfStreamTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -88,6 +89,78 @@ namespace iText.Kernel.Pdf {
             byte[] cmpImgBytes2 = ReadFile(sourceFolder + "cmp_img2.jpg");
             NUnit.Framework.Assert.AreEqual(imgBytes1, cmpImgBytes1);
             NUnit.Framework.Assert.AreEqual(imgBytes2, cmpImgBytes2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectRefInFilterAndNoTaggedPdfTest() {
+            String inFile = sourceFolder + "indirectRefInFilterAndNoTaggedPdf.pdf";
+            String outFile = destinationFolder + "destIndirectRefInFilterAndNoTaggedPdf.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(inFile));
+            PdfDocument outDoc = new PdfDocument(new PdfReader(inFile), new PdfWriter(outFile));
+            outDoc.Close();
+            PdfDocument doc = new PdfDocument(new PdfReader(outFile));
+            PdfStream outStreamIm1 = doc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
+                ("Im1"));
+            PdfStream outStreamIm2 = doc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
+                ("Im2"));
+            PdfStream cmpStreamIm1 = srcDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new 
+                PdfName("Im1"));
+            PdfStream cmpStreamIm2 = srcDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new 
+                PdfName("Im2"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStreamIm1, cmpStreamIm1));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStreamIm2, cmpStreamIm2));
+            srcDoc.Close();
+            outDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectFilterInCatalogTest() {
+            // TODO DEVSIX-1193 remove junitExpectedException and expected NullPointerException after fix
+            String inFile = sourceFolder + "indFilterInCatalog.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(inFile), new PdfWriter(destinationFolder + "indFilterInCatalog.pdf"
+                ));
+            NUnit.Framework.Assert.That(() =>  {
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectFilterFlushedBeforeStreamTest() {
+            // TODO DEVSIX-1193 remove junitExpectedException after fix
+            String inFile = sourceFolder + "indFilterInCatalog.pdf";
+            String @out = destinationFolder + "indirectFilterFlushedBeforeStreamTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFile), new PdfWriter(@out));
+            // Simulate the case in which filter is somehow already flushed before stream.
+            // Either directly by user or because of any other reason.
+            PdfObject filterObject = pdfDoc.GetPdfObject(6);
+            filterObject.Flush();
+            NUnit.Framework.Assert.That(() =>  {
+                pdfDoc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectFilterMarkedToBeFlushedBeforeStreamTest() {
+            // TODO DEVSIX-1193 remove junitExpectedException after fix
+            String inFile = sourceFolder + "indFilterInCatalog.pdf";
+            String @out = destinationFolder + "indirectFilterMarkedToBeFlushedBeforeStreamTest.pdf";
+            PdfWriter writer = new PdfWriter(@out);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFile), writer);
+            // Simulate the case when indirect filter object is marked to be flushed before the stream itself.
+            PdfObject filterObject = pdfDoc.GetPdfObject(6);
+            filterObject.GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
+            // The image stream will be marked as MUST_BE_FLUSHED after page is flushed.
+            pdfDoc.GetFirstPage().GetPdfObject().GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
+            NUnit.Framework.Assert.That(() =>  {
+                writer.FlushWaitingObjects(JavaCollectionsUtil.EmptySet<PdfIndirectReference>());
+                pdfDoc.Close();
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
         }
     }
 }

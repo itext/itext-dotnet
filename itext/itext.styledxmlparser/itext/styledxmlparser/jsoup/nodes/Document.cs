@@ -628,7 +628,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <summary>Set the indent amount for pretty printing</summary>
         /// <param name="indentAmount">
         /// number of spaces to use for indenting each level. Must be
-        /// <literal>&gt;=</literal>
+        /// <c>&gt;=</c>
         /// 0.
         /// </param>
         /// <returns>this, for chaining</returns>

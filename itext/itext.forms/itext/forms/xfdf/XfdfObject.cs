@@ -50,7 +50,7 @@ namespace iText.Forms.Xfdf {
     /// <remarks>
     /// Represents xfdf element, the top level element in an xfdf document.
     /// For more details see paragraph 6.2.1 in Xfdf document specification.
-    /// Content model: ( f? & ids? & fields? & annots? )
+    /// Content model: ( f? &amp; ids? &amp; fields? &amp; annots? )
     /// Attributes: xml:space, xmlns.
     /// </remarks>
     public class XfdfObject {

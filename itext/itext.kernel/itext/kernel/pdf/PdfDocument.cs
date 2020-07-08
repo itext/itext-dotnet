@@ -277,6 +277,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets XMPMetadata.</summary>
+        /// <returns>the XMPMetadata</returns>
         public virtual byte[] GetXmpMetadata() {
             return GetXmpMetadata(false);
         }
@@ -526,15 +527,18 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageNum">the one-based index of the PdfPage to be removed</param>
         public virtual void RemovePage(int pageNum) {
             CheckClosingStatus();
-            PdfPage removedPage = catalog.GetPageTree().RemovePage(pageNum);
+            PdfPage removedPage = GetPage(pageNum);
+            if (removedPage != null && removedPage.IsFlushed() && (IsTagged() || HasAcroForm())) {
+                throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED);
+            }
+            catalog.GetPageTree().RemovePage(pageNum);
             if (removedPage != null) {
                 catalog.RemoveOutlines(removedPage);
                 RemoveUnusedWidgetsFromFields(removedPage);
                 if (IsTagged()) {
                     GetTagStructureContext().RemovePageTags(removedPage);
                 }
-                // TODO should we remove everything (outlines, tags) if page won't be removed in the end, because it's already flushed? wouldn't tags be also flushed?
-                if (!removedPage.GetPdfObject().IsFlushed()) {
+                if (!removedPage.IsFlushed()) {
                     removedPage.GetPdfObject().Remove(PdfName.Parent);
                     removedPage.GetPdfObject().GetIndirectReference().SetFree();
                 }
@@ -1358,8 +1362,13 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method returns a complete outline tree of the whole document.</summary>
         /// <param name="updateOutlines">
-        /// if the flag is true, the method read the whole document and creates outline tree.
-        /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
+        /// if the flag is
+        /// <see langword="true"/>
+        /// , the method reads the whole document and creates outline tree.
+        /// If the flag is
+        /// <see langword="false"/>
+        /// , the method gets cached outline tree
+        /// (if it was cached via calling getOutlines method before).
         /// </param>
         /// <returns>
         /// fully initialize
@@ -1395,6 +1404,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets static copy of cross reference table.</summary>
+        /// <returns>a static copy of cross reference table</returns>
         public virtual IList<PdfIndirectReference> ListIndirectReferences() {
             CheckClosingStatus();
             IList<PdfIndirectReference> indRefs = new List<PdfIndirectReference>(xref.Size());
@@ -1734,10 +1744,15 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// or load already created one.
         /// </summary>
-        /// <remarks>
-        /// Create a new instance of
+        /// <param name="dictionary">
+        /// 
+        /// <see cref="PdfDictionary"/>
+        /// that presents
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </param>
+        /// <returns>
+        /// instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// or load already created one.
         /// <para />
         /// Note, PdfFont which created with
         /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
@@ -1746,7 +1761,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// or
         /// <see cref="PdfResources"/>.
-        /// </remarks>
+        /// </returns>
         public virtual PdfFont GetFont(PdfDictionary dictionary) {
             System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
             if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
@@ -1798,6 +1813,11 @@ namespace iText.Kernel.Pdf {
         /// instance to this document so that this font is flushed automatically
         /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
         /// </remarks>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to add
+        /// </param>
         /// <returns>the same PdfFont instance.</returns>
         public virtual PdfFont AddFont(PdfFont font) {
             font.MakeIndirect(this);
@@ -2024,8 +2044,7 @@ namespace iText.Kernel.Pdf {
                     }
                     file.Close();
                     writer.Write((byte)'\n');
-                    //TODO log if full compression differs
-                    writer.properties.isFullCompression = reader.HasXrefStm();
+                    OverrideFullCompressionInWriterProperties(writer.properties, reader.HasXrefStm());
                     writer.crypto = reader.decrypt;
                     if (newPdfVersion != null) {
                         // In PDF 1.4, a PDF version can also be specified in the Version entry of the document catalog,
@@ -2109,6 +2128,7 @@ namespace iText.Kernel.Pdf {
         /// Update XMP metadata values from
         /// <see cref="PdfDocumentInfo"/>.
         /// </summary>
+        /// <returns>the XMPMetadata</returns>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);
@@ -2216,6 +2236,10 @@ namespace iText.Kernel.Pdf {
         /// <returns>iText version info.</returns>
         internal VersionInfo GetVersionInfo() {
             return versionInfo;
+        }
+
+        internal virtual bool HasAcroForm() {
+            return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
 
         private void UpdateProducerInInfoDictionary() {
@@ -2406,10 +2430,6 @@ namespace iText.Kernel.Pdf {
             names.SetModified();
         }
 
-        private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
-            return xmpMeta.GetProperty(schemaNS, propName) != null;
-        }
-
         private long GetDocumentId() {
             return documentId;
         }
@@ -2474,6 +2494,25 @@ namespace iText.Kernel.Pdf {
                 buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
             }
+        }
+
+        private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
+            ) {
+            if (true == properties.isFullCompression && !readerHasXrefStream) {
+                ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
+            }
+            else {
+                if (false == properties.isFullCompression && readerHasXrefStream) {
+                    ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                    logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
+                }
+            }
+            properties.isFullCompression = readerHasXrefStream;
+        }
+
+        private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
+            return xmpMeta.GetProperty(schemaNS, propName) != null;
         }
 
         void System.IDisposable.Dispose() {

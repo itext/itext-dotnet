@@ -197,6 +197,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             public IccBased(Stream iccStream)
+                // TODO DEVSIX-4217 add parsing of the Range
                 : this(GetInitialPdfArray(iccStream, null)) {
             }
 

@@ -56,8 +56,13 @@ namespace iText.Kernel.Geom {
         public Subpath() {
         }
 
-        /// <summary>Copy constuctor.</summary>
-        /// <param name="subpath"/>
+        /// <summary>Copy constructor.</summary>
+        /// <param name="subpath">
+        /// 
+        /// <see cref="Subpath"/>
+        /// which contents will be used to create this
+        /// <see cref="Subpath"/>
+        /// </param>
         public Subpath(iText.Kernel.Geom.Subpath subpath) {
             this.startPoint = subpath.startPoint;
             this.segments.AddAll(subpath.GetSegments());
@@ -65,24 +70,27 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Constructs a new subpath starting at the given point.</summary>
+        /// <param name="startPoint">the point this subpath starts at</param>
         public Subpath(Point startPoint)
             : this((float)startPoint.GetX(), (float)startPoint.GetY()) {
         }
 
         /// <summary>Constructs a new subpath starting at the given point.</summary>
+        /// <param name="startPointX">x-coordinate of the start point of subpath</param>
+        /// <param name="startPointY">y-coordinate of the start point of subpath</param>
         public Subpath(float startPointX, float startPointY) {
             this.startPoint = new Point(startPointX, startPointY);
         }
 
         /// <summary>Sets the start point of the subpath.</summary>
-        /// <param name="startPoint"/>
+        /// <param name="startPoint">the point this subpath starts at</param>
         public virtual void SetStartPoint(Point startPoint) {
             SetStartPoint((float)startPoint.GetX(), (float)startPoint.GetY());
         }
 
         /// <summary>Sets the start point of the subpath.</summary>
-        /// <param name="x"/>
-        /// <param name="y"/>
+        /// <param name="x">x-coordinate of the start pint</param>
+        /// <param name="y">y-coordinate of the start pint</param>
         public virtual void SetStartPoint(float x, float y) {
             this.startPoint = new Point(x, y);
         }
@@ -165,6 +173,7 @@ namespace iText.Kernel.Geom {
         /// See
         /// <see cref="IsClosed()"/>
         /// </summary>
+        /// <param name="closed"><c>boolean</c> value indicating whether the path is closed or not.</param>
         public virtual void SetClosed(bool closed) {
             this.closed = closed;
         }

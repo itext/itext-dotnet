@@ -156,8 +156,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <c>Rectangle</c>
         /// .
         /// </summary>
-        /// <param name="tri"/>
-        /// <returns/>
+        /// <param name="tri">
+        /// <see cref="TextRenderInfo"/>
+        /// object
+        /// </param>
+        /// <returns>a list of
+        /// <see cref="CharacterRenderInfo"/>s
+        /// which represents the passed
+        /// <see cref="TextRenderInfo"/>
+        /// </returns>
         protected internal virtual IList<CharacterRenderInfo> ToCRI(TextRenderInfo tri) {
             IList<CharacterRenderInfo> cris = new List<CharacterRenderInfo>();
             foreach (TextRenderInfo subTri in tri.GetCharacterRenderInfos()) {
@@ -186,8 +193,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <c>Rectangle</c>
         /// .
         /// </summary>
-        /// <param name="cris"/>
-        /// <returns/>
+        /// <param name="cris">list of
+        /// <see cref="CharacterRenderInfo"/>
+        /// objects</param>
+        /// <returns>an array containing elements of this list</returns>
         protected internal virtual IList<Rectangle> ToRectangles(IList<CharacterRenderInfo> cris) {
             IList<Rectangle> retval = new List<Rectangle>();
             if (cris.IsEmpty()) {

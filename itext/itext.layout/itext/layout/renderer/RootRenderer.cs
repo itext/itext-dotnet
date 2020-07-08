@@ -61,6 +61,8 @@ namespace iText.Layout.Renderer {
 
         protected internal IList<IRenderer> waitingDrawingElements = new List<IRenderer>();
 
+        internal IList<Rectangle> floatRendererAreas;
+
         private IRenderer keepWithNextHangingRenderer;
 
         private LayoutResult keepWithNextHangingRendererLayoutResult;
@@ -68,8 +70,6 @@ namespace iText.Layout.Renderer {
         private MarginsCollapseHandler marginsCollapseHandler;
 
         private LayoutArea initialCurrentArea;
-
-        private IList<Rectangle> floatRendererAreas;
 
         private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
@@ -104,6 +104,7 @@ namespace iText.Layout.Renderer {
             }
             // Static layout
             for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
+                RootRendererAreaStateHandler rootRendererStateHandler = new RootRendererAreaStateHandler();
                 renderer = addedRenderers[i];
                 bool rendererIsFloat = FloatingHelper.IsRendererFloating(renderer);
                 bool clearanceOverflowsToNextPage = FloatingHelper.IsClearanceApplied(waitingNextPageRenderers, renderer.GetProperty
@@ -116,8 +117,6 @@ namespace iText.Layout.Renderer {
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
-                RootLayoutArea storedArea = null;
-                RootLayoutArea nextStoredArea = null;
                 MarginsCollapseInfo childMarginsInfo = null;
                 if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
@@ -137,12 +136,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             ProcessRenderer(result.GetSplitRenderer(), resultRenderers);
-                            if (nextStoredArea != null) {
-                                currentArea = nextStoredArea;
-                                currentPageNumber = nextStoredArea.GetPageNumber();
-                                nextStoredArea = null;
-                            }
-                            else {
+                            if (!rootRendererStateHandler.AttemptGoForwardToStoredNextState(this)) {
                                 currentAreaNeedsToBeUpdated = true;
                             }
                         }
@@ -175,12 +169,9 @@ namespace iText.Layout.Renderer {
                                         ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                         logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
-                                        if (storedArea != null) {
-                                            nextStoredArea = currentArea;
-                                            currentArea = storedArea;
-                                            currentPageNumber = storedArea.GetPageNumber();
+                                        if (!rendererIsFloat) {
+                                            rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
                                         }
-                                        storedArea = currentArea;
                                     }
                                     else {
                                         if (null != result.GetCauseOfNothing() && true.Equals(result.GetCauseOfNothing().GetProperty<bool?>(Property
@@ -200,6 +191,9 @@ namespace iText.Layout.Renderer {
                                             ILog logger = LogManager.GetLogger(typeof(RootRenderer));
                                             logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
                                                 ));
+                                            if (!rendererIsFloat) {
+                                                rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
+                                            }
                                         }
                                         else {
                                             if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
@@ -219,13 +213,8 @@ namespace iText.Layout.Renderer {
                                     }
                                 }
                                 else {
-                                    storedArea = currentArea;
-                                    if (nextStoredArea != null) {
-                                        currentArea = nextStoredArea;
-                                        currentPageNumber = nextStoredArea.GetPageNumber();
-                                        nextStoredArea = null;
-                                    }
-                                    else {
+                                    rootRendererStateHandler.StorePreviousState(this);
+                                    if (!rootRendererStateHandler.AttemptGoForwardToStoredNextState(this)) {
                                         if (rendererIsFloat) {
                                             waitingNextPageRenderers.Add(result.GetOverflowRenderer());
                                             floatOverflowedCompletely = true;
@@ -344,7 +333,7 @@ namespace iText.Layout.Renderer {
             if (!immediateFlush) {
                 Flush();
             }
-            FlushWaitingDrawingElements();
+            FlushWaitingDrawingElements(true);
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {
                 taggingHelper.ReleaseAllHints();
@@ -367,14 +356,6 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
 
-        protected internal virtual void FlushWaitingDrawingElements() {
-            for (int i = 0; i < waitingDrawingElements.Count; ++i) {
-                IRenderer waitingDrawingElement = waitingDrawingElements[i];
-                FlushSingleRenderer(waitingDrawingElement);
-            }
-            waitingDrawingElements.Clear();
-        }
-
         protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {
             if (currentArea != null) {
@@ -389,6 +370,29 @@ namespace iText.Layout.Renderer {
             if (!immediateFlush) {
                 childRenderers.AddAll(resultRenderers);
             }
+        }
+
+        protected internal virtual void FlushWaitingDrawingElements() {
+            FlushWaitingDrawingElements(true);
+        }
+
+        internal virtual void FlushWaitingDrawingElements(bool force) {
+            ICollection<IRenderer> flushedElements = new HashSet<IRenderer>();
+            for (int i = 0; i < waitingDrawingElements.Count; ++i) {
+                IRenderer waitingDrawingElement = waitingDrawingElements[i];
+                // TODO Remove checking occupied area to be not null when DEVSIX-1655 is resolved.
+                if (force || (null != waitingDrawingElement.GetOccupiedArea() && waitingDrawingElement.GetOccupiedArea().GetPageNumber
+                    () < currentArea.GetPageNumber())) {
+                    FlushSingleRenderer(waitingDrawingElement);
+                    flushedElements.Add(waitingDrawingElement);
+                }
+                else {
+                    if (null == waitingDrawingElement.GetOccupiedArea()) {
+                        flushedElements.Add(waitingDrawingElement);
+                    }
+                }
+            }
+            waitingDrawingElements.RemoveAll(flushedElements);
         }
 
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {

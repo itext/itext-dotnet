@@ -88,6 +88,8 @@ namespace iText.Pdfa.Checker {
 
         internal const int MIN_PAGE_SIZE = 3;
 
+        private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 32;
+
         private bool currentFillCsIsIccBasedCMYK = false;
 
         private bool currentStrokeCsIsIccBasedCMYK = false;
@@ -146,15 +148,20 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_164(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_165(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
+                else {
+                    if (pattern is PdfPattern.Tiling) {
+                        CheckContentStream((PdfStream)pattern.GetPdfObject());
+                    }
+                }
             }
-            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
+            base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
-        private sealed class _CanvasGraphicsState_164 : CanvasGraphicsState {
-            public _CanvasGraphicsState_164(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_165 : CanvasGraphicsState {
+            public _CanvasGraphicsState_165(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -184,8 +191,16 @@ namespace iText.Pdfa.Checker {
             else {
                 if (colorSpace is PdfSpecialCs.DeviceN) {
                     PdfSpecialCs.DeviceN deviceN = (PdfSpecialCs.DeviceN)colorSpace;
+                    if (deviceN.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
+                        throw new PdfAConformanceException(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+                            , MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS);
+                    }
+                    //TODO DEVSIX-4203 Fix IndexOutOfBounds exception being thrown for DeviceN (not NChannel) colorspace without
+                    // attributes. According to the spec PdfAConformanceException should be thrown.
                     PdfDictionary attributes = ((PdfArray)deviceN.GetPdfObject()).GetAsDictionary(4);
                     PdfDictionary colorants = attributes.GetAsDictionary(PdfName.Colorants);
+                    //TODO DEVSIX-4203 Colorants dictionary is mandatory in PDF/A-2 spec. Need to throw an appropriate exception
+                    // if it is not present.
                     if (colorants != null) {
                         foreach (KeyValuePair<PdfName, PdfObject> entry in colorants.EntrySet()) {
                             PdfArray separation = (PdfArray)entry.Value;
@@ -331,6 +346,14 @@ namespace iText.Pdfa.Checker {
             return 32767;
         }
 
+        protected internal override void CheckPdfArray(PdfArray array) {
+        }
+
+        // currently no validation for arrays is implemented for PDF/A 2
+        protected internal override void CheckPdfDictionary(PdfDictionary dictionary) {
+        }
+
+        // currently no validation for dictionaries is implemented for PDF/A 2
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null) {
@@ -500,7 +523,7 @@ namespace iText.Pdfa.Checker {
                         configList.Add((PdfDictionary)config);
                     }
                 }
-                ICollection<PdfObject> ocgs = new HashSet<PdfObject>();
+                HashSet<PdfObject> ocgs = new HashSet<PdfObject>();
                 PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
                 if (ocgsArray != null) {
                     foreach (PdfObject ocg in ocgsArray) {
@@ -508,34 +531,8 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 HashSet<String> names = new HashSet<String>();
-                HashSet<PdfObject> order = new HashSet<PdfObject>();
                 foreach (PdfDictionary config in configList) {
-                    PdfString name = config.GetAsString(PdfName.Name);
-                    if (name == null) {
-                        throw new PdfAConformanceException(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
-                            );
-                    }
-                    if (!names.Add(name.ToUnicodeString())) {
-                        throw new PdfAConformanceException(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
-                            );
-                    }
-                    if (config.ContainsKey(PdfName.AS)) {
-                        throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
-                            );
-                    }
-                    PdfArray orderArray = config.GetAsArray(PdfName.Order);
-                    if (orderArray != null) {
-                        FillOrderRecursively(orderArray, order);
-                    }
-                }
-                if (order.Count != ocgs.Count) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
-                        );
-                }
-                order.RetainAll(ocgs);
-                if (order.Count != ocgs.Count) {
-                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
-                        );
+                    CheckCatalogConfig(config, ocgs, names);
                 }
             }
         }
@@ -579,6 +576,7 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal override void CheckPdfStream(PdfStream stream) {
+            CheckPdfDictionary(stream);
             if (stream.ContainsKey(PdfName.F) || stream.ContainsKey(PdfName.FFilter) || stream.ContainsKey(PdfName.FDecodeParams
                 )) {
                 throw new PdfAConformanceException(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
@@ -867,6 +865,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             CheckResources(form.GetAsDictionary(PdfName.Resources));
+            CheckContentStream(form);
         }
 
         private void CheckContentsForTransparency(PdfDictionary pageDict) {
@@ -964,6 +963,31 @@ namespace iText.Pdfa.Checker {
                 }
             }
             return altCSIsTheSame;
+        }
+
+        private void CheckCatalogConfig(PdfDictionary config, HashSet<PdfObject> ocgs, HashSet<String> names) {
+            PdfString name = config.GetAsString(PdfName.Name);
+            if (name == null) {
+                throw new PdfAConformanceException(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+                    );
+            }
+            if (!names.Add(name.ToUnicodeString())) {
+                throw new PdfAConformanceException(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+                    );
+            }
+            if (config.ContainsKey(PdfName.AS)) {
+                throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+                    );
+            }
+            PdfArray orderArray = config.GetAsArray(PdfName.Order);
+            if (orderArray != null) {
+                HashSet<PdfObject> order = new HashSet<PdfObject>();
+                FillOrderRecursively(orderArray, order);
+                if (!JavaUtil.SetEquals(order, ocgs)) {
+                    throw new PdfAConformanceException(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS
+                        );
+                }
+            }
         }
 
         private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order) {

@@ -137,6 +137,11 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.IO.Source.DeflaterOutputStream"/>.
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWriter"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel) {
             this.properties.SetCompressionLevel(compressionLevel);
             return this;
@@ -153,6 +158,11 @@ namespace iText.Kernel.Pdf {
         /// of the resulting PDF document.
         /// </remarks>
         /// <param name="smartMode">True for enabling smart mode.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfWriter"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode) {
             this.properties.smartMode = smartMode;
             return this;
@@ -311,7 +321,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="Java.Util.Set{E}"/>
         /// of
         /// <see cref="PdfIndirectReference">references</see>
-        /// that are forbidden to be flushed automatically.
+        /// that are forbidden to be flushed
+        /// automatically.
         /// </param>
         protected internal virtual void FlushWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush) {
             PdfXrefTable xref = document.GetXref();
@@ -343,7 +354,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="Java.Util.Set{E}"/>
         /// of
         /// <see cref="PdfIndirectReference">references</see>
-        /// that are forbidden to be flushed automatically.
+        /// that are forbidden to be flushed
+        /// automatically.
         /// </param>
         protected internal virtual void FlushModifiedWaitingObjects(ICollection<PdfIndirectReference> forbiddenToFlush
             ) {
