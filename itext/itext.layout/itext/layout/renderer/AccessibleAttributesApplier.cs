@@ -156,7 +156,7 @@ namespace iText.Layout.Renderer {
             UnitValue[] margins = new UnitValue[] { renderer.GetPropertyAsUnitValue(Property.MARGIN_TOP), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_BOTTOM), renderer.GetPropertyAsUnitValue(Property.MARGIN_LEFT), renderer.GetPropertyAsUnitValue
                 (Property.MARGIN_RIGHT) };
-            //TODO set depending on writing direction
+            //TODO DEVSIX-4218 set depending on writing direction
             int[] marginsOrder = new int[] { 0, 1, 2, 3 };
             UnitValue spaceBefore = margins[marginsOrder[0]];
             if (spaceBefore != null) {
@@ -335,7 +335,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 PdfArray paddingArray = new PdfArray();
-                //TODO set depending on writing direction
+                //TODO DEVSIX-4218 set depending on writing direction
                 int[] paddingsOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in paddingsOrder) {
                     paddingArray.Add(new PdfNumber(paddings[i]));
@@ -387,7 +387,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                //TODO set depending on writing direction
+                //TODO DEVSIX-4218 set depending on writing direction
                 int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 foreach (int i in borderOrder) {
                     if (borders[i] != null) {
@@ -441,7 +441,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment) {
-            //TODO set rightToLeft value according with actual text content if it is possible.
+            //TODO DEVSIX-4218 set rightToLeft value according with actual text content if it is possible.
             bool isLeftToRight = true;
             switch (textAlignment) {
                 case TextAlignment.LEFT: {
@@ -480,7 +480,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static PdfName TransformBlockAlignToName(HorizontalAlignment? horizontalAlignment) {
-            //TODO set rightToLeft value according with actual text content if it is possible.
+            //TODO DEVSIX-4218 set rightToLeft value according with actual text content if it is possible.
             bool isLeftToRight = true;
             switch (horizontalAlignment) {
                 case HorizontalAlignment.LEFT: {
