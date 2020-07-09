@@ -60,12 +60,11 @@ namespace iText.Pdfa {
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
-                    using (PdfADocument pdfa = new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B, GetOutputIntent
-                        (icm))) {
-                        using (Document document = new Document(pdfa)) {
-                            pdfa.checker = testChecker;
-                            document.Add(BuildContent());
-                        }
+                    using (Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B
+                        , GetOutputIntent(icm)))) {
+                        PdfADocument pdfa = (PdfADocument)document.GetPdfDocument();
+                        pdfa.checker = testChecker;
+                        document.Add(BuildContent());
                     }
                 }
             }
@@ -90,12 +89,11 @@ namespace iText.Pdfa {
                 using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                     )) {
                     using (Stream fos = new MemoryStream()) {
-                        using (PdfADocument pdfa = new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B, GetOutputIntent
-                            (icm))) {
-                            using (Document document = new Document(pdfa)) {
-                                pdfa.checker = testChecker;
-                                document.Add(BuildContent());
-                            }
+                        using (Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B
+                            , GetOutputIntent(icm)))) {
+                            PdfADocument pdfa = (PdfADocument)document.GetPdfDocument();
+                            pdfa.checker = testChecker;
+                            document.Add(BuildContent());
                         }
                     }
                 }
