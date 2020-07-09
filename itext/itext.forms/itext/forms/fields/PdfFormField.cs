@@ -3458,20 +3458,6 @@ namespace iText.Forms.Fields {
         /// <param name="height">height of the checkbox</param>
         /// <param name="selectedValue">the selected value of the checkbox which determines the appearance of the checkbox
         ///     </param>
-        /// <param name="checkType">
-        /// the type that determines how the checkbox will look like. Allowed values are
-        /// <value>TYPE_CHECK</value>
-        /// ,
-        /// <value>TYPE_CIRCLE</value>
-        /// ,
-        /// <value>TYPE_CROSS</value>
-        /// ,
-        /// <value>TYPE_DIAMOND</value>
-        /// ,
-        /// <value>TYPE_SQUARE</value>
-        /// ,
-        /// <value>TYPE_STAR</value>
-        /// </param>
         [System.ObsoleteAttribute(@"use DrawPdfA2CheckAppearance(float, float, System.String, int) instead.")]
         protected internal virtual void DrawPdfA1CheckAppearance(float width, float height, String selectedValue, 
             int checkType) {
