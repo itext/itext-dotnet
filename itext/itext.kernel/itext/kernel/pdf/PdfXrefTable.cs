@@ -98,10 +98,15 @@ namespace iText.Kernel.Pdf {
             return reference;
         }
 
+        /// <summary>Get size of cross-reference table.</summary>
+        /// <returns>amount of lines including zero-object</returns>
         public virtual int Size() {
             return count + 1;
         }
 
+        /// <summary>Get appropriate reference to indirect object.</summary>
+        /// <param name="index">is the index of required object</param>
+        /// <returns>reference to object with the provided index</returns>
         public virtual PdfIndirectReference Get(int index) {
             if (index > count) {
                 return null;
@@ -109,14 +114,22 @@ namespace iText.Kernel.Pdf {
             return xref[index];
         }
 
+        /// <summary>
+        /// Change the state of the cross-reference table to mark that reading of the document
+        /// was completed.
+        /// </summary>
         internal virtual void MarkReadingCompleted() {
             readingCompleted = true;
         }
 
+        /// <summary>Check if reading of the document was completed.</summary>
+        /// <returns>true if reading was completed and false otherwise</returns>
         internal virtual bool IsReadingCompleted() {
             return readingCompleted;
         }
 
+        /// <summary>Set up appropriate state for the free references list.</summary>
+        /// <param name="pdfDocument">is the current document</param>
         internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
             freeReferencesLinkedList.Clear();
             // ensure zero object is free
@@ -167,7 +180,9 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Put(0, prevFreeRef);
         }
 
-        //For Object streams
+        /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
+        /// <param name="document">is the current document</param>
+        /// <returns>created indirect reference to the object stream</returns>
         internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
             Add(reference);
@@ -182,6 +197,8 @@ namespace iText.Kernel.Pdf {
             return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
+        /// <summary>Set the reference to free state.</summary>
+        /// <param name="reference">is a reference to be updated.</param>
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
             if (reference.IsFree()) {
                 return;
@@ -203,6 +220,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Increase capacity of the array of indirect references.</summary>
+        /// <param name="capacity">is a new capacity to set</param>
         protected internal virtual void SetCapacity(int capacity) {
             if (capacity > xref.Length) {
                 ExtendXref(capacity);
@@ -351,6 +370,7 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Clear();
         }
 
+        /// <summary>Clear the state of the cross-reference table.</summary>
         internal virtual void Clear() {
             for (int i = 1; i <= count; i++) {
                 if (xref[i] != null && xref[i].IsFree()) {
