@@ -189,7 +189,7 @@ namespace iText.Pdfa.Checker {
 
         public override void CheckXrefTable(PdfXrefTable xrefTable) {
             // do not consider 'zero object' as it is not an indirect object
-            if (xrefTable.Size() - 1 > GetMaxNumberOfIndirectObjects()) {
+            if (xrefTable.GetCountOfIndirectObjects() > GetMaxNumberOfIndirectObjects()) {
                 throw new PdfAConformanceException(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED);
             }
         }
