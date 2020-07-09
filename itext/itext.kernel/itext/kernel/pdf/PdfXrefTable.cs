@@ -50,7 +50,7 @@ using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
-    internal class PdfXrefTable {
+    public class PdfXrefTable {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
@@ -238,6 +238,7 @@ namespace iText.Kernel.Pdf {
                 xref = null;
                 return;
             }
+            document.CheckIsoConformance(this, IsoKey.XREF_TABLE);
             long startxref = writer.GetCurrentPos();
             long xRefStmPos = -1;
             if (xrefStream != null) {

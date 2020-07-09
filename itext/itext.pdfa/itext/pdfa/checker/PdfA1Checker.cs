@@ -187,12 +187,23 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckXrefTable(PdfXrefTable xrefTable) {
+            // do not consider 'zero object' as it is not an indirect object
+            if (xrefTable.Size() - 1 > GetMaxNumberOfIndirectObjects()) {
+                throw new PdfAConformanceException(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED);
+            }
+        }
+
         protected internal override ICollection<PdfName> GetForbiddenActions() {
             return forbiddenActions;
         }
 
         protected internal override ICollection<PdfName> GetAllowedNamedActions() {
             return allowedNamedActions;
+        }
+
+        protected internal override long GetMaxNumberOfIndirectObjects() {
+            return 8_388_607;
         }
 
         protected internal override void CheckColorsUsages() {

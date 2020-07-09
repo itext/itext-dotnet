@@ -417,6 +417,10 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
         }
 
+        /// <summary>Verify the conformity of the cross-reference table.</summary>
+        /// <param name="xrefTable">is the Xref table</param>
+        public abstract void CheckXrefTable(PdfXrefTable xrefTable);
+
         protected internal virtual void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources) {
         }
 
@@ -440,6 +444,10 @@ namespace iText.Pdfa.Checker {
         /// <param name="object">is an operand of content stream to validate</param>
         protected internal virtual void CheckContentStreamObject(PdfObject @object) {
         }
+
+        /// <summary>Retrieve maximum allowed number of indirect objects in conforming document.</summary>
+        /// <returns>maximum allowed number of indirect objects</returns>
+        protected internal abstract long GetMaxNumberOfIndirectObjects();
 
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
