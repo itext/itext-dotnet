@@ -50,6 +50,7 @@ using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
     public class PdfXrefTable {
         private const int INITIAL_CAPACITY = 32;
 
@@ -102,6 +103,18 @@ namespace iText.Kernel.Pdf {
         /// <returns>amount of lines including zero-object</returns>
         public virtual int Size() {
             return count + 1;
+        }
+
+        /// <summary>Calculates a number of stored references to indirect objects.</summary>
+        /// <returns>number of indirect objects</returns>
+        public virtual int GetCountOfIndirectObjects() {
+            int countOfIndirectObjects = 0;
+            foreach (PdfIndirectReference @ref in xref) {
+                if (@ref != null && !@ref.IsFree()) {
+                    countOfIndirectObjects++;
+                }
+            }
+            return countOfIndirectObjects;
         }
 
         /// <summary>Get appropriate reference to indirect object.</summary>

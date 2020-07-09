@@ -147,7 +147,7 @@ namespace iText.Pdfa {
         }
 
         // during closing of pdfa object exception will be thrown as new document will contain
-        // 12 indirect objects anf limit per "mock specification" conformance will be exceeded
+        // 12 indirect objects and limit per "mock specification" conformance will be exceeded
         private Paragraph BuildContent() {
             PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
