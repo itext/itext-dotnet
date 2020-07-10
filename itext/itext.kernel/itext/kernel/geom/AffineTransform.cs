@@ -690,6 +690,15 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Creates a "deep copy" of this AffineTransform, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <returns>the copied AffineTransform.</returns>
+        public virtual iText.Kernel.Geom.AffineTransform Clone() {
+            return (iText.Kernel.Geom.AffineTransform) MemberwiseClone();
+        }
+
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -705,15 +714,6 @@ namespace iText.Kernel.Geom {
 
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(m00, m10, m01, m11, m02, m12);
-        }
-
-        /// <summary>
-        /// Creates a "deep copy" of this AffineTransform, meaning the object returned by this method will be independent
-        /// of the object being cloned.
-        /// </summary>
-        /// <returns>the copied AffineTransform.</returns>
-        public virtual iText.Kernel.Geom.AffineTransform Clone() {
-            return (iText.Kernel.Geom.AffineTransform) MemberwiseClone();
         }
     }
 }

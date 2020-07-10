@@ -328,6 +328,41 @@ namespace iText.Kernel {
             return GetClassFromLicenseKey(licenseKeyClassFullName);
         }
 
+        private static Type GetClassFromLicenseKey(String classPartialName) {
+            String classFullName = null;
+
+            Assembly kernelAssembly = typeof(Version).GetAssembly();
+            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
+            if (keyVersionAttr is KeyVersionAttribute) {
+                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
+                String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                classFullName = String.Format(format, classPartialName, keyVersion);
+            }
+
+            Type type = null;
+            if (classFullName != null) {
+                String fileLoadExceptionMessage = null;
+                try {
+                    type = System.Type.GetType(classFullName);
+                } catch (FileLoadException fileLoadException) {
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+
+                if (type == null) {
+                    ILog logger = LogManager.GetLogger(typeof(Version));
+                    try {
+                        type = System.Type.GetType(classPartialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type == null && fileLoadExceptionMessage != null) {
+                        logger.Error(fileLoadExceptionMessage);
+                    }
+                }
+            }
+            return type;
+        }
+
         private static void CheckLicenseVersion(String coreVersionString, String licenseVersionString) {
             String[] coreVersions = ParseVersionString(coreVersionString);
             String[] licenseVersions = ParseVersionString(licenseVersionString);
@@ -399,41 +434,6 @@ namespace iText.Kernel {
             catch (Exception e) {
                 throw new Exception(e.Message, e);
             }
-        }
-
-        private static Type GetClassFromLicenseKey(String classPartialName) {
-            String classFullName = null;
-
-            Assembly kernelAssembly = typeof(Version).GetAssembly();
-            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
-            if (keyVersionAttr is KeyVersionAttribute) {
-                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
-                String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
-                classFullName = String.Format(format, classPartialName, keyVersion);
-            }
-
-            Type type = null;
-            if (classFullName != null) {
-                String fileLoadExceptionMessage = null;
-                try {
-                    type = System.Type.GetType(classFullName);
-                } catch (FileLoadException fileLoadException) {
-                    fileLoadExceptionMessage = fileLoadException.Message;
-                }
-
-                if (type == null) {
-                    ILog logger = LogManager.GetLogger(typeof(Version));
-                    try {
-                        type = System.Type.GetType(classPartialName);
-                    } catch {
-                        // ignore
-                    }
-                    if (type == null && fileLoadExceptionMessage != null) {
-                        logger.Error(fileLoadExceptionMessage);
-                    }
-                }
-            }
-            return type;
         }
     }
 }

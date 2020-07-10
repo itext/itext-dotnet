@@ -574,6 +574,15 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
+        /// <summary>
+        /// Creates a "deep copy" of this rectangle, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <returns>the copied rectangle.</returns>
+        public virtual iText.Kernel.Geom.Rectangle Clone() {
+            return (iText.Kernel.Geom.Rectangle) MemberwiseClone();
+        }
+
         /// <summary>Compares instance of this rectangle with given deviation equals to 0.0001</summary>
         /// <param name="that">
         /// the
@@ -696,15 +705,6 @@ namespace iText.Kernel.Geom {
                 }
             }
             return (new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly));
-        }
-
-        /// <summary>
-        /// Creates a "deep copy" of this rectangle, meaning the object returned by this method will be independent
-        /// of the object being cloned.
-        /// </summary>
-        /// <returns>the copied rectangle.</returns>
-        public virtual iText.Kernel.Geom.Rectangle Clone() {
-            return (iText.Kernel.Geom.Rectangle) MemberwiseClone();
         }
     }
 }
