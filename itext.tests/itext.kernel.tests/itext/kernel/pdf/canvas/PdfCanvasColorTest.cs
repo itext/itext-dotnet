@@ -304,6 +304,25 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MakePatternColorTest() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "makePatternColorTest.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfSpecialCs.Pattern pattern = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Rgb());
+            Color greenPattern = Color.MakeColor(pattern, new float[] { 0, 1, 0 });
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(10, 10, 12, 12, false);
+            new PdfPatternCanvas(circle, document).Circle(5f, 5f, 5f).Fill().Release();
+            canvas.SetColor(greenPattern.GetColorSpace(), greenPattern.GetColorValue(), circle, true).Rectangle(50, 600
+                , 50, 50).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "makePatternColorTest.pdf"
+                , sourceFolder + "cmp_makePatternColorTest.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PatternColorColoredAxialPatternTest() {
             String name = "patternColorColoredAxialPatternTest.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + name);
