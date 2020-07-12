@@ -581,6 +581,7 @@ namespace iText.Kernel.Pdf {
             list = null;
         }
 
+        /// <summary><inheritDoc/></summary>
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
