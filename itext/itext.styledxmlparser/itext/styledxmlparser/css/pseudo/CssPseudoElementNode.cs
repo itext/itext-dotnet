@@ -78,44 +78,32 @@ namespace iText.StyledXmlParser.Css.Pseudo {
             return pseudoElementName;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#name()
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual String Name() {
             return pseudoElementTagName;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAttributes()
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual IAttributes GetAttributes() {
             return new CssPseudoElementNode.AttributesStub();
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAttribute(java.lang.String)
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual String GetAttribute(String key) {
             return null;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getAdditionalHtmlStyles()
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual IList<IDictionary<String, String>> GetAdditionalHtmlStyles() {
             return null;
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#addAdditionalHtmlStyles(java.util.Map)
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual void AddAdditionalHtmlStyles(IDictionary<String, String> styles) {
             throw new NotSupportedException();
         }
 
-        /* (non-Javadoc)
-        * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getLang()
-        */
+        /// <summary><inheritDoc/></summary>
         public virtual String GetLang() {
             return null;
         }
@@ -126,30 +114,22 @@ namespace iText.StyledXmlParser.Css.Pseudo {
         /// implementation.
         /// </summary>
         private class AttributesStub : IAttributes {
-            /* (non-Javadoc)
-            * @see com.itextpdf.styledxmlparser.html.node.IAttributes#getAttribute(java.lang.String)
-            */
+            /// <summary><inheritDoc/></summary>
             public virtual String GetAttribute(String key) {
                 return null;
             }
 
-            /* (non-Javadoc)
-            * @see com.itextpdf.styledxmlparser.html.node.IAttributes#setAttribute(java.lang.String, java.lang.String)
-            */
+            /// <summary><inheritDoc/></summary>
             public virtual void SetAttribute(String key, String value) {
                 throw new NotSupportedException();
             }
 
-            /* (non-Javadoc)
-            * @see com.itextpdf.styledxmlparser.html.node.IAttributes#size()
-            */
+            /// <summary><inheritDoc/></summary>
             public virtual int Size() {
                 return 0;
             }
 
-            /* (non-Javadoc)
-            * @see java.lang.Iterable#iterator()
-            */
+            /// <summary><inheritDoc/></summary>
             public virtual IEnumerator<IAttribute> GetEnumerator() {
                 return JavaCollectionsUtil.EmptyIterator<IAttribute>();
             }
