@@ -587,8 +587,10 @@ namespace iText.IO.Source {
         /// <param name="content">string bytes to be decoded</param>
         /// <param name="from">given start index</param>
         /// <param name="to">given end index</param>
-        /// <param name="hexWriting">true if given string is hex-encoded, e.g. '<69546578…>'. False otherwise, e.g. '((iText( some version)…)'
-        ///     </param>
+        /// <param name="hexWriting">
+        /// true if given string is hex-encoded, e.g. '&lt;69546578…&gt;'.
+        /// False otherwise, e.g. '((iText( some version)…)'
+        /// </param>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>.
@@ -710,8 +712,10 @@ namespace iText.IO.Source {
         /// so we can convert it directly to byte array.
         /// </remarks>
         /// <param name="content">string bytes to be decoded</param>
-        /// <param name="hexWriting">true if given string is hex-encoded, e.g. '<69546578…>'. False otherwise, e.g. '((iText( some version)…)'
-        ///     </param>
+        /// <param name="hexWriting">
+        /// true if given string is hex-encoded, e.g. '&lt;69546578…&gt;'.
+        /// False otherwise, e.g. '((iText( some version)…)'
+        /// </param>
         /// <returns>
         /// byte[] for decrypting or for creating
         /// <see cref="System.String"/>.
