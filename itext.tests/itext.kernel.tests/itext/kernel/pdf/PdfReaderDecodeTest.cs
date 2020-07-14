@@ -51,14 +51,6 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfReaderDecodeTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfReaderDecodeTest/";
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
-        }
-
         [NUnit.Framework.Test]
         public virtual void NoMemoryHandlerTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));

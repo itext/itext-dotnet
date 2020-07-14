@@ -217,12 +217,38 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets decoded stream bytes.</summary>
-        /// <returns>byte[]</returns>
+        /// <remarks>
+        /// Gets decoded stream bytes.
+        /// Note,
+        /// <see cref="PdfName.DCTDecode"/>
+        /// and
+        /// <see cref="PdfName.JPXDecode"/>
+        /// filters will be ignored.
+        /// </remarks>
+        /// <returns>
+        /// byte content of the
+        /// <c>PdfStream</c>
+        /// . Byte content will be
+        /// <see langword="null"/>
+        /// ,
+        /// if the
+        /// <c>PdfStream</c>
+        /// was created by
+        /// <c>InputStream</c>.
+        /// </returns>
         public virtual byte[] GetBytes() {
             return GetBytes(true);
         }
 
         /// <summary>Gets stream bytes.</summary>
+        /// <remarks>
+        /// Gets stream bytes.
+        /// Note,
+        /// <see cref="PdfName.DCTDecode"/>
+        /// and
+        /// <see cref="PdfName.JPXDecode"/>
+        /// filters will be ignored.
+        /// </remarks>
         /// <param name="decoded">true if to get decoded stream bytes, otherwise false.</param>
         /// <returns>
         /// byte content of the

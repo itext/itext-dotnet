@@ -75,6 +75,8 @@ namespace iText.Kernel.Pdf.Filters {
             map.Put(PdfName.CCITTFaxDecode, new CCITTFaxDecodeFilter());
             map.Put(PdfName.Crypt, new DoNothingFilter());
             map.Put(PdfName.RunLengthDecode, new RunLengthDecodeFilter());
+            map.Put(PdfName.DCTDecode, new DctDecodeFilter());
+            map.Put(PdfName.JPXDecode, new JpxDecodeFilter());
             defaults = JavaCollectionsUtil.UnmodifiableMap(map);
         }
 
