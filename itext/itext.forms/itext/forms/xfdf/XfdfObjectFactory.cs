@@ -169,7 +169,7 @@ namespace iText.Forms.Xfdf {
             }
         }
 
-        private static bool IsAnnotSuppoted(String nodeName) {
+        private static bool IsAnnotSupported(String nodeName) {
             return XfdfConstants.TEXT.EqualsIgnoreCase(nodeName) || XfdfConstants.HIGHLIGHT.EqualsIgnoreCase(nodeName)
                  || XfdfConstants.UNDERLINE.EqualsIgnoreCase(nodeName) || XfdfConstants.STRIKEOUT.EqualsIgnoreCase(nodeName
                 ) || XfdfConstants.SQUIGGLY.EqualsIgnoreCase(nodeName) || XfdfConstants.CIRCLE.EqualsIgnoreCase(nodeName
@@ -181,7 +181,7 @@ namespace iText.Forms.Xfdf {
             XmlNodeList annotsNodeList = node.ChildNodes;
             for (int temp = 0; temp < annotsNodeList.Count; temp++) {
                 XmlNode currentNode = annotsNodeList.Item(temp);
-                if (currentNode.NodeType == System.Xml.XmlNodeType.Element && IsAnnotationSubtype(currentNode.Name) && IsAnnotSuppoted
+                if (currentNode.NodeType == System.Xml.XmlNodeType.Element && IsAnnotationSubtype(currentNode.Name) && IsAnnotSupported
                     (currentNode.Name)) {
                     VisitAnnotationNode(currentNode, annotsObject);
                 }
@@ -319,7 +319,7 @@ namespace iText.Forms.Xfdf {
                 .PROJECTION.EqualsIgnoreCase(tag);
         }
 
-        //projection annotation is now supported in iText
+        //projection annotation is not supported in iText
         private void ReadFieldList(XmlNode node, FieldsObject fieldsObject) {
             XmlNodeList fieldNodeList = node.ChildNodes;
             for (int temp = 0; temp < fieldNodeList.Count; temp++) {
@@ -470,11 +470,16 @@ namespace iText.Forms.Xfdf {
             annot.AddAttribute(XfdfConstants.SUBJECT, pdfMarkupAnnotation.GetSubject());
         }
 
+        private static void AddBorderStyleAttributes(AnnotObject annotObject, PdfNumber width, PdfString dashes, PdfString
+             style) {
+            annotObject.AddAttribute(XfdfConstants.WIDTH, width);
+            annotObject.AddAttribute(XfdfConstants.DASHES, dashes);
+            annotObject.AddAttribute(XfdfConstants.STYLE, style);
+        }
+
         private static void CreateTextMarkupAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber
             ) {
             PdfTextMarkupAnnotation pdfTextMarkupAnnotation = (PdfTextMarkupAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfTextMarkupAnnotation);
             annot.AddAttribute(new AttributeObject(XfdfConstants.COORDS, XfdfObjectUtils.ConvertQuadPointsToCoordsString
                 (pdfTextMarkupAnnotation.GetQuadPoints().ToFloatArray())));
             if (pdfTextMarkupAnnotation.GetContents() != null) {
@@ -487,8 +492,6 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateTextAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber) {
             PdfTextAnnotation pdfTextAnnotation = ((PdfTextAnnotation)pdfAnnotation);
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfTextAnnotation);
             annot.AddAttribute(XfdfConstants.ICON, pdfTextAnnotation.GetIconName());
             annot.AddAttribute(XfdfConstants.STATE, pdfTextAnnotation.GetState());
             annot.AddAttribute(XfdfConstants.STATE_MODEL, pdfTextAnnotation.GetStateModel());
@@ -509,12 +512,10 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateCircleAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber) {
             PdfCircleAnnotation pdfCircleAnnotation = (PdfCircleAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfCircleAnnotation);
-            if (pdfCircleAnnotation.GetBorderStyle() != null) {
-                annot.AddAttribute(XfdfConstants.WIDTH, pdfCircleAnnotation.GetBorderStyle().GetAsNumber(PdfName.W));
-                annot.AddAttribute(XfdfConstants.DASHES, pdfCircleAnnotation.GetBorderStyle().GetAsString(PdfName.Dashed));
-                annot.AddAttribute(XfdfConstants.STYLE, pdfCircleAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
+            PdfDictionary bs = pdfCircleAnnotation.GetBorderStyle();
+            if (bs != null) {
+                AddBorderStyleAttributes(annot, bs.GetAsNumber(PdfName.W), bs.GetAsString(PdfName.Dashed), bs.GetAsString(
+                    PdfName.Style));
             }
             if (pdfCircleAnnotation.GetBorderEffect() != null) {
                 //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
@@ -538,12 +539,10 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateSquareAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber) {
             PdfSquareAnnotation pdfSquareAnnotation = (PdfSquareAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfSquareAnnotation);
-            if (pdfSquareAnnotation.GetBorderStyle() != null) {
-                annot.AddAttribute(XfdfConstants.WIDTH, pdfSquareAnnotation.GetBorderStyle().GetAsNumber(PdfName.W));
-                annot.AddAttribute(XfdfConstants.DASHES, pdfSquareAnnotation.GetBorderStyle().GetAsString(PdfName.Dashed));
-                annot.AddAttribute(XfdfConstants.STYLE, pdfSquareAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
+            PdfDictionary bs = pdfSquareAnnotation.GetBorderStyle();
+            if (bs != null) {
+                AddBorderStyleAttributes(annot, bs.GetAsNumber(PdfName.W), bs.GetAsString(PdfName.Dashed), bs.GetAsString(
+                    PdfName.Style));
             }
             if (pdfSquareAnnotation.GetBorderEffect() != null) {
                 //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
@@ -567,8 +566,6 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateStampAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber) {
             PdfStampAnnotation pdfStampAnnotation = (PdfStampAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfStampAnnotation);
             annot.AddAttribute(XfdfConstants.ICON, pdfStampAnnotation.GetIconName());
             //How to add rotation? iText doesn't support ratotion attribute in PdfStampAnnotation
             if (pdfStampAnnotation.GetContents() != null) {
@@ -596,13 +593,10 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateFreeTextAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot) {
             PdfFreeTextAnnotation pdfFreeTextAnnotation = (PdfFreeTextAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfFreeTextAnnotation);
-            if (pdfFreeTextAnnotation.GetBorderStyle() != null) {
-                annot.AddAttribute(XfdfConstants.WIDTH, pdfFreeTextAnnotation.GetBorderStyle().GetAsNumber(PdfName.W));
-                annot.AddAttribute(XfdfConstants.DASHES, pdfFreeTextAnnotation.GetBorderStyle().GetAsString(PdfName.Dashed
-                    ));
-                annot.AddAttribute(XfdfConstants.STYLE, pdfFreeTextAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
+            PdfDictionary bs = pdfFreeTextAnnotation.GetBorderStyle();
+            if (bs != null) {
+                AddBorderStyleAttributes(annot, bs.GetAsNumber(PdfName.W), bs.GetAsString(PdfName.Dashed), bs.GetAsString(
+                    PdfName.Style));
             }
             //TODO DEVSIX-4134 add rotation optional attribute
             //annot.addAttribute(new AttributeObject("rotation", pdfFreeTextAnnotation.));
@@ -626,8 +620,6 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateLineAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber) {
             PdfLineAnnotation pdfLineAnnotation = (PdfLineAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfLineAnnotation);
             PdfArray line = pdfLineAnnotation.GetLine();
             if (line != null) {
                 annot.AddAttribute(new AttributeObject(XfdfConstants.START, XfdfObjectUtils.ConvertLineStartToString(line.
@@ -663,10 +655,10 @@ namespace iText.Forms.Xfdf {
                 annot.AddAttribute(new AttributeObject(XfdfConstants.CAPTION_OFFSET_H, "0"));
                 annot.AddAttribute(new AttributeObject(XfdfConstants.CAPTION_OFFSET_V, "0"));
             }
-            if (pdfLineAnnotation.GetBorderStyle() != null) {
-                annot.AddAttribute(XfdfConstants.WIDTH, pdfLineAnnotation.GetBorderStyle().GetAsNumber(PdfName.W));
-                annot.AddAttribute(XfdfConstants.DASHES, pdfLineAnnotation.GetBorderStyle().GetAsString(PdfName.Dashed));
-                annot.AddAttribute(XfdfConstants.STYLE, pdfLineAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
+            PdfDictionary bs = pdfLineAnnotation.GetBorderStyle();
+            if (bs != null) {
+                AddBorderStyleAttributes(annot, bs.GetAsNumber(PdfName.W), bs.GetAsString(PdfName.Dashed), bs.GetAsString(
+                    PdfName.Style));
             }
             annot.SetContents(pdfAnnotation.GetContents());
             if (pdfLineAnnotation.GetPopup() != null) {
@@ -676,7 +668,6 @@ namespace iText.Forms.Xfdf {
 
         private static void CreateLinkAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot) {
             PdfLinkAnnotation pdfLinkAnnotation = (PdfLinkAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
             if (pdfLinkAnnotation.GetContents() != null) {
                 annot.SetContents(pdfLinkAnnotation.GetContents());
             }
@@ -770,13 +761,10 @@ namespace iText.Forms.Xfdf {
         private static void CreatePolyGeomAnnotation(PdfAnnotation pdfAnnotation, AnnotObject annot, int pageNumber
             ) {
             PdfPolyGeomAnnotation pdfPolyGeomAnnotation = (PdfPolyGeomAnnotation)pdfAnnotation;
-            AddCommonAnnotationAttributes(annot, pdfAnnotation);
-            AddMarkupAnnotationAttributes(annot, pdfPolyGeomAnnotation);
-            if (pdfPolyGeomAnnotation.GetBorderStyle() != null) {
-                annot.AddAttribute(XfdfConstants.WIDTH, pdfPolyGeomAnnotation.GetBorderStyle().GetAsNumber(PdfName.W));
-                annot.AddAttribute(XfdfConstants.DASHES, pdfPolyGeomAnnotation.GetBorderStyle().GetAsString(PdfName.Dashed
-                    ));
-                annot.AddAttribute(XfdfConstants.STYLE, pdfPolyGeomAnnotation.GetBorderStyle().GetAsString(PdfName.Style));
+            PdfDictionary bs = pdfPolyGeomAnnotation.GetBorderStyle();
+            if (bs != null) {
+                AddBorderStyleAttributes(annot, bs.GetAsNumber(PdfName.W), bs.GetAsString(PdfName.Dashed), bs.GetAsString(
+                    PdfName.Style));
             }
             if (pdfPolyGeomAnnotation.GetBorderEffect() != null) {
                 //TODO DEVSIX-4133 map intensity to border effect dictionary's I key
@@ -816,7 +804,6 @@ namespace iText.Forms.Xfdf {
             AnnotObject annot = new AnnotObject();
             annot.SetRef(pdfAnnotation.GetPdfObject().GetIndirectReference());
             annot.AddFdfAttributes(pageNumber);
-            //TODO DEVSIX-4135 move here all common methods like addFDFAttributes and Add common annotations
             if (pdfAnnotation is PdfTextMarkupAnnotation) {
                 CreateTextMarkupAnnotation(pdfAnnotation, annot, pageNumber);
             }
@@ -847,6 +834,12 @@ namespace iText.Forms.Xfdf {
             if (pdfAnnotation is PdfLinkAnnotation) {
                 CreateLinkAnnotation(pdfAnnotation, annot);
             }
+            if (IsSupportedAnnotation(pdfAnnotation)) {
+                AddCommonAnnotationAttributes(annot, pdfAnnotation);
+                if (pdfAnnotation is PdfMarkupAnnotation) {
+                    AddMarkupAnnotationAttributes(annot, (PdfMarkupAnnotation)pdfAnnotation);
+                }
+            }
             return annot;
         }
 
@@ -856,9 +849,15 @@ namespace iText.Forms.Xfdf {
             annot.AddFdfAttributes(pageNumber);
             annot.SetName(XfdfConstants.POPUP);
             annot.SetRef(pdfPopupAnnotation.GetPdfObject().GetIndirectReference());
-            AddCommonAnnotationAttributes(annot, pdfPopupAnnotation);
             annot.AddAttribute(XfdfConstants.OPEN, pdfPopupAnnotation.GetOpen());
             return annot;
+        }
+
+        private static bool IsSupportedAnnotation(PdfAnnotation pdfAnnotation) {
+            return pdfAnnotation is PdfTextMarkupAnnotation || pdfAnnotation is PdfTextAnnotation || pdfAnnotation is 
+                PdfCircleAnnotation || pdfAnnotation is PdfSquareAnnotation || pdfAnnotation is PdfStampAnnotation || 
+                pdfAnnotation is PdfFreeTextAnnotation || pdfAnnotation is PdfLineAnnotation || pdfAnnotation is PdfPolyGeomAnnotation
+                 || pdfAnnotation is PdfLinkAnnotation || pdfAnnotation is PdfPopupAnnotation;
         }
     }
 }
