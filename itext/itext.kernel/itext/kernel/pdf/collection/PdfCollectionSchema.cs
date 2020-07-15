@@ -58,12 +58,19 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>Adds a Collection field to the Schema.</summary>
         /// <param name="name">the name of the collection field</param>
         /// <param name="field">a Collection Field</param>
+        /// <returns>this instance to support fluent interface</returns>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionSchema AddField(String name, PdfCollectionField field
             ) {
             GetPdfObject().Put(new PdfName(name), field.GetPdfObject());
             return this;
         }
 
+        /// <summary>Retrieves a Collection field from the Schema.</summary>
+        /// <param name="name">is the name of the collection field</param>
+        /// <returns>
+        /// a
+        /// <see cref="PdfCollectionField">Collection field</see>
+        /// </returns>
         public virtual PdfCollectionField GetField(String name) {
             return new PdfCollectionField(GetPdfObject().GetAsDictionary(new PdfName(name)));
         }
