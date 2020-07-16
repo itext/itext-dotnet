@@ -76,13 +76,15 @@ namespace iText.Test {
         *  "Hello fox1 , World  fox2 !" with "Hello {0} , World {1} !"
         * */
 
-        public static bool EqualsMessageByTemplate(string message, string template) {
-            if (template.Contains("{") && template.Contains("}")) {
-                String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.)*?");
+        public static bool EqualsMessageByTemplate(string message, string template)
+        {
+            if (template.Contains("{") && template.Contains("}"))
+            {
+                String templateWithoutParameters = Regex.Replace(Regex.Escape(template).Replace("''", "'"), "\\\\\\{[0-9]+?\\}", "(.)*?");
                 return Regex.IsMatch(message, templateWithoutParameters, RegexOptions.Singleline);
-            } else {
-                return message.Contains(template);
             }
+
+            return message.Contains(template);
         }
     }
 }
