@@ -71,7 +71,7 @@ namespace iText.Svg.Css.Impl {
         private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
 
         /// <summary>The resource resolver</summary>
-        private ResourceResolver resourceResolver = new ResourceResolver("");
+        private ResourceResolver resourceResolver;
 
         /// <summary>
         /// Creates a
@@ -79,12 +79,40 @@ namespace iText.Svg.Css.Impl {
         /// with a given default CSS.
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
-        public SvgStyleResolver(Stream defaultCssStream) {
-            this.css = CssStyleSheetParser.Parse(defaultCssStream);
+        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(System.IO.Stream, iText.Svg.Processors.Impl.SvgProcessorContext) instead"
+            )]
+        public SvgStyleResolver(Stream defaultCssStream)
+            : this(defaultCssStream, new SvgProcessorContext(new SvgConverterProperties())) {
         }
 
-        /// <summary>Creates a SvgStyleResolver.</summary>
-        public SvgStyleResolver() {
+        /// <summary>
+        /// Creates a
+        /// <see cref="SvgStyleResolver"/>.
+        /// </summary>
+        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(iText.Svg.Processors.Impl.SvgProcessorContext) instead"
+            )]
+        public SvgStyleResolver()
+            : this(new SvgProcessorContext(new SvgConverterProperties())) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="SvgStyleResolver"/>
+        /// with a given default CSS.
+        /// </summary>
+        /// <param name="defaultCssStream">the default CSS</param>
+        /// <param name="context">the processor context</param>
+        public SvgStyleResolver(Stream defaultCssStream, SvgProcessorContext context) {
+            this.css = CssStyleSheetParser.Parse(defaultCssStream);
+            this.resourceResolver = context.GetResourceResolver();
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="SvgStyleResolver"/>.
+        /// </summary>
+        /// <param name="context">the processor context</param>
+        public SvgStyleResolver(SvgProcessorContext context) {
             try {
                 using (Stream defaultCss = ResourceUtil.GetResourceStream(DEFAULT_CSS_PATH)) {
                     this.css = CssStyleSheetParser.Parse(defaultCss);
@@ -95,12 +123,18 @@ namespace iText.Svg.Css.Impl {
                 logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
                 this.css = new CssStyleSheet();
             }
+            this.resourceResolver = context.GetResourceResolver();
         }
 
-        /// <summary>Creates a SvgStyleResolver.</summary>
+        /// <summary>
+        /// Creates a
+        /// <see cref="SvgStyleResolver"/>.
+        /// </summary>
         /// <remarks>
-        /// Creates a SvgStyleResolver. This constructor will instantiate its internal style sheet and it
-        /// will collect the css declarations from the provided node.
+        /// Creates a
+        /// <see cref="SvgStyleResolver"/>
+        /// . This constructor will instantiate its internal
+        /// style sheet and it will collect the css declarations from the provided node.
         /// </remarks>
         /// <param name="rootNode">node to collect css from</param>
         /// <param name="context">the processor context</param>
@@ -108,7 +142,7 @@ namespace iText.Svg.Css.Impl {
             // TODO DEVSIX-2060. Fetch default styles first.
             this.deviceDescription = context.GetDeviceDescription();
             this.resourceResolver = context.GetResourceResolver();
-            CollectCssDeclarations(rootNode, context.GetResourceResolver());
+            CollectCssDeclarations(rootNode, this.resourceResolver);
             CollectFonts();
         }
 
@@ -219,13 +253,15 @@ namespace iText.Svg.Css.Impl {
                         if (SvgCssUtils.IsStyleSheetLink(headChildElement)) {
                             String styleSheetUri = headChildElement.GetAttribute(SvgConstants.Attributes.HREF);
                             try {
-                                Stream stream = resourceResolver.RetrieveStyleSheet(styleSheetUri);
-                                byte[] bytes = StreamUtil.InputStreamToArray(stream);
-                                CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new MemoryStream(bytes), resourceResolver.ResolveAgainstBaseUri
-                                    (styleSheetUri).ToExternalForm());
-                                this.css.AppendCssStyleSheet(styleSheet);
+                                using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(styleSheetUri)) {
+                                    if (stream != null) {
+                                        CssStyleSheet styleSheet = CssStyleSheetParser.Parse(stream, resourceResolver.ResolveAgainstBaseUri(styleSheetUri
+                                            ).ToExternalForm());
+                                        this.css.AppendCssStyleSheet(styleSheet);
+                                    }
+                                }
                             }
-                            catch (System.IO.IOException exc) {
+                            catch (Exception exc) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
                                 logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
                             }

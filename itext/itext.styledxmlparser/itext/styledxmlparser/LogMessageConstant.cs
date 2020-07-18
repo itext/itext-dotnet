@@ -83,6 +83,12 @@ namespace iText.StyledXmlParser {
         [System.ObsoleteAttribute(@"moved into iText.StyledXmlParser.Exceptions.StyledXMLParserException")]
         public const String NAN = "The passed value (@{0}) is not a number";
 
+        /// <summary>The Constant RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT.</summary>
+        public const String RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT = "Resource with given URL ({0}) was filtered out.";
+
+        /// <summary>The Constant UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT.</summary>
+        public const String UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT = "Unable to retrieve resource with given URL ({0}) and resource size byte limit ({1}).";
+
         /// <summary>The Constant UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI.</summary>
         public const String UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI = "Unable to retrieve image with given base URI ({0}) and image source path ({1})";
 

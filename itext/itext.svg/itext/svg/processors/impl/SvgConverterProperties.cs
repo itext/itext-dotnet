@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css.Media;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
@@ -51,7 +52,7 @@ namespace iText.Svg.Processors.Impl {
     /// Default and fallback implementation of
     /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>
     /// for
-    /// <see cref="DefaultSvgProcessor"/>
+    /// <see cref="DefaultSvgProcessor"/>.
     /// </summary>
     public class SvgConverterProperties : ISvgConverterProperties {
         /// <summary>The media device description.</summary>
@@ -63,21 +64,33 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>The base URI.</summary>
         private String baseUri = "";
 
+        /// <summary>The resource retriever.</summary>
+        private IResourceRetriever resourceRetriever;
+
         private ISvgNodeRendererFactory rendererFactory;
 
         private String charset = System.Text.Encoding.UTF8.Name();
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="SvgConverterProperties"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="SvgConverterProperties"/>
+        /// instance.
+        /// Instantiates its members, IResourceRetriever and ISvgNodeRendererFactory, to its default implementations.
+        /// </remarks>
+        public SvgConverterProperties() {
+            this.resourceRetriever = new DefaultResourceRetriever();
+            this.rendererFactory = new DefaultSvgNodeRendererFactory();
+        }
 
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetRendererFactory(ISvgNodeRendererFactory
              rendererFactory) {
             this.rendererFactory = rendererFactory;
             return this;
-        }
-
-        /// <summary>Creates a SvgConverterProperties object.</summary>
-        /// <remarks>Creates a SvgConverterProperties object. Instantiates its members, ICssResolver and ISvgNodeRenderer, to its default implementations.
-        ///     </remarks>
-        public SvgConverterProperties() {
-            this.rendererFactory = new DefaultSvgNodeRendererFactory();
         }
 
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetFontProvider(FontProvider fontProvider) {
@@ -131,6 +144,33 @@ namespace iText.Svg.Processors.Impl {
         /// <returns>the ConverterProperties instance</returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetBaseUri(String baseUri) {
             this.baseUri = baseUri;
+            return this;
+        }
+
+        /// <summary>Gets the resource retriever.</summary>
+        /// <remarks>
+        /// Gets the resource retriever.
+        /// The resourceRetriever is used to retrieve data from resources by URL.
+        /// </remarks>
+        /// <returns>the resource retriever</returns>
+        public virtual IResourceRetriever GetResourceRetriever() {
+            return resourceRetriever;
+        }
+
+        /// <summary>Sets the resource retriever.</summary>
+        /// <remarks>
+        /// Sets the resource retriever.
+        /// The resourceRetriever is used to retrieve data from resources by URL.
+        /// </remarks>
+        /// <param name="resourceRetriever">the resource retriever</param>
+        /// <returns>
+        /// the
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetResourceRetriever(IResourceRetriever resourceRetriever
+            ) {
+            this.resourceRetriever = resourceRetriever;
             return this;
         }
     }

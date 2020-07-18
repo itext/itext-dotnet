@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
+using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
@@ -152,6 +153,19 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void FontWeightTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "fontWeightTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void ExternalStyleSheetWithFillStyleTest() {
+            // TODO DEVSIX-4275 investigate why fill style not processed
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithFillStyleTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void ExternalStyleSheetWithStrokeStyleTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithStrokeStyleTest");
         }
 
         [NUnit.Framework.Test]

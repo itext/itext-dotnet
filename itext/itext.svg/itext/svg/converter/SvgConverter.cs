@@ -669,34 +669,22 @@ namespace iText.Svg.Converter {
         /// </param>
         public static void CreatePdf(Stream svgStream, Stream pdfDest, ISvgConverterProperties props, WriterProperties
              writerProps) {
-            //create doc
+            // Create doc
             if (writerProps == null) {
                 writerProps = new WriterProperties();
             }
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(pdfDest, writerProps));
-            //process
+            // Process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
             ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
-            String baseUri = TryToExtractBaseUri(props);
-            ResourceResolver resourceResolver = null;
-            if (processorResult is SvgProcessorResult) {
-                //TODO DEVSIX-3814 add assert after 7.2 cause now be have a null pointer on deprecated constructor
-                SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
-                if (context != null) {
-                    resourceResolver = context.GetResourceResolver();
-                }
-            }
-            //TODO DEVSIX-3814 remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
-            // ISvgNodeRenderer, FontProvider, FontSet) is removed
-            if (resourceResolver == null) {
-                resourceResolver = new ResourceResolver(baseUri);
-            }
+            ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
+                props);
             SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
                 .GetRootRenderer());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            //Add temp fonts
+            // Add temp fonts
             drawContext.SetTempFonts(processorResult.GetTempFonts());
-            //Extract topmost dimensions
+            // Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
             float width;
@@ -704,13 +692,13 @@ namespace iText.Svg.Converter {
             float[] wh = ExtractWidthAndHeight(topSvgRenderer);
             width = wh[0];
             height = wh[1];
-            //adjust pagesize and create new page
+            // Adjust pagesize and create new page
             pdfDocument.SetDefaultPageSize(new PageSize(width, height));
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas pageCanvas = new PdfCanvas(page);
-            //Add to the first page
+            // Add to the first page
             PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, drawContext);
-            //Draw
+            // Draw
             Draw(xObject, pageCanvas);
             pdfDocument.Close();
         }
@@ -879,7 +867,8 @@ namespace iText.Svg.Converter {
         //Private converter for unification
         private static PdfFormXObject ConvertToXObject(ISvgProcessorResult processorResult, PdfDocument document, 
             ISvgConverterProperties props) {
-            ResourceResolver resourceResolver = GetResourceResolver(processorResult, props);
+            ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
+                props);
             SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
                 .GetRootRenderer());
             drawContext.SetTempFonts(processorResult.GetTempFonts());
@@ -1201,7 +1190,7 @@ namespace iText.Svg.Converter {
         /// </returns>
         public static ISvgProcessorResult ParseAndProcess(Stream svgStream, ISvgConverterProperties props) {
             IXmlParser parser = new JsoupXmlParser();
-            String charset = TryToExtractCharset(props);
+            String charset = iText.Svg.Converter.SvgConverter.TryToExtractCharset(props);
             INode nodeTree;
             try {
                 nodeTree = parser.Parse(svgStream, charset);
@@ -1311,7 +1300,7 @@ namespace iText.Svg.Converter {
             CheckNull(stream);
             // props is allowed to be null
             IXmlParser xmlParser = new JsoupXmlParser();
-            return xmlParser.Parse(stream, TryToExtractCharset(props));
+            return xmlParser.Parse(stream, iText.Svg.Converter.SvgConverter.TryToExtractCharset(props));
         }
 
         /// <summary>
@@ -1387,11 +1376,7 @@ namespace iText.Svg.Converter {
             //TODO DEVSIX-3814 remove the clause when the deprecated  constructor SvgProcessorResult(Map<String, ISvgNodeRenderer>,
             // ISvgNodeRenderer, FontProvider, FontSet) is removed
             if (resourceResolver == null) {
-                String baseUri = "";
-                if (props != null) {
-                    baseUri = props.GetBaseUri();
-                }
-                resourceResolver = new ResourceResolver(baseUri);
+                resourceResolver = iText.Svg.Converter.SvgConverter.CreateResourceResolver(props);
             }
             return resourceResolver;
         }
@@ -1401,23 +1386,23 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>.
         /// </summary>
         /// <param name="props">converter properties</param>
-        /// <returns>charset  | null</returns>
+        /// <returns>charset | null</returns>
         private static String TryToExtractCharset(ISvgConverterProperties props) {
             return props != null ? props.GetCharset() : null;
         }
 
-        /// <summary>
-        /// Tries to extract baseUri from
-        /// <see cref="iText.Svg.Processors.ISvgConverterProperties"/>.
-        /// </summary>
-        /// <param name="props">converter properties</param>
-        /// <returns>baseUrl  | null</returns>
-        private static String TryToExtractBaseUri(ISvgConverterProperties props) {
-            if (props == null || props.GetBaseUri() == null) {
-                return null;
+        private static ResourceResolver CreateResourceResolver(ISvgConverterProperties props) {
+            if (props == null) {
+                return new ResourceResolver(null);
             }
-            String baseUrl = props.GetBaseUri().Trim();
-            return String.IsNullOrEmpty(baseUrl) ? null : baseUrl;
+            // TODO DEVSIX-3814 change the clause if-else to return new ResourceResolver(props.getBaseUri(),
+            //  props.getResourceRetriever()) when the ISvgConverterProperties#getResourceRetriever() is added
+            if (props is SvgConverterProperties) {
+                return new ResourceResolver(props.GetBaseUri(), ((SvgConverterProperties)props).GetResourceRetriever());
+            }
+            else {
+                return new ResourceResolver(props.GetBaseUri(), null);
+            }
         }
     }
 }
