@@ -216,7 +216,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets a boolean indicating if a value-richtext element is present inside the field.</summary>
-        /// <returns>a boolean indicating if a value-richtext element is present inside the field</returns>
+        /// <returns>true if a value-richtext element is present inside the field, false otherwise</returns>
         public virtual bool IsContainsRichText() {
             return containsRichText;
         }

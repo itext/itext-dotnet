@@ -355,7 +355,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets the boolean, indicating if annotation has an inner popup element.</summary>
-        /// <returns>boolean value indicating if annotation has an inner popup element</returns>
+        /// <returns>true if annotation has an inner popup element, false otherwise</returns>
         public virtual bool IsHasPopup() {
             return hasPopup;
         }
