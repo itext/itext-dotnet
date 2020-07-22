@@ -510,8 +510,8 @@ namespace iText.Layout.Renderer {
                                 (), 1, 1);
                         }
                         else {
-                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
-                                (), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
+                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.GetHeight(
+                                ), backgroundImage.GetWidth(), backgroundImage.GetHeight());
                         }
                         if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                             ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));

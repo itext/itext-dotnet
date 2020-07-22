@@ -104,5 +104,13 @@ namespace iText.Layout.Properties {
         public virtual bool IsRepeatY() {
             return repeatY;
         }
+
+        public virtual float GetWidth() {
+            return (float)image.GetWidth();
+        }
+
+        public virtual float GetHeight() {
+            return (float)image.GetHeight();
+        }
     }
 }
