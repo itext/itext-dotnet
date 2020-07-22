@@ -330,6 +330,18 @@ internal static class StyledXmlParserExtensions {
         return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
     }
 
+    public static Uri ToUri(this String s) {
+        return new Uri(s);
+    }
+
+    public static FileInfo ToFile(this String s) {
+        return new FileInfo(s);
+    }
+
+    public static Uri ToUrl(this Uri u) {
+        return u;
+    }
+
     public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c,
         IDictionary<TKey, TValue> collectionToAdd) {
         foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {

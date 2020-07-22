@@ -302,8 +302,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [Test]
         public virtual void RetrieveBytesFromLocalWithResourceSizeByteLimitTest() {
-            String fileName = "retrieveStyleSheetTest.css";
-            // retrieveStyleSheetTest.css size is 89 bytes
+            String fileName = "retrieveStyleSheetTest.css.dat";
+            // retrieveStyleSheetTest.css.dat size is 89 bytes
             IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(89);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
             byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
@@ -409,55 +409,58 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         // Absolute path tests block
 
         [Test]
-        public virtual void RetrieveStyleSheetGetPathFromAbsolutePathTest() {
+        public virtual void RetrieveStyleSheetAbsolutePathTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).AbsolutePath + fileName;
-            Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
+            String absolutePath = Path.Combine(baseUri, fileName).ToFile().FullName;
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
-            Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            using (Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath),
+                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
         }
 
         [Test]
-        public virtual void RetrieveStyleSheetGetStringFromAbsolutePathTest() {
+        public virtual void RetrieveResourceAsInputStreamAbsolutePathTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).ToString() + fileName;
-            // The URI#toString method returns a string that starts with "file:", so to
-            // open Stream to check the result, a string is taken without "file:".
-            Stream expected = new FileStream(absolutePath.Substring(5), FileMode.Open, FileAccess.Read);
+            String absolutePath = Path.Combine(baseUri, fileName).ToFile().FullName;
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
-            Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
+                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
         }
 
         [Test]
-        public virtual void RetrieveResourceAsInputStreamGetPathFromAbsolutePathTest() {
+        public virtual void RetrieveStyleSheetFileUrlTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).AbsolutePath + fileName;
-            Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
+            Uri url = Path.Combine(baseUri, fileName).ToUri().ToUrl();
+            String fileUrlString = url.ToExternalForm();
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath);
-            Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            using (Stream stream = resourceResolver.RetrieveStyleSheet(fileUrlString),
+                expected = UrlUtil.OpenStream(url)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
+
         }
 
         [Test]
-        public virtual void RetrieveResourceAsInputStreamGetStringFromAbsolutePathTest() {
+        public virtual void RetrieveResourceAsInputStreamFileUrlTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).ToString() + fileName;
-            // The URI#toString method returns a string that starts with "file:", so to
-            // open Stream to check the result, a string is taken without "file:".
-            Stream expected = new FileStream(absolutePath.Substring(5), FileMode.Open, FileAccess.Read);
+            Uri url = Path.Combine(baseUri, fileName).ToUri().ToUrl();
+            String fileUrlString = url.ToExternalForm();
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath);
-            Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileUrlString),
+                expected = UrlUtil.OpenStream(url)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
         }
     }
 }

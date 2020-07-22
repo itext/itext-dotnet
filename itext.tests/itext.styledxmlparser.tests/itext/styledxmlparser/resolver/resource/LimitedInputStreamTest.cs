@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Util;
+using iText.StyledXmlParser;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
@@ -61,6 +62,25 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 stream.Read(bytes);
             }
             , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroBytesLimitTest() {
+            LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0);
+            NUnit.Framework.Assert.That(() =>  {
+                stream.Read();
+            }
+            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IllegalReadingByteLimitValueTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                new LimitedInputStream(new MemoryStream(new byte[0]), -1);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(StyledXmlParserExceptionMessage.READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO))
 ;
         }
     }

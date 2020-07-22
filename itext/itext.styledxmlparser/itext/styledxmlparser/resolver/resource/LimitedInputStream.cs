@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+using System;
 using System.IO;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
@@ -45,8 +47,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance.
         /// </summary>
         /// <param name="inputStream">the input stream, the reading of bytes from which will be limited</param>
-        /// <param name="readingByteLimit">the reading byte limit</param>
+        /// <param name="readingByteLimit">the reading byte limit, must not be less than zero</param>
         public LimitedInputStream(Stream inputStream, long readingByteLimit) {
+            if (readingByteLimit < 0) {
+                throw new ArgumentException(StyledXmlParserExceptionMessage.READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO);
+            }
             this.isLimitViolated = false;
             this.inputStream = inputStream;
             this.readingByteLimit = readingByteLimit;
