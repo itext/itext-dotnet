@@ -212,7 +212,10 @@ namespace iText.Svg.Renderers.Impl {
             try {
                 return WebColors.GetRGBAColor(value)[3];
             }
-            catch (Exception) {
+            catch (IndexOutOfRangeException) {
+                return 1f;
+            }
+            catch (NullReferenceException) {
                 return 1f;
             }
         }

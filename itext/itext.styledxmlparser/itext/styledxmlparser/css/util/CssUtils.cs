@@ -241,7 +241,10 @@ namespace iText.StyledXmlParser.Css.Util {
                     );
                 return new int[] { first, second };
             }
-            catch (Exception) {
+            catch (FormatException) {
+                return null;
+            }
+            catch (NullReferenceException) {
                 return null;
             }
         }
