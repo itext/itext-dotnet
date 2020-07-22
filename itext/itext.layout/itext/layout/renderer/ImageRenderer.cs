@@ -54,6 +54,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Renderer.Objectfit;
 using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
@@ -75,6 +76,12 @@ namespace iText.Layout.Renderer {
         private float? height;
 
         private float? width;
+
+        private float renderedImageHeight;
+
+        private float renderedImageWidth;
+
+        private bool doesObjectFitRequireCutting;
 
         private Rectangle initialOccupiedAreaBBox;
 
@@ -134,8 +141,8 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
-            float imageItselfScaledWidth = (float)width;
-            float imageItselfScaledHeight = (float)height;
+            float imageContainerWidth = (float)width;
+            float imageContainerHeight = (float)height;
             if (IsFixedLayout()) {
                 fixedXPosition = this.GetPropertyAsFloat(Property.LEFT);
                 fixedYPosition = this.GetPropertyAsFloat(Property.BOTTOM);
@@ -148,15 +155,26 @@ namespace iText.Layout.Renderer {
             t.Rotate((float)angle);
             initialOccupiedAreaBBox = GetOccupiedAreaBBox().Clone();
             float scaleCoef = AdjustPositionAfterRotation((float)angle, layoutBox.GetWidth(), layoutBox.GetHeight());
-            imageItselfScaledHeight *= scaleCoef;
-            imageItselfScaledWidth *= scaleCoef;
-            initialOccupiedAreaBBox.MoveDown(imageItselfScaledHeight);
-            initialOccupiedAreaBBox.SetHeight(imageItselfScaledHeight);
-            initialOccupiedAreaBBox.SetWidth(imageItselfScaledWidth);
+            imageContainerHeight *= scaleCoef;
+            imageContainerWidth *= scaleCoef;
+            initialOccupiedAreaBBox.MoveDown(imageContainerHeight);
+            initialOccupiedAreaBBox.SetHeight(imageContainerHeight);
+            initialOccupiedAreaBBox.SetWidth(imageContainerWidth);
             if (xObject is PdfFormXObject) {
                 t.Scale(scaleCoef, scaleCoef);
             }
-            GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
+            float imageItselfWidth;
+            float imageItselfHeight;
+            ApplyObjectFit(modelElement.GetObjectFit(), imageWidth, imageHeight);
+            if (modelElement.GetObjectFit() == ObjectFit.FILL) {
+                imageItselfWidth = imageContainerWidth;
+                imageItselfHeight = imageContainerHeight;
+            }
+            else {
+                imageItselfWidth = renderedImageWidth;
+                imageItselfHeight = renderedImageHeight;
+            }
+            GetMatrix(t, imageItselfWidth, imageItselfHeight);
             // indicates whether the placement is forced
             bool isPlacingForced = false;
             if (width > layoutBox.GetWidth() || height > layoutBox.GetHeight()) {
@@ -173,7 +191,10 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea.GetBBox().MoveDown((float)height);
             if (borders[3] != null) {
-                height += (float)Math.Sin((float)angle) * borders[3].GetWidth();
+                float delta = (float)Math.Sin((float)angle) * borders[3].GetWidth();
+                float renderScaling = renderedImageHeight / (float)height;
+                height += delta;
+                renderedImageHeight += delta * renderScaling;
             }
             occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
@@ -191,7 +212,7 @@ namespace iText.Layout.Renderer {
             }
             if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
                 TranslateImage(leftMargin.GetValue(), topMargin.GetValue(), t);
-                GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
+                GetMatrix(t, imageContainerWidth, imageContainerHeight);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -284,11 +305,15 @@ namespace iText.Layout.Renderer {
                     canvas.OpenTag(tagPointer.GetTagReference());
                 }
             }
+            BeginObjectFitImageClipping(canvas);
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
             BeginElementOpacityApplying(drawContext);
-            canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
-                )fixedYPosition);
+            float renderedImageShiftX = ((float)width - renderedImageWidth) / 2;
+            float renderedImageShiftY = ((float)height - renderedImageHeight) / 2;
+            canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX + renderedImageShiftX
+                , (float)fixedYPosition + renderedImageShiftY);
             EndElementOpacityApplying(drawContext);
+            EndObjectFitImageClipping(canvas);
             EndTransformationIfApplied(drawContext.GetCanvas());
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
@@ -360,6 +385,29 @@ namespace iText.Layout.Renderer {
                 UpdateWidth(UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
+        }
+
+        private void ApplyObjectFit(ObjectFit objectFit, float imageWidth, float imageHeight) {
+            ObjectFitApplyingResult result = ObjectFitCalculator.CalculateRenderedImageSize(objectFit, imageWidth, imageHeight
+                , (float)width, (float)height);
+            renderedImageWidth = (float)result.GetRenderedImageWidth();
+            renderedImageHeight = (float)result.GetRenderedImageHeight();
+            doesObjectFitRequireCutting = result.IsImageCuttingRequired();
+        }
+
+        private void BeginObjectFitImageClipping(PdfCanvas canvas) {
+            if (doesObjectFitRequireCutting) {
+                canvas.SaveState();
+                Rectangle clippedArea = new Rectangle((float)fixedXPosition, (float)fixedYPosition, (float)width, (float)height
+                    );
+                canvas.Rectangle(clippedArea).Clip().EndPath();
+            }
+        }
+
+        private void EndObjectFitImageClipping(PdfCanvas canvas) {
+            if (doesObjectFitRequireCutting) {
+                canvas.RestoreState();
+            }
         }
 
         private void CalculateImageDimensions(Rectangle layoutBox, AffineTransform t, PdfXObject xObject) {
