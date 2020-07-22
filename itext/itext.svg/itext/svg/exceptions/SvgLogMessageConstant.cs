@@ -45,9 +45,6 @@ using System;
 namespace iText.Svg.Exceptions {
     /// <summary>Class that holds the logging and exception messages.</summary>
     public sealed class SvgLogMessageConstant {
-        private SvgLogMessageConstant() {
-        }
-
         public const String ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(rx ry rot largearc sweep x y)+ parameters are expected for elliptical arcs. Got: {0}";
 
         public const String ATTRIBUTES_NULL = "The attributes of this element are null.";
@@ -62,6 +59,8 @@ namespace iText.Svg.Exceptions {
         public const String ERROR_CLOSING_CSS_STREAM = "An error occured when trying to close the InputStream of the default CSS.";
 
         public const String ERROR_INITIALIZING_DEFAULT_CSS = "Error loading the default CSS. Initializing an empty style sheet.";
+
+        public const String FAILED_TO_PARSE_INPUTSTREAM = "Failed to parse InputStream.";
 
         [Obsolete]
         public const String FLOAT_PARSING_NAN = "The passed value is not a number.";
@@ -134,5 +133,8 @@ namespace iText.Svg.Exceptions {
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+
+        private SvgLogMessageConstant() {
+        }
     }
 }

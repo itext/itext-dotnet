@@ -1202,7 +1202,13 @@ namespace iText.Svg.Converter {
         public static ISvgProcessorResult ParseAndProcess(Stream svgStream, ISvgConverterProperties props) {
             IXmlParser parser = new JsoupXmlParser();
             String charset = TryToExtractCharset(props);
-            INode nodeTree = parser.Parse(svgStream, charset);
+            INode nodeTree;
+            try {
+                nodeTree = parser.Parse(svgStream, charset);
+            }
+            catch (Exception e) {
+                throw new SvgProcessingException(SvgLogMessageConstant.FAILED_TO_PARSE_INPUTSTREAM, e);
+            }
             return new DefaultSvgProcessor().Process(nodeTree, props);
         }
 
