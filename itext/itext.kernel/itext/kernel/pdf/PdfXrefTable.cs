@@ -88,6 +88,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
         /// <param name="reference">indirect reference to add.</param>
+        /// <returns>reference from param</returns>
         public virtual PdfIndirectReference Add(PdfIndirectReference reference) {
             if (reference == null) {
                 return null;
@@ -142,7 +143,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Set up appropriate state for the free references list.</summary>
-        /// <param name="pdfDocument">is the current document</param>
+        /// <param name="pdfDocument">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
         internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
             freeReferencesLinkedList.Clear();
             // ensure zero object is free
@@ -194,7 +198,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
-        /// <param name="document">is the current document</param>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
         /// <returns>created indirect reference to the object stream</returns>
         internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
@@ -203,6 +210,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Creates next available indirect reference.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
         /// <returns>created indirect reference.</returns>
         protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
@@ -242,6 +253,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
+        /// <param name="fileId">field id</param>
+        /// <param name="crypto">pdf encryption</param>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();

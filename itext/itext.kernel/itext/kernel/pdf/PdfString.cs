@@ -156,6 +156,11 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets the encoding of this string.</summary>
+        /// <returns>
+        /// the name of the encoding specifying the byte representation of current
+        /// <see cref="PdfString"/>
+        /// value
+        /// </returns>
         public virtual String GetEncoding() {
             return encoding;
         }

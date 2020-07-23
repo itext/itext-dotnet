@@ -106,6 +106,11 @@ namespace iText.Kernel.Pdf {
         /// in.close();
         /// </pre>
         /// </remarks>
+        /// <param name="doc">
+        /// the
+        /// <see cref="PdfDocument">pdf document</see>
+        /// in which this stream lies
+        /// </param>
         /// <param name="inputStream">the data to write to this stream</param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
@@ -137,6 +142,11 @@ namespace iText.Kernel.Pdf {
         /// in.close();
         /// </pre>
         /// </remarks>
+        /// <param name="doc">
+        /// the
+        /// <see cref="PdfDocument">pdf document</see>
+        /// in which this stream lies
+        /// </param>
         /// <param name="inputStream">the data to write to this stream</param>
         public PdfStream(PdfDocument doc, Stream inputStream)
             : this(doc, inputStream, CompressionConstants.UNDEFINED_COMPRESSION) {
@@ -384,6 +394,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Update length manually in case its correction.</summary>
+        /// <param name="length">the new length</param>
         /// <seealso cref="PdfReader.CheckPdfStreamLength(PdfStream)"/>
         protected internal virtual void UpdateLength(int length) {
             this.length = length;

@@ -57,6 +57,27 @@ namespace iText.Kernel.Pdf {
         /// suppress any key.
         /// By default output intent subtype is GTS_PDFA1, use setter to change it.
         /// </remarks>
+        /// <param name="outputConditionIdentifier">
+        /// (required) identifying the intended output device or production condition in
+        /// human or machine readable form
+        /// </param>
+        /// <param name="outputCondition">
+        /// (optional) identifying the intended output device or production
+        /// condition in human-readable form
+        /// </param>
+        /// <param name="registryName">
+        /// identifying the registry in which the condition designated by
+        /// <paramref name="outputConditionIdentifier"/>
+        /// is defined
+        /// </param>
+        /// <param name="info">
+        /// (required if
+        /// <paramref name="outputConditionIdentifier"/>
+        /// does not specify a standard
+        /// production condition; optional otherwise) containing additional information or
+        /// comments about the intended target device or production condition
+        /// </param>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream</param>
         public PdfOutputIntent(String outputConditionIdentifier, String outputCondition, String registryName, String
              info, Stream iccStream)
             : base(new PdfDictionary()) {
