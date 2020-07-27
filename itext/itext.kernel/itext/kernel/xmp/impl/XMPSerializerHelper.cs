@@ -89,13 +89,13 @@ namespace iText.Kernel.XMP.Impl
 
 			try
 			{
-				return new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())).GetString(output.GetBuffer());
+				return new EncodingNoPreamble(IanaEncodings.GetEncodingEncoding(options.GetEncoding())).GetString(output.GetBuffer(), 0, (int) output.Length);
 			}
 			catch (Exception)
 			{
 				// cannot happen as UTF-8/16LE/BE is required to be implemented in
 				// Java
-				return GetString(output.GetBuffer());
+				return GetString(output.GetBuffer(), (int) output.Length);
 			}
 		}
 
@@ -115,10 +115,10 @@ namespace iText.Kernel.XMP.Impl
 			return output.ToArray();
 		}
 
-		static string GetString(byte[] bytes)
+		static string GetString(byte[] bytes, int length)
 		{
-			char[] chars = new char[bytes.Length / sizeof(char)];
-			Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+			char[] chars = new char[length / sizeof(char)];
+			Buffer.BlockCopy(bytes, 0, chars, 0, length);
 			return new string(chars);
 		}
 	}
