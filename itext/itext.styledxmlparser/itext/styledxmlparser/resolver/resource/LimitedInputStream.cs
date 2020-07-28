@@ -33,6 +33,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     /// an
     /// <see cref="ReadingByteLimitException"/>
     /// exception will be thrown.
+    ///
+    /// Note that the readingByteLimit is not taken into account in the <see cref="Seek"/>,
+    /// <see cref="set_Position"/> methods.
     /// </summary>
     internal class LimitedInputStream : Stream {
         private bool isLimitViolated;
@@ -64,10 +67,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             
             if (count > readingByteLimit) {
                 if (readingByteLimit == 0) {
-                    // still need to test if end of stream is reached, so setting 1 byte to read 
+                    // Still need to test if end of stream is reached, so setting 1 byte to read 
                     count = 1;
                 } else {
-                    // safe to cast to int, because count is int and greater
+                    // Safe to cast to int, because count is int and greater
                     count = (int) readingByteLimit;
                 }
             }
@@ -75,7 +78,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             int bytesRead = inputStream.Read(buffer, offset, count);
             readingByteLimit -= bytesRead;
 
-            // if end of stream is met at the moment when readingByteLimit == 0 
+            // If end of stream is met at the moment when readingByteLimit == 0 
             // we will not throw an exception, because readingByteLimit would not change 
             if (readingByteLimit < 0) {
                 isLimitViolated = true;
@@ -96,7 +99,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public override void Flush() {
             inputStream.Flush();
         }
-
+        
         public override long Seek(long offset, SeekOrigin origin) {
             return inputStream.Seek(offset, origin);
         }
