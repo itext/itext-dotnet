@@ -61,6 +61,25 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void OverridenMemoryHandler() {
+            MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_75();
+            PdfArray filters = new PdfArray();
+            filters.Add(PdfName.FlateDecode);
+            NUnit.Framework.Assert.IsFalse(defaultHandler.IsPdfStreamSuspicious(filters));
+            NUnit.Framework.Assert.IsTrue(customHandler.IsPdfStreamSuspicious(filters));
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_75 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_75() {
+            }
+
+            internal override bool IsPdfStreamSuspicious(PdfArray filters) {
+                return true;
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DefaultSingleMemoryHandler() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             TestSingleStream(handler);

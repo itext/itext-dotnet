@@ -50,6 +50,10 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles FlateDecode filter.</summary>
     public class FlateDecodeFilter : MemoryLimitsAwareFilter {
+        /// <summary>Defines how the corrupted streams should be treated.</summary>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
+        private bool strictDecoding = false;
+
         /// <summary>Creates a FlateDecodeFilter.</summary>
         public FlateDecodeFilter()
             : this(false) {
@@ -69,32 +73,6 @@ namespace iText.Kernel.Pdf.Filters {
             return strictDecoding;
         }
 
-        /// <summary>Defines how the corrupted streams should be treated.</summary>
-        /// <param name="strict">true if the decoder should try to read a corrupted stream otherwise false</param>
-        /// <returns>the decoder</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        public virtual iText.Kernel.Pdf.Filters.FlateDecodeFilter SetStrictDecoding(bool strict) {
-            this.strictDecoding = strict;
-            return this;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            ) {
-            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
-            byte[] res = FlateDecode(b, true, outputStream);
-            if (res == null && !strictDecoding) {
-                outputStream.JReset();
-                res = FlateDecode(b, false, outputStream);
-            }
-            b = DecodePredictor(res, decodeParams);
-            return b;
-        }
-
-        /// <summary>Defines how the corrupted streams should be treated.</summary>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
-        private bool strictDecoding = false;
-
         /// <summary>A helper to flateDecode.</summary>
         /// <param name="in">the input data</param>
         /// <param name="strict">
@@ -106,42 +84,7 @@ namespace iText.Kernel.Pdf.Filters {
         /// </param>
         /// <returns>the decoded data</returns>
         public static byte[] FlateDecode(byte[] @in, bool strict) {
-            return FlateDecode(@in, strict, new MemoryStream());
-        }
-
-        /// <summary>A helper to flateDecode.</summary>
-        /// <param name="in">the input data</param>
-        /// <param name="strict">
-        /// 
-        /// <see langword="true"/>
-        /// to read a correct stream.
-        /// <see langword="false"/>
-        /// to try to read a corrupted stream.
-        /// </param>
-        /// <param name="out">the out stream which will be used to write the bytes.</param>
-        /// <returns>the decoded data</returns>
-        private static byte[] FlateDecode(byte[] @in, bool strict, MemoryStream @out) {
-            MemoryStream stream = new MemoryStream(@in);
-            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
-            byte[] b = new byte[strict ? 4092 : 1];
-            try {
-                int n;
-                while ((n = zip.Read(b)) >= 0) {
-                    @out.Write(b, 0, n);
-                }
-                zip.Dispose();
-                @out.Dispose();
-                return @out.ToArray();
-            }
-            catch (MemoryLimitsAwareException e) {
-                throw;
-            }
-            catch (Exception) {
-                if (strict) {
-                    return null;
-                }
-                return @out.ToArray();
-            }
+            return FlateDecodeInternal(@in, strict, new MemoryStream());
         }
 
         /// <param name="in">Input byte array.</param>
@@ -160,21 +103,9 @@ namespace iText.Kernel.Pdf.Filters {
             if (predictor < 10 && predictor != 2) {
                 return @in;
             }
-            int width = 1;
-            obj = dic.Get(PdfName.Columns);
-            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER) {
-                width = ((PdfNumber)obj).IntValue();
-            }
-            int colors = 1;
-            obj = dic.Get(PdfName.Colors);
-            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER) {
-                colors = ((PdfNumber)obj).IntValue();
-            }
-            int bpc = 8;
-            obj = dic.Get(PdfName.BitsPerComponent);
-            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER) {
-                bpc = ((PdfNumber)obj).IntValue();
-            }
+            int width = GetNumberOrDefault(dic, PdfName.Columns, 1);
+            int colors = GetNumberOrDefault(dic, PdfName.Colors, 1);
+            int bpc = GetNumberOrDefault(dic, PdfName.BitsPerComponent, 8);
             BinaryReader dataStream = new BinaryReader(new MemoryStream(@in));
             MemoryStream fout = new MemoryStream(@in.Length);
             int bytesPerPixel = colors * bpc / 8;
@@ -287,6 +218,72 @@ namespace iText.Kernel.Pdf.Filters {
                 prior = curr;
                 curr = tmp;
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+            ) {
+            MemoryStream outputStream = EnableMemoryLimitsAwareHandler(streamDictionary);
+            byte[] res = FlateDecodeInternal(b, true, outputStream);
+            if (res == null && !strictDecoding) {
+                outputStream.JReset();
+                res = FlateDecodeInternal(b, false, outputStream);
+            }
+            b = DecodePredictor(res, decodeParams);
+            return b;
+        }
+
+        /// <summary>Defines how the corrupted streams should be treated.</summary>
+        /// <param name="strict">true if the decoder should try to read a corrupted stream otherwise false</param>
+        /// <returns>the decoder</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use FlateDecodeStrictFilter instead.")]
+        public virtual iText.Kernel.Pdf.Filters.FlateDecodeFilter SetStrictDecoding(bool strict) {
+            this.strictDecoding = strict;
+            return this;
+        }
+
+        /// <summary>A helper to flateDecode.</summary>
+        /// <param name="in">the input data</param>
+        /// <param name="strict">
+        /// 
+        /// <see langword="true"/>
+        /// to read a correct stream.
+        /// <see langword="false"/>
+        /// to try to read a corrupted stream.
+        /// </param>
+        /// <param name="out">the out stream which will be used to write the bytes.</param>
+        /// <returns>the decoded data</returns>
+        protected internal static byte[] FlateDecodeInternal(byte[] @in, bool strict, MemoryStream @out) {
+            MemoryStream stream = new MemoryStream(@in);
+            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
+            byte[] b = new byte[strict ? 4092 : 1];
+            try {
+                int n;
+                while ((n = zip.Read(b)) >= 0) {
+                    @out.Write(b, 0, n);
+                }
+                zip.Dispose();
+                @out.Dispose();
+                return @out.ToArray();
+            }
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception) {
+                if (strict) {
+                    return null;
+                }
+                return @out.ToArray();
+            }
+        }
+
+        private static int GetNumberOrDefault(PdfDictionary dict, PdfName key, int defaultInt) {
+            int result = defaultInt;
+            PdfObject obj = dict.Get(key);
+            if (obj != null && obj.GetObjectType() == PdfObject.NUMBER) {
+                result = ((PdfNumber)obj).IntValue();
+            }
+            return result;
         }
     }
 }

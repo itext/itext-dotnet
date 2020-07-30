@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -177,6 +178,40 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return this;
+        }
+
+        /// <summary>
+        /// Performs a check if the setup of the filters of
+        /// <see cref="PdfStream"/>
+        /// is suspicious so that
+        /// during the processing we should keep in mind that possible 'decompression bomb' scenario
+        /// has to be handled.
+        /// </summary>
+        /// <remarks>
+        /// Performs a check if the setup of the filters of
+        /// <see cref="PdfStream"/>
+        /// is suspicious so that
+        /// during the processing we should keep in mind that possible 'decompression bomb' scenario
+        /// has to be handled.
+        /// 'Decompression bomb' is a small piece of extremely compressed data whose size is increasing
+        /// dramatically during decompression so that the system cannot handle it and is going to crash
+        /// <para />
+        /// </remarks>
+        /// <param name="filters">
+        /// is an
+        /// <see cref="PdfArray"/>
+        /// of names of filters
+        /// </param>
+        /// <returns>true if PDF stream is suspicious and false otherwise</returns>
+        internal virtual bool IsPdfStreamSuspicious(PdfArray filters) {
+            HashSet<PdfName> filterSet = new HashSet<PdfName>();
+            for (int index = 0; index < filters.Size(); index++) {
+                PdfName filterName = filters.GetAsName(index);
+                if (!filterSet.Add(filterName)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>Begins handling of current pdf stream decompression.</summary>

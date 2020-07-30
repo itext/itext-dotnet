@@ -445,20 +445,10 @@ namespace iText.Kernel.Pdf {
             if (null != streamDictionary.GetIndirectReference()) {
                 memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
             }
-            if (null != memoryLimitsAwareHandler) {
-                HashSet<PdfName> filterSet = new HashSet<PdfName>();
-                int index;
-                for (index = 0; index < filters.Size(); index++) {
-                    PdfName filterName = filters.GetAsName(index);
-                    if (!filterSet.Add(filterName)) {
-                        memoryLimitsAwareHandler.BeginDecompressedPdfStreamProcessing();
-                        break;
-                    }
-                }
-                if (index == filters.Size()) {
-                    // The stream isn't suspicious. We shouldn't process it.
-                    memoryLimitsAwareHandler = null;
-                }
+            bool memoryLimitsAwarenessRequired = null != memoryLimitsAwareHandler && memoryLimitsAwareHandler.IsPdfStreamSuspicious
+                (filters);
+            if (memoryLimitsAwarenessRequired) {
+                memoryLimitsAwareHandler.BeginDecompressedPdfStreamProcessing();
             }
             PdfArray dp = new PdfArray();
             PdfObject dpo = streamDictionary.Get(PdfName.DecodeParms);
@@ -506,11 +496,11 @@ namespace iText.Kernel.Pdf {
                     decodeParams = null;
                 }
                 b = filterHandler.Decode(b, filterName, decodeParams, streamDictionary);
-                if (null != memoryLimitsAwareHandler) {
+                if (memoryLimitsAwarenessRequired) {
                     memoryLimitsAwareHandler.ConsiderBytesOccupiedByDecompressedPdfStream(b.Length);
                 }
             }
-            if (null != memoryLimitsAwareHandler) {
+            if (memoryLimitsAwarenessRequired) {
                 memoryLimitsAwareHandler.EndDecompressedPdfStreamProcessing();
             }
             return b;
