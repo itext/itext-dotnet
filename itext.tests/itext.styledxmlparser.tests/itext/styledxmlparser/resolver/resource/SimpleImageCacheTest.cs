@@ -122,6 +122,18 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.IsNull(cache.GetImage(imgSrc[4]));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OrderRemovingFromCacheTest() {
+            SimpleImageCache cache = new SimpleImageCache(10);
+            for (int j = 0; j <= 9; j++) {
+                cache.PutImage("src" + j + ".jpg", new SimpleImageCacheTest.ImageXObjectStub());
+            }
+            for (int i = 0; i <= 9; i++) {
+                cache.PutImage("src" + i + 10 + ".jpg", new SimpleImageCacheTest.ImageXObjectStub());
+                NUnit.Framework.Assert.IsNull(cache.GetImage("src" + i + ".jpg"));
+            }
+        }
+
         private class ImageXObjectStub : PdfImageXObject {
             private static int totalNum = 0;
 
