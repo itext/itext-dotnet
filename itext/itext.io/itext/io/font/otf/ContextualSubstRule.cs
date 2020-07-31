@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 namespace iText.IO.Font.Otf {
     public abstract class ContextualSubstRule {
-        /// <returns>length of the context glyph sequence defined by this rule.</returns>
+        /// <returns>length of the context glyph sequence defined by this rule</returns>
         public abstract int GetContextLength();
 
         /// <returns>
         /// an array of <c>SubstLookupRecord</c>. Each record specifies a position in the context glyph
-        /// sequence and a LookupListIndex to the substitution lookup that is applied at that position.
+        /// sequence and a LookupListIndex to the substitution lookup that is applied at that position
         /// </returns>
         public abstract SubstLookupRecord[] GetSubstLookupRecords();
 
@@ -59,33 +59,54 @@ namespace iText.IO.Font.Otf {
         /// NOTE: rules do not contain the first element of the input sequence, the first element is defined by rule
         /// position in substitution table. Therefore atIdx shall not be 0.
         /// </remarks>
-        /// <param name="glyphId"/>
-        /// <param name="atIdx">index in the rule sequence. Shall be: 0 &lt; atIdx &lt; ContextualSubstRule.getContextLength().
-        ///     </param>
+        /// <param name="glyphId">glyph code id</param>
+        /// <param name="atIdx">
+        /// index in the rule sequence. Shall be: 0 &lt; atIdx &lt;
+        /// <see cref="GetContextLength()"/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph matches element
+        /// </returns>
         public abstract bool IsGlyphMatchesInput(int glyphId, int atIdx);
 
-        /// <returns>length of the lookahead context glyph sequence defined by this rule.</returns>
+        /// <returns>length of the lookahead context glyph sequence defined by this rule</returns>
         public virtual int GetLookaheadContextLength() {
             return 0;
         }
 
-        /// <returns>length of the backtrack context glyph sequence defined by this rule.</returns>
+        /// <returns>length of the backtrack context glyph sequence defined by this rule</returns>
         public virtual int GetBacktrackContextLength() {
             return 0;
         }
 
         /// <summary>Checks if glyph line element matches element from lookahead sequence of the rule.</summary>
-        /// <param name="glyphId"/>
-        /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getLookaheadContextLength().
-        ///     </param>
+        /// <param name="glyphId">glyph code id</param>
+        /// <param name="atIdx">
+        /// index in rule sequence. Shall be: 0 &lt;= atIdx &lt;
+        /// <see cref="GetLookaheadContextLength()"/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph matches element from lookahead sequence
+        /// </returns>
         public virtual bool IsGlyphMatchesLookahead(int glyphId, int atIdx) {
             return false;
         }
 
         /// <summary>Checks if glyph line element matches element from backtrack sequence of the rule.</summary>
-        /// <param name="glyphId"/>
-        /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getBacktrackContextLength().
-        ///     </param>
+        /// <param name="glyphId">glyph code id</param>
+        /// <param name="atIdx">
+        /// index in rule sequence. Shall be: 0 &lt;= atIdx &lt;
+        /// <see cref="GetBacktrackContextLength()"/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph matches element from backtrack sequence
+        /// </returns>
         public virtual bool IsGlyphMatchesBacktrack(int glyphId, int atIdx) {
             return false;
         }

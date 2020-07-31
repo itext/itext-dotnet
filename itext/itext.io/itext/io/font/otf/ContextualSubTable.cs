@@ -82,16 +82,22 @@ namespace iText.IO.Font.Otf {
         }
 
         /// <summary>Gets a set of rules, which start with given glyph id.</summary>
-        /// <param name="startId">id of the first glyph in the sequence.</param>
+        /// <param name="startId">id of the first glyph in the sequence</param>
+        /// <returns>
+        /// a list of
+        /// <see cref="ContextualSubstRule"/>
+        /// instances. The list will be empty if there are no rules
+        /// that start with a given glyph id
+        /// </returns>
         protected internal abstract IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId);
 
-        /// <summary>Checks if given glyph line at the given position matches given rule.</summary>
+        /// <summary>Checks if given glyph line matches given rule.</summary>
+        /// <param name="line">glyph line to be checked</param>
+        /// <param name="rule">rule to be compared with a given glyph line</param>
         /// <returns>
-        /// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
-        /// or -1 if context doesn't match.
+        /// either index which corresponds to the last glyph of the matching context inside the glyph line
+        /// if context matches, or -1 if context doesn't match
         /// </returns>
-        /// <param name="line"/>
-        /// <param name="rule"/>
         protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();

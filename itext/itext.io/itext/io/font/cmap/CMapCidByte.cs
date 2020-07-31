@@ -89,6 +89,11 @@ namespace iText.IO.Font.Cmap {
         /// Returns a list containing sequential pairs of code space beginning and endings:
         /// (begincodespacerange1, endcodespacerange1, begincodespacerange2, endcodespacerange1, ...)
         /// </summary>
+        /// <returns>
+        /// list of
+        /// <c>byte[]</c>
+        /// that contain code space ranges
+        /// </returns>
         public virtual IList<byte[]> GetCodeSpaceRanges() {
             return codeSpaceRanges;
         }
