@@ -95,6 +95,40 @@ namespace iText.Barcodes {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BarcodeAlignRightTest() {
+            String filename = "barcodeMSI_AlignRight.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            Barcode1D barcode = new BarcodeMSI(document);
+            barcode.SetCode("123456789");
+            barcode.SetGenerateChecksum(true);
+            barcode.SetTextAlignment(Barcode1D.ALIGN_RIGHT);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLACK, ColorConstants.RED);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BarcodeAlignCenterTest() {
+            String filename = "barcodeMSI_AlignCenter.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            Barcode1D barcode = new BarcodeMSI(document);
+            barcode.SetCode("123456789");
+            barcode.SetGenerateChecksum(true);
+            barcode.SetTextAlignment(Barcode1D.ALIGN_CENTER);
+            barcode.PlaceBarcode(canvas, ColorConstants.BLACK, ColorConstants.RED);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
             byte[] expected = new byte[] { 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 
                 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 };
