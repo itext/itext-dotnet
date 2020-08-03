@@ -421,8 +421,7 @@ namespace iText.Pdfa.Checker {
             if (form.ContainsKey(PdfName.SMask) && !PdfName.None.Equals(form.GetAsName(PdfName.SMask))) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_XOBJECTS);
             }
-            if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
-                (PdfName.S))) {
+            if (IsContainsTransparencyGroup(form)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                     );
             }
@@ -714,8 +713,7 @@ namespace iText.Pdfa.Checker {
                     CheckAction(action);
                 }
             }
-            if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
-                ).GetAsName(PdfName.S))) {
+            if (IsContainsTransparencyGroup(pageDict)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_PAGE_XOBJECT
                     );
             }

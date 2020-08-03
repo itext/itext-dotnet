@@ -96,8 +96,6 @@ namespace iText.Pdfa.Checker {
 
         private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>();
 
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfA2Checker));
-
         private ICollection<PdfObject> transparencyObjects = new HashSet<PdfObject>();
 
         /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
@@ -148,7 +146,7 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_165(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_166(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -160,8 +158,8 @@ namespace iText.Pdfa.Checker {
             base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
-        private sealed class _CanvasGraphicsState_165 : CanvasGraphicsState {
-            public _CanvasGraphicsState_165(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_166 : CanvasGraphicsState {
+            public _CanvasGraphicsState_166(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -440,6 +438,16 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        protected internal override void CheckAppearanceStream(PdfStream appearanceStream) {
+            if (IsAlreadyChecked(appearanceStream)) {
+                return;
+            }
+            if (IsContainsTransparencyGroup(appearanceStream)) {
+                this.transparencyObjects.Add(appearanceStream);
+            }
+            CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources));
+        }
+
         protected internal override void CheckForm(PdfDictionary form) {
             if (form != null) {
                 PdfBoolean needAppearances = form.GetAsBoolean(PdfName.NeedAppearances);
@@ -628,8 +636,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_PAGE_DICTIONARY_SHALL_NOT_CONTAIN_PRESSTEPS_ENTRY
                     );
             }
-            if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
-                ).GetAsName(PdfName.S))) {
+            if (IsContainsTransparencyGroup(pageDict)) {
                 PdfObject cs = pageDict.GetAsDictionary(PdfName.Group).Get(PdfName.CS);
                 if (cs != null) {
                     PdfDictionary currentColorSpaces = pageResources.GetAsDictionary(PdfName.ColorSpace);
@@ -647,7 +654,8 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 CheckContentsForTransparency(pageDict);
-                CheckXObjectsForTransparency(pageResources.GetAsDictionary(PdfName.XObject));
+                CheckAnnotationsForTransparency(pageDict.GetAsArray(PdfName.Annots));
+                CheckResourcesForTransparency(pageResources, new HashSet<PdfObject>());
             }
         }
 
@@ -829,6 +837,12 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
+            if (font is PdfType3Font) {
+                CheckType3FontGlyphs((PdfType3Font)font, contentStream);
+            }
+        }
+
         protected internal override void CheckFormXObject(PdfStream form) {
             CheckFormXObject(form, null);
         }
@@ -849,8 +863,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_SUBTYPE2_KEY_WITH_A_VALUE_OF_PS
                     );
             }
-            if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
-                (PdfName.S))) {
+            if (IsContainsTransparencyGroup(form)) {
                 if (contentStream != null) {
                     transparencyObjects.Add(contentStream);
                 }
@@ -887,18 +900,74 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        private void CheckXObjectsForTransparency(PdfDictionary dictionary) {
-            if (dictionary != null) {
-                foreach (PdfName key in dictionary.KeySet()) {
-                    PdfDictionary xObject = dictionary.GetAsStream(key);
-                    if (transparencyObjects.Contains(xObject)) {
-                        throw new PdfAConformanceException(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
-                            );
+        private void CheckAnnotationsForTransparency(PdfArray annotations) {
+            if (annotations == null) {
+                return;
+            }
+            for (int i = 0; i < annotations.Size(); ++i) {
+                PdfDictionary annot = annotations.GetAsDictionary(i);
+                PdfDictionary ap = annot.GetAsDictionary(PdfName.AP);
+                if (ap != null) {
+                    CheckAppearanceStreamForTransparency(ap, new HashSet<PdfObject>());
+                }
+            }
+        }
+
+        private void CheckAppearanceStreamForTransparency(PdfDictionary ap, ICollection<PdfObject> checkedObjects) {
+            if (checkedObjects.Contains(ap)) {
+                return;
+            }
+            else {
+                checkedObjects.Add(ap);
+            }
+            foreach (PdfObject val in ap.Values()) {
+                if (this.transparencyObjects.Contains(val)) {
+                    throw new PdfAConformanceException(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                        );
+                }
+                else {
+                    if (val.IsDictionary()) {
+                        CheckAppearanceStreamForTransparency((PdfDictionary)val, checkedObjects);
                     }
-                    if (xObject.GetAsDictionary(PdfName.Resources) != null && xObject.GetAsDictionary(PdfName.Resources).GetAsDictionary
-                        (PdfName.XObject) != null) {
-                        CheckXObjectsForTransparency(xObject.GetAsDictionary(PdfName.Resources).GetAsDictionary(PdfName.XObject));
+                    else {
+                        if (val.IsStream()) {
+                            CheckObjectWithResourcesForTransparency(val, checkedObjects);
+                        }
                     }
+                }
+            }
+        }
+
+        private void CheckObjectWithResourcesForTransparency(PdfObject objectWithResources, ICollection<PdfObject>
+             checkedObjects) {
+            if (checkedObjects.Contains(objectWithResources)) {
+                return;
+            }
+            else {
+                checkedObjects.Add(objectWithResources);
+            }
+            if (this.transparencyObjects.Contains(objectWithResources)) {
+                throw new PdfAConformanceException(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                    );
+            }
+            if (objectWithResources is PdfDictionary) {
+                CheckResourcesForTransparency(((PdfDictionary)objectWithResources).GetAsDictionary(PdfName.Resources), checkedObjects
+                    );
+            }
+        }
+
+        private void CheckResourcesForTransparency(PdfDictionary resources, ICollection<PdfObject> checkedObjects) {
+            if (resources != null) {
+                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.XObject), checkedObjects);
+                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.Pattern), checkedObjects);
+            }
+        }
+
+        private void CheckSingleResourceTypeForTransparency(PdfDictionary singleResourceDict, ICollection<PdfObject
+            > checkedObjects) {
+            if (singleResourceDict != null) {
+                foreach (PdfObject resource in singleResourceDict.Values()) {
+                    CheckObjectWithResourcesForTransparency(resource, checkedObjects);
                 }
             }
         }
@@ -1023,12 +1092,13 @@ namespace iText.Pdfa.Checker {
             return true;
         }
 
-        public override void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
-            if (font is PdfType3Font) {
-                for (int i = 0; i < ((PdfType3Font)font).GetNumberOfGlyphs(); i++) {
-                    int unicode = ((PdfType3Font)font).GetFontEncoding().GetUnicode(i);
-                    if (unicode != -1) {
-                        CheckFormXObject(((PdfType3Font)font).GetType3Glyph(unicode).GetContentStream(), contentStream);
+        private void CheckType3FontGlyphs(PdfType3Font font, PdfStream contentStream) {
+            for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; ++i) {
+                FontEncoding fontEncoding = font.GetFontEncoding();
+                if (fontEncoding.CanDecode(i)) {
+                    Type3Glyph type3Glyph = font.GetType3Glyph(fontEncoding.GetUnicode(i));
+                    if (type3Glyph != null) {
+                        CheckFormXObject(type3Glyph.GetContentStream(), contentStream);
                     }
                 }
             }

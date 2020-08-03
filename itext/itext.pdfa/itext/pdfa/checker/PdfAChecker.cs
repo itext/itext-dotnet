@@ -553,6 +553,25 @@ namespace iText.Pdfa.Checker {
                  || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
         }
 
+        /// <summary>Checks whether the specified dictionary has a transparency group.</summary>
+        /// <param name="dictionary">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to check
+        /// </param>
+        /// <returns>
+        /// true if and only if the specified dictionary has a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Group"/>
+        /// key and its value is
+        /// a dictionary with
+        /// <see cref="iText.Kernel.Pdf.PdfName.Transparency"/>
+        /// subtype
+        /// </returns>
+        protected internal static bool IsContainsTransparencyGroup(PdfDictionary dictionary) {
+            return dictionary.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(dictionary.GetAsDictionary(PdfName
+                .Group).GetAsName(PdfName.S));
+        }
+
         protected internal virtual bool IsAlreadyChecked(PdfDictionary dictionary) {
             if (checkedObjects.Contains(dictionary)) {
                 return true;
@@ -561,18 +580,42 @@ namespace iText.Pdfa.Checker {
             return false;
         }
 
+        /// <summary>Checks resources of the appearance streams.</summary>
+        /// <param name="appearanceStreamsDict">the dictionary with appearance streams to check.</param>
         protected internal virtual void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict) {
+            CheckResourcesOfAppearanceStreams(appearanceStreamsDict, new HashSet<PdfObject>());
+        }
+
+        /// <summary>Check single annotation appearance stream.</summary>
+        /// <param name="appearanceStream">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// to check
+        /// </param>
+        protected internal virtual void CheckAppearanceStream(PdfStream appearanceStream) {
+            if (IsAlreadyChecked(appearanceStream)) {
+                return;
+            }
+            CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources));
+        }
+
+        private void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict, ICollection<PdfObject>
+             checkedObjects) {
+            if (checkedObjects.Contains(appearanceStreamsDict)) {
+                return;
+            }
+            else {
+                checkedObjects.Add(appearanceStreamsDict);
+            }
             foreach (PdfObject val in appearanceStreamsDict.Values()) {
                 if (val is PdfDictionary) {
                     PdfDictionary ap = (PdfDictionary)val;
                     if (ap.IsDictionary()) {
-                        CheckResourcesOfAppearanceStreams(ap);
+                        CheckResourcesOfAppearanceStreams(ap, checkedObjects);
                     }
                     else {
                         if (ap.IsStream()) {
-                            if (!IsAlreadyChecked(ap)) {
-                                CheckResources(ap.GetAsDictionary(PdfName.Resources));
-                            }
+                            CheckAppearanceStream((PdfStream)ap);
                         }
                     }
                 }

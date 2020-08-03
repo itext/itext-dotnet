@@ -136,7 +136,8 @@ namespace iText.Kernel.Font {
                 fontProgram.GetFontMetrics().SetBbox(0, 0, 0, 0);
             }
             int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
-            int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), 255);
+            int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE
+                );
             for (int i = firstChar; i <= lastChar; i++) {
                 shortTag[i] = 1;
             }
@@ -148,7 +149,7 @@ namespace iText.Kernel.Font {
             PdfArray multipliedPdfWidths = new PdfArray(multipliedWidths);
             int[] widths = FontUtil.ConvertSimpleWidthsArray(multipliedPdfWidths, firstChar, 0);
             if (toUnicode != null && toUnicode.HasByteMappings() && fontEncoding.HasDifferences()) {
-                for (int i = 0; i < 256; i++) {
+                for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
                     int unicode = fontEncoding.GetUnicode(i);
                     PdfName glyphName = new PdfName(fontEncoding.GetDifference(i));
                     if (unicode != -1 && !FontEncoding.NOTDEF.Equals(glyphName.GetValue()) && charProcsDic.ContainsKey(glyphName
@@ -333,7 +334,7 @@ namespace iText.Kernel.Font {
                 throw new PdfException("No glyphs defined for type3 font.");
             }
             PdfDictionary charProcs = new PdfDictionary();
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
                 if (fontEncoding.CanDecode(i)) {
                     Type3Glyph glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
                     if (glyph != null) {
@@ -416,7 +417,7 @@ namespace iText.Kernel.Font {
         /// <returns>code from 1 to 255 or -1 if all slots are busy.</returns>
         private int GetFirstEmptyCode() {
             int startFrom = 1;
-            for (int i = startFrom; i < 256; i++) {
+            for (int i = startFrom; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
                 if (!fontEncoding.CanDecode(i)) {
                     return i;
                 }
@@ -455,7 +456,7 @@ namespace iText.Kernel.Font {
                 return defaultValue;
             }
             int result = firstLast.IntValue();
-            return result < 0 || result > 255 ? defaultValue : result;
+            return result < 0 || result > PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE ? defaultValue : result;
         }
 
         private PdfArray NormalizeBBox(int[] bBox) {
