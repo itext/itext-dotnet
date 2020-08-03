@@ -166,7 +166,7 @@ namespace iText.Kernel.Pdf {
             public _MemoryLimitsAwareHandler_203() {
             }
 
-            internal override bool IsPdfStreamSuspicious(PdfArray filters) {
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
                 return true;
             }
         }
@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf {
             public _MemoryLimitsAwareHandler_235() {
             }
 
-            internal override bool IsPdfStreamSuspicious(PdfArray filters) {
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
                 return false;
             }
         }

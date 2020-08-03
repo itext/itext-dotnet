@@ -113,8 +113,8 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.
         /// This value correlates with maximum heap size. This value should not exceed limit of the heap size.
-        /// iText will throw an exception if during decompression a pdf stream with two or more filters of identical type
-        /// occupies more memory than allowed.
+        /// iText will throw an exception if during decompression a pdf stream which was identified as
+        /// requiring memory limits awareness occupies more memory than allowed.
         /// </remarks>
         /// <param name="maxSizeOfSingleDecompressedPdfStream">the maximum allowed size which can be occupied by a single decompressed pdf stream.
         ///     </param>
@@ -123,6 +123,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
+        /// <seealso cref="IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray)"/>
         public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler SetMaxSizeOfSingleDecompressedPdfStream(int maxSizeOfSingleDecompressedPdfStream
             ) {
             this.maxSizeOfSingleDecompressedPdfStream = maxSizeOfSingleDecompressedPdfStream;
@@ -140,8 +141,8 @@ namespace iText.Kernel.Pdf {
         /// Sets the maximum allowed size which can be occupied by all decompressed pdf streams.
         /// This value can be limited by the maximum expected PDF file size when it's completely decompressed.
         /// Setting this value correlates with the maximum processing time spent on document reading
-        /// iText will throw an exception if during decompression pdf streams with two or more filters of identical type
-        /// occupy more memory than allowed.
+        /// iText will throw an exception if during decompression pdf streams which were identified as
+        /// requiring memory limits awareness occupy more memory than allowed.
         /// </remarks>
         /// <param name="maxSizeOfDecompressedPdfStreamsSum">he maximum allowed size which can be occupied by all decompressed pdf streams.
         ///     </param>
@@ -150,10 +151,34 @@ namespace iText.Kernel.Pdf {
         /// <see cref="MemoryLimitsAwareHandler"/>
         /// instance.
         /// </returns>
+        /// <seealso cref="IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray)"/>
         public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler SetMaxSizeOfDecompressedPdfStreamsSum(long maxSizeOfDecompressedPdfStreamsSum
             ) {
             this.maxSizeOfDecompressedPdfStreamsSum = maxSizeOfDecompressedPdfStreamsSum;
             return this;
+        }
+
+        /// <summary>
+        /// Performs a check if the
+        /// <see cref="PdfStream"/>
+        /// with provided setup of the filters requires
+        /// memory limits awareness during decompression.
+        /// </summary>
+        /// <param name="filters">
+        /// is an
+        /// <see cref="PdfArray"/>
+        /// of names of filters
+        /// </param>
+        /// <returns>true if PDF stream is suspicious and false otherwise</returns>
+        public virtual bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
+            HashSet<PdfName> filterSet = new HashSet<PdfName>();
+            for (int index = 0; index < filters.Size(); index++) {
+                PdfName filterName = filters.GetAsName(index);
+                if (!filterSet.Add(filterName)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>Considers the number of bytes which are occupied by the decompressed pdf stream.</summary>
@@ -178,40 +203,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return this;
-        }
-
-        /// <summary>
-        /// Performs a check if the setup of the filters of
-        /// <see cref="PdfStream"/>
-        /// is suspicious so that
-        /// during the processing we should keep in mind that possible 'decompression bomb' scenario
-        /// has to be handled.
-        /// </summary>
-        /// <remarks>
-        /// Performs a check if the setup of the filters of
-        /// <see cref="PdfStream"/>
-        /// is suspicious so that
-        /// during the processing we should keep in mind that possible 'decompression bomb' scenario
-        /// has to be handled.
-        /// 'Decompression bomb' is a small piece of extremely compressed data whose size is increasing
-        /// dramatically during decompression so that the system cannot handle it and is going to crash
-        /// <para />
-        /// </remarks>
-        /// <param name="filters">
-        /// is an
-        /// <see cref="PdfArray"/>
-        /// of names of filters
-        /// </param>
-        /// <returns>true if PDF stream is suspicious and false otherwise</returns>
-        internal virtual bool IsPdfStreamSuspicious(PdfArray filters) {
-            HashSet<PdfName> filterSet = new HashSet<PdfName>();
-            for (int index = 0; index < filters.Size(); index++) {
-                PdfName filterName = filters.GetAsName(index);
-                if (!filterSet.Add(filterName)) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         /// <summary>Begins handling of current pdf stream decompression.</summary>
