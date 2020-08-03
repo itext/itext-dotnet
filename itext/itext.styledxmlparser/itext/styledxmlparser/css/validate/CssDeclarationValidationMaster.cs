@@ -79,6 +79,19 @@ namespace iText.StyledXmlParser.Css.Validate {
                 .INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.NONE), new CssQuotesValidator()));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.TRANSFORM, new SingleTypeDeclarationValidator(new CssTransformValidator
                 ()));
+            CssEnumValidator enumValidator = new CssEnumValidator(CommonCssConstants.LARGER, CommonCssConstants.SMALLER
+                );
+            enumValidator.AddAllowedValues(CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.Keys);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FONT_SIZE, new MultiTypeDeclarationValidator(new CssNumericValueValidator
+                (true, false), enumValidator));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.WORD_SPACING, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (false, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.LETTER_SPACING, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (false, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.TEXT_INDENT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, false)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.LINE_HEIGHT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, true)));
         }
 
         /// <summary>

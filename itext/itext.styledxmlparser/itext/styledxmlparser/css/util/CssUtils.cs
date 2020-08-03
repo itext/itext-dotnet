@@ -400,6 +400,16 @@ namespace iText.StyledXmlParser.Css.Util {
             return null;
         }
 
+        /// <summary>Checks if a string is in a valid format.</summary>
+        /// <param name="value">the string that needs to be checked.</param>
+        /// <returns>boolean true if value is in a valid format.</returns>
+        public static bool IsValidNumericValue(String value) {
+            if (value == null || value.Contains(" ")) {
+                return false;
+            }
+            return IsRelativeValue(value) || IsMetricValue(value) || IsNumericValue(value);
+        }
+
         /// <summary>Parses the absolute font size.</summary>
         /// <remarks>
         /// Parses the absolute font size.

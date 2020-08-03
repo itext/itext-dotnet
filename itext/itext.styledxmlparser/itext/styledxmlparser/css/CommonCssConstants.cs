@@ -715,6 +715,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant value UNDERLINE</summary>
         public const String UNDERLINE = "underline";
 
+        /// <summary>The Constant value UNSET.</summary>
+        public const String UNSET = "unset";
+
         /// <summary>The Constant UPPER_ALPHA.</summary>
         public const String UPPER_ALPHA = "upper-alpha";
 

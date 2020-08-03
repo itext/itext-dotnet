@@ -61,7 +61,13 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
         /// </summary>
         /// <param name="allowedValues">the allowed values</param>
         public CssEnumValidator(params String[] allowedValues) {
-            this.allowedValues = JavaUtil.ArraysAsList(allowedValues);
+            this.allowedValues = new List<String>(JavaUtil.ArraysAsList(allowedValues));
+        }
+
+        /// <summary>Adds new allowed values to the allowedValues.</summary>
+        /// <param name="allowedValues">the allowed values</param>
+        public virtual void AddAllowedValues(ICollection<String> allowedValues) {
+            this.allowedValues.AddAll(allowedValues);
         }
 
         /* (non-Javadoc)
