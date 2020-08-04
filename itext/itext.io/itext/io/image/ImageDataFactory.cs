@@ -316,8 +316,13 @@ namespace iText.IO.Image {
             return image;
         }
 
-        /// <summary>Create a ImageData instance from a Jpeg image url</summary>
+        /// <summary>
+        /// Create a
+        /// <Link>ImageData</Link>
+        /// instance from a Jpeg image url
+        /// </summary>
         /// <param name="url">URL</param>
+        /// <returns>the created JPEG image</returns>
         public static ImageData CreateJpeg(Uri url) {
             ValidateImageType(url, ImageType.JPEG);
             ImageData image = new JpegImageData(url);

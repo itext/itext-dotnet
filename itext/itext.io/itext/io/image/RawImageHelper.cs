@@ -118,7 +118,7 @@ namespace iText.IO.Image {
         }
 
         /// <summary>Update original image with Raw Image parameters.</summary>
-        /// <param name="image"/>
+        /// <param name="image">to update its parameters with Raw Image parameters.</param>
         /// <param name="width">the exact width of the image</param>
         /// <param name="height">the exact height of the image</param>
         /// <param name="components">1,3 or 4 for GrayScale, RGB and CMYK</param>
