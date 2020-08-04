@@ -241,6 +241,33 @@ internal static class KernelExtensions {
         }
         return modified;
     }
+    
+    public static bool RemoveAll<T>(this ICollection<T> toClean, ICollection<T> c) {
+        bool modified = false;
+        foreach (T element in c)
+        {
+            bool anythingToRemove;
+            do
+            {
+                anythingToRemove = toClean.Remove(element);
+                modified |= anythingToRemove;
+            } while (anythingToRemove);
+        }
+        return modified;
+    }
+    
+    public static bool RetainAll<T>(this ICollection<T> toClean, ICollection<T> c) {
+        IList<T> toRemove = new List<T>();
+        foreach (T element in toClean)
+        {
+            if (!c.Contains(element))
+            {
+                toRemove.Add(element);
+            }
+        }
+        
+        return toClean.RemoveAll(toRemove);
+    }
 
     public static T PollFirst<T>(this SortedSet<T> set) {
         T item = set.First();
