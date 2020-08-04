@@ -39,9 +39,6 @@ using iText.Test;
 
 namespace iText.Layout.Renderer {
     public class WordWrapUnitTest : ExtendedITextTest {
-        public static readonly String SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/WordWrapUnitTest/glyphLineData.txt";
-
         public static readonly String THAI_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSansThai-Regular.ttf";
 
@@ -423,7 +420,7 @@ namespace iText.Layout.Renderer {
             float minWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(minWidth / 2, 100));
             LayoutResult layoutResult = lineRenderer.Layout(new LayoutContext(layoutArea));
-            NUnit.Framework.Assert.IsTrue(layoutResult.GetStatus() == LayoutResult.PARTIAL);
+            NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, layoutResult.GetStatus());
         }
 
         [NUnit.Framework.Test]
@@ -441,7 +438,7 @@ namespace iText.Layout.Renderer {
             float minWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(minWidth / 2, 100));
             LayoutResult layoutResult = lineRenderer.Layout(new LayoutContext(layoutArea));
-            NUnit.Framework.Assert.IsTrue(layoutResult.GetStatus() == LayoutResult.PARTIAL);
+            NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, layoutResult.GetStatus());
         }
 
         [NUnit.Framework.Test]
@@ -703,6 +700,60 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNotNull(childTextRenderer.GetSpecialScriptsWordBreakPoints());
             NUnit.Framework.Assert.AreEqual(1, childTextRenderer.GetSpecialScriptsWordBreakPoints().Count);
             NUnit.Framework.Assert.AreEqual(-1, (int)childTextRenderer.GetSpecialScriptsWordBreakPoints()[0]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnfittingSequenceWithPrecedingTextRendererContainingNoSpecialScripts() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
+            thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+            thaiTextRenderer.SetText(THAI_WORD);
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            TextRenderer nonThaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text("."));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(nonThaiTextRenderer);
+            lineRenderer.AddChild(thaiTextRenderer);
+            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
+                (1);
+            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
+                , status);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnfittingSequenceWithPrecedingInlineBlockRenderer() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
+            thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+            thaiTextRenderer.SetText(THAI_WORD);
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            TableRenderer inlineBlock = new TableRenderer(new Table(3));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(inlineBlock);
+            lineRenderer.AddChild(thaiTextRenderer);
+            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
+                (1);
+            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
+                , status);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnfittingSingleTextRendererContainingSpecialScripts() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
+            thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+            thaiTextRenderer.SetText(THAI_WORD);
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(thaiTextRenderer);
+            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
+                (0);
+            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT, status);
         }
     }
 }

@@ -1456,10 +1456,11 @@ namespace iText.Layout.Renderer {
                     analyzedTextRendererIndex--;
                     amountOfFloating++;
                 }
-                // move to the previous renderer if line break isn't allowed to happen within the renderer being analyzed
-                if (analyzedTextRendererIndex == 0 || !(childRenderers[analyzedTextRendererIndex - 1] is TextRenderer)) {
-                    // possible breaks haven't been found, can't move back
-                    // forced split on the latter renderer having either Full or Partial result
+                LineRenderer.SpecialScriptsContainingSequenceStatus status = GetSpecialScriptsContainingSequenceStatus(analyzedTextRendererIndex
+                    );
+                // possible breaks haven't been found, can't move back
+                // forced split on the latter renderer having either Full or Partial result
+                if (status == LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT) {
                     if (childPosLayoutResult.GetStatus() != LayoutResult.NOTHING) {
                         returnLayoutResult = childPosLayoutResult;
                     }
@@ -1468,7 +1469,8 @@ namespace iText.Layout.Renderer {
                 }
                 // possible breaks haven't been found, can't move back
                 // move the entire renderer on the next line
-                if (!((TextRenderer)childRenderers[analyzedTextRendererIndex - 1]).TextContainsSpecialScriptGlyphs(true)) {
+                if (status == LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
+                    ) {
                     indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex + amountOfFloating;
                     break;
                 }
@@ -1501,6 +1503,79 @@ namespace iText.Layout.Renderer {
             foreach (int index in indicesOfFloats) {
                 if (index > indexOfRendererContainingLastFullyFittingWord) {
                     floatsOverflowedToNextLine.Remove(childRenderers[index]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method defines how to proceed with a
+        /// <see cref="TextRenderer"/>
+        /// within which possible breaks haven't been found.
+        /// </summary>
+        /// <remarks>
+        /// This method defines how to proceed with a
+        /// <see cref="TextRenderer"/>
+        /// within which possible breaks haven't been found.
+        /// Possible scenarios are:
+        /// - Preceding renderer is also an instance of
+        /// <see cref="TextRenderer"/>
+        /// and does contain special scripts:
+        /// <see cref="GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine(int, System.Collections.Generic.IDictionary{K, V}, bool, System.Collections.Generic.IList{E})
+        ///     "/>
+        /// will
+        /// proceed to analyze the preceding
+        /// <see cref="TextRenderer"/>
+        /// on the subject of possible breaks;
+        /// - Preceding renderer is either an instance of
+        /// <see cref="TextRenderer"/>
+        /// which does not contain special scripts,
+        /// or an instance of
+        /// <see cref="ImageRenderer"/>
+        /// or is an inlineBlock child: in this case the entire subsequence of
+        /// <see cref="TextRenderer"/>
+        /// -s containing special scripts is to be moved to the next line;
+        /// - Otherwise a forced split is to happen.
+        /// </remarks>
+        /// <param name="analyzedTextRendererIndex">
+        /// index of the latter child
+        /// that has been analyzed on the subject of possible breaks
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="SpecialScriptsContainingSequenceStatus"/>
+        /// instance standing for the strategy to proceed with.
+        /// </returns>
+        internal virtual LineRenderer.SpecialScriptsContainingSequenceStatus GetSpecialScriptsContainingSequenceStatus
+            (int analyzedTextRendererIndex) {
+            bool moveSequenceContainingSpecialScriptsOnNextLine = false;
+            bool moveToPreviousTextRendererContainingSpecialScripts = false;
+            if (analyzedTextRendererIndex > 0) {
+                IRenderer prevChildRenderer = childRenderers[analyzedTextRendererIndex - 1];
+                if (prevChildRenderer is TextRenderer) {
+                    if (((TextRenderer)prevChildRenderer).TextContainsSpecialScriptGlyphs(true)) {
+                        moveToPreviousTextRendererContainingSpecialScripts = true;
+                    }
+                    else {
+                        moveSequenceContainingSpecialScriptsOnNextLine = true;
+                    }
+                }
+                else {
+                    if (prevChildRenderer is ImageRenderer || IsInlineBlockChild(prevChildRenderer)) {
+                        moveSequenceContainingSpecialScriptsOnNextLine = true;
+                    }
+                }
+            }
+            bool forcedSplit = !(moveToPreviousTextRendererContainingSpecialScripts || moveSequenceContainingSpecialScriptsOnNextLine
+                );
+            if (moveSequenceContainingSpecialScriptsOnNextLine) {
+                return LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE;
+            }
+            else {
+                if (forcedSplit) {
+                    return LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT;
+                }
+                else {
+                    return LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_TO_PREVIOUS_TEXT_RENDERER_CONTAINING_SPECIAL_SCRIPTS;
                 }
             }
         }
@@ -1670,6 +1745,12 @@ namespace iText.Layout.Renderer {
             }
 
             private readonly LineRenderer _enclosing;
+        }
+
+        internal enum SpecialScriptsContainingSequenceStatus {
+            MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE,
+            MOVE_TO_PREVIOUS_TEXT_RENDERER_CONTAINING_SPECIAL_SCRIPTS,
+            FORCED_SPLIT
         }
     }
 }
