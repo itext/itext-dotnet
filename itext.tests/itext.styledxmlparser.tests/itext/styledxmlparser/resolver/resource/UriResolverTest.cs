@@ -410,6 +410,13 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.AreEqual(expectedUrl, resolver.ResolveAgainstBaseUri(relativePath).ToExternalForm());
     }
         
+        [NUnit.Framework.Test]
+        public void UriResolverPercentSignTest() {
+            String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToString();
+            UriResolver resolver = new UriResolver(absolutePathRoot + "%homepath%");
+            NUnit.Framework.Assert.AreEqual(absolutePathRoot + "%25homepath%25", resolver.GetBaseUri());
+        }
+        
         private void TestPaths(String absolutePathRoot, UriResolver resolver)
         {
             NUnit.Framework.Assert.AreEqual(absolutePathRoot + "test/folder/index.html", resolver.GetBaseUri());
