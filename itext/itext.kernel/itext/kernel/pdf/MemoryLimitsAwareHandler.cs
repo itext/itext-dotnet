@@ -47,8 +47,20 @@ namespace iText.Kernel.Pdf {
     /// <summary>
     /// A
     /// <see cref="MemoryLimitsAwareHandler"/>
-    /// handles memory allocation and prevents decompressed pdf streams from occupation of more space than allowed.
+    /// handles memory allocation and prevents decompressed
+    /// pdf streams from occupation of more space than allowed.
     /// </summary>
+    /// <remarks>
+    /// A
+    /// <see cref="MemoryLimitsAwareHandler"/>
+    /// handles memory allocation and prevents decompressed
+    /// pdf streams from occupation of more space than allowed.
+    /// <para />A configured MemoryLimitsAwareHandler can be set as a property of
+    /// <see cref="ReaderProperties"/>
+    /// instance which is passed to
+    /// <see cref="PdfReader"/>.
+    /// </remarks>
+    /// <seealso cref="ReaderProperties.SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler)"/>
     public class MemoryLimitsAwareHandler {
         private const int SINGLE_SCALE_COEFFICIENT = 100;
 
@@ -113,11 +125,13 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.
         /// This value correlates with maximum heap size. This value should not exceed limit of the heap size.
-        /// iText will throw an exception if during decompression a pdf stream which was identified as
+        /// <para />iText will throw an exception if during decompression a pdf stream which was identified as
         /// requiring memory limits awareness occupies more memory than allowed.
         /// </remarks>
-        /// <param name="maxSizeOfSingleDecompressedPdfStream">the maximum allowed size which can be occupied by a single decompressed pdf stream.
-        ///     </param>
+        /// <param name="maxSizeOfSingleDecompressedPdfStream">
+        /// the maximum allowed size which can be occupied by a single
+        /// decompressed pdf stream.
+        /// </param>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
@@ -141,11 +155,13 @@ namespace iText.Kernel.Pdf {
         /// Sets the maximum allowed size which can be occupied by all decompressed pdf streams.
         /// This value can be limited by the maximum expected PDF file size when it's completely decompressed.
         /// Setting this value correlates with the maximum processing time spent on document reading
-        /// iText will throw an exception if during decompression pdf streams which were identified as
+        /// <para />iText will throw an exception if during decompression pdf streams which were identified as
         /// requiring memory limits awareness occupy more memory than allowed.
         /// </remarks>
-        /// <param name="maxSizeOfDecompressedPdfStreamsSum">he maximum allowed size which can be occupied by all decompressed pdf streams.
-        ///     </param>
+        /// <param name="maxSizeOfDecompressedPdfStreamsSum">
+        /// he maximum allowed size which can be occupied by all decompressed pdf
+        /// streams.
+        /// </param>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
