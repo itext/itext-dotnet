@@ -49,7 +49,6 @@ namespace iText.Kernel.XMP {
     /// You can use these functions is to compose a complete path expression, or all but the last
     /// component. Suppose you have a property that is an array of integers within a struct. You can
     /// access one of the array items like this:
-    /// <para />
     /// <blockquote>
     /// <pre>
     /// String path = XMPPathFactory.composeStructFieldPath (schemaNS, &amp;quot;Struct&amp;quot;, fieldNS,
@@ -197,7 +196,6 @@ namespace iText.Kernel.XMP {
         /// that has two fields, the name of a city and the URI of an FTP site in that city. Use this to
         /// create an array of download alternatives. You can show the user a popup built from the values
         /// of the city fields. You can then get the corresponding URI as follows:
-        /// <para />
         /// <blockquote>
         /// <pre>
         /// String path = composeFieldSelector ( schemaNS, &amp;quot;Downloads&amp;quot;, fieldNS,
