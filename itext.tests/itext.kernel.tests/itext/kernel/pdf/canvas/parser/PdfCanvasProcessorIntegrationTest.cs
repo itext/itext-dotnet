@@ -55,7 +55,7 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
-    public class PdfCanvasProcessorTest : ExtendedITextTest {
+    public class PdfCanvasProcessorIntegrationTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
@@ -66,7 +66,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             StringBuilder pageEventsLog = new StringBuilder();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryHighLevelEventListener
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.RecordEveryHighLevelEventListener
                     (pageEventsLog));
                 processor.ProcessPageContent(page);
             }
@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.RecordEveryTextRenderEvent
                     (textRenderInfo));
                 processor.ProcessPageContent(page);
             }
@@ -99,7 +99,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
                 PdfPage page = document.GetPage(i);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.RecordEveryTextRenderEvent
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.RecordEveryTextRenderEvent
                     (textRenderInfo));
                 processor.ProcessPageContent(page);
             }
@@ -111,7 +111,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void TestClosingEmptyPath() {
             String fileName = "closingEmptyPath.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
-            PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
+                ());
             // Assert than no exception is thrown when an empty path is handled
             processor.ProcessPageContent(document.GetPage(1));
         }
@@ -138,7 +139,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.That(() =>  {
                 String fileName = "circularReferencesInResources.pdf";
                 PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorTest.NoOpEventListener());
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
+                    ());
                 PdfPage page = pdfDocument.GetFirstPage();
                 processor.ProcessPageContent(page);
                 pdfDocument.Close();
@@ -154,7 +156,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
                 PdfPage page = pdfDocument.GetPage(i);
-                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                PdfCanvasProcessorIntegrationTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorIntegrationTest.ColorParsingEventListener
                     ();
                 PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
                 processor.ProcessPageContent(page);
@@ -169,7 +171,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
                 PdfPage page = pdfDocument.GetPage(i);
-                PdfCanvasProcessorTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorTest.ColorParsingEventListener
+                PdfCanvasProcessorIntegrationTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorIntegrationTest.ColorParsingEventListener
                     ();
                 PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
                 processor.ProcessPageContent(page);
