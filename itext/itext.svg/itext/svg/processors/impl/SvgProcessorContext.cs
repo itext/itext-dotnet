@@ -118,6 +118,18 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="fontProgram">the font program</param>
         /// <param name="encoding">the encoding</param>
         /// <param name="alias">the alias</param>
+        public virtual void AddTemporaryFont(FontProgram fontProgram, String encoding, String alias, Range unicodeRange
+            ) {
+            if (tempFonts == null) {
+                tempFonts = new FontSet();
+            }
+            tempFonts.AddFont(fontProgram, encoding, alias, unicodeRange);
+        }
+
+        /// <summary>Add temporary font from @font-face.</summary>
+        /// <param name="fontProgram">the font program</param>
+        /// <param name="encoding">the encoding</param>
+        /// <param name="alias">the alias</param>
         public virtual void AddTemporaryFont(FontProgram fontProgram, String encoding, String alias) {
             if (tempFonts == null) {
                 tempFonts = new FontSet();

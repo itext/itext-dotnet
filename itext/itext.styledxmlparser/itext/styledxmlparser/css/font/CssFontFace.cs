@@ -1,44 +1,24 @@
 /*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -48,35 +28,36 @@ using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 
-namespace iText.Svg.Processors.Impl.Font {
+namespace iText.StyledXmlParser.Css.Font {
     /// <summary>
     /// Class that will examine the font as described in the CSS, and store it
     /// in a form that the font provider will understand.
     /// </summary>
-    internal class FontFace {
+    public class CssFontFace {
         /// <summary>Name that will be used as the alias of the font.</summary>
         private readonly String alias;
 
         /// <summary>A list of font face sources.</summary>
-        private readonly IList<FontFace.FontFaceSrc> sources;
+        private readonly IList<CssFontFace.CssFontFaceSrc> sources;
 
         /// <summary>
         /// Create a
-        /// <see cref="FontFace"/>
+        /// <see cref="CssFontFace"/>
         /// instance from a list of
         /// CSS font attributes ("font-family" or "src").
         /// </summary>
         /// <param name="properties">the font properties</param>
         /// <returns>
         /// the
-        /// <see cref="FontFace"/>
+        /// <see cref="CssFontFace"/>
         /// instance
         /// </returns>
-        public static iText.Svg.Processors.Impl.Font.FontFace Create(IList<CssDeclaration> properties) {
+        public static iText.StyledXmlParser.Css.Font.CssFontFace Create(IList<CssDeclaration> properties) {
             String fontFamily = null;
             String srcs = null;
             foreach (CssDeclaration descriptor in properties) {
                 if ("font-family".Equals(descriptor.GetProperty())) {
+                    // TODO DEVSIX-2534
                     fontFamily = FontFamilySplitter.RemoveQuotes(descriptor.GetExpression());
                 }
                 else {
@@ -91,28 +72,34 @@ namespace iText.Svg.Processors.Impl.Font {
                 // https://www.w3.org/TR/2013/CR-css-fonts-3-20131003/#descdef-src
                 return null;
             }
-            IList<FontFace.FontFaceSrc> sources = new List<FontFace.FontFaceSrc>();
+            IList<CssFontFace.CssFontFaceSrc> sources = new List<CssFontFace.CssFontFaceSrc>();
             // ttc collection are supported via url(Arial.ttc#1), url(Arial.ttc#2), etc.
             foreach (String src in SplitSourcesSequence(srcs)) {
                 //local|url("ideal-sans-serif.woff")( format("woff"))?
-                FontFace.FontFaceSrc source = FontFace.FontFaceSrc.Create(src.Trim());
+                CssFontFace.CssFontFaceSrc source = CssFontFace.CssFontFaceSrc.Create(src.Trim());
                 if (source != null) {
                     sources.Add(source);
                 }
             }
             if (sources.Count > 0) {
-                return new iText.Svg.Processors.Impl.Font.FontFace(fontFamily, sources);
+                return new iText.StyledXmlParser.Css.Font.CssFontFace(fontFamily, sources);
             }
             else {
                 return null;
             }
         }
 
-        // NOTE: If src property is written in incorrect format (for example, contains token url(<url_content>)<some_nonsense>),
+        // NOTE: If src property is written in incorrect format
+        // (for example, contains token url(<url_content>)<some_nonsense>),
         // then browser ignores it altogether and doesn't load font at all, even if there are valid tokens.
         // iText will still process all split tokens and can possibly load this font in case it contains some correct urls.
-        /// <summary>Processes and splits a string sequence containing a url/uri</summary>
+        /// <summary>Processes and splits a string sequence containing a url/uri.</summary>
         /// <param name="src">a string representing css src attribute</param>
+        /// <returns>
+        /// an array of
+        /// <see cref="System.String"/>
+        /// urls for font loading
+        /// </returns>
         public static String[] SplitSourcesSequence(String src) {
             IList<String> list = new List<String>();
             int indexToStart = 0;
@@ -143,6 +130,28 @@ namespace iText.Svg.Processors.Impl.Font {
             return result;
         }
 
+        /// <summary>Checks whether in general we support requested font format.</summary>
+        /// <param name="format">
+        /// 
+        /// <see cref="FontFormat"/>
+        /// </param>
+        /// <returns>true, if supported or unrecognized.</returns>
+        public static bool IsSupportedFontFormat(CssFontFace.FontFormat format) {
+            switch (format) {
+                case CssFontFace.FontFormat.None:
+                case CssFontFace.FontFormat.TrueType:
+                case CssFontFace.FontFormat.OpenType:
+                case CssFontFace.FontFormat.WOFF:
+                case CssFontFace.FontFormat.WOFF2: {
+                    return true;
+                }
+
+                default: {
+                    return false;
+                }
+            }
+        }
+
         /// <summary>Gets the font-family.</summary>
         /// <remarks>
         /// Gets the font-family.
@@ -155,36 +164,52 @@ namespace iText.Svg.Processors.Impl.Font {
 
         /// <summary>Gets the font face sources.</summary>
         /// <returns>the sources</returns>
-        public virtual IList<FontFace.FontFaceSrc> GetSources() {
-            return new List<FontFace.FontFaceSrc>(sources);
+        public virtual IList<CssFontFace.CssFontFaceSrc> GetSources() {
+            return new List<CssFontFace.CssFontFaceSrc>(sources);
         }
 
         /// <summary>Instantiates a new font face.</summary>
         /// <param name="alias">the font-family (or alias)</param>
         /// <param name="sources">the sources</param>
-        private FontFace(String alias, IList<FontFace.FontFaceSrc> sources) {
+        private CssFontFace(String alias, IList<CssFontFace.CssFontFaceSrc> sources) {
             this.alias = alias;
-            this.sources = new List<FontFace.FontFaceSrc>(sources);
+            this.sources = new List<CssFontFace.CssFontFaceSrc>(sources);
         }
 
-        //region Nested types
+        /// <summary>The Enum FontFormat.</summary>
+        public enum FontFormat {
+            None,
+            /// <summary>"truetype"</summary>
+            TrueType,
+            /// <summary>"opentype"</summary>
+            OpenType,
+            /// <summary>"woff"</summary>
+            WOFF,
+            /// <summary>"woff2"</summary>
+            WOFF2,
+            /// <summary>"embedded-opentype"</summary>
+            EOT,
+            /// <summary>"svg"</summary>
+            SVG
+        }
+
         /// <summary>Class that defines a font face source.</summary>
-        internal class FontFaceSrc {
+        public class CssFontFaceSrc {
             /// <summary>The UrlPattern used to compose a source path.</summary>
-            internal static readonly Regex UrlPattern = iText.IO.Util.StringUtil.RegexCompile("^((local)|(url))\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\)( format\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\))?$"
+            public static readonly Regex UrlPattern = iText.IO.Util.StringUtil.RegexCompile("^((local)|(url))\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\)( format\\(((\'[^\']*\')|(\"[^\"]*\")|([^\'\"\\)]*))\\))?$"
                 );
 
             /// <summary>The Constant TypeGroup.</summary>
-            internal const int TypeGroup = 1;
+            public const int TypeGroup = 1;
 
             /// <summary>The Constant UrlGroup.</summary>
-            internal const int UrlGroup = 4;
+            public const int UrlGroup = 4;
 
             /// <summary>The Constant FormatGroup.</summary>
-            internal const int FormatGroup = 9;
+            public const int FormatGroup = 9;
 
             /// <summary>The font format.</summary>
-            internal readonly FontFace.FontFormat format;
+            internal readonly CssFontFace.FontFormat format;
 
             /// <summary>The source path.</summary>
             internal readonly String src;
@@ -192,17 +217,29 @@ namespace iText.Svg.Processors.Impl.Font {
             /// <summary>Indicates if the font is local.</summary>
             internal readonly bool isLocal;
 
+            public virtual CssFontFace.FontFormat GetFormat() {
+                return format;
+            }
+
+            public virtual String GetSrc() {
+                return src;
+            }
+
+            public virtual bool IsLocal() {
+                return isLocal;
+            }
+
             /* (non-Javadoc)
             * @see java.lang.Object#toString()
             */
             public override String ToString() {
-                return MessageFormatUtil.Format("{0}({1}){2}", isLocal ? "local" : "url", src, format != FontFace.FontFormat
+                return MessageFormatUtil.Format("{0}({1}){2}", isLocal ? "local" : "url", src, format != CssFontFace.FontFormat
                     .None ? MessageFormatUtil.Format(" format({0})", format) : "");
             }
 
             /// <summary>
             /// Creates a
-            /// <see cref="FontFace"/>
+            /// <see cref="CssFontFaceSrc"/>
             /// object by parsing a
             /// <see cref="System.String"/>
             /// trying to match patterns that reveal the font name, whether that font is local,
@@ -211,16 +248,17 @@ namespace iText.Svg.Processors.Impl.Font {
             /// <param name="src">a string containing information about a font</param>
             /// <returns>
             /// the font in the form of a
-            /// <see cref="FontFace"/>
+            /// <see cref="CssFontFaceSrc"/>
             /// object
             /// </returns>
-            internal static FontFace.FontFaceSrc Create(String src) {
+            public static CssFontFace.CssFontFaceSrc Create(String src) {
                 Match m = iText.IO.Util.StringUtil.Match(UrlPattern, src);
                 if (!m.Success) {
                     return null;
                 }
-                return new FontFace.FontFaceSrc(Unquote(iText.IO.Util.StringUtil.Group(m, UrlGroup)), "local".Equals(iText.IO.Util.StringUtil.Group
-                    (m, TypeGroup)), ParseFormat(iText.IO.Util.StringUtil.Group(m, FormatGroup)));
+                return new CssFontFace.CssFontFaceSrc(Unquote(iText.IO.Util.StringUtil.Group(m, UrlGroup)), "local".Equals
+                    (iText.IO.Util.StringUtil.Group(m, TypeGroup)), ParseFormat(iText.IO.Util.StringUtil.Group(m, FormatGroup
+                    )));
             }
 
             /// <summary>
@@ -230,35 +268,35 @@ namespace iText.Svg.Processors.Impl.Font {
             /// </summary>
             /// <param name="formatStr">a string</param>
             /// <returns>a font format</returns>
-            internal static FontFace.FontFormat ParseFormat(String formatStr) {
+            public static CssFontFace.FontFormat ParseFormat(String formatStr) {
                 if (formatStr != null && formatStr.Length > 0) {
                     switch (Unquote(formatStr).ToLowerInvariant()) {
                         case "truetype": {
-                            return FontFace.FontFormat.TrueType;
+                            return CssFontFace.FontFormat.TrueType;
                         }
 
                         case "opentype": {
-                            return FontFace.FontFormat.OpenType;
+                            return CssFontFace.FontFormat.OpenType;
                         }
 
                         case "woff": {
-                            return FontFace.FontFormat.WOFF;
+                            return CssFontFace.FontFormat.WOFF;
                         }
 
                         case "woff2": {
-                            return FontFace.FontFormat.WOFF2;
+                            return CssFontFace.FontFormat.WOFF2;
                         }
 
                         case "embedded-opentype": {
-                            return FontFace.FontFormat.EOT;
+                            return CssFontFace.FontFormat.EOT;
                         }
 
                         case "svg": {
-                            return FontFace.FontFormat.SVG;
+                            return CssFontFace.FontFormat.SVG;
                         }
                     }
                 }
-                return FontFace.FontFormat.None;
+                return CssFontFace.FontFormat.None;
             }
 
             /// <summary>
@@ -275,7 +313,7 @@ namespace iText.Svg.Processors.Impl.Font {
             /// <see cref="System.String"/>
             /// without the quotes
             /// </returns>
-            internal static String Unquote(String quotedString) {
+            public static String Unquote(String quotedString) {
                 if (quotedString[0] == '\'' || quotedString[0] == '\"') {
                     return quotedString.JSubstring(1, quotedString.Length - 1);
                 }
@@ -284,35 +322,17 @@ namespace iText.Svg.Processors.Impl.Font {
 
             /// <summary>
             /// Instantiates a new
-            /// <see cref="FontFaceSrc"/>
+            /// <see cref="CssFontFaceSrc"/>
             /// instance.
             /// </summary>
             /// <param name="src">a source path</param>
             /// <param name="isLocal">indicates if the font is local</param>
             /// <param name="format">the font format (true type, open type, woff,...)</param>
-            private FontFaceSrc(String src, bool isLocal, FontFace.FontFormat format) {
+            private CssFontFaceSrc(String src, bool isLocal, CssFontFace.FontFormat format) {
                 this.format = format;
                 this.src = src;
                 this.isLocal = isLocal;
             }
         }
-
-        /// <summary>The Enum FontFormat.</summary>
-        internal enum FontFormat {
-            None,
-            /// <summary>"truetype"</summary>
-            TrueType,
-            /// <summary>"opentype"</summary>
-            OpenType,
-            /// <summary>"woff"</summary>
-            WOFF,
-            /// <summary>"woff2"</summary>
-            WOFF2,
-            /// <summary>"embedded-opentype"</summary>
-            EOT,
-            /// <summary>"svg"</summary>
-            SVG
-        }
-        //endregion
     }
 }

@@ -67,6 +67,19 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
+        public virtual void UnicodeRangeTest() {
+            // TODO fix cmp file after DEVSIX-2256 is finished. Right now unicode range is not processed correctly
+            ConvertAndCompare(sourceFolder, destinationFolder, "unicodeRangeTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DroidSerifSingleQuotesTest() {
+            // TODO fix cmp file after DEVSIX-2534 is finished. Right now droid fonts are not applied if
+            //  their aliases are inside single quotes and contain spaces
+            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifSingleQuotesTest");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DroidSerifWebFontTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifWebFontTest");
         }

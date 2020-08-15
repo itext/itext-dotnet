@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Layout.Font;
+using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>Class to store a CSS font face At rule.</summary>
@@ -88,6 +90,16 @@ namespace iText.StyledXmlParser.Css {
             }
             sb.Append("}");
             return sb.ToString();
+        }
+
+        public virtual Range ResolveUnicodeRange() {
+            Range range = null;
+            foreach (CssDeclaration descriptor in GetProperties()) {
+                if ("unicode-range".Equals(descriptor.GetProperty())) {
+                    range = CssUtils.ParseUnicodeRange(descriptor.GetExpression());
+                }
+            }
+            return range;
         }
     }
 }
