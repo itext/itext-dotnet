@@ -312,11 +312,30 @@ namespace iText.Kernel.Pdf {
             target.GetAnnotation(pdfDoc);
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
             linkAnnotation.SetColor(ColorConstants.RED);
-            linkAnnotation.SetAction(PdfAction.CreateGoToE(new PdfNamedDestination("prime"), true, target));
+            linkAnnotation.SetAction(PdfAction.CreateGoToE(new PdfStringFS("Some fake destination"), new PdfNamedDestination
+                ("prime"), true, target));
             pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentTargetTest.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED)]
+        public virtual void NoFileAttachmentTargetTest() {
+            String fileName = "noFileAttachmentTargetTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            pdfDoc.AddNewPage();
+            PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
+            linkAnnotation.SetAction(PdfAction.CreateGoToE(null, true, null));
+            pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destinationFolder + fileName, sourceFolder + "cmp_" + fileName
                 , destinationFolder, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
