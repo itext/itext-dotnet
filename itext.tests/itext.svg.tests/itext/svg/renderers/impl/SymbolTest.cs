@@ -236,5 +236,22 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolXYContrudictionAllUnitsTest", properties
                 );
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 3)]
+        public virtual void UseSymbolCoordinatesContrudictionTest() {
+            // TODO: check cmp after feature implementation DEVSIX-2257
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolCoordinatesContrudiction", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 5)]
+        public virtual void WidthHeightAttrInteractionTest() {
+            // TODO: check cmp after feature implementation DEVSIX-2257
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrInteraction", properties);
+        }
     }
 }
