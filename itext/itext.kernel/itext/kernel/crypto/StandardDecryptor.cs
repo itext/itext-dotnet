@@ -46,9 +46,9 @@ namespace iText.Kernel.Crypto {
         protected internal ARCFOUREncryption arcfour;
 
         /// <summary>Creates a new instance of StandardDecryption</summary>
-        /// <param name="key"/>
-        /// <param name="off"/>
-        /// <param name="len"/>
+        /// <param name="key">data to be written</param>
+        /// <param name="off">the start offset in data</param>
+        /// <param name="len">number of bytes to write</param>
         public StandardDecryptor(byte[] key, int off, int len) {
             arcfour = new ARCFOUREncryption();
             arcfour.PrepareARCFOURKey(key, off, len);

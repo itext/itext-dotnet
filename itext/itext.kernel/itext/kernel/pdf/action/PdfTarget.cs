@@ -71,6 +71,11 @@ namespace iText.Kernel.Pdf.Action {
         /// object by the underlying dictionary.
         /// </summary>
         /// <param name="pdfObject">the underlying dictionary object</param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfTarget"/>
+        /// object by the underlying dictionary
+        /// </returns>
         public static iText.Kernel.Pdf.Action.PdfTarget Create(PdfDictionary pdfObject) {
             return new iText.Kernel.Pdf.Action.PdfTarget(pdfObject);
         }

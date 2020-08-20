@@ -84,8 +84,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// Note: For most of the supported security handlers algorithm to calculate encryption key for particular object
         /// is the same.
         /// </summary>
-        /// <param name="objNumber"/>
-        /// <param name="objGeneration"/>
+        /// <param name="objNumber">number of particular object for encryption</param>
+        /// <param name="objGeneration">generation of particular object for encryption</param>
         public virtual void SetHashKeyForNextObject(int objNumber, int objGeneration) {
             // added by ujihara
             md5.Reset();

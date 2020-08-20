@@ -47,12 +47,16 @@ namespace iText.Kernel.Events {
     /// <summary>Event dispatcher interface.</summary>
     public interface IEventDispatcher {
         /// <summary>Adds new event handler.</summary>
-        /// <param name="type">a type of event to be handled.</param>
-        /// <param name="handler">event handler.</param>
+        /// <param name="type">a type of event to be handled</param>
+        /// <param name="handler">event handler</param>
         void AddEventHandler(String type, IEventHandler handler);
 
         /// <summary>Dispatches an event.</summary>
-        /// <param name="event"/>
+        /// <param name="event">
+        /// the
+        /// <see cref="Event"/>
+        /// to be dispatched
+        /// </param>
         void DispatchEvent(iText.Kernel.Events.Event @event);
 
         /// <summary>Dispatches a delayed event.</summary>
@@ -61,17 +65,35 @@ namespace iText.Kernel.Events {
         /// Sometimes event cannot be handled immediately because event handler has not been set yet.
         /// In this case event is placed into event ques of dispatcher and is waiting until handler is assigned.
         /// </remarks>
-        /// <param name="event"/>
-        /// <param name="delayed"/>
+        /// <param name="event">
+        /// the
+        /// <see cref="Event"/>
+        /// to be dispatched
+        /// </param>
+        /// <param name="delayed">
+        /// flag whether
+        /// <see cref="Event"/>
+        /// delayed or not
+        /// </param>
         void DispatchEvent(iText.Kernel.Events.Event @event, bool delayed);
 
         /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.</summary>
-        /// <param name="type"/>
+        /// <param name="type">
+        /// a type of the
+        /// <see cref="Event"/>
+        /// </param>
+        /// <returns>true if event dispatcher as an event handler assigned for a certain event type</returns>
         bool HasEventHandler(String type);
 
         /// <summary>Removes event handler.</summary>
-        /// <param name="type"/>
-        /// <param name="handler"/>
+        /// <param name="type">
+        /// a type of the
+        /// <see cref="Event"/>
+        /// </param>
+        /// <param name="handler">
+        /// event handler
+        /// <see cref="IEventHandler"/>
+        /// </param>
         void RemoveEventHandler(String type, IEventHandler handler);
 
         /// <summary>Remove all event handlers.</summary>
