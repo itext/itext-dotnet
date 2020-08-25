@@ -69,6 +69,18 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckAverageBboxCalculationForType3FontsWithFontMatrix01Test() {
+            String inputPdf = sourceFolder + "checkAverageBboxCalculationForType3FontsWithFontMatrix01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputPdf));
+            GlyphBboxCalculationTest.CharacterPositionEventListener listener = new GlyphBboxCalculationTest.CharacterPositionEventListener
+                ();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+            processor.ProcessPageContent(pdfDocument.GetPage(1));
+            NUnit.Framework.Assert.AreEqual(600, listener.firstTextRenderInfo.GetFont().GetFontProgram().GetAvgWidth()
+                , 0.01f);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Type3FontsWithIdentityFontMatrixAndMultiplier() {
             String inputPdf = sourceFolder + "type3FontsWithIdentityFontMatrixAndMultiplier.pdf";
             String outputPdf = destinationFolder + "type3FontsWithIdentityFontMatrixAndMultiplier.pdf";
@@ -91,6 +103,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class CharacterPositionEventListener : ITextExtractionStrategy {
             internal float glyphWidth;
 
+            internal TextRenderInfo firstTextRenderInfo;
+
             public virtual String GetResultantText() {
                 return null;
             }
@@ -98,6 +112,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             public virtual void EventOccurred(IEventData data, EventType type) {
                 if (type.Equals(EventType.RENDER_TEXT)) {
                     TextRenderInfo renderInfo = (TextRenderInfo)data;
+                    if (firstTextRenderInfo == null) {
+                        firstTextRenderInfo = renderInfo;
+                        firstTextRenderInfo.PreserveGraphicsState();
+                    }
                     IList<TextRenderInfo> subs = renderInfo.GetCharacterRenderInfos();
                     for (int i = 0; i < subs.Count; i++) {
                         TextRenderInfo charInfo = subs[i];
