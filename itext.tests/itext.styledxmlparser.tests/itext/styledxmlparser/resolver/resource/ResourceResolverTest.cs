@@ -308,98 +308,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [Test]
         public virtual void RetrieveImagePathWithSpacesTest() {
             String fileName = "retrieveImagePathWithSpaces.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%with%spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces01Test() {
-            String fileName = "retrieveImagePathWithSpaces.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%25with%25spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces02Test() {
-            String fileName = "retrieveImagePathWithSpaces02.png";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%2525with%2525spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces03Test() {
-            String fileName = "retrieveImagePathWithSpaces0304.jpg";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path with spaces/");
             PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
             Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces04Test() {
-            String fileName = "retrieveImagePathWithSpaces0304.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%20with%20spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces05Test() {
-            String fileName = "retrieveImagePathWithSpaces05.png";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%2520with%2520spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces06Test() {
-            String fileName = "retrieveImagePathWithSpaces0607.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path/with/spaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces07Test() {
-            String fileName = "retrieveImagePathWithSpaces0607.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%2Fwith%2Fspaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces08Test() {
-            String fileName = "retrieveImagePathWithSpaces08.png";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%252Fwith%252Fspaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces09Test() {
-            String fileName = "retrieveImagePathWithSpaces09.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path%25252Fwith%25252Fspaces/");
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces10Test() {
-            String fileName = "path with spaces/retrieveImagePathWithSpaces1011.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
-        }
-
-        [Test]
-        public virtual void RetrieveImagePathWithSpaces11Test() {
-            String fileName = "path%20with%20spaces/retrieveImagePathWithSpaces1011.jpg";
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            Assert.NotNull(image);
+            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
         }
 
         [Test]
