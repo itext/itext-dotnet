@@ -42,37 +42,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
-using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter {
     /// <summary>
-    /// A
-    /// <see cref="EventCounter"/>
-    /// implementation that outputs event type to
-    /// <see cref="System.Console.Out"/>
+    /// <see cref="IEventCounterFactory"/>
+    /// implementation that creates new
+    /// <see cref="StandardOutputEventCounter"/>
+    /// on each call
     /// </summary>
-    public class SystemOutEventCounter : EventCounter {
-        /// <summary>
-        /// The name of the class for which the ICounter was created
-        /// (or iText if no name is available)
-        /// </summary>
-        protected internal String name;
-
-        public SystemOutEventCounter(String name) {
-            this.name = name;
-        }
-
-        public SystemOutEventCounter()
-            : this("iText") {
-        }
-
-        public SystemOutEventCounter(Type cls)
-            : this(cls.FullName) {
-        }
-
-        protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
-            System.Console.Out.WriteLine(MessageFormatUtil.Format("[{0}] {1} event", name, @event.GetEventType()));
+    public class StandardOutputEventCounterFactory : IEventCounterFactory {
+        public virtual EventCounter GetCounter(Type cls) {
+            return cls != null ? new StandardOutputEventCounter(cls) : new StandardOutputEventCounter();
         }
     }
 }
