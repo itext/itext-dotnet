@@ -41,10 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Text;
-using iText.Kernel.Numbering;
 using iText.Test;
 
-namespace iText.Kernel.Pdf.Numbering {
+namespace iText.Kernel.Numbering {
     public class GreekAlphabetNumberingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestUpperCase() {
