@@ -45,6 +45,9 @@ using System;
 namespace iText.StyledXmlParser {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class LogMessageConstant {
+        /// <summary>The Constant BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
+        public const String BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "background shorthand property cannot be empty.";
+
         /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
         public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";
 
@@ -57,10 +60,16 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant ERROR_PARSING_CSS_SELECTOR.</summary>
         public const String ERROR_PARSING_CSS_SELECTOR = "Error while parsing css selector: {0}";
 
+        /// <summary>The Constant ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR.</summary>
+        public const String ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR = "Only the last background can include a background color.";
+
         /// <summary>The Constant UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED.</summary>
         public const String UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED = "Unknown absolute metric length parsed \"{0}\".";
 
         public const String UNKNOWN_METRIC_ANGLE_PARSED = "Unknown metric angle parsed: \"{0}\".";
+
+        /// <summary>The Constant UNKNOWN__PROPERTY.</summary>
+        public const String UNKNOWN_PROPERTY = "Unknown {0} property: \"{1}\".";
 
         public const String URL_IS_EMPTY_IN_CSS_EXPRESSION = "url function is empty in expression:{0}";
 

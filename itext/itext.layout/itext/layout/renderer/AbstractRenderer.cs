@@ -465,8 +465,16 @@ namespace iText.Layout.Renderer {
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            BackgroundImage backgroundImage = this.GetProperty<BackgroundImage>(Property.BACKGROUND_IMAGE);
-            if (background != null || backgroundImage != null) {
+            Object uncastedBackgroundImage = this.GetProperty<Object>(Property.BACKGROUND_IMAGE);
+            IList<BackgroundImage> backgroundImagesList;
+            // TODO DEVSIX-3814 support only List<BackgroundImage>.
+            if (uncastedBackgroundImage is BackgroundImage) {
+                backgroundImagesList = JavaCollectionsUtil.SingletonList((BackgroundImage)uncastedBackgroundImage);
+            }
+            else {
+                backgroundImagesList = this.GetProperty<IList<BackgroundImage>>(Property.BACKGROUND_IMAGE);
+            }
+            if (background != null || backgroundImagesList != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
                 bool isTagged = drawContext.IsTaggingEnabled();
                 if (isTagged) {
@@ -485,58 +493,14 @@ namespace iText.Layout.Renderer {
                         TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
                         drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
                         backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
-                        drawContext.GetCanvas().Rectangle(backgroundArea.GetX() - background.GetExtraLeft(), backgroundArea.GetY()
-                             - background.GetExtraBottom(), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight
-                            (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
-                            ();
+                        drawContext.GetCanvas().Rectangle((double)backgroundArea.GetX() - background.GetExtraLeft(), (double)backgroundArea
+                            .GetY() - background.GetExtraBottom(), (double)backgroundArea.GetWidth() + background.GetExtraLeft() +
+                             background.GetExtraRight(), (double)backgroundArea.GetHeight() + background.GetExtraTop() + background
+                            .GetExtraBottom()).Fill().RestoreState();
                     }
-                    if (backgroundImage != null && backgroundImage.IsBackgroundSpecified()) {
-                        if (!backgroundAreaIsClipped) {
-                            backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
-                        }
-                        ApplyBorderBox(backgroundArea, false);
-                        PdfXObject backgroundXObject = backgroundImage.GetImage();
-                        if (backgroundXObject == null) {
-                            backgroundXObject = backgroundImage.GetForm();
-                        }
-                        // TODO: DEVSIX-3108 due to invalid logic of `PdfCanvas.addXObject(PdfXObject, Rectangle)`
-                        //  for PDfFormXObject (invalid scaling) for now the imageRectangle initialization
-                        //  for gradient uses width and height = 1. For all othe cases the logic left as it was.
-                        Rectangle imageRectangle;
-                        if (backgroundXObject == null) {
-                            backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
-                                (), backgroundArea, drawContext.GetDocument());
-                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
-                                (), 1, 1);
-                        }
-                        else {
-                            imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.GetHeight(
-                                ), backgroundImage.GetWidth(), backgroundImage.GetHeight());
-                        }
-                        if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                            logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
-                                ));
-                        }
-                        else {
-                            ApplyBorderBox(backgroundArea, true);
-                            drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
-                            float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
-                                .GetX();
-                            float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
-                            imageRectangle.SetY(initialY);
-                            do {
-                                imageRectangle.SetX(initialX);
-                                do {
-                                    drawContext.GetCanvas().AddXObject(backgroundXObject, imageRectangle);
-                                    imageRectangle.MoveRight(imageRectangle.GetWidth());
-                                }
-                                while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
-                                imageRectangle.MoveDown(imageRectangle.GetHeight());
-                            }
-                            while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
-                            drawContext.GetCanvas().RestoreState();
-                        }
+                    if (backgroundImagesList != null) {
+                        backgroundAreaIsClipped = DrawBackgroundImagesList(backgroundImagesList, backgroundAreaIsClipped, drawContext
+                            , backgroundArea);
                     }
                     if (backgroundAreaIsClipped) {
                         drawContext.GetCanvas().RestoreState();
@@ -546,6 +510,67 @@ namespace iText.Layout.Renderer {
                     drawContext.GetCanvas().CloseTag();
                 }
             }
+        }
+
+        private bool DrawBackgroundImagesList(IList<BackgroundImage> backgroundImagesList, bool backgroundAreaIsClipped
+            , DrawContext drawContext, Rectangle backgroundArea) {
+            for (int i = backgroundImagesList.Count - 1; i >= 0; i--) {
+                BackgroundImage backgroundImage = backgroundImagesList[i];
+                if (backgroundImage != null && backgroundImage.IsBackgroundSpecified()) {
+                    if (!backgroundAreaIsClipped) {
+                        backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
+                    }
+                    ApplyBorderBox(backgroundArea, false);
+                    PdfXObject backgroundXObject = backgroundImage.GetImage();
+                    if (backgroundXObject == null) {
+                        backgroundXObject = backgroundImage.GetForm();
+                    }
+                    // TODO: DEVSIX-3108 due to invalid logic of `PdfCanvas.addXObject(PdfXObject, Rectangle)`
+                    //  for PDfFormXObject (invalid scaling) for now the imageRectangle initialization
+                    //  for gradient uses width and height = 1. For all other cases the logic left as it was.
+                    Rectangle imageRectangle;
+                    if (backgroundXObject == null) {
+                        backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
+                            (), backgroundArea, drawContext.GetDocument());
+                        imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
+                            (), 1, 1);
+                    }
+                    else {
+                        imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.GetHeight(
+                            ), backgroundImage.GetWidth(), backgroundImage.GetHeight());
+                    }
+                    if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
+                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                            ));
+                    }
+                    else {
+                        ApplyBorderBox(backgroundArea, true);
+                        drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
+                        MoveImageRectangle(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea);
+                        drawContext.GetCanvas().RestoreState();
+                    }
+                }
+            }
+            return backgroundAreaIsClipped;
+        }
+
+        private static void MoveImageRectangle(Rectangle imageRectangle, BackgroundImage backgroundImage, DrawContext
+             drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea) {
+            float initialX = backgroundImage.IsRepeatX() ? (imageRectangle.GetX() - imageRectangle.GetWidth()) : imageRectangle
+                .GetX();
+            float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
+            imageRectangle.SetY(initialY);
+            do {
+                imageRectangle.SetX(initialX);
+                do {
+                    drawContext.GetCanvas().AddXObject(backgroundXObject, imageRectangle);
+                    imageRectangle.MoveRight(imageRectangle.GetWidth());
+                }
+                while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
+                imageRectangle.MoveDown(imageRectangle.GetHeight());
+            }
+            while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
         }
 
         /// <summary>

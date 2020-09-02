@@ -643,6 +643,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ROTATE.</summary>
         public const String ROTATE = "rotate";
 
+        /// <summary>The Constant ROUND.</summary>
+        public const String ROUND = "round";
+
         /// <summary>The Constant SCALE.</summary>
         public const String SCALE = "scale";
 
@@ -679,6 +682,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant SOLID.</summary>
         public const String SOLID = "solid";
 
+        /// <summary>The Constant SPACE.</summary>
+        public const String SPACE = "space";
+
         /// <summary>The Constant SQUARE.</summary>
         public const String SQUARE = "square";
 
@@ -711,6 +717,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant TRANSPARENT.</summary>
         public const String TRANSPARENT = "transparent";
+
+        /// <summary>The Constant UNDEFINED_NAME.</summary>
+        public const String UNDEFINED_NAME = "undefined";
 
         /// <summary>The Constant value UNDERLINE</summary>
         public const String UNDERLINE = "underline";
@@ -756,7 +765,7 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant BACKGROUND_REPEAT_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_REPEAT_VALUES = JavaCollectionsUtil.UnmodifiableSet(
-            new HashSet<String>(JavaUtil.ArraysAsList(REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y)));
+            new HashSet<String>(JavaUtil.ArraysAsList(REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y, ROUND, SPACE)));
 
         /// <summary>The Constant BACKGROUND_ATTACHMENT_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_ATTACHMENT_VALUES = JavaCollectionsUtil.UnmodifiableSet

@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Pdf.Xobject;
 
@@ -47,32 +48,135 @@ namespace iText.Layout.Properties {
     public class BackgroundImage {
         protected internal PdfXObject image;
 
+        /// <summary>Whether the background repeats in the x dimension.</summary>
+        [System.ObsoleteAttribute(@"Replace this field with BackgroundRepeat instance.")]
         protected internal bool repeatX;
 
+        /// <summary>Whether the background repeats in the y dimension.</summary>
+        [System.ObsoleteAttribute(@"Replace this field with BackgroundRepeat instance.")]
         protected internal bool repeatY;
 
         protected internal AbstractLinearGradientBuilder linearGradientBuilder;
 
-        private BackgroundImage(PdfXObject image, bool repeatX, bool repeatY) {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat) {
             this.image = image;
-            this.repeatX = repeatX;
-            this.repeatY = repeatY;
+            this.repeatX = repeat.IsRepeatX();
+            this.repeatY = repeat.IsRepeatY();
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat)
+            : this((PdfXObject)image, repeat) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat)
+            : this((PdfXObject)image, repeat) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// instance.
+        /// </param>
         public BackgroundImage(PdfImageXObject image)
-            : this(image, true, true) {
+            : this(image, new BackgroundRepeat(true, true)) {
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// instance.
+        /// </param>
         public BackgroundImage(PdfFormXObject image)
-            : this(image, true, true) {
+            : this(image, new BackgroundRepeat(true, true)) {
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeatX">is background is repeated in x dimension.</param>
+        /// <param name="repeatY">is background is repeated in y dimension.</param>
+        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
-            : this((PdfXObject)image, repeatX, repeatY) {
+            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY)) {
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeatX">is background is repeated in x dimension.</param>
+        /// <param name="repeatY">is background is repeated in y dimension.</param>
+        [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
-            : this((PdfXObject)image, repeatX, repeatY) {
+            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY)) {
         }
 
         public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder) {

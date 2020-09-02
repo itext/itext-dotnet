@@ -52,7 +52,7 @@ using iText.Layout.Properties;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
-    public class LineRendererUnitTest : AbstractRendererUnitTest {
+    public class LineRendererUnitTest : RendererUnitTest {
         private const double EPS = 1e-5;
 
         [NUnit.Framework.Test]

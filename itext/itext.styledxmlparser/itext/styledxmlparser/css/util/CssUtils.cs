@@ -733,7 +733,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the value</param>
         /// <returns>true, if the value contains a color property</returns>
         public static bool IsColorProperty(String value) {
-            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || WebColors.NAMES.Contains
+            return value.StartsWith("rgb(") || value.StartsWith("rgba(") || value.StartsWith("#") || WebColors.NAMES.Contains
                 (value.ToLowerInvariant()) || CommonCssConstants.TRANSPARENT.Equals(value);
         }
 

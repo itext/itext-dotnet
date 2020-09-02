@@ -92,6 +92,18 @@ namespace iText.StyledXmlParser.Css.Validate {
                 (true, false)));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.LINE_HEIGHT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
                 (true, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_REPEAT, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_REPEAT)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_IMAGE, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_IMAGE)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_POSITION, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_POSITION)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_SIZE, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_SIZE)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_CLIP, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_CLIP)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_ORIGIN, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_ORIGIN)));
         }
 
         /// <summary>

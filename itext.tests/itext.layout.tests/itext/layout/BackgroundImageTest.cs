@@ -41,8 +41,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
@@ -76,6 +78,15 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
             BackgroundImageGenericTest("backgroundImage", backgroundImage);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundMultipleImagesTest() {
+            IList<iText.Layout.Properties.BackgroundImage> images = JavaUtil.ArraysAsList(new iText.Layout.Properties.BackgroundImage
+                (new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "rock_texture.jpg")), new BackgroundRepeat
+                (false, true)), new iText.Layout.Properties.BackgroundImage(new PdfImageXObject(ImageDataFactory.Create
+                (sourceFolder + "itis.jpg")), new BackgroundRepeat(true, false)));
+            BackgroundImageGenericTest("backgroundMultipleImages", images);
         }
 
         [NUnit.Framework.Test]
@@ -126,7 +137,7 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatX() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
-                , false, true);
+                , new BackgroundRepeat(false, true));
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatX", backgroundImage);
@@ -136,7 +147,7 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatY() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
-                , true, false);
+                , new BackgroundRepeat(true, false));
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatY", backgroundImage);
@@ -146,7 +157,7 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatXY() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
-                , false, false);
+                , new BackgroundRepeat(false, false));
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatXY", backgroundImage);
@@ -177,7 +188,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
-                    (pdfDocument), false, true);
+                    (pdfDocument), new BackgroundRepeat(false, true));
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -193,7 +204,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
-                    (pdfDocument), true, false);
+                    (pdfDocument), new BackgroundRepeat(true, false));
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -209,7 +220,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
-                    (pdfDocument), false, false);
+                    (pdfDocument), new BackgroundRepeat(false, false));
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -257,14 +268,21 @@ namespace iText.Layout {
             return template;
         }
 
-        private void BackgroundImageGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
-            ) {
+        private void BackgroundImageGenericTest(String filename, Object backgroundImage) {
             BackgroundImageGenericTest(filename, backgroundImage, null);
         }
 
-        private void BackgroundImageGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
-            , double? angle) {
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
+        private void BackgroundImageGenericTest(String filename, Object backgroundImage, double? angle) {
+            if (backgroundImage is iText.Layout.Properties.BackgroundImage) {
+                NUnit.Framework.Assert.IsTrue(((iText.Layout.Properties.BackgroundImage)backgroundImage).IsBackgroundSpecified
+                    ());
+            }
+            else {
+                foreach (iText.Layout.Properties.BackgroundImage image in (IList<iText.Layout.Properties.BackgroundImage>)
+                    backgroundImage) {
+                    NUnit.Framework.Assert.IsTrue((image).IsBackgroundSpecified());
+                }
+            }
             String outFileName = destinationFolder + filename + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + filename + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
