@@ -531,6 +531,20 @@ namespace iText.Kernel.Pdf {
             return d;
         }
 
+        internal virtual PdfDictionary FillAndGetOcPropertiesDictionary() {
+            if (ocProperties != null) {
+                ocProperties.FillDictionary(false);
+                GetPdfObject().Put(PdfName.OCProperties, ocProperties.GetPdfObject());
+                ocProperties = null;
+            }
+            if (GetPdfObject().GetAsDictionary(PdfName.OCProperties) == null) {
+                PdfDictionary pdfDictionary = new PdfDictionary();
+                pdfDictionary.MakeIndirect(GetDocument());
+                GetDocument().GetCatalog().GetPdfObject().Put(PdfName.OCProperties, pdfDictionary);
+            }
+            return GetPdfObject().GetAsDictionary(PdfName.OCProperties);
+        }
+
         private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, String
              srcDestName, PdfArray srcDestArray, PdfPage oldPage) {
             PdfArray sameNameDest = (PdfArray)toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Get(srcDestName

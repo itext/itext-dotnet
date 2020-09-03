@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
-using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -61,7 +60,6 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Filespec;
-using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -1165,10 +1163,11 @@ namespace iText.Kernel.Pdf {
                 }
                 lastCopiedPageNum = (int)pageNum;
             }
-            if (GetCatalog() != null && GetCatalog().GetOCProperties(false) != null) {
-                CopyOCGProperties(copiedPages, toDocument);
-            }
             CopyLinkAnnotations(toDocument, page2page);
+            // Copying OCGs should go after copying LinkAnnotations
+            if (GetCatalog() != null && GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties) != null) {
+                OcgPropertiesCopier.CopyOCGProperties(this, toDocument, page2page);
+            }
             // It's important to copy tag structure after link annotations were copied, because object content items in tag
             // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
             if (toDocument.IsTagged()) {
@@ -2501,61 +2500,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void CopyOCGProperties(IList<PdfPage> copiedPages, PdfDocument toDocument) {
-            ICollection<String> layerNames = new HashSet<String>();
-            PdfCatalog catalog = toDocument.GetCatalog();
-            PdfOCProperties documentOCProperties = catalog.GetOCProperties(false);
-            if (documentOCProperties != null) {
-                foreach (PdfLayer layer in documentOCProperties.GetLayers()) {
-                    String name = layer.GetPdfObject().GetAsString(PdfName.Name).ToUnicodeString();
-                    layerNames.Add(name);
-                }
-            }
-            bool hasConflictingNames = false;
-            foreach (PdfPage page in copiedPages) {
-                PdfDictionary resources = page.GetPdfObject().GetAsDictionary(PdfName.Resources);
-                if (resources != null && !resources.IsFlushed()) {
-                    IList<PdfDictionary> ocgs = new List<PdfDictionary>();
-                    PdfDictionary properties = resources.GetAsDictionary(PdfName.Properties);
-                    if (properties != null && !properties.IsFlushed()) {
-                        foreach (PdfName name in properties.KeySet()) {
-                            PdfObject currObj = properties.Get(name);
-                            if (currObj != null && currObj.IsDictionary() && !currObj.IsFlushed()) {
-                                PdfDictionary currDict = (PdfDictionary)currObj;
-                                PdfName typeName = currDict.GetAsName(PdfName.Type);
-                                if (PdfName.OCG.Equals(typeName)) {
-                                    ocgs.Add(currDict);
-                                }
-                            }
-                        }
-                    }
-                    foreach (PdfDictionary entry in ocgs) {
-                        String ocgLayerName = entry.GetAsString(PdfName.Name).ToUnicodeString();
-                        for (int i = 0; layerNames.Contains(ocgLayerName); ++i) {
-                            if (i == 0) {
-                                hasConflictingNames = true;
-                            }
-                            if (layerNames.Contains(ocgLayerName + "_" + i)) {
-                                continue;
-                            }
-                            ocgLayerName += "_" + i;
-                            entry.Put(PdfName.Name, new PdfString(ocgLayerName, PdfEncodings.UNICODE_BIG));
-                        }
-                        layerNames.Add(ocgLayerName);
-                        entry.MakeIndirect(toDocument);
-                        PdfLayer layer = new PdfLayer(entry);
-                        if (!LayerAlreadyInProperties(layer, toDocument.GetCatalog().GetOCProperties(false))) {
-                            toDocument.GetCatalog().GetOCProperties(true).RegisterLayer(layer);
-                        }
-                    }
-                }
-            }
-            if (hasConflictingNames) {
-                ILog logger = LogManager.GetLogger(typeof(PdfDocument));
-                logger.Warn(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
-            }
-        }
-
         private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
             ) {
             if (true == properties.isFullCompression && !readerHasXrefStream) {
@@ -2573,17 +2517,6 @@ namespace iText.Kernel.Pdf {
 
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
-        }
-
-        private static bool LayerAlreadyInProperties(PdfLayer newLayer, PdfOCProperties pdfOCProperties) {
-            if (pdfOCProperties != null) {
-                foreach (PdfLayer layer in pdfOCProperties.GetLayers()) {
-                    if (newLayer.GetIndirectReference().Equals(layer.GetIndirectReference())) {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         void System.IDisposable.Dispose() {

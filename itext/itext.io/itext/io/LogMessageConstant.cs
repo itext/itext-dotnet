@@ -226,6 +226,8 @@ namespace iText.IO {
 
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";
 
+        public const String OCG_COPYING_ERROR = "OCG copying caused the following exception: {0}.";
+
         public const String OCSP_STATUS_IS_REVOKED = "OCSP status is revoked.";
 
         public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";

@@ -366,34 +366,20 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "ignoreTagStructureTest.pdf";
             PdfDocument doNotIgnoreTagStructureDocument = new PdfDocument(new PdfReader(srcFile));
             PdfDocumentTest.IgnoreTagStructurePdfDocument ignoreTagStructureDocument = new PdfDocumentTest.IgnoreTagStructurePdfDocument
-                (this, new PdfReader(srcFile));
+                (new PdfReader(srcFile));
             NUnit.Framework.Assert.IsTrue(doNotIgnoreTagStructureDocument.IsTagged());
             NUnit.Framework.Assert.IsFalse(ignoreTagStructureDocument.IsTagged());
             doNotIgnoreTagStructureDocument.Close();
             ignoreTagStructureDocument.Close();
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CreateDocwithOCG() {
-            String srcFile = sourceFolder + "sourceOCG1.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFile));
-            PdfDocument outPdf = new PdfDocument(new PdfWriter(destinationFolder + "mergedWithOCG.pdf"));
-            PdfMerger merger = new PdfMerger(outPdf);
-            merger.Merge(pdfDoc, 1, 1);
-            pdfDoc.Close();
-            outPdf.Close();
-        }
-
         private class IgnoreTagStructurePdfDocument : PdfDocument {
-            internal IgnoreTagStructurePdfDocument(PdfDocumentTest _enclosing, PdfReader reader)
+            internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {
-                this._enclosing = _enclosing;
             }
 
             protected internal override void TryInitTagStructure(PdfDictionary str) {
             }
-
-            private readonly PdfDocumentTest _enclosing;
         }
     }
 }

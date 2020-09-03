@@ -130,6 +130,21 @@ namespace iText.Kernel.Pdf.Layer {
         /// </remarks>
         /// <returns>the resultant dictionary</returns>
         public virtual PdfObject FillDictionary() {
+            return this.FillDictionary(true);
+        }
+
+        /// <summary>Fills the underlying PdfDictionary object with the current layers and their settings.</summary>
+        /// <remarks>
+        /// Fills the underlying PdfDictionary object with the current layers and their settings.
+        /// Note that it completely regenerates the dictionary, so your direct changes to the dictionary
+        /// will not take any affect.
+        /// </remarks>
+        /// <param name="removeNonDocumentOcgs">
+        /// the flag indicating whether it is necessary
+        /// to delete OCGs not from the current document
+        /// </param>
+        /// <returns>the resultant dictionary</returns>
+        public virtual PdfObject FillDictionary(bool removeNonDocumentOcgs) {
             PdfArray gr = new PdfArray();
             foreach (PdfLayer layer in layers) {
                 if (layer.GetTitle() == null) {
@@ -193,6 +208,9 @@ namespace iText.Kernel.Pdf.Layer {
             AddASEvent(PdfName.View, PdfName.View);
             AddASEvent(PdfName.Print, PdfName.Print);
             AddASEvent(PdfName.Export, PdfName.Export);
+            if (removeNonDocumentOcgs) {
+                this.RemoveNotRegisteredOcgs();
+            }
             return GetPdfObject();
         }
 
@@ -221,7 +239,7 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>This method registers a new layer in the OCProperties.</summary>
         /// <param name="layer">the new layer</param>
-        public virtual void RegisterLayer(PdfLayer layer) {
+        protected internal virtual void RegisterLayer(PdfLayer layer) {
             if (layer == null) {
                 throw new ArgumentException("layer argument is null");
             }
@@ -259,11 +277,38 @@ namespace iText.Kernel.Pdf.Layer {
             }
         }
 
+        private void RemoveNotRegisteredOcgs() {
+            PdfDictionary dDict = GetPdfObject().GetAsDictionary(PdfName.D);
+            PdfDictionary ocProperties = this.GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
+                );
+            ICollection<PdfIndirectReference> ocgsFromDocument = new HashSet<PdfIndirectReference>();
+            if (ocProperties.GetAsArray(PdfName.OCGs) != null) {
+                PdfArray ocgs = ocProperties.GetAsArray(PdfName.OCGs);
+                foreach (PdfObject ocgObj in ocgs) {
+                    if (ocgObj.IsDictionary()) {
+                        ocgsFromDocument.Add(ocgObj.GetIndirectReference());
+                    }
+                }
+            }
+            // Remove from RBGroups OCGs not presented in the output document (in OCProperties/OCGs)
+            PdfArray rbGroups = dDict.GetAsArray(PdfName.RBGroups);
+            if (rbGroups != null) {
+                foreach (PdfObject rbGroupObj in rbGroups) {
+                    PdfArray rbGroup = (PdfArray)rbGroupObj;
+                    for (int i = rbGroup.Size() - 1; i > -1; i--) {
+                        if (!ocgsFromDocument.Contains(rbGroup.Get(i).GetIndirectReference())) {
+                            rbGroup.Remove(i);
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>Populates the /AS entry in the /D dictionary.</summary>
         private void AddASEvent(PdfName @event, PdfName category) {
             PdfArray arr = new PdfArray();
             foreach (PdfLayer layer in layers) {
-                if (layer.GetTitle() == null) {
+                if (layer.GetTitle() == null && !layer.GetPdfObject().IsFlushed()) {
                     PdfDictionary usage = layer.GetPdfObject().GetAsDictionary(PdfName.Usage);
                     if (usage != null && usage.Get(category) != null) {
                         arr.Add(layer.GetPdfObject().GetIndirectReference());
@@ -308,14 +353,24 @@ namespace iText.Kernel.Pdf.Layer {
                 if (off != null) {
                     for (int i = 0; i < off.Size(); i++) {
                         PdfObject offLayer = off.Get(i, false);
-                        layerMap.Get((PdfIndirectReference)offLayer).on = false;
+                        if (offLayer.IsIndirectReference()) {
+                            layerMap.Get((PdfIndirectReference)offLayer).on = false;
+                        }
+                        else {
+                            layerMap.Get(offLayer.GetIndirectReference()).on = false;
+                        }
                     }
                 }
                 PdfArray locked = d.GetAsArray(PdfName.Locked);
                 if (locked != null) {
                     for (int i = 0; i < locked.Size(); i++) {
                         PdfObject lockedLayer = locked.Get(i, false);
-                        layerMap.Get((PdfIndirectReference)lockedLayer).locked = true;
+                        if (lockedLayer.IsIndirectReference()) {
+                            layerMap.Get((PdfIndirectReference)lockedLayer).locked = true;
+                        }
+                        else {
+                            layerMap.Get(lockedLayer.GetIndirectReference()).locked = true;
+                        }
                     }
                 }
                 PdfArray orderArray = d.GetAsArray(PdfName.Order);
@@ -345,8 +400,11 @@ namespace iText.Kernel.Pdf.Layer {
                             parent.AddChild(layer);
                         }
                         if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY) {
-                            ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap);
-                            i++;
+                            PdfArray nextArray = orderArray.GetAsArray(i + 1);
+                            if (nextArray.Size() > 0 && nextArray.Get(0).GetObjectType() != PdfObject.STRING) {
+                                ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap);
+                                i++;
+                            }
                         }
                     }
                 }

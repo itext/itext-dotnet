@@ -234,6 +234,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BaselineShift = CreateDirectName("BaselineShift");
 
+        public static readonly iText.Kernel.Pdf.PdfName BaseState = CreateDirectName("BaseState");
+
         public static readonly iText.Kernel.Pdf.PdfName BaseVersion = CreateDirectName("BaseVersion");
 
         public static readonly iText.Kernel.Pdf.PdfName Bates = CreateDirectName("Bates");

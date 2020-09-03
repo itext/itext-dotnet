@@ -1,11 +1,56 @@
+/*
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2020 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf.Layer;
+using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
-    public class PdfDocumentUnitTest {
+    public class PdfDocumentUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CopyPagesWithOCGDifferentNames() {
             IList<IList<String>> ocgNames = new List<IList<String>>();
@@ -15,7 +60,7 @@ namespace iText.Kernel.Pdf {
             ocgNames2.Add("Name2");
             ocgNames.Add(ocgNames1);
             ocgNames.Add(ocgNames2);
-            IList<byte[]> sourceDocuments = InitSourceDocuments(ocgNames);
+            IList<byte[]> sourceDocuments = PdfDocumentUnitTest.InitSourceDocuments(ocgNames);
             using (PdfDocument outDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
                 foreach (byte[] docBytes in sourceDocuments) {
                     using (PdfDocument fromDocument = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
@@ -24,19 +69,15 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                 }
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog);
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog.ocProperties);
-                NUnit.Framework.Assert.AreEqual(2, outDocument.catalog.ocProperties.GetLayers().Count);
-                PdfLayer layer = outDocument.catalog.ocProperties.GetLayers()[0];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name1", layer);
-                layer = outDocument.catalog.ocProperties.GetLayers()[1];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name2", layer);
+                IList<String> layerNames = new List<String>();
+                layerNames.Add("Name1");
+                layerNames.Add("Name2");
+                PdfDocumentUnitTest.AssertLayerNames(outDocument, layerNames);
             }
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
         public virtual void CopyPagesWithOCGSameName() {
             IList<IList<String>> ocgNames = new List<IList<String>>();
             IList<String> ocgNames1 = new List<String>();
@@ -45,7 +86,7 @@ namespace iText.Kernel.Pdf {
             ocgNames.Add(ocgNames1);
             ocgNames.Add(ocgNames1);
             ocgNames.Add(ocgNames1);
-            IList<byte[]> sourceDocuments = InitSourceDocuments(ocgNames);
+            IList<byte[]> sourceDocuments = PdfDocumentUnitTest.InitSourceDocuments(ocgNames);
             using (PdfDocument outDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
                 foreach (byte[] docBytes in sourceDocuments) {
                     using (PdfDocument fromDocument = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
@@ -54,27 +95,18 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                 }
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog);
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog.ocProperties);
-                NUnit.Framework.Assert.AreEqual(4, outDocument.catalog.ocProperties.GetLayers().Count);
-                PdfLayer layer = outDocument.catalog.ocProperties.GetLayers()[0];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name1", layer);
-                layer = outDocument.catalog.ocProperties.GetLayers()[1];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name1_0", layer);
-                layer = outDocument.catalog.ocProperties.GetLayers()[2];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name1_1", layer);
-                layer = outDocument.catalog.ocProperties.GetLayers()[3];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("Name1_2", layer);
+                IList<String> layerNames = new List<String>();
+                layerNames.Add("Name1");
+                layerNames.Add("Name1_0");
+                layerNames.Add("Name1_1");
+                layerNames.Add("Name1_2");
+                PdfDocumentUnitTest.AssertLayerNames(outDocument, layerNames);
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyPagesWithOCGSameObject() {
-            byte[] docBytes = null;
+            byte[] docBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
                     PdfPage page = document.AddNewPage();
@@ -82,6 +114,7 @@ namespace iText.Kernel.Pdf {
                     PdfDictionary ocg = new PdfDictionary();
                     ocg.Put(PdfName.Type, PdfName.OCG);
                     ocg.Put(PdfName.Name, new PdfString("name1"));
+                    ocg.MakeIndirect(document);
                     pdfResource.AddProperties(ocg);
                     PdfPage page2 = document.AddNewPage();
                     PdfResources pdfResource2 = page2.GetResources();
@@ -94,21 +127,16 @@ namespace iText.Kernel.Pdf {
                 using (PdfDocument fromDocument = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
                     fromDocument.CopyPagesTo(1, fromDocument.GetNumberOfPages(), outDocument);
                 }
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog);
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog.ocProperties);
-                NUnit.Framework.Assert.AreEqual(2, outDocument.catalog.ocProperties.GetLayers().Count);
-                PdfLayer layer = outDocument.catalog.ocProperties.GetLayers()[0];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("name1", layer);
-                layer = outDocument.catalog.ocProperties.GetLayers()[1];
-                NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("name1_0", layer);
+                IList<String> layerNames = new List<String>();
+                layerNames.Add("name1");
+                PdfDocumentUnitTest.AssertLayerNames(outDocument, layerNames);
             }
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.OCG_COPYING_ERROR, LogLevel = LogLevelConstants.ERROR)]
         public virtual void CopyPagesFlushedResources() {
-            byte[] docBytes = null;
+            byte[] docBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
                     PdfPage page = document.AddNewPage();
@@ -116,6 +144,7 @@ namespace iText.Kernel.Pdf {
                     PdfDictionary ocg = new PdfDictionary();
                     ocg.Put(PdfName.Type, PdfName.OCG);
                     ocg.Put(PdfName.Name, new PdfString("name1"));
+                    ocg.MakeIndirect(document);
                     pdfResource.AddProperties(ocg);
                     pdfResource.MakeIndirect(document);
                     PdfPage page2 = document.AddNewPage();
@@ -125,26 +154,40 @@ namespace iText.Kernel.Pdf {
                 docBytes = outputStream.ToArray();
             }
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            writer.SetSmartMode(true);
             using (PdfDocument outDocument = new PdfDocument(writer)) {
                 using (PdfDocument fromDocument = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
                     fromDocument.CopyPagesTo(1, 1, outDocument);
+                    IList<String> layerNames = new List<String>();
+                    layerNames.Add("name1");
+                    PdfDocumentUnitTest.AssertLayerNames(outDocument, layerNames);
                     outDocument.FlushCopiedObjects(fromDocument);
                     fromDocument.CopyPagesTo(2, 2, outDocument);
+                    NUnit.Framework.Assert.IsNotNull(outDocument.GetCatalog());
+                    PdfOCProperties ocProperties = outDocument.GetCatalog().GetOCProperties(false);
+                    NUnit.Framework.Assert.IsNotNull(ocProperties);
+                    NUnit.Framework.Assert.AreEqual(1, ocProperties.GetLayers().Count);
+                    PdfLayer layer = ocProperties.GetLayers()[0];
+                    NUnit.Framework.Assert.IsTrue(layer.GetPdfObject().IsFlushed());
                 }
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog);
-                NUnit.Framework.Assert.IsNotNull(outDocument.catalog.ocProperties);
-                NUnit.Framework.Assert.AreEqual(1, outDocument.catalog.ocProperties.GetLayers().Count);
-                PdfLayer layer = outDocument.catalog.ocProperties.GetLayers()[0];
+            }
+        }
+
+        private static void AssertLayerNames(PdfDocument outDocument, IList<String> layerNames) {
+            NUnit.Framework.Assert.IsNotNull(outDocument.GetCatalog());
+            PdfOCProperties ocProperties = outDocument.GetCatalog().GetOCProperties(true);
+            NUnit.Framework.Assert.IsNotNull(ocProperties);
+            NUnit.Framework.Assert.AreEqual(layerNames.Count, ocProperties.GetLayers().Count);
+            for (int i = 0; i < layerNames.Count; i++) {
+                PdfLayer layer = ocProperties.GetLayers()[i];
                 NUnit.Framework.Assert.IsNotNull(layer);
-                AssertLayerNameEqual("name1", layer);
+                PdfDocumentUnitTest.AssertLayerNameEqual(layerNames[i], layer);
             }
         }
 
         private static IList<byte[]> InitSourceDocuments(IList<IList<String>> ocgNames) {
             IList<byte[]> result = new List<byte[]>();
             foreach (IList<String> names in ocgNames) {
-                result.Add(InitDocument(names));
+                result.Add(PdfDocumentUnitTest.InitDocument(names));
             }
             return result;
         }
@@ -158,6 +201,7 @@ namespace iText.Kernel.Pdf {
                         PdfDictionary ocg = new PdfDictionary();
                         ocg.Put(PdfName.Type, PdfName.OCG);
                         ocg.Put(PdfName.Name, new PdfString(name));
+                        ocg.MakeIndirect(document);
                         pdfResource.AddProperties(ocg);
                     }
                     document.GetCatalog().GetOCProperties(true);
@@ -166,7 +210,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        internal virtual void AssertLayerNameEqual(String name, PdfLayer layer) {
+        private static void AssertLayerNameEqual(String name, PdfLayer layer) {
             PdfDictionary layerDictionary = layer.GetPdfObject();
             NUnit.Framework.Assert.IsNotNull(layerDictionary);
             NUnit.Framework.Assert.IsNotNull(layerDictionary.Get(PdfName.Name));
