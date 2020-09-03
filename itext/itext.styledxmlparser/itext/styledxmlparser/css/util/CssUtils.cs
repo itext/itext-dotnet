@@ -48,9 +48,11 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Layout.Font;
 using iText.Layout.Properties;
+using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Exceptions;
+using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
@@ -813,6 +815,18 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <returns>double converted value px*0.75</returns>
         public static double ConvertPxToPts(double px) {
             return px * 0.75;
+        }
+
+        /// <summary>
+        /// Checks if an
+        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
+        /// represents a style sheet link.
+        /// </summary>
+        /// <param name="headChildElement">the head child element</param>
+        /// <returns>true, if the element node represents a style sheet link</returns>
+        public static bool IsStyleSheetLink(IElementNode headChildElement) {
+            return CommonCssConstants.LINK.Equals(headChildElement.Name()) && CommonAttributeConstants.STYLESHEET.Equals
+                (headChildElement.GetAttribute(CommonAttributeConstants.REL));
         }
 
         private static bool AddRange(RangeBuilder builder, String range) {

@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -377,6 +379,33 @@ namespace iText.StyledXmlParser.Css.Util {
                 .ResolveBackgroundPropertyType("padding-box"));
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ATTACHMENT, CssBackgroundUtils
                 .ResolveBackgroundPropertyType("fixed"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementNodeIsStyleSheetLink() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("link"), "");
+            element.Attr(CommonAttributeConstants.REL, CommonAttributeConstants.STYLESHEET);
+            JsoupElementNode elementNode = new JsoupElementNode(element);
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsStyleSheetLink(elementNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementNodeIsNotLink() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("p"), "");
+            element.Attr(CommonAttributeConstants.REL, CommonAttributeConstants.STYLESHEET);
+            JsoupElementNode elementNode = new JsoupElementNode(element);
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsStyleSheetLink(elementNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementNodeAttributeIsNotStylesheet() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("link"), "");
+            element.Attr(CommonAttributeConstants.REL, "");
+            JsoupElementNode elementNode = new JsoupElementNode(element);
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsStyleSheetLink(elementNode));
         }
     }
 }

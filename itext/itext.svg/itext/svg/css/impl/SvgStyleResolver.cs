@@ -49,13 +49,13 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Resolve;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default implementation of SVG`s styles and attribute resolver .</summary>
@@ -250,7 +250,7 @@ namespace iText.Svg.Css.Impl {
                         }
                     }
                     else {
-                        if (SvgCssUtils.IsStyleSheetLink(headChildElement)) {
+                        if (CssUtils.IsStyleSheetLink(headChildElement)) {
                             String styleSheetUri = headChildElement.GetAttribute(SvgConstants.Attributes.HREF);
                             try {
                                 using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(styleSheetUri)) {

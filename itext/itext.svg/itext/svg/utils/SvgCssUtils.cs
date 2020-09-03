@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.StyledXmlParser;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
 
 namespace iText.Svg.Utils {
@@ -110,9 +111,9 @@ namespace iText.Svg.Utils {
         /// </summary>
         /// <param name="headChildElement">the head child element</param>
         /// <returns>true, if the element node represents a style sheet link</returns>
+        [System.ObsoleteAttribute(@"Will be replaced by the iText.StyledXmlParser.Css.Util.CssUtils.IsStyleSheetLink(headChildElement) in the 7.2 update")]
         public static bool IsStyleSheetLink(IElementNode headChildElement) {
-            return SvgConstants.Tags.LINK.Equals(headChildElement.Name()) && SvgConstants.Attributes.STYLESHEET.Equals(headChildElement
-                .GetAttribute(SvgConstants.Attributes.REL));
+            return CssUtils.IsStyleSheetLink(headChildElement);
         }
     }
 }
