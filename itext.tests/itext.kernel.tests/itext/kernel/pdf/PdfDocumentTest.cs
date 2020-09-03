@@ -373,6 +373,17 @@ namespace iText.Kernel.Pdf {
             ignoreTagStructureDocument.Close();
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CreateDocwithOCG() {
+            String srcFile = sourceFolder + "sourceOCG1.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFile));
+            PdfDocument outPdf = new PdfDocument(new PdfWriter(destinationFolder + "mergedWithOCG.pdf"));
+            PdfMerger merger = new PdfMerger(outPdf);
+            merger.Merge(pdfDoc, 1, 1);
+            pdfDoc.Close();
+            outPdf.Close();
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfDocumentTest _enclosing, PdfReader reader)
                 : base(reader) {

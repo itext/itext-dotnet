@@ -264,6 +264,36 @@ namespace iText.Kernel.Utils {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 3)]
+        public virtual void MergePdfWithOCGTest() {
+            String pdfWithOCG1 = sourceFolder + "sourceOCG1.pdf";
+            String pdfWithOCG2 = sourceFolder + "sourceOCG2.pdf";
+            String outPdf = destinationFolder + "mergePdfWithOCGTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_mergePdfWithOCGTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(pdfWithOCG1));
+            sources.Add(new FileInfo(pdfWithOCG2));
+            sources.Add(new FileInfo(pdfWithOCG2));
+            sources.Add(new FileInfo(pdfWithOCG2));
+            MergePdfs(sources, outPdf);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES, Count = 1)]
+        public virtual void MergePdfWithComplexOCGTest() {
+            String pdfWithOCG1 = sourceFolder + "sourceOCG1.pdf";
+            String pdfWithOCG2 = sourceFolder + "pdfWithComplexOCG.pdf";
+            String outPdf = destinationFolder + "mergePdfWithComplexOCGTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_mergePdfWithComplexOCGTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(pdfWithOCG1));
+            sources.Add(new FileInfo(pdfWithOCG2));
+            MergePdfs(sources, outPdf);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
+
         private void MergePdfs(IList<FileInfo> sources, String destination) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             PdfMerger merger = new PdfMerger(mergedDoc);

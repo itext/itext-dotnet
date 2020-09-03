@@ -221,7 +221,7 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>This method registers a new layer in the OCProperties.</summary>
         /// <param name="layer">the new layer</param>
-        protected internal virtual void RegisterLayer(PdfLayer layer) {
+        public virtual void RegisterLayer(PdfLayer layer) {
             if (layer == null) {
                 throw new ArgumentException("layer argument is null");
             }
