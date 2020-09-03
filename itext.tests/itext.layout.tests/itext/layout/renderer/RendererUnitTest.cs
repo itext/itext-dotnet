@@ -48,9 +48,10 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Test;
 
 namespace iText.Layout.Renderer {
-    public abstract class RendererUnitTest {
+    public abstract class RendererUnitTest : ExtendedITextTest {
         // This also can be converted to a @Rule to have it all at hand in the future
         protected internal static Document CreateDocument() {
             return new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())));
