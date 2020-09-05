@@ -233,5 +233,23 @@ namespace iText.Forms {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void LongOptionWrappedIntoTwoLinesTest() {
+            // TODO DEVSIX-4480 iText wraps the text into more than one line when generating listbox appearance
+            String outFileName = destinationFolder + "longOptionWrappedIntoTwoLinesTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_longOptionWrappedIntoTwoLinesTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            String shortOption = "Short option";
+            String longOption = "Long long long long long long long option";
+            String[] options = new String[] { shortOption, longOption };
+            Rectangle rect = new Rectangle(50, 650, 100, 100);
+            PdfChoiceFormField choice = PdfFormField.CreateList(pdfDocument, rect, "List", "Short option", options);
+            form.AddField(choice);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
     }
 }
