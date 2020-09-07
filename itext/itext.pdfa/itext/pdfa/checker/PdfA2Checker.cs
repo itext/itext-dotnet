@@ -136,10 +136,6 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill) {
-            CheckColor(color, currentColorSpaces, fill, null);
-        }
-
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
             ) {
             if (color is PatternColor) {
@@ -261,10 +257,6 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
-        }
-
-        public override void CheckExtGState(CanvasGraphicsState extGState) {
-            CheckExtGState(extGState, null);
         }
 
         public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {

@@ -136,10 +136,6 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill) {
-            CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
-        }
-
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
             ) {
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
@@ -226,10 +222,6 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        public override void CheckExtGState(CanvasGraphicsState extGState) {
-            CheckExtGState(extGState, null);
-        }
-
         public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
             if (extGState.GetTransferFunction() != null) {
                 throw new PdfAConformanceException(PdfAConformanceException.AN_EXTGSTATE_DICTIONARY_SHALL_NOT_CONTAIN_THE_TR_KEY
@@ -262,6 +254,10 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
+        }
+
+        // This check is irrelevant for the PdfA1 checker, so the body of the method is empty
         public override void CheckRenderingIntent(PdfName intent) {
             if (intent == null) {
                 return;
@@ -295,6 +291,11 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
+            ) {
+        }
+
+        // This check is irrelevant for the PdfA1 checker, so the body of the method is empty
         protected internal override void CheckContentStream(PdfStream contentStream) {
             if (IsFullCheckMode() || contentStream.IsModified()) {
                 byte[] contentBytes = contentStream.GetBytes();
