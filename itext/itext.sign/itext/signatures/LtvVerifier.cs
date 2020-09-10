@@ -113,7 +113,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
-        /// <param name="verifyRootCertificate"/>
+        /// <param name="verifyRootCertificate">false if you can't verify the root certificate, otherwise true</param>
         public virtual void SetVerifyRootCertificate(bool verifyRootCertificate) {
             this.verifyRootCertificate = verifyRootCertificate;
         }
@@ -131,7 +131,16 @@ namespace iText.Signatures {
         }
 
         /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
-        /// <param name="result"/>
+        /// <param name="result">
+        /// a list of
+        /// <see cref="VerificationOK"/>
+        /// objects
+        /// </param>
+        /// <returns>
+        /// a list of all
+        /// <see cref="VerificationOK"/>
+        /// objects after verification
+        /// </returns>
         public virtual IList<VerificationOK> Verify(IList<VerificationOK> result) {
             if (result == null) {
                 result = new List<VerificationOK>();
@@ -143,6 +152,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>Verifies a document level timestamp.</summary>
+        /// <returns>
+        /// a list of
+        /// <see cref="VerificationOK"/>
+        /// objects
+        /// </returns>
         public virtual IList<VerificationOK> VerifySignature() {
             LOGGER.Info("Verifying signature.");
             IList<VerificationOK> result = new List<VerificationOK>();

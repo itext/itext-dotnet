@@ -69,7 +69,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Creates a CrlClientOnline instance using one or more URLs.</summary>
-        /// <param name="crls"/>
+        /// <param name="crls">the CRLs as Strings</param>
         public CrlClientOnline(params String[] crls) {
             foreach (String url in crls) {
                 AddUrl(url);
@@ -77,7 +77,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Creates a CrlClientOnline instance using one or more URLs.</summary>
-        /// <param name="crls"/>
+        /// <param name="crls">the CRLs as URLs</param>
         public CrlClientOnline(params Uri[] crls) {
             foreach (Uri url in crls) {
                 AddUrl(url);
@@ -85,7 +85,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
-        /// <param name="chain"/>
+        /// <param name="chain">a certificate chain</param>
         public CrlClientOnline(X509Certificate[] chain) {
             for (int i = 0; i < chain.Length; i++) {
                 X509Certificate cert = (X509Certificate)chain[i];
