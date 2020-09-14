@@ -432,6 +432,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <param name="asDirect">true is to extract direct object always.</param>
+        /// <param name="key">the key to get the value from the map</param>
+        /// <returns>key if indirect reference is present</returns>
         public virtual PdfObject Get(PdfName key, bool asDirect) {
             if (!asDirect) {
                 return map.Get(key);

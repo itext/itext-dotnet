@@ -317,8 +317,8 @@ namespace iText.IO.Image {
         }
 
         /// <summary>
-        /// Create a
-        /// <Link>ImageData</Link>
+        /// Create an
+        /// <see cref="ImageData"/>
         /// instance from a Jpeg image url
         /// </summary>
         /// <param name="url">URL</param>

@@ -200,6 +200,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
         /// will be added.
         /// </param>
+        /// <param name="description">the file description</param>
         /// <returns>
         /// 
         /// <see cref="PdfFileSpec"/>
@@ -375,7 +376,7 @@ namespace iText.Kernel.Pdf.Filespec {
         /// will be added.
         /// </param>
         /// <returns>
-        /// @return
+        /// 
         /// <see cref="PdfFileSpec"/>
         /// containing the file specification of the file
         /// </returns>

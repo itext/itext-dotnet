@@ -348,6 +348,8 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <param name="asDirect">true is to extract direct object always.</param>
+        /// <param name="index">index of the element to return</param>
+        /// <returns>the element at the specified position in this list</returns>
         public virtual PdfObject Get(int index, bool asDirect) {
             if (!asDirect) {
                 return list[index];

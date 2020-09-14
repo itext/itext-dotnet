@@ -312,6 +312,7 @@ namespace iText.IO {
         }
 
         /// <summary>Gets additional params for Exception message.</summary>
+        /// <returns>params for exception message.</returns>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {

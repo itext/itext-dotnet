@@ -214,6 +214,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
+        /// <param name="reference">indirect reference which will be associated with this document</param>
         /// <returns>object itself.</returns>
         public virtual PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
             if (document == null || indirectReference != null) {
@@ -356,6 +357,7 @@ namespace iText.Kernel.Pdf {
         /// prevented from releasing by high-level entities dealing with the objects.
         /// Also it's not possible to release the objects that have been modified.
         /// </remarks>
+        /// <returns>true if releasing this object is forbidden, otherwise false</returns>
         public virtual bool IsReleaseForbidden() {
             return CheckState(FORBID_RELEASE);
         }
@@ -491,6 +493,10 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Sets special states of current object.</summary>
         /// <param name="state">special flag of current object</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfObject"/>
+        /// </returns>
         protected internal virtual PdfObject SetState(short state) {
             this.state |= state;
             return this;
@@ -498,6 +504,10 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Clear state of the flag of current object.</summary>
         /// <param name="state">special flag state to clear</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfObject"/>
+        /// </returns>
         protected internal virtual PdfObject ClearState(short state) {
             this.state &= (short)~state;
             return this;
