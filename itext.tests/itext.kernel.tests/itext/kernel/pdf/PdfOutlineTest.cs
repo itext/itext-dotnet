@@ -416,5 +416,35 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(root);
             pdfDocument.Close();
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageInDocWithSimpleOutlineTreeStructTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: remove expected exception when DEVSIX-4464 will be fixed
+                String input = sourceFolder + "simpleOutlineTreeStructure.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithSimpleOutlineTreeStruct.pdf"
+                    ));
+                pdfDocument.RemovePage(2);
+                pdfDocument.Close();
+                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageInDocWithComplexOutlineTreeStructTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: remove expected exception when DEVSIX-4464 will be fixed
+                String input = sourceFolder + "complexOutlineTreeStructure.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithComplexOutlineTreeStruct.pdf"
+                    ));
+                pdfDocument.RemovePage(2);
+                pdfDocument.Close();
+                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
     }
 }
