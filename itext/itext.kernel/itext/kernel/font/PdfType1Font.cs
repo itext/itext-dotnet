@@ -134,6 +134,7 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsBuiltInFont() {
             return ((Type1Font)GetFontProgram()).IsBuiltInFont();
         }

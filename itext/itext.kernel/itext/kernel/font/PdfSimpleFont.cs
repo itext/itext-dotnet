@@ -415,6 +415,14 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <summary>Indicates that the font is built in, i.e. it is one of the 14 Standard fonts</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// in case the font is a Standard font and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         protected internal virtual bool IsBuiltInFont() {
             return false;
         }

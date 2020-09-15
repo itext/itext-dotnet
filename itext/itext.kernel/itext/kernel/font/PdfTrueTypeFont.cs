@@ -227,5 +227,10 @@ namespace iText.Kernel.Font {
                 }
             }
         }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override bool IsBuiltInFont() {
+            return fontProgram is Type1Font && ((Type1Font)fontProgram).IsBuiltInFont();
+        }
     }
 }
