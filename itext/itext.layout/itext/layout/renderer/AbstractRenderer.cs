@@ -525,15 +525,12 @@ namespace iText.Layout.Renderer {
                     if (backgroundXObject == null) {
                         backgroundXObject = backgroundImage.GetForm();
                     }
-                    // TODO: DEVSIX-3108 due to invalid logic of `PdfCanvas.addXObject(PdfXObject, Rectangle)`
-                    //  for PDfFormXObject (invalid scaling) for now the imageRectangle initialization
-                    //  for gradient uses width and height = 1. For all other cases the logic left as it was.
                     Rectangle imageRectangle;
                     if (backgroundXObject == null) {
                         backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
                             (), backgroundArea, drawContext.GetDocument());
                         imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
-                            (), 1, 1);
+                            (), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
                     }
                     else {
                         imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.GetHeight(
@@ -564,7 +561,7 @@ namespace iText.Layout.Renderer {
             do {
                 imageRectangle.SetX(initialX);
                 do {
-                    drawContext.GetCanvas().AddXObject(backgroundXObject, imageRectangle);
+                    drawContext.GetCanvas().AddXObjectFittedIntoRectangle(backgroundXObject, imageRectangle);
                     imageRectangle.MoveRight(imageRectangle.GetWidth());
                 }
                 while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());

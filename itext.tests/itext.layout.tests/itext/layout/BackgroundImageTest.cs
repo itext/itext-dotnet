@@ -59,20 +59,20 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class BackgroundImageTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/BackgroundImageTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImage() {
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
                 );
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
@@ -83,9 +83,9 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void BackgroundMultipleImagesTest() {
             IList<iText.Layout.Properties.BackgroundImage> images = JavaUtil.ArraysAsList(new iText.Layout.Properties.BackgroundImage
-                (new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "rock_texture.jpg")), new BackgroundRepeat
+                (new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg")), new BackgroundRepeat
                 (false, true)), new iText.Layout.Properties.BackgroundImage(new PdfImageXObject(ImageDataFactory.Create
-                (sourceFolder + "itis.jpg")), new BackgroundRepeat(true, false)));
+                (SOURCE_FOLDER + "itis.jpg")), new BackgroundRepeat(true, false)));
             BackgroundImageGenericTest("backgroundMultipleImages", images);
         }
 
@@ -112,14 +112,14 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageForText() {
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
                 );
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
-            String outFileName = destinationFolder + "backgroundImageForText.pdf";
-            String cmpFileName = sourceFolder + "cmp_backgroundImageForText.pdf";
+            String outFileName = DESTINATION_FOLDER + "backgroundImageForText.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageForText.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 Document doc = new Document(pdfDocument);
@@ -129,13 +129,13 @@ namespace iText.Layout {
                 textElement.SetFontSize(50);
                 doc.Add(new Paragraph(textElement));
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatX() {
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
                 , new BackgroundRepeat(false, true));
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
@@ -145,7 +145,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatY() {
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
                 , new BackgroundRepeat(true, false));
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
@@ -155,7 +155,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatXY() {
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(xObject
                 , new BackgroundRepeat(false, false));
             NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
@@ -165,10 +165,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundXObject() {
-            //TODO DEVSIX-3108
             String filename = "backgroundXObject";
             String fileName = filename + ".pdf";
-            String outFileName = destinationFolder + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
@@ -181,10 +180,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatX() {
-            //TODO DEVSIX-3108
             String filename = "backgroundXObjectWithoutRepeatX";
             String fileName = filename + ".pdf";
-            String outFileName = destinationFolder + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
@@ -197,10 +195,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatY() {
-            //TODO DEVSIX-3108
             String filename = "backgroundXObjectWithoutRepeatY";
             String fileName = filename + ".pdf";
-            String outFileName = destinationFolder + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
@@ -213,10 +210,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundXObjectWithoutRepeatXY() {
-            //TODO DEVSIX-3108
             String filename = "backgroundXObjectWithoutRepeatXY";
             String fileName = filename + ".pdf";
-            String outFileName = destinationFolder + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(CreateFormXObject
@@ -228,12 +224,11 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void BackgroundXObjectAndImage() {
-            //TODO DEVSIX-3108
-            String filename = "backgroundXObjectAndImage";
+        public virtual void BackgroundXObjectAndImageTest() {
+            String filename = "backgroundXObjectAndImageTest";
             String fileName = filename + ".pdf";
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + "cmp_" + filename + ".pdf";
+            String outFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 Document doc = new Document(pdfDocument);
@@ -242,7 +237,7 @@ namespace iText.Layout {
                      + "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
                      + "officia deserunt mollit anim id est laborum. ";
                 Div div = new Div().Add(new Paragraph(text + text + text));
-                PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+                PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
                 iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(imageXObject
                     );
                 div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
@@ -253,13 +248,13 @@ namespace iText.Layout {
                 div.SetProperty(Property.BACKGROUND_IMAGE, backgroundFormXObject);
                 doc.Add(div);
                 pdfDocument.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                     , "diff"));
             }
         }
 
         private PdfFormXObject CreateFormXObject(PdfDocument pdfDocument) {
-            ImageData image = ImageDataFactory.Create(sourceFolder + "itis.jpg");
+            ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg");
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
             canvas.AddImage(image, 0, 0, image.GetWidth(), false).Flush();
@@ -283,8 +278,8 @@ namespace iText.Layout {
                     NUnit.Framework.Assert.IsTrue((image).IsBackgroundSpecified());
                 }
             }
-            String outFileName = destinationFolder + filename + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_" + filename + ".pdf";
+            String outFileName = DESTINATION_FOLDER + filename + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDocument);
             String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
@@ -298,15 +293,15 @@ namespace iText.Layout {
             div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
             doc.Add(div);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         private void BackgroundXObjectGenericTest(String filename, iText.Layout.Properties.BackgroundImage backgroundImage
             , PdfDocument pdfDocument) {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
-            String outFileName = destinationFolder + filename + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_" + filename + ".pdf";
+            String outFileName = DESTINATION_FOLDER + filename + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
             Document doc = new Document(pdfDocument);
             String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                  + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
@@ -316,7 +311,7 @@ namespace iText.Layout {
             div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
             doc.Add(div);
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
     }

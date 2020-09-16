@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using Common.Logging;
 using iText.Kernel;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
@@ -91,6 +92,74 @@ namespace iText.Kernel.Pdf.Xobject {
                 }
                 else {
                     throw new NotSupportedException(PdfException.UnsupportedXObjectType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculates a rectangle with the specified coordinates and width, and the height is
+        /// calculated in such a way that the original proportions of the xObject do not change.
+        /// </summary>
+        /// <remarks>
+        /// Calculates a rectangle with the specified coordinates and width, and the height is
+        /// calculated in such a way that the original proportions of the xObject do not change.
+        /// <para />
+        /// To calculate the original width and height of the xObject, the BBox and Matrix fields
+        /// are used. For mor information see paragraph 8.10.1 in ISO-32000-1.
+        /// </remarks>
+        /// <param name="xObject">the xObject for which we are calculating the rectangle</param>
+        /// <param name="x">the x-coordinate of the lower-left corner of the rectangle</param>
+        /// <param name="y">the y-coordinate of the lower-left corner of the rectangle</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <returns>the rectangle with specified coordinates and width</returns>
+        public static Rectangle CalculateProportionallyFitRectangleWithWidth(iText.Kernel.Pdf.Xobject.PdfXObject xObject
+            , float x, float y, float width) {
+            if (xObject is PdfFormXObject) {
+                PdfFormXObject formXObject = (PdfFormXObject)xObject;
+                Rectangle bBox = PdfFormXObject.CalculateBBoxMultipliedByMatrix(formXObject);
+                return new Rectangle(x, y, width, (width / bBox.GetWidth()) * bBox.GetHeight());
+            }
+            else {
+                if (xObject is PdfImageXObject) {
+                    PdfImageXObject imageXObject = (PdfImageXObject)xObject;
+                    return new Rectangle(x, y, width, (width / imageXObject.GetWidth()) * imageXObject.GetHeight());
+                }
+                else {
+                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculates a rectangle with the specified coordinates and height, and the width is
+        /// calculated in such a way that the original proportions of the xObject do not change.
+        /// </summary>
+        /// <remarks>
+        /// Calculates a rectangle with the specified coordinates and height, and the width is
+        /// calculated in such a way that the original proportions of the xObject do not change.
+        /// <para />
+        /// To calculate the original width and height of the xObject, the BBox and Matrix fields
+        /// are used. For mor information see paragraph 8.10.1 in ISO-32000-1.
+        /// </remarks>
+        /// <param name="xObject">the xObject for which we are calculating the rectangle</param>
+        /// <param name="x">the x-coordinate of the lower-left corner of the rectangle</param>
+        /// <param name="y">the y-coordinate of the lower-left corner of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <returns>the rectangle with specified coordinates and height</returns>
+        public static Rectangle CalculateProportionallyFitRectangleWithHeight(iText.Kernel.Pdf.Xobject.PdfXObject 
+            xObject, float x, float y, float height) {
+            if (xObject is PdfFormXObject) {
+                PdfFormXObject formXObject = (PdfFormXObject)xObject;
+                Rectangle bBox = PdfFormXObject.CalculateBBoxMultipliedByMatrix(formXObject);
+                return new Rectangle(x, y, (height / bBox.GetHeight()) * bBox.GetWidth(), height);
+            }
+            else {
+                if (xObject is PdfImageXObject) {
+                    PdfImageXObject imageXObject = (PdfImageXObject)xObject;
+                    return new Rectangle(x, y, (height / imageXObject.GetHeight()) * imageXObject.GetWidth(), height);
+                }
+                else {
+                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
                 }
             }
         }

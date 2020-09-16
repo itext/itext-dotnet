@@ -1626,16 +1626,22 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
-        /// <summary>Creates Image XObject from image and adds it to canvas (as Image XObject).</summary>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// </summary>
         /// <remarks>
-        /// Creates Image XObject from image and adds it to canvas (as Image XObject).
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
         /// </remarks>
         /// <param name="image">
-        /// the
-        /// <c>PdfImageXObject</c>
-        /// object
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
         /// </param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
@@ -1643,22 +1649,30 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
-        /// <returns>created Image XObject.</returns>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddImageWithTransformationMatrix(iText.IO.Image.ImageData, float, float, float, float, float, float) or AddXObjectWithTransformationMatrix(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f) {
-            return AddImage(image, a, b, c, d, e, f, false);
+            return AddImageWithTransformationMatrix(image, a, b, c, d, e, f);
         }
 
-        /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// </summary>
         /// <remarks>
-        /// Creates Image XObject from image and adds it to canvas.
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
         /// </remarks>
         /// <param name="image">
-        /// the
-        /// <c>PdfImageXObject</c>
-        /// object
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
         /// </param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
@@ -1666,11 +1680,74 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
-        /// <param name="asInline">true if to add image as in-line.</param>
-        /// <returns>created Image XObject or null in case of in-line image (asInline = true).</returns>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        public virtual PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
+             d, float e, float f) {
+            return AddImageWithTransformationMatrix(image, a, b, c, d, e, f, false);
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// <para />
+        /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// </remarks>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="a">an element of the transformation matrix</param>
+        /// <param name="b">an element of the transformation matrix</param>
+        /// <param name="c">an element of the transformation matrix</param>
+        /// <param name="d">an element of the transformation matrix</param>
+        /// <param name="e">an element of the transformation matrix</param>
+        /// <param name="f">an element of the transformation matrix</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddImageWithTransformationMatrix(iText.IO.Image.ImageData, float, float, float, float, float, float, bool) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, float a, float b, float c, float d, float e, float f, 
             bool asInline) {
+            return AddImageWithTransformationMatrix(image, a, b, c, d, e, f, asInline);
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to canvas.
+        /// <para />
+        /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// </remarks>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="a">an element of the transformation matrix</param>
+        /// <param name="b">an element of the transformation matrix</param>
+        /// <param name="c">an element of the transformation matrix</param>
+        /// <param name="d">an element of the transformation matrix</param>
+        /// <param name="e">an element of the transformation matrix</param>
+        /// <param name="f">an element of the transformation matrix</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        public virtual PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
+             d, float e, float f, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreateFormXObject(document);
@@ -1684,36 +1761,105 @@ namespace iText.Kernel.Pdf.Canvas {
                     return null;
                 }
                 else {
-                    AddImage(imageXObject, a, b, c, d, e, f);
+                    AddImageWithTransformationMatrix(imageXObject, a, b, c, d, e, f);
                     return imageXObject;
                 }
             }
         }
 
-        /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and fitted into specific rectangle on canvas.
+        /// </summary>
         /// <remarks>
-        /// Creates Image XObject from image and adds it to canvas.
-        /// The created image will be fit inside on the specified rectangle without preserving aspect ratio.
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and fitted into specific rectangle on canvas.
+        /// The created imageXObject will be fit inside on the specified rectangle without preserving aspect ratio.
         /// <para />
         /// The x, y, width and height parameters of the rectangle will be used in concatenating
         /// the transformation matrix as operands.
         /// </remarks>
-        /// <param name="image">image from which Image XObject will be created</param>
-        /// <param name="rect">rectangle in which the created image will be fit</param>
-        /// <param name="asInline">true if to add image as in-line.</param>
-        /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="rect">the rectangle in which the created imageXObject will be fit</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddImageFittedIntoRectangle(iText.IO.Image.ImageData, iText.Kernel.Geom.Rectangle, bool) orAddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, iText.Kernel.Geom.Rectangle rect, bool asInline) {
-            return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY(), asInline);
+            return AddImageFittedIntoRectangle(image, rect, asInline);
         }
 
-        /// <summary>Creates Image XObject from image and adds it to canvas.</summary>
-        /// <param name="image">image from which Image XObject will be created</param>
-        /// <param name="x">horizontal offset of the created image position</param>
-        /// <param name="y">vertical offset of the created image position</param>
-        /// <param name="asInline">true if to add image as in-line.</param>
-        /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and fitted into specific rectangle on canvas.
+        /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and fitted into specific rectangle on canvas.
+        /// The created imageXObject will be fit inside on the specified rectangle without preserving aspect ratio.
+        /// <para />
+        /// The x, y, width and height parameters of the rectangle will be used in concatenating
+        /// the transformation matrix as operands.
+        /// </remarks>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="rect">the rectangle in which the created imageXObject will be fit</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        public virtual PdfXObject AddImageFittedIntoRectangle(ImageData image, iText.Kernel.Geom.Rectangle rect, bool
+             asInline) {
+            return AddImageWithTransformationMatrix(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.
+                GetY(), asInline);
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified position.
+        /// </summary>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="x">the horizontal position of the imageXObject</param>
+        /// <param name="y">the vertical position of the imageXObject</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddImageAt(iText.IO.Image.ImageData, float, float, bool) orAddXObjectAt(iText.Kernel.Pdf.Xobject.PdfXObject, float, float) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline) {
+            return AddImageAt(image, x, y, asInline);
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified position.
+        /// </summary>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="x">the horizontal position of the imageXObject</param>
+        /// <param name="y">the vertical position of the imageXObject</param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        public virtual PdfXObject AddImageAt(ImageData image, float x, float y, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreateFormXObject(document);
@@ -1727,103 +1873,129 @@ namespace iText.Kernel.Pdf.Canvas {
                     return null;
                 }
                 else {
-                    AddImage(imageXObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
+                    AddImageWithTransformationMatrix(imageXObject, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
                     return imageXObject;
                 }
             }
         }
 
-        /// <summary>Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
-        ///     </summary>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified
+        /// position with specified width preserving aspect ratio.
+        /// </summary>
         /// <remarks>
-        /// Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified
+        /// position with specified width preserving aspect ratio.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operand.
         /// </remarks>
-        /// <param name="image">image from which Image XObject will be created</param>
-        /// <param name="x">horizontal offset of the created image position</param>
-        /// <param name="y">vertical offset of the created image position</param>
-        /// <param name="width">width of the created image on the basis of which the image height will be calculated</param>
-        /// <param name="asInline">true if to add image as in-line.</param>
-        /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="x">the horizontal position of the imageXObject</param>
+        /// <param name="y">the vertical position of the imageXObject</param>
+        /// <param name="width">the width of the created imageXObject on the basis of which the height will be calculated
+        ///     </param>
+        /// <param name="asInline">true if to add image as in-line</param>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddImageFittedIntoRectangle(iText.IO.Image.ImageData, iText.Kernel.Geom.Rectangle, bool) or AddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float width, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 // TODO add matrix parameters
                 PdfXObject xObject = wmf.CreateFormXObject(document);
-                AddImage(xObject, width, 0, 0, width, x, y);
+                AddImageWithTransformationMatrix(xObject, width, 0, 0, width, x, y);
                 return xObject;
             }
             else {
                 PdfImageXObject imageXObject = new PdfImageXObject(image);
                 if (asInline && image.CanImageBeInline()) {
-                    AddInlineImage(imageXObject, width, 0, 0, width / image.GetWidth() * image.GetHeight(), x, y);
+                    AddInlineImage(imageXObject, width, 0, 0, (width / image.GetWidth()) * image.GetHeight(), x, y);
                     return null;
                 }
                 else {
-                    AddImage(imageXObject, width, 0, 0, width / image.GetWidth() * image.GetHeight(), x, y);
+                    AddImageWithTransformationMatrix(imageXObject, width, 0, 0, (width / image.GetWidth()) * image.GetHeight()
+                        , x, y);
                     return imageXObject;
                 }
             }
         }
 
-        /// <summary>Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
-        ///     </summary>
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified
+        /// position with specified height preserving aspect ratio.
+        /// </summary>
         /// <remarks>
-        /// Creates Image XObject from image and adds it to the specified position with specified width preserving aspect ratio.
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// from image and adds it to the specified
+        /// position with specified height preserving aspect ratio.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operand.
         /// </remarks>
-        /// <param name="image">image from which Image XObject will be created</param>
-        /// <param name="x">horizontal offset of the created image position</param>
-        /// <param name="y">vertical offset of the created image position</param>
-        /// <param name="height">height of the created image on the basis of which the image width will be calculated</param>
-        /// <param name="asInline">true if to add image as in-line.</param>
+        /// <param name="image">
+        /// the image from which
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be created
+        /// </param>
+        /// <param name="x">the horizontal position of the imageXObject</param>
+        /// <param name="y">the vertical position of the imageXObject</param>
+        /// <param name="height">the height of the created imageXObject on the basis of which the width will be calculated
+        ///     </param>
+        /// <param name="asInline">true if to add image as in-line</param>
         /// <param name="dummy">
         /// flag to note that the method works with the height parameter as opposed to the method
-        /// <see cref="AddImage(iText.IO.Image.ImageData, float, float, float, bool)"/>.
+        /// <see cref="AddImage(iText.IO.Image.ImageData, float, float, float, bool)"/>
         /// </param>
-        /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"></seealso>
+        /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddImageFittedIntoRectangle(iText.IO.Image.ImageData, iText.Kernel.Geom.Rectangle, bool) or AddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float height, bool asInline, bool dummy
             ) {
-            return AddImage(image, height / image.GetHeight() * image.GetWidth(), 0, 0, height, x, y, asInline);
+            return AddImageWithTransformationMatrix(image, (height / image.GetHeight()) * image.GetWidth(), 0, 0, height
+                , x, y, asInline);
         }
 
         /// <summary>
         /// Adds
-        /// <c>PdfXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// to canvas.
         /// </summary>
         /// <remarks>
         /// Adds
-        /// <c>PdfXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
         /// </remarks>
-        /// <param name="xObject">
-        /// the
-        /// <c>PdfImageXObject</c>
-        /// object
-        /// </param>
+        /// <param name="xObject">the xObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
         /// <param name="c">an element of the transformation matrix</param>
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
-        /// <returns>current canvas.</returns>
+        /// <returns>the current canvas</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"></seealso>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float a, float b, float c, 
-            float d, float e, float f) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectWithTransformationMatrix(PdfXObject xObject, float
+             a, float b, float c, float d, float e, float f) {
             if (xObject is PdfFormXObject) {
-                return AddForm((PdfFormXObject)xObject, a, b, c, d, e, f);
+                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, a, b, c, d, e, f);
             }
             else {
                 if (xObject is PdfImageXObject) {
-                    return AddImage((PdfImageXObject)xObject, a, b, c, d, e, f);
+                    return AddImageWithTransformationMatrix(xObject, a, b, c, d, e, f);
                 }
                 else {
                     throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
@@ -1833,20 +2005,78 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to canvas.
+        /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to canvas.
+        /// <para />
+        /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// </remarks>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="a">an element of the transformation matrix</param>
+        /// <param name="b">an element of the transformation matrix</param>
+        /// <param name="c">an element of the transformation matrix</param>
+        /// <param name="d">an element of the transformation matrix</param>
+        /// <param name="e">an element of the transformation matrix</param>
+        /// <param name="f">an element of the transformation matrix</param>
+        /// <returns>the current canvas</returns>
+        /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddXObjectWithTransformationMatrix(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float) instead"
+            )]
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float a, float b, float c, 
+            float d, float e, float f) {
+            return AddXObjectWithTransformationMatrix(xObject, a, b, c, d, e, f);
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// to the specified position.
         /// </summary>
-        /// <param name="xObject">Image XObject to be added</param>
-        /// <param name="x">horizontal offset of the image position</param>
-        /// <param name="y">vertical offset of the image position</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="x">the horizontal position of the xObject</param>
+        /// <param name="y">the vertical position of the xObject</param>
+        /// <returns>the current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectAt(PdfXObject xObject, float x, float y) {
+            if (xObject is PdfFormXObject) {
+                return AddFormAt((PdfFormXObject)xObject, x, y);
+            }
+            else {
+                if (xObject is PdfImageXObject) {
+                    return AddImageAt((PdfImageXObject)xObject, x, y);
+                }
+                else {
+                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to the specified position in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
+        /// </summary>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position or the horizontal position of the imageXObject
+        ///     </param>
+        /// <param name="y">the vertical offset of the formXObject position or the vertical position of the imageXObject
+        ///     </param>
+        /// <returns>the current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddXObjectAt(iText.Kernel.Pdf.Xobject.PdfXObject, float, float) instead"
+            )]
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y) {
             if (xObject is PdfFormXObject) {
                 return AddForm((PdfFormXObject)xObject, x, y);
             }
             else {
                 if (xObject is PdfImageXObject) {
-                    return AddImage((PdfImageXObject)xObject, x, y);
+                    return AddImageAt((PdfImageXObject)xObject, x, y);
                 }
                 else {
                     throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
@@ -1856,27 +2086,57 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to specified rectangle on canvas.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// fitted into specific rectangle on canvas.
+        /// </summary>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="rect">the rectangle in which the xObject will be fitted</param>
+        /// <returns>the current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, iText.Kernel.Geom.Rectangle
+             rect) {
+            if (xObject is PdfFormXObject) {
+                return AddFormFittedIntoRectangle((PdfFormXObject)xObject, rect);
+            }
+            else {
+                if (xObject is PdfImageXObject) {
+                    return AddImageFittedIntoRectangle((PdfImageXObject)xObject, rect);
+                }
+                else {
+                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// fitted into specific rectangle on canvas in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <remarks>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to specified rectangle on canvas.
-        /// Do note that using this method of adding an XObject <b>will scale</b> the XObject using the width and the height
-        /// of the provided Rectangle. If you don't wish to scale the XObject, use
-        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float)"/>
-        /// ,
-        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)"/>
-        /// ,
-        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, bool)"/>
-        /// ,
-        /// or
-        /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float, float, float, float)"/>.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// fitted into specific rectangle on canvas in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
+        /// Do note that using this method of adding an
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// <b>will scale</b>
+        /// the xObject using the width and the height of the provided Rectangle.
         /// </remarks>
-        /// <param name="xObject">the XObject to add</param>
-        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="rect">
+        /// the rectangle containing x and y coordinates and width and height information in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or x and y offset and scale information in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// </param>
+        /// <returns>the current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, iText.Kernel.Geom.Rectangle
              rect) {
             if (xObject is PdfFormXObject) {
@@ -1884,7 +2144,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             else {
                 if (xObject is PdfImageXObject) {
-                    return AddImage((PdfImageXObject)xObject, rect);
+                    return AddImageFittedIntoRectangle((PdfImageXObject)xObject, rect);
                 }
                 else {
                     throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
@@ -1894,22 +2154,37 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to the specified position with specified width preserving aspect ratio.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to the specified position with specified width preserving aspect ratio in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales horizontally in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <remarks>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to the specified position with specified width preserving aspect ratio.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to the specified position with specified width preserving aspect ratio in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales horizontally in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operand.
         /// </remarks>
-        /// <param name="xObject">Image XObject to be added</param>
-        /// <param name="x">horizontal offset of the image position</param>
-        /// <param name="y">vertical offset of the image position</param>
-        /// <param name="width">width of the image on the basis of which the height will be calculated</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position or the horizontal position of the imageXObject
+        ///     </param>
+        /// <param name="y">the vertical offset of the formXObject position or the vertical position of the imageXObject
+        ///     </param>
+        /// <param name="width">
+        /// the width of the xObject on the basis of which the height will be calculated in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or scale horizontally coefficient in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// </param>
+        /// <returns>the current canvas</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) (PdfXObject, Rectangle)} andiText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithWidth(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float) instead"
+            )]
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y, float width
             ) {
             if (xObject is PdfFormXObject) {
@@ -1917,7 +2192,9 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             else {
                 if (xObject is PdfImageXObject) {
-                    return AddImage((PdfImageXObject)xObject, x, y, width);
+                    iText.Kernel.Geom.Rectangle rect = PdfXObject.CalculateProportionallyFitRectangleWithWidth(xObject, x, y, 
+                        width);
+                    return AddXObject(xObject, rect);
                 }
                 else {
                     throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
@@ -1927,26 +2204,41 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to the specified position with specified height preserving aspect ratio.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to the specified position with specified height preserving aspect ratio in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales vertically in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// </summary>
         /// <remarks>
         /// Adds
-        /// <c>PdfXObject</c>
-        /// to the specified position with specified height preserving aspect ratio.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to the specified position with specified height preserving aspect ratio in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or moves to the specified offset and scales vertically in the case of
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operand.
         /// </remarks>
-        /// <param name="xObject">Image XObject to be added</param>
-        /// <param name="x">horizontal offset of the image position</param>
-        /// <param name="y">vertical offset of the image position</param>
-        /// <param name="height">height of the image on the basis of which the width will be calculated</param>
+        /// <param name="xObject">the xObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position or the horizontal position of the imageXObject
+        ///     </param>
+        /// <param name="y">the vertical offset of the formXObject position or the vertical position of the imageXObject
+        ///     </param>
+        /// <param name="height">
+        /// the height of the xObject on the basis of which the width will be calculated in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// or scale vertically coefficient in the case of the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// </param>
         /// <param name="dummy">
-        /// flag to note that the method works with the height parameter as opposed to the method
+        /// the flag to note that the method works with the height parameter as opposed to the method
         /// <see cref="AddXObject(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)"/>
         /// </param>
-        /// <returns>current canvas.</returns>
+        /// <returns>the current canvas</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddXObjectFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfXObject, iText.Kernel.Geom.Rectangle) (PdfXObject, Rectangle)} andiText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithHeight(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float) instead"
+            )]
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject, float x, float y, float height
             , bool dummy) {
             if (xObject is PdfFormXObject) {
@@ -1954,7 +2246,42 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             else {
                 if (xObject is PdfImageXObject) {
-                    return AddImage((PdfImageXObject)xObject, x, y, height, dummy);
+                    iText.Kernel.Geom.Rectangle rect = PdfXObject.CalculateProportionallyFitRectangleWithHeight(xObject, x, y, 
+                        height);
+                    return AddXObject(xObject, rect);
+                }
+                else {
+                    throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// on canvas.
+        /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// on canvas.
+        /// <para />
+        /// Note: the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// will be placed at coordinates (0, 0) with its
+        /// original width and height, the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// will be fitted in its bBox.
+        /// </remarks>
+        /// <param name="xObject">the xObject to add</param>
+        /// <returns>the current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject) {
+            if (xObject is PdfFormXObject) {
+                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, 1, 0, 0, 1, 0, 0);
+            }
+            else {
+                if (xObject is PdfImageXObject) {
+                    return AddImageAt((PdfImageXObject)xObject, 0, 0);
                 }
                 else {
                     throw new ArgumentException("PdfFormXObject or PdfImageXObject expected.");
@@ -2161,21 +2488,44 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfFormXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// to canvas.
         /// </summary>
-        /// <param name="form">
-        /// the
-        /// <c>PdfImageXObject</c>
-        /// object
-        /// </param>
+        /// <param name="form">the formXObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
         /// <param name="c">an element of the transformation matrix</param>
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
-        /// <returns>current canvas.</returns>
+        /// <returns>current canvas</returns>
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddFormWithTransformationMatrix(PdfFormXObject form, float a, float
+             b, float c, float d, float e, float f) {
+            SaveState();
+            if (!iText.Kernel.Pdf.Canvas.PdfCanvas.IsIdentityMatrix(a, b, c, d, e, f)) {
+                ConcatMatrix(a, b, c, d, e, f);
+            }
+            PdfName name = resources.AddForm(form);
+            contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(Do);
+            RestoreState();
+            return this;
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to canvas.
+        /// </summary>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="a">an element of the transformation matrix</param>
+        /// <param name="b">an element of the transformation matrix</param>
+        /// <param name="c">an element of the transformation matrix</param>
+        /// <param name="d">an element of the transformation matrix</param>
+        /// <param name="e">an element of the transformation matrix</param>
+        /// <param name="f">an element of the transformation matrix</param>
+        /// <returns>current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddFormWithTransformationMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float, float, float, float, float) instead"
+            )]
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float a, float b, float c, float d, 
             float e, float f) {
             SaveState();
@@ -2188,39 +2538,53 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfFormXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// to the specified position.
         /// </summary>
-        /// <param name="form"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <returns>current canvas.</returns>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="x">the horizontal position of the formXObject</param>
+        /// <param name="y">the vertical position of the formXObject</param>
+        /// <returns>the current canvas</returns>
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddFormAt(PdfFormXObject form, float x, float y) {
+            iText.Kernel.Geom.Rectangle bBox = PdfFormXObject.CalculateBBoxMultipliedByMatrix(form);
+            Vector bBoxMin = new Vector(bBox.GetLeft(), bBox.GetBottom(), 1);
+            Vector bBoxMax = new Vector(bBox.GetRight(), bBox.GetTop(), 1);
+            Vector rectMin = new Vector(x, y, 1);
+            Vector rectMax = new Vector(x + bBoxMax.Get(Vector.I1) - bBoxMin.Get(Vector.I1), y + bBoxMax.Get(Vector.I2
+                ) - bBoxMin.Get(Vector.I2), 1);
+            float[] result = iText.Kernel.Pdf.Canvas.PdfCanvas.CalculateTransformationMatrix(rectMin, rectMax, bBoxMin
+                , bBoxMax);
+            return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
+                [5]);
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to the canvas and moves to the specified offset.
+        /// </summary>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position</param>
+        /// <param name="y">the vertical offset of the formXObject position</param>
+        /// <returns>the current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormAt(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float) instead"
+            )]
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y) {
             return AddForm(form, 1, 0, 0, 1, x, y);
         }
 
         /// <summary>
         /// Adds
-        /// <c>PdfFormXObject</c>
-        /// to specified rectangle on canvas and scale it using the rectangle's width and height.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to the canvas and moves to the specified offset and scales horizontally.
         /// </summary>
-        /// <param name="form">PdfFormXObject to add</param>
-        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
-        /// <returns>current canvas.</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, iText.Kernel.Geom.Rectangle rect) {
-            return AddForm(form, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
-        }
-
-        /// <summary>
-        /// Adds I
-        /// <c>PdfFormXObject</c>
-        /// to the specified position with specified width preserving aspect ratio.
-        /// </summary>
-        /// <param name="form"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="width"/>
-        /// <returns>current canvas.</returns>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position</param>
+        /// <param name="y">the vertical offset of the formXObject position</param>
+        /// <param name="width">the scale horizontally coefficient</param>
+        /// <returns>current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfFormXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y, float width) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (bbox == null) {
@@ -2233,15 +2597,20 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfFormXObject</c>
-        /// to the specified position with specified height preserving aspect ratio.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to the canvas and moves to the specified offset and scales vertically.
         /// </summary>
-        /// <param name="form"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="height"/>
-        /// <param name="dummy"/>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="x">the horizontal offset of the formXObject position</param>
+        /// <param name="y">the vertical offset of the formXObject position</param>
+        /// <param name="height">the scale vertically coefficient</param>
+        /// <param name="dummy">
+        /// flag to note that the method works with the height parameter as opposed to the method
+        /// <see cref="AddForm(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float, float)"/>
+        /// </param>
         /// <returns>current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfFormXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y, float height, bool
              dummy) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
@@ -2255,36 +2624,63 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfImageXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// fitted into specific rectangle on canvas.
+        /// </summary>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="rect">the rectangle in which the formXObject will be fitted</param>
+        /// <returns>the current canvas</returns>
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddFormFittedIntoRectangle(PdfFormXObject form, iText.Kernel.Geom.Rectangle
+             rect) {
+            iText.Kernel.Geom.Rectangle bBox = PdfFormXObject.CalculateBBoxMultipliedByMatrix(form);
+            Vector bBoxMin = new Vector(bBox.GetLeft(), bBox.GetBottom(), 1);
+            Vector bBoxMax = new Vector(bBox.GetRight(), bBox.GetTop(), 1);
+            Vector rectMin = new Vector(rect.GetLeft(), rect.GetBottom(), 1);
+            Vector rectMax = new Vector(rect.GetRight(), rect.GetTop(), 1);
+            float[] result = iText.Kernel.Pdf.Canvas.PdfCanvas.CalculateTransformationMatrix(rectMin, rectMax, bBoxMin
+                , bBoxMax);
+            return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
+                [5]);
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to canvas and moves to the specified offset and scales.
+        /// </summary>
+        /// <param name="form">the formXObject to add</param>
+        /// <param name="rect">the rectangle containing x and y offset and scale information</param>
+        /// <returns>current canvas</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use AddFormFittedIntoRectangle(iText.Kernel.Pdf.Xobject.PdfFormXObject, iText.Kernel.Geom.Rectangle) instead"
+            )]
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, iText.Kernel.Geom.Rectangle rect) {
+            return AddForm(form, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// to canvas.
         /// </summary>
-        /// <param name="image">
-        /// the
-        /// <c>PdfImageXObject</c>
-        /// object
-        /// </param>
+        /// <param name="xObject">the xObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
         /// <param name="c">an element of the transformation matrix</param>
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
-        /// <returns>canvas a reference to this object.</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float a, float b, float c, float
-             d, float e, float f) {
+        /// <returns>current canvas</returns>
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImageWithTransformationMatrix(PdfXObject xObject, float a, float
+             b, float c, float d, float e, float f) {
             SaveState();
             ConcatMatrix(a, b, c, d, e, f);
-            PdfName name = resources.AddImage(image);
-            contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(Do);
-            RestoreState();
-            return this;
-        }
-
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfXObject xObject, float a, float b, float c, float d, 
-            float e, float f) {
-            SaveState();
-            ConcatMatrix(a, b, c, d, e, f);
-            PdfName name = resources.AddImage(xObject.GetPdfObject());
+            PdfName name;
+            if (xObject is PdfImageXObject) {
+                name = resources.AddImage((PdfImageXObject)xObject);
+            }
+            else {
+                name = resources.AddImage(xObject.GetPdfObject());
+            }
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(Do);
             RestoreState();
             return this;
@@ -2292,64 +2688,29 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>
         /// Adds
-        /// <c>PdfImageXObject</c>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// to the specified position.
         /// </summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <returns>current canvas</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float x, float y) {
-            return AddImage(image, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
+        /// <param name="image">the imageXObject to add</param>
+        /// <param name="x">the horizontal position of the imageXObject</param>
+        /// <param name="y">the vertical position of the imageXObject</param>
+        /// <returns>the current canvas</returns>
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImageAt(PdfImageXObject image, float x, float y) {
+            return AddImageWithTransformationMatrix(image, image.GetWidth(), 0, 0, image.GetHeight(), x, y);
         }
 
         /// <summary>
         /// Adds
-        /// <c>PdfImageXObject</c>
-        /// to specified rectangle on canvas and scale it using the rectangle's width and height.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// fitted into specific rectangle on canvas.
         /// </summary>
-        /// <param name="image">PdfImageXObject to add</param>
-        /// <param name="rect">rectangle containing x and y coordinates and scaling information</param>
+        /// <param name="image">the imageXObject to add</param>
+        /// <param name="rect">the rectangle in which the imageXObject will be fitted</param>
         /// <returns>current canvas</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, iText.Kernel.Geom.Rectangle rect
-            ) {
-            return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
-        }
-
-        /// <summary>
-        /// Adds
-        /// <c>PdfImageXObject</c>
-        /// to the specified position with specified width preserving aspect ratio.
-        /// </summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="width"/>
-        /// <returns>current canvas</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float x, float y, float width) {
-            return AddImage(image, width, 0, 0, width / image.GetWidth() * image.GetHeight(), x, y);
-        }
-
-        /// <summary>
-        /// Adds
-        /// <c>PdfImageXObject</c>
-        /// to the specified position with specified height preserving aspect ratio.
-        /// </summary>
-        /// <param name="image"/>
-        /// <param name="x"/>
-        /// <param name="y"/>
-        /// <param name="height"/>
-        /// <param name="dummy"/>
-        /// <returns>current canvas.</returns>
-        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImage(PdfImageXObject image, float x, float y, float height, 
-            bool dummy) {
-            return AddImage(image, height / image.GetHeight() * image.GetWidth(), 0, 0, height, x, y);
-        }
-
-        private static PdfStream GetPageStream(PdfPage page) {
-            PdfStream stream = page.GetLastContentStream();
-            return stream == null || stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter) ? page.NewContentStreamAfter
-                () : stream;
+        private iText.Kernel.Pdf.Canvas.PdfCanvas AddImageFittedIntoRectangle(PdfImageXObject image, iText.Kernel.Geom.Rectangle
+             rect) {
+            return AddImageWithTransformationMatrix(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.
+                GetY());
         }
 
         private PdfStream EnsureStreamDataIsReadyToBeProcessed(PdfStream stream) {
@@ -2437,12 +2798,39 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
+        private static PdfStream GetPageStream(PdfPage page) {
+            PdfStream stream = page.GetLastContentStream();
+            return stream == null || stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter) ? page.NewContentStreamAfter
+                () : stream;
+        }
+
         private static IList<T> EnumeratorToList<T>(IEnumerator<T> enumerator) {
             IList<T> list = new List<T>();
             while (enumerator.MoveNext()) {
                 list.Add(enumerator.Current);
             }
             return list;
+        }
+
+        private static float[] CalculateTransformationMatrix(Vector expectedMin, Vector expectedMax, Vector actualMin
+            , Vector actualMax) {
+            // Calculates a matrix such that if you multiply the actual vertices by it, you get the expected vertices
+            float[] result = new float[6];
+            result[0] = (expectedMin.Get(Vector.I1) - expectedMax.Get(Vector.I1)) / (actualMin.Get(Vector.I1) - actualMax
+                .Get(Vector.I1));
+            result[1] = 0;
+            result[2] = 0;
+            result[3] = (expectedMin.Get(Vector.I2) - expectedMax.Get(Vector.I2)) / (actualMin.Get(Vector.I2) - actualMax
+                .Get(Vector.I2));
+            result[4] = expectedMin.Get(Vector.I1) - actualMin.Get(Vector.I1) * result[0];
+            result[5] = expectedMin.Get(Vector.I2) - actualMin.Get(Vector.I2) * result[3];
+            return result;
+        }
+
+        private static bool IsIdentityMatrix(float a, float b, float c, float d, float e, float f) {
+            return JavaUtil.FloatCompare(a, 1) == 0 && JavaUtil.FloatCompare(b, 0) == 0 && JavaUtil.FloatCompare(c, 0)
+                 == 0 && JavaUtil.FloatCompare(d, 1) == 0 && JavaUtil.FloatCompare(e, 0) == 0 && JavaUtil.FloatCompare
+                (f, 0) == 0;
         }
     }
 }

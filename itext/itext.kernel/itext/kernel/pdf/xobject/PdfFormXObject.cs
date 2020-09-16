@@ -125,6 +125,42 @@ namespace iText.Kernel.Pdf.Xobject {
             : this(new WmfImageHelper(image).CreateFormXObject(pdfDocument).GetPdfObject()) {
         }
 
+        /// <summary>Calculates the coordinates of the xObject BBox multiplied by the Matrix field.</summary>
+        /// <remarks>
+        /// Calculates the coordinates of the xObject BBox multiplied by the Matrix field.
+        /// <para />
+        /// For mor information see paragraph 8.10.1 in ISO-32000-1.
+        /// </remarks>
+        /// <param name="form">the object for which calculate the coordinates of the bBox</param>
+        /// <returns>
+        /// the bBox
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// </returns>
+        public static Rectangle CalculateBBoxMultipliedByMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject form) {
+            PdfArray pdfArrayBBox = form.GetPdfObject().GetAsArray(PdfName.BBox);
+            if (pdfArrayBBox == null) {
+                throw new PdfException(PdfException.PdfFormXobjectHasInvalidBbox);
+            }
+            float[] bBoxArray = pdfArrayBBox.ToFloatArray();
+            PdfArray pdfArrayMatrix = form.GetPdfObject().GetAsArray(PdfName.Matrix);
+            float[] matrixArray;
+            if (pdfArrayMatrix == null) {
+                matrixArray = new float[] { 1, 0, 0, 1, 0, 0 };
+            }
+            else {
+                matrixArray = pdfArrayMatrix.ToFloatArray();
+            }
+            Matrix matrix = new Matrix(matrixArray[0], matrixArray[1], matrixArray[2], matrixArray[3], matrixArray[4], 
+                matrixArray[5]);
+            Vector bBoxMin = new Vector(bBoxArray[0], bBoxArray[1], 1);
+            Vector bBoxMax = new Vector(bBoxArray[2], bBoxArray[3], 1);
+            Vector bBoxMinByMatrix = bBoxMin.Cross(matrix);
+            Vector bBoxMaxByMatrix = bBoxMax.Cross(matrix);
+            float width = bBoxMaxByMatrix.Get(Vector.I1) - bBoxMinByMatrix.Get(Vector.I1);
+            float height = bBoxMaxByMatrix.Get(Vector.I2) - bBoxMinByMatrix.Get(Vector.I2);
+            return new Rectangle(bBoxMinByMatrix.Get(Vector.I1), bBoxMinByMatrix.Get(Vector.I2), width, height);
+        }
+
         /// <summary>
         /// Gets
         /// <see cref="iText.Kernel.Pdf.PdfResources"/>
