@@ -98,6 +98,26 @@ namespace iText.IO.Font.Otf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestAdditionWithActualText() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            IList<Glyph> glyphs = ConstructGlyphListFromString("Viva France!", font);
+            GlyphLine containerLine = new GlyphLine(glyphs);
+            NUnit.Framework.Assert.IsNull(containerLine.actualText);
+            containerLine.SetActualText(0, 1, "TEST");
+            NUnit.Framework.Assert.IsNotNull(containerLine.actualText);
+            NUnit.Framework.Assert.AreEqual(12, containerLine.actualText.Count);
+            NUnit.Framework.Assert.AreEqual("TEST", containerLine.actualText[0].value);
+            containerLine.Add(new GlyphLine(glyphs));
+            NUnit.Framework.Assert.AreEqual(24, containerLine.actualText.Count);
+            for (int i = 13; i < 24; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read

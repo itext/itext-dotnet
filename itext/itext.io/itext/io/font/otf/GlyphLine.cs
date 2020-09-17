@@ -200,6 +200,11 @@ namespace iText.IO.Font.Otf {
                 actualText.AddAll(other.actualText.SubList(other.start, other.end));
             }
             glyphs.AddAll(other.glyphs.SubList(other.start, other.end));
+            if (null != actualText) {
+                while (actualText.Count < glyphs.Count) {
+                    actualText.Add(null);
+                }
+            }
         }
 
         /// <summary>Replaces the current content with the other line's content.</summary>
