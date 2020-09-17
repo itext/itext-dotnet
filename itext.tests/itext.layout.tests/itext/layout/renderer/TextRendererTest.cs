@@ -218,5 +218,35 @@ namespace iText.Layout.Renderer {
             PdfFont pdfFont = renderer.ResolveFirstPdfFont();
             NUnit.Framework.Assert.AreEqual("NotoSans", pdfFont.GetFontProgram().GetFontNames().GetFontName());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MyanmarCharacterBelongsToSpecificScripts() {
+            // u1042 MYANMAR DIGIT TWO
+            NUnit.Framework.Assert.IsTrue(TextRenderer.CodePointIsOfSpecialScript(4162));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ThaiCharacterBelongsToSpecificScripts() {
+            // u0E19 THAI CHARACTER NO NU
+            NUnit.Framework.Assert.IsTrue(TextRenderer.CodePointIsOfSpecialScript(3609));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LaoCharacterBelongsToSpecificScripts() {
+            // u0EC8 LAO TONE MAI EK
+            NUnit.Framework.Assert.IsTrue(TextRenderer.CodePointIsOfSpecialScript(3784));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KhmerCharacterBelongsToSpecificScripts() {
+            // u1789 KHMER LETTER NYO
+            NUnit.Framework.Assert.IsTrue(TextRenderer.CodePointIsOfSpecialScript(6025));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CyrillicCharacterDoesntBelongToSpecificScripts() {
+            // u0433 Cyrillic Small Letter U
+            NUnit.Framework.Assert.IsFalse(TextRenderer.CodePointIsOfSpecialScript(1091));
+        }
     }
 }
