@@ -86,6 +86,131 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>
+        /// Splits the provided
+        /// <see cref="System.String"/>
+        /// by comma with respect of brackets.
+        /// </summary>
+        /// <param name="value">to split</param>
+        /// <returns>
+        /// the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of split result
+        /// </returns>
+        public static IList<String> SplitStringWithComma(String value) {
+            if (value == null) {
+                return new List<String>();
+            }
+            IList<String> resultList = new List<String>();
+            int lastComma = 0;
+            int notClosedBrackets = 0;
+            for (int i = 0; i < value.Length; ++i) {
+                if (value[i] == ',' && notClosedBrackets == 0) {
+                    resultList.Add(value.JSubstring(lastComma, i));
+                    lastComma = i + 1;
+                }
+                if (value[i] == '(') {
+                    ++notClosedBrackets;
+                }
+                if (value[i] == ')') {
+                    --notClosedBrackets;
+                    notClosedBrackets = Math.Max(notClosedBrackets, 0);
+                }
+            }
+            String lastToken = value.Substring(lastComma);
+            if (!String.IsNullOrEmpty(lastToken)) {
+                resultList.Add(lastToken);
+            }
+            return resultList;
+        }
+
+        /// <summary>Parses the given css blend mode value.</summary>
+        /// <remarks>
+        /// Parses the given css blend mode value. If the argument is
+        /// <see langword="null"/>
+        /// or an unknown blend
+        /// mode, then the default css
+        /// <see cref="iText.Layout.Properties.BlendMode.NORMAL"/>
+        /// value would be returned.
+        /// </remarks>
+        /// <param name="cssValue">the value to parse</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Properties.BlendMode"/>
+        /// instance representing the parsed value
+        /// </returns>
+        public static BlendMode ParseBlendMode(String cssValue) {
+            if (cssValue == null) {
+                return BlendMode.NORMAL;
+            }
+            switch (cssValue) {
+                case CommonCssConstants.MULTIPLY: {
+                    return BlendMode.MULTIPLY;
+                }
+
+                case CommonCssConstants.SCREEN: {
+                    return BlendMode.SCREEN;
+                }
+
+                case CommonCssConstants.OVERLAY: {
+                    return BlendMode.OVERLAY;
+                }
+
+                case CommonCssConstants.DARKEN: {
+                    return BlendMode.DARKEN;
+                }
+
+                case CommonCssConstants.LIGHTEN: {
+                    return BlendMode.LIGHTEN;
+                }
+
+                case CommonCssConstants.COLOR_DODGE: {
+                    return BlendMode.COLOR_DODGE;
+                }
+
+                case CommonCssConstants.COLOR_BURN: {
+                    return BlendMode.COLOR_BURN;
+                }
+
+                case CommonCssConstants.HARD_LIGHT: {
+                    return BlendMode.HARD_LIGHT;
+                }
+
+                case CommonCssConstants.SOFT_LIGHT: {
+                    return BlendMode.SOFT_LIGHT;
+                }
+
+                case CommonCssConstants.DIFFERENCE: {
+                    return BlendMode.DIFFERENCE;
+                }
+
+                case CommonCssConstants.EXCLUSION: {
+                    return BlendMode.EXCLUSION;
+                }
+
+                case CommonCssConstants.HUE: {
+                    return BlendMode.HUE;
+                }
+
+                case CommonCssConstants.SATURATION: {
+                    return BlendMode.SATURATION;
+                }
+
+                case CommonCssConstants.COLOR: {
+                    return BlendMode.COLOR;
+                }
+
+                case CommonCssConstants.LUMINOSITY: {
+                    return BlendMode.LUMINOSITY;
+                }
+
+                case CommonCssConstants.NORMAL:
+                default: {
+                    return BlendMode.NORMAL;
+                }
+            }
+        }
+
+        /// <summary>
         /// Extracts shorthand properties as list of string lists from a string, where the top level
         /// list is shorthand property and the lower level list is properties included in shorthand property.
         /// </summary>

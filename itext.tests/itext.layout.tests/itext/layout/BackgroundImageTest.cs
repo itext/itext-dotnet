@@ -253,6 +253,102 @@ namespace iText.Layout {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndNormalBlendModeTest() {
+            BlendModeTest(BlendMode.NORMAL);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndMultiplyBlendModeTest() {
+            BlendModeTest(BlendMode.MULTIPLY);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndScreenBlendModeTest() {
+            BlendModeTest(BlendMode.SCREEN);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndOverlayBlendModeTest() {
+            BlendModeTest(BlendMode.OVERLAY);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndDarkenBlendModeTest() {
+            BlendModeTest(BlendMode.DARKEN);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndLightenBlendModeTest() {
+            BlendModeTest(BlendMode.LIGHTEN);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndColorDodgeBlendModeTest() {
+            BlendModeTest(BlendMode.COLOR_DODGE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndColorBurnBlendModeTest() {
+            BlendModeTest(BlendMode.COLOR_BURN);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndHardLightBlendModeTest() {
+            BlendModeTest(BlendMode.HARD_LIGHT);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndSoftLightBlendModeTest() {
+            BlendModeTest(BlendMode.SOFT_LIGHT);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndDifferenceBlendModeTest() {
+            BlendModeTest(BlendMode.DIFFERENCE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndExclusionBlendModeTest() {
+            BlendModeTest(BlendMode.EXCLUSION);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndHueBlendModeTest() {
+            BlendModeTest(BlendMode.HUE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndSaturationBlendModeTest() {
+            BlendModeTest(BlendMode.SATURATION);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndColorBlendModeTest() {
+            BlendModeTest(BlendMode.COLOR);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLinearGradientAndLuminosityBlendModeTest() {
+            BlendModeTest(BlendMode.LUMINOSITY);
+        }
+
+        private void BlendModeTest(BlendMode blendMode) {
+            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
+                GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
+                .WHITE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(gradientBuilder
+                );
+            AbstractLinearGradientBuilder topGradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+                (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddColorStop(new GradientColorStop(ColorConstants
+                .RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue())).AddColorStop
+                (new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage topBackgroundImage = new iText.Layout.Properties.BackgroundImage(topGradientBuilder
+                , blendMode);
+            BackgroundImageGenericTest("backgroundImageWithLinearGradientAndBlendMode_" + blendMode.GetPdfRepresentation
+                ().GetValue(), JavaUtil.ArraysAsList(topBackgroundImage, backgroundImage));
+        }
+
         private PdfFormXObject CreateFormXObject(PdfDocument pdfDocument) {
             ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg");
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));

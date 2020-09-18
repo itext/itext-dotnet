@@ -46,6 +46,8 @@ using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Layout.Properties {
     public class BackgroundImage {
+        private static readonly BlendMode DEFAULT_BLEND_MODE = BlendMode.NORMAL;
+
         protected internal PdfXObject image;
 
         /// <summary>Whether the background repeats in the x dimension.</summary>
@@ -57,6 +59,8 @@ namespace iText.Layout.Properties {
         protected internal bool repeatY;
 
         protected internal AbstractLinearGradientBuilder linearGradientBuilder;
+
+        private BlendMode blendMode = DEFAULT_BLEND_MODE;
 
         /// <summary>
         /// Creates a new
@@ -73,10 +77,66 @@ namespace iText.Layout.Properties {
         /// <see cref="BackgroundRepeat"/>
         /// instance.
         /// </param>
-        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat) {
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BlendMode blendMode) {
             this.image = image;
             this.repeatX = repeat.IsRepeatX();
             this.repeatY = repeat.IsRepeatY();
+            if (blendMode != null) {
+                this.blendMode = blendMode;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat, BlendMode blendMode)
+            : this((PdfXObject)image, repeat, blendMode) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat, BlendMode blendMode)
+            : this((PdfXObject)image, repeat, blendMode) {
         }
 
         /// <summary>
@@ -95,7 +155,7 @@ namespace iText.Layout.Properties {
         /// instance.
         /// </param>
         public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat)
-            : this((PdfXObject)image, repeat) {
+            : this(image, repeat, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -114,7 +174,7 @@ namespace iText.Layout.Properties {
         /// instance.
         /// </param>
         public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat)
-            : this((PdfXObject)image, repeat) {
+            : this(image, repeat, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -159,7 +219,7 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">is background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
-            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY)) {
+            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY), DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -176,13 +236,45 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">is background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
-            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY)) {
+            : this((PdfXObject)image, new BackgroundRepeat(repeatX, repeatY), DEFAULT_BLEND_MODE) {
         }
 
-        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder) {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance with linear gradient.
+        /// </summary>
+        /// <param name="linearGradientBuilder">
+        /// the linear gradient builder representing the background image.
+        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder)
+            : this(linearGradientBuilder, DEFAULT_BLEND_MODE) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance with linear gradient and custom blending mode.
+        /// </summary>
+        /// <param name="linearGradientBuilder">
+        /// the linear gradient builder representing the background image.
+        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
+        /// instance.
+        /// </param>
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode) {
             this.linearGradientBuilder = linearGradientBuilder;
             this.repeatX = false;
             this.repeatY = false;
+            if (blendMode != null) {
+                this.blendMode = blendMode;
+            }
         }
 
         public virtual PdfImageXObject GetImage() {
@@ -215,6 +307,16 @@ namespace iText.Layout.Properties {
 
         public virtual float GetHeight() {
             return (float)image.GetHeight();
+        }
+
+        /// <summary>Get the image's blend mode.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="BlendMode"/>
+        /// representation of the image's blend mode
+        /// </returns>
+        public virtual BlendMode GetBlendMode() {
+            return blendMode;
         }
     }
 }

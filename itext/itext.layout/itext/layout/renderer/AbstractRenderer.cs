@@ -554,6 +554,10 @@ namespace iText.Layout.Renderer {
 
         private static void MoveImageRectangle(Rectangle imageRectangle, BackgroundImage backgroundImage, DrawContext
              drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea) {
+            BlendMode blendMode = backgroundImage.GetBlendMode();
+            if (blendMode != BlendMode.NORMAL) {
+                drawContext.GetCanvas().SetExtGState(new PdfExtGState().SetBlendMode(blendMode.GetPdfRepresentation()));
+            }
             float initialX = backgroundImage.IsRepeatX() ? (imageRectangle.GetX() - imageRectangle.GetWidth()) : imageRectangle
                 .GetX();
             float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();

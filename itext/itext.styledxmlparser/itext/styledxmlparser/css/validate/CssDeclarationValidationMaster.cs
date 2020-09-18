@@ -104,6 +104,8 @@ namespace iText.StyledXmlParser.Css.Validate {
                 (CommonCssConstants.BACKGROUND_CLIP)));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_ORIGIN, new SingleTypeDeclarationValidator(new CssBackgroundValidator
                 (CommonCssConstants.BACKGROUND_ORIGIN)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_BLEND_MODE, new SingleTypeDeclarationValidator(new ArrayDataTypeValidator
+                (new CssBlendModeValidator())));
         }
 
         /// <summary>

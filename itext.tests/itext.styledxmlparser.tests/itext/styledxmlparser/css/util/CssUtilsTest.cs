@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Layout.Properties;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Exceptions;
@@ -406,6 +407,56 @@ namespace iText.StyledXmlParser.Css.Util {
             element.Attr(CommonAttributeConstants.REL, "");
             JsoupElementNode elementNode = new JsoupElementNode(element);
             NUnit.Framework.Assert.IsFalse(CssUtils.IsStyleSheetLink(elementNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitStringWithCommaTest() {
+            NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitStringWithComma(null));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma
+                ("value1,value2,value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", " value2", " value3"), CssUtils.SplitStringWithComma
+                ("value1, value2, value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with,comma)", "value3"), CssUtils.
+                SplitStringWithComma("value1,(value,with,comma),value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(val(ue,with,comma),value3"), CssUtils.SplitStringWithComma
+                ("value1,(val(ue,with,comma),value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with)", "comma)", "value3"), CssUtils
+                .SplitStringWithComma("value1,(value,with),comma),value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "( v2,v3)", "(v4, v5)", "value3"), CssUtils
+                .SplitStringWithComma("value1,( v2,v3),(v4, v5),value3"));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("v.al*ue1\"", "( v2,v3)", "\"(v4,v5;);", "value3"), 
+                CssUtils.SplitStringWithComma("v.al*ue1\",( v2,v3),\"(v4,v5;);,value3"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseBlendModeTest() {
+            NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode(null));
+            NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode(CommonCssConstants.NORMAL));
+            NUnit.Framework.Assert.AreEqual(BlendMode.MULTIPLY, CssUtils.ParseBlendMode(CommonCssConstants.MULTIPLY));
+            NUnit.Framework.Assert.AreEqual(BlendMode.SCREEN, CssUtils.ParseBlendMode(CommonCssConstants.SCREEN));
+            NUnit.Framework.Assert.AreEqual(BlendMode.OVERLAY, CssUtils.ParseBlendMode(CommonCssConstants.OVERLAY));
+            NUnit.Framework.Assert.AreEqual(BlendMode.DARKEN, CssUtils.ParseBlendMode(CommonCssConstants.DARKEN));
+            NUnit.Framework.Assert.AreEqual(BlendMode.LIGHTEN, CssUtils.ParseBlendMode(CommonCssConstants.LIGHTEN));
+            NUnit.Framework.Assert.AreEqual(BlendMode.COLOR_DODGE, CssUtils.ParseBlendMode(CommonCssConstants.COLOR_DODGE
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.COLOR_BURN, CssUtils.ParseBlendMode(CommonCssConstants.COLOR_BURN
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.HARD_LIGHT, CssUtils.ParseBlendMode(CommonCssConstants.HARD_LIGHT
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.SOFT_LIGHT, CssUtils.ParseBlendMode(CommonCssConstants.SOFT_LIGHT
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.DIFFERENCE, CssUtils.ParseBlendMode(CommonCssConstants.DIFFERENCE
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.EXCLUSION, CssUtils.ParseBlendMode(CommonCssConstants.EXCLUSION)
+                );
+            NUnit.Framework.Assert.AreEqual(BlendMode.HUE, CssUtils.ParseBlendMode(CommonCssConstants.HUE));
+            NUnit.Framework.Assert.AreEqual(BlendMode.SATURATION, CssUtils.ParseBlendMode(CommonCssConstants.SATURATION
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.COLOR, CssUtils.ParseBlendMode(CommonCssConstants.COLOR));
+            NUnit.Framework.Assert.AreEqual(BlendMode.LUMINOSITY, CssUtils.ParseBlendMode(CommonCssConstants.LUMINOSITY
+                ));
+            NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("invalid"));
+            NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("SCREEN"));
         }
     }
 }
