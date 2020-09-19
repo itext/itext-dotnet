@@ -87,6 +87,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant BACKGROUND_POSITION.</summary>
         public const String BACKGROUND_POSITION = "background-position";
 
+        /// <summary>The Constant BACKGROUND_POSITION_X.</summary>
+        public const String BACKGROUND_POSITION_X = "background-position-x";
+
+        /// <summary>The Constant BACKGROUND_POSITION_Y.</summary>
+        public const String BACKGROUND_POSITION_Y = "background-position-y";
+
         /// <summary>The Constant BACKGROUND_REPEAT.</summary>
         public const String BACKGROUND_REPEAT = "background-repeat";
 
@@ -816,6 +822,14 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant BACKGROUND_POSITION_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_POSITION_VALUES = JavaCollectionsUtil.UnmodifiableSet
             (new HashSet<String>(JavaUtil.ArraysAsList(LEFT, CENTER, BOTTOM, TOP, RIGHT)));
+
+        /// <summary>The Constant BACKGROUND_POSITION_X_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_POSITION_X_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(LEFT, CENTER, RIGHT)));
+
+        /// <summary>The Constant BACKGROUND_POSITION_Y_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_POSITION_Y_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CENTER, BOTTOM, TOP)));
 
         /// <summary>The Constant BORDER_WIDTH_VALUES.</summary>
         public static readonly ICollection<String> BORDER_WIDTH_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet

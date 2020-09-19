@@ -65,8 +65,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
-            if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression
-                ) || CommonCssConstants.UNSET.Equals(shorthandExpression)) {
+            if (CssUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
                 return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.BACKGROUND_COLOR, shorthandExpression), 
                     new CssDeclaration(CommonCssConstants.BACKGROUND_IMAGE, shorthandExpression), new CssDeclaration(CommonCssConstants
                     .BACKGROUND_POSITION, shorthandExpression), new CssDeclaration(CommonCssConstants.BACKGROUND_SIZE, shorthandExpression
@@ -75,7 +74,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_ATTACHMENT, shorthandExpression));
             }
             if (String.IsNullOrEmpty(shorthandExpression.Trim())) {
-                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY);
+                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.BACKGROUND));
                 return new List<CssDeclaration>();
             }
             IList<IList<String>> propsList = CssUtils.ExtractShorthandProperties(shorthandExpression);
@@ -83,16 +83,6 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 , String>();
             FillMapWithPropertiesTypes(resolvedProps);
             foreach (IList<String> props in propsList) {
-                if (props.IsEmpty()) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY);
-                    return new List<CssDeclaration>();
-                }
-                if (resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR) != null) {
-                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
-                        );
-                    return new List<CssDeclaration>();
-                }
-                RemoveSpacesAroundSlash(props);
                 if (!ProcessProperties(props, resolvedProps)) {
                     return new List<CssDeclaration>();
                 }
@@ -100,6 +90,9 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             if (resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR) == null) {
                 resolvedProps.Put(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR, CommonCssConstants.TRANSPARENT
                     );
+            }
+            if (!CheckProperties(resolvedProps)) {
+                return new List<CssDeclaration>();
             }
             return JavaUtil.ArraysAsList(new CssDeclaration(CssBackgroundUtils.GetBackgroundPropertyNameFromType(CssBackgroundUtils.BackgroundPropertyType
                 .BACKGROUND_COLOR), resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR)), new 
@@ -118,6 +111,24 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 CssDeclaration(CssBackgroundUtils.GetBackgroundPropertyNameFromType(CssBackgroundUtils.BackgroundPropertyType
                 .BACKGROUND_ATTACHMENT), resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ATTACHMENT
                 )));
+        }
+
+        private static bool CheckProperties(IDictionary<CssBackgroundUtils.BackgroundPropertyType, String> resolvedProps
+            ) {
+            foreach (KeyValuePair<CssBackgroundUtils.BackgroundPropertyType, String> property in resolvedProps) {
+                if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CssBackgroundUtils.GetBackgroundPropertyNameFromType
+                    (property.Key), property.Value))) {
+                    LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        , property.Value));
+                    return false;
+                }
+                IShorthandResolver resolver = ShorthandResolverFactory.GetShorthandResolver(CssBackgroundUtils.GetBackgroundPropertyNameFromType
+                    (property.Key));
+                if (resolver != null && resolver.ResolveShorthand(property.Value).IsEmpty()) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static void RemoveSpacesAroundSlash(IList<String> props) {
@@ -164,6 +175,17 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static bool ProcessProperties(IList<String> props, IDictionary<CssBackgroundUtils.BackgroundPropertyType
             , String> resolvedProps) {
+            if (props.IsEmpty()) {
+                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    , CommonCssConstants.BACKGROUND));
+                return false;
+            }
+            if (resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR) != null) {
+                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
+                    );
+                return false;
+            }
+            RemoveSpacesAroundSlash(props);
             ICollection<CssBackgroundUtils.BackgroundPropertyType> usedTypes = new HashSet<CssBackgroundUtils.BackgroundPropertyType
                 >();
             bool slashEncountered = false;
@@ -232,6 +254,10 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static CssBackgroundUtils.BackgroundPropertyType ChangePropertyType(CssBackgroundUtils.BackgroundPropertyType
              propertyType, bool slashEncountered, bool isBackgroundOriginUsed) {
+            if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_X || propertyType == CssBackgroundUtils.BackgroundPropertyType
+                .BACKGROUND_POSITION_Y) {
+                propertyType = CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION;
+            }
             if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE) {
                 return slashEncountered ? CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_SIZE : CssBackgroundUtils.BackgroundPropertyType
                     .BACKGROUND_POSITION;
@@ -273,12 +299,6 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 else {
                     resolvedProps.Put(type, resolvedProps.Get(type) + "," + value);
                 }
-            }
-            if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CssBackgroundUtils.GetBackgroundPropertyNameFromType
-                (type), resolvedProps.Get(type)))) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                    , resolvedProps.Get(type)));
-                return false;
             }
             usedTypes.Add(type);
             return true;

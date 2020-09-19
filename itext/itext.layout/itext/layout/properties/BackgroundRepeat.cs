@@ -32,6 +32,16 @@ namespace iText.Layout.Properties {
         /// <see cref="BackgroundRepeat"/>
         /// instance.
         /// </summary>
+        public BackgroundRepeat() {
+            this.repeatX = true;
+            this.repeatY = true;
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </summary>
         /// <param name="repeatX">whether the background repeats in the x dimension.</param>
         /// <param name="repeatY">whether the background repeats in the y dimension.</param>
         public BackgroundRepeat(bool repeatX, bool repeatY) {

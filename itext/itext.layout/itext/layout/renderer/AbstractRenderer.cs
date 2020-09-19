@@ -520,58 +520,103 @@ namespace iText.Layout.Renderer {
                     if (!backgroundAreaIsClipped) {
                         backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                     }
-                    ApplyBorderBox(backgroundArea, false);
-                    PdfXObject backgroundXObject = backgroundImage.GetImage();
-                    if (backgroundXObject == null) {
-                        backgroundXObject = backgroundImage.GetForm();
-                    }
-                    Rectangle imageRectangle;
-                    if (backgroundXObject == null) {
-                        backgroundXObject = iText.Layout.Renderer.AbstractRenderer.CreateXObject(backgroundImage.GetLinearGradientBuilder
-                            (), backgroundArea, drawContext.GetDocument());
-                        imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundXObject.GetHeight
-                            (), backgroundXObject.GetWidth(), backgroundXObject.GetHeight());
-                    }
-                    else {
-                        imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.GetHeight(
-                            ), backgroundImage.GetWidth(), backgroundImage.GetHeight());
-                    }
-                    if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
-                            ));
-                    }
-                    else {
-                        ApplyBorderBox(backgroundArea, true);
-                        drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
-                        MoveImageRectangle(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea);
-                        drawContext.GetCanvas().RestoreState();
-                    }
+                    DrawBackgroundImage(backgroundImage, drawContext, backgroundArea);
                 }
             }
             return backgroundAreaIsClipped;
         }
 
-        private static void MoveImageRectangle(Rectangle imageRectangle, BackgroundImage backgroundImage, DrawContext
-             drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea) {
+        private void DrawBackgroundImage(BackgroundImage backgroundImage, DrawContext drawContext, Rectangle backgroundArea
+            ) {
+            ApplyBorderBox(backgroundArea, false);
+            PdfXObject backgroundXObject = backgroundImage.GetImage();
+            if (backgroundXObject == null) {
+                backgroundXObject = backgroundImage.GetForm();
+            }
+            Rectangle imageRectangle;
+            UnitValue xPosition = UnitValue.CreatePointValue(0);
+            UnitValue yPosition = UnitValue.CreatePointValue(0);
+            if (backgroundXObject == null) {
+                AbstractLinearGradientBuilder gradientBuilder = backgroundImage.GetLinearGradientBuilder();
+                if (gradientBuilder == null) {
+                    return;
+                }
+                // fullWidth and fullHeight is 0 because percentage shifts are ignored for linear-gradients
+                backgroundImage.GetBackgroundPosition().CalculatePositionValues(0, 0, xPosition, yPosition);
+                backgroundXObject = CreateXObject(gradientBuilder, backgroundArea, drawContext.GetDocument());
+                imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
+                    backgroundXObject.GetHeight() - yPosition.GetValue(), backgroundXObject.GetWidth(), backgroundXObject.
+                    GetHeight());
+            }
+            else {
+                backgroundImage.GetBackgroundPosition().CalculatePositionValues(backgroundArea.GetWidth() - backgroundImage
+                    .GetWidth(), backgroundArea.GetHeight() - backgroundImage.GetHeight(), xPosition, yPosition);
+                imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
+                    backgroundImage.GetHeight() - yPosition.GetValue(), backgroundImage.GetWidth(), backgroundImage.GetHeight
+                    ());
+            }
+            if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                logger.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                    ));
+            }
+            else {
+                ApplyBorderBox(backgroundArea, true);
+                drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
+                DrawPdfXObject(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea);
+                drawContext.GetCanvas().RestoreState();
+            }
+        }
+
+        private static void DrawPdfXObject(Rectangle imageRectangle, BackgroundImage backgroundImage, DrawContext 
+            drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea) {
             BlendMode blendMode = backgroundImage.GetBlendMode();
             if (blendMode != BlendMode.NORMAL) {
                 drawContext.GetCanvas().SetExtGState(new PdfExtGState().SetBlendMode(blendMode.GetPdfRepresentation()));
             }
-            float initialX = backgroundImage.IsRepeatX() ? (imageRectangle.GetX() - imageRectangle.GetWidth()) : imageRectangle
-                .GetX();
-            float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
-            imageRectangle.SetY(initialY);
+            float initialX = imageRectangle.GetX();
+            int counterY = 1;
+            bool firstDraw = true;
+            bool isCurrentOverlaps;
+            bool isNextOverlaps;
             do {
+                DrawPdfXObjectHorizontally(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea
+                    , firstDraw);
+                firstDraw = false;
                 imageRectangle.SetX(initialX);
-                do {
-                    drawContext.GetCanvas().AddXObjectFittedIntoRectangle(backgroundXObject, imageRectangle);
-                    imageRectangle.MoveRight(imageRectangle.GetWidth());
+                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea);
+                if (counterY % 2 == 1) {
+                    isNextOverlaps = imageRectangle.MoveDown(imageRectangle.GetHeight() * counterY).Overlaps(backgroundArea);
                 }
-                while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
-                imageRectangle.MoveDown(imageRectangle.GetHeight());
+                else {
+                    isNextOverlaps = imageRectangle.MoveUp(imageRectangle.GetHeight() * counterY).Overlaps(backgroundArea);
+                }
+                ++counterY;
             }
-            while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
+            while (backgroundImage.IsRepeatY() && (isCurrentOverlaps || isNextOverlaps));
+        }
+
+        private static void DrawPdfXObjectHorizontally(Rectangle imageRectangle, BackgroundImage backgroundImage, 
+            DrawContext drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea, bool firstDraw) {
+            bool isItFirstDraw = firstDraw;
+            int counterX = 1;
+            bool isCurrentOverlaps;
+            bool isNextOverlaps;
+            do {
+                if (imageRectangle.Overlaps(backgroundArea) || isItFirstDraw) {
+                    drawContext.GetCanvas().AddXObjectFittedIntoRectangle(backgroundXObject, imageRectangle);
+                    isItFirstDraw = false;
+                }
+                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea);
+                if (counterX % 2 == 1) {
+                    isNextOverlaps = imageRectangle.MoveRight(imageRectangle.GetWidth() * counterX).Overlaps(backgroundArea);
+                }
+                else {
+                    isNextOverlaps = imageRectangle.MoveLeft(imageRectangle.GetWidth() * counterX).Overlaps(backgroundArea);
+                }
+                ++counterX;
+            }
+            while (backgroundImage.IsRepeatX() && (isCurrentOverlaps || isNextOverlaps));
         }
 
         /// <summary>

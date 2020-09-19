@@ -45,8 +45,13 @@ using System;
 namespace iText.StyledXmlParser {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class LogMessageConstant {
+        /// <summary>The Constant SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
+        public const String SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "{0} shorthand property cannot be empty.";
+
         /// <summary>The Constant BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
-        public const String BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "background shorthand property cannot be empty.";
+        [System.ObsoleteAttribute(@"LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY should be used instead."
+            )]
+        public const String BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "Background shorthand property cannot be empty.";
 
         /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
         public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";

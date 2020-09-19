@@ -61,6 +61,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.BACKGROUND_COLOR, CommonCssConstants.TRANSPARENT);
             defaultValues.Put(CommonCssConstants.BACKGROUND_IMAGE, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.BACKGROUND_POSITION, "0% 0%");
+            defaultValues.Put(CommonCssConstants.BACKGROUND_POSITION_X, "0%");
+            defaultValues.Put(CommonCssConstants.BACKGROUND_POSITION_Y, "0%");
             defaultValues.Put(CommonCssConstants.BACKGROUND_REPEAT, CommonCssConstants.REPEAT);
             defaultValues.Put(CommonCssConstants.BACKGROUND_CLIP, CommonCssConstants.BORDER_BOX);
             defaultValues.Put(CommonCssConstants.BACKGROUND_ORIGIN, CommonCssConstants.PADDING_BOX);

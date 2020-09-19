@@ -954,6 +954,14 @@ namespace iText.StyledXmlParser.Css.Util {
                 (headChildElement.GetAttribute(CommonAttributeConstants.REL));
         }
 
+        /// <summary>Checks if value is initial, inherit or unset.</summary>
+        /// <param name="value">value to check.</param>
+        /// <returns>true if value is initial, inherit or unset. false otherwise.</returns>
+        public static bool IsInitialOrInheritOrUnset(String value) {
+            return CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value) || CommonCssConstants
+                .UNSET.Equals(value);
+        }
+
         private static bool AddRange(RangeBuilder builder, String range) {
             range = range.Trim();
             if (range.Matches("[uU]\\+[0-9a-fA-F?]{1,6}(-[0-9a-fA-F]{1,6})?")) {

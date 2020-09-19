@@ -150,58 +150,27 @@ namespace iText.StyledXmlParser.Css.Validate {
         [NUnit.Framework.Test]
         public virtual void BackgroundPositionValidationTest() {
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "initial")));
+                .BACKGROUND_POSITION_X, "initial")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "0")));
+                .BACKGROUND_POSITION_Y, "-0")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5px")));
+                .BACKGROUND_POSITION_Y, "5px")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5em")));
+                .BACKGROUND_POSITION_X, "5em")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5px 5%")));
+                .BACKGROUND_POSITION_Y, "5px, 5%, bottom")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "top")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left top")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "top left")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "50px top")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left 50px")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left 50px bottom 20px")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left 50px bottom")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left 10% center")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5px, 5%, left")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5px 5%, top")));
+                .BACKGROUND_POSITION_X, "left 5%, right")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5")));
+                .BACKGROUND_POSITION_X, "5")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "ja")));
+                .BACKGROUND_POSITION_Y, "ja")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "5px ja")));
+                .BACKGROUND_POSITION_X, "initial 5px")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "initial 5px")));
+                .BACKGROUND_POSITION_Y, "ja, 5px")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "ja, 5px")));
-            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "initial, 5px")));
-            // TODO DEVSIX-1457 change the assertions below when background-position will be fully supported.
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "top top")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left left")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "top 50px")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "50px left")));
-            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
-                .BACKGROUND_POSITION, "left 50px center 20px")));
+                .BACKGROUND_POSITION_X, "initial, 5px")));
         }
 
         [NUnit.Framework.Test]

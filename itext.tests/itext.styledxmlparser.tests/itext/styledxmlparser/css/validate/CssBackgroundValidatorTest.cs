@@ -66,7 +66,7 @@ namespace iText.StyledXmlParser.Css.Validate {
 
         [NUnit.Framework.Test]
         public virtual void PropertyValueWithMultiTypesCorrespondsPropertyTypeTest() {
-            ICssDataTypeValidator positionValidator = new CssBackgroundValidator("background-position");
+            ICssDataTypeValidator positionValidator = new CssBackgroundValidator("background-position-x");
             ICssDataTypeValidator sizeValidator = new CssBackgroundValidator("background-size");
             NUnit.Framework.Assert.IsTrue(positionValidator.IsValid("5px"));
             NUnit.Framework.Assert.IsTrue(sizeValidator.IsValid("5px"));
@@ -87,18 +87,40 @@ namespace iText.StyledXmlParser.Css.Validate {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckMultiValuePositionXYTest() {
+            ICssDataTypeValidator positionValidator = new CssBackgroundValidator("background-position-x");
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("50px left"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("50px bottom"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("center 50pt"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("50px 50pt"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("left right"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("bottom"));
+            NUnit.Framework.Assert.IsTrue(positionValidator.IsValid("left 10pt"));
+            NUnit.Framework.Assert.IsTrue(positionValidator.IsValid("center"));
+            positionValidator = new CssBackgroundValidator("background-position-y");
+            NUnit.Framework.Assert.IsTrue(positionValidator.IsValid("bottom 10pt"));
+            NUnit.Framework.Assert.IsTrue(positionValidator.IsValid("10pt"));
+            NUnit.Framework.Assert.IsFalse(positionValidator.IsValid("right"));
+            ICssDataTypeValidator notPositionValidator = new CssBackgroundValidator("background-size");
+            NUnit.Framework.Assert.IsTrue(notPositionValidator.IsValid("10px 15pt"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MultiValuesAllowedForThisTypeTest() {
             ICssDataTypeValidator validator = new CssBackgroundValidator("background-size");
             NUnit.Framework.Assert.IsTrue(validator.IsValid("5px 10%"));
-            validator = new CssBackgroundValidator("background-position");
-            NUnit.Framework.Assert.IsTrue(validator.IsValid("5px 10%"));
-            // TODO DEVSIX-1457 change to assertFalse when background-position property will be supported.
-            NUnit.Framework.Assert.IsTrue(validator.IsValid("5px 5px 5px 5px 5px 5px 5px 5px 5px 5px 5px 5px 5px"));
+            validator = new CssBackgroundValidator("background-position-x");
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("left 10px"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("5px 10%"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("left left left left left"));
+            validator = new CssBackgroundValidator("background-position-y");
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("bottom 10px"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("5px 10%"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("bottom bottom bottom bottom"));
             validator = new CssBackgroundValidator("background-repeat");
             NUnit.Framework.Assert.IsTrue(validator.IsValid("repeat no-repeat"));
-            // TODO DEVSIX-4370 change to assertFalse when background-repeat property will be fully supported.
-            NUnit.Framework.Assert.IsTrue(validator.IsValid("repeat repeat repeat repeat repeat repeat repeat repeat")
-                );
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("repeat repeat repeat repeat repeat repeat repeat repeat"
+                ));
             validator = new CssBackgroundValidator("background-image");
             NUnit.Framework.Assert.IsFalse(validator.IsValid("url(something.png) url(something2.png)"));
             validator = new CssBackgroundValidator("background-clip");

@@ -37,6 +37,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// This validator should not be used with non-background properties.
     /// </remarks>
     public class CssBackgroundValidator : ICssDataTypeValidator {
+        private const int MAX_AMOUNT_OF_VALUES = 2;
+
         private readonly String backgroundProperty;
 
         /// <summary>
@@ -54,18 +56,17 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (objectString == null) {
                 return false;
             }
-            if (CommonCssConstants.INITIAL.Equals(objectString) || CommonCssConstants.INHERIT.Equals(objectString) || 
-                CommonCssConstants.UNSET.Equals(objectString)) {
+            if (CssUtils.IsInitialOrInheritOrUnset(objectString)) {
                 return true;
             }
             // Actually it's not shorthand but extractShorthandProperties method works exactly as needed in this case
             IList<IList<String>> extractedProperties = CssUtils.ExtractShorthandProperties(objectString);
             foreach (IList<String> propertyValues in extractedProperties) {
-                if (propertyValues.IsEmpty()) {
+                if (propertyValues.IsEmpty() || propertyValues.Count > MAX_AMOUNT_OF_VALUES) {
                     return false;
                 }
-                foreach (String propertyValue in propertyValues) {
-                    if (!IsValidProperty(propertyValue, propertyValues)) {
+                for (int i = 0; i < propertyValues.Count; i++) {
+                    if (!IsValidProperty(propertyValues, i)) {
                         return false;
                     }
                 }
@@ -73,12 +74,12 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             return true;
         }
 
-        private bool IsValidProperty(String propertyValue, IList<String> propertyValues) {
-            if (IsPropertyValueCorrespondsPropertyType(propertyValue)) {
-                if (propertyValues.Count > 1) {
-                    if (IsMultiValueAllowedForThisType() && IsMultiValueAllowedForThisValue(propertyValue)) {
+        private bool IsValidProperty(IList<String> propertyValues, int index) {
+            if (IsPropertyValueCorrespondsPropertyType(propertyValues[index])) {
+                if (propertyValues.Count == MAX_AMOUNT_OF_VALUES) {
+                    if (IsMultiValueAllowedForThisType() && IsMultiValueAllowedForThisValue(propertyValues[index])) {
                         // TODO DEVSIX-2106 Some extra validations for currently not supported properties.
-                        return true;
+                        return CheckMultiValuePositionXY(propertyValues, index);
                     }
                     else {
                         return false;
@@ -89,6 +90,17 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             return false;
         }
 
+        private bool CheckMultiValuePositionXY(IList<String> propertyValues, int index) {
+            if (CommonCssConstants.BACKGROUND_POSITION_X.Equals(backgroundProperty) || CommonCssConstants.BACKGROUND_POSITION_Y
+                .Equals(backgroundProperty)) {
+                if (CommonCssConstants.BACKGROUND_POSITION_VALUES.Contains(propertyValues[index]) && index == 1) {
+                    return false;
+                }
+                return CommonCssConstants.BACKGROUND_POSITION_VALUES.Contains(propertyValues[index]) || index == 1;
+            }
+            return true;
+        }
+
         private bool IsMultiValueAllowedForThisType() {
             return !CommonCssConstants.BACKGROUND_ORIGIN.Equals(backgroundProperty) && !CommonCssConstants.BACKGROUND_CLIP
                 .Equals(backgroundProperty) && !CommonCssConstants.BACKGROUND_IMAGE.Equals(backgroundProperty) && !CommonCssConstants
@@ -97,7 +109,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
 
         private static bool IsMultiValueAllowedForThisValue(String value) {
             return !CommonCssConstants.REPEAT_X.Equals(value) && !CommonCssConstants.REPEAT_Y.Equals(value) && !CommonCssConstants
-                .COVER.Equals(value) && !CommonCssConstants.CONTAIN.Equals(value);
+                .COVER.Equals(value) && !CommonCssConstants.CONTAIN.Equals(value) && !CommonCssConstants.CENTER.Equals
+                (value);
         }
 
         private bool IsPropertyValueCorrespondsPropertyType(String value) {
@@ -109,14 +122,18 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (CssBackgroundUtils.GetBackgroundPropertyNameFromType(propertyType).Equals(backgroundProperty)) {
                 return true;
             }
+            if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION && (CommonCssConstants.BACKGROUND_POSITION_X
+                .Equals(backgroundProperty) || CommonCssConstants.BACKGROUND_POSITION_Y.Equals(backgroundProperty))) {
+                return true;
+            }
             if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ORIGIN_OR_CLIP && (CommonCssConstants
                 .BACKGROUND_CLIP.Equals(backgroundProperty) || CommonCssConstants.BACKGROUND_ORIGIN.Equals(backgroundProperty
                 ))) {
                 return true;
             }
             return propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE && (CommonCssConstants
-                .BACKGROUND_POSITION.Equals(backgroundProperty) || CommonCssConstants.BACKGROUND_SIZE.Equals(backgroundProperty
-                ));
+                .BACKGROUND_POSITION_X.Equals(backgroundProperty) || CommonCssConstants.BACKGROUND_POSITION_Y.Equals(backgroundProperty
+                ) || CommonCssConstants.BACKGROUND_SIZE.Equals(backgroundProperty));
         }
     }
 }

@@ -51,6 +51,14 @@ namespace iText.StyledXmlParser.Css.Util {
                     return CommonCssConstants.BACKGROUND_POSITION;
                 }
 
+                case CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_X: {
+                    return CommonCssConstants.BACKGROUND_POSITION_X;
+                }
+
+                case CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_Y: {
+                    return CommonCssConstants.BACKGROUND_POSITION_Y;
+                }
+
                 case CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_SIZE: {
                     return CommonCssConstants.BACKGROUND_SIZE;
                 }
@@ -95,10 +103,19 @@ namespace iText.StyledXmlParser.Css.Util {
             if (CommonCssConstants.BACKGROUND_ATTACHMENT_VALUES.Contains(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ATTACHMENT;
             }
-            if (CommonCssConstants.BACKGROUND_POSITION_VALUES.Contains(value)) {
+            if (CommonCssConstants.BACKGROUND_POSITION_X_VALUES.Contains(value) && !CommonCssConstants.CENTER.Equals(value
+                )) {
+                return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_X;
+            }
+            if (CommonCssConstants.BACKGROUND_POSITION_Y_VALUES.Contains(value) && !CommonCssConstants.CENTER.Equals(value
+                )) {
+                return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_Y;
+            }
+            if (CommonCssConstants.CENTER.Equals(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION;
             }
-            if ("0".Equals(value) || CssUtils.IsMetricValue(value) || CssUtils.IsRelativeValue(value)) {
+            if (((int?)0).Equals(CssUtils.ParseInteger(value)) || CssUtils.IsMetricValue(value) || CssUtils.IsRelativeValue
+                (value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE;
             }
             if (CommonCssConstants.BACKGROUND_SIZE_VALUES.Contains(value)) {
@@ -117,6 +134,8 @@ namespace iText.StyledXmlParser.Css.Util {
             BACKGROUND_COLOR,
             BACKGROUND_IMAGE,
             BACKGROUND_POSITION,
+            BACKGROUND_POSITION_X,
+            BACKGROUND_POSITION_Y,
             BACKGROUND_SIZE,
             BACKGROUND_REPEAT,
             BACKGROUND_ORIGIN,
