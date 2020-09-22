@@ -151,7 +151,7 @@ namespace iText.Kernel.Font {
             return 1;
         }
 
-        /// <summary>Checks whether the glyph is appendable, i.e. has valid unicode and code values</summary>
+        /// <summary>Checks whether the glyph is appendable, i.e. has valid unicode and code values.</summary>
         /// <param name="glyph">
         /// not-null
         /// <see cref="iText.IO.Font.Otf.Glyph"/>
@@ -162,6 +162,11 @@ namespace iText.Kernel.Font {
             return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
+        /// <summary>Get the font encoding.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Font.FontEncoding"/>
+        /// </returns>
         public virtual FontEncoding GetFontEncoding() {
             return fontEncoding;
         }
