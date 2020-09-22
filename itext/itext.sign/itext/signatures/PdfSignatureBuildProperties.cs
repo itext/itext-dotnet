@@ -64,7 +64,7 @@ namespace iText.Signatures {
         /// <see cref="PdfSignatureApp"/>
         /// dictionary.
         /// </summary>
-        /// <param name="name"/>
+        /// <param name="name">the signature creator's name to be set</param>
         public virtual void SetSignatureCreator(String name) {
             GetPdfSignatureAppProperty().SetSignatureCreator(name);
         }
