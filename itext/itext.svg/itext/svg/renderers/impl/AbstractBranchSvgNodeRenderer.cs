@@ -72,7 +72,7 @@ namespace iText.Svg.Renderers.Impl {
         /// maintains its state
         /// </param>
         protected internal override void DoDraw(SvgDrawContext context) {
-            // if branch has no children, don't do anything
+            // If branch has no children, don't do anything
             if (GetChildren().Count > 0) {
                 PdfStream stream = new PdfStream();
                 stream.Put(PdfName.Type, PdfName.XObject);
@@ -106,7 +106,7 @@ namespace iText.Svg.Renderers.Impl {
                     }
                 }
                 CleanUp(context);
-                // transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
+                // Transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
                 context.GetCurrentCanvas().AddXObject(xObject, 0, 0);
             }
         }

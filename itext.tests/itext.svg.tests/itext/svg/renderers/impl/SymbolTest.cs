@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -49,208 +48,152 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void SimpleSymbolTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleSymbolTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void UseTagFirstSymbolAfterTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "useTagFirstSymbolAfterTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void HeightPxAttrTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "heightPxAttrTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void HeightPercentsAttrTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
+            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "heightPercentsAttrTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void WidthPxAttrTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthPxAttrTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void WidthPercentsAttrTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
+            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthPercentsAttrTest");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void WidthHeightAttrPxTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrPxTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 4)]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
         public virtual void WidthHeightAttrPercentsPxTest() {
+            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrPercentsPxTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
-        [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 3)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 3)]
         public virtual void PreserveAspectRatioViewBoxTest() {
+            // TODO DEVSIX-3537 Processing of preserveAspectRatio attribute with offsets x and y is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioViewBoxTest");
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-2257")]
         public virtual void XYInUseWithDefsTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "xYInUseWithDefsTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void ClassAttributeTestWithCssTest() {
+            // TODO DEVSIX-4563 Processing of attributes from an external CSS is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "classAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void StyleAttributeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "styleAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void StyleAttrInUseTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "styleAttrInUseTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void BothStyleAttributeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "bothStyleAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void OpacityAttributeTest() {
+            // TODO DEVSIX-2258 Processing of stroke attribute is not currently correct supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void VisibilityAttributeTest() {
+            // TODO DEVSIX-2254 Processing of visibility attribute is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void DisplayNoneAttributeTest() {
+            // TODO DEVSIX-4564 Processing of display attribute is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneAttrTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void DisplayAttributeWithNoUseTagTest() {
+            // TODO DEVSIX-4564 Processing of display attribute is not currently supported
             //Expects that nothing will be displayed on the page as it's done in Chrome browser
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "displayAttrWithNoUseTagTest");
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void SimpleImageTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleImageTest", properties);
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void LinearGradientSymbolTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradientSymbolTest", properties);
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void UseHeightWidthAllUnitsTest() {
+            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useHeightWidthAllUnitsTest", properties);
         }
 
         [NUnit.Framework.Test]
-        // TODO Check cmp after feature implementation. DEVSIX-2257
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void UseSymbolHeightWidthAllUnitsTest() {
+            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
+            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolHeightWidthAllUnitsTest", properties
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 3)]
         public virtual void UseSymbolXYContrudictionAllUnitsTest() {
-            // TODO Check cmp after feature implementation. DEVSIX-2257
+            // TODO DEVSIX-4388 The handling of x and y attributes with percentages is not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolXYContrudictionAllUnitsTest", properties
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 3)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 6)]
         public virtual void UseSymbolCoordinatesContrudictionTest() {
-            // TODO: check cmp after feature implementation DEVSIX-2257
+            // TODO DEVSIX-2654 Percent values are not correctly processed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolCoordinatesContrudiction", properties
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 5)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 5)]
         public virtual void WidthHeightAttrInteractionTest() {
-            // TODO: check cmp after feature implementation DEVSIX-2257
+            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrInteraction", properties);
         }
     }

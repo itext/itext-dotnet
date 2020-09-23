@@ -35,7 +35,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;linearGradient&gt; tag.
     /// </summary>
-    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer {
+    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer, INoDrawSvgNodeRenderer {
         public override Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
             , float parentOpacity) {
             if (objectBoundingBox == null) {
