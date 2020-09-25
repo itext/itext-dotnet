@@ -273,7 +273,7 @@ namespace iText.Kernel.Colors {
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            int result = colorSpace != null ? colorSpace.GetHashCode() : 0;
+            int result = colorSpace != null ? colorSpace.GetPdfObject().GetHashCode() : 0;
             result = 31 * result + (colorValue != null ? JavaUtil.ArraysHashCode(colorValue) : 0);
             return result;
         }
