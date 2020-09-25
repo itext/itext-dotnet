@@ -159,7 +159,7 @@ namespace iText.Layout {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 textElement.SetFontSize(50);
                 doc.Add(new Paragraph(textElement));
             }
@@ -461,7 +461,7 @@ namespace iText.Layout {
                  + "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
                  + "officia deserunt mollit anim id est laborum. ";
             Div div = new Div().Add(new Paragraph(text + text + text));
-            div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+            div.SetBackgroundImage(backgroundImage);
             doc.Add(div);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

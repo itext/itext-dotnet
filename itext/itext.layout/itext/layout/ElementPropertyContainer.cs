@@ -478,6 +478,28 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Specifies a background image for the Element.</summary>
+        /// <param name="image">
+        /// 
+        /// <see cref="iText.Layout.Properties.BackgroundImage"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBackgroundImage(BackgroundImage image) {
+            SetProperty(Property.BACKGROUND_IMAGE, image);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Specifies a list of background images for the Element.</summary>
+        /// <param name="imagesList">
+        /// List of
+        /// <see cref="iText.Layout.Properties.BackgroundImage"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBackgroundImage(IList<BackgroundImage> imagesList) {
+            SetProperty(Property.BACKGROUND_IMAGE, imagesList);
+            return (T)(Object)this;
+        }
+
         /// <summary>Sets a border for all four edges of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
