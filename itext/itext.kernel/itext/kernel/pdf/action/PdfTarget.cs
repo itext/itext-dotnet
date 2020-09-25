@@ -186,8 +186,16 @@ namespace iText.Kernel.Pdf.Action {
                 throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
             }
             else {
-                Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page)));
-                Put(PdfName.A, new PdfNumber(page.GetAnnotations().IndexOf(pdfAnnotation)));
+                Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page) - 1));
+                int indexOfAnnotation = -1;
+                IList<PdfAnnotation> annots = page.GetAnnotations();
+                for (int i = 0; i < annots.Count; i++) {
+                    if (annots[i] != null && pdfAnnotation.GetPdfObject().Equals(annots[i].GetPdfObject())) {
+                        indexOfAnnotation = i;
+                        break;
+                    }
+                }
+                Put(PdfName.A, new PdfNumber(indexOfAnnotation));
             }
             return this;
         }
