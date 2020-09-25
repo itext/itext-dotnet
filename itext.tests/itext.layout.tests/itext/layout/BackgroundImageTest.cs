@@ -228,7 +228,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument)).Build();
+                    (pdfDocument, "itis.jpg")).Build();
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -243,7 +243,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument)).SetBackgroundRepeat(new BackgroundRepeat(false, true)).Build();
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(false, true)).Build();
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -258,7 +258,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument)).SetBackgroundRepeat(new BackgroundRepeat(true, false)).Build();
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(true, false)).Build();
                 NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -273,7 +273,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument)).SetBackgroundRepeat(new BackgroundRepeat(false, false)).Build();
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(false, false)).Build();
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
                 NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
@@ -297,17 +297,53 @@ namespace iText.Layout {
                 PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(imageXObject
                     ).Build();
-                div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                div.SetBackgroundImage(backgroundImage);
                 doc.Add(div);
                 iText.Layout.Properties.BackgroundImage backgroundFormXObject = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument)).Build();
+                    (pdfDocument, "itis.jpg")).Build();
                 div = new Div().Add(new Paragraph(text + text + text));
-                div.SetProperty(Property.BACKGROUND_IMAGE, backgroundFormXObject);
+                div.SetBackgroundImage(backgroundFormXObject);
                 doc.Add(div);
                 pdfDocument.Close();
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                     , "diff"));
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundXFormObjectWithBboxTest() {
+            // There shall be rock texture picture at the left top corner with 30pt width and 60pt height
+            String filename = "backgroundComplicatedXFormObjectTest";
+            String fileName = filename + ".pdf";
+            String outFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                     + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
+                     + "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
+                     + "officia deserunt mollit anim id est laborum. ";
+                iText.Layout.Properties.BackgroundImage backgroundFormXObject = new BackgroundImage.Builder().SetBackgroundRepeat
+                    (new BackgroundRepeat(false, false)).SetImage(CreateFormXObject(pdfDocument, "rock_texture.jpg").SetBBox
+                    (new PdfArray(new Rectangle(70, -15, 50, 75)))).Build();
+                Div div = new Div().Add(new Paragraph(text + text + text));
+                div.SetBackgroundImage(backgroundFormXObject);
+                doc.Add(div);
+                pdfDocument.Close();
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                    , "diff"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithBboxTest() {
+            // There shall be default rock texture picture with 100pt width and height at the left top corner. BBox shall not do any differences.
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"))
+                .Put(PdfName.BBox, new PdfArray(new Rectangle(70, -15, 500, 750)));
+            iText.Layout.Properties.BackgroundImage image = new BackgroundImage.Builder().SetImage(xObject).SetBackgroundRepeat
+                (new BackgroundRepeat(false, false)).Build();
+            BackgroundImageGenericTest("backgroundImageWithBbox", image);
         }
 
         [NUnit.Framework.Test]
@@ -406,8 +442,8 @@ namespace iText.Layout {
                 ().GetValue(), JavaUtil.ArraysAsList(topBackgroundImage, backgroundImage));
         }
 
-        private PdfFormXObject CreateFormXObject(PdfDocument pdfDocument) {
-            ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg");
+        private PdfFormXObject CreateFormXObject(PdfDocument pdfDocument, String pictureName) {
+            ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + pictureName);
             PdfFormXObject template = new PdfFormXObject(new Rectangle(image.GetWidth(), image.GetHeight()));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
             canvas.AddImage(image, 0, 0, image.GetWidth(), false).Flush();
@@ -443,7 +479,12 @@ namespace iText.Layout {
             if (angle != null) {
                 div.SetRotationAngle(angle.Value);
             }
-            div.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+            if (backgroundImage is iText.Layout.Properties.BackgroundImage) {
+                div.SetBackgroundImage((iText.Layout.Properties.BackgroundImage)backgroundImage);
+            }
+            else {
+                div.SetBackgroundImage((IList<iText.Layout.Properties.BackgroundImage>)backgroundImage);
+            }
             doc.Add(div);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
