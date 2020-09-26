@@ -678,7 +678,8 @@ namespace iText.Kernel.Pdf.Canvas {
                                 float xPlacementAddition = 0;
                                 int currentGlyphIndex = i;
                                 Glyph currentGlyph = text.Get(i);
-                                while (currentGlyph != null && currentGlyph.GetXPlacement() != 0) {
+                                // if xPlacement is not zero, anchorDelta is expected to be non-zero as well
+                                while (currentGlyph != null && (currentGlyph.GetAnchorDelta() != 0)) {
                                     xPlacementAddition += currentGlyph.GetXPlacement();
                                     if (currentGlyph.GetAnchorDelta() == 0) {
                                         break;
