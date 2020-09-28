@@ -176,7 +176,6 @@ namespace iText.Kernel.Pdf {
                 using (PdfDocument fromDocument = new PdfDocument(new PdfReader(new MemoryStream(fromDocBytes)))) {
                     // This test verifies that if the PDF is invalid, i.e. if OCProperties.OCGs is empty in the document,
                     // but there are OCGs that are used on the page, then OCGs will be copied
-                    // TODO DEVSIX-4393 I think this is normal behavior, Yulian what you think about it?
                     NUnit.Framework.Assert.IsTrue(fromDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
                         ).GetAsArray(PdfName.OCGs).IsEmpty());
                     fromDocument.CopyPagesTo(1, 1, toDocument);

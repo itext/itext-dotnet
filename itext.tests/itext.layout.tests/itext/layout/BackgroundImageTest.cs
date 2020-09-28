@@ -221,7 +221,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundXObject() {
-            //TODO DEVSIX-3108
             String filename = "backgroundXObject";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
