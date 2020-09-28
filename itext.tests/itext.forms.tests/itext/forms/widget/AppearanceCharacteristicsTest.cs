@@ -41,9 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Forms;
+using iText.Forms.Fields;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -74,6 +78,50 @@ namespace iText.Forms.Widget {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderStyleInCreatedFormFieldsTest() {
+            //TODO: update cmp file after fixing DEVSIX-836
+            String outPdf = destinationFolder + "borderStyleInCreatedFormFields.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            PdfFormField formField1 = PdfTextFormField.CreateText(doc, new Rectangle(100, 600, 100, 50), "firstField", 
+                "Hello, iText!");
+            formField1.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_BEVELED);
+            formField1.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+            PdfFormField formField2 = PdfTextFormField.CreateText(doc, new Rectangle(100, 500, 100, 50), "secondField"
+                , "Hello, iText!");
+            formField2.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_UNDERLINE);
+            formField2.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+            PdfFormField formField3 = PdfTextFormField.CreateText(doc, new Rectangle(100, 400, 100, 50), "thirdField", 
+                "Hello, iText!");
+            formField3.GetWidgets()[0].SetBorderStyle(PdfAnnotation.STYLE_INSET);
+            formField3.SetBorderWidth(2).SetBorderColor(ColorConstants.BLUE);
+            form.AddField(formField1);
+            form.AddField(formField2);
+            form.AddField(formField3);
+            form.FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, sourceFolder + "cmp_borderStyleInCreatedFormFields.pdf"
+                , destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UpdatingBorderStyleInFormFieldsTest() {
+            //TODO: update cmp file after fixing DEVSIX-836
+            String inputPdf = sourceFolder + "borderStyleInCreatedFormFields.pdf";
+            String outPdf = destinationFolder + "updatingBorderStyleInFormFields.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(inputPdf), new PdfWriter(outPdf));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, false);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            fields.Get("firstField").SetValue("New Value 1");
+            fields.Get("secondField").SetValue("New Value 2");
+            fields.Get("thirdField").SetValue("New Value 3");
+            form.FlattenFields();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, sourceFolder + "cmp_updatingBorderStyleInFormFields.pdf"
+                , destinationFolder));
         }
     }
 }
