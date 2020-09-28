@@ -529,6 +529,8 @@ namespace iText.Layout.Renderer {
         private void DrawBackgroundImage(BackgroundImage backgroundImage, DrawContext drawContext, Rectangle backgroundArea
             ) {
             ApplyBorderBox(backgroundArea, false);
+            float[] imageWidthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 
+                backgroundArea.GetWidth(), backgroundArea.GetHeight());
             PdfXObject backgroundXObject = backgroundImage.GetImage();
             if (backgroundXObject == null) {
                 backgroundXObject = backgroundImage.GetForm();
@@ -545,15 +547,13 @@ namespace iText.Layout.Renderer {
                 backgroundImage.GetBackgroundPosition().CalculatePositionValues(0, 0, xPosition, yPosition);
                 backgroundXObject = CreateXObject(gradientBuilder, backgroundArea, drawContext.GetDocument());
                 imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
-                    backgroundXObject.GetHeight() - yPosition.GetValue(), backgroundXObject.GetWidth(), backgroundXObject.
-                    GetHeight());
+                    imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight[1]);
             }
             else {
-                backgroundImage.GetBackgroundPosition().CalculatePositionValues(backgroundArea.GetWidth() - backgroundImage
-                    .GetWidth(), backgroundArea.GetHeight() - backgroundImage.GetHeight(), xPosition, yPosition);
+                backgroundImage.GetBackgroundPosition().CalculatePositionValues(backgroundArea.GetWidth() - imageWidthAndHeight
+                    [0], backgroundArea.GetHeight() - imageWidthAndHeight[1], xPosition, yPosition);
                 imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
-                    backgroundImage.GetHeight() - yPosition.GetValue(), backgroundImage.GetWidth(), backgroundImage.GetHeight
-                    ());
+                    imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight[1]);
             }
             if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));

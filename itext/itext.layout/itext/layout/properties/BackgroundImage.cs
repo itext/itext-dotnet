@@ -64,6 +64,8 @@ namespace iText.Layout.Properties {
 
         private BackgroundPosition position;
 
+        private BackgroundSize backgroundSize;
+
         /// <summary>
         /// Creates a new
         /// <see cref="BackgroundImage"/>
@@ -84,6 +86,11 @@ namespace iText.Layout.Properties {
         /// <see cref="BackgroundPosition"/>
         /// instance.
         /// </param>
+        /// <param name="backgroundSize">
+        /// background-size property.
+        /// <see cref="BackgroundSize"/>
+        /// instance.
+        /// </param>
         /// <param name="linearGradientBuilder">
         /// background-image property.
         /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
@@ -95,11 +102,13 @@ namespace iText.Layout.Properties {
         /// instance.
         /// </param>
         protected internal BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BackgroundPosition position, 
-            AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode) {
+            BackgroundSize backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode
+            ) {
             this.image = image;
             this.repeatX = repeat.IsRepeatX();
             this.repeatY = repeat.IsRepeatY();
             this.position = position;
+            this.backgroundSize = backgroundSize;
             this.linearGradientBuilder = linearGradientBuilder;
             if (blendMode != null) {
                 this.blendMode = blendMode;
@@ -128,7 +137,7 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), null, blendMode) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode) {
         }
 
         /// <summary>
@@ -153,7 +162,7 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), null, blendMode) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode) {
         }
 
         /// <summary>
@@ -173,7 +182,7 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -193,7 +202,7 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -208,7 +217,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image)
-            : this(image, new BackgroundRepeat(), new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
+                ) {
         }
 
         /// <summary>
@@ -223,7 +233,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image)
-            : this(image, new BackgroundRepeat(), new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
+                ) {
         }
 
         /// <summary>
@@ -240,7 +251,8 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), new BackgroundSize(), null
+                , DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -257,7 +269,8 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), null, DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), new BackgroundSize(), null
+                , DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -292,8 +305,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode)
-            : this(null, new BackgroundRepeat(false, false), new BackgroundPosition(), linearGradientBuilder, blendMode
-                ) {
+            : this(null, new BackgroundRepeat(false, false), new BackgroundPosition(), new BackgroundSize(), linearGradientBuilder
+                , blendMode) {
         }
 
         public virtual PdfImageXObject GetImage() {
@@ -329,10 +342,34 @@ namespace iText.Layout.Properties {
             return repeatY;
         }
 
+        /// <summary>Gets the background size property.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="BackgroundSize"/>
+        /// instance
+        /// </returns>
+        public virtual BackgroundSize GetBackgroundSize() {
+            return backgroundSize;
+        }
+
+        /// <summary>Gets initial image width.</summary>
+        public virtual float GetImageWidth() {
+            return (float)image.GetWidth();
+        }
+
+        /// <summary>Gets initial image height.</summary>
+        public virtual float GetImageHeight() {
+            return (float)image.GetHeight();
+        }
+
+        /// <summary>Gets initial image width.</summary>
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageWidth() instead.")]
         public virtual float GetWidth() {
             return (float)image.GetWidth();
         }
 
+        /// <summary>Gets initial image height.</summary>
+        [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageHeight() instead.")]
         public virtual float GetHeight() {
             return (float)image.GetHeight();
         }
@@ -361,6 +398,8 @@ namespace iText.Layout.Properties {
             private BackgroundRepeat repeat = new BackgroundRepeat();
 
             private BlendMode blendMode = DEFAULT_BLEND_MODE;
+
+            private BackgroundSize backgroundSize = new BackgroundSize();
 
             public Builder() {
             }
@@ -456,6 +495,23 @@ namespace iText.Layout.Properties {
                 return this;
             }
 
+            /// <summary>Set the image's backgroundSize.</summary>
+            /// <param name="backgroundSize">
+            /// 
+            /// <see cref="BackgroundSize"/>
+            /// to be set.
+            /// </param>
+            /// <returns>
+            /// this
+            /// <see cref="Builder"/>.
+            /// </returns>
+            public virtual BackgroundImage.Builder SetBackgroundSize(BackgroundSize backgroundSize) {
+                if (backgroundSize != null) {
+                    this.backgroundSize = backgroundSize;
+                }
+                return this;
+            }
+
             /// <summary>
             /// Builds new
             /// <see cref="BackgroundImage"/>
@@ -466,7 +522,7 @@ namespace iText.Layout.Properties {
             /// <see cref="BackgroundImage"/>.
             /// </returns>
             public virtual BackgroundImage Build() {
-                return new BackgroundImage(image, repeat, position, linearGradientBuilder, blendMode);
+                return new BackgroundImage(image, repeat, position, backgroundSize, linearGradientBuilder, blendMode);
             }
         }
     }

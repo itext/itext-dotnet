@@ -168,6 +168,170 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPercentWidth() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentWidth.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentWidth.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(30), null);
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPercentHeight() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeight.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeight.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePercentValue(30));
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPercentHeightAndWidth() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeightAndWidth.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeightAndWidth.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(20), UnitValue.
+                    CreatePercentValue(20));
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPointWidth() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointWidth.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointWidth.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(15), null);
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPointHeight() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeight.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeight.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePointValue(20));
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithPointHeightAndWidth() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeightAndWidth.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeightAndWidth.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(50), UnitValue.CreatePointValue
+                    (100));
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageWithLowWidthAndHeight() {
+            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            String outFileName = DESTINATION_FOLDER + "backgroundImageWithLowWidthAndHeight.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithLowWidthAndHeight.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
+                )))) {
+                Document doc = new Document(pdfDocument);
+                Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    );
+                textElement.SetFontSize(50);
+                backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(-1), UnitValue.CreatePointValue
+                    (-1));
+                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                doc.Add(new Paragraph(textElement));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BackgroundImageWithoutRepeatXTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
