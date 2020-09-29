@@ -50,21 +50,31 @@ namespace iText.Layout.Properties {
 
         protected internal PdfXObject image;
 
-        /// <summary>Whether the background repeats in the x dimension.</summary>
-        [System.ObsoleteAttribute(@"Replace this field with BackgroundRepeat instance.")]
+        /// <summary>
+        /// Whether the background-repeat value is not
+        /// <see cref="BackgroundRepeatValue.NO_REPEAT"/>
+        /// for X axis.
+        /// </summary>
+        [System.ObsoleteAttribute(@"replace this field with BackgroundRepeat instance")]
         protected internal bool repeatX;
 
-        /// <summary>Whether the background repeats in the y dimension.</summary>
-        [System.ObsoleteAttribute(@"Replace this field with BackgroundRepeat instance.")]
+        /// <summary>
+        /// Whether the background-repeat value is not
+        /// <see cref="BackgroundRepeatValue.NO_REPEAT"/>
+        /// for Y axis.
+        /// </summary>
+        [System.ObsoleteAttribute(@"replace this field with BackgroundRepeat instance")]
         protected internal bool repeatY;
 
         protected internal AbstractLinearGradientBuilder linearGradientBuilder;
 
         private BlendMode blendMode = DEFAULT_BLEND_MODE;
 
-        private BackgroundPosition position;
+        private BackgroundRepeat repeat;
 
-        private BackgroundSize backgroundSize;
+        private readonly BackgroundPosition position;
+
+        private readonly BackgroundSize backgroundSize;
 
         /// <summary>
         /// Creates a new
@@ -105,8 +115,9 @@ namespace iText.Layout.Properties {
             BackgroundSize backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode
             ) {
             this.image = image;
-            this.repeatX = repeat.IsRepeatX();
-            this.repeatY = repeat.IsRepeatY();
+            this.repeatX = !repeat.IsNoRepeatOnXAxis();
+            this.repeatY = !repeat.IsNoRepeatOnYAxis();
+            this.repeat = repeat;
             this.position = position;
             this.backgroundSize = backgroundSize;
             this.linearGradientBuilder = linearGradientBuilder;
@@ -251,8 +262,9 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), new BackgroundSize(), null
-                , DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
+                .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
+                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -269,8 +281,9 @@ namespace iText.Layout.Properties {
         /// <param name="repeatY">defines whether background is repeated in y dimension.</param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
-            : this(image, new BackgroundRepeat(repeatX, repeatY), new BackgroundPosition(), new BackgroundSize(), null
-                , DEFAULT_BLEND_MODE) {
+            : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
+                .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
+                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
         }
 
         /// <summary>
@@ -305,8 +318,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode)
-            : this(null, new BackgroundRepeat(false, false), new BackgroundPosition(), new BackgroundSize(), linearGradientBuilder
-                , blendMode) {
+            : this(null, new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT), new BackgroundPosition
+                (), new BackgroundSize(), linearGradientBuilder, blendMode) {
         }
 
         public virtual PdfImageXObject GetImage() {
@@ -334,10 +347,12 @@ namespace iText.Layout.Properties {
             return image is PdfFormXObject || image is PdfImageXObject || linearGradientBuilder != null;
         }
 
+        [Obsolete]
         public virtual bool IsRepeatX() {
             return repeatX;
         }
 
+        [Obsolete]
         public virtual bool IsRepeatY() {
             return repeatY;
         }
@@ -372,6 +387,25 @@ namespace iText.Layout.Properties {
         [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageHeight() instead.")]
         public virtual float GetHeight() {
             return (float)image.GetHeight();
+        }
+
+        /// <summary>
+        /// Gets image
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </summary>
+        /// <returns>the image background repeat</returns>
+        public virtual BackgroundRepeat GetRepeat() {
+            // Remove this if-blocks after removing repeatX and repeatY
+            if (repeatX == repeat.IsNoRepeatOnXAxis()) {
+                repeat = new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
+                    .NO_REPEAT, repeat.GetYAxisRepeat());
+            }
+            if (repeatY == repeat.IsNoRepeatOnYAxis()) {
+                repeat = new BackgroundRepeat(repeat.GetXAxisRepeat(), repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT
+                     : BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
+            }
+            return repeat;
         }
 
         /// <summary>Get the image's blend mode.</summary>
@@ -443,7 +477,7 @@ namespace iText.Layout.Properties {
             public virtual BackgroundImage.Builder SetLinearGradientBuilder(AbstractLinearGradientBuilder linearGradientBuilder
                 ) {
                 this.linearGradientBuilder = linearGradientBuilder;
-                this.repeat = new BackgroundRepeat(false, false);
+                this.repeat = new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
                 this.image = null;
                 return this;
             }

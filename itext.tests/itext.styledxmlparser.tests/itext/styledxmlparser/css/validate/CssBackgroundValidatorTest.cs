@@ -118,9 +118,8 @@ namespace iText.StyledXmlParser.Css.Validate {
             NUnit.Framework.Assert.IsFalse(validator.IsValid("5px 10%"));
             NUnit.Framework.Assert.IsFalse(validator.IsValid("bottom bottom bottom bottom"));
             validator = new CssBackgroundValidator("background-repeat");
-            NUnit.Framework.Assert.IsTrue(validator.IsValid("repeat no-repeat"));
-            NUnit.Framework.Assert.IsFalse(validator.IsValid("repeat repeat repeat repeat repeat repeat repeat repeat"
-                ));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("repeat round"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("repeat-x repeat"));
             validator = new CssBackgroundValidator("background-image");
             NUnit.Framework.Assert.IsFalse(validator.IsValid("url(something.png) url(something2.png)"));
             validator = new CssBackgroundValidator("background-clip");
@@ -135,8 +134,14 @@ namespace iText.StyledXmlParser.Css.Validate {
         public virtual void MultiValuesAllowedForThisValueTest() {
             ICssDataTypeValidator validator = new CssBackgroundValidator("background-repeat");
             NUnit.Framework.Assert.IsTrue(validator.IsValid("repeat no-repeat"));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("round space"));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("no-repeat space"));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("round repeat"));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("space repeat"));
             NUnit.Framework.Assert.IsFalse(validator.IsValid("repeat-x repeat"));
             NUnit.Framework.Assert.IsFalse(validator.IsValid("repeat-y no-repeat"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("round repeat-x"));
+            NUnit.Framework.Assert.IsFalse(validator.IsValid("space repeat-x"));
             validator = new CssBackgroundValidator("background-size");
             NUnit.Framework.Assert.IsTrue(validator.IsValid("5px 5px"));
             NUnit.Framework.Assert.IsFalse(validator.IsValid("contain 5px"));

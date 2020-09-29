@@ -50,6 +50,50 @@ using iText.Test;
 
 namespace iText.Kernel.Geom {
     public class RectangleTest : ExtendedITextTest {
+        private const float OVERLAP_EPSILON = 0.1f;
+
+        [NUnit.Framework.Test]
+        public virtual void OverlapWithEpsilon() {
+            Rectangle first = new Rectangle(0, 0, 10, 10);
+            Rectangle second = new Rectangle(-10, 0, 10.09f, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, OVERLAP_EPSILON));
+            second.SetWidth(10.11f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, OVERLAP_EPSILON));
+            second = new Rectangle(5, 9.91f, 5, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, OVERLAP_EPSILON));
+            second.SetY(9.89f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, OVERLAP_EPSILON));
+            second = new Rectangle(9.91f, 0, 5, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, OVERLAP_EPSILON));
+            second.SetX(9.89f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, OVERLAP_EPSILON));
+            second = new Rectangle(5, -10, 5, 10.09f);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, OVERLAP_EPSILON));
+            second.SetHeight(10.11f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, OVERLAP_EPSILON));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverlapWithNegativeEpsilon() {
+            Rectangle first = new Rectangle(0, 0, 10, 10);
+            Rectangle second = new Rectangle(-10, 0, 9.89f, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, -OVERLAP_EPSILON));
+            second.SetWidth(9.91f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, -OVERLAP_EPSILON));
+            second = new Rectangle(5, 10.11f, 5, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, -OVERLAP_EPSILON));
+            second.SetY(10.09f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, -OVERLAP_EPSILON));
+            second = new Rectangle(10.11f, 0, 5, 5);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, -OVERLAP_EPSILON));
+            second.SetX(10.09f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, -OVERLAP_EPSILON));
+            second = new Rectangle(5, -10, 5, 9.89f);
+            NUnit.Framework.Assert.IsFalse(first.Overlaps(second, -OVERLAP_EPSILON));
+            second.SetHeight(9.91f);
+            NUnit.Framework.Assert.IsTrue(first.Overlaps(second, -OVERLAP_EPSILON));
+        }
+
         [NUnit.Framework.Test]
         public virtual void RectangleOverlapTest01() {
             //Intersection

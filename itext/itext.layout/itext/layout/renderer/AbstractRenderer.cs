@@ -78,6 +78,8 @@ namespace iText.Layout.Renderer {
     /// this default implementation.
     /// </remarks>
     public abstract class AbstractRenderer : IRenderer {
+        public const float OVERLAP_EPSILON = 1e-4f;
+
         /// <summary>
         /// The maximum difference between
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
@@ -574,6 +576,8 @@ namespace iText.Layout.Renderer {
             if (blendMode != BlendMode.NORMAL) {
                 drawContext.GetCanvas().SetExtGState(new PdfExtGState().SetBlendMode(blendMode.GetPdfRepresentation()));
             }
+            Point whitespace = backgroundImage.GetRepeat().PrepareRectangleToDrawingAndGetWhitespace(imageRectangle, backgroundArea
+                , backgroundImage.GetBackgroundSize());
             float initialX = imageRectangle.GetX();
             int counterY = 1;
             bool firstDraw = true;
@@ -581,42 +585,47 @@ namespace iText.Layout.Renderer {
             bool isNextOverlaps;
             do {
                 DrawPdfXObjectHorizontally(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea
-                    , firstDraw);
+                    , firstDraw, (float)whitespace.GetX());
                 firstDraw = false;
                 imageRectangle.SetX(initialX);
-                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea);
+                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea, OVERLAP_EPSILON);
                 if (counterY % 2 == 1) {
-                    isNextOverlaps = imageRectangle.MoveDown(imageRectangle.GetHeight() * counterY).Overlaps(backgroundArea);
+                    isNextOverlaps = imageRectangle.MoveDown((imageRectangle.GetHeight() + (float)whitespace.GetY()) * counterY
+                        ).Overlaps(backgroundArea, OVERLAP_EPSILON);
                 }
                 else {
-                    isNextOverlaps = imageRectangle.MoveUp(imageRectangle.GetHeight() * counterY).Overlaps(backgroundArea);
+                    isNextOverlaps = imageRectangle.MoveUp((imageRectangle.GetHeight() + (float)whitespace.GetY()) * counterY)
+                        .Overlaps(backgroundArea, OVERLAP_EPSILON);
                 }
                 ++counterY;
             }
-            while (backgroundImage.IsRepeatY() && (isCurrentOverlaps || isNextOverlaps));
+            while (!backgroundImage.GetRepeat().IsNoRepeatOnYAxis() && (isCurrentOverlaps || isNextOverlaps));
         }
 
         private static void DrawPdfXObjectHorizontally(Rectangle imageRectangle, BackgroundImage backgroundImage, 
-            DrawContext drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea, bool firstDraw) {
+            DrawContext drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea, bool firstDraw, float
+             xWhitespace) {
             bool isItFirstDraw = firstDraw;
             int counterX = 1;
             bool isCurrentOverlaps;
             bool isNextOverlaps;
             do {
-                if (imageRectangle.Overlaps(backgroundArea) || isItFirstDraw) {
+                if (imageRectangle.Overlaps(backgroundArea, OVERLAP_EPSILON) || isItFirstDraw) {
                     drawContext.GetCanvas().AddXObjectFittedIntoRectangle(backgroundXObject, imageRectangle);
                     isItFirstDraw = false;
                 }
-                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea);
+                isCurrentOverlaps = imageRectangle.Overlaps(backgroundArea, OVERLAP_EPSILON);
                 if (counterX % 2 == 1) {
-                    isNextOverlaps = imageRectangle.MoveRight(imageRectangle.GetWidth() * counterX).Overlaps(backgroundArea);
+                    isNextOverlaps = imageRectangle.MoveRight((imageRectangle.GetWidth() + xWhitespace) * counterX).Overlaps(backgroundArea
+                        , OVERLAP_EPSILON);
                 }
                 else {
-                    isNextOverlaps = imageRectangle.MoveLeft(imageRectangle.GetWidth() * counterX).Overlaps(backgroundArea);
+                    isNextOverlaps = imageRectangle.MoveLeft((imageRectangle.GetWidth() + xWhitespace) * counterX).Overlaps(backgroundArea
+                        , OVERLAP_EPSILON);
                 }
                 ++counterX;
             }
-            while (backgroundImage.IsRepeatX() && (isCurrentOverlaps || isNextOverlaps));
+            while (!backgroundImage.GetRepeat().IsNoRepeatOnXAxis() && (isCurrentOverlaps || isNextOverlaps));
         }
 
         /// <summary>

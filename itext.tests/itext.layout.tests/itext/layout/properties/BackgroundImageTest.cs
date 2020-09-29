@@ -52,12 +52,12 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Layout {
+namespace iText.Layout.Properties {
     public class BackgroundImageTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";
@@ -75,8 +75,10 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
                 Build();
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetXAxisRepeat());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetYAxisRepeat());
             BackgroundImageGenericTest("backgroundImage", backgroundImage);
         }
 
@@ -84,9 +86,11 @@ namespace iText.Layout {
         public virtual void BackgroundMultipleImagesTest() {
             IList<iText.Layout.Properties.BackgroundImage> images = JavaUtil.ArraysAsList(new BackgroundImage.Builder(
                 ).SetImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"))).SetBackgroundRepeat
-                (new BackgroundRepeat(false, true)).SetBackgroundPosition(new BackgroundPosition()).Build(), new BackgroundImage.Builder
-                ().SetImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"))).SetBackgroundRepeat
-                (new BackgroundRepeat(true, false)).Build());
+                (new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue
+                .REPEAT)).SetBackgroundPosition(new BackgroundPosition()).Build(), new BackgroundImage.Builder().SetImage
+                (new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"))).SetBackgroundRepeat(new BackgroundRepeat
+                (BackgroundRepeat.BackgroundRepeatValue.REPEAT, BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build
+                ());
             BackgroundImageGenericTest("backgroundMultipleImages", images);
         }
 
@@ -113,7 +117,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientAndRepeatTest() {
-            // TODO DEVSIX-4370. Pay attention at the blue stripe at the top of gradient. It mustn't be there.
             AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
                 GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
@@ -149,8 +152,10 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
                 Build();
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetXAxisRepeat());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetYAxisRepeat());
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
             String outFileName = DESTINATION_FOLDER + "backgroundImageForText.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageForText.pdf";
@@ -169,7 +174,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPercentWidth() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -192,7 +196,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPercentHeight() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -215,7 +218,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPercentHeightAndWidth() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -239,7 +241,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPointWidth() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -262,7 +263,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPointHeight() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -285,7 +285,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithPointHeightAndWidth() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -309,7 +308,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLowWidthAndHeight() {
-            //TODO DEVSIX-4370 first pixel near the border is redrawn by another image
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
                 ));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
@@ -335,9 +333,12 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatXTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
-                SetBackgroundRepeat(new BackgroundRepeat(false, true)).Build();
-            NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+                SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue
+                .REPEAT)).Build();
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                ().GetXAxisRepeat());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetYAxisRepeat());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatX", backgroundImage);
         }
 
@@ -345,9 +346,12 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatYTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
-                SetBackgroundRepeat(new BackgroundRepeat(true, false)).Build();
-            NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
-            NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
+                SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.REPEAT, BackgroundRepeat.BackgroundRepeatValue
+                .NO_REPEAT)).Build();
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                .GetXAxisRepeat());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                ().GetYAxisRepeat());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatY", backgroundImage);
         }
 
@@ -355,9 +359,11 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithoutRepeatXYTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
-                SetBackgroundRepeat(new BackgroundRepeat(false, false)).Build();
-            NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
-            NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
+                SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build();
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                ().GetXAxisRepeat());
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                ().GetYAxisRepeat());
             BackgroundImageGenericTest("backgroundImageWithoutRepeatXY", backgroundImage);
         }
 
@@ -365,9 +371,9 @@ namespace iText.Layout {
         public virtual void BackgroundImageWithPositionTest() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
             iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
-                SetBackgroundRepeat(new BackgroundRepeat(false, false)).SetBackgroundPosition(new BackgroundPosition()
-                .SetXShift(new UnitValue(UnitValue.PERCENT, 80)).SetYShift(new UnitValue(UnitValue.POINT, 55))).Build(
-                );
+                SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).SetBackgroundPosition
+                (new BackgroundPosition().SetXShift(new UnitValue(UnitValue.PERCENT, 80)).SetYShift(new UnitValue(UnitValue
+                .POINT, 55))).Build();
             BackgroundImageGenericTest("backgroundImageWithPosition", backgroundImage);
         }
 
@@ -375,11 +381,11 @@ namespace iText.Layout {
         public virtual void BackgroundImagesWithPositionTest() {
             IList<iText.Layout.Properties.BackgroundImage> images = JavaUtil.ArraysAsList(new BackgroundImage.Builder(
                 ).SetImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"))).SetBackgroundRepeat
-                (new BackgroundRepeat(false, false)).SetBackgroundPosition(new BackgroundPosition().SetXShift(new UnitValue
-                (UnitValue.PERCENT, 100)).SetYShift(new UnitValue(UnitValue.PERCENT, 100))).Build(), new BackgroundImage.Builder
-                ().SetImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"))).SetBackgroundPosition
-                (new BackgroundPosition().SetXShift(new UnitValue(UnitValue.PERCENT, 0)).SetYShift(new UnitValue(UnitValue
-                .PERCENT, 100))).Build());
+                (new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).SetBackgroundPosition(new BackgroundPosition
+                ().SetXShift(new UnitValue(UnitValue.PERCENT, 100)).SetYShift(new UnitValue(UnitValue.PERCENT, 100))).
+                Build(), new BackgroundImage.Builder().SetImage(new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER
+                 + "itis.jpg"))).SetBackgroundPosition(new BackgroundPosition().SetXShift(new UnitValue(UnitValue.PERCENT
+                , 0)).SetYShift(new UnitValue(UnitValue.PERCENT, 100))).Build());
             BackgroundImageGenericTest("backgroundImagesWithPosition", images);
         }
 
@@ -392,8 +398,10 @@ namespace iText.Layout {
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).Build();
-                NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
-                NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                    .GetXAxisRepeat());
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                    .GetYAxisRepeat());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
             }
         }
@@ -406,9 +414,12 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(false, true)).Build();
-                NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
-                NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatY());
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
+                    .NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue.REPEAT)).Build();
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                    ().GetXAxisRepeat());
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                    .GetYAxisRepeat());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
             }
         }
@@ -421,9 +432,12 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(true, false)).Build();
-                NUnit.Framework.Assert.IsTrue(backgroundImage.IsRepeatX());
-                NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
+                    .REPEAT, BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build();
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
+                    .GetXAxisRepeat());
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                    ().GetYAxisRepeat());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
             }
         }
@@ -436,9 +450,12 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create
                 )))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
-                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(false, false)).Build();
-                NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatX());
-                NUnit.Framework.Assert.IsFalse(backgroundImage.IsRepeatY());
+                    (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
+                    .NO_REPEAT)).Build();
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                    ().GetXAxisRepeat());
+                NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, backgroundImage.GetRepeat
+                    ().GetYAxisRepeat());
                 BackgroundXObjectGenericTest(filename, backgroundImage, pdfDocument);
             }
         }
@@ -488,8 +505,8 @@ namespace iText.Layout {
                      + "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui "
                      + "officia deserunt mollit anim id est laborum. ";
                 iText.Layout.Properties.BackgroundImage backgroundFormXObject = new BackgroundImage.Builder().SetBackgroundRepeat
-                    (new BackgroundRepeat(false, false)).SetImage(CreateFormXObject(pdfDocument, "rock_texture.jpg").SetBBox
-                    (new PdfArray(new Rectangle(70, -15, 50, 75)))).Build();
+                    (new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).SetImage(CreateFormXObject(pdfDocument
+                    , "rock_texture.jpg").SetBBox(new PdfArray(new Rectangle(70, -15, 50, 75)))).Build();
                 Div div = new Div().Add(new Paragraph(text + text + text));
                 div.SetBackgroundImage(backgroundFormXObject);
                 doc.Add(div);
@@ -505,7 +522,7 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"))
                 .Put(PdfName.BBox, new PdfArray(new Rectangle(70, -15, 500, 750)));
             iText.Layout.Properties.BackgroundImage image = new BackgroundImage.Builder().SetImage(xObject).SetBackgroundRepeat
-                (new BackgroundRepeat(false, false)).Build();
+                (new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build();
             BackgroundImageGenericTest("backgroundImageWithBbox", image);
         }
 
