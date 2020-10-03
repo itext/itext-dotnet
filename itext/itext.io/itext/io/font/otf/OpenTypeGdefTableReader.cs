@@ -45,11 +45,11 @@ using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
     public class OpenTypeGdefTableReader {
-        private readonly int FLAG_IGNORE_BASE = 2;
+        internal const int FLAG_IGNORE_BASE = 2;
 
-        private readonly int FLAG_IGNORE_LIGATURE = 4;
+        internal const int FLAG_IGNORE_LIGATURE = 4;
 
-        private readonly int FLAG_IGNORE_MARK = 8;
+        internal const int FLAG_IGNORE_MARK = 8;
 
         private readonly int tableLocation;
 
@@ -97,8 +97,16 @@ namespace iText.IO.Font.Otf {
                     return true;
                 }
             }
-            if (markAttachmentClass != null && markAttachmentClass.GetOtfClass(glyph) > 0 && (flag >> 8) > 0) {
-                return markAttachmentClass.GetOtfClass(glyph) != (flag >> 8);
+            int markAttachmentType = (flag >> 8);
+            // If MarkAttachmentType is non-zero, then mark attachment classes must be defined in the
+            // Mark Attachment Class Definition Table in the GDEF table. When processing glyph sequences,
+            // a lookup must ignore any mark glyphs that are not in the specified mark attachment class;
+            // only marks of the specified type are processed.
+            if (markAttachmentType != 0 && glyphClass != null) {
+                int currentGlyphClass = glyphClass.GetOtfClass(glyph);
+                // Will be 0 in case the class is not defined for this particular glyph
+                int glyphMarkAttachmentClass = markAttachmentClass != null ? markAttachmentClass.GetOtfClass(glyph) : 0;
+                return currentGlyphClass == OtfClass.GLYPH_MARK && glyphMarkAttachmentClass != markAttachmentType;
             }
             return false;
         }
