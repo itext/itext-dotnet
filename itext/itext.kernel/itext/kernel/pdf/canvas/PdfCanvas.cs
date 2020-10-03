@@ -202,6 +202,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private static readonly PdfSpecialCs.Pattern pattern = new PdfSpecialCs.Pattern();
 
+        private const float IDENTITY_MATRIX_EPS = 1e-4f;
+
         /// <summary>a LIFO stack of graphics state saved states.</summary>
         protected internal Stack<CanvasGraphicsState> gsStack = new Stack<CanvasGraphicsState>();
 
@@ -1820,6 +1822,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="asInline">true if to add image as in-line</param>
         /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
+        /// <seealso cref="iText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithWidth(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)
+        ///     "/>
+        /// <seealso cref="iText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithHeight(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)
+        ///     "/>
         public virtual PdfXObject AddImageFittedIntoRectangle(ImageData image, iText.Kernel.Geom.Rectangle rect, bool
              asInline) {
             return AddImageWithTransformationMatrix(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.
@@ -1992,7 +1998,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectWithTransformationMatrix(PdfXObject xObject, float
              a, float b, float c, float d, float e, float f) {
             if (xObject is PdfFormXObject) {
-                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, a, b, c, d, e, f);
+                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, a, b, c, d, e, f, true);
             }
             else {
                 if (xObject is PdfImageXObject) {
@@ -2093,6 +2099,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="xObject">the xObject to add</param>
         /// <param name="rect">the rectangle in which the xObject will be fitted</param>
         /// <returns>the current canvas</returns>
+        /// <seealso cref="iText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithWidth(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)
+        ///     "/>
+        /// <seealso cref="iText.Kernel.Pdf.Xobject.PdfXObject.CalculateProportionallyFitRectangleWithHeight(iText.Kernel.Pdf.Xobject.PdfXObject, float, float, float)
+        ///     "/>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, iText.Kernel.Geom.Rectangle
              rect) {
             if (xObject is PdfFormXObject) {
@@ -2278,7 +2288,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>the current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject) {
             if (xObject is PdfFormXObject) {
-                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, 1, 0, 0, 1, 0, 0);
+                return AddFormWithTransformationMatrix((PdfFormXObject)xObject, 1, 0, 0, 1, 0, 0, false);
             }
             else {
                 if (xObject is PdfImageXObject) {
@@ -2499,11 +2509,17 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="d">an element of the transformation matrix</param>
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
+        /// <param name="writeIdentityMatrix">
+        /// true if the matrix is written in any case, otherwise if the
+        /// <see cref="IsIdentityMatrix(float, float, float, float, float, float)"/>
+        /// method indicates
+        /// that the matrix is identity, the matrix will not be written
+        /// </param>
         /// <returns>current canvas</returns>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddFormWithTransformationMatrix(PdfFormXObject form, float a, float
-             b, float c, float d, float e, float f) {
+             b, float c, float d, float e, float f, bool writeIdentityMatrix) {
             SaveState();
-            if (!iText.Kernel.Pdf.Canvas.PdfCanvas.IsIdentityMatrix(a, b, c, d, e, f)) {
+            if (writeIdentityMatrix || !iText.Kernel.Pdf.Canvas.PdfCanvas.IsIdentityMatrix(a, b, c, d, e, f)) {
                 ConcatMatrix(a, b, c, d, e, f);
             }
             PdfName name = resources.AddForm(form);
@@ -2525,7 +2541,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="e">an element of the transformation matrix</param>
         /// <param name="f">an element of the transformation matrix</param>
         /// <returns>current canvas</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddFormWithTransformationMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float, float, float, float, float) instead"
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useAddFormWithTransformationMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject, float, float, float, float, float, float, bool) instead"
             )]
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float a, float b, float c, float d, 
             float e, float f) {
@@ -2556,7 +2572,7 @@ namespace iText.Kernel.Pdf.Canvas {
             float[] result = iText.Kernel.Pdf.Canvas.PdfCanvas.CalculateTransformationMatrix(rectMin, rectMax, bBoxMin
                 , bBoxMax);
             return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
-                [5]);
+                [5], false);
         }
 
         /// <summary>
@@ -2641,7 +2657,7 @@ namespace iText.Kernel.Pdf.Canvas {
             float[] result = iText.Kernel.Pdf.Canvas.PdfCanvas.CalculateTransformationMatrix(rectMin, rectMax, bBoxMin
                 , bBoxMax);
             return AddFormWithTransformationMatrix(form, result[0], result[1], result[2], result[3], result[4], result
-                [5]);
+                [5], false);
         }
 
         /// <summary>
@@ -2829,9 +2845,8 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private static bool IsIdentityMatrix(float a, float b, float c, float d, float e, float f) {
-            return JavaUtil.FloatCompare(a, 1) == 0 && JavaUtil.FloatCompare(b, 0) == 0 && JavaUtil.FloatCompare(c, 0)
-                 == 0 && JavaUtil.FloatCompare(d, 1) == 0 && JavaUtil.FloatCompare(e, 0) == 0 && JavaUtil.FloatCompare
-                (f, 0) == 0;
+            return Math.Abs(1 - a) < IDENTITY_MATRIX_EPS && Math.Abs(b) < IDENTITY_MATRIX_EPS && Math.Abs(c) < IDENTITY_MATRIX_EPS
+                 && Math.Abs(1 - d) < IDENTITY_MATRIX_EPS && Math.Abs(e) < IDENTITY_MATRIX_EPS && Math.Abs(f) < IDENTITY_MATRIX_EPS;
         }
     }
 }

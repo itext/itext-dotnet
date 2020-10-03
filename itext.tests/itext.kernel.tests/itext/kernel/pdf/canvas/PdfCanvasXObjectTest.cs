@@ -520,5 +520,60 @@ namespace iText.Kernel.Pdf.Canvas {
                 : base(pdfObject) {
             }
         }
+
+        // Adds PdfFormXObject with matrix close to the identity matrix tests block
+        [NUnit.Framework.Test]
+        public virtual void AddFormXObjectWithUserIdentityMatrixTest() {
+            String fileName = "addFormXObjectWithUserIdentityMatrixTest.pdf";
+            String destPdf = DESTINATION_FOLDER + fileName;
+            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+            FileStream fos = new FileStream(destPdf, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fos);
+            PdfDocument document = new PdfDocument(writer);
+            PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0, 0, 20, 20));
+            new PdfCanvas(formXObject, document).Circle(10, 10, 10).Fill();
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            // It should be written because it is user matrix
+            canvas.AddXObjectWithTransformationMatrix(formXObject, 1.00011f, 0, 0, 1, 0, 0);
+            canvas.Release();
+            page.Flush();
+            page = document.AddNewPage();
+            canvas = new PdfCanvas(page);
+            // It should be written because it is user matrix
+            canvas.AddXObjectWithTransformationMatrix(formXObject, 1.00009f, 0, 0, 1, 0, 0);
+            canvas.Release();
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddFormXObjectWithIdentityMatrixTest() {
+            String fileName = "addFormXObjectWithIdentityMatrixTest.pdf";
+            String destPdf = DESTINATION_FOLDER + fileName;
+            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+            FileStream fos = new FileStream(destPdf, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fos);
+            PdfDocument document = new PdfDocument(writer);
+            PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0, 0, 20, 20));
+            new PdfCanvas(formXObject, document).Circle(10, 10, 10).Fill();
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            // It should be written because it is larger then PdfCanvas#IDENTITY_MATRIX_EPS
+            canvas.AddXObjectAt(formXObject, 0.00011f, 0);
+            canvas.Release();
+            page.Flush();
+            page = document.AddNewPage();
+            canvas = new PdfCanvas(page);
+            // It shouldn't be written because it is less then PdfCanvas#IDENTITY_MATRIX_EPS
+            canvas.AddXObjectAt(formXObject, 0.00009f, 0);
+            canvas.Release();
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
     }
 }
