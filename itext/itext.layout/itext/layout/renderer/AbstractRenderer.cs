@@ -491,14 +491,11 @@ namespace iText.Layout.Renderer {
                 else {
                     bool backgroundAreaIsClipped = false;
                     if (background != null) {
-                        backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
-                        TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
-                        drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
-                        backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
-                        drawContext.GetCanvas().Rectangle((double)backgroundArea.GetX() - background.GetExtraLeft(), (double)backgroundArea
-                            .GetY() - background.GetExtraBottom(), (double)backgroundArea.GetWidth() + background.GetExtraLeft() +
-                             background.GetExtraRight(), (double)backgroundArea.GetHeight() + background.GetExtraTop() + background
-                            .GetExtraBottom()).Fill().RestoreState();
+                        // TODO DEVSIX-4525 determine how background-clip affects background-radius
+                        Rectangle clippedBackgroundArea = ApplyBackgroundBoxProperty(backgroundArea.Clone(), background.GetBackgroundClip
+                            ());
+                        backgroundAreaIsClipped = ClipBackgroundArea(drawContext, clippedBackgroundArea);
+                        DrawColorBackground(background, drawContext, clippedBackgroundArea);
                     }
                     if (backgroundImagesList != null) {
                         backgroundAreaIsClipped = DrawBackgroundImagesList(backgroundImagesList, backgroundAreaIsClipped, drawContext
@@ -514,11 +511,36 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private void DrawColorBackground(Background background, DrawContext drawContext, Rectangle colorBackgroundArea
+            ) {
+            TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
+            drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
+            backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
+            drawContext.GetCanvas().Rectangle((double)colorBackgroundArea.GetX() - background.GetExtraLeft(), (double)
+                colorBackgroundArea.GetY() - background.GetExtraBottom(), (double)colorBackgroundArea.GetWidth() + background
+                .GetExtraLeft() + background.GetExtraRight(), (double)colorBackgroundArea.GetHeight() + background.GetExtraTop
+                () + background.GetExtraBottom()).Fill().RestoreState();
+        }
+
+        private Rectangle ApplyBackgroundBoxProperty(Rectangle rectangle, BackgroundBox clip) {
+            if (BackgroundBox.PADDING_BOX == clip) {
+                ApplyBorderBox(rectangle, false);
+            }
+            else {
+                if (BackgroundBox.CONTENT_BOX == clip) {
+                    ApplyBorderBox(rectangle, false);
+                    ApplyPaddings(rectangle, false);
+                }
+            }
+            return rectangle;
+        }
+
         private bool DrawBackgroundImagesList(IList<BackgroundImage> backgroundImagesList, bool backgroundAreaIsClipped
             , DrawContext drawContext, Rectangle backgroundArea) {
             for (int i = backgroundImagesList.Count - 1; i >= 0; i--) {
                 BackgroundImage backgroundImage = backgroundImagesList[i];
                 if (backgroundImage != null && backgroundImage.IsBackgroundSpecified()) {
+                    // TODO DEVSIX-4525 determine how background-clip affects background-radius
                     if (!backgroundAreaIsClipped) {
                         backgroundAreaIsClipped = ClipBackgroundArea(drawContext, backgroundArea);
                     }
@@ -530,9 +552,10 @@ namespace iText.Layout.Renderer {
 
         private void DrawBackgroundImage(BackgroundImage backgroundImage, DrawContext drawContext, Rectangle backgroundArea
             ) {
-            ApplyBorderBox(backgroundArea, false);
+            Rectangle originBackgroundArea = ApplyBackgroundBoxProperty(backgroundArea.Clone(), backgroundImage.GetBackgroundOrigin
+                ());
             float[] imageWidthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 
-                backgroundArea.GetWidth(), backgroundArea.GetHeight());
+                originBackgroundArea.GetWidth(), originBackgroundArea.GetHeight());
             PdfXObject backgroundXObject = backgroundImage.GetImage();
             if (backgroundXObject == null) {
                 backgroundXObject = backgroundImage.GetForm();
@@ -547,15 +570,17 @@ namespace iText.Layout.Renderer {
                 }
                 // fullWidth and fullHeight is 0 because percentage shifts are ignored for linear-gradients
                 backgroundImage.GetBackgroundPosition().CalculatePositionValues(0, 0, xPosition, yPosition);
-                backgroundXObject = CreateXObject(gradientBuilder, backgroundArea, drawContext.GetDocument());
-                imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
-                    imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight[1]);
+                backgroundXObject = CreateXObject(gradientBuilder, originBackgroundArea, drawContext.GetDocument());
+                imageRectangle = new Rectangle(originBackgroundArea.GetLeft() + xPosition.GetValue(), originBackgroundArea
+                    .GetTop() - imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight
+                    [1]);
             }
             else {
-                backgroundImage.GetBackgroundPosition().CalculatePositionValues(backgroundArea.GetWidth() - imageWidthAndHeight
-                    [0], backgroundArea.GetHeight() - imageWidthAndHeight[1], xPosition, yPosition);
-                imageRectangle = new Rectangle(backgroundArea.GetLeft() + xPosition.GetValue(), backgroundArea.GetTop() - 
-                    imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight[1]);
+                backgroundImage.GetBackgroundPosition().CalculatePositionValues(originBackgroundArea.GetWidth() - imageWidthAndHeight
+                    [0], originBackgroundArea.GetHeight() - imageWidthAndHeight[1], xPosition, yPosition);
+                imageRectangle = new Rectangle(originBackgroundArea.GetLeft() + xPosition.GetValue(), originBackgroundArea
+                    .GetTop() - imageWidthAndHeight[1] - yPosition.GetValue(), imageWidthAndHeight[0], imageWidthAndHeight
+                    [1]);
             }
             if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
@@ -563,20 +588,22 @@ namespace iText.Layout.Renderer {
                     ));
             }
             else {
-                ApplyBorderBox(backgroundArea, true);
-                drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().EndPath();
-                DrawPdfXObject(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea);
+                Rectangle clippedBackgroundArea = ApplyBackgroundBoxProperty(backgroundArea.Clone(), backgroundImage.GetBackgroundClip
+                    ());
+                drawContext.GetCanvas().SaveState().Rectangle(clippedBackgroundArea).Clip().EndPath();
+                DrawPdfXObject(imageRectangle, backgroundImage, drawContext, backgroundXObject, backgroundArea, originBackgroundArea
+                    );
                 drawContext.GetCanvas().RestoreState();
             }
         }
 
         private static void DrawPdfXObject(Rectangle imageRectangle, BackgroundImage backgroundImage, DrawContext 
-            drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea) {
+            drawContext, PdfXObject backgroundXObject, Rectangle backgroundArea, Rectangle originBackgroundArea) {
             BlendMode blendMode = backgroundImage.GetBlendMode();
             if (blendMode != BlendMode.NORMAL) {
                 drawContext.GetCanvas().SetExtGState(new PdfExtGState().SetBlendMode(blendMode.GetPdfRepresentation()));
             }
-            Point whitespace = backgroundImage.GetRepeat().PrepareRectangleToDrawingAndGetWhitespace(imageRectangle, backgroundArea
+            Point whitespace = backgroundImage.GetRepeat().PrepareRectangleToDrawingAndGetWhitespace(imageRectangle, originBackgroundArea
                 , backgroundImage.GetBackgroundSize());
             float initialX = imageRectangle.GetX();
             int counterY = 1;

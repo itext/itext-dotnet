@@ -76,54 +76,27 @@ namespace iText.Layout.Properties {
 
         private readonly BackgroundSize backgroundSize;
 
+        private readonly BackgroundBox backgroundClip;
+
+        private readonly BackgroundBox backgroundOrigin;
+
         /// <summary>
-        /// Creates a new
+        /// Creates a copy of passed
         /// <see cref="BackgroundImage"/>
         /// instance.
         /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
-        /// instance.
+        /// <param name="backgroundImage">
+        /// 
+        /// <see cref="BackgroundImage"/>
+        /// for cloning
         /// </param>
-        /// <param name="repeat">
-        /// background-repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        /// <param name="position">
-        /// background-position property.
-        /// <see cref="BackgroundPosition"/>
-        /// instance.
-        /// </param>
-        /// <param name="backgroundSize">
-        /// background-size property.
-        /// <see cref="BackgroundSize"/>
-        /// instance.
-        /// </param>
-        /// <param name="linearGradientBuilder">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
-        /// instance.
-        /// </param>
-        /// <param name="blendMode">
-        /// the image's blend mode.
-        /// <see cref="BlendMode"/>
-        /// instance.
-        /// </param>
-        protected internal BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BackgroundPosition position, 
-            BackgroundSize backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode
-            ) {
-            this.image = image;
-            this.repeatX = !repeat.IsNoRepeatOnXAxis();
-            this.repeatY = !repeat.IsNoRepeatOnYAxis();
-            this.repeat = repeat;
-            this.position = position;
-            this.backgroundSize = backgroundSize;
-            this.linearGradientBuilder = linearGradientBuilder;
-            if (blendMode != null) {
-                this.blendMode = blendMode;
-            }
+        public BackgroundImage(iText.Layout.Properties.BackgroundImage backgroundImage)
+            : this(backgroundImage.GetImage() == null ? (PdfXObject)backgroundImage.GetForm() : backgroundImage.GetImage
+                (), backgroundImage.GetRepeat(), backgroundImage.GetBackgroundPosition(), backgroundImage.GetBackgroundSize
+                (), backgroundImage.GetLinearGradientBuilder(), backgroundImage.GetBlendMode(), backgroundImage.GetBackgroundClip
+                (), backgroundImage.GetBackgroundOrigin()) {
+            repeatX = backgroundImage.IsRepeatX();
+            repeatY = backgroundImage.IsRepeatY();
         }
 
         /// <summary>
@@ -148,7 +121,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode, BackgroundBox.BORDER_BOX
+                , BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -173,7 +147,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat, BlendMode blendMode)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, blendMode, BackgroundBox.BORDER_BOX
+                , BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -193,7 +168,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox
+                .BORDER_BOX, BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -213,7 +189,8 @@ namespace iText.Layout.Properties {
         /// </param>
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image, BackgroundRepeat repeat)
-            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
+            : this(image, repeat, new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox
+                .BORDER_BOX, BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -229,7 +206,7 @@ namespace iText.Layout.Properties {
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfImageXObject image)
             : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
-                ) {
+                , BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -245,7 +222,7 @@ namespace iText.Layout.Properties {
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(PdfFormXObject image)
             : this(image, new BackgroundRepeat(), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE
-                ) {
+                , BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -264,7 +241,8 @@ namespace iText.Layout.Properties {
         public BackgroundImage(PdfImageXObject image, bool repeatX, bool repeatY)
             : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
                 .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
+                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox.BORDER_BOX
+                , BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -283,7 +261,8 @@ namespace iText.Layout.Properties {
         public BackgroundImage(PdfFormXObject image, bool repeatX, bool repeatY)
             : this(image, new BackgroundRepeat(repeatX ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
                 .NO_REPEAT, repeatY ? BackgroundRepeat.BackgroundRepeatValue.REPEAT : BackgroundRepeat.BackgroundRepeatValue
-                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE) {
+                .NO_REPEAT), new BackgroundPosition(), new BackgroundSize(), null, DEFAULT_BLEND_MODE, BackgroundBox.BORDER_BOX
+                , BackgroundBox.PADDING_BOX) {
         }
 
         /// <summary>
@@ -319,7 +298,8 @@ namespace iText.Layout.Properties {
         [System.ObsoleteAttribute(@"Remove this constructor in 7.2.")]
         public BackgroundImage(AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode)
             : this(null, new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT), new BackgroundPosition
-                (), new BackgroundSize(), linearGradientBuilder, blendMode) {
+                (), new BackgroundSize(), linearGradientBuilder, blendMode, BackgroundBox.BORDER_BOX, BackgroundBox.PADDING_BOX
+                ) {
         }
 
         public virtual PdfImageXObject GetImage() {
@@ -328,6 +308,70 @@ namespace iText.Layout.Properties {
 
         public virtual PdfFormXObject GetForm() {
             return image is PdfFormXObject ? (PdfFormXObject)image : null;
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background-image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background-repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        /// <param name="position">
+        /// background-position property.
+        /// <see cref="BackgroundPosition"/>
+        /// instance.
+        /// </param>
+        /// <param name="backgroundSize">
+        /// background-size property.
+        /// <see cref="BackgroundSize"/>
+        /// instance.
+        /// </param>
+        /// <param name="linearGradientBuilder">
+        /// background-image property.
+        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
+        /// instance.
+        /// </param>
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        /// <param name="clip">
+        /// background-clip property.
+        /// <see cref="BackgroundBox"/>
+        /// instance.
+        /// </param>
+        /// <param name="origin">
+        /// background-origin property.
+        /// <see cref="BackgroundBox"/>
+        /// instance.
+        /// </param>
+        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BackgroundPosition position, BackgroundSize
+             backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode, BackgroundBox
+             clip, BackgroundBox origin) {
+            this.image = image;
+            if (repeat != null) {
+                this.repeatX = !repeat.IsNoRepeatOnXAxis();
+                this.repeatY = !repeat.IsNoRepeatOnYAxis();
+            }
+            this.repeat = repeat;
+            this.position = position;
+            this.backgroundSize = backgroundSize;
+            this.linearGradientBuilder = linearGradientBuilder;
+            if (blendMode != null) {
+                this.blendMode = blendMode;
+            }
+            this.backgroundClip = clip;
+            this.backgroundOrigin = origin;
         }
 
         /// <summary>Gets background-position.</summary>
@@ -418,6 +462,24 @@ namespace iText.Layout.Properties {
             return blendMode;
         }
 
+        /// <summary>Gets background-clip.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="BackgroundBox"/>
+        /// </returns>
+        public virtual BackgroundBox GetBackgroundClip() {
+            return backgroundClip;
+        }
+
+        /// <summary>Gets background-origin.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="BackgroundBox"/>
+        /// </returns>
+        public virtual BackgroundBox GetBackgroundOrigin() {
+            return backgroundOrigin;
+        }
+
         /// <summary>
         /// <see cref="BackgroundImage"/>
         /// builder class.
@@ -434,6 +496,10 @@ namespace iText.Layout.Properties {
             private BlendMode blendMode = DEFAULT_BLEND_MODE;
 
             private BackgroundSize backgroundSize = new BackgroundSize();
+
+            private BackgroundBox clip = BackgroundBox.BORDER_BOX;
+
+            private BackgroundBox origin = BackgroundBox.PADDING_BOX;
 
             public Builder() {
             }
@@ -546,6 +612,36 @@ namespace iText.Layout.Properties {
                 return this;
             }
 
+            /// <summary>Sets background-clip.</summary>
+            /// <param name="clip">
+            /// 
+            /// <see cref="BackgroundBox"/>
+            /// to be set.
+            /// </param>
+            /// <returns>
+            /// this
+            /// <see cref="Builder"/>.
+            /// </returns>
+            public virtual BackgroundImage.Builder SetBackgroundClip(BackgroundBox clip) {
+                this.clip = clip;
+                return this;
+            }
+
+            /// <summary>Sets background-origin.</summary>
+            /// <param name="origin">
+            /// 
+            /// <see cref="BackgroundBox"/>
+            /// to be set.
+            /// </param>
+            /// <returns>
+            /// this
+            /// <see cref="Builder"/>.
+            /// </returns>
+            public virtual BackgroundImage.Builder SetBackgroundOrigin(BackgroundBox origin) {
+                this.origin = origin;
+                return this;
+            }
+
             /// <summary>
             /// Builds new
             /// <see cref="BackgroundImage"/>
@@ -556,7 +652,8 @@ namespace iText.Layout.Properties {
             /// <see cref="BackgroundImage"/>.
             /// </returns>
             public virtual BackgroundImage Build() {
-                return new BackgroundImage(image, repeat, position, backgroundSize, linearGradientBuilder, blendMode);
+                return new BackgroundImage(image, repeat, position, backgroundSize, linearGradientBuilder, blendMode, clip
+                    , origin);
             }
         }
     }

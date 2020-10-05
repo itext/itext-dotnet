@@ -188,34 +188,68 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             RemoveSpacesAroundSlash(props);
             ICollection<CssBackgroundUtils.BackgroundPropertyType> usedTypes = new HashSet<CssBackgroundUtils.BackgroundPropertyType
                 >();
+            if (ProcessAllSpecifiedProperties(props, resolvedProps, usedTypes)) {
+                FillNotProcessedProperties(resolvedProps, usedTypes);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        private static bool ProcessAllSpecifiedProperties(IList<String> props, IDictionary<CssBackgroundUtils.BackgroundPropertyType
+            , String> resolvedProps, ICollection<CssBackgroundUtils.BackgroundPropertyType> usedTypes) {
+            IList<String> boxValues = new List<String>();
             bool slashEncountered = false;
+            bool propertyProcessedCorrectly = true;
             foreach (String value in props) {
-                bool isBackgroundOriginUsed = usedTypes.Contains(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ORIGIN
-                    );
                 int slashCharInd = value.IndexOf('/');
                 if (slashCharInd > 0 && slashCharInd < value.Length - 1 && !slashEncountered && !value.Contains("url(")) {
                     slashEncountered = true;
-                    if (!ProcessValueWithSlash(value, slashCharInd, isBackgroundOriginUsed, resolvedProps, usedTypes)) {
-                        return false;
-                    }
+                    propertyProcessedCorrectly = ProcessValueWithSlash(value, slashCharInd, resolvedProps, usedTypes);
                 }
                 else {
-                    if (!PutPropertyBasedOnType(ChangePropertyType(CssBackgroundUtils.ResolveBackgroundPropertyType(value), slashEncountered
-                        , isBackgroundOriginUsed), value, resolvedProps, usedTypes)) {
-                        return false;
+                    CssBackgroundUtils.BackgroundPropertyType type = CssBackgroundUtils.ResolveBackgroundPropertyType(value);
+                    if (CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ORIGIN_OR_CLIP == type) {
+                        boxValues.Add(value);
+                    }
+                    else {
+                        propertyProcessedCorrectly = PutPropertyBasedOnType(ChangePropertyType(type, slashEncountered), value, resolvedProps
+                            , usedTypes);
+                    }
+                }
+                if (!propertyProcessedCorrectly) {
+                    return false;
+                }
+            }
+            return AddBackgroundClipAndBackgroundOriginBoxValues(boxValues, resolvedProps, usedTypes);
+        }
+
+        private static bool AddBackgroundClipAndBackgroundOriginBoxValues(IList<String> boxValues, IDictionary<CssBackgroundUtils.BackgroundPropertyType
+            , String> resolvedProps, ICollection<CssBackgroundUtils.BackgroundPropertyType> usedTypes) {
+            if (boxValues.Count == 1) {
+                return PutPropertyBasedOnType(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_CLIP, boxValues[0], resolvedProps
+                    , usedTypes);
+            }
+            else {
+                if (boxValues.Count >= 2) {
+                    for (int i = 0; i < 2; i++) {
+                        CssBackgroundUtils.BackgroundPropertyType type = i == 0 ? CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ORIGIN
+                             : CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_CLIP;
+                        if (!PutPropertyBasedOnType(type, boxValues[i], resolvedProps, usedTypes)) {
+                            return false;
+                        }
                     }
                 }
             }
-            FillNotProcessedProperties(resolvedProps, usedTypes);
             return true;
         }
 
-        private static bool ProcessValueWithSlash(String value, int slashCharInd, bool isBackgroundOriginUsed, IDictionary
-            <CssBackgroundUtils.BackgroundPropertyType, String> resolvedProps, ICollection<CssBackgroundUtils.BackgroundPropertyType
-            > usedTypes) {
+        private static bool ProcessValueWithSlash(String value, int slashCharInd, IDictionary<CssBackgroundUtils.BackgroundPropertyType
+            , String> resolvedProps, ICollection<CssBackgroundUtils.BackgroundPropertyType> usedTypes) {
             String value1 = value.JSubstring(0, slashCharInd);
             CssBackgroundUtils.BackgroundPropertyType typeBeforeSlash = ChangePropertyType(CssBackgroundUtils.ResolveBackgroundPropertyType
-                (value1), false, isBackgroundOriginUsed);
+                (value1), false);
             if (typeBeforeSlash != CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION && typeBeforeSlash !=
                  CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE) {
                 LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
@@ -224,7 +258,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             }
             String value2 = value.Substring(slashCharInd + 1);
             CssBackgroundUtils.BackgroundPropertyType typeAfterSlash = ChangePropertyType(CssBackgroundUtils.ResolveBackgroundPropertyType
-                (value2), true, isBackgroundOriginUsed);
+                (value2), true);
             if (typeAfterSlash != CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_SIZE && typeAfterSlash != CssBackgroundUtils.BackgroundPropertyType
                 .BACKGROUND_POSITION_OR_SIZE) {
                 LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
@@ -253,7 +287,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         }
 
         private static CssBackgroundUtils.BackgroundPropertyType ChangePropertyType(CssBackgroundUtils.BackgroundPropertyType
-             propertyType, bool slashEncountered, bool isBackgroundOriginUsed) {
+             propertyType, bool slashEncountered) {
             if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_X || propertyType == CssBackgroundUtils.BackgroundPropertyType
                 .BACKGROUND_POSITION_Y) {
                 propertyType = CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION;
@@ -267,10 +301,6 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             }
             if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION && slashEncountered) {
                 return CssBackgroundUtils.BackgroundPropertyType.UNDEFINED;
-            }
-            if (propertyType == CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_ORIGIN_OR_CLIP) {
-                return isBackgroundOriginUsed ? CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_CLIP : CssBackgroundUtils.BackgroundPropertyType
-                    .BACKGROUND_ORIGIN;
             }
             return propertyType;
         }

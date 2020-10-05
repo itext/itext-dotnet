@@ -60,7 +60,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             String shorthandExpression = "url('img.gif') 25%/50px 150px fixed border-box";
             ICollection<String> expectedResolvedProperties = new HashSet<String>(JavaUtil.ArraysAsList("background-color: transparent"
                 , "background-image: url('img.gif')", "background-position: 25%", "background-size: 50px 150px", "background-repeat: repeat"
-                , "background-origin: border-box", "background-clip: border-box", "background-attachment: fixed"));
+                , "background-origin: padding-box", "background-clip: border-box", "background-attachment: fixed"));
             IShorthandResolver backgroundResolver = ShorthandResolverFactory.GetShorthandResolver(CommonCssConstants.BACKGROUND
                 );
             NUnit.Framework.Assert.IsNotNull(backgroundResolver);

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -79,6 +80,41 @@ namespace iText.Layout.Properties {
                 .GetXAxisRepeat());
             NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
                 .GetYAxisRepeat());
+            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyConstructorTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage image = new BackgroundImage.Builder().SetImage(xObject).Build();
+            FieldInfo[] imageFields = image.GetType().GetFields();
+            iText.Layout.Properties.BackgroundImage copyImage = new iText.Layout.Properties.BackgroundImage(image);
+            FieldInfo[] copyImageFields = copyImage.GetType().GetFields();
+            NUnit.Framework.Assert.AreEqual(imageFields.Length, copyImageFields.Length);
+            for (int i = 0; i < imageFields.Length; i++) {
+                FieldInfo imageField = imageFields[i];
+                FieldInfo copyImageField = copyImageFields[i];
+                NUnit.Framework.Assert.AreEqual(imageField, copyImageField);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageClipOriginDefaultsTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            NUnit.Framework.Assert.AreEqual(BackgroundBox.BORDER_BOX, backgroundImage.GetBackgroundClip());
+            NUnit.Framework.Assert.AreEqual(BackgroundBox.PADDING_BOX, backgroundImage.GetBackgroundOrigin());
+            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundImageClipOriginTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                SetBackgroundClip(BackgroundBox.CONTENT_BOX).SetBackgroundOrigin(BackgroundBox.CONTENT_BOX).Build();
+            NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundClip());
+            NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundOrigin());
             BackgroundImageGenericTest("backgroundImage", backgroundImage);
         }
 
