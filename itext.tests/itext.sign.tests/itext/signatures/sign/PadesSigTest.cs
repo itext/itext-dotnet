@@ -93,7 +93,6 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PadesEccSigTest01() {
             SignApproval(certsSrc + "signCertEcc01.p12", destinationFolder + "padesEccSigTest01.pdf");
-            // TODO ECDSA encryption algorithms verification is not supported
             BasicCheckSignedDoc(destinationFolder + "padesEccSigTest01.pdf", "Signature1");
         }
 
