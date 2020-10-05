@@ -290,6 +290,7 @@ namespace iText.IO.Font.Otf {
         public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[] substGlyphIds) {
             //sequence length shall be at least 1
             int substCode = substGlyphIds[0];
+            Glyph oldGlyph = glyphs[idx];
             Glyph glyph = tableReader.GetGlyph(substCode);
             glyphs[idx] = glyph;
             if (substGlyphIds.Length > 1) {
@@ -300,6 +301,14 @@ namespace iText.IO.Font.Otf {
                     additionalGlyphs.Add(glyph);
                 }
                 AddAllGlyphs(idx + 1, additionalGlyphs);
+                if (null != actualText) {
+                    if (null == actualText[idx]) {
+                        actualText[idx] = new GlyphLine.ActualText(oldGlyph.GetUnicodeString());
+                    }
+                    for (int i = 0; i < additionalGlyphs.Count; i++) {
+                        this.actualText[idx + 1 + i] = actualText[idx];
+                    }
+                }
                 idx += substGlyphIds.Length - 1;
                 end += substGlyphIds.Length - 1;
             }
