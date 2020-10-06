@@ -206,6 +206,10 @@ namespace iText.IO.Font.Otf {
             return OtfReadCommon.ReadSubstLookupRecords(rf, substCount);
         }
 
+        protected internal virtual PosLookupRecord[] ReadPosLookupRecords(int substCount) {
+            return OtfReadCommon.ReadPosLookupRecords(rf, substCount);
+        }
+
         protected internal virtual TagAndLocation[] ReadTagAndLocations(int baseLocation) {
             int count = rf.ReadUnsignedShort();
             TagAndLocation[] tagslLocs = new TagAndLocation[count];

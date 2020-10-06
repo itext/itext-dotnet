@@ -160,6 +160,8 @@ namespace iText.IO {
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
 
+        public const String GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED = "Subtable format {0} of GPOS Lookup Type {1} is not supported yet";
+
         public const String GRAPHICS_STATE_WAS_DELETED = "Graphics state is always deleted after event dispatching. If you want to preserve it in renderer info, use preserveGraphicsState method after receiving renderer info.";
 
         public const String IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT = "If Path key is set, Vertices key shall not be present. Remove Vertices key before setting Path";
