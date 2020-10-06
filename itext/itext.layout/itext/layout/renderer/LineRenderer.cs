@@ -909,7 +909,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // TODO for floats we don't apply any leading for the moment (and therefore line-height for pdf2html is not entirely supported in terms of floats)
         protected internal virtual LineRenderer TrimLast() {
             int lastIndex = childRenderers.Count;
             IRenderer lastRenderer = null;
@@ -1065,29 +1064,22 @@ namespace iText.Layout.Renderer {
                 ()) {
                 return;
             }
-            // TODO handle it
-            bool ltr = true;
             float floatWidth = justPlacedFloatBox.GetWidth();
             if (kidFloatPropertyVal.Equals(FloatPropertyValue.LEFT)) {
                 layoutBox.SetWidth(layoutBox.GetWidth() - floatWidth).MoveRight(floatWidth);
                 occupiedArea.GetBBox().MoveRight(floatWidth);
-                if (ltr) {
-                    for (int i = 0; i < childPos; ++i) {
-                        IRenderer prevChild = childRenderers[i];
-                        if (!FloatingHelper.IsRendererFloating(prevChild)) {
-                            prevChild.Move(floatWidth, 0);
-                        }
+                for (int i = 0; i < childPos; ++i) {
+                    IRenderer prevChild = childRenderers[i];
+                    if (!FloatingHelper.IsRendererFloating(prevChild)) {
+                        prevChild.Move(floatWidth, 0);
                     }
                 }
             }
             else {
                 layoutBox.SetWidth(layoutBox.GetWidth() - floatWidth);
-                if (!ltr) {
-                }
             }
         }
 
-        // TODO
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> floatsToNextPageSplitRenderers, LineRenderer
              splitRenderer) {
             foreach (KeyValuePair<int, IRenderer> splitFloat in floatsToNextPageSplitRenderers) {
