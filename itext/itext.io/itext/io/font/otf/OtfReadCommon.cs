@@ -73,16 +73,16 @@ namespace iText.IO.Font.Otf {
             int coverageFormat = rf.ReadShort();
             IList<int> glyphIds;
             if (coverageFormat == 1) {
-                int glyphCount = rf.ReadShort();
+                int glyphCount = rf.ReadUnsignedShort();
                 glyphIds = new List<int>(glyphCount);
                 for (int i = 0; i < glyphCount; i++) {
-                    int coverageGlyphId = rf.ReadShort();
+                    int coverageGlyphId = rf.ReadUnsignedShort();
                     glyphIds.Add(coverageGlyphId);
                 }
             }
             else {
                 if (coverageFormat == 2) {
-                    int rangeCount = rf.ReadShort();
+                    int rangeCount = rf.ReadUnsignedShort();
                     glyphIds = new List<int>();
                     for (int i = 0; i < rangeCount; i++) {
                         ReadRangeRecord(rf, glyphIds);
@@ -96,8 +96,8 @@ namespace iText.IO.Font.Otf {
         }
 
         private static void ReadRangeRecord(RandomAccessFileOrArray rf, IList<int> glyphIds) {
-            int startGlyphId = rf.ReadShort();
-            int endGlyphId = rf.ReadShort();
+            int startGlyphId = rf.ReadUnsignedShort();
+            int endGlyphId = rf.ReadUnsignedShort();
             int startCoverageIndex = rf.ReadShort();
             for (int glyphId = startGlyphId; glyphId <= endGlyphId; glyphId++) {
                 glyphIds.Add(glyphId);
