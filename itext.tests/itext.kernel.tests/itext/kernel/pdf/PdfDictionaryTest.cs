@@ -40,9 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-
+using System;
 using System.Collections.Generic;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -51,16 +52,16 @@ namespace iText.Kernel.Pdf {
         public virtual void TestEntrySet() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
-            IList<int> nums = new List<int>(iText.IO.Util.JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6));
+            IList<int> nums = new List<int>(JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6));
             foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
                 NUnit.Framework.Assert.AreEqual(e.Key.ToString(), "/" + e.Value);
-                if (!nums.Remove(((PdfNumber)e.Value).IntValue())) {
+                if (!nums.Remove(Convert.ToInt32(((PdfNumber)e.Value).IntValue()))) {
                     NUnit.Framework.Assert.Fail("Element not found");
                 }
             }
@@ -70,10 +71,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestEntrySetContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
@@ -85,18 +86,18 @@ namespace iText.Kernel.Pdf {
         public virtual void TestEntrySetRemove() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             IList<KeyValuePair<PdfName, PdfObject>> toRemove = new List<KeyValuePair<PdfName, PdfObject>>();
             foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
                 toRemove.Add(e);
             }
-            foreach (KeyValuePair<PdfName, PdfObject> e_1 in toRemove) {
-                NUnit.Framework.Assert.IsTrue(dict.EntrySet().Remove(e_1));
+            foreach (KeyValuePair<PdfName, PdfObject> e in toRemove) {
+                NUnit.Framework.Assert.IsTrue(dict.EntrySet().Remove(e));
             }
             NUnit.Framework.Assert.AreEqual(0, dict.EntrySet().Count);
             NUnit.Framework.Assert.AreEqual(0, dict.Values().Count);
@@ -107,17 +108,17 @@ namespace iText.Kernel.Pdf {
         public virtual void TestEntrySetRemove2() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             PdfDictionary dict2 = new PdfDictionary();
-            dict2.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict2.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict2.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict2.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict2.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict2.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict2.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict2.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict2.Put(new PdfName("5"), new PdfNumber(5));
             dict2.Put(new PdfName("6"), new PdfNumber(6));
             foreach (KeyValuePair<PdfName, PdfObject> e in dict2.EntrySet()) {
@@ -129,13 +130,80 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestEntrySetRemoveAll() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
+            dict.Put(new PdfName("5"), new PdfNumber(5));
+            dict.Put(new PdfName("6"), new PdfNumber(6));
+            IList<KeyValuePair<PdfName, PdfObject>> toRemove = new List<KeyValuePair<PdfName, PdfObject>>();
+            foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
+                toRemove.Add(e);
+            }
+            dict.EntrySet().RemoveAll(toRemove);
+            NUnit.Framework.Assert.AreEqual(0, dict.EntrySet().Count);
+            NUnit.Framework.Assert.AreEqual(0, dict.Values().Count);
+            NUnit.Framework.Assert.AreEqual(0, dict.Size());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestEntrySetRemoveAll2() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
+            dict.Put(new PdfName("5"), new PdfNumber(5));
+            dict.Put(new PdfName("6"), new PdfNumber(6));
+            PdfDictionary dict2 = new PdfDictionary();
+            dict2.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict2.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict2.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict2.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
+            dict2.Put(new PdfName("5"), new PdfNumber(5));
+            dict2.Put(new PdfName("6"), new PdfNumber(6));
+            dict.EntrySet().RemoveAll(dict2.EntrySet());
+            NUnit.Framework.Assert.AreEqual(0, dict.EntrySet().Count);
+            NUnit.Framework.Assert.AreEqual(0, dict.Values().Count);
+            NUnit.Framework.Assert.AreEqual(0, dict.Size());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestEntrySetRetainAll() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
+            dict.Put(new PdfName("5"), new PdfNumber(5));
+            dict.Put(new PdfName("6"), new PdfNumber(6));
+            IList<KeyValuePair<PdfName, PdfObject>> toRemove = new List<KeyValuePair<PdfName, PdfObject>>();
+            int i = 0;
+            foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
+                toRemove.Add(e);
+                if (i++ > 2) {
+                    break;
+                }
+            }
+            dict.EntrySet().RetainAll(toRemove);
+            NUnit.Framework.Assert.AreEqual(4, dict.EntrySet().Count);
+            NUnit.Framework.Assert.AreEqual(4, dict.Values().Count);
+            NUnit.Framework.Assert.AreEqual(4, dict.Size());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestEntrySetClear() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             dict.EntrySet().Clear();
@@ -148,16 +216,16 @@ namespace iText.Kernel.Pdf {
         public virtual void TestValues() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
-            IList<int> nums = new List<int>(iText.IO.Util.JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6));
+            IList<int> nums = new List<int>(JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6));
             foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
                 NUnit.Framework.Assert.AreEqual(e.Key.ToString(), "/" + e.Value);
-                if (!nums.Remove(((PdfNumber)e.Value).IntValue())) {
+                if (!nums.Remove(Convert.ToInt32(((PdfNumber)e.Value).IntValue()))) {
                     NUnit.Framework.Assert.Fail("Element not found");
                 }
             }
@@ -167,10 +235,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestValuesContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             foreach (PdfObject v in dict.Values()) {
@@ -182,10 +250,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestValuesIndirectContains() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
-            dict.Put(new PdfName("1"), ((PdfNumber)new PdfNumber(1).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("2"), ((PdfNumber)new PdfNumber(2).MakeIndirect(doc)).GetIndirectReference());
-            dict.Put(new PdfName("3"), ((PdfNumber)new PdfNumber(3).MakeIndirect(doc)));
-            dict.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
+            dict.Put(new PdfName("1"), new PdfNumber(1).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("2"), new PdfNumber(2).MakeIndirect(doc).GetIndirectReference());
+            dict.Put(new PdfName("3"), new PdfNumber(3).MakeIndirect(doc));
+            dict.Put(new PdfName("4"), new PdfNumber(4).MakeIndirect(doc));
             dict.Put(new PdfName("5"), new PdfNumber(5));
             dict.Put(new PdfName("6"), new PdfNumber(6));
             NUnit.Framework.Assert.IsTrue(dict.Values().Contains(dict.Get(new PdfName("1"), false)));
@@ -196,38 +264,45 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestPdfNamesFetching() {
-            byte[][] namesBytes = new byte[][] { new byte[] { 35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 
-                105, 102, 116, 95, 49 }, new byte[] { 35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 105, 102
-                , 116, 95, 50 }, new byte[] { 65, 114, 116, 105, 99, 108, 101 }, new byte[] { 66, 105, 108, 100, 117, 
-                110, 116, 101, 114, 115, 99, 104, 114, 105, 102, 116 }, new byte[] { 78, 111, 114, 109, 97, 108, 80, 97
-                , 114, 97, 103, 114, 97, 112, 104, 83, 116, 121, 108, 101 }, new byte[] { 83, 116, 111, 114, 121 }, new 
-                byte[] { 84, 79, 67, 45, 49 }, new byte[] { 84, 79, 67, 45, 50, 45, 50 }, new byte[] { 84, 79, 67, 45, 
-                72, 101, 97, 100 }, new byte[] { 84, 97, 98, 101, 108, 108, 101 }, new byte[] { 84, 97, 98, 101, 108, 
-                108, 101, 95, 72, 101, 97, 100 }, new byte[] { 84, 97, 98, 101, 108, 108, 101, 95, 102, 101, 116, 116 }
-                , new byte[] { 84, 101, 120, 116, 95, 73, 78, 70, 79 }, new byte[] { 84, 101, 120, 116, 95, 73, 110, 102
-                , 111, 95, 72, 101, 97, 100 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 
-                101, 114 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 101, 114, 45, 69, 114
-                , 115, 116, 122, 101, 105, 108, 101 }, new byte[] { 84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114
-                , 112, 101, 114, 95, 66, 97, 99, 107 }, new byte[] { 95, 78, 111, 95, 112, 97, 114, 97, 103, 114, 97, 
-                112, 104, 95, 115, 116, 121, 108, 101, 95 } };
-            // /#C3#9Cberschrift_1
-            // /#C3#9Cberschrift_2
-            // /Article
-            // /Bildunterschrift
-            // /NormalParagraphStyle
-            // /Story
-            // /TOC-1
-            // /TOC-2-2
-            // /TOC-Head
-            // /Tabelle
-            // /Tabelle_Head
-            // /Tabelle_fett
-            // /Text_INFO
-            // /Text_Info_Head
-            // /Textk#C3#B6rper
-            // /Textk#C3#B6rper-Erstzeile
-            // /Textk#C3#B6rper_Back
-            // /_No_paragraph_style_
+            byte[][] namesBytes = new byte[][] { new byte[] { 
+                        // /#C3#9Cberschrift_1
+                        35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 105, 102, 116, 95, 49 }, new byte[] { 
+                        // /#C3#9Cberschrift_2
+                        35, 67, 51, 35, 57, 67, 98, 101, 114, 115, 99, 104, 114, 105, 102, 116, 95, 50 }, new byte[] { 
+                        // /Article
+                        65, 114, 116, 105, 99, 108, 101 }, new byte[] { 
+                        // /Bildunterschrift
+                        66, 105, 108, 100, 117, 110, 116, 101, 114, 115, 99, 104, 114, 105, 102, 116 }, new byte[] { 
+                        // /NormalParagraphStyle
+                        78, 111, 114, 109, 97, 108, 80, 97, 114, 97, 103, 114, 97, 112, 104, 83, 116, 121, 108, 101 }, new byte[] 
+                { 
+                        // /Story
+                        83, 116, 111, 114, 121 }, new byte[] { 
+                        // /TOC-1
+                        84, 79, 67, 45, 49 }, new byte[] { 
+                        // /TOC-2-2
+                        84, 79, 67, 45, 50, 45, 50 }, new byte[] { 
+                        // /TOC-Head
+                        84, 79, 67, 45, 72, 101, 97, 100 }, new byte[] { 
+                        // /Tabelle
+                        84, 97, 98, 101, 108, 108, 101 }, new byte[] { 
+                        // /Tabelle_Head
+                        84, 97, 98, 101, 108, 108, 101, 95, 72, 101, 97, 100 }, new byte[] { 
+                        // /Tabelle_fett
+                        84, 97, 98, 101, 108, 108, 101, 95, 102, 101, 116, 116 }, new byte[] { 
+                        // /Text_INFO
+                        84, 101, 120, 116, 95, 73, 78, 70, 79 }, new byte[] { 
+                        // /Text_Info_Head
+                        84, 101, 120, 116, 95, 73, 110, 102, 111, 95, 72, 101, 97, 100 }, new byte[] { 
+                        // /Textk#C3#B6rper
+                        84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 101, 114 }, new byte[] { 
+                        // /Textk#C3#B6rper-Erstzeile
+                        84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 101, 114, 45, 69, 114, 115, 116, 122, 101, 105, 
+                108, 101 }, new byte[] { 
+                        // /Textk#C3#B6rper_Back
+                        84, 101, 120, 116, 107, 35, 67, 51, 35, 66, 54, 114, 112, 101, 114, 95, 66, 97, 99, 107 }, new byte[] { 
+                        // /_No_paragraph_style_
+                        95, 78, 111, 95, 112, 97, 114, 97, 103, 114, 97, 112, 104, 95, 115, 116, 121, 108, 101, 95 } };
             bool[] haveValue = new bool[] { true, true, false, true, true, true, false, false, false, false, false, false
                 , false, false, false, false, false, false };
             IList<PdfName> names = new List<PdfName>();

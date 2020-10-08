@@ -155,7 +155,6 @@ namespace iText.IO.Font.Otf
 					needsActualText = true;
 					break;
 				}
-				// TODO zero glyph is a special case. Unicode might be special
 				toUnicodeMapResult.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
 			}
 			return needsActualText || !toUnicodeMapResult.ToString().Equals(glyphLinePart.actualText

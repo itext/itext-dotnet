@@ -47,188 +47,465 @@ using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
 using iText.Test;
 using iText.Test.Attributes;
+using NUnit.Framework;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     class ResourceResolverTest : ExtendedITextTest {
-        public static readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-           .CurrentContext.TestDirectory) + "/resources/itext/styledxmlparser/resolver/retrieveStreamTest/";
+        private static readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework
+                                                     .TestContext
+                                                     .CurrentContext.TestDirectory) +
+                                                 "/resources/itext/styledxmlparser/resolver/retrieveStreamTest/";
 
-         private static readonly String bLogoIncorrect = "data:image/png;base,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
+        private static readonly String bLogoIncorrect =
+            "data:image/png;base,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
 
-        private static readonly String bLogoCorruptedData = "data:image/png;base64,,,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
+        private static readonly String bLogoCorruptedData =
+            "data:image/png;base64,,,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
 
-        private static readonly String bLogo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
+        private static readonly String bLogo =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVoAAAAxCAMAAACsy5FpAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAqUExURQAAAPicJAdJdQdJdQdJdficJjBUbPicJgdJdQdJdficJficJQdJdficJlrFe50AAAAMdFJOUwCBe8I/Phe+65/saIJg0K4AAAMOSURBVHja7ZvbmqsgDIU5Bo/v/7q7/WZXsQYNuGy1muuZFH7DIiSglFLU6pZUbGQQNvXpNcC4caoNRvNxOuDUdf80HXk3VYewKp516DHWxuOc/0ye/U00duAwU+/qkWzfh9F9hzIHJxuzNa+fsa4I7Ihx+H+qUFN/sKVhzP7lH+a+qwY1gJHtmwFDPBHK1wLLjLOGTb2jIWhHScAF7RgOGod2CAGTFB8J2JodJ3Dq5kNow95oH3BdtsjGHE6LVu+P9iG5UlVwNjXOndGeRWuZEBBJLtWcMMK11nFoDfDL4TOEMUu0K/leIpNNpUrYFVsrDi2Mbb1DXqv5PV4quWzKHikJKq99utTsoI1dsMjBkr2dctoAMO3XQS2ogrNrJ5vH1OvtU6/ddIPR0k1g9K++bcSKo6Htf8wbdxpK2rnRigJRqAU3WiEylzzVlubCF0TLb/pTyZXH9o1WoKLVoKK8yBbUHS6IdjksZYpxo82WXIzIXhptYtmDRPbQaDXiPBZaaQl26ZBI6pfQ+gZ00A3CxkH6COo2rIwjom12KM/IJRehBUdF2wLrtUWS+56P/Q7aPUrheYnYRpE9LtrwSbSp7cxuJnv1qCWzk9AeEy3t0MAp2ccq93NogWHry3QWowqHPDK0mPSr8aXZAWQzO+hB17ebb9P5ZbDCu2obJPeiNQQWbAUse10VbbKqSLm9yRutQGT/8wO0G6+LdvV2Aaq0eDW0kmI3SHKvhZZkESnoTd5o5SIr+gb0A2g9wGQi67KUw5wdLajNEHymyCqo5B4RLawWHp10XcEC528suBOjJVwDZ2iOca9lBNsSl4jZE6Ntd6jXmtKVzeiIOy/aDzwTydmPZpJrzov2A89EsrKod8mVoq1y0LbsE02Zf/sVQSAObXa5ZSq5UkGoZw9LlqwRNkai5ZT7rRXyHkJgQqioSBipgjhGHPdMYy3hbLx8UDbDPTatndyeeW1HpaXtodxYyUO+zmoDUWjeUnHRB7d5E/KQnazRs0VdbWjI/EluloPnb26+KXIGI+e+7CBt/wAetDeCKwxY6QAAAABJRU5ErkJggg==";
 
-        [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, Count = 1)]
-        public virtual void malformedResourceNameTest() { 
+        // Constructor tests block
+
+        [Test]
+        public virtual void ConstructorWithBaseUriTest() {
+            ResourceResolver resolver = new ResourceResolver(null);
+
+            UriResolver uriResolver = new UriResolver("");
+            String resolveUrl = resolver.ResolveAgainstBaseUri("").ToString();
+            String expectedUrl = uriResolver.ResolveAgainstBaseUri("").ToString();
+
+            Assert.AreEqual(resolveUrl, expectedUrl);
+            Assert.AreEqual(typeof(DefaultResourceRetriever), resolver.GetRetriever().GetType());
+        }
+
+        [Test]
+        public virtual void ConstructorWithBaseUriAndResourceRetrieverTest() {
+            ResourceResolver resolver = new ResourceResolver("folder", new CustomResourceRetriever());
+
+            UriResolver uriResolver = new UriResolver("folder");
+            String resolveUrl = resolver.ResolveAgainstBaseUri("").ToString();
+            String expectedUrl = uriResolver.ResolveAgainstBaseUri("").ToString();
+
+            Assert.AreEqual(resolveUrl, expectedUrl);
+            Assert.AreEqual(typeof(CustomResourceRetriever), resolver.GetRetriever().GetType());
+        }
+
+        class CustomResourceRetriever : DefaultResourceRetriever {
+
+        }
+
+        // Malformed resource name tests block
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveStreamByMalformedResourceNameTest() {
             String fileName = "resourceResolverTest .png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            resourceResolver.RetrieveStream(fileName);
+            byte[] bytes = resourceResolver.RetrieveStream(fileName);
+            Assert.Null(bytes);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ResourceResolverConstructorTest() {
-            ResourceResolver rr = new ResourceResolver(null);
-            UriResolver ur = new UriResolver("");
-            String rrUrl = rr.ResolveAgainstBaseUri("").ToString();
-            String urUrl = ur.ResolveAgainstBaseUri("").ToString();
-            NUnit.Framework.Assert.AreEqual(rrUrl, urUrl);
-        }
-        
-        [NUnit.Framework.Test]
-        public virtual void malformedResourceNameTest1() {
+        [Test]
+        public virtual void RetrieveStyleSheetByMalformedResourceNameTest() {
             NUnit.Framework.Assert.That(() => {
-                String fileName = "retrieveStyl eSheetTest.css";
-                ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-                resourceResolver.RetrieveStyleSheet(fileName);
-            }
-            , NUnit.Framework.Throws.TypeOf<FileNotFoundException>());
-            ;
+                    String fileName = "retrieveStyl eSheetTest.css";
+                    ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+                    resourceResolver.RetrieveStyleSheet(fileName);
+                }
+                , NUnit.Framework.Throws.InstanceOf<IOException>());
         }
 
-        [NUnit.Framework.Test]
-        public void IsDataSrcCheckTest() {
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveResourceAsInputStreamByMalformedResourceNameTest() {
+            String fileName = "retrieveStyl eSheetTest.css";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            NUnit.Framework.Assert.True(resourceResolver.IsDataSrc(bLogoCorruptedData));
-            NUnit.Framework.Assert.True(resourceResolver.IsDataSrc(bLogoIncorrect));
-            NUnit.Framework.Assert.False(resourceResolver.IsDataSrc("https://data.com/data"));
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+            Assert.Null(stream);
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveBytesFromResourceByMalformedResourceNameTest() {
+            String fileName = "retrieveStyl eSheetTest.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.Null(bytes);
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveImageExtendedByMalformedResourceNameTest() {
+            String fileName = "retrieveStyl eSheetTest.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            PdfXObject pdfXObject = resourceResolver.RetrieveImageExtended(fileName);
+            Assert.Null(pdfXObject);
         }
         
-        [NUnit.Framework.Test]
-        public void IncorrectBase64Test() {
+        [Test]
+        public virtual void MalformedResourceNameTest07() {
+            String fileName = "%23%5B%5D@!$&'()+,;=._~-/styles09.css";
+            Stream expected = new FileStream(baseUri + "#[]@!$&'()+,;=._~-/styles09.css", FileMode.Open, FileAccess.Read);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject pdfXObject = resourceResolver.TryResolveBase64ImageSource(bLogoIncorrect);
-            NUnit.Framework.Assert.Null(pdfXObject);
+            Stream stream = resourceResolver.RetrieveStyleSheet(fileName);
+            Assert.NotNull(stream);
+            Assert.AreEqual(expected.Read(), stream.Read());
+        }
+
+        // Boolean method tests block
+
+        [Test]
+        public virtual void IsDataSrcTest() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Assert.True(resourceResolver.IsDataSrc(bLogo));
+            Assert.True(resourceResolver.IsDataSrc(bLogoCorruptedData));
+            Assert.True(resourceResolver.IsDataSrc(bLogoIncorrect));
+            Assert.False(resourceResolver.IsDataSrc("https://data.com/data"));
+        }
+
+        [Test]
+        public virtual void IsImageTypeSupportedTest() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Assert.True(resourceResolver.IsImageTypeSupportedByImageDataFactory("resourceResolverTest.png"));
+            Assert.False(resourceResolver.IsImageTypeSupportedByImageDataFactory("test.txt"));
+            Assert.False(resourceResolver.IsImageTypeSupportedByImageDataFactory("htt://test.png"));
+        }
+
+        // Retrieve pdfXObject tests block
+
+        [Test]
+        public virtual void RetrieveImageExtendedBase64Test() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogo);
+            Assert.NotNull(image);
         }
         
-        [NUnit.Framework.Test]
-        public virtual void RetrieveAsStreamBase64Test() {
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI)]
+        public virtual void RetrieveImageExtendedIncorrectBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveResourceAsInputStream(bLogo);
-            NUnit.Framework.Assert.NotNull(stream);
+            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
+            Assert.Null(image);
         }
 
-        [NUnit.Framework.Test]
-        public void retrieveBytesTest()
-        {
-            String fileName = "resourceResolverTest.png";
-            byte[] expected = File.ReadAllBytes(baseUri + fileName);
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveImageExtendedCorruptedDataBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            byte[] stream = resourceResolver.RetrieveStream("resourceResolverTest.png");
-            NUnit.Framework.Assert.NotNull(stream);
-            NUnit.Framework.Assert.AreEqual(expected.Length, stream.Length);
+            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
+            Assert.Null(image);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RetrieveStreamTest() {
-            String fileName = "resourceResolverTest.png";
-            byte[] expected = File.ReadAllBytes(baseUri + fileName);
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveImageExtendedNullTest() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            byte[] stream = resourceResolver.RetrieveStream("resourceResolverTest.png");
-            NUnit.Framework.Assert.NotNull(stream);
-            NUnit.Framework.Assert.AreEqual(expected.Length, stream.Length);
+            PdfXObject image = resourceResolver.RetrieveImageExtended(null);
+            Assert.Null(image);
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public virtual void RetrieveImageTest() {
             String fileName = "resourceResolverTest.png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
-            NUnit.Framework.Assert.NotNull(image);
-            NUnit.Framework.Assert.True(image.IdentifyImageFileExtension().EqualsIgnoreCase("png"));
+            Assert.NotNull(image);
+            Assert.True(image.IdentifyImageFileExtension().EqualsIgnoreCase("png"));
         }
 
-        [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, Count = 1)]
-        public void RetrieveBytesMalformedResourceNameTest() {
+        // Retrieve byte array tests block
+
+        [Test]
+        public virtual void RetrieveBytesFromResourceBase64Test() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(bLogo);
+            Assert.NotNull(bytes);
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveBytesFromResourceIncorrectBase64Test() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(bLogoIncorrect);
+            Assert.Null(bytes);
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI,
+            LogLevel = LogLevelConstants.ERROR)]
+        public virtual void RetrieveBytesFromResourceCorruptedDataBase64Test() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(bLogoCorruptedData);
+            Assert.Null(bytes);
+        }
+
+        [Test]
+        public virtual void RetrieveBytesFromResourcePngImageTest() {
+            String fileName = "resourceResolverTest.png";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] expected = File.ReadAllBytes(baseUri + fileName);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.NotNull(bytes);
+            Assert.AreEqual(expected.Length, bytes.Length);
+        }
+
+        [Test]
+        public virtual void RetrieveStreamPngImageTest() {
+            String fileName = "resourceResolverTest.png";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] expected = File.ReadAllBytes(baseUri + fileName);
+            byte[] stream = resourceResolver.RetrieveStream(fileName);
+            Assert.NotNull(resourceResolver.RetrieveStream(fileName));
+            Assert.AreEqual(expected.Length, stream.Length);
+        }
+
+        [Test]
+        public virtual void RetrieveBytesFromResourceStyleSheetTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            byte[] expected = File.ReadAllBytes(baseUri + fileName);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.NotNull(bytes);
+            Assert.AreEqual(expected.Length, bytes.Length);
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
+        public virtual void AttemptToRetrieveBytesFromResourceStyleSheetWithFilterRetrieverTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            resourceResolver.SetRetriever(new FilterResourceRetriever());
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.Null(bytes);
+        }
+        
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI)]
+        public virtual void RetrieveImageWrongPathTest() {
+            String fileName = "/itextpdf.com/itis.jpg";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            Assert.Null(image);
+        }
+        
+        [Test]
+        public virtual void RetrieveImageRightPathTest() {
+            String fileName = "itextpdf.com/itis.jpg";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            Assert.NotNull(image);
+            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
+        }
+
+        [Test]
+        public virtual void RetrieveImagePathWithSpacesTest() {
+            String fileName = "retrieveImagePathWithSpaces.jpg";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri + "path with spaces/");
+            PdfImageXObject image = resourceResolver.RetrieveImage(fileName);
+            Assert.NotNull(image);
+            Assert.IsTrue(image.IdentifyImageFileExtension().EqualsIgnoreCase("jpg"));
+        }
+
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI)]
+        public virtual void RetrieveBytesMalformedResourceNameTest() {
             String fileName = "resourceResolverTest .png";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             byte[] bytes =resourceResolver.RetrieveBytesFromResource(fileName);
-            NUnit.Framework.Assert.Null(bytes);
+            Assert.Null(bytes);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RetrieveStyleSheetTest() {
-            string fileName = "retrieveStyleSheetTest.css";
+        [Test]
+        public virtual void RetrieveBytesFromResourceWithRetryRetrieverTest() {
+            String fileName = "!invalid! StyleSheetName.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri, new RetryResourceRetriever(baseUri));
+            byte[] expected = File.ReadAllBytes(baseUri + "retrieveStyleSheetTest.css");
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.NotNull(bytes);
+            Assert.AreEqual(expected.Length, bytes.Length);
+        }
 
+        [Test]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT,
+            LogLevel = LogLevelConstants.WARN)]
+        public virtual void AttemptToRetrieveBytesFromLocalWithResourceSizeByteLimitTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            // retrieveStyleSheetTest.css size is 89 bytes
+            IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(88);
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.Null(bytes);
+        }
+
+        [Test]
+        public virtual void RetrieveBytesFromLocalWithResourceSizeByteLimitTest() {
+            String fileName = "retrieveStyleSheetTest.css.dat";
+            // retrieveStyleSheetTest.css.dat size is 89 bytes
+            IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(89);
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
+            byte[] bytes = resourceResolver.RetrieveBytesFromResource(fileName);
+            Assert.NotNull(bytes);
+            Assert.AreEqual(((DefaultResourceRetriever) retriever).GetResourceSizeByteLimit(), bytes.Length);
+        }
+
+        // Retrieve input stream tests block
+
+        [Test]
+        public virtual void AttemptToReadBytesFromLimitedInputStreamTest() {
+            NUnit.Framework.Assert.That(() => {
+                    String fileName = "retrieveStyleSheetTest.css";
+                    // retrieveStyleSheetTest.css size is 89 bytes
+                    IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(40);
+                    ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
+                    Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+                    for (int i = 0; i < 41; i++) {
+                        stream.Read();
+                    }
+                }
+                , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>());
+        }
+
+        [Test]
+        public virtual void RetrieveResourceAsInputStreamBase64Test() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(bLogo);
+            Assert.NotNull(stream);
+        }
+
+        [Test]
+        public virtual void RetrieveStyleSheetTest() {
+            String fileName = "retrieveStyleSheetTest.css";
             Stream expected = new FileStream(baseUri + fileName, FileMode.Open, FileAccess.Read);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet("retrieveStyleSheetTest.css");
-
-            NUnit.Framework.Assert.NotNull(stream);
-            NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
+            Stream stream = resourceResolver.RetrieveStyleSheet(fileName);
+            Assert.NotNull(stream);
+            Assert.AreEqual(expected.Read(), stream.Read());
         }
 
-        [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI, Count = 1)]
-        public virtual void RetrieveImageExtendedNullTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(null);
-            NUnit.Framework.Assert.Null(image);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void RetrieveImageExtendedBase64Test() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogo);
-            NUnit.Framework.Assert.NotNull(image);
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI, Count = 1)]
-        public virtual void RetrieveImageExtendedIncorrectBase64Test() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
-            NUnit.Framework.Assert.Null(image);
-        }
-        
-        [NUnit.Framework.Test]
-        public virtual void absolutePathTest() {
-            //TODO check this test with on linux or mac with mono!
+        [Test]
+        public virtual void RetrieveResourceAsInputStreamStyleSheetTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri).AbsolutePath + fileName;
-            Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
-
+            Stream expected = new FileStream(baseUri + fileName, FileMode.Open, FileAccess.Read);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
-            NUnit.Framework.Assert.NotNull(stream);
-            NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+            Assert.NotNull(stream);
+            Assert.AreEqual(expected.Read(), stream.Read());
         }
-        
-        [NUnit.Framework.Test]
-        public virtual void absolutePathTest2() {
-            //TODO check this test with on linux or mac with mono!
+
+        [Test]
+        [LogMessage(LogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, LogLevel = LogLevelConstants.WARN)]
+        public virtual void AttemptToRetrieveInputStreamWithFilterRetrieverTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            String absolutePath = UrlUtil.ToNormalizedURI(baseUri) + fileName;
-            //this constructor will fail.
-            //Stream expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read);
-        
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath);
-            NUnit.Framework.Assert.NotNull(stream);
-            //NUnit.Framework.Assert.AreEqual(expected.Read(), stream.Read());
-        }
-        
-        [NUnit.Framework.Test]
-        public void IsImageTypeSupportedTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            String fileName = "resourceResolverTest.png";
-            bool res = resourceResolver.IsImageTypeSupportedByImageDataFactory(fileName);
-            NUnit.Framework.Assert.True(res);
-            res = resourceResolver.IsImageTypeSupportedByImageDataFactory("test.txt");
-            NUnit.Framework.Assert.False(res);
+            resourceResolver.SetRetriever(new FilterResourceRetriever());
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+            Assert.Null(stream);
         }
 
-        [NUnit.Framework.Test]
-        public void IsImageTypeSupportedMalformedURLTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            bool res = resourceResolver.IsImageTypeSupportedByImageDataFactory("htt://test.png");
-            NUnit.Framework.Assert.False(res);
-            res = resourceResolver.IsImageTypeSupportedByImageDataFactory("htt://test.png");
-            NUnit.Framework.Assert.False(res);
+        class FilterResourceRetriever : DefaultResourceRetriever {
+
+            protected internal override bool UrlFilter(Uri url) {
+                return url.AbsolutePath.StartsWith("/MyFolderWithUniqName");
+            }
         }
-        
-        
+
+        [Test]
+        public virtual void RetrieveInputStreamWithRetryRetrieverTest() {
+            String fileName = "!invalid! StyleSheetName.css";
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri, new RetryResourceRetriever(baseUri));
+            Stream expected = new FileStream(baseUri + "retrieveStyleSheetTest.css", FileMode.Open, FileAccess.Read);
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+            Assert.NotNull(stream);
+            Assert.AreEqual(expected.Read(), stream.Read());
+        }
+
+        class RetryResourceRetriever : DefaultResourceRetriever {
+            private String baseUri;
+
+            public RetryResourceRetriever(String baseUri) {
+                this.baseUri = baseUri;
+            }
+
+            public override Stream GetInputStreamByUrl(Uri url) {
+                Stream stream = null;
+                try {
+                    stream = base.GetInputStreamByUrl(url);
+                }
+                catch (Exception ignored) {
+                }
+
+                if (stream == null) {
+                    Uri newUrl = new UriResolver(this.baseUri).ResolveAgainstBaseUri("retrieveStyleSheetTest.css");
+                    stream = base.GetInputStreamByUrl(newUrl);
+                }
+
+                return stream;
+            }
+        }
+
+        // Absolute path tests block
+
+        [Test]
+        public virtual void RetrieveStyleSheetAbsolutePathTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            String absolutePath = Path.Combine(baseUri, fileName).ToFile().FullName;
+
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            using (Stream stream = resourceResolver.RetrieveStyleSheet(absolutePath),
+                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
+        }
+
+        [Test]
+        public virtual void RetrieveResourceAsInputStreamAbsolutePathTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            String absolutePath = Path.Combine(baseUri, fileName).ToFile().FullName;
+
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
+                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
+        }
+
+        [Test]
+        public virtual void RetrieveStyleSheetFileUrlTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            Uri url = Path.Combine(baseUri, fileName).ToUri().ToUrl();
+            String fileUrlString = url.ToExternalForm();
+
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            using (Stream stream = resourceResolver.RetrieveStyleSheet(fileUrlString),
+                expected = UrlUtil.OpenStream(url)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
+
+        }
+
+        [Test]
+        public virtual void RetrieveResourceAsInputStreamFileUrlTest() {
+            String fileName = "retrieveStyleSheetTest.css";
+            Uri url = Path.Combine(baseUri, fileName).ToUri().ToUrl();
+            String fileUrlString = url.ToExternalForm();
+
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileUrlString),
+                expected = UrlUtil.OpenStream(url)) {
+                Assert.NotNull(stream);
+                Assert.AreEqual(expected.Read(), stream.Read());
+            }
+        }
     }
 }

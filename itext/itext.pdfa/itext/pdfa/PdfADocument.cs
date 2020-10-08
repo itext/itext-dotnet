@@ -234,6 +234,11 @@ namespace iText.Pdfa {
                     checker.CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
                     break;
                 }
+
+                case IsoKey.XREF_TABLE: {
+                    checker.CheckXrefTable((PdfXrefTable)obj);
+                    break;
+                }
             }
         }
 

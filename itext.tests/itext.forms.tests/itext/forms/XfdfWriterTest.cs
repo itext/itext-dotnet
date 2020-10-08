@@ -971,51 +971,5 @@ namespace iText.Forms {
             , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING))
 ;
         }
-
-        //TODO how to define test as unit test inside this whole class? is it even possible
-        [NUnit.Framework.Test]
-        public virtual void FieldEmptyValueTest() {
-            XfdfObject xfdfObject = new XfdfObject();
-            FieldsObject fieldsObject = new FieldsObject();
-            FieldObject fieldObject = new FieldObject();
-            fieldObject.SetName("testname");
-            fieldObject.SetValue("");
-            fieldsObject.AddField(fieldObject);
-            xfdfObject.SetFields(fieldsObject);
-            String xfdfFilename = destinationFolder + "fieldEmptyValueTest.xfdf";
-            xfdfObject.WriteToFile(xfdfFilename);
-            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldEmptyValueTest.xfdf"
-                , sourceFolder + "cmp_fieldEmptyValueTest.xfdf"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void FieldNullValueTest() {
-            XfdfObject xfdfObject = new XfdfObject();
-            FieldsObject fieldsObject = new FieldsObject();
-            FieldObject fieldObject = new FieldObject();
-            fieldObject.SetName("testname");
-            fieldsObject.AddField(fieldObject);
-            xfdfObject.SetFields(fieldsObject);
-            String xfdfFilename = destinationFolder + "fieldNullValueTest.xfdf";
-            xfdfObject.WriteToFile(xfdfFilename);
-            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldNullValueTest.xfdf", 
-                sourceFolder + "cmp_fieldNullValueTest.xfdf"));
-        }
-
-        //TODO how to define test as unit test inside this whole class? is it even possible
-        [NUnit.Framework.Test]
-        public virtual void FieldValueTest() {
-            XfdfObject xfdfObject = new XfdfObject();
-            FieldsObject fieldsObject = new FieldsObject();
-            FieldObject fieldObject = new FieldObject();
-            fieldObject.SetName("testname");
-            fieldObject.SetValue("testvalue");
-            fieldsObject.AddField(fieldObject);
-            xfdfObject.SetFields(fieldsObject);
-            String xfdfFilename = destinationFolder + "fieldValueTest.xfdf";
-            xfdfObject.WriteToFile(xfdfFilename);
-            NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(destinationFolder + "fieldValueTest.xfdf", sourceFolder
-                 + "cmp_fieldValueTest.xfdf"));
-        }
     }
 }

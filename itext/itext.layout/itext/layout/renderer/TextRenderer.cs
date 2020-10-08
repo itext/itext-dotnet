@@ -1605,9 +1605,10 @@ namespace iText.Layout.Renderer {
             return -1;
         }
 
-        private bool CodePointIsOfSpecialScript(int codePoint) {
+        internal static bool CodePointIsOfSpecialScript(int codePoint) {
             UnicodeScript? glyphScript = UnicodeScriptUtil.Of(codePoint);
-            return UnicodeScript.THAI == glyphScript || UnicodeScript.KHMER == glyphScript || UnicodeScript.LAO == glyphScript;
+            return UnicodeScript.THAI == glyphScript || UnicodeScript.KHMER == glyphScript || UnicodeScript.LAO == glyphScript
+                 || UnicodeScript.MYANMAR == glyphScript;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {

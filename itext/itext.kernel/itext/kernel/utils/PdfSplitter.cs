@@ -88,6 +88,7 @@ namespace iText.Kernel.Utils {
         /// This could be changed with this flag - if set to false, resultant documents will be not tagged, even if
         /// original document is tagged.
         /// </remarks>
+        /// <param name="preserveTagged">defines whether the resultant documents need to be tagged</param>
         public virtual void SetPreserveTagged(bool preserveTagged) {
             this.preserveTagged = preserveTagged;
         }
@@ -99,6 +100,7 @@ namespace iText.Kernel.Utils {
         /// This could be changed with this flag - if set to false, resultant documents won't contain outlines, even if
         /// original document had them.
         /// </remarks>
+        /// <param name="preserveOutlines">defines whether the resultant documents will preserve outlines or not</param>
         public virtual void SetPreserveOutlines(bool preserveOutlines) {
             this.preserveOutlines = preserveOutlines;
         }
@@ -155,12 +157,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_167(splitDocuments));
+            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_171(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_167 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_167(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_171 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_171(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -192,12 +194,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageCount(pageCount, new _IDocumentReadyListener_204(splitDocuments));
+            SplitByPageCount(pageCount, new _IDocumentReadyListener_208(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_204 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_204(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_208 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_208(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -274,6 +276,11 @@ namespace iText.Kernel.Utils {
         /// and places the entire hierarchy in a separate document ( outlines and pages ) .
         /// </summary>
         /// <param name="outlineTitles">list of outline titles .</param>
+        /// <returns>
+        /// Collection of
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// which contains split parts of a document
+        /// </returns>
         public virtual IList<PdfDocument> SplitByOutlines(IList<String> outlineTitles) {
             if (outlineTitles == null || outlineTitles.Count == 0) {
                 return JavaCollectionsUtil.EmptyList<PdfDocument>();

@@ -1164,6 +1164,10 @@ namespace iText.Kernel.Pdf {
                 lastCopiedPageNum = (int)pageNum;
             }
             CopyLinkAnnotations(toDocument, page2page);
+            // Copying OCGs should go after copying LinkAnnotations
+            if (GetCatalog() != null && GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties) != null) {
+                OcgPropertiesCopier.CopyOCGProperties(this, toDocument, page2page);
+            }
             // It's important to copy tag structure after link annotations were copied, because object content items in tag
             // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
             if (toDocument.IsTagged()) {

@@ -45,8 +45,7 @@ using System;
 using System.Collections.Generic;
 #if !NETSTANDARD1_6
 using System.Drawing;
-#endif
-using System.IO;
+#endif // !NETSTANDARD1_6
 using iText.IO.Codec;
 using iText.IO.Util;
 
@@ -173,7 +172,9 @@ namespace iText.IO.Image {
         public static ImageData Create(System.Drawing.Image image, Color? color) {
             return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
+#endif // !NETSTANDARD1_6
 
+#if !NETSTANDARD1_6
         /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
         /// <param name="image">the <c>java.awt.Image</c> to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
@@ -182,7 +183,7 @@ namespace iText.IO.Image {
         public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
-#endif
+#endif // !NETSTANDARD1_6
 
         /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
         /// <param name="url">location of the image.</param>
@@ -315,8 +316,13 @@ namespace iText.IO.Image {
             return image;
         }
 
-        /// <summary>Create a ImageData instance from a Jpeg image url</summary>
+        /// <summary>
+        /// Create an
+        /// <see cref="ImageData"/>
+        /// instance from a Jpeg image url
+        /// </summary>
         /// <param name="url">URL</param>
+        /// <returns>the created JPEG image</returns>
         public static ImageData CreateJpeg(Uri url) {
             ValidateImageType(url, ImageType.JPEG);
             ImageData image = new JpegImageData(url);

@@ -45,6 +45,14 @@ using System;
 namespace iText.StyledXmlParser {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class LogMessageConstant {
+        /// <summary>The Constant SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
+        public const String SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "{0} shorthand property cannot be empty.";
+
+        /// <summary>The Constant BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
+        [System.ObsoleteAttribute(@"LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY should be used instead."
+            )]
+        public const String BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "Background shorthand property cannot be empty.";
+
         /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
         public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";
 
@@ -57,10 +65,16 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant ERROR_PARSING_CSS_SELECTOR.</summary>
         public const String ERROR_PARSING_CSS_SELECTOR = "Error while parsing css selector: {0}";
 
+        /// <summary>The Constant ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR.</summary>
+        public const String ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR = "Only the last background can include a background color.";
+
         /// <summary>The Constant UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED.</summary>
         public const String UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED = "Unknown absolute metric length parsed \"{0}\".";
 
         public const String UNKNOWN_METRIC_ANGLE_PARSED = "Unknown metric angle parsed: \"{0}\".";
+
+        /// <summary>The Constant UNKNOWN__PROPERTY.</summary>
+        public const String UNKNOWN_PROPERTY = "Unknown {0} property: \"{1}\".";
 
         public const String URL_IS_EMPTY_IN_CSS_EXPRESSION = "url function is empty in expression:{0}";
 
@@ -82,6 +96,12 @@ namespace iText.StyledXmlParser {
 
         [System.ObsoleteAttribute(@"moved into iText.StyledXmlParser.Exceptions.StyledXMLParserException")]
         public const String NAN = "The passed value (@{0}) is not a number";
+
+        /// <summary>The Constant RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT.</summary>
+        public const String RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT = "Resource with given URL ({0}) was filtered out.";
+
+        /// <summary>The Constant UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT.</summary>
+        public const String UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT = "Unable to retrieve resource with given URL ({0}) and resource size byte limit ({1}).";
 
         /// <summary>The Constant UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI.</summary>
         public const String UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI = "Unable to retrieve image with given base URI ({0}) and image source path ({1})";

@@ -49,13 +49,14 @@ using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Dummy.Sdk;
+using iText.Svg.Processors.Impl;
 using iText.Test;
 
 namespace iText.Svg.Css {
     public class DefaultStylesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CheckDefaultStrokeValuesTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
+            ICssResolver styleResolver = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
@@ -74,7 +75,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void CheckDefaultFillValuesTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
+            ICssResolver styleResolver = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
@@ -87,7 +88,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void CheckDefaultFontValuesTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
+            ICssResolver styleResolver = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
@@ -98,7 +99,8 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void EmptyStreamTest() {
-            ICssResolver styleResolver = new SvgStyleResolver(new MemoryStream(new byte[] {  }));
+            ICssResolver styleResolver = new SvgStyleResolver(new MemoryStream(new byte[] {  }), new SvgProcessorContext
+                (new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
@@ -109,7 +111,7 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void EmptyStylesFallbackTest() {
             NUnit.Framework.Assert.That(() =>  {
-                new SvgStyleResolver(new ExceptionInputStream());
+                new SvgStyleResolver(new ExceptionInputStream(), new SvgProcessorContext(new SvgConverterProperties()));
             }
             , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
 ;

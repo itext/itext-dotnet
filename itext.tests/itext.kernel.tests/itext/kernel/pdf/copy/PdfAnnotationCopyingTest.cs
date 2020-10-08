@@ -21,10 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using NUnit.Framework;
 using iText.IO.Util;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Copy {
@@ -125,6 +130,67 @@ namespace iText.Kernel.Pdf.Copy {
             }
             , NUnit.Framework.Throws.InstanceOf<AssertionException>())
 ;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopySameLinksWithGoToSmartModeTest() {
+            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
+            String cmpFilePath = sourceFolder + "cmp_copySameLinksWithGoToSmartMode.pdf";
+            String outFilePath = destinationFolder + "copySameLinksWithGoToSmartMode.pdf";
+            CopyLinksGoToActionTest(outFilePath, true, false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyDiffDestLinksWithGoToSmartModeTest() {
+            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
+            String cmpFilePath = sourceFolder + "cmp_copyDiffDestLinksWithGoToSmartMode.pdf";
+            String outFilePath = destinationFolder + "copyDiffDestLinksWithGoToSmartMode.pdf";
+            CopyLinksGoToActionTest(outFilePath, false, false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyDiffDisplayLinksWithGoToSmartModeTest() {
+            // TODO DEVSIX-4238 Update cmp file after the ticket DEVSIX-4238 will be resolved
+            String cmpFilePath = sourceFolder + "cmp_copyDiffDisplayLinksWithGoToSmartMode.pdf";
+            String outFilePath = destinationFolder + "copyDiffDisplayLinksWithGoToSmartMode.pdf";
+            CopyLinksGoToActionTest(outFilePath, false, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(cmpFilePath, outFilePath, destinationFolder
+                ));
+        }
+
+        private void CopyLinksGoToActionTest(String dest, bool isTheSameLinks, bool diffDisplayOptions) {
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(dest).SetSmartMode(true));
+            MemoryStream sourceBaos1 = CreatePdfWithGoToAnnot(isTheSameLinks, diffDisplayOptions);
+            PdfDocument sourceDoc1 = new PdfDocument(new PdfReader(new MemoryStream(sourceBaos1.ToArray())));
+            sourceDoc1.CopyPagesTo(1, sourceDoc1.GetNumberOfPages(), destDoc);
+            sourceDoc1.Close();
+            destDoc.Close();
+        }
+
+        private MemoryStream CreatePdfWithGoToAnnot(bool isTheSameLink, bool diffDisplayOptions) {
+            MemoryStream stream = new MemoryStream();
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(stream));
+            pdfDocument.AddNewPage();
+            pdfDocument.AddNewPage();
+            pdfDocument.AddNewPage();
+            Rectangle linkLocation = new Rectangle(523, 770, 36, 36);
+            PdfExplicitDestination destination = PdfExplicitDestination.CreateFit(pdfDocument.GetPage(3));
+            PdfAnnotation annotation = new PdfLinkAnnotation(linkLocation).SetAction(PdfAction.CreateGoTo(destination)
+                ).SetBorder(new PdfArray(new int[] { 0, 0, 1 }));
+            pdfDocument.GetFirstPage().AddAnnotation(annotation);
+            if (!isTheSameLink) {
+                destination = (diffDisplayOptions) ? PdfExplicitDestination.Create(pdfDocument.GetPage(3), PdfName.XYZ, 350
+                    , 350, 0, 0, 1) : PdfExplicitDestination.CreateFit(pdfDocument.GetPage(1));
+            }
+            annotation = new PdfLinkAnnotation(linkLocation).SetAction(PdfAction.CreateGoTo(destination)).SetBorder(new 
+                PdfArray(new int[] { 0, 0, 1 }));
+            pdfDocument.GetPage(2).AddAnnotation(annotation);
+            pdfDocument.Close();
+            return stream;
         }
     }
 }

@@ -72,7 +72,6 @@ namespace iText.IO.Source {
 
         /// <summary><inheritDoc/></summary>
         public virtual int Get(long position) {
-            // TODO: test to make sure we are handling the length properly (i.e. is raf.length() the last byte in the file, or one past the last byte?)
             if (position > length) {
                 return -1;
             }

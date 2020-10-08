@@ -1000,7 +1000,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Returns the underlying source.</summary>
-        /// <returns>The underlying source</returns>
+        /// <returns>the underlying source</returns>
         protected internal virtual IRandomAccessSource GetUnderlyingSource() {
             RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
             return raf == null ? fac.CreateSource(bout) : fac.CreateSource(raf);
@@ -1034,7 +1034,11 @@ namespace iText.Signatures {
         /// This method is only used for signatures that lock fields.
         /// </remarks>
         /// <param name="crypto">the signature dictionary</param>
-        /// <param name="fieldLock"/>
+        /// <param name="fieldLock">
+        /// the
+        /// <see cref="iText.Forms.PdfSigFieldLock"/>
+        /// instance specified the field lock to be set
+        /// </param>
         protected internal virtual void AddFieldMDP(PdfSignature crypto, PdfSigFieldLock fieldLock) {
             PdfDictionary reference = new PdfDictionary();
             PdfDictionary transformParams = new PdfDictionary();

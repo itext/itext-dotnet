@@ -536,7 +536,7 @@ namespace iText.Svg.Converter {
                 Stream fis = new ExceptionInputStream();
                 ISvgProcessorResult result = SvgConverter.ParseAndProcess(fis);
             }
-            , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
+            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
 

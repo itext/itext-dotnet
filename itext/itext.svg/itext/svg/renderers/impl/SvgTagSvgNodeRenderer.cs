@@ -40,12 +40,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
-using iText.Kernel.Geom;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve;
-using iText.StyledXmlParser.Css.Util;
-using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -53,61 +47,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;svg&gt; tag.
     /// </summary>
-    public class SvgTagSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
-        public override float GetCurrentFontSize() {
-            String fontSizeValue = GetAttribute(SvgConstants.Attributes.FONT_SIZE);
-            if (fontSizeValue == null) {
-                fontSizeValue = CssDefaults.GetDefaultValue(CommonCssConstants.FONT_SIZE);
-            }
-            return CssUtils.ParseAbsoluteFontSize(fontSizeValue);
-        }
-
-        protected internal override void DoDraw(SvgDrawContext context) {
-            context.AddViewPort(this.CalculateViewPort(context));
-            base.DoDraw(context);
-        }
-
-        public override bool CanConstructViewPort() {
-            return true;
-        }
-
-        /// <summary>Calculate the viewport based on the context.</summary>
-        /// <param name="context">the SVG draw context</param>
-        /// <returns>the viewport that applies to this renderer</returns>
-        internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
-            Rectangle currentViewPort = context.GetCurrentViewPort();
-            float portX = 0f;
-            float portY = 0f;
-            float portWidth = 0f;
-            float portHeight = 0f;
-            // set default values to parent viewport in the case of a nested svg tag
-            portX = currentViewPort.GetX();
-            portY = currentViewPort.GetY();
-            portWidth = currentViewPort.GetWidth();
-            // default should be parent portWidth if not outermost
-            portHeight = currentViewPort.GetHeight();
-            // default should be parent height if not outermost
-            if (attributesAndStyles != null) {
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                    portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                    portY = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                    portWidth = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                    portHeight = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT));
-                }
-            }
-            return new Rectangle(portX, portY, portWidth, portHeight);
-        }
-
-        protected internal override bool CanElementFill() {
-            return false;
-        }
-
+    public class SvgTagSvgNodeRenderer : AbstractContainerSvgNodeRenderer {
         public override ISvgNodeRenderer CreateDeepCopy() {
             SvgTagSvgNodeRenderer copy = new SvgTagSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);

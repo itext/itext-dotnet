@@ -54,6 +54,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         static ShorthandResolverFactory() {
             shorthandResolvers = new Dictionary<String, IShorthandResolver>();
             shorthandResolvers.Put(CommonCssConstants.BACKGROUND, new BackgroundShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.BACKGROUND_POSITION, new BackgroundPositionShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.BORDER, new BorderShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.BORDER_BOTTOM, new BorderBottomShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.BORDER_COLOR, new BorderColorShorthandResolver());

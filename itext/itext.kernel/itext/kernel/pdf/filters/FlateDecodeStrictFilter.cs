@@ -40,9 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using System.IO;
-using System.util.zlib;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Filters {
@@ -62,24 +60,7 @@ namespace iText.Kernel.Pdf.Filters {
         /// <param name="out">the out stream which will be used to write the bytes.</param>
         /// <returns>the decoded data</returns>
         private static byte[] FlateDecode(byte[] @in, MemoryStream @out) {
-            MemoryStream stream = new MemoryStream(@in);
-            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
-            byte[] b = new byte[4092];
-            try {
-                int n;
-                while ((n = zip.Read(b)) >= 0) {
-                    @out.Write(b, 0, n);
-                }
-                zip.Dispose();
-                @out.Dispose();
-                return @out.ToArray();
-            }
-            catch (MemoryLimitsAwareException e) {
-                throw;
-            }
-            catch (Exception) {
-                return null;
-            }
+            return FlateDecodeInternal(@in, true, @out);
         }
     }
 }

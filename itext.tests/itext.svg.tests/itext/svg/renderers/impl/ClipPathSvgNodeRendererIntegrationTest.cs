@@ -41,11 +41,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class ClipPathSvgNodeRendererIntegrationTest : SvgIntegrationTest {
@@ -127,7 +125,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 27)]
         public virtual void ClipPathRulesCombined() {
             //TODO: update after DEVSIX-2377
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRulesCombined");

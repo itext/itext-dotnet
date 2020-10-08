@@ -52,6 +52,7 @@ using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     public class SvgStyleResolverTest : ExtendedITextTest {
@@ -90,10 +91,66 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SvgCssResolverStylesheetTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf(SvgConstants.Tags.LINK), "");
+            Attributes linkAttributes = jsoupLink.Attributes();
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml"
+                ));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.REL, SvgConstants.Attributes
+                .STYLESHEET));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.HREF, "styleSheetWithLinkStyle.css"
+                ));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("type", "text/css"));
+            JsoupElementNode node = new JsoupElementNode(jsoupLink);
+            SvgConverterProperties scp = new SvgConverterProperties();
+            scp.SetBaseUri(baseUri);
+            SvgProcessorContext processorContext = new SvgProcessorContext(scp);
+            SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            IDictionary<String, String> expectedAttr = new Dictionary<String, String>();
+            expectedAttr.Put(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml");
+            expectedAttr.Put(SvgConstants.Attributes.REL, SvgConstants.Attributes.STYLESHEET);
+            expectedAttr.Put(SvgConstants.Attributes.HREF, "styleSheetWithLinkStyle.css");
+            expectedAttr.Put("type", "text/css");
+            // Attribute from external stylesheet
+            expectedAttr.Put(SvgConstants.Attributes.FILL, "black");
+            NUnit.Framework.Assert.AreEqual(expectedAttr, attr);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI, LogLevel
+             = LogLevelConstants.ERROR)]
+        public virtual void SvgCssResolverInvalidNameStylesheetTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf(SvgConstants.Tags.LINK), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes linkAttributes = jsoupLink.Attributes();
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml"
+                ));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.REL, SvgConstants.Attributes
+                .STYLESHEET));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.HREF, "!invalid name!externalSheet.css"
+                ));
+            linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("type", "text/css"));
+            JsoupElementNode node = new JsoupElementNode(jsoupLink);
+            SvgConverterProperties scp = new SvgConverterProperties();
+            scp.SetBaseUri(baseUri);
+            SvgProcessorContext processorContext = new SvgProcessorContext(scp);
+            SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
+            IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
+            IDictionary<String, String> expectedAttr = new Dictionary<String, String>();
+            expectedAttr.Put(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml");
+            expectedAttr.Put(SvgConstants.Attributes.REL, SvgConstants.Attributes.STYLESHEET);
+            expectedAttr.Put(SvgConstants.Attributes.HREF, "!invalid name!externalSheet.css");
+            expectedAttr.Put("type", "text/css");
+            NUnit.Framework.Assert.AreEqual(expectedAttr, attr);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SvgCssResolverXlinkTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("image"), "");
-            Attributes imageAttributes = jsoupImage.Attributes();
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes imageAttributes = jsoupImage.Attributes();
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "itis.jpg"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
@@ -110,7 +167,7 @@ namespace iText.Svg.Css {
         public virtual void SvgCssResolveHashXlinkTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupImage = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("image"), "");
-            Attributes imageAttributes = jsoupImage.Attributes();
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes imageAttributes = jsoupImage.Attributes();
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "#testid"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
@@ -123,7 +180,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void OverrideDefaultStyleTest() {
-            ICssResolver styleResolver = new SvgStyleResolver();
+            ICssResolver styleResolver = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             svg.Attributes().Put(SvgConstants.Attributes.STROKE, "white");

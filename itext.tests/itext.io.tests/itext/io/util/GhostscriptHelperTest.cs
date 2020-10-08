@@ -149,5 +149,67 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-003.png"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DSaferParamInGhostScriptHelperTest() {
+            String cmpPdf = sourceFolder + "maliciousPsInvokingCalcExe.ps";
+            String maliciousPsInvokingCalcExe = destinationFolder + "maliciousPsInvokingCalcExe.png";
+            int majorVersion = 0;
+            int minorVersion = 0;
+            bool isWindows = IdentifyOsType().ToLowerInvariant().Contains("win");
+            if (isWindows) {
+                String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
+                if (gsExec == null) {
+                    gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
+                }
+                String[] pathParts = iText.IO.Util.StringUtil.Split(gsExec, "\\d\\.\\d\\d");
+                for (int i = 0; i < pathParts.Length; i++) {
+                    gsExec = gsExec.Replace(pathParts[i], "");
+                }
+                String[] version = iText.IO.Util.StringUtil.Split(gsExec, "\\.");
+                majorVersion = Convert.ToInt32(version[0], System.Globalization.CultureInfo.InvariantCulture);
+                minorVersion = Convert.ToInt32(version[1], System.Globalization.CultureInfo.InvariantCulture);
+            }
+            try {
+                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+                ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, destinationFolder, "maliciousPsInvokingCalcExe.png"
+                    );
+                if (isWindows) {
+                    NUnit.Framework.Assert.IsTrue((majorVersion > 9 || (majorVersion == 9 && minorVersion >= 50)));
+                }
+            }
+            catch (GhostscriptHelper.GhostscriptExecutionException) {
+                if (isWindows) {
+                    NUnit.Framework.Assert.IsTrue((majorVersion < 9 || (majorVersion == 9 && minorVersion < 50)));
+                }
+            }
+            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousPsInvokingCalcExe));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GhostScriptImageGenerationTest() {
+            String filename = "resultantImage.png";
+            String psFile = sourceFolder + "simple.ps";
+            String resultantImage = destinationFolder + filename;
+            String cmpResultantImage = sourceFolder + "cmp_" + filename;
+            String diff = destinationFolder + "diff_" + filename;
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            ghostscriptHelper.RunGhostScriptImageGeneration(psFile, destinationFolder, filename);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(resultantImage));
+            ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
+            NUnit.Framework.Assert.IsTrue(imageMagickHelper.RunImageMagickImageCompare(resultantImage, cmpResultantImage
+                , diff));
+        }
+
+        /// <summary>Identifies type of current OS and return it (win, linux).</summary>
+        /// <returns>
+        /// type of current os as
+        /// <see cref="System.String"/>
+        /// </returns>
+        private static String IdentifyOsType() {
+            String os = Environment.GetEnvironmentVariable("os.name") == null ? Environment.GetEnvironmentVariable("OS"
+                ) : Environment.GetEnvironmentVariable("os.name");
+            return os.ToLowerInvariant();
+        }
     }
 }

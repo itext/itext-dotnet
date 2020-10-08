@@ -83,15 +83,17 @@ namespace iText.Forms.Xfdf {
         /// Gets the f element, child of the xfdf element.
         /// Corresponds to the F key in the file dictionary.
         /// </remarks>
+        /// <returns>the f element</returns>
         public virtual FObject GetF() {
             return f;
         }
 
-        /// <summary>Sets the f element, child of the xfdf element.</summary>
+        /// <summary>Sets f element, child of the xfdf element.</summary>
         /// <remarks>
-        /// Sets the f element, child of the xfdf element.
+        /// Sets f element, child of the xfdf element.
         /// Corresponds to the F key in the file dictionary.
         /// </remarks>
+        /// <param name="f">element</param>
         public virtual void SetF(FObject f) {
             this.f = f;
         }
@@ -101,27 +103,30 @@ namespace iText.Forms.Xfdf {
         /// Gets the ids element, child of the xfdf element.
         /// Corresponds to the ID key in the file dictionary.
         /// </remarks>
+        /// <returns>the ids element</returns>
         public virtual IdsObject GetIds() {
             return ids;
         }
 
-        /// <summary>Sets the ids element, child of the xfdf element.</summary>
+        /// <summary>Sets ids element, child of the xfdf element.</summary>
         /// <remarks>
-        /// Sets the ids element, child of the xfdf element.
+        /// Sets ids element, child of the xfdf element.
         /// Corresponds to the ID key in the file dictionary.
         /// </remarks>
+        /// <param name="ids">element</param>
         public virtual void SetIds(IdsObject ids) {
             this.ids = ids;
         }
 
         /// <summary>Gets the fields element, a child of the xfdf element and is the container for form field elements.
         ///     </summary>
+        /// <returns>the fields element</returns>
         public virtual FieldsObject GetFields() {
             return fields;
         }
 
-        /// <summary>Sets the fields element, a child of the xfdf element and is the container for form field elements.
-        ///     </summary>
+        /// <summary>Sets fields element, a child of the xfdf element and is the container for form field elements.</summary>
+        /// <param name="fields">element</param>
         public virtual void SetFields(FieldsObject fields) {
             this.fields = fields;
         }

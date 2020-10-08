@@ -366,7 +366,7 @@ namespace iText.Kernel.Pdf {
             String srcFile = sourceFolder + "ignoreTagStructureTest.pdf";
             PdfDocument doNotIgnoreTagStructureDocument = new PdfDocument(new PdfReader(srcFile));
             PdfDocumentTest.IgnoreTagStructurePdfDocument ignoreTagStructureDocument = new PdfDocumentTest.IgnoreTagStructurePdfDocument
-                (this, new PdfReader(srcFile));
+                (new PdfReader(srcFile));
             NUnit.Framework.Assert.IsTrue(doNotIgnoreTagStructureDocument.IsTagged());
             NUnit.Framework.Assert.IsFalse(ignoreTagStructureDocument.IsTagged());
             doNotIgnoreTagStructureDocument.Close();
@@ -374,15 +374,12 @@ namespace iText.Kernel.Pdf {
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {
-            internal IgnoreTagStructurePdfDocument(PdfDocumentTest _enclosing, PdfReader reader)
+            internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {
-                this._enclosing = _enclosing;
             }
 
             protected internal override void TryInitTagStructure(PdfDictionary str) {
             }
-
-            private readonly PdfDocumentTest _enclosing;
         }
     }
 }

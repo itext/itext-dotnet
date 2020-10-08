@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Layout.Font;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css {
@@ -36,6 +37,17 @@ namespace iText.StyledXmlParser.Css {
             String expectedCss = "@font-face {\n" + "    font-family: test-font-family;\n" + "    font-weight: bold;\n"
                  + "}";
             NUnit.Framework.Assert.AreEqual(expectedCss, fontFaceRule.ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveUnicodeRangeTest() {
+            CssFontFaceRule fontFaceRule = new CssFontFaceRule();
+            IList<CssDeclaration> declarations = new List<CssDeclaration>();
+            declarations.Add(new CssDeclaration("unicode-range", "U+75"));
+            fontFaceRule.AddBodyCssDeclarations(declarations);
+            Range range = fontFaceRule.ResolveUnicodeRange();
+            NUnit.Framework.Assert.IsNotNull(range);
+            NUnit.Framework.Assert.IsTrue(range.Contains(117));
         }
     }
 }

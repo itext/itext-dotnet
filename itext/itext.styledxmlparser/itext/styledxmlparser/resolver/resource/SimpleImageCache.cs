@@ -124,8 +124,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             if (cache.Count >= capacity) {
                 String mostUnpopularImg = null;
                 int minFrequency = int.MaxValue;
+                // the keySet method preserves the LinkedList order.
                 foreach (String imgSrc in cache.Keys) {
-                    // TODO keySet preserves order of LinkedList? and in .net?
                     int? imgFrequency = imagesFrequency.Get(imgSrc);
                     if (imgFrequency == null || imgFrequency < minFrequency) {
                         mostUnpopularImg = imgSrc;

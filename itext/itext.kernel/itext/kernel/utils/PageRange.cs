@@ -219,7 +219,11 @@ namespace iText.Kernel.Utils {
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            return sequences.GetHashCode();
+            int hashCode = 0;
+            foreach (PageRange.IPageRangePart part in sequences) {
+                hashCode += part.GetHashCode();
+            }
+            return hashCode;
         }
 
         /// <summary>Inner interface for range parts definition</summary>
@@ -443,7 +447,11 @@ namespace iText.Kernel.Utils {
 
             /// <summary><inheritDoc/></summary>
             public override int GetHashCode() {
-                return conditions.GetHashCode();
+                int hashCode = 0;
+                foreach (PageRange.IPageRangePart part in conditions) {
+                    hashCode += part.GetHashCode();
+                }
+                return hashCode;
             }
         }
     }

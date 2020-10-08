@@ -70,6 +70,7 @@ namespace iText.Kernel {
 
         public const String CannotAddKidToTheFlushedElement = "Cannot add kid to the flushed element.";
 
+        [Obsolete]
         public const String CannotAddNonDictionaryExtGStateToResources1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary.";
 
         public const String CannotAddNonDictionaryPatternToResources1 = "Cannot add pattern to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream.";

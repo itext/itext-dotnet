@@ -121,6 +121,16 @@ namespace iText.Kernel.Pdf {
         /// Note: If chain of references has length of more than 32,
         /// this method return 31st reference in chain.
         /// </remarks>
+        /// <param name="recursively">
+        /// 
+        /// <see langword="true"/>
+        /// to resolve indirects chain
+        /// </param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfObject"/>
+        /// result of indirect reference resolving
+        /// </returns>
         public virtual PdfObject GetRefersTo(bool recursively) {
             if (!recursively) {
                 if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && !CheckState(FREE) && GetReader() 

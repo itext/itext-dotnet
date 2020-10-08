@@ -93,6 +93,7 @@ namespace iText.Forms.Xfdf {
         /// This value does not change when the file is incrementally updated.
         /// The value shall be a hexadecimal number.
         /// </remarks>
+        /// <returns>the permanent identifier value</returns>
         public virtual String GetOriginal() {
             return original;
         }
@@ -108,6 +109,11 @@ namespace iText.Forms.Xfdf {
         /// The value shall be a hexadecimal number.
         /// A common value for this is an MD5 checksum.
         /// </remarks>
+        /// <param name="original">the permanent identifier value</param>
+        /// <returns>
+        /// current
+        /// <see cref="IdsObject">ids object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.IdsObject SetOriginal(String original) {
             this.original = original;
             return this;
@@ -124,6 +130,7 @@ namespace iText.Forms.Xfdf {
         /// on the file's contents at the time it was last updated.
         /// The value shall be a hexadecimal number.
         /// </remarks>
+        /// <returns>the unique identifier value</returns>
         public virtual String GetModified() {
             return modified;
         }
@@ -140,6 +147,11 @@ namespace iText.Forms.Xfdf {
         /// The value shall be a hexadecimal number.
         /// A common value for this is an MD5 checksum.
         /// </remarks>
+        /// <param name="modified">the unique identifier value</param>
+        /// <returns>
+        /// current
+        /// <see cref="IdsObject">ids object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.IdsObject SetModified(String modified) {
             this.modified = modified;
             return this;

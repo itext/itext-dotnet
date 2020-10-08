@@ -81,11 +81,13 @@ namespace iText.Svg.Processors.Impl {
             if (fontProvider == null) {
                 fontProvider = new BasicFontProvider();
             }
-            String baseUri = converterProperties.GetBaseUri();
-            if (baseUri == null) {
-                baseUri = "";
+            IResourceRetriever retriever = null;
+            // TODO DEVSIX-3814 change the clause if block to retriever = new ResourceResolver(props.getBaseUri(),
+            //  converterProperties.getResourceRetriever()) when the ISvgConverterProperties#getResourceRetriever() is added
+            if (converterProperties is SvgConverterProperties) {
+                retriever = ((SvgConverterProperties)converterProperties).GetResourceRetriever();
             }
-            resourceResolver = new ResourceResolver(baseUri);
+            resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), retriever);
         }
 
         /// <summary>Gets the font provider.</summary>
@@ -110,6 +112,18 @@ namespace iText.Svg.Processors.Impl {
         /// <returns>the set of fonts</returns>
         public virtual FontSet GetTempFonts() {
             return tempFonts;
+        }
+
+        /// <summary>Add temporary font from @font-face.</summary>
+        /// <param name="fontProgram">the font program</param>
+        /// <param name="encoding">the encoding</param>
+        /// <param name="alias">the alias</param>
+        public virtual void AddTemporaryFont(FontProgram fontProgram, String encoding, String alias, Range unicodeRange
+            ) {
+            if (tempFonts == null) {
+                tempFonts = new FontSet();
+            }
+            tempFonts.AddFont(fontProgram, encoding, alias, unicodeRange);
         }
 
         /// <summary>Add temporary font from @font-face.</summary>

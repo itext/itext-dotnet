@@ -30,6 +30,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using iText.IO.Util;
@@ -285,23 +286,32 @@ namespace iText.Kernel.XMP.Impl
 		//Security stuff. Protecting against XEE attacks as described here: https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing
 		private static XmlReaderSettings GetSecureReaderSettings()
 		{
-			XmlReaderSettings settings = new XmlReaderSettings();
-			settings.DtdProcessing = DtdProcessing.Prohibit;
-			return settings;
+			XmlReaderSettings readerSettings = new XmlReaderSettings();
+			readerSettings.DtdProcessing = DtdProcessing.Ignore;
+			return readerSettings;
+		}
+
+		private static XmlReader PreventUndeclaredEntityException(XmlReader reader) {
+			try {
+				// Prevents Exception "Reference to undeclared entity 'question'"
+				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
+					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				propertyInfo.SetValue(reader, true, null);
+			} catch (Exception exc) {
+			}
+			return reader;
 		}
 
 		private static XmlReader GetSecureXmlReader(Stream stream) {
-			return XmlReader.Create(stream, GetSecureReaderSettings());
+			return PreventUndeclaredEntityException(XmlReader.Create(stream, GetSecureReaderSettings()));
 		}
 
-		private static XmlReader GetSecureXmlReader(TextReader textReader)
-		{
-			return XmlReader.Create(textReader, GetSecureReaderSettings());
+		private static XmlReader GetSecureXmlReader(TextReader textReader) {
+			return PreventUndeclaredEntityException(XmlReader.Create(textReader, GetSecureReaderSettings()));
 		}
 
-		private static XmlReader GetSecureXmlReader(String str)
-		{
-			return XmlReader.Create(new StringReader(str), GetSecureReaderSettings());
+		private static XmlReader GetSecureXmlReader(String str) {
+			return PreventUndeclaredEntityException(XmlReader.Create(new StringReader(str), GetSecureReaderSettings()));
 		}
 	}
 }

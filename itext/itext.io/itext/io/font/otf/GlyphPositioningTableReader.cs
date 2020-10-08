@@ -73,6 +73,10 @@ namespace iText.IO.Font.Otf {
                 }
             }
             switch (lookupType) {
+                case 1: {
+                    return new GposLookupType1(this, lookupFlag, subTableLocations);
+                }
+
                 case 2: {
                     return new GposLookupType2(this, lookupFlag, subTableLocations);
                 }
@@ -87,6 +91,10 @@ namespace iText.IO.Font.Otf {
 
                 case 6: {
                     return new GposLookupType6(this, lookupFlag, subTableLocations);
+                }
+
+                case 7: {
+                    return new GposLookupType7(this, lookupFlag, subTableLocations);
                 }
 
                 default: {

@@ -68,6 +68,7 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Defines the sort order of the field (ascending or descending).</summary>
         /// <param name="ascending">true is the default, use false for descending order</param>
+        /// <returns>this instance to support fluent interface</returns>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool ascending) {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsName()) {
@@ -81,6 +82,7 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Defines the sort order of the field (ascending or descending).</summary>
         /// <param name="ascending">an array with every element corresponding with a name of a field.</param>
+        /// <returns>this instance to support fluent interface</returns>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool[] ascending) {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsArray()) {

@@ -109,7 +109,7 @@ namespace iText.Svg.Renderers {
         public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider, ISvgNodeRenderer svgRootRenderer
             ) {
             if (resourceResolver == null) {
-                resourceResolver = new ResourceResolver("");
+                resourceResolver = new ResourceResolver(null);
             }
             this.resourceResolver = resourceResolver;
             if (fontProvider == null) {

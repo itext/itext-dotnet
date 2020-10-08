@@ -688,6 +688,90 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ZeroDegreeRotatedWithAlignmentParagraphInDivTest() {
+            //TODO: update cmp file after fixing DEVSIX-4458
+            String outFileName = destinationFolder + "zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
+            div.SetWidth(300);
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.LEFT).SetRotationAngle(
+                MathUtil.ToRadians(0)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.CENTER).SetRotationAngle
+                (MathUtil.ToRadians(0)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.RIGHT).SetRotationAngle
+                (MathUtil.ToRadians(0)));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Rotated180DegreesWithAlignmentParagraphInDivTest() {
+            //TODO: update cmp file after fixing DEVSIX-4458
+            String outFileName = destinationFolder + "rotated180DegreesWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_rotated180DegreesWithAlignmentParagraphInDiv.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
+            div.SetWidth(300);
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.LEFT).SetRotationAngle(
+                MathUtil.ToRadians(180)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.CENTER).SetRotationAngle
+                (MathUtil.ToRadians(180)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.RIGHT).SetRotationAngle
+                (MathUtil.ToRadians(180)));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Rotated90DegreesWithAlignmentParagraphInDivTest() {
+            //TODO: update cmp file after fixing DEVSIX-4458
+            String outFileName = destinationFolder + "rotated90DegreesWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_rotated90DegreesWithAlignmentParagraphInDiv.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
+            div.SetHeight(300);
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.LEFT).SetRotationAngle(
+                MathUtil.ToRadians(90)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.CENTER).SetRotationAngle
+                (MathUtil.ToRadians(90)));
+            div.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.RIGHT).SetRotationAngle
+                (MathUtil.ToRadians(90)));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RotatedWithAlignmentCellInTableTest() {
+            //TODO: update cmp file after fixing DEVSIX-4458
+            String outFileName = destinationFolder + "rotatedWithAlignmentCellInTable.pdf";
+            String cmpFileName = sourceFolder + "cmp_rotatedWithAlignmentCellInTable.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            table.SetWidth(300);
+            Cell cell = new Cell().SetBorder(new SolidBorder(ColorConstants.BLACK, 1)).SetRotationAngle(MathUtil.ToRadians
+                (180));
+            cell.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.LEFT));
+            cell.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.CENTER));
+            cell.Add(new Paragraph("The quick brown fox\njumps").SetTextAlignment(TextAlignment.RIGHT));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
         private void DrawCross(PdfCanvas canvas, float x, float y) {
             DrawLine(canvas, x - 50, y, x + 50, y);
             DrawLine(canvas, x, y - 50, x, y + 50);

@@ -48,9 +48,11 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Layout.Font;
 using iText.Layout.Properties;
+using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Exceptions;
+using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
@@ -81,6 +83,131 @@ namespace iText.StyledXmlParser.Css.Util {
         /// instance.
         /// </summary>
         private CssUtils() {
+        }
+
+        /// <summary>
+        /// Splits the provided
+        /// <see cref="System.String"/>
+        /// by comma with respect of brackets.
+        /// </summary>
+        /// <param name="value">to split</param>
+        /// <returns>
+        /// the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of split result
+        /// </returns>
+        public static IList<String> SplitStringWithComma(String value) {
+            if (value == null) {
+                return new List<String>();
+            }
+            IList<String> resultList = new List<String>();
+            int lastComma = 0;
+            int notClosedBrackets = 0;
+            for (int i = 0; i < value.Length; ++i) {
+                if (value[i] == ',' && notClosedBrackets == 0) {
+                    resultList.Add(value.JSubstring(lastComma, i));
+                    lastComma = i + 1;
+                }
+                if (value[i] == '(') {
+                    ++notClosedBrackets;
+                }
+                if (value[i] == ')') {
+                    --notClosedBrackets;
+                    notClosedBrackets = Math.Max(notClosedBrackets, 0);
+                }
+            }
+            String lastToken = value.Substring(lastComma);
+            if (!String.IsNullOrEmpty(lastToken)) {
+                resultList.Add(lastToken);
+            }
+            return resultList;
+        }
+
+        /// <summary>Parses the given css blend mode value.</summary>
+        /// <remarks>
+        /// Parses the given css blend mode value. If the argument is
+        /// <see langword="null"/>
+        /// or an unknown blend
+        /// mode, then the default css
+        /// <see cref="iText.Layout.Properties.BlendMode.NORMAL"/>
+        /// value would be returned.
+        /// </remarks>
+        /// <param name="cssValue">the value to parse</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Properties.BlendMode"/>
+        /// instance representing the parsed value
+        /// </returns>
+        public static BlendMode ParseBlendMode(String cssValue) {
+            if (cssValue == null) {
+                return BlendMode.NORMAL;
+            }
+            switch (cssValue) {
+                case CommonCssConstants.MULTIPLY: {
+                    return BlendMode.MULTIPLY;
+                }
+
+                case CommonCssConstants.SCREEN: {
+                    return BlendMode.SCREEN;
+                }
+
+                case CommonCssConstants.OVERLAY: {
+                    return BlendMode.OVERLAY;
+                }
+
+                case CommonCssConstants.DARKEN: {
+                    return BlendMode.DARKEN;
+                }
+
+                case CommonCssConstants.LIGHTEN: {
+                    return BlendMode.LIGHTEN;
+                }
+
+                case CommonCssConstants.COLOR_DODGE: {
+                    return BlendMode.COLOR_DODGE;
+                }
+
+                case CommonCssConstants.COLOR_BURN: {
+                    return BlendMode.COLOR_BURN;
+                }
+
+                case CommonCssConstants.HARD_LIGHT: {
+                    return BlendMode.HARD_LIGHT;
+                }
+
+                case CommonCssConstants.SOFT_LIGHT: {
+                    return BlendMode.SOFT_LIGHT;
+                }
+
+                case CommonCssConstants.DIFFERENCE: {
+                    return BlendMode.DIFFERENCE;
+                }
+
+                case CommonCssConstants.EXCLUSION: {
+                    return BlendMode.EXCLUSION;
+                }
+
+                case CommonCssConstants.HUE: {
+                    return BlendMode.HUE;
+                }
+
+                case CommonCssConstants.SATURATION: {
+                    return BlendMode.SATURATION;
+                }
+
+                case CommonCssConstants.COLOR: {
+                    return BlendMode.COLOR;
+                }
+
+                case CommonCssConstants.LUMINOSITY: {
+                    return BlendMode.LUMINOSITY;
+                }
+
+                case CommonCssConstants.NORMAL:
+                default: {
+                    return BlendMode.NORMAL;
+                }
+            }
         }
 
         /// <summary>
@@ -241,7 +368,10 @@ namespace iText.StyledXmlParser.Css.Util {
                     );
                 return new int[] { first, second };
             }
-            catch (Exception) {
+            catch (FormatException) {
+                return null;
+            }
+            catch (NullReferenceException) {
                 return null;
             }
         }
@@ -395,6 +525,16 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             return null;
+        }
+
+        /// <summary>Checks if a string is in a valid format.</summary>
+        /// <param name="value">the string that needs to be checked.</param>
+        /// <returns>boolean true if value is in a valid format.</returns>
+        public static bool IsValidNumericValue(String value) {
+            if (value == null || value.Contains(" ")) {
+                return false;
+            }
+            return IsRelativeValue(value) || IsMetricValue(value) || IsNumericValue(value);
         }
 
         /// <summary>Parses the absolute font size.</summary>
@@ -720,7 +860,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the value</param>
         /// <returns>true, if the value contains a color property</returns>
         public static bool IsColorProperty(String value) {
-            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || WebColors.NAMES.Contains
+            return value.StartsWith("rgb(") || value.StartsWith("rgba(") || value.StartsWith("#") || WebColors.NAMES.Contains
                 (value.ToLowerInvariant()) || CommonCssConstants.TRANSPARENT.Equals(value);
         }
 
@@ -800,6 +940,26 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <returns>double converted value px*0.75</returns>
         public static double ConvertPxToPts(double px) {
             return px * 0.75;
+        }
+
+        /// <summary>
+        /// Checks if an
+        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
+        /// represents a style sheet link.
+        /// </summary>
+        /// <param name="headChildElement">the head child element</param>
+        /// <returns>true, if the element node represents a style sheet link</returns>
+        public static bool IsStyleSheetLink(IElementNode headChildElement) {
+            return CommonCssConstants.LINK.Equals(headChildElement.Name()) && CommonAttributeConstants.STYLESHEET.Equals
+                (headChildElement.GetAttribute(CommonAttributeConstants.REL));
+        }
+
+        /// <summary>Checks if value is initial, inherit or unset.</summary>
+        /// <param name="value">value to check.</param>
+        /// <returns>true if value is initial, inherit or unset. false otherwise.</returns>
+        public static bool IsInitialOrInheritOrUnset(String value) {
+            return CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value) || CommonCssConstants
+                .UNSET.Equals(value);
         }
 
         private static bool AddRange(RangeBuilder builder, String range) {

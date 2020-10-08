@@ -60,7 +60,7 @@ namespace iText.Kernel.Font {
         protected internal bool forceWidthsOutput = false;
 
         /// <summary>The array used with single byte encodings.</summary>
-        protected internal byte[] shortTag = new byte[256];
+        protected internal byte[] shortTag = new byte[PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE + 1];
 
         /// <summary>Currently only exists for the fonts that are parsed from the document.</summary>
         /// <remarks>
@@ -151,7 +151,7 @@ namespace iText.Kernel.Font {
             return 1;
         }
 
-        /// <summary>Checks whether the glyph is appendable, i.e. has valid unicode and code values</summary>
+        /// <summary>Checks whether the glyph is appendable, i.e. has valid unicode and code values.</summary>
         /// <param name="glyph">
         /// not-null
         /// <see cref="iText.IO.Font.Otf.Glyph"/>
@@ -162,6 +162,11 @@ namespace iText.Kernel.Font {
             return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
+        /// <summary>Get the font encoding.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Font.FontEncoding"/>
+        /// </returns>
         public virtual FontEncoding GetFontEncoding() {
             return fontEncoding;
         }
@@ -317,19 +322,19 @@ namespace iText.Kernel.Font {
             }
             int firstChar;
             int lastChar;
-            for (firstChar = 0; firstChar < 256; ++firstChar) {
+            for (firstChar = 0; firstChar <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; ++firstChar) {
                 if (shortTag[firstChar] != 0) {
                     break;
                 }
             }
-            for (lastChar = 255; lastChar >= firstChar; --lastChar) {
+            for (lastChar = PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; lastChar >= firstChar; --lastChar) {
                 if (shortTag[lastChar] != 0) {
                     break;
                 }
             }
-            if (firstChar > 255) {
-                firstChar = 255;
-                lastChar = 255;
+            if (firstChar > PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE) {
+                firstChar = PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE;
+                lastChar = PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE;
             }
             if (!IsSubset() || !IsEmbedded()) {
                 firstChar = 0;
@@ -415,6 +420,14 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <summary>Indicates that the font is built in, i.e. it is one of the 14 Standard fonts</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// in case the font is a Standard font and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         protected internal virtual bool IsBuiltInFont() {
             return false;
         }

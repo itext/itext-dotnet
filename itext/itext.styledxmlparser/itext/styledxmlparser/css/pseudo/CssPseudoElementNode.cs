@@ -1,5 +1,4 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -45,103 +44,101 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
-namespace iText.StyledXmlParser.Css.Pseudo
-{
-    /// <summary><see cref="IElementNode"/> implementation for pseudo elements.</summary>
-    public class CssPseudoElementNode : CssContextNode, IElementNode, ICustomElementNode
-    {
+namespace iText.StyledXmlParser.Css.Pseudo {
+    /// <summary>
+    /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
+    /// implementation for pseudo elements.
+    /// </summary>
+    public class CssPseudoElementNode : CssContextNode, IElementNode, ICustomElementNode {
         /// <summary>The pseudo element name.</summary>
         private String pseudoElementName;
 
         /// <summary>The pseudo element tag name.</summary>
         private String pseudoElementTagName;
 
-        /// <summary>Creates a new <see cref="CssPseudoElementNode"/> instance.</summary>
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssPseudoElementNode"/>
+        /// instance.
+        /// </summary>
         /// <param name="parentNode">the parent node</param>
         /// <param name="pseudoElementName">the pseudo element name</param>
         public CssPseudoElementNode(INode parentNode, String pseudoElementName)
-            : base(parentNode)
-        {
+            : base(parentNode) {
             this.pseudoElementName = pseudoElementName;
             this.pseudoElementTagName = CssPseudoElementUtil.CreatePseudoElementTagName(pseudoElementName);
         }
 
         /// <summary>Gets the pseudo element name.</summary>
         /// <returns>the pseudo element name</returns>
-        public virtual String GetPseudoElementName()
-        {
+        public virtual String GetPseudoElementName() {
             return pseudoElementName;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String Name()
-        {
+        public virtual String Name() {
             return pseudoElementTagName;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IAttributes GetAttributes()
-        {
+        public virtual IAttributes GetAttributes() {
             return new CssPseudoElementNode.AttributesStub();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetAttribute(String key)
-        {
+        public virtual String GetAttribute(String key) {
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IList<IDictionary<String, String>> GetAdditionalHtmlStyles()
-        {
+        public virtual IList<IDictionary<String, String>> GetAdditionalHtmlStyles() {
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual void AddAdditionalHtmlStyles(IDictionary<String, String> styles)
-        {
+        public virtual void AddAdditionalHtmlStyles(IDictionary<String, String> styles) {
             throw new NotSupportedException();
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetLang()
-        {
+        public virtual String GetLang() {
             return null;
         }
 
-        /// <summary>A simple <see cref="IAttributes"/> implementation.</summary>
-        private class AttributesStub : IAttributes
-        {
+        /// <summary>
+        /// A simple
+        /// <see cref="iText.StyledXmlParser.Node.IAttributes"/>
+        /// implementation.
+        /// </summary>
+        private class AttributesStub : IAttributes {
             /// <summary><inheritDoc/></summary>
-            public virtual String GetAttribute(String key)
-            {
+            public virtual String GetAttribute(String key) {
                 return null;
             }
 
             /// <summary><inheritDoc/></summary>
-            public virtual void SetAttribute(String key, String value)
-            {
+            public virtual void SetAttribute(String key, String value) {
                 throw new NotSupportedException();
             }
 
             /// <summary><inheritDoc/></summary>
-            public virtual int Size()
-            {
+            public virtual int Size() {
                 return 0;
             }
 
             /// <summary><inheritDoc/></summary>
-            public IEnumerator<IAttribute> GetEnumerator()
-            {
+            public virtual IEnumerator<IAttribute> GetEnumerator() {
                 return JavaCollectionsUtil.EmptyIterator<IAttribute>();
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+        /// <summary><inheritDoc/></summary>
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
         }
     }
 }

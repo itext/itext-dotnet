@@ -50,7 +50,8 @@ using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
-    internal class PdfXrefTable {
+    /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
+    public class PdfXrefTable {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
@@ -87,6 +88,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
         /// <param name="reference">indirect reference to add.</param>
+        /// <returns>reference from param</returns>
         public virtual PdfIndirectReference Add(PdfIndirectReference reference) {
             if (reference == null) {
                 return null;
@@ -98,10 +100,27 @@ namespace iText.Kernel.Pdf {
             return reference;
         }
 
+        /// <summary>Get size of cross-reference table.</summary>
+        /// <returns>amount of lines including zero-object</returns>
         public virtual int Size() {
             return count + 1;
         }
 
+        /// <summary>Calculates a number of stored references to indirect objects.</summary>
+        /// <returns>number of indirect objects</returns>
+        public virtual int GetCountOfIndirectObjects() {
+            int countOfIndirectObjects = 0;
+            foreach (PdfIndirectReference @ref in xref) {
+                if (@ref != null && !@ref.IsFree()) {
+                    countOfIndirectObjects++;
+                }
+            }
+            return countOfIndirectObjects;
+        }
+
+        /// <summary>Get appropriate reference to indirect object.</summary>
+        /// <param name="index">is the index of required object</param>
+        /// <returns>reference to object with the provided index</returns>
         public virtual PdfIndirectReference Get(int index) {
             if (index > count) {
                 return null;
@@ -109,14 +128,25 @@ namespace iText.Kernel.Pdf {
             return xref[index];
         }
 
+        /// <summary>
+        /// Change the state of the cross-reference table to mark that reading of the document
+        /// was completed.
+        /// </summary>
         internal virtual void MarkReadingCompleted() {
             readingCompleted = true;
         }
 
+        /// <summary>Check if reading of the document was completed.</summary>
+        /// <returns>true if reading was completed and false otherwise</returns>
         internal virtual bool IsReadingCompleted() {
             return readingCompleted;
         }
 
+        /// <summary>Set up appropriate state for the free references list.</summary>
+        /// <param name="pdfDocument">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
         internal virtual void InitFreeReferencesList(PdfDocument pdfDocument) {
             freeReferencesLinkedList.Clear();
             // ensure zero object is free
@@ -167,7 +197,12 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Put(0, prevFreeRef);
         }
 
-        //For Object streams
+        /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
+        /// <returns>created indirect reference to the object stream</returns>
         internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
             Add(reference);
@@ -175,6 +210,10 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Creates next available indirect reference.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
         /// <returns>created indirect reference.</returns>
         protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
             PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
@@ -182,6 +221,8 @@ namespace iText.Kernel.Pdf {
             return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
+        /// <summary>Set the reference to free state.</summary>
+        /// <param name="reference">is a reference to be updated.</param>
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
             if (reference.IsFree()) {
                 return;
@@ -203,6 +244,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Increase capacity of the array of indirect references.</summary>
+        /// <param name="capacity">is a new capacity to set</param>
         protected internal virtual void SetCapacity(int capacity) {
             if (capacity > xref.Length) {
                 ExtendXref(capacity);
@@ -210,6 +253,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
+        /// <param name="document">
+        /// is the current
+        /// <see cref="PdfDocument">document</see>
+        /// </param>
+        /// <param name="fileId">field id</param>
+        /// <param name="crypto">pdf encryption</param>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
@@ -238,6 +287,7 @@ namespace iText.Kernel.Pdf {
                 xref = null;
                 return;
             }
+            document.CheckIsoConformance(this, IsoKey.XREF_TABLE);
             long startxref = writer.GetCurrentPos();
             long xRefStmPos = -1;
             if (xrefStream != null) {
@@ -350,6 +400,7 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Clear();
         }
 
+        /// <summary>Clear the state of the cross-reference table.</summary>
         internal virtual void Clear() {
             for (int i = 1; i <= count; i++) {
                 if (xref[i] != null && xref[i].IsFree()) {

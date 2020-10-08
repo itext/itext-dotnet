@@ -374,48 +374,6 @@ namespace iText.Layout.Renderer {
             return c;
         }
 
-        private class TypographyMethodSignature {
-            protected internal readonly String className;
-
-            protected internal Type[] parameterTypes;
-
-            private readonly String methodName;
-
-            internal TypographyMethodSignature(String className, Type[] parameterTypes)
-                : this(className, parameterTypes, null) {
-            }
-
-            internal TypographyMethodSignature(String className, Type[] parameterTypes, String methodName) {
-                this.methodName = methodName;
-                this.className = className;
-                this.parameterTypes = parameterTypes;
-            }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || GetType() != o.GetType()) {
-                    return false;
-                }
-                TypographyUtils.TypographyMethodSignature that = (TypographyUtils.TypographyMethodSignature)o;
-                if (!className.Equals(that.className)) {
-                    return false;
-                }
-                if (!JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
-                    return false;
-                }
-                return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
-            }
-
-            public override int GetHashCode() {
-                int result = className.GetHashCode();
-                result = 31 * result + JavaUtil.ArraysHashCode(parameterTypes);
-                result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
-                return result;
-            }
-        }
-
         private static Type GetTypographyClass(String partialName) {
             String classFullName = null;
 
@@ -465,6 +423,48 @@ namespace iText.Layout.Renderer {
             }
 
             return type;
+        }
+
+        private class TypographyMethodSignature {
+            protected internal readonly String className;
+
+            protected internal Type[] parameterTypes;
+
+            private readonly String methodName;
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes)
+                : this(className, parameterTypes, null) {
+            }
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes, String methodName) {
+                this.methodName = methodName;
+                this.className = className;
+                this.parameterTypes = parameterTypes;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                TypographyUtils.TypographyMethodSignature that = (TypographyUtils.TypographyMethodSignature)o;
+                if (!className.Equals(that.className)) {
+                    return false;
+                }
+                if (!JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                    return false;
+                }
+                return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
+            }
+
+            public override int GetHashCode() {
+                int result = className.GetHashCode();
+                result = 31 * result + JavaUtil.ArraysHashCode(parameterTypes);
+                result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
+                return result;
+            }
         }
     }
 }

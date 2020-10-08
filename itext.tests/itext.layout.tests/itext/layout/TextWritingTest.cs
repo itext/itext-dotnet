@@ -47,6 +47,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -58,6 +59,9 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/TextWritingTest/";
+
+        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -307,6 +311,24 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LeadingAndFloatInTextTest() {
+            // TODO: update cmp file after fixing DEVSIX-4604
+            String outFileName = destinationFolder + "leadingAndFloatInText.pdf";
+            String cmpFileName = sourceFolder + "cmp_leadingAndFloatInText.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Paragraph p = new Paragraph().SetFixedLeading(30).SetBorder(new SolidBorder(ColorConstants.RED, 2));
+            p.Add("First text");
+            Text text = new Text("Second text with float ");
+            text.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            p.Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
     }
 }

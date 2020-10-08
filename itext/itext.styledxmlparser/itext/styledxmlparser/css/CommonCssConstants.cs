@@ -87,6 +87,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant BACKGROUND_POSITION.</summary>
         public const String BACKGROUND_POSITION = "background-position";
 
+        /// <summary>The Constant BACKGROUND_POSITION_X.</summary>
+        public const String BACKGROUND_POSITION_X = "background-position-x";
+
+        /// <summary>The Constant BACKGROUND_POSITION_Y.</summary>
+        public const String BACKGROUND_POSITION_Y = "background-position-y";
+
         /// <summary>The Constant BACKGROUND_REPEAT.</summary>
         public const String BACKGROUND_REPEAT = "background-repeat";
 
@@ -186,6 +192,18 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLOR.</summary>
         public const String COLOR = "color";
 
+        /// <summary>The Constant COLOR_DODGE.</summary>
+        public const String COLOR_DODGE = "color-dodge";
+
+        /// <summary>The Constant COLOR_BURN.</summary>
+        public const String COLOR_BURN = "color-burn";
+
+        /// <summary>The Constant DARKEN.</summary>
+        public const String DARKEN = "darken";
+
+        /// <summary>The Constant DIFFERENCE.</summary>
+        public const String DIFFERENCE = "difference";
+
         /// <summary>The Constant DIRECTION.</summary>
         public const String DIRECTION = "direction";
 
@@ -194,6 +212,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant EMPTY_CELLS.</summary>
         public const String EMPTY_CELLS = "empty-cells";
+
+        /// <summary>The Constant EXCLUSION.</summary>
+        public const String EXCLUSION = "exclusion";
 
         /// <summary>The Constant FLOAT.</summary>
         public const String FLOAT = "float";
@@ -255,6 +276,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant HANGING_PUNCTUATION.</summary>
         public const String HANGING_PUNCTUATION = "hanging-punctuation";
 
+        /// <summary>The Constant HARD_LIGHT.</summary>
+        public const String HARD_LIGHT = "hard-light";
+
+        /// <summary>The Constant HUE.</summary>
+        public const String HUE = "hue";
+
         /// <summary>The Constant HYPHENS.</summary>
         public const String HYPHENS = "hyphens";
 
@@ -296,6 +323,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant MIN_HEIGHT.</summary>
         public const String MIN_HEIGHT = "min-height";
+
+        /// <summary>The Constant MULTIPLY.</summary>
+        public const String MULTIPLY = "multiply";
 
         /// <summary>The Constant OPACITY.</summary>
         public const String OPACITY = "opacity";
@@ -553,6 +583,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant LEFT.</summary>
         public const String LEFT = "left";
 
+        /// <summary>The Constant LIGHTEN.</summary>
+        public const String LIGHTEN = "lighten";
+
         /// <summary>The Constant LIGHTER.</summary>
         public const String LIGHTER = "lighter";
 
@@ -573,6 +606,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant LOWER_ROMAN.</summary>
         public const String LOWER_ROMAN = "lower-roman";
+
+        /// <summary>The Constant LUMINOSITY.</summary>
+        public const String LUMINOSITY = "luminosity";
 
         /// <summary>The Constant MANUAL.</summary>
         public const String MANUAL = "manual";
@@ -616,6 +652,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant OUTSET.</summary>
         public const String OUTSET = "outset";
 
+        /// <summary>The Constant value OVERLAY.</summary>
+        public const String OVERLAY = "overlay";
+
         /// <summary>The Constant value OVERLINE.</summary>
         public const String OVERLINE = "overline";
 
@@ -643,6 +682,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ROTATE.</summary>
         public const String ROTATE = "rotate";
 
+        /// <summary>The Constant ROUND.</summary>
+        public const String ROUND = "round";
+
+        /// <summary>The Constant SATURATION.</summary>
+        public const String SATURATION = "saturation";
+
         /// <summary>The Constant SCALE.</summary>
         public const String SCALE = "scale";
 
@@ -651,6 +696,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant SCALE_Y.</summary>
         public const String SCALE_Y = "scaley";
+
+        /// <summary>The Constant SCREEN.</summary>
+        public const String SCREEN = "screen";
 
         /// <summary>The Constant SCROLL.</summary>
         public const String SCROLL = "scroll";
@@ -676,8 +724,14 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant SMALLER.</summary>
         public const String SMALLER = "smaller";
 
+        /// <summary>The Constant SOFT_LIGHT.</summary>
+        public const String SOFT_LIGHT = "soft-light";
+
         /// <summary>The Constant SOLID.</summary>
         public const String SOLID = "solid";
+
+        /// <summary>The Constant SPACE.</summary>
+        public const String SPACE = "space";
 
         /// <summary>The Constant SQUARE.</summary>
         public const String SQUARE = "square";
@@ -712,8 +766,14 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant TRANSPARENT.</summary>
         public const String TRANSPARENT = "transparent";
 
+        /// <summary>The Constant UNDEFINED_NAME.</summary>
+        public const String UNDEFINED_NAME = "undefined";
+
         /// <summary>The Constant value UNDERLINE</summary>
         public const String UNDERLINE = "underline";
+
+        /// <summary>The Constant value UNSET.</summary>
+        public const String UNSET = "unset";
 
         /// <summary>The Constant UPPER_ALPHA.</summary>
         public const String UPPER_ALPHA = "upper-alpha";
@@ -753,7 +813,7 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant BACKGROUND_REPEAT_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_REPEAT_VALUES = JavaCollectionsUtil.UnmodifiableSet(
-            new HashSet<String>(JavaUtil.ArraysAsList(REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y)));
+            new HashSet<String>(JavaUtil.ArraysAsList(REPEAT, NO_REPEAT, REPEAT_X, REPEAT_Y, ROUND, SPACE)));
 
         /// <summary>The Constant BACKGROUND_ATTACHMENT_VALUES.</summary>
         public static readonly ICollection<String> BACKGROUND_ATTACHMENT_VALUES = JavaCollectionsUtil.UnmodifiableSet
@@ -763,6 +823,14 @@ namespace iText.StyledXmlParser.Css {
         public static readonly ICollection<String> BACKGROUND_POSITION_VALUES = JavaCollectionsUtil.UnmodifiableSet
             (new HashSet<String>(JavaUtil.ArraysAsList(LEFT, CENTER, BOTTOM, TOP, RIGHT)));
 
+        /// <summary>The Constant BACKGROUND_POSITION_X_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_POSITION_X_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(LEFT, CENTER, RIGHT)));
+
+        /// <summary>The Constant BACKGROUND_POSITION_Y_VALUES.</summary>
+        public static readonly ICollection<String> BACKGROUND_POSITION_Y_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CENTER, BOTTOM, TOP)));
+
         /// <summary>The Constant BORDER_WIDTH_VALUES.</summary>
         public static readonly ICollection<String> BORDER_WIDTH_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(new String[] { THIN, MEDIUM, THICK })));
@@ -771,6 +839,11 @@ namespace iText.StyledXmlParser.Css {
         public static readonly ICollection<String> BORDER_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(new String[] { NONE, HIDDEN, DOTTED, DASHED, SOLID, DOUBLE, GROOVE, RIDGE
             , INSET, OUTSET })));
+
+        /// <summary>The Constant BLEND_MODE_VALUES.</summary>
+        public static readonly ICollection<String> BLEND_MODE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(new String[] { NORMAL, MULTIPLY, SCREEN, OVERLAY, DARKEN, LIGHTEN, COLOR_DODGE
+            , COLOR_BURN, HARD_LIGHT, SOFT_LIGHT, DIFFERENCE, EXCLUSION, HUE, SATURATION, COLOR, LUMINOSITY })));
 
         /// <summary>The Constant FONT_ABSOLUTE_SIZE_KEYWORDS.</summary>
         public static readonly IDictionary<String, String> FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES;

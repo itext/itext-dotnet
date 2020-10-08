@@ -74,6 +74,29 @@ namespace iText.Forms.Xfdf {
             this.WriteDom(xfdfObject);
         }
 
+        internal static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
+            <FieldObject> fieldList) {
+            IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
+            XmlElement field = document.CreateElement("field");
+            field.SetAttribute("name", fieldObject.GetName());
+            if (!childrenFields.IsEmpty()) {
+                foreach (FieldObject childField in childrenFields) {
+                    AddField(childField, field, document, fieldList);
+                }
+            }
+            else {
+                if (fieldObject.GetValue() != null && !String.IsNullOrEmpty(fieldObject.GetValue())) {
+                    XmlElement value = document.CreateElement("value");
+                    value.InnerText = fieldObject.GetValue();
+                    field.AppendChild(value);
+                }
+                else {
+                    logger.Info(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
+                }
+            }
+            parentElement.AppendChild(field);
+        }
+
         private void WriteDom(XfdfObject xfdfObject) {
             XmlDocument document = XfdfFileUtils.CreateNewXfdfDocument();
             // root xfdf element
@@ -141,29 +164,6 @@ namespace iText.Forms.Xfdf {
                 }
             }
             return childrenFields;
-        }
-
-        private static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
-            <FieldObject> fieldList) {
-            IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
-            XmlElement field = document.CreateElement("field");
-            field.SetAttribute("name", fieldObject.GetName());
-            if (!childrenFields.IsEmpty()) {
-                foreach (FieldObject childField in childrenFields) {
-                    AddField(childField, field, document, fieldList);
-                }
-            }
-            else {
-                if (fieldObject.GetValue() != null && !String.IsNullOrEmpty(fieldObject.GetValue())) {
-                    XmlElement value = document.CreateElement("value");
-                    value.InnerText = fieldObject.GetValue();
-                    field.AppendChild(value);
-                }
-                else {
-                    logger.Info(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
-                }
-            }
-            parentElement.AppendChild(field);
         }
 
         private static void AddAnnot(AnnotObject annotObject, XmlElement annots, XmlDocument document) {

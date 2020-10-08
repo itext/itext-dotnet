@@ -42,6 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.StyledXmlParser;
+using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 
 namespace iText.Svg.Utils {
@@ -168,6 +171,17 @@ namespace iText.Svg.Utils {
             float expected = 1.4E-45f;
             float actual = SvgCssUtils.ConvertPtsToPx(float.Epsilon);
             NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareIsStyleSheetLinkResult() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("link"), "");
+            element.Attr(CommonAttributeConstants.REL, CommonAttributeConstants.STYLESHEET);
+            JsoupElementNode elementNode = new JsoupElementNode(element);
+            bool expected = CssUtils.IsStyleSheetLink(elementNode);
+            bool actual = SvgCssUtils.IsStyleSheetLink(elementNode);
+            NUnit.Framework.Assert.AreEqual(actual, expected);
         }
     }
 }

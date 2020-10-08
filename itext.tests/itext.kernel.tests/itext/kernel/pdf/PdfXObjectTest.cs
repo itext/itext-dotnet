@@ -54,23 +54,24 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfXObjectTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXObjectTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfXObjectTest/";
 
-        public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp", sourceFolder
-             + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder + "WP_20140410_001.tif" };
+        public static readonly String[] images = new String[] { SOURCE_FOLDER + "WP_20140410_001.bmp", SOURCE_FOLDER
+             + "WP_20140410_001.JPC", SOURCE_FOLDER + "WP_20140410_001.jpg", SOURCE_FOLDER + "WP_20140410_001.tif"
+             };
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentFromImages1() {
-            String destinationDocument = destinationFolder + "documentFromImages1.pdf";
+            String destinationDocument = DESTINATION_FOLDER + "documentFromImages1.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -98,18 +99,18 @@ namespace iText.Kernel.Pdf {
             page_1.Flush();
             document.Close();
             NUnit.Framework.Assert.IsTrue(new FileInfo(destinationDocument).Length < 20 * 1024 * 1024);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentFromImages1.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, SOURCE_FOLDER + "cmp_documentFromImages1.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void CreateDocumentFromImages2() {
-            String destinationDocument = destinationFolder + "documentFromImages2.pdf";
+            String destinationDocument = DESTINATION_FOLDER + "documentFromImages2.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
-            ImageData image = ImageDataFactory.Create(sourceFolder + "itext.jpg");
+            ImageData image = ImageDataFactory.Create(SOURCE_FOLDER + "itext.jpg");
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.AddImage(image, 50, 500, 100, true);
@@ -117,13 +118,13 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentFromImages2.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, SOURCE_FOLDER + "cmp_documentFromImages2.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithForms() {
-            String destinationDocument = destinationFolder + "documentWithForms1.pdf";
+            String destinationDocument = DESTINATION_FOLDER + "documentWithForms1.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -154,8 +155,8 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page2.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_documentWithForms1.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, SOURCE_FOLDER + "cmp_documentWithForms1.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -163,8 +164,8 @@ namespace iText.Kernel.Pdf {
         public virtual void XObjectIterativeReference() {
             // The input file contains circular references chain, see: 8 0 R -> 10 0 R -> 4 0 R -> 8 0 R.
             // Copying of such file even with smart mode is expected to be handled correctly.
-            String src = sourceFolder + "checkboxes_XObject_iterative_reference.pdf";
-            String dest = destinationFolder + "checkboxes_XObject_iterative_reference_out.pdf";
+            String src = SOURCE_FOLDER + "checkboxes_XObject_iterative_reference.pdf";
+            String dest = DESTINATION_FOLDER + "checkboxes_XObject_iterative_reference_out.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(dest).SetSmartMode(true));
             PdfReader pdfReader = new PdfReader(src);
             PdfDocument sourceDocumentPdf = new PdfDocument(pdfReader);
@@ -225,6 +226,82 @@ namespace iText.Kernel.Pdf {
             String expected = "<</BBox [0 0 20 20 ] /Filter /FlateDecode /FormType 1 /Length 70 /Matrix [1 0 0 1 0 0 ] /Resources <</Font <</ZaDb "
                  + countIdIn + " 0 R Modified; >> >> /Subtype /Form /Type /XObject >>";
             NUnit.Framework.Assert.IsTrue(mapOut.Get(expected).Equals(1));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateProportionallyFitRectangleWithWidthTest() {
+            String fileName = "calculateProportionallyFitRectangleWithWidthTest.pdf";
+            String destPdf = DESTINATION_FOLDER + fileName;
+            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+            FileStream fos = new FileStream(destPdf, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fos);
+            PdfDocument document = new PdfDocument(writer);
+            PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
+            formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 2, 20, 5 }));
+            new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            Rectangle rect = PdfXObject.CalculateProportionallyFitRectangleWithWidth(formXObject, 0, 0, 20);
+            canvas.AddXObjectFittedIntoRectangle(formXObject, rect);
+            rect = PdfXObject.CalculateProportionallyFitRectangleWithWidth(imageXObject, 20, 0, 20);
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, rect);
+            canvas.Release();
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateProportionallyFitRectangleWithWidthForCustomXObjectTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
+                PdfXObject.CalculateProportionallyFitRectangleWithWidth(pdfXObject, 0, 0, 20);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateProportionallyFitRectangleWithHeightTest() {
+            String fileName = "calculateProportionallyFitRectangleWithHeightTest.pdf";
+            String destPdf = DESTINATION_FOLDER + fileName;
+            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+            FileStream fos = new FileStream(destPdf, FileMode.Create);
+            PdfWriter writer = new PdfWriter(fos);
+            PdfDocument document = new PdfDocument(writer);
+            PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(5, 5, 15, 20));
+            formXObject.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0.57f, 0, 2, 20, 5 }));
+            new PdfCanvas(formXObject, document).Circle(10, 15, 10).Fill();
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            Rectangle rect = PdfXObject.CalculateProportionallyFitRectangleWithHeight(formXObject, 0, 0, 20);
+            canvas.AddXObjectFittedIntoRectangle(formXObject, rect);
+            rect = PdfXObject.CalculateProportionallyFitRectangleWithHeight(imageXObject, 20, 0, 20);
+            canvas.AddXObjectFittedIntoRectangle(imageXObject, rect);
+            canvas.Release();
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateProportionallyFitRectangleWithHeightForCustomXObjectTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
+                PdfXObject.CalculateProportionallyFitRectangleWithHeight(pdfXObject, 0, 0, 20);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
+;
+        }
+
+        private class CustomPdfXObject : PdfXObject {
+            protected internal CustomPdfXObject(PdfStream pdfObject)
+                : base(pdfObject) {
+            }
         }
     }
 }

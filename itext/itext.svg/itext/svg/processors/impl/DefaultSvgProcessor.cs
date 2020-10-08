@@ -174,7 +174,7 @@ namespace iText.Svg.Processors.Impl {
                 IElementNode element = (IElementNode)node;
                 if (!rendererFactory.IsTagIgnored(element)) {
                     ISvgNodeRenderer parentRenderer = processorState.Top();
-                    ISvgNodeRenderer renderer = CreateRenderer(element, parentRenderer);
+                    ISvgNodeRenderer renderer = rendererFactory.CreateSvgNodeRendererForTag(element, parentRenderer);
                     if (renderer != null) {
                         IDictionary<String, String> styles;
                         if (cssResolver is SvgStyleResolver && OnlyNativeStylesShouldBeResolved(element)) {
@@ -191,21 +191,24 @@ namespace iText.Svg.Processors.Impl {
                         if (attribute != null) {
                             namedObjects.Put(attribute, renderer);
                         }
-                        if (renderer is NoDrawOperationSvgNodeRenderer) {
-                            // add the NoDrawOperationSvgNodeRenderer or its subtree to the ISvgNodeRenderer tree
-                            // only if the parent is NoDrawOperationSvgNodeRenderer itself
-                            if (parentRenderer is NoDrawOperationSvgNodeRenderer) {
-                                ((NoDrawOperationSvgNodeRenderer)parentRenderer).AddChild(renderer);
+                        if (renderer is StopSvgNodeRenderer) {
+                            if (parentRenderer is LinearGradientSvgNodeRenderer) {
+                                // It is necessary to add StopSvgNodeRenderer only as a child of LinearGradientSvgNodeRenderer,
+                                // because StopSvgNodeRenderer performs an auxiliary function and should not be drawn at all
+                                ((LinearGradientSvgNodeRenderer)parentRenderer).AddChild(renderer);
                             }
                         }
                         else {
-                            if (parentRenderer is IBranchSvgNodeRenderer) {
-                                ((IBranchSvgNodeRenderer)parentRenderer).AddChild(renderer);
-                            }
-                            else {
-                                if (parentRenderer is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
-                                    //Text branch node renderers only accept ISvgTextNodeRenderers
-                                    ((TextSvgBranchRenderer)parentRenderer).AddChild((ISvgTextNodeRenderer)renderer);
+                            // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only serves as a storage
+                            if (!(renderer is INoDrawSvgNodeRenderer) && !(parentRenderer is DefsSvgNodeRenderer)) {
+                                if (parentRenderer is IBranchSvgNodeRenderer) {
+                                    ((IBranchSvgNodeRenderer)parentRenderer).AddChild(renderer);
+                                }
+                                else {
+                                    if (parentRenderer is TextSvgBranchRenderer && renderer is ISvgTextNodeRenderer) {
+                                        // Text branch node renderers only accept ISvgTextNodeRenderers
+                                        ((TextSvgBranchRenderer)parentRenderer).AddChild((ISvgTextNodeRenderer)renderer);
+                                    }
                                 }
                             }
                         }
@@ -244,14 +247,6 @@ namespace iText.Svg.Processors.Impl {
                 return IsElementNested(parentElement, parentElementNameForSearch);
             }
             return false;
-        }
-
-        /// <summary>Create renderer based on the passed SVG tag and assign its parent</summary>
-        /// <param name="tag">SVG tag with all style attributes already assigned</param>
-        /// <param name="parent">renderer of the parent tag</param>
-        /// <returns>Configured renderer for the tag</returns>
-        private ISvgNodeRenderer CreateRenderer(IElementNode tag, ISvgNodeRenderer parent) {
-            return rendererFactory.CreateSvgNodeRendererForTag(tag, parent);
         }
 
         /// <summary>Check if this node is a text node that needs to be processed by the parent</summary>

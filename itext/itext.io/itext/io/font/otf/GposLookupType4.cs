@@ -82,7 +82,7 @@ namespace iText.IO.Font.Otf {
                             break;
                         }
                         // not mark => base glyph
-                        if (!mb.marks.ContainsKey(gi.glyph.GetCode())) {
+                        if (openReader.GetGlyphClass(gi.glyph.GetCode()) != OtfClass.GLYPH_MARK) {
                             break;
                         }
                     }

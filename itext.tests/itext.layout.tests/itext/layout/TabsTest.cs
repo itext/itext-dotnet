@@ -264,6 +264,29 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TabPositionAbsoluteValueTest() {
+            String outFileName = destinationFolder + "tabPositionAbsoluteValue.pdf";
+            String cmpFileName = sourceFolder + "cmp_tabPositionAbsoluteValue.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("x-coordinate = 100").SetFontColor(ColorConstants.RED).SetFirstLineIndent(100).SetFontSize
+                (8));
+            doc.Add(new Paragraph("x-coordinate = 200").SetFontColor(ColorConstants.GREEN).SetFirstLineIndent(200).SetFontSize
+                (8));
+            doc.Add(new Paragraph("x-coordinate = 300").SetFontColor(ColorConstants.BLUE).SetFirstLineIndent(300).SetFontSize
+                (8));
+            Paragraph p = new Paragraph().Add("Hello, iText!").Add(new Tab()).AddTabStops(new TabStop(100)).Add("Hi, iText!"
+                ).Add(new Tab()).AddTabStops(new TabStop(200)).Add("Hello, iText!").Add(new Tab()).AddTabStops(new TabStop
+                (300)).Add("Hello, iText!");
+            doc.Add(p);
+            float[] positions = new float[] { 100, 200, 300 };
+            DrawTabStopsPositions(positions, doc, 1, 0, 120);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SeveralTabsInRowTest() {
             String fileName = "severalTabsInRowTest.pdf";
             String outFileName = destinationFolder + fileName;

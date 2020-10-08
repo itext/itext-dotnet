@@ -49,10 +49,14 @@ namespace iText.Kernel.Crypto {
         protected internal ARCFOUREncryption arcfour;
 
         /// <summary>Creates a new instance of OutputStreamStandardEncryption</summary>
-        /// <param name="out"/>
-        /// <param name="key"/>
-        /// <param name="off"/>
-        /// <param name="len"/>
+        /// <param name="out">
+        /// the
+        /// <see cref="System.IO.Stream"/>
+        /// to which data will be written
+        /// </param>
+        /// <param name="key">data to be written</param>
+        /// <param name="off">the start offset in data</param>
+        /// <param name="len">number of bytes to write</param>
         public OutputStreamStandardEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
             arcfour = new ARCFOUREncryption();

@@ -52,6 +52,13 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
     public abstract class PdfFont : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>The upper bound value for char code.</summary>
+        /// <remarks>
+        /// The upper bound value for char code. As for simple fonts char codes are a single byte values,
+        /// it may vary from 0 to 255.
+        /// </remarks>
+        public const int SIMPLE_FONT_MAX_CHAR_CODE_VALUE = 255;
+
         protected internal FontProgram fontProgram;
 
         protected internal static readonly byte[] EMPTY_BYTES = new byte[0];

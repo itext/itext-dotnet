@@ -22,11 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Svg;
-using iText.Svg.Exceptions;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class OverflowAttributeTest : ExtendedITextTest {
@@ -84,37 +82,29 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG, Count = 2)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES, Count = 2)]
         public virtual void OverflowVisibleInSymbolElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2257 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInSymbol"
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void OverflowHiddenInSymbolElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2257 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInSymbol"
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void OverflowInitialInSymbolElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2257 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInSymbol"
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPEDTAG)]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES)]
         public virtual void OverflowScrollInSymbolElementTest() {
-            //TODO: update when DEVSIX-3482, DEVSIX-2257 fixed
+            //TODO: update when DEVSIX-3482 fixed
             SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInSymbol"
                 );
         }

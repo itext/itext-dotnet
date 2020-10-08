@@ -64,6 +64,7 @@ namespace iText.Layout.Element {
     /// <see cref="Paragraph.AddTabStops(TabStop[])"/>.
     /// </remarks>
     public class TabStop {
+        // tabPosition here is absolute value
         private float tabPosition;
 
         private TabAlignment tabAlignment;
@@ -73,7 +74,7 @@ namespace iText.Layout.Element {
         private ILineDrawer tabLeader;
 
         /// <summary>Creates a TabStop at the appropriate position.</summary>
-        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in absolute points</param>
         public TabStop(float tabPosition)
             : this(tabPosition, TabAlignment.LEFT) {
         }
@@ -87,7 +88,7 @@ namespace iText.Layout.Element {
         /// alignment. A tab alignment defines the way the textual content should be
         /// positioned with regards to this tab stop.
         /// </remarks>
-        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in absolute points</param>
         /// <param name="tabAlignment">
         /// a
         /// <see cref="iText.Layout.Properties.TabAlignment"/>
@@ -109,7 +110,7 @@ namespace iText.Layout.Element {
         /// the TabStop is reached. If null, the space leading up to the TabStop will
         /// be empty.
         /// </remarks>
-        /// <param name="tabPosition">a <c>float</c>, measured in points</param>
+        /// <param name="tabPosition">a <c>float</c>, measured in absolute points</param>
         /// <param name="tabAlignment">
         /// a
         /// <see cref="iText.Layout.Properties.TabAlignment"/>

@@ -252,11 +252,12 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual bool HasOffsets() {
-            return xPlacement != 0 || yPlacement != 0 || xAdvance != 0 || yAdvance != 0;
+            return HasAdvance() || HasPlacement();
         }
 
+        // In case some of placement values are not zero we always expect anchorDelta to be non-zero
         public virtual bool HasPlacement() {
-            return xPlacement != 0 || yPlacement != 0;
+            return anchorDelta != 0;
         }
 
         public virtual bool HasAdvance() {

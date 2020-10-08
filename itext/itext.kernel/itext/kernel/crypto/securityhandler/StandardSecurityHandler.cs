@@ -81,7 +81,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         /// <summary>Gets bytes of String-value without considering encoding.</summary>
-        /// <param name="string"/>
+        /// <param name="string">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// to get bytes from it
+        /// </param>
         /// <returns>byte array</returns>
         protected internal virtual byte[] GetIsoBytes(PdfString @string) {
             return ByteUtils.GetIsoBytes(@string.GetValue());

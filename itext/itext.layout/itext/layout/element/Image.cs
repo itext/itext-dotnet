@@ -706,6 +706,38 @@ namespace iText.Layout.Element {
                 () * (float)this.GetProperty<float?>(Property.VERTICAL_SCALING);
         }
 
+        /// <summary>Sets an object-fit mode for the image.</summary>
+        /// <param name="objectFit">
+        /// is the
+        /// <see cref="iText.Layout.Properties.ObjectFit"/>
+        /// mode
+        /// </param>
+        /// <returns>this image</returns>
+        public virtual iText.Layout.Element.Image SetObjectFit(ObjectFit objectFit) {
+            SetProperty(Property.OBJECT_FIT, objectFit);
+            return this;
+        }
+
+        /// <summary>
+        /// Retrieves the
+        /// <see cref="iText.Layout.Properties.ObjectFit"/>
+        /// mode for the image.
+        /// </summary>
+        /// <returns>
+        /// an object-fit mode for the image if it was set
+        /// and default value
+        /// <see cref="iText.Layout.Properties.ObjectFit.FILL"/>
+        /// otherwise
+        /// </returns>
+        public virtual ObjectFit GetObjectFit() {
+            if (HasProperty(Property.OBJECT_FIT)) {
+                return (ObjectFit)this.GetProperty<ObjectFit?>(Property.OBJECT_FIT);
+            }
+            else {
+                return ObjectFit.FILL;
+            }
+        }
+
         public virtual AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.FIGURE);

@@ -198,17 +198,15 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </param>
         /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes(bool decoded) {
-            byte[] bytes;
-            bytes = GetPdfObject().GetBytes(false);
+            // TODO: DEVSIX-1792 replace `.getBytes(false)` with `getBytes(true) and remove manual decoding
+            byte[] bytes = GetPdfObject().GetBytes(false);
             if (decoded) {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
-                DoNothingFilter stubFilter = new DoNothingFilter();
-                filters.Put(PdfName.DCTDecode, stubFilter);
-                filters.Put(PdfName.JBIG2Decode, stubFilter);
-                filters.Put(PdfName.JPXDecode, stubFilter);
+                filters.Put(PdfName.JBIG2Decode, new DoNothingFilter());
                 bytes = PdfReader.DecodeBytes(bytes, GetPdfObject(), filters);
-                if (stubFilter.GetLastFilterName() == null) {
+                ImageType imageType = IdentifyImageType();
+                if (imageType == ImageType.TIFF || imageType == ImageType.PNG) {
                     try {
                         bytes = new ImagePdfBytesInfo(this).DecodeTiffAndPngBytes(bytes);
                     }

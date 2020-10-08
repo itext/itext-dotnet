@@ -1148,7 +1148,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class BeginMarkedContentOperator : IContentOperator {
             /// <summary><inheritDoc/></summary>
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
-                processor.BeginMarkedContent((PdfName)operands[0], new PdfDictionary());
+                processor.BeginMarkedContent((PdfName)operands[0], null);
             }
         }
 

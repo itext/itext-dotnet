@@ -93,6 +93,14 @@ namespace iText.Barcodes {
         /// <summary>The number of individual bars either drawn or not drawn per character of the <c>code</c></summary>
         private const int BARS_PER_CHARACTER = 12;
 
+        /// <summary>The number of individual bars either drawn or not drawn for the start character in the BarcodeMSI.
+        ///     </summary>
+        private const int BARS_FOR_START = 3;
+
+        /// <summary>The number of individual bars either drawn or not drawn for the stop character in the BarcodeMSI.
+        ///     </summary>
+        private const int BARS_FOR_STOP = 4;
+
         /// <summary>Creates a new BarcodeMSI.</summary>
         /// <remarks>
         /// Creates a new BarcodeMSI.
@@ -145,11 +153,11 @@ namespace iText.Barcodes {
                 String fullCode = this.code;
                 fontX = this.font.GetWidth(this.altText != null ? this.altText : fullCode, this.size);
             }
-            int len = fCode.Length + 2;
+            int len = fCode.Length;
             if (this.generateChecksum) {
                 ++len;
             }
-            float fullWidth = (float)len * (6.0f * this.x + 3.0f * this.x * this.n) + (float)(len - 1) * this.x;
+            float fullWidth = (len * BARS_PER_CHARACTER + BARS_FOR_START + BARS_FOR_STOP) * x;
             fullWidth = Math.Max(fullWidth, fontX);
             float fullHeight = this.barHeight + fontY;
             return new Rectangle(fullWidth, fullHeight);
@@ -211,7 +219,7 @@ namespace iText.Barcodes {
             }
             int idx;
             idx = bCode.Length;
-            float fullWidth = (float)((idx + 2) * 11) * this.x + 2.0f * this.x;
+            float fullWidth = (idx * BARS_PER_CHARACTER + BARS_FOR_START + BARS_FOR_STOP) * this.x;
             float barStartX = 0.0f;
             float textStartX = 0.0f;
             switch (this.textAlignment) {

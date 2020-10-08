@@ -259,18 +259,39 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
-        /// <param name="rect">a rectangle which is to be checked if it overlaps the passed rectangle.</param>
+        /// <param name="rect">a rectangle which is to be checked if it overlaps the passed rectangle</param>
         /// <returns>true if there is overlap of some kind</returns>
         public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect) {
+            return Overlaps(rect, -EPS);
+        }
+
+        /// <summary>Check if this rectangle and the passed rectangle overlap</summary>
+        /// <param name="rect">a rectangle which is to be checked if it overlaps the passed rectangle</param>
+        /// <param name="epsilon">
+        /// if greater than zero, then this is the maximum distance that one rectangle can go to another, but
+        /// they will not overlap, if less than zero, then this is the minimum required distance between the
+        /// rectangles so that they do not overlap
+        /// </param>
+        /// <returns>true if there is overlap of some kind</returns>
+        public virtual bool Overlaps(iText.Kernel.Geom.Rectangle rect, float epsilon) {
             // Two rectangles do not overlap if any of the following holds
-            // 1. the lower left corner of the second rectangle is to the right of the upper-right corner of the first.
-            return !((rect.GetX() - (this.GetX() + this.GetWidth()) > EPS) || 
-                        // 2. the lower left corner of the second rectangle is above the upper right corner of the first.
-                        (rect.GetY() - (this.GetY() + this.GetHeight()) > EPS) || 
-                        // 3. the upper right corner of the second rectangle is to the left of the lower-left corner of the first.
-                        (this.GetX() - (rect.GetX() + rect.GetWidth()) > EPS) || 
-                        // 4. the upper right corner of the second rectangle is below the lower left corner of the first.
-                        (this.GetY() - (rect.GetY() + rect.GetHeight()) > EPS));
+            // The first rectangle lies to the left of the second rectangle or touches very slightly
+            if ((this.GetX() + this.GetWidth()) < (rect.GetX() + epsilon)) {
+                return false;
+            }
+            // The first rectangle lies to the right of the second rectangle or touches very slightly
+            if ((this.GetX() + epsilon) > (rect.GetX() + rect.GetWidth())) {
+                return false;
+            }
+            // The first rectangle lies to the bottom of the second rectangle or touches very slightly
+            if ((this.GetY() + this.GetHeight()) < (rect.GetY() + epsilon)) {
+                return false;
+            }
+            // The first rectangle lies to the top of the second rectangle or touches very slightly
+            if ((this.GetY() + epsilon) > (rect.GetY() + rect.GetHeight())) {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
@@ -574,6 +595,15 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
+        /// <summary>
+        /// Creates a "deep copy" of this rectangle, meaning the object returned by this method will be independent
+        /// of the object being cloned.
+        /// </summary>
+        /// <returns>the copied rectangle.</returns>
+        public virtual iText.Kernel.Geom.Rectangle Clone() {
+            return (iText.Kernel.Geom.Rectangle) MemberwiseClone();
+        }
+
         /// <summary>Compares instance of this rectangle with given deviation equals to 0.0001</summary>
         /// <param name="that">
         /// the
@@ -696,15 +726,6 @@ namespace iText.Kernel.Geom {
                 }
             }
             return (new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly));
-        }
-
-        /// <summary>
-        /// Creates a "deep copy" of this rectangle, meaning the object returned by this method will be independent
-        /// of the object being cloned.
-        /// </summary>
-        /// <returns>the copied rectangle.</returns>
-        public virtual iText.Kernel.Geom.Rectangle Clone() {
-            return (iText.Kernel.Geom.Rectangle) MemberwiseClone();
         }
     }
 }

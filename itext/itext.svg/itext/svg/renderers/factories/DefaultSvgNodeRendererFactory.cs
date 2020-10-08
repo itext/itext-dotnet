@@ -113,7 +113,8 @@ namespace iText.Svg.Renderers.Factories {
                 throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
                     ));
             }
-            if (parent != null && !(parent is NoDrawOperationSvgNodeRenderer)) {
+            // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only serves as a storage
+            if (parent != null && !(result is INoDrawSvgNodeRenderer) && !(parent is DefsSvgNodeRenderer)) {
                 result.SetParent(parent);
             }
             return result;

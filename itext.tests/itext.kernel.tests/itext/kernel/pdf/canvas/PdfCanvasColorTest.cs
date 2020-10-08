@@ -54,20 +54,20 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
     public class PdfCanvasColorTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasColorTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/canvas/PdfCanvasColorTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "colorTest01.pdf"));
+            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "colorTest01.pdf"));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.RED).Rectangle(50, 500, 50, 50).Fill();
@@ -80,13 +80,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetStrokeColor(DeviceCmyk.BLACK).Rectangle(350, 400, 50, 50).Stroke();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest01.pdf", sourceFolder
-                 + "cmp_colorTest01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest01.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest01.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest02() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "colorTest02.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -110,13 +110,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetStrokeColor(black).Rectangle(350, 400, 50, 50).Stroke();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest02.pdf", sourceFolder
-                 + "cmp_colorTest02.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest02.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest02.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest03() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "colorTest03.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -136,8 +136,8 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetFillColor(lab2).Rectangle(150, 300, 50, 50).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest03.pdf", sourceFolder
-                 + "cmp_colorTest03.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest03.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest03.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -149,9 +149,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            FileStream streamGray = new FileStream(sourceFolder + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamCmyk = new FileStream(sourceFolder + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamRgb = new FileStream(SOURCE_FOLDER + "CIERGB.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamCmyk = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read
+                );
             IccBased gray = new IccBased(streamGray, new float[] { 0.5f });
             IccBased rgb = new IccBased(streamRgb, new float[] { 1.0f, 0.5f, 0f });
             IccBased cmyk = new IccBased(streamCmyk, new float[] { 1.0f, 0.5f, 0f, 0f });
@@ -165,22 +166,23 @@ namespace iText.Kernel.Pdf.Canvas {
             byte[] bytes = baos.ToArray();
             PdfReader reader = new PdfReader(new MemoryStream(bytes));
             document = new PdfDocument(reader);
-            writer = new PdfWriter(destinationFolder + "colorTest04.pdf");
+            writer = new PdfWriter(DESTINATION_FOLDER + "colorTest04.pdf");
             PdfDocument newDocument = new PdfDocument(writer);
             newDocument.AddPage(document.GetPage(1).CopyTo(newDocument));
             newDocument.Close();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest04.pdf", sourceFolder
-                 + "cmp_colorTest04.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest04.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest04.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest05() {
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "colorTest05.pdf"));
+            PdfDocument document = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "colorTest05.pdf"));
             PdfPage page = document.AddNewPage();
-            FileStream streamGray = new FileStream(sourceFolder + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamRgb = new FileStream(sourceFolder + "CIERGB.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamCmyk = new FileStream(sourceFolder + "USWebUncoated.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamRgb = new FileStream(SOURCE_FOLDER + "CIERGB.icc", FileMode.Open, FileAccess.Read);
+            FileStream streamCmyk = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read
+                );
             PdfCieBasedCs.IccBased gray = (PdfCieBasedCs.IccBased)new IccBased(streamGray).GetColorSpace();
             PdfCieBasedCs.IccBased rgb = (PdfCieBasedCs.IccBased)new IccBased(streamRgb).GetColorSpace();
             PdfCieBasedCs.IccBased cmyk = (PdfCieBasedCs.IccBased)new IccBased(streamCmyk).GetColorSpace();
@@ -194,8 +196,8 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetFillColorCmyk(1.0f, 0.5f, 0f, 0f).Rectangle(250, 500, 50, 50).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest05.pdf", sourceFolder
-                 + "cmp_colorTest05.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest05.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest05.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -207,7 +209,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 bytes[k++] = (byte)i;
                 bytes[k++] = (byte)i;
             }
-            PdfWriter writer = new PdfWriter(destinationFolder + "colorTest06.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -219,13 +221,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetFillColor(new Indexed(indexed, 170)).Rectangle(250, 500, 50, 50).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest06.pdf", sourceFolder
-                 + "cmp_colorTest06.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest06.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest06.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest07() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "colorTest07.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest07.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -238,13 +240,13 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetFillColor(new Separation(separation, 0.75f)).Rectangle(250, 500, 50, 50).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest07.pdf", sourceFolder
-                 + "cmp_colorTest07.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest07.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest07.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColorTest08() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "colorTest08.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "colorTest08.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -260,8 +262,8 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.SetFillColor(new DeviceN(deviceN, new float[] { 1, 0 })).Rectangle(250, 500, 50, 50).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "colorTest08.pdf", sourceFolder
-                 + "cmp_colorTest08.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "colorTest08.pdf", SOURCE_FOLDER
+                 + "cmp_colorTest08.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -275,8 +277,8 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private void SetColorSameColorSpacesTest(String pdfName, bool pattern) {
-            String cmpFile = sourceFolder + "cmp_" + pdfName;
-            String destFile = destinationFolder + pdfName;
+            String cmpFile = SOURCE_FOLDER + "cmp_" + pdfName;
+            String destFile = DESTINATION_FOLDER + pdfName;
             PdfDocument document = new PdfDocument(new PdfWriter(destFile));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -299,14 +301,33 @@ namespace iText.Kernel.Pdf.Canvas {
                 (PdfFontFactory.CreateFont(), 16).ShowText("bluish").EndText().RestoreState();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MakePatternColorTest() {
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "makePatternColorTest.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfSpecialCs.Pattern pattern = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Rgb());
+            Color greenPattern = Color.MakeColor(pattern, new float[] { 0, 1, 0 });
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(10, 10, 12, 12, false);
+            new PdfPatternCanvas(circle, document).Circle(5f, 5f, 5f).Fill().Release();
+            canvas.SetColor(greenPattern.GetColorSpace(), greenPattern.GetColorValue(), circle, true).Rectangle(50, 600
+                , 50, 50).Fill();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "makePatternColorTest.pdf"
+                , SOURCE_FOLDER + "cmp_makePatternColorTest.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredAxialPatternTest() {
             String name = "patternColorColoredAxialPatternTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -317,14 +338,14 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Rectangle(30, 300, 400, 400).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredRadialPatternTest() {
             String name = "patternColorColoredRadialPatternTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -335,14 +356,14 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Rectangle(30, 300, 400, 400).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredCircleRgbTest() {
             String name = "patternColorUncoloredCircleRgbTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -356,14 +377,14 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Rectangle(30, 300, 400, 400).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredLineGrayTest() {
             String name = "patternColorUncoloredLineGrayTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -374,14 +395,14 @@ namespace iText.Kernel.Pdf.Canvas {
             canvas.Rectangle(30, 300, 400, 400).Fill();
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorColoredSetTwiceTest() {
             String name = "patternColorColoredSetTwiceTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -407,14 +428,14 @@ namespace iText.Kernel.Pdf.Canvas {
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(1, p1Count);
             NUnit.Framework.Assert.AreEqual(1, p2Count);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredSetTwiceTest() {
             String name = "patternColorUncoloredSetTwiceTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + name);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + name);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
@@ -451,8 +472,8 @@ namespace iText.Kernel.Pdf.Canvas {
             int p2Count = CountSubstringOccurrences(contentStreamString, "/P2 scn");
             NUnit.Framework.Assert.AreEqual(3, p1Count);
             NUnit.Framework.Assert.AreEqual(2, p2Count);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
-                "cmp_" + name, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + name, SOURCE_FOLDER 
+                + "cmp_" + name, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]

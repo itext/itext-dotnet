@@ -243,6 +243,8 @@ namespace iText.Layout.Properties {
 
         public const int NO_SOFT_WRAP_INLINE = 118;
 
+        public const int OBJECT_FIT = 125;
+
         public const int OPACITY = 92;
 
         public const int ORPHANS_CONTROL = 121;
@@ -357,7 +359,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 124;
+        private const int MAX_INHERITED_PROPERTY_ID = 125;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

@@ -362,12 +362,14 @@ namespace iText.IO.Font {
         protected internal abstract class Item {
             protected internal int myOffset = -1;
 
-            /// <summary>remember the current offset and increment by item's size in bytes.</summary>
+            /// <summary>Remember the current offset and increment by item's size in bytes.</summary>
+            /// <param name="currentOffset">increment offset by item's size</param>
             public virtual void Increment(int[] currentOffset) {
                 myOffset = currentOffset[0];
             }
 
             /// <summary>Emit the byte stream for this item.</summary>
+            /// <param name="buffer">byte array</param>
             public virtual void Emit(byte[] buffer) {
             }
 
@@ -379,11 +381,12 @@ namespace iText.IO.Font {
         protected internal abstract class OffsetItem : CFFFont.Item {
             public int value;
 
-            /// <summary>set the value of an offset item that was initially unknown.</summary>
+            /// <summary>Set the value of an offset item that was initially unknown.</summary>
             /// <remarks>
-            /// set the value of an offset item that was initially unknown.
+            /// Set the value of an offset item that was initially unknown.
             /// It will be fixed up latex by a call to xref on some marker.
             /// </remarks>
+            /// <param name="offset">offset to set</param>
             public virtual void Set(int offset) {
                 this.value = offset;
             }
@@ -709,7 +712,8 @@ namespace iText.IO.Font {
         /// a PDF restriction) and to subset the CharStrings glyph
         /// description.
         /// </remarks>
-        /// <param name="fontName"/>
+        /// <param name="fontName">name of the font</param>
+        /// <returns>byte array represents the CID font</returns>
         public virtual byte[] GetCID(String fontName) {
             //throws java.io.FileNotFoundException
             int j;

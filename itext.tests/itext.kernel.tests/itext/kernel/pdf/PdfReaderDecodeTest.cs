@@ -51,50 +51,47 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfReaderDecodeTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfReaderDecodeTest/";
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
-        }
-
         [NUnit.Framework.Test]
         public virtual void NoMemoryHandlerTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-            FileStream @is = new FileStream(sourceFolder + "stream", FileMode.Open, FileAccess.Read);
-            byte[] b = new byte[51];
-            @is.Read(b);
-            PdfArray array = new PdfArray();
-            PdfStream stream = new PdfStream(b);
-            stream.Put(PdfName.Filter, array);
-            stream.MakeIndirect(pdfDocument);
-            NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                using (FileStream @is = new FileStream(sourceFolder + "stream", FileMode.Open, FileAccess.Read)) {
+                    byte[] b = new byte[51];
+                    @is.Read(b);
+                    PdfArray array = new PdfArray();
+                    PdfStream stream = new PdfStream(b);
+                    stream.Put(PdfName.Filter, array);
+                    stream.MakeIndirect(pdfDocument);
+                    NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
+                    // needed to close the document
+                    pdfDocument.AddNewPage();
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void DefaultMemoryHandlerTest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf"), new PdfWriter(new MemoryStream
-                ()));
-            PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
-            byte[] b = stream.GetBytes(false);
-            PdfArray array = new PdfArray();
-            stream.Put(PdfName.Filter, array);
-            NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf"), new PdfWriter
+                (new MemoryStream()))) {
+                PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                byte[] b = stream.GetBytes(false);
+                PdfArray array = new PdfArray();
+                stream.Put(PdfName.Filter, array);
+                NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
+                array.Add(PdfName.Fl);
+                NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
+                array.Add(PdfName.Fl);
+                NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
+                array.Add(PdfName.Fl);
+                NUnit.Framework.Assert.AreEqual(1000000, PdfReader.DecodeBytes(b, stream).Length);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -103,27 +100,24 @@ namespace iText.Kernel.Pdf {
         public virtual void CustomMemoryHandlerSingleTest() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1000);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties(
-                ).SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()));
-            PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
-            byte[] b = stream.GetBytes(false);
-            PdfArray array = new PdfArray();
-            stream.Put(PdfName.Filter, array);
-            NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
-            array.Add(PdfName.Fl);
-            String expectedExceptionMessage = PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed;
-            String thrownExceptionMessage = null;
-            try {
-                PdfReader.DecodeBytes(b, stream);
+            NUnit.Framework.Assert.That(() =>  {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                    PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                    byte[] b = stream.GetBytes(false);
+                    PdfArray array = new PdfArray();
+                    stream.Put(PdfName.Filter, array);
+                    NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    NUnit.Framework.Assert.AreEqual(992, PdfReader.DecodeBytes(b, stream).Length);
+                    array.Add(PdfName.Fl);
+                    PdfReader.DecodeBytes(b, stream);
+                }
             }
-            catch (MemoryLimitsAwareException e) {
-                thrownExceptionMessage = e.Message;
-            }
-            NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>().With.Message.EqualTo(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed))
+;
         }
 
         [NUnit.Framework.Test]
@@ -132,17 +126,78 @@ namespace iText.Kernel.Pdf {
         public virtual void OneFilterCustomMemoryHandlerSingleTest() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties(
-                ).SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()));
-            PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
-            byte[] b = stream.GetBytes(false);
-            PdfArray array = new PdfArray();
-            stream.Put(PdfName.Filter, array);
-            // Limit is reached, but the stream has no filters. Therefore we don't consider ot to be suspicious
-            NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
-            // Limit is reached, but the stream has only one filter. Therefore we don't consider ot to be suspicious
-            array.Add(PdfName.Fl);
-            NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                byte[] b = stream.GetBytes(false);
+                PdfArray array = new PdfArray();
+                stream.Put(PdfName.Filter, array);
+                // Limit is reached, but the stream has no filters. Therefore we don't consider ot to be suspicious
+                NUnit.Framework.Assert.AreEqual(51, PdfReader.DecodeBytes(b, stream).Length);
+                // Limit is reached, but the stream has only one filter. Therefore we don't consider ot to be suspicious
+                array.Add(PdfName.Fl);
+                NUnit.Framework.Assert.AreEqual(40, PdfReader.DecodeBytes(b, stream).Length);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void OverriddenMemoryHandlerAllStreamsAreSuspiciousTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_203();
+                handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                    PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                    byte[] b = stream.GetBytes(false);
+                    PdfArray array = new PdfArray();
+                    stream.Put(PdfName.Filter, array);
+                    array.Add(PdfName.Fl);
+                    // Limit is reached, and the stream with one filter is considered to be suspicious
+                    PdfReader.DecodeBytes(b, stream);
+                }
+            }
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>().With.Message.EqualTo(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed))
+;
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_203 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_203() {
+            }
+
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
+                return true;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        public virtual void OverriddenMemoryHandlerNoStreamsAreSuspiciousTest() {
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_235();
+            handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                byte[] b = stream.GetBytes(false);
+                PdfArray array = new PdfArray();
+                stream.Put(PdfName.Filter, array);
+                array.Add(PdfName.Fl);
+                array.Add(PdfName.Fl);
+                // Limit is reached but the stream with several copies of the filter is not considered
+                // to be suspicious
+                PdfReader.DecodeBytes(b, stream);
+            }
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_235 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_235() {
+            }
+
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
+                return false;
+            }
         }
 
         [NUnit.Framework.Test]
@@ -164,19 +219,16 @@ namespace iText.Kernel.Pdf {
         public virtual void CustomMemoryHandlerSumTest() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             handler.SetMaxSizeOfDecompressedPdfStreamsSum(100000);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties(
-                ).SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()));
-            PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
-            byte[] b = stream.GetBytes(false);
-            String expectedExceptionMessage = PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed;
-            String thrownExceptionMessage = null;
-            try {
-                PdfReader.DecodeBytes(b, stream);
+            NUnit.Framework.Assert.That(() =>  {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                    PdfStream stream = pdfDocument.GetFirstPage().GetContentStream(0);
+                    byte[] b = stream.GetBytes(false);
+                    PdfReader.DecodeBytes(b, stream);
+                }
             }
-            catch (MemoryLimitsAwareException e) {
-                thrownExceptionMessage = e.Message;
-            }
-            NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>().With.Message.EqualTo(PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed))
+;
         }
 
         [NUnit.Framework.Test]
@@ -185,17 +237,14 @@ namespace iText.Kernel.Pdf {
         public virtual void PageSumTest() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             handler.SetMaxSizeOfDecompressedPdfStreamsSum(1500000);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties(
-                ).SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()));
-            String expectedExceptionMessage = PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed;
-            String thrownExceptionMessage = null;
-            try {
-                pdfDocument.GetFirstPage().GetContentBytes();
+            NUnit.Framework.Assert.That(() =>  {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                    pdfDocument.GetFirstPage().GetContentBytes();
+                }
             }
-            catch (MemoryLimitsAwareException e) {
-                thrownExceptionMessage = e.Message;
-            }
-            NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>().With.Message.EqualTo(PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed))
+;
         }
 
         [NUnit.Framework.Test]
@@ -204,17 +253,14 @@ namespace iText.Kernel.Pdf {
         public virtual void PageAsSingleStreamTest() {
             MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1500000);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties(
-                ).SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()));
-            String expectedExceptionMessage = PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed;
-            String thrownExceptionMessage = null;
-            try {
-                pdfDocument.GetFirstPage().GetContentBytes();
+            NUnit.Framework.Assert.That(() =>  {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "timing.pdf", new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
+                    pdfDocument.GetFirstPage().GetContentBytes();
+                }
             }
-            catch (MemoryLimitsAwareException e) {
-                thrownExceptionMessage = e.Message;
-            }
-            NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, thrownExceptionMessage);
+            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>().With.Message.EqualTo(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed))
+;
         }
     }
 }

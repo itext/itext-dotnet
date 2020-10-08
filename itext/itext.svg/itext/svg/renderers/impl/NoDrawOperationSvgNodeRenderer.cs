@@ -51,6 +51,8 @@ namespace iText.Svg.Renderers.Impl {
     /// Tags mapped onto this renderer won't be drawn and will be excluded from the renderer tree when processed.
     /// Different from being added to the ignored list as this Renderer will allow its children to be processed.
     /// </remarks>
+    [System.ObsoleteAttribute(@"will be removed in iText 7.2 use iText.Svg.Renderers.INoDrawSvgNodeRenderer instead"
+        )]
     public class NoDrawOperationSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);

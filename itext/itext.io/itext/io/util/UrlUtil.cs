@@ -85,6 +85,10 @@ namespace iText.IO.Util {
                 HttpClient client = new HttpClient();
                 using (Stream rs = client.GetStreamAsync(url).Result) {
 #endif
+                    // We don't want to leave the response stream in an open state as it
+                    // may lead to running out of server connections what will block processing
+                    // of new requests. Therefore copying the state of the stream to a MemoryStream 
+                    // which doesn't deal with connections.
                     isp = new MemoryStream();
                     byte[] buffer = new byte[4096];
                     int read;

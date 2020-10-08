@@ -106,7 +106,7 @@ namespace iText.Kernel.Geom {
         /// ,
         /// <see cref="distanceToleranceSquare"/>
         /// ,
-        /// <see cref="distanceToleranceManhattan"/>
+        /// <see cref="distanceToleranceManhattan"/>.
         /// </summary>
         /// <returns>
         /// 

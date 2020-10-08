@@ -98,6 +98,26 @@ namespace iText.IO.Font.Otf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestAdditionWithActualText() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            IList<Glyph> glyphs = ConstructGlyphListFromString("Viva France!", font);
+            GlyphLine containerLine = new GlyphLine(glyphs);
+            NUnit.Framework.Assert.IsNull(containerLine.actualText);
+            containerLine.SetActualText(0, 1, "TEST");
+            NUnit.Framework.Assert.IsNotNull(containerLine.actualText);
+            NUnit.Framework.Assert.AreEqual(12, containerLine.actualText.Count);
+            NUnit.Framework.Assert.AreEqual("TEST", containerLine.actualText[0].value);
+            containerLine.Add(new GlyphLine(glyphs));
+            NUnit.Framework.Assert.AreEqual(24, containerLine.actualText.Count);
+            for (int i = 13; i < 24; i++) {
+                NUnit.Framework.Assert.IsNull(containerLine.actualText[i]);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
@@ -154,6 +174,55 @@ namespace iText.IO.Font.Otf {
             lineToBeReplaced.ReplaceContent(lineToBeCopied);
             // Test that no exception has been thrown. Also check the content.
             NUnit.Framework.Assert.AreEqual("Belarus", lineToBeReplaced.ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany01() {
+            String expectedActualTextForFirstGlyph = "0";
+            String expectedActualTextForSecondGlyph = "A";
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            // no actual text for the second glyph is set - it should be created during substitution
+            GlyphLine line = new GlyphLine(ConstructGlyphListFromString("AA", font));
+            line.SetActualText(0, 1, expectedActualTextForFirstGlyph);
+            line.idx = 1;
+            line.SubstituteOneToMany(font.GetGsubTable(), new int[] { 39, 40 });
+            NUnit.Framework.Assert.IsNotNull(line.actualText);
+            NUnit.Framework.Assert.AreEqual(3, line.actualText.Count);
+            NUnit.Framework.Assert.AreSame(line.actualText[1], line.actualText[2]);
+            NUnit.Framework.Assert.AreEqual(expectedActualTextForSecondGlyph, line.actualText[1].value);
+            // check that it hasn't been corrupted
+            NUnit.Framework.Assert.AreEqual(expectedActualTextForFirstGlyph, line.actualText[0].value);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany02() {
+            String expectedActualTextForFirstGlyph = "A";
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            GlyphLine line = new GlyphLine(ConstructGlyphListFromString("A", font));
+            line.SetActualText(0, 1, expectedActualTextForFirstGlyph);
+            line.SubstituteOneToMany(font.GetGsubTable(), new int[] { 39, 40 });
+            NUnit.Framework.Assert.IsNotNull(line.actualText);
+            NUnit.Framework.Assert.AreEqual(2, line.actualText.Count);
+            NUnit.Framework.Assert.AreSame(line.actualText[0], line.actualText[1]);
+            NUnit.Framework.Assert.AreEqual(expectedActualTextForFirstGlyph, line.actualText[0].value);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany03() {
+            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+                ));
+            TrueTypeFont font = new TrueTypeFont(ttf);
+            // no actual text is set
+            GlyphLine line = new GlyphLine(ConstructGlyphListFromString("A", font));
+            line.SubstituteOneToMany(font.GetGsubTable(), new int[] { 39, 40 });
+            NUnit.Framework.Assert.IsNull(line.actualText);
         }
     }
 }

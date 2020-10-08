@@ -148,9 +148,7 @@ namespace iText.StyledXmlParser.Css {
                 else {
                     IList<CssDeclaration> resolvedShorthandProps = shorthandResolver.ResolveShorthand(declaration.GetExpression
                         ());
-                    foreach (CssDeclaration resolvedProp in resolvedShorthandProps) {
-                        PutDeclarationInMapIfValid(map, resolvedProp);
-                    }
+                    PopulateDeclarationsMap(resolvedShorthandProps, map);
                 }
             }
         }

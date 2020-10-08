@@ -47,6 +47,7 @@ using iText.IO.Font;
 using iText.IO.Util;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Font;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 
@@ -65,10 +66,10 @@ namespace iText.Svg.Processors.Impl.Font {
             if (cssResolver is SvgStyleResolver) {
                 foreach (CssFontFaceRule fontFace in ((SvgStyleResolver)cssResolver).GetFonts()) {
                     bool findSupportedSrc = false;
-                    FontFace ff = FontFace.Create(fontFace.GetProperties());
+                    CssFontFace ff = CssFontFace.Create(fontFace.GetProperties());
                     if (ff != null) {
-                        foreach (FontFace.FontFaceSrc src in ff.GetSources()) {
-                            if (CreateFont(ff.GetFontFamily(), src)) {
+                        foreach (CssFontFace.CssFontFaceSrc src in ff.GetSources()) {
+                            if (CreateFont(ff.GetFontFamily(), src, fontFace.ResolveUnicodeRange())) {
                                 findSupportedSrc = true;
                                 break;
                             }
@@ -86,14 +87,14 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <param name="fontFamily">the font family</param>
         /// <param name="src">the source of the font</param>
         /// <returns>true, if successful</returns>
-        private bool CreateFont(String fontFamily, FontFace.FontFaceSrc src) {
-            if (!SupportedFontFormat(src.format)) {
+        private bool CreateFont(String fontFamily, CssFontFace.CssFontFaceSrc src, Range unicodeRange) {
+            if (!CssFontFace.IsSupportedFontFormat(src.GetFormat())) {
                 return false;
             }
             else {
-                if (src.isLocal) {
+                if (src.IsLocal()) {
                     // to method with lazy initialization
-                    ICollection<FontInfo> fonts = context.GetFontProvider().GetFontSet().Get(src.src);
+                    ICollection<FontInfo> fonts = context.GetFontProvider().GetFontSet().Get(src.GetSrc());
                     if (fonts.Count > 0) {
                         foreach (FontInfo fi in fonts) {
                             context.AddTemporaryFont(fi, fontFamily);
@@ -109,38 +110,15 @@ namespace iText.Svg.Processors.Impl.Font {
                     try {
                         // Cache at resource resolver level only, at font level we will create font in any case.
                         // The instance of fontProgram will be collected by GC if the is no need in it.
-                        byte[] bytes = context.GetResourceResolver().RetrieveBytesFromResource(src.src);
+                        byte[] bytes = context.GetResourceResolver().RetrieveBytesFromResource(src.GetSrc());
                         if (bytes != null) {
                             FontProgram fp = FontProgramFactory.CreateFont(bytes, false);
-                            context.AddTemporaryFont(fp, PdfEncodings.IDENTITY_H, fontFamily);
+                            context.AddTemporaryFont(fp, PdfEncodings.IDENTITY_H, fontFamily, unicodeRange);
                             return true;
                         }
                     }
                     catch (Exception) {
                     }
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>Checks whether in general we support requested font format.</summary>
-        /// <param name="format">
-        /// 
-        /// <see cref="FontFormat"/>
-        /// </param>
-        /// <returns>true, if supported or unrecognized.</returns>
-        private bool SupportedFontFormat(FontFace.FontFormat format) {
-            //TODO (DEVSIX-2230) code duplication
-            switch (format) {
-                case FontFace.FontFormat.None:
-                case FontFace.FontFormat.TrueType:
-                case FontFace.FontFormat.OpenType:
-                case FontFace.FontFormat.WOFF:
-                case FontFace.FontFormat.WOFF2: {
-                    return true;
-                }
-
-                default: {
                     return false;
                 }
             }

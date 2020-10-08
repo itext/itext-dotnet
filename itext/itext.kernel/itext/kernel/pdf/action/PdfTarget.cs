@@ -71,6 +71,11 @@ namespace iText.Kernel.Pdf.Action {
         /// object by the underlying dictionary.
         /// </summary>
         /// <param name="pdfObject">the underlying dictionary object</param>
+        /// <returns>
+        /// a new
+        /// <see cref="PdfTarget"/>
+        /// object by the underlying dictionary
+        /// </returns>
         public static iText.Kernel.Pdf.Action.PdfTarget Create(PdfDictionary pdfObject) {
             return new iText.Kernel.Pdf.Action.PdfTarget(pdfObject);
         }
@@ -181,8 +186,16 @@ namespace iText.Kernel.Pdf.Action {
                 throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
             }
             else {
-                Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page)));
-                Put(PdfName.A, new PdfNumber(page.GetAnnotations().IndexOf(pdfAnnotation)));
+                Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page) - 1));
+                int indexOfAnnotation = -1;
+                IList<PdfAnnotation> annots = page.GetAnnotations();
+                for (int i = 0; i < annots.Count; i++) {
+                    if (annots[i] != null && pdfAnnotation.GetPdfObject().Equals(annots[i].GetPdfObject())) {
+                        indexOfAnnotation = i;
+                        break;
+                    }
+                }
+                Put(PdfName.A, new PdfNumber(indexOfAnnotation));
             }
             return this;
         }

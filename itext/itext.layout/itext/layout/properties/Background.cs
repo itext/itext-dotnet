@@ -71,6 +71,8 @@ namespace iText.Layout.Properties {
 
         protected internal float extraBottom;
 
+        private BackgroundBox backgroundClip = BackgroundBox.BORDER_BOX;
+
         /// <summary>Creates a background with a specified color.</summary>
         /// <param name="color">the background color</param>
         public Background(Color color)
@@ -128,6 +130,18 @@ namespace iText.Layout.Properties {
             this.extraBottom = extraBottom;
         }
 
+        /// <summary>Creates a background with a specified color, opacity and clip value.</summary>
+        /// <param name="color">the background color</param>
+        /// <param name="opacity">
+        /// the opacity of the background color; a float between 0 and 1, where 1 stands for fully opaque
+        /// color and 0 - for fully transparent
+        /// </param>
+        /// <param name="clip">the value to clip the background color</param>
+        public Background(Color color, float opacity, BackgroundBox clip)
+            : this(color, opacity) {
+            this.backgroundClip = clip;
+        }
+
         /// <summary>Gets the background's color.</summary>
         /// <returns>
         /// a
@@ -166,6 +180,12 @@ namespace iText.Layout.Properties {
         /// <returns>a float value</returns>
         public virtual float GetExtraBottom() {
             return extraBottom;
+        }
+
+        /// <summary>Gets background clip value.</summary>
+        /// <returns>background clip value</returns>
+        public virtual BackgroundBox GetBackgroundClip() {
+            return backgroundClip;
         }
     }
 }

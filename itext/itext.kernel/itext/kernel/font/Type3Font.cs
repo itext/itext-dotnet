@@ -161,6 +161,15 @@ namespace iText.Kernel.Font {
             codeToGlyph.Put(code, glyph);
             unicodeToGlyph.Put(unicode, glyph);
             type3Glyphs.Put(unicode, type3Glyph);
+            RecalculateAverageWidth();
+        }
+
+        private void RecalculateAverageWidth() {
+            int widthSum = 0;
+            foreach (Glyph glyph in codeToGlyph.Values) {
+                widthSum += glyph.GetWidth();
+            }
+            avgWidth = widthSum / codeToGlyph.Count;
         }
     }
 }

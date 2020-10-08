@@ -2555,6 +2555,123 @@ namespace iText.Layout {
                 "diff50_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void IndentInParagraphAndFloatInInnerDivTest() {
+            String outFile = destinationFolder + "indentInParagraphAndFloatInInnerDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_indentInParagraphAndFloatInInnerDiv.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Div div = new Div().Add(new Paragraph("Video provides a powerful way to help you prove" + " your point. When you click Online Video, you can"
+                ));
+            div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            div.SetBackgroundColor(ColorConstants.YELLOW);
+            Paragraph p = new Paragraph();
+            p.SetFirstLineIndent(50);
+            p.Add(div);
+            p.Add(text);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatAndIndentInFirstParagraphInDivTest() {
+            String outFile = destinationFolder + "floatAndIndentInFirstParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_floatAndIndentInFirstParagraphInDiv.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
+                );
+            shortFloat.SetFirstLineIndent(50).SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(ColorConstants.YELLOW);
+            Div div = new Div();
+            div.Add(shortFloat);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortFloatRightAndIndentInSecondParagraphInDivTest() {
+            String outFile = destinationFolder + "shortFloatRightAndIndentInSecondParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_shortFloatRightAndIndentInSecondParagraphInDiv.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
+                );
+            shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph(text).SetFirstLineIndent(50).SetBackgroundColor(ColorConstants.YELLOW);
+            Div div = new Div();
+            div.Add(shortFloat);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortFloatLeftAndIndentInSecondParagraphInDivTest() {
+            String outFile = destinationFolder + "shortFloatLeftAndIndentInSecondParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_shortFloatLeftAndIndentInSecondParagraphInDiv.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
+                );
+            shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            Paragraph p = new Paragraph(text).SetFirstLineIndent(50).SetBackgroundColor(ColorConstants.YELLOW);
+            Div div = new Div();
+            div.Add(shortFloat);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongFloatAndIndentInSecondParagraphInDivTest() {
+            String outFile = destinationFolder + "longFloatAndIndentInSecondParagraphInDiv.pdf";
+            String cmpFileName = sourceFolder + "cmp_longFloatAndIndentInSecondParagraphInDiv.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph longFloat = new Paragraph(text).SetBackgroundColor(ColorConstants.CYAN);
+            longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph(text).SetFirstLineIndent(50).SetBackgroundColor(ColorConstants.YELLOW);
+            Div div = new Div();
+            div.Add(longFloat);
+            div.Add(p);
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndentInParentParagraphShortFirstFloatTest() {
+            String outFile = destinationFolder + "indentInParentParagraphShortFirstFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_indentInParentParagraphShortFirstFloat.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph parent = new Paragraph(text).SetFirstLineIndent(50);
+            Paragraph shortFloat = new Paragraph(shortText).SetBackgroundColor(ColorConstants.CYAN);
+            shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parent.Add(shortFloat);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(ColorConstants.YELLOW);
+            parent.Add(p);
+            document.Add(parent);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndentInParentParagraphLongFirstFloatTest() {
+            String outFile = destinationFolder + "indentInParentParagraphLongFirstFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_indentInParentParagraphLongFirstFloat.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Paragraph parent = new Paragraph(text).SetFirstLineIndent(50);
+            Paragraph longFloat = new Paragraph(text).SetBackgroundColor(ColorConstants.CYAN);
+            longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            parent.Add(longFloat);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(ColorConstants.YELLOW);
+            parent.Add(p);
+            document.Add(parent);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
         private static void FillWithKeptTogetherElement(Document doc, String floatText, int textTimes, bool isInner
             , bool floatAsFirst) {
             Div floatedDiv = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether

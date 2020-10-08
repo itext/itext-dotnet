@@ -42,7 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -177,6 +179,29 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsFalse(page2ResFontObj.Equals(page3ResFontObj));
             assertDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PageCopyAsFormXObjectWithInheritedResourcesTest() {
+            String cmpFile = sourceFolder + "cmp_pageCopyAsFormXObjectWithInheritedResourcesTest.pdf";
+            String srcFile = sourceFolder + "pageCopyAsFormXObjectWithInheritedResourcesTest.pdf";
+            String destFile = destinationFolder + "pageCopyAsFormXObjectWithInheritedResourcesTest.pdf";
+            PdfDocument origPdf = new PdfDocument(new PdfReader(srcFile));
+            PdfDocument copyPdfX = new PdfDocument(new PdfWriter(destFile).SetSmartMode(true));
+            PdfDictionary pages = origPdf.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages);
+            if (pages != null) {
+                for (int i = 1; i < origPdf.GetNumberOfPages() + 1; i++) {
+                    PdfPage origPage = origPdf.GetPage(i);
+                    Rectangle ps = origPage.GetPageSize();
+                    PdfPage page = copyPdfX.AddNewPage(new PageSize(ps));
+                    PdfCanvas canvas = new PdfCanvas(page);
+                    PdfFormXObject pageCopy = origPage.CopyAsFormXObject(copyPdfX);
+                    canvas.AddXObject(pageCopy, 0, 0);
+                }
+            }
+            copyPdfX.Close();
+            origPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder));
         }
     }
 }

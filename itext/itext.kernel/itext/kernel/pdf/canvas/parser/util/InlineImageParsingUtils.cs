@@ -382,10 +382,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             try {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
-                DoNothingFilter stubfilter = new DoNothingFilter();
-                filters.Put(PdfName.DCTDecode, stubfilter);
-                filters.Put(PdfName.JBIG2Decode, stubfilter);
-                filters.Put(PdfName.JPXDecode, stubfilter);
+                filters.Put(PdfName.JBIG2Decode, new DoNothingFilter());
                 filters.Put(PdfName.FlateDecode, new FlateDecodeStrictFilter());
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
             }

@@ -48,6 +48,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class ParagraphTest : ExtendedITextTest {
@@ -108,6 +109,24 @@ namespace iText.Layout {
             }
             doc.Add(p);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, LogLevel = LogLevelConstants
+            .INFO)]
+        public virtual void WordWasSplitAndItWillFitOntoNextLineTest02() {
+            // TODO DEVSIX-4622
+            String outFileName = destinationFolder + "wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Paragraph paragraph = new Paragraph().Add(new Text("Short").SetBackgroundColor(ColorConstants.YELLOW)).Add
+                (new Text(" Loooooooooooooooooooong").SetBackgroundColor(ColorConstants.RED)).SetWidth(90).SetBorder(new 
+                SolidBorder(1));
+            document.Add(paragraph);
+            document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

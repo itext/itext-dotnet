@@ -89,49 +89,78 @@ namespace iText.Forms.Xfdf {
         /// Gets the PdfObject representing the page displayed by current Fit element.
         /// Attribute of Fit, FitB, FitBH, FitBV, FitH, FitR, FitV, XYZ elements.
         /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject">page</see>
+        /// of the current Fit element
+        /// </returns>
         public virtual PdfObject GetPage() {
             return page;
         }
 
         /// <summary>Gets a float vertical coordinate positioned at the top edge of the window.</summary>
+        /// <returns>top vertical coordinate</returns>
         public virtual float GetTop() {
             return top;
         }
 
         /// <summary>Sets a float vertical coordinate positioned at the top edge of the window.</summary>
+        /// <param name="top">vertical coordinate value</param>
+        /// <returns>
+        /// current
+        /// <see cref="FitObject">fit object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetTop(float top) {
             this.top = top;
             return this;
         }
 
         /// <summary>Gets a float horizontal coordinate positioned at the left edge of the window.</summary>
+        /// <returns>left horizontal coordinate</returns>
         public virtual float GetLeft() {
             return left;
         }
 
         /// <summary>Sets a float horizontal coordinate positioned at the left edge of the window.</summary>
+        /// <param name="left">horizontal coordinate value</param>
+        /// <returns>
+        /// current
+        /// <see cref="FitObject">fit object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetLeft(float left) {
             this.left = left;
             return this;
         }
 
         /// <summary>Gets a float vertical coordinate positioned at the bottom edge of the window.</summary>
+        /// <returns>bottom vertical coordinate</returns>
         public virtual float GetBottom() {
             return bottom;
         }
 
         /// <summary>Sets a float vertical coordinate positioned at the bottom edge of the window.</summary>
+        /// <param name="bottom">vertical coordinate value</param>
+        /// <returns>
+        /// current
+        /// <see cref="FitObject">fit object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetBottom(float bottom) {
             this.bottom = bottom;
             return this;
         }
 
         /// <summary>Gets a float horizontal coordinate positioned at the right edge of the window.</summary>
+        /// <returns>right horizontal coordinate</returns>
         public virtual float GetRight() {
             return right;
         }
 
         /// <summary>Sets a float horizontal coordinate positioned at the right edge of the window.</summary>
+        /// <param name="right">horizontal coordinate</param>
+        /// <returns>
+        /// current
+        /// <see cref="FitObject">fit object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetRight(float right) {
             this.right = right;
             return this;
@@ -142,6 +171,7 @@ namespace iText.Forms.Xfdf {
         /// Gets a float representing the zoom ratio.
         /// Attribute of XYZ object.
         /// </remarks>
+        /// <returns>zoom ratio value</returns>
         public virtual float GetZoom() {
             return zoom;
         }
@@ -151,6 +181,11 @@ namespace iText.Forms.Xfdf {
         /// Sets a float representing the zoom ratio.
         /// Attribute of XYZ object.
         /// </remarks>
+        /// <param name="zoom">ratio value</param>
+        /// <returns>
+        /// current
+        /// <see cref="FitObject">fit object</see>
+        /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetZoom(float zoom) {
             this.zoom = zoom;
             return this;

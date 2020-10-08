@@ -389,7 +389,7 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Function uses BuildNewIndex to create the new index of the subset charstrings</summary>
+        /// <summary>Function uses BuildNewIndex to create the new index of the subset charstrings.</summary>
         /// <param name="FontIndex">the font</param>
         protected internal virtual void BuildNewCharString(int FontIndex) {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
@@ -596,9 +596,9 @@ namespace iText.IO.Font {
         /// <param name="end">the end point of the subr</param>
         /// <param name="GBias">the bias of the Global Subrs</param>
         /// <param name="LBias">the bias of the Local Subrs</param>
-        /// <param name="hSubr">the Map for the lSubrs</param>
-        /// <param name="lSubr">the list for the lSubrs</param>
-        /// <param name="LSubrsOffsets"/>
+        /// <param name="hSubr">the subroutines used as set</param>
+        /// <param name="lSubr">the subroutines used as list</param>
+        /// <param name="LSubrsOffsets">the offsets array of the subroutines</param>
         protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias, ICollection<int> hSubr
             , IList<int> lSubr, int[] LSubrsOffsets) {
             // Clear the stack for the subrs

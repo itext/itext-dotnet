@@ -187,12 +187,22 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckXrefTable(PdfXrefTable xrefTable) {
+            if (xrefTable.GetCountOfIndirectObjects() > GetMaxNumberOfIndirectObjects()) {
+                throw new PdfAConformanceException(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED);
+            }
+        }
+
         protected internal override ICollection<PdfName> GetForbiddenActions() {
             return forbiddenActions;
         }
 
         protected internal override ICollection<PdfName> GetAllowedNamedActions() {
             return allowedNamedActions;
+        }
+
+        protected internal override long GetMaxNumberOfIndirectObjects() {
+            return 8_388_607;
         }
 
         protected internal override void CheckColorsUsages() {
@@ -411,8 +421,7 @@ namespace iText.Pdfa.Checker {
             if (form.ContainsKey(PdfName.SMask) && !PdfName.None.Equals(form.GetAsName(PdfName.SMask))) {
                 throw new PdfAConformanceException(PdfAConformanceException.THE_SMASK_KEY_IS_NOT_ALLOWED_IN_XOBJECTS);
             }
-            if (form.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(form.GetAsDictionary(PdfName.Group).GetAsName
-                (PdfName.S))) {
+            if (IsContainsTransparencyGroup(form)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                     );
             }
@@ -704,8 +713,7 @@ namespace iText.Pdfa.Checker {
                     CheckAction(action);
                 }
             }
-            if (pageDict.ContainsKey(PdfName.Group) && PdfName.Transparency.Equals(pageDict.GetAsDictionary(PdfName.Group
-                ).GetAsName(PdfName.S))) {
+            if (IsContainsTransparencyGroup(pageDict)) {
                 throw new PdfAConformanceException(PdfAConformanceException.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_PAGE_XOBJECT
                     );
             }

@@ -106,6 +106,8 @@ namespace iText.IO {
 
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
 
+        public const String DOCUMENT_HAS_CONFLICTING_OCG_NAMES = "Document has conflicting names for optional content groups. Groups with conflicting names will be renamed";
+
         public const String DOCUMENT_IDS_ARE_CORRUPTED = "The document original and/or modified id is corrupted";
 
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
@@ -157,6 +159,8 @@ namespace iText.IO {
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
+
+        public const String GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED = "Subtable format {0} of GPOS Lookup Type {1} is not supported yet";
 
         public const String GRAPHICS_STATE_WAS_DELETED = "Graphics state is always deleted after event dispatching. If you want to preserve it in renderer info, use preserveGraphicsState method after receiving renderer info.";
 
@@ -223,6 +227,8 @@ namespace iText.IO {
         public const String N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY = "\\N entry is required to be present in an appearance dictionary.";
 
         public const String OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED = "Occupied area has not been initialized. {0}";
+
+        public const String OCG_COPYING_ERROR = "OCG copying caused the following exception: {0}.";
 
         public const String OCSP_STATUS_IS_REVOKED = "OCSP status is revoked.";
 

@@ -32,8 +32,8 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the gradient &lt;stop&gt; tag.
     /// </summary>
-    public class StopSvgNodeRenderer : NoDrawOperationSvgNodeRenderer {
-        /// <summary>Evaluates the stop color offset value</summary>
+    public class StopSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, INoDrawSvgNodeRenderer {
+        /// <summary>Evaluates the stop color offset value.</summary>
         /// <returns>the stop color offset value in [0, 1] range</returns>
         public virtual double GetOffset() {
             double? offset = null;
@@ -50,7 +50,7 @@ namespace iText.Svg.Renderers.Impl {
             return result > 1d ? 1d : result > 0d ? result : 0d;
         }
 
-        /// <summary>Evaluates the rgba array of the specified stop color</summary>
+        /// <summary>Evaluates the rgba array of the specified stop color.</summary>
         /// <returns>
         /// the array of 4 floats which contains the rgba value corresponding
         /// to the specified stop color
@@ -67,7 +67,7 @@ namespace iText.Svg.Renderers.Impl {
             return color;
         }
 
-        /// <summary>Evaluates the stop opacity of the specified stop color</summary>
+        /// <summary>Evaluates the stop opacity of the specified stop color.</summary>
         /// <returns>the stop opacity value specified in the stop color</returns>
         public virtual float GetStopOpacity() {
             float? result = null;

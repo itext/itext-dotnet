@@ -79,6 +79,35 @@ namespace iText.StyledXmlParser.Css.Validate {
                 .INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.NONE), new CssQuotesValidator()));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.TRANSFORM, new SingleTypeDeclarationValidator(new CssTransformValidator
                 ()));
+            CssEnumValidator enumValidator = new CssEnumValidator(CommonCssConstants.LARGER, CommonCssConstants.SMALLER
+                );
+            enumValidator.AddAllowedValues(CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.Keys);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FONT_SIZE, new MultiTypeDeclarationValidator(new CssNumericValueValidator
+                (true, false), enumValidator));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.WORD_SPACING, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (false, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.LETTER_SPACING, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (false, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.TEXT_INDENT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, false)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.LINE_HEIGHT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_REPEAT, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_REPEAT)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_IMAGE, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_IMAGE)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_POSITION_X, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_POSITION_X)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_POSITION_Y, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_POSITION_Y)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_SIZE, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_SIZE)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_CLIP, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_CLIP)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_ORIGIN, new SingleTypeDeclarationValidator(new CssBackgroundValidator
+                (CommonCssConstants.BACKGROUND_ORIGIN)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_BLEND_MODE, new SingleTypeDeclarationValidator(new ArrayDataTypeValidator
+                (new CssBlendModeValidator())));
         }
 
         /// <summary>

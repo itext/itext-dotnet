@@ -172,14 +172,25 @@ namespace iText.IO.Font.Otf {
         }
 
         public static SubstLookupRecord[] ReadSubstLookupRecords(RandomAccessFileOrArray rf, int substCount) {
-            SubstLookupRecord[] substPosLookUpRecords = new SubstLookupRecord[substCount];
+            SubstLookupRecord[] substLookUpRecords = new SubstLookupRecord[substCount];
             for (int i = 0; i < substCount; ++i) {
                 SubstLookupRecord slr = new SubstLookupRecord();
                 slr.sequenceIndex = rf.ReadUnsignedShort();
                 slr.lookupListIndex = rf.ReadUnsignedShort();
-                substPosLookUpRecords[i] = slr;
+                substLookUpRecords[i] = slr;
             }
-            return substPosLookUpRecords;
+            return substLookUpRecords;
+        }
+
+        public static PosLookupRecord[] ReadPosLookupRecords(RandomAccessFileOrArray rf, int recordCount) {
+            PosLookupRecord[] posLookUpRecords = new PosLookupRecord[recordCount];
+            for (int i = 0; i < recordCount; ++i) {
+                PosLookupRecord lookupRecord = new PosLookupRecord();
+                lookupRecord.sequenceIndex = rf.ReadUnsignedShort();
+                lookupRecord.lookupListIndex = rf.ReadUnsignedShort();
+                posLookUpRecords[i] = lookupRecord;
+            }
+            return posLookUpRecords;
         }
 
         public static GposAnchor[] ReadAnchorArray(OpenTypeFontTableReader tableReader, int[] locations, int left, 

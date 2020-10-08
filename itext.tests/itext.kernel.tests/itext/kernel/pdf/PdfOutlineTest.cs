@@ -192,6 +192,19 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetOutlinesInvalidParentLink() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "outlinesInvalidParentLink.pdf");
+                String filename = "updateOutlineTitleInvalidParentLink.pdf";
+                PdfWriter writer = new PdfWriter(destinationFolder + filename);
+                PdfDocument pdfDoc = new PdfDocument(reader, writer);
+                PdfOutline outlines = pdfDoc.GetOutlines(false);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReadOutlineTitle() {
             String filename = sourceFolder + "updateOutlineTitleResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
@@ -415,6 +428,36 @@ namespace iText.Kernel.Pdf {
             root = pdfDocument.GetOutlines(true);
             NUnit.Framework.Assert.IsNull(root);
             pdfDocument.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageInDocWithSimpleOutlineTreeStructTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: remove expected exception when DEVSIX-4464 will be fixed
+                String input = sourceFolder + "simpleOutlineTreeStructure.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithSimpleOutlineTreeStruct.pdf"
+                    ));
+                pdfDocument.RemovePage(2);
+                pdfDocument.Close();
+                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageInDocWithComplexOutlineTreeStructTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: remove expected exception when DEVSIX-4464 will be fixed
+                String input = sourceFolder + "complexOutlineTreeStructure.pdf";
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithComplexOutlineTreeStruct.pdf"
+                    ));
+                pdfDocument.RemovePage(2);
+                pdfDocument.Close();
+                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
         }
     }
 }

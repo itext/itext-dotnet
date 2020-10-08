@@ -70,7 +70,7 @@ namespace iText.Svg.Renderers.Factories {
             IDictionary<String, Type> result = new Dictionary<String, Type>();
             result.Put(SvgConstants.Tags.CIRCLE, typeof(CircleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.CLIP_PATH, typeof(ClipPathSvgNodeRenderer));
-            result.Put(SvgConstants.Tags.DEFS, typeof(NoDrawOperationSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.DEFS, typeof(DefsSvgNodeRenderer));
             result.Put(SvgConstants.Tags.ELLIPSE, typeof(EllipseSvgNodeRenderer));
             result.Put(SvgConstants.Tags.G, typeof(GroupSvgNodeRenderer));
             result.Put(SvgConstants.Tags.IMAGE, typeof(ImageSvgNodeRenderer));
@@ -83,6 +83,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.RECT, typeof(RectangleSvgNodeRenderer));
             result.Put(SvgConstants.Tags.STOP, typeof(StopSvgNodeRenderer));
             result.Put(SvgConstants.Tags.SVG, typeof(SvgTagSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.SYMBOL, typeof(SymbolSvgNodeRenderer));
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgBranchRenderer));
             result.Put(SvgConstants.Tags.TSPAN, typeof(TextSvgTSpanBranchRenderer));
             result.Put(SvgConstants.Tags.USE, typeof(UseSvgNodeRenderer));
