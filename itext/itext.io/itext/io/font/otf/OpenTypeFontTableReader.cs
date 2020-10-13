@@ -167,16 +167,27 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual LanguageRecord GetLanguageRecord(String otfScriptTag) {
-            LanguageRecord languageRecord = null;
-            if (otfScriptTag != null) {
-                foreach (ScriptRecord record in GetScriptRecords()) {
-                    if (otfScriptTag.Equals(record.tag)) {
-                        languageRecord = record.defaultLanguage;
-                        break;
+            return GetLanguageRecord(otfScriptTag, null);
+        }
+
+        public virtual LanguageRecord GetLanguageRecord(String otfScriptTag, String langTag) {
+            if (otfScriptTag == null) {
+                return null;
+            }
+            foreach (ScriptRecord record in GetScriptRecords()) {
+                if (!otfScriptTag.Equals(record.tag)) {
+                    continue;
+                }
+                if (langTag == null) {
+                    return record.defaultLanguage;
+                }
+                foreach (LanguageRecord lang in record.languages) {
+                    if (langTag.Equals(lang.tag)) {
+                        return lang;
                     }
                 }
             }
-            return languageRecord;
+            return null;
         }
 
         protected internal abstract OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
