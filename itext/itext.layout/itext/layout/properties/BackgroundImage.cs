@@ -412,22 +412,26 @@ namespace iText.Layout.Properties {
         }
 
         /// <summary>Gets initial image width.</summary>
+        /// <returns>the initial image width</returns>
         public virtual float GetImageWidth() {
             return (float)image.GetWidth();
         }
 
         /// <summary>Gets initial image height.</summary>
+        /// <returns>the initial image height</returns>
         public virtual float GetImageHeight() {
             return (float)image.GetHeight();
         }
 
         /// <summary>Gets initial image width.</summary>
+        /// <returns>the initial image width</returns>
         [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageWidth() instead.")]
         public virtual float GetWidth() {
             return (float)image.GetWidth();
         }
 
         /// <summary>Gets initial image height.</summary>
+        /// <returns>the initial image height</returns>
         [System.ObsoleteAttribute(@"To be removed in 7.2. Use GetImageHeight() instead.")]
         public virtual float GetHeight() {
             return (float)image.GetHeight();
