@@ -45,29 +45,58 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Data {
+    /// <summary>Represents the clipping path data.</summary>
     public class ClippingPathInfo : AbstractRenderInfo {
         private Path path;
 
         private Matrix ctm;
 
-        /// <param name="path">The path to be rendered.</param>
-        /// <param name="ctm">The path to be rendered.</param>
+        /// <summary>
+        /// Creates a new
+        /// <see cref="ClippingPathInfo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="gs">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState">canvas graphics state</see>
+        /// </param>
+        /// <param name="path">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Path"/>
+        /// which represents current clipping path
+        /// </param>
+        /// <param name="ctm">
+        /// the current
+        /// <see cref="iText.Kernel.Geom.Matrix">transformation matrix</see>
+        /// </param>
         public ClippingPathInfo(CanvasGraphicsState gs, Path path, Matrix ctm)
             : base(gs) {
             this.path = path;
             this.ctm = ctm;
         }
 
-        /// <returns>
-        /// The
+        /// <summary>
+        /// Gets the
         /// <see cref="iText.Kernel.Geom.Path"/>
         /// which represents current clipping path.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Path"/>
+        /// which represents current clipping path
         /// </returns>
         public virtual Path GetClippingPath() {
             return path;
         }
 
-        /// <returns>Current transformation matrix.</returns>
+        /// <summary>
+        /// Gets the current
+        /// <see cref="iText.Kernel.Geom.Matrix">transformation matrix</see>.
+        /// </summary>
+        /// <returns>
+        /// the current
+        /// <see cref="iText.Kernel.Geom.Matrix">transformation matrix</see>
+        /// </returns>
         public virtual Matrix GetCtm() {
             return ctm;
         }

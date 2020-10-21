@@ -82,10 +82,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         ///     </summary>
         private IList<CanvasTag> canvasTagHierarchy;
 
-        /// <param name="gs">The graphics state.</param>
-        /// <param name="path">The path to be rendered.</param>
+        /// <summary>
+        /// Creates the new
+        /// <see cref="PathRenderInfo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="canvasTagHierarchy">the canvas tag hierarchy</param>
+        /// <param name="gs">the graphics state</param>
+        /// <param name="path">the path to be rendered</param>
         /// <param name="operation">
-        /// One of the possible combinations of
+        /// one of the possible combinations of
         /// <see cref="STROKE"/>
         /// and
         /// <see cref="FILL"/>
@@ -93,17 +99,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="NO_OP"/>
         /// </param>
         /// <param name="rule">
-        /// Either
+        /// either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// </param>
-        /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.</param>
+        /// <param name="isClip">
+        /// 
+        /// <see langword="true"/>
+        /// indicates that current path modifies the clipping path
+        /// </param>
         /// <param name="clipRule">
-        /// Either
+        /// either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// </param>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             , int rule, bool isClip, int clipRule)
@@ -138,102 +148,163 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="PathRenderInfo(System.Collections.Generic.Stack{E}, iText.Kernel.Pdf.Canvas.CanvasGraphicsState, iText.Kernel.Geom.Path, int, int, bool, int)
         ///     "/>
         /// </remarks>
+        /// <param name="canvasTagHierarchy">the canvas tag hierarchy</param>
+        /// <param name="gs">the graphics state</param>
+        /// <param name="path">the path to be rendered</param>
+        /// <param name="operation">
+        /// one of the possible combinations of
+        /// <see cref="STROKE"/>
+        /// and
+        /// <see cref="FILL"/>
+        /// values or
+        /// <see cref="NO_OP"/>
+        /// </param>
         public PathRenderInfo(Stack<CanvasTag> canvasTagHierarchy, CanvasGraphicsState gs, Path path, int operation
             )
             : this(canvasTagHierarchy, gs, path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule
                 .NONZERO_WINDING) {
         }
 
-        /// <returns>
-        /// The
+        /// <summary>
+        /// Gets the
         /// <see cref="iText.Kernel.Geom.Path"/>
-        /// to be rendered.
+        /// to be rendered
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Path"/>
+        /// to be rendered
         /// </returns>
         public virtual Path GetPath() {
             return path;
         }
 
-        /// <returns>
-        /// <c>int</c> value which is either
+        /// <summary>
+        /// Gets the
+        /// <c>int</c>
+        /// value which is either
         /// <see cref="NO_OP"/>
         /// or one of possible
         /// combinations of
         /// <see cref="STROKE"/>
         /// and
-        /// <see cref="FILL"/>
-        /// </returns>
+        /// <see cref="FILL"/>.
+        /// </summary>
+        /// <returns>the operation value</returns>
         public virtual int GetOperation() {
             return operation;
         }
 
-        /// <returns>
-        /// Either
+        /// <summary>
+        /// Gets either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
-        /// </returns>
+        /// </summary>
+        /// <returns>the rule value</returns>
         public virtual int GetRule() {
             return rule;
         }
 
-        /// <returns>true indicates that current path modifies the clipping path, false - if not.</returns>
+        /// <summary>Gets the clipping path flag.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// indicates that current path modifies the clipping path
+        /// </returns>
         public virtual bool IsPathModifiesClippingPath() {
             return isClip;
         }
 
-        /// <returns>
-        /// Either
+        /// <summary>
+        /// Gets either
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>.
-        /// </returns>
+        /// </summary>
+        /// <returns>the clipping rule value</returns>
         public virtual int GetClippingRule() {
             return clippingRule;
         }
 
-        /// <returns>Current transformation matrix.</returns>
+        /// <summary>Gets the current transformation matrix.</summary>
+        /// <returns>
+        /// the current transformation
+        /// <see cref="iText.Kernel.Geom.Matrix">matrix</see>
+        /// </returns>
         public virtual Matrix GetCtm() {
             CheckGraphicsState();
             return gs.GetCtm();
         }
 
+        /// <summary>Gets the path's line width.</summary>
+        /// <returns>the path's line width</returns>
         public virtual float GetLineWidth() {
             CheckGraphicsState();
             return gs.GetLineWidth();
         }
 
+        /// <summary>Gets the line cap style.</summary>
+        /// <remarks>
+        /// Gets the line cap style. See
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>.
+        /// </remarks>
+        /// <returns>the line cap style value</returns>
         public virtual int GetLineCapStyle() {
             CheckGraphicsState();
             return gs.GetLineCapStyle();
         }
 
+        /// <summary>Gets the line join style.</summary>
+        /// <remarks>
+        /// Gets the line join style. See
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle"/>.
+        /// </remarks>
+        /// <returns>the line join style value</returns>
         public virtual int GetLineJoinStyle() {
             CheckGraphicsState();
             return gs.GetLineJoinStyle();
         }
 
+        /// <summary>Gets the miter limit.</summary>
+        /// <returns>the miter limit</returns>
         public virtual float GetMiterLimit() {
             CheckGraphicsState();
             return gs.GetMiterLimit();
         }
 
+        /// <summary>Gets the path's dash pattern.</summary>
+        /// <returns>
+        /// the path's dash pattern as a
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// </returns>
         public virtual PdfArray GetLineDashPattern() {
             CheckGraphicsState();
             return gs.GetDashPattern();
         }
 
+        /// <summary>Gets the path's stroke color.</summary>
+        /// <returns>
+        /// the path's stroke
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
         public virtual Color GetStrokeColor() {
             CheckGraphicsState();
             return gs.GetStrokeColor();
         }
 
+        /// <summary>Gets the path's fill color.</summary>
+        /// <returns>
+        /// the path's fill
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
         public virtual Color GetFillColor() {
             CheckGraphicsState();
             return gs.GetFillColor();
         }
 
         /// <summary>Gets hierarchy of the canvas tags that wraps given text.</summary>
-        /// <returns>list of the wrapping canvas tags. The first tag is the innermost (nearest to the text).</returns>
+        /// <returns>list of the wrapping canvas tags. The first tag is the innermost (nearest to the text)</returns>
         public virtual IList<CanvasTag> GetCanvasTagHierarchy() {
             return canvasTagHierarchy;
         }
@@ -258,7 +329,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// with a given mcid.
         /// </summary>
         /// <param name="mcid">a marked content id</param>
-        /// <returns>true if the text is marked with this id</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the text is marked with this id
+        /// </returns>
         public virtual bool HasMcid(int mcid) {
             return HasMcid(mcid, false);
         }
@@ -270,7 +345,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="mcid">a marked content id</param>
         /// <param name="checkTheTopmostLevelOnly">indicates whether to check the topmost level of marked content stack only
         ///     </param>
-        /// <returns>true if the text is marked with this id</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the text is marked with this id
+        /// </returns>
         public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly) {
             if (checkTheTopmostLevelOnly) {
                 if (canvasTagHierarchy != null) {
