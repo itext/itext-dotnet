@@ -118,6 +118,7 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="fontProgram">the font program</param>
         /// <param name="encoding">the encoding</param>
         /// <param name="alias">the alias</param>
+        /// <param name="unicodeRange">the specific range of characters to be used from the font</param>
         public virtual void AddTemporaryFont(FontProgram fontProgram, String encoding, String alias, Range unicodeRange
             ) {
             if (tempFonts == null) {

@@ -196,7 +196,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
 
-        /// <summary>Evaluate the current object bounding box</summary>
+        /// <summary>Evaluate the current object bounding box.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>

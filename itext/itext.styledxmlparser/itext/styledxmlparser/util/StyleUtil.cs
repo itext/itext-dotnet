@@ -44,6 +44,7 @@ namespace iText.StyledXmlParser.Util {
         /// <param name="styles">the styles map</param>
         /// <param name="styleProperty">the CSS property</param>
         /// <param name="parentPropValue">the parent properties value</param>
+        /// <param name="parentFontSizeString">is a font size of parent element</param>
         /// <param name="inheritanceRules">set of inheritance rules</param>
         /// <returns>a map of updated styles after merging parent and child style declarations</returns>
         public static IDictionary<String, String> MergeParentStyleDeclaration(IDictionary<String, String> styles, 

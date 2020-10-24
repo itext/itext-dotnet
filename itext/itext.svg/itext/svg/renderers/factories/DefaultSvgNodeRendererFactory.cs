@@ -80,8 +80,7 @@ namespace iText.Svg.Renderers.Factories {
         /// back to the
         /// <see cref="DefaultSvgNodeRendererMapper"/>
         /// </param>
-        /// <see>DefaultSvgNodeRendererFactory} extension) to create extensions of the factory.</see>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the custom"
+        [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the customDefaultSvgNodeRendererFactory extension) to create extensions of the factory."
             )]
         public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
             if (mapper != null) {
