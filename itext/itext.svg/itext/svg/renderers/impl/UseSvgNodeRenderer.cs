@@ -65,11 +65,10 @@ namespace iText.Svg.Renderers.Impl {
                     String normalizedName = SvgTextUtil.FilterReferenceValue(elementToReUse);
                     if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
                         ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
-                        //Clone template
+                        // Clone template
                         ISvgNodeRenderer namedObject = template == null ? null : template.CreateDeepCopy();
-                        //Resolve parent inheritance
-                        SvgNodeRendererInheritanceResolver iresolver = new SvgNodeRendererInheritanceResolver();
-                        iresolver.ApplyInheritanceToSubTree(this, namedObject);
+                        // Resolve parent inheritance
+                        SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, namedObject, context.GetCssContext());
                         if (namedObject != null) {
                             if (namedObject is AbstractSvgNodeRenderer) {
                                 ((AbstractSvgNodeRenderer)namedObject).SetPartOfClipPath(partOfClipPath);

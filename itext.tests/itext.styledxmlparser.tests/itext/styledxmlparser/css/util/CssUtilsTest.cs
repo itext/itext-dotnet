@@ -424,5 +424,25 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("invalid"));
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("SCREEN"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void IsNegativeValueTest() {
+            // Invalid values
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(null));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("-..23"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12 34"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12reeem"));
+            // Valid not negative values
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(".23"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("+123"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("57%"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("3.7em"));
+            // Valid negative values
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-1.7rem"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-43.56%"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-12"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-0.123"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-.34"));
+        }
     }
 }

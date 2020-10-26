@@ -125,7 +125,7 @@ namespace iText.Svg.Renderers.Impl {
                 double width = currentViewPort.GetWidth();
                 double height = currentViewPort.GetHeight();
                 float em = GetCurrentFontSize();
-                float rem = context.GetRemValue();
+                float rem = context.GetCssContext().GetRootFontSize();
                 start = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X1, x, x, width, em, rem), GetCoordinateForUserSpaceOnUse
                     (SvgConstants.Attributes.Y1, y, y, height, em, rem));
                 end = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X2, x + width, x, width, em, rem), 

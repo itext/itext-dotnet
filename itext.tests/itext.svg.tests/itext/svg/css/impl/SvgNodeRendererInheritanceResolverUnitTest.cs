@@ -57,8 +57,7 @@ namespace iText.Svg.Css.Impl {
             CircleSvgNodeRenderer circle = new CircleSvgNodeRenderer();
             subTree.AddChild(rect);
             subTree.AddChild(circle);
-            SvgNodeRendererInheritanceResolver sru = new SvgNodeRendererInheritanceResolver();
-            sru.ApplyInheritanceToSubTree(newRoot, subTree);
+            SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(newRoot, subTree, null);
             NUnit.Framework.Assert.AreEqual(expectedFillAttribute, subTree.GetAttribute(SvgConstants.Attributes.FILL));
             NUnit.Framework.Assert.AreEqual(expectedFillAttribute, rect.GetAttribute(SvgConstants.Attributes.FILL));
             NUnit.Framework.Assert.AreEqual(expectedFillAttribute, circle.GetAttribute(SvgConstants.Attributes.FILL));

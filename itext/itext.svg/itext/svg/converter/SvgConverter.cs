@@ -676,14 +676,16 @@ namespace iText.Svg.Converter {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(pdfDest, writerProps));
             // Process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
-            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
             ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
                 props);
-            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
-                .GetRootRenderer());
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
+            if (processorResult is SvgProcessorResult) {
+                drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            }
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             // Add temp fonts
             drawContext.SetTempFonts(processorResult.GetTempFonts());
+            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
             // Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
@@ -869,8 +871,10 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props) {
             ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
                 props);
-            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
-                .GetRootRenderer());
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
+            if (processorResult is SvgProcessorResult) {
+                drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            }
             drawContext.SetTempFonts(processorResult.GetTempFonts());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);

@@ -87,6 +87,7 @@ namespace iText.Svg.Css {
             expected.Put("ry", "53");
             expected.Put("stroke-width", "1.5");
             expected.Put("stroke", "#da0000");
+            expected.Put("font-size", "12pt");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
@@ -112,6 +113,7 @@ namespace iText.Svg.Css {
             expectedAttr.Put(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml");
             expectedAttr.Put(SvgConstants.Attributes.REL, SvgConstants.Attributes.STYLESHEET);
             expectedAttr.Put(SvgConstants.Attributes.HREF, "styleSheetWithLinkStyle.css");
+            expectedAttr.Put(SvgConstants.Attributes.FONT_SIZE, "12pt");
             expectedAttr.Put("type", "text/css");
             // Attribute from external stylesheet
             expectedAttr.Put(SvgConstants.Attributes.FILL, "black");
@@ -142,6 +144,7 @@ namespace iText.Svg.Css {
             expectedAttr.Put(SvgConstants.Attributes.XMLNS, "http://www.w3.org/1999/xhtml");
             expectedAttr.Put(SvgConstants.Attributes.REL, SvgConstants.Attributes.STYLESHEET);
             expectedAttr.Put(SvgConstants.Attributes.HREF, "!invalid name!externalSheet.css");
+            expectedAttr.Put(SvgConstants.Attributes.FONT_SIZE, "12pt");
             expectedAttr.Put("type", "text/css");
             NUnit.Framework.Assert.AreEqual(expectedAttr, attr);
         }
@@ -185,7 +188,7 @@ namespace iText.Svg.Css {
                 .ValueOf("svg"), "");
             svg.Attributes().Put(SvgConstants.Attributes.STROKE, "white");
             INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("white", resolvedStyles.Get(SvgConstants.Attributes.STROKE));
         }
 
@@ -208,6 +211,7 @@ namespace iText.Svg.Css {
             expected.Put("stroke-width", "1.76388889");
             expected.Put("stroke", "#da0000");
             expected.Put("stroke-opacity", "1");
+            expected.Put("font-size", "12pt");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 

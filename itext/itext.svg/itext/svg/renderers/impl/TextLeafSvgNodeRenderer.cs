@@ -67,8 +67,8 @@ namespace iText.Svg.Renderers.Impl {
             float contentLength = 0.0f;
             if (font != null && this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes
                 .TEXT_CONTENT)) {
-                //Use own font-size declaration if it is present, parent's otherwise
-                float fontSize = (float)SvgTextUtil.ResolveFontSize(this, parentFontSize);
+                // Use own font-size declaration if it is present, parent's otherwise
+                float fontSize = SvgTextUtil.ResolveFontSize(this, parentFontSize);
                 String content = this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT);
                 contentLength = font.GetWidth(content, fontSize);
             }
@@ -96,7 +96,7 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint) {
             if (GetParent() is TextSvgBranchRenderer && basePoint != null) {
-                float parentFontSize = ((TextSvgBranchRenderer)GetParent()).GetFontSize();
+                float parentFontSize = ((AbstractSvgNodeRenderer)GetParent()).GetCurrentFontSize();
                 PdfFont parentFont = ((TextSvgBranchRenderer)GetParent()).GetFont();
                 float textLength = GetTextContentLength(parentFontSize, parentFont);
                 float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode

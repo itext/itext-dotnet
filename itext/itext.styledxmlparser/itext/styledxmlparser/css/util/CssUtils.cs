@@ -69,6 +69,7 @@ namespace iText.StyledXmlParser.Css.Util {
 
         // TODO (DEVSIX-3596) The list of the font-relative measurements is not full.
         //  Add 'ch' units to array and move this array to the CommonCssConstants
+        [Obsolete]
         private static readonly String[] FONT_RELATIVE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.EM, 
             CommonCssConstants.EX, CommonCssConstants.REM };
 
@@ -742,6 +743,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Checks whether a string contains an allowed value relative to font.</summary>
         /// <param name="value">the string that needs to be checked.</param>
         /// <returns>boolean true if value contains an allowed font relative value.</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use IsRelativeValue(System.String) method instead")]
         public static bool IsFontRelativeValue(String value) {
             if (value == null) {
                 return false;
@@ -797,6 +799,23 @@ namespace iText.StyledXmlParser.Css.Util {
         public static bool IsNumericValue(String value) {
             return value != null && (value.Matches("^[-+]?\\d\\d*\\.\\d*$") || value.Matches("^[-+]?\\d\\d*$") || value
                 .Matches("^[-+]?\\.\\d\\d*$"));
+        }
+
+        /// <summary>Checks whether a string matches a negative value (e.g. -123, -2em, -0.123).</summary>
+        /// <remarks>
+        /// Checks whether a string matches a negative value (e.g. -123, -2em, -0.123).
+        /// All these metric values are allowed in HTML/CSS.
+        /// </remarks>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>true if value is negative</returns>
+        public static bool IsNegativeValue(String value) {
+            if (value == null) {
+                return false;
+            }
+            if (IsNumericValue(value) || IsRelativeValue(value)) {
+                return value.StartsWith("-");
+            }
+            return false;
         }
 
         /// <summary>

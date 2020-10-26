@@ -40,7 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.StyledXmlParser.Css.Resolve;
+using iText.StyledXmlParser.Css.Util;
+using iText.Svg;
 
 namespace iText.Svg.Css {
     /// <summary>
@@ -48,5 +51,20 @@ namespace iText.Svg.Css {
     /// e.g. relative font-size statements.
     /// </summary>
     public class SvgCssContext : AbstractCssContext {
+        /// <summary>The root font size value in pt.</summary>
+        private float rootFontSize = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
+            .FONT_SIZE));
+
+        /// <summary>Gets the root font size.</summary>
+        /// <returns>the root font size in pt</returns>
+        public virtual float GetRootFontSize() {
+            return rootFontSize;
+        }
+
+        /// <summary>Sets the root font size.</summary>
+        /// <param name="fontSizeStr">the new root font size</param>
+        public virtual void SetRootFontSize(String fontSizeStr) {
+            this.rootFontSize = CssUtils.ParseAbsoluteFontSize(fontSizeStr);
+        }
     }
 }

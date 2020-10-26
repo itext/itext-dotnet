@@ -91,7 +91,8 @@ namespace iText.Svg.Processors.Impl.Font {
 
         [NUnit.Framework.Test]
         public virtual void DiffUnitsOfMeasure() {
-            //TODO: update cmp-file after DEVSIX-2785 and DEVSIX-2884
+            // TODO DEVSIX-2785 percentage and em value doesn't correctly support in font-size
+            // TODO DEVSIX-2884 rem in font-size doesn't support correctly
             String name = "diff_units_of_measure";
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }

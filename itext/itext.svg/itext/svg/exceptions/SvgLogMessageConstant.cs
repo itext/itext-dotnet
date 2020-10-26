@@ -53,6 +53,8 @@ namespace iText.Svg.Exceptions {
 
         public const String COULDNOTINSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
+        public const String CUSTOM_ABSTRACT_CSS_CONTEXT_NOT_SUPPORTED = "Custom AbstractCssContext implementations are not supported yet";
+
         public const String DRAW_NO_DRAW = "Can't draw current SvgNodeRenderer.";
 
         [Obsolete]

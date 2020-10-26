@@ -46,6 +46,7 @@ using iText.Layout.Font;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Css;
 using iText.Svg.Processors;
 
 namespace iText.Svg.Processors.Impl {
@@ -57,10 +58,13 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Temporary set of fonts used in the PDF.</summary>
         private FontSet tempFonts;
 
-        private ResourceResolver resourceResolver;
+        private readonly ResourceResolver resourceResolver;
 
         /// <summary>The device description.</summary>
         private MediaDeviceDescription deviceDescription;
+
+        /// <summary>The SVG CSS context.</summary>
+        private readonly SvgCssContext cssContext;
 
         /// <summary>
         /// Instantiates a new
@@ -88,6 +92,7 @@ namespace iText.Svg.Processors.Impl {
                 retriever = ((SvgConverterProperties)converterProperties).GetResourceRetriever();
             }
             resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), retriever);
+            cssContext = new SvgCssContext();
         }
 
         /// <summary>Gets the font provider.</summary>
@@ -112,6 +117,12 @@ namespace iText.Svg.Processors.Impl {
         /// <returns>the set of fonts</returns>
         public virtual FontSet GetTempFonts() {
             return tempFonts;
+        }
+
+        /// <summary>Gets the SVG CSS context.</summary>
+        /// <returns>the SVG CSS context</returns>
+        public virtual SvgCssContext GetCssContext() {
+            return cssContext;
         }
 
         /// <summary>Add temporary font from @font-face.</summary>

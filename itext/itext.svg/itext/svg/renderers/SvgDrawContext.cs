@@ -45,13 +45,10 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Font;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve;
-using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Css;
 using iText.Svg.Exceptions;
-using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers {
     /// <summary>
@@ -70,14 +67,13 @@ namespace iText.Svg.Renderers {
 
         private readonly Stack<String> useIds = new Stack<String>();
 
-        private ResourceResolver resourceResolver;
+        private readonly ResourceResolver resourceResolver;
 
-        private FontProvider fontProvider;
+        private readonly FontProvider fontProvider;
 
         private FontSet tempFonts;
 
-        // value of root element font-size in points
-        private float remValue;
+        private SvgCssContext cssContext;
 
         private AffineTransform lastTextTransform = new AffineTransform();
 
@@ -92,8 +88,16 @@ namespace iText.Svg.Renderers {
         /// instance of
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// </param>
-        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider)
-            : this(resourceResolver, fontProvider, null) {
+        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider) {
+            if (resourceResolver == null) {
+                resourceResolver = new ResourceResolver(null);
+            }
+            this.resourceResolver = resourceResolver;
+            if (fontProvider == null) {
+                fontProvider = new BasicFontProvider();
+            }
+            this.fontProvider = fontProvider;
+            cssContext = new SvgCssContext();
         }
 
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
@@ -106,23 +110,11 @@ namespace iText.Svg.Renderers {
         /// <see cref="iText.Layout.Font.FontProvider"/>
         /// </param>
         /// <param name="svgRootRenderer">svg element that is root for current file</param>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use SvgDrawContext(iText.StyledXmlParser.Resolver.Resource.ResourceResolver, iText.Layout.Font.FontProvider) instead"
+            )]
         public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider, ISvgNodeRenderer svgRootRenderer
-            ) {
-            if (resourceResolver == null) {
-                resourceResolver = new ResourceResolver(null);
-            }
-            this.resourceResolver = resourceResolver;
-            if (fontProvider == null) {
-                fontProvider = new BasicFontProvider();
-            }
-            this.fontProvider = fontProvider;
-            if (svgRootRenderer is AbstractSvgNodeRenderer) {
-                remValue = ((AbstractSvgNodeRenderer)svgRootRenderer).GetCurrentFontSize();
-            }
-            else {
-                // default font-size value
-                remValue = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(CommonCssConstants.FONT_SIZE));
-            }
+            )
+            : this(resourceResolver, fontProvider) {
         }
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
@@ -318,8 +310,22 @@ namespace iText.Svg.Renderers {
 
         /// <summary>Return the value of root svg element font-size</summary>
         /// <returns>rem value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use GetCssContext() andiText.Svg.Css.SvgCssContext.GetRootFontSize() instead"
+            )]
         public virtual float GetRemValue() {
-            return remValue;
+            return cssContext.GetRootFontSize();
+        }
+
+        /// <summary>Gets the SVG CSS context.</summary>
+        /// <returns>the SVG CSS context</returns>
+        public virtual SvgCssContext GetCssContext() {
+            return cssContext;
+        }
+
+        /// <summary>Sets the SVG CSS context.</summary>
+        /// <param name="cssContext">the SVG CSS context</param>
+        public virtual void SetCssContext(SvgCssContext cssContext) {
+            this.cssContext = cssContext;
         }
     }
 }
