@@ -195,6 +195,12 @@ namespace iText.Kernel.Pdf.Canvas {
             return properties;
         }
 
+        /// <summary>Gets value of /ActualText property.</summary>
+        /// <returns>
+        /// actual text value or
+        /// <see langword="null"/>
+        /// if actual text is not defined
+        /// </returns>
         public virtual String GetActualText() {
             return GetPropertyAsString(PdfName.ActualText);
         }
@@ -204,7 +210,10 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private String GetPropertyAsString(PdfName name) {
-            PdfString text = properties.GetAsString(name);
+            PdfString text = null;
+            if (properties != null) {
+                text = properties.GetAsString(name);
+            }
             String result = null;
             if (text != null) {
                 result = text.ToUnicodeString();
