@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.IO.Font.Constants;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -714,6 +715,86 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatingElementsInDivAndKeepTogetherElemTest() {
+            //TODO: update cmp file when DEVSIX-4681 will be fixed
+            String cmpFileName = sourceFolder + "cmp_floatingElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingElementsInDivAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            Div mainDiv = new Div();
+            iText.Layout.Element.Image first = new Image(ImageDataFactory.Create(sourceFolder + "1.png"));
+            first.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            first.SetHeight(350);
+            iText.Layout.Element.Image second = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
+                "2.png"));
+            second.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            second.SetHeight(350);
+            mainDiv.Add(first);
+            mainDiv.Add(second);
+            doc.Add(mainDiv);
+            doc.Add(new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                ).SetKeepTogether(true).SetFontSize(24));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatingEmptyElementsInDivAndKeepTogetherElemTest() {
+            //TODO: update cmp file when DEVSIX-4681 will be fixed
+            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage(PageSize.A5.Rotate());
+            Document doc = new Document(pdfDoc);
+            Div mainDiv = new Div();
+            Paragraph p1 = new Paragraph();
+            p1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p2 = new Paragraph();
+            p2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph ktp = new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! ").SetKeepTogether
+                (true).SetFontSize(20);
+            mainDiv.Add(p1);
+            mainDiv.Add(p2);
+            doc.Add(mainDiv);
+            doc.Add(ktp);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatingEmptyElementsAndKeepTogetherElemTest() {
+            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingEmptyElementsAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage(PageSize.A5.Rotate());
+            Document doc = new Document(pdfDoc);
+            Paragraph p1 = new Paragraph();
+            p1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p2 = new Paragraph();
+            p2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph ktp = new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! ").SetKeepTogether
+                (true).SetFontSize(20);
+            doc.Add(p1);
+            doc.Add(p2);
+            doc.Add(ktp);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
         }
 
         private static Div CreateKeptTogetherDivWithSmallFloat(int divHeight) {
