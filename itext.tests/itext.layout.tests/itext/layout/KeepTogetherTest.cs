@@ -196,6 +196,56 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void KeepTogetherDivWithInnerClearDiv() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherDivWithInnerClearDiv.pdf";
+            String outFile = destinationFolder + "keepTogetherDivWithInnerClearDiv.pdf";
+            using (PdfWriter pdfWriter = new PdfWriter(outFile)) {
+                using (PdfDocument pdfDoc = new PdfDocument(pdfWriter)) {
+                    using (Document doc = new Document(pdfDoc)) {
+                        Div keepTogetherDiv = new Div();
+                        keepTogetherDiv.SetKeepTogether(true);
+                        keepTogetherDiv.SetBackgroundColor(ColorConstants.BLUE);
+                        Div shortFloat = new Div();
+                        shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                        shortFloat.SetWidth(UnitValue.CreatePercentValue(30));
+                        shortFloat.SetBackgroundColor(ColorConstants.GREEN);
+                        shortFloat.Add(new Paragraph("Short text"));
+                        keepTogetherDiv.Add(shortFloat);
+                        Div longFloat = new Div();
+                        longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                        longFloat.SetWidth(UnitValue.CreatePercentValue(70));
+                        longFloat.SetBackgroundColor(ColorConstants.ORANGE);
+                        longFloat.Add(new Paragraph("Lorem ipsum dolor sit amet, consetetur sadipscing " + "elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
+                             + "aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " + "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est "
+                             + "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur " + "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et "
+                             + "dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et " + "justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata "
+                             + "sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, " + "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut "
+                             + "labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et " + "accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea "
+                             + "takimata sanctus est Lorem ipsum dolor sit amet.\n" + "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse "
+                             + "molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero " + "eros et accumsan et iusto odio dignissim qui blandit praesent luptatum "
+                             + "zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum " + "dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod "
+                             + "tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" + "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper "
+                             + "suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel " + "eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, "
+                             + "vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et " + "iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis "
+                             + "dolore te feugait nulla facilisi."));
+                        keepTogetherDiv.Add(longFloat);
+                        Div clearDiv = new Div();
+                        clearDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+                        keepTogetherDiv.Add(clearDiv);
+                        // on first add we could see how the div should be rendered when it fits the page area
+                        doc.Add(keepTogetherDiv);
+                        // on second add the div should not fit the left space and, since we have keep together
+                        // property set, should be fully placed on the second page with the same appearance
+                        // as the first add
+                        doc.Add(keepTogetherDiv);
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDefaultTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherDefaultTest01.pdf";
