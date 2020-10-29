@@ -55,7 +55,6 @@ using iText.Kernel.Pdf;
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
-        // TODO: REFACTOR. At this moment this serves as storage for some signature-related methods from iText 5 AcroFields
         private PdfDocument document;
 
         private PdfAcroForm acroForm;
@@ -408,7 +407,8 @@ namespace iText.Signatures {
                 }
                 catch (System.IO.IOException) {
                 }
-                // TODO: add exception handling (at least some logger)
+                // TODO DEVSIX-3458: remove this catch since RandomAccessFileOrArray#length will not throw
+                //  IOException anymore and therefore PdfReader#getFileLength will not do so either
                 for (int k = 0; k < sorter.Count; ++k) {
                     Object[] objs = sorter[k];
                     String name = (String)objs[0];
