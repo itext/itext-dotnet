@@ -53,7 +53,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <remarks>The base, abstract Node model. Elements, Documents, Comments etc are all Node instances.</remarks>
     /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public abstract class Node
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
  : ICloneable
 #endif
  {

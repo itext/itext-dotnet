@@ -203,7 +203,7 @@ namespace iText.IO.Codec.Brotli.Dec
 
 		public override bool CanWrite{get{return false;}}
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         public override System.IAsyncResult BeginWrite(byte[] buffer, int offset,
 				int count, System.AsyncCallback callback, object state) {
 			throw new System.NotSupportedException();

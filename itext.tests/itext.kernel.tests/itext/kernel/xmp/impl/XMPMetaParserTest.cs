@@ -53,16 +53,16 @@ namespace iText.Kernel.XMP.Impl {
              + "                                                                                                    \n"
              + "             \n" + "<?xpacket end=\"w\"?>";
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromString() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
             XMPMeta xmpMeta = XMPMetaParser.Parse(metadataToParse, null);
             NUnit.Framework.Assert.AreEqual(EXPECTED_SERIALIZED_XMP, XMPMetaFactory.SerializeToString(xmpMeta, null));
         }
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromString() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -73,18 +73,18 @@ namespace iText.Kernel.XMP.Impl {
                 }
                 , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo("Reference to undeclared entity 'xxe'. Line 6, position 27."));
         }
-#endif // NETSTANDARD1_6
+#endif // NETSTANDARD2_0
         
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromByteBuffer() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
             XMPMeta xmpMeta = XMPMetaParser.Parse(metadataToParse.GetBytes(System.Text.Encoding.UTF8), null);
             NUnit.Framework.Assert.AreEqual(EXPECTED_SERIALIZED_XMP, XMPMetaFactory.SerializeToString(xmpMeta, null));
         }
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromByteBuffer() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -95,9 +95,9 @@ namespace iText.Kernel.XMP.Impl {
                 }
                 , NUnit.Framework.Throws.InstanceOf<XMPException>().With.Message.EqualTo("Unsupported Encoding"));
         }
-#endif // NETSTANDARD1_6
+#endif // NETSTANDARD2_0
         
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromInputStream() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -105,9 +105,9 @@ namespace iText.Kernel.XMP.Impl {
             XMPMeta xmpMeta = XMPMetaParser.Parse(inputStream, null);
             NUnit.Framework.Assert.AreEqual(EXPECTED_SERIALIZED_XMP, XMPMetaFactory.SerializeToString(xmpMeta, null));
         }
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromInputStream() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -119,6 +119,6 @@ namespace iText.Kernel.XMP.Impl {
                 }
                 , NUnit.Framework.Throws.InstanceOf<XMPException>().With.Message.EqualTo("Unsupported Encoding"));
         }
-#endif // NETSTANDARD1_6
+#endif // NETSTANDARD2_0
     }
 }

@@ -190,7 +190,7 @@ namespace iText.Signatures {
             return dgst.Digest();
         }
 
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         public static WebResponse GetResponse(this WebRequest request) {
             return request.GetResponseAsync().Result;
         }

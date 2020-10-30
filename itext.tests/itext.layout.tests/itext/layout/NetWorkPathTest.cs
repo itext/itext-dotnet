@@ -59,7 +59,7 @@ namespace iText.Layout {
         public virtual void NetworkPathImageTest() {
             String fullImagePath = @"\\someVeryRandomWords\SomeVeryRandomName.img";
             String startOfMsg = null;
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 #else

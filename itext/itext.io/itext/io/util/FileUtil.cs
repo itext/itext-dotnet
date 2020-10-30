@@ -167,7 +167,7 @@ namespace iText.IO.Util {
         }
 
         public static String GetBaseDirectory() {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             return AppDomain.CurrentDomain.BaseDirectory;
 #else
             return AppContext.BaseDirectory;

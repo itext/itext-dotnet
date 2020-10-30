@@ -77,7 +77,7 @@ namespace iText.Kernel.Counter.Data {
         public static void RegisterProcessAllShutdownHook<T, V>(EventDataHandler<T, V> dataHandler)
             where V : EventData<T> {
             try {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => dataHandler.TryProcessRest();
                 AppDomain.CurrentDomain.DomainUnload += (s, e) => dataHandler.TryProcessRest();
 #else
@@ -112,7 +112,7 @@ namespace iText.Kernel.Counter.Data {
                         Thread.Sleep((int) dataHandler.GetWaitTime().GetTime());
                         dataHandler.TryProcessNextAsync(false);
                     }
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
                     catch (ThreadInterruptedException any) {
                         break;
                     }

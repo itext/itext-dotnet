@@ -102,7 +102,7 @@ namespace iText.Kernel.Colors {
             : this(0f, 0f, 0f) {
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         /// <summary>
         /// Create DeviceRGB color from R, G, B values of System.Drawing.Color
         /// <br/>

@@ -479,7 +479,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
     /// <summary>A Document's output settings control the form of the text() and html() methods.</summary>
     public class OutputSettings
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
  : ICloneable
 #endif
  {

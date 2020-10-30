@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
 using System.Drawing;
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
 using iText.IO.Codec;
 using iText.IO.Util;
 
@@ -164,7 +164,7 @@ namespace iText.IO.Image {
             return image;
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
         /// <param name="image">the java.awt.Image to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
@@ -172,9 +172,9 @@ namespace iText.IO.Image {
         public static ImageData Create(System.Drawing.Image image, Color? color) {
             return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
         /// <param name="image">the <c>java.awt.Image</c> to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
@@ -183,7 +183,7 @@ namespace iText.IO.Image {
         public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
 
         /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
         /// <param name="url">location of the image.</param>

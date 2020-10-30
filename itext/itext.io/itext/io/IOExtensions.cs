@@ -197,7 +197,7 @@ namespace iText.IO {
         }
 
         public static Assembly GetAssembly(this Type type) {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             return type.Assembly;
 #else
             return type.GetTypeInfo().Assembly;

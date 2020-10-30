@@ -46,7 +46,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
 using System.Net.Http;
 #endif
 
@@ -76,7 +76,7 @@ namespace iText.IO.Util {
                 // UNC path.
                 isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);     
             } else {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
