@@ -50,7 +50,7 @@ using iText.StyledXmlParser;
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class with functionality to normalize CSS properties.</summary>
     internal class CssPropertyNormalizer {
-        private static readonly Regex URL_PATTERN = PortUtil.CreateRegexPatternWithDotMatchingNewlines("^[uU][rR][lL]\\(.*?"
+        private static readonly Regex URL_PATTERN = PortUtil.CreateRegexPatternWithDotMatchingNewlines("^[uU][rR][lL]\\("
             );
 
         /// <summary>Normalize a property.</summary>
@@ -85,8 +85,8 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.StringUtil.Match(URL_PATTERN, str.Substring(i)).Success
-                                ) {
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
+                                ()) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);
                             }
