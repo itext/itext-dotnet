@@ -26,12 +26,12 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
-    public class FontRelativeUnitsTest : SvgIntegrationTest {
+    public class FontRelativeUnitTest : SvgIntegrationTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/FontRelativeUnitsTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/FontRelativeUnitTest/";
 
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/css/FontRelativeUnitsTest/";
+             + "/test/itext/svg/css/FontRelativeUnitTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
