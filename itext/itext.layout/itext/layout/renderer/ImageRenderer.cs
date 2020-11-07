@@ -141,6 +141,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
+            TargetCounterHandler.AddPageByID(this);
             float imageContainerWidth = (float)width;
             float imageContainerHeight = (float)height;
             if (IsFixedLayout()) {

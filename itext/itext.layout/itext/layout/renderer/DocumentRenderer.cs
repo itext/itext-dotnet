@@ -59,6 +59,8 @@ namespace iText.Layout.Renderer {
 
         protected internal IList<int> wrappedContentPage = new List<int>();
 
+        protected internal TargetCounterHandler targetCounterHandler = new TargetCounterHandler();
+
         public DocumentRenderer(Document document)
             : this(document, true) {
         }
@@ -67,6 +69,22 @@ namespace iText.Layout.Renderer {
             this.document = document;
             this.immediateFlush = immediateFlush;
             this.modelElement = document;
+        }
+
+        /// <summary>Get handler for target-counters.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="TargetCounterHandler"/>
+        /// instance
+        /// </returns>
+        public virtual TargetCounterHandler GetTargetCounterHandler() {
+            return targetCounterHandler;
+        }
+
+        /// <summary>Indicates if relayout is required for targetCounterHandler.</summary>
+        /// <returns>true if relayout is required, false otherwise</returns>
+        public virtual bool IsRelayoutRequired() {
+            return targetCounterHandler.IsRelayoutRequired();
         }
 
         public override LayoutArea GetOccupiedArea() {

@@ -183,6 +183,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
+            TargetCounterHandler.AddPageByID(this);
             bool anythingPlaced = false;
             int currentTextPos = text.start;
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
@@ -773,7 +774,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_813();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_814();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -835,8 +836,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_813 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_813() {
+        private sealed class _IGlyphLineFilter_814 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_814() {
             }
 
             public bool Accept(Glyph glyph) {

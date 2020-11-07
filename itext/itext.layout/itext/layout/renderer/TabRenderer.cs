@@ -68,6 +68,7 @@ namespace iText.Layout.Renderer {
             UnitValue height = this.GetProperty<UnitValue>(Property.MIN_HEIGHT);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().GetX(), area.GetBBox().GetY
                 () + area.GetBBox().GetHeight(), (float)width, (float)height.GetValue()));
+            TargetCounterHandler.AddPageByID(this);
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 

@@ -59,9 +59,6 @@ namespace iText.Layout.Properties {
     /// as its potential keys.
     /// </remarks>
     public sealed class Property {
-        private Property() {
-        }
-
         public const int ACTION = 1;
 
         public const int APPEARANCE_STREAM_LAYOUT = 82;
@@ -186,6 +183,8 @@ namespace iText.Layout.Properties {
         public const int HORIZONTAL_SCALING = 29;
 
         public const int HYPHENATION = 30;
+
+        public const int ID = 126;
 
         public const int IGNORE_FOOTER = 96;
 
@@ -400,6 +399,9 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TYPOGRAPHY_CONFIG] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_HEIGHT] = true;
+        }
+
+        private Property() {
         }
 
         /// <summary>

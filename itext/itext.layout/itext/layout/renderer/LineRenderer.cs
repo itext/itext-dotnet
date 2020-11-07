@@ -100,6 +100,7 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
             UpdateChildrenParent();
+            TargetCounterHandler.AddPageByID(this);
             float curWidth = 0;
             if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasChildRendererInHtmlMode
                 ()) {
