@@ -124,6 +124,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void RunTest() {
+            // This test can't be sped up because it uses of a lot of input data
             foreach (HyphenateTest.TestParams param in @params) {
                 TryHyphenate(param.lang, param.testWorld, param.shouldPass);
             }

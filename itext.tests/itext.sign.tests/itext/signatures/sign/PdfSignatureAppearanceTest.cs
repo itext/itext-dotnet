@@ -209,6 +209,7 @@ namespace iText.Signatures.Sign {
             // Make sure iText can open the document
             new PdfDocument(new PdfReader(dest)).Close();
             try {
+                // TODO DEVSIX-864 compareVisually() should be changed to compareByContent() because it slows down the test
                 String testResult = new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
                     , "diff_");
                 if (null != testResult) {
