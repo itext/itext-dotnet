@@ -73,22 +73,24 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-1
     /// </remarks>
     public class PdfA1Checker : PdfAChecker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Sound, PdfName.Movie, PdfName.FileAttachment)));
 
-        protected internal static readonly ICollection<PdfName> contentAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Text, PdfName.FreeText, PdfName.Line, PdfName.Square, PdfName.Circle, PdfName.Stamp, PdfName.
-            Ink, PdfName.Popup));
+        protected internal static readonly ICollection<PdfName> contentAnnotations = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Text, PdfName.FreeText, PdfName.Line, PdfName.Square
+            , PdfName.Circle, PdfName.Stamp, PdfName.Ink, PdfName.Popup)));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
-            , PdfName.Hide));
+        protected internal static readonly ICollection<PdfName> forbiddenActions = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm
+            , PdfName.ImportData, PdfName.JavaScript, PdfName.Hide)));
 
-        protected internal static readonly ICollection<PdfName> allowedNamedActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.NextPage, PdfName.PrevPage, PdfName.FirstPage, PdfName.LastPage));
+        protected internal static readonly ICollection<PdfName> allowedNamedActions = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.NextPage, PdfName.PrevPage, PdfName.FirstPage, PdfName
+            .LastPage)));
 
-        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
+        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric
+            , PdfName.Perceptual, PdfName.Saturation)));
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 8;
 

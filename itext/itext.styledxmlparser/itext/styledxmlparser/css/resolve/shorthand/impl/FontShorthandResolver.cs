@@ -56,20 +56,21 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// </summary>
     public class FontShorthandResolver : IShorthandResolver {
         /// <summary>Unsupported shorthand values.</summary>
-        private static readonly ICollection<String> UNSUPPORTED_VALUES_OF_FONT_SHORTHAND = new HashSet<String>(JavaUtil.ArraysAsList
-            (CommonCssConstants.CAPTION, CommonCssConstants.ICON, CommonCssConstants.MENU, CommonCssConstants.MESSAGE_BOX
-            , CommonCssConstants.SMALL_CAPTION, CommonCssConstants.STATUS_BAR));
+        private static readonly ICollection<String> UNSUPPORTED_VALUES_OF_FONT_SHORTHAND = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.CAPTION, CommonCssConstants.ICON, CommonCssConstants
+            .MENU, CommonCssConstants.MESSAGE_BOX, CommonCssConstants.SMALL_CAPTION, CommonCssConstants.STATUS_BAR
+            )));
 
         /// <summary>Font weight values.</summary>
-        private static readonly ICollection<String> FONT_WEIGHT_NOT_DEFAULT_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (CommonCssConstants.BOLD, CommonCssConstants.BOLDER, CommonCssConstants.LIGHTER, "100", "200", "300", 
-            "400", "500", "600", "700", "800", "900"));
+        private static readonly ICollection<String> FONT_WEIGHT_NOT_DEFAULT_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.BOLD, CommonCssConstants.BOLDER, CommonCssConstants
+            .LIGHTER, "100", "200", "300", "400", "500", "600", "700", "800", "900")));
 
         /// <summary>Font size values.</summary>
-        private static readonly ICollection<String> FONT_SIZE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants
-            .MEDIUM, CommonCssConstants.XX_SMALL, CommonCssConstants.X_SMALL, CommonCssConstants.SMALL, CommonCssConstants
-            .LARGE, CommonCssConstants.X_LARGE, CommonCssConstants.XX_LARGE, CommonCssConstants.SMALLER, CommonCssConstants
-            .LARGER));
+        private static readonly ICollection<String> FONT_SIZE_VALUES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(CommonCssConstants.MEDIUM, CommonCssConstants.XX_SMALL, CommonCssConstants
+            .X_SMALL, CommonCssConstants.SMALL, CommonCssConstants.LARGE, CommonCssConstants.X_LARGE, CommonCssConstants
+            .XX_LARGE, CommonCssConstants.SMALLER, CommonCssConstants.LARGER)));
 
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)

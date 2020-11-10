@@ -53,24 +53,25 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// in accordance with "http://www.w3schools.com/cssref/"
         /// and "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference"
         /// </summary>
-        private static readonly ICollection<String> inheritableProperties = new HashSet<String>(JavaUtil.ArraysAsList
-            (CommonCssConstants.COLOR, CommonCssConstants.VISIBILITY, CommonCssConstants.HANGING_PUNCTUATION, CommonCssConstants
-            .HYPHENS, CommonCssConstants.LETTER_SPACING, CommonCssConstants.LINE_HEIGHT, CommonCssConstants.OVERFLOW_WRAP
-            , CommonCssConstants.TAB_SIZE, CommonCssConstants.TEXT_ALIGN, CommonCssConstants.TEXT_ALIGN_LAST, CommonCssConstants
-            .TEXT_INDENT, CommonCssConstants.TEXT_JUSTIFY, CommonCssConstants.TEXT_TRANSFORM, CommonCssConstants.WHITE_SPACE
-            , CommonCssConstants.WORD_BREAK, CommonCssConstants.WORD_SPACING, CommonCssConstants.WORDWRAP, CommonCssConstants
-            .TEXT_SHADOW, CommonCssConstants.TEXT_UNDERLINE_POSITION, CommonCssConstants.FONT, CommonCssConstants.
-            FONT_FAMILY, CommonCssConstants.FONT_FEATURE_SETTINGS, CommonCssConstants.FONT_KERNING, CommonCssConstants
-            .FONT_LANGUAGE_OVERRIDE, CommonCssConstants.FONT_SIZE, CommonCssConstants.FONT_SIZE_ADJUST, CommonCssConstants
-            .FONT_STRETCH, CommonCssConstants.FONT_STYLE, CommonCssConstants.FONT_SYNTHESIS, CommonCssConstants.FONT_VARIANT
-            , CommonCssConstants.FONT_VARIANT_ALTERNATES, CommonCssConstants.FONT_VARIANT_CAPS, CommonCssConstants
-            .FONT_VARIANT_EAST_ASIAN, CommonCssConstants.FONT_VARIANT_LIGATURES, CommonCssConstants.FONT_VARIANT_NUMERIC
-            , CommonCssConstants.FONT_VARIANT_POSITION, CommonCssConstants.FONT_WEIGHT, CommonCssConstants.DIRECTION
-            , CommonCssConstants.TEXT_ORIENTATION, CommonCssConstants.TEXT_COMBINE_UPRIGHT, CommonCssConstants.UNICODE_BIDI
-            , CommonCssConstants.WRITING_MODE, CommonCssConstants.BORDER_COLLAPSE, CommonCssConstants.BORDER_SPACING
-            , CommonCssConstants.CAPTION_SIDE, CommonCssConstants.EMPTY_CELLS, CommonCssConstants.LIST_STYLE, CommonCssConstants
-            .LIST_STYLE_IMAGE, CommonCssConstants.LIST_STYLE_POSITION, CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants
-            .QUOTES, CommonCssConstants.ORPHANS, CommonCssConstants.WIDOWS));
+        private static readonly ICollection<String> INHERITABLE_PROPERTIES = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.COLOR, CommonCssConstants.VISIBILITY, CommonCssConstants
+            .HANGING_PUNCTUATION, CommonCssConstants.HYPHENS, CommonCssConstants.LETTER_SPACING, CommonCssConstants
+            .LINE_HEIGHT, CommonCssConstants.OVERFLOW_WRAP, CommonCssConstants.TAB_SIZE, CommonCssConstants.TEXT_ALIGN
+            , CommonCssConstants.TEXT_ALIGN_LAST, CommonCssConstants.TEXT_INDENT, CommonCssConstants.TEXT_JUSTIFY, 
+            CommonCssConstants.TEXT_TRANSFORM, CommonCssConstants.WHITE_SPACE, CommonCssConstants.WORD_BREAK, CommonCssConstants
+            .WORD_SPACING, CommonCssConstants.WORDWRAP, CommonCssConstants.TEXT_SHADOW, CommonCssConstants.TEXT_UNDERLINE_POSITION
+            , CommonCssConstants.FONT, CommonCssConstants.FONT_FAMILY, CommonCssConstants.FONT_FEATURE_SETTINGS, CommonCssConstants
+            .FONT_KERNING, CommonCssConstants.FONT_LANGUAGE_OVERRIDE, CommonCssConstants.FONT_SIZE, CommonCssConstants
+            .FONT_SIZE_ADJUST, CommonCssConstants.FONT_STRETCH, CommonCssConstants.FONT_STYLE, CommonCssConstants.
+            FONT_SYNTHESIS, CommonCssConstants.FONT_VARIANT, CommonCssConstants.FONT_VARIANT_ALTERNATES, CommonCssConstants
+            .FONT_VARIANT_CAPS, CommonCssConstants.FONT_VARIANT_EAST_ASIAN, CommonCssConstants.FONT_VARIANT_LIGATURES
+            , CommonCssConstants.FONT_VARIANT_NUMERIC, CommonCssConstants.FONT_VARIANT_POSITION, CommonCssConstants
+            .FONT_WEIGHT, CommonCssConstants.DIRECTION, CommonCssConstants.TEXT_ORIENTATION, CommonCssConstants.TEXT_COMBINE_UPRIGHT
+            , CommonCssConstants.UNICODE_BIDI, CommonCssConstants.WRITING_MODE, CommonCssConstants.BORDER_COLLAPSE
+            , CommonCssConstants.BORDER_SPACING, CommonCssConstants.CAPTION_SIDE, CommonCssConstants.EMPTY_CELLS, 
+            CommonCssConstants.LIST_STYLE, CommonCssConstants.LIST_STYLE_IMAGE, CommonCssConstants.LIST_STYLE_POSITION
+            , CommonCssConstants.LIST_STYLE_TYPE, CommonCssConstants.QUOTES, CommonCssConstants.ORPHANS, CommonCssConstants
+            .WIDOWS)));
 
         // Color Properties
         // Basic Box Properties
@@ -85,7 +86,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// <param name="cssProperty">the CSS property</param>
         /// <returns>true, if the property is inheritable</returns>
         public virtual bool IsInheritable(String cssProperty) {
-            return inheritableProperties.Contains(cssProperty);
+            return INHERITABLE_PROPERTIES.Contains(cssProperty);
         }
     }
 }

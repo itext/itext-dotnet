@@ -72,17 +72,20 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-2
     /// </remarks>
     public class PdfA2Checker : PdfA1Checker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie)
+            ));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
-            , PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName.Trans, PdfName.GoTo3DView));
+        protected internal static readonly ICollection<PdfName> forbiddenActions = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm
+            , PdfName.ImportData, PdfName.JavaScript, PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName
+            .Trans, PdfName.GoTo3DView)));
 
-        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Normal, PdfName.Compatible, PdfName.Multiply, PdfName.Screen, PdfName.Overlay, PdfName.Darken
-            , PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight, PdfName
-            .Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName.Color, PdfName.Luminosity));
+        protected internal static readonly ICollection<PdfName> allowedBlendModes = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Normal, PdfName.Compatible, PdfName.Multiply, PdfName
+            .Screen, PdfName.Overlay, PdfName.Darken, PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName
+            .HardLight, PdfName.SoftLight, PdfName.Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, 
+            PdfName.Color, PdfName.Luminosity)));
 
         internal const int MAX_PAGE_SIZE = 14400;
 
@@ -146,7 +149,7 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_166(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_198(extGStateDict);
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -158,8 +161,8 @@ namespace iText.Pdfa.Checker {
             base.CheckColor(color, currentColorSpaces, fill, contentStream);
         }
 
-        private sealed class _CanvasGraphicsState_166 : CanvasGraphicsState {
-            public _CanvasGraphicsState_166(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_198 : CanvasGraphicsState {
+            public _CanvasGraphicsState_198(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));

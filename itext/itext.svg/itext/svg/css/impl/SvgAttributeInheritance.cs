@@ -54,9 +54,9 @@ namespace iText.Svg.Css.Impl {
         /// in accordance with "http://www.w3schools.com/cssref/"
         /// and "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference"
         /// </summary>
-        private static readonly ICollection<String> inheritableProperties = new HashSet<String>(JavaUtil.ArraysAsList
-            (SvgConstants.Attributes.STROKE, SvgConstants.Attributes.FILL, SvgConstants.Attributes.FILL_RULE, SvgConstants.Attributes
-            .CLIP_RULE, SvgConstants.Attributes.TEXT_ANCHOR));
+        private static readonly ICollection<String> inheritableProperties = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<String>(JavaUtil.ArraysAsList(SvgConstants.Attributes.STROKE, SvgConstants.Attributes.FILL, SvgConstants.Attributes
+            .FILL_RULE, SvgConstants.Attributes.CLIP_RULE, SvgConstants.Attributes.TEXT_ANCHOR)));
 
         //Stroke
         //Fill
