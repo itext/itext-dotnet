@@ -294,9 +294,7 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         //getCode() could be either -1 or 0
-                        int nullCode = cmapEncoding.GetCmapCode(0);
-                        buffer.Append(nullCode >> 8);
-                        buffer.Append(nullCode);
+                        buffer.Append(cmapEncoding.GetCmapBytes(0));
                     }
                 }
             }

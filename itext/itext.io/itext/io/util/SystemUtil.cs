@@ -56,12 +56,6 @@ namespace iText.IO.Util {
     public class SystemUtil {
         private const String SPLIT_REGEX = "((\".+?\"|[^'\\s]|'.+?')+)\\s*";
 
-        [System.ObsoleteAttribute(
-            @"To be removed in iText version 7.2. For time-based seed, please use {@link #getTimeBasedSeed()} instead.")]
-        public static long GetSystemTimeTicks() {
-            return DateTime.Now.Ticks / 10000 + Environment.TickCount;
-        }
-
         public static long GetTimeBasedSeed() {
             return DateTime.Now.Ticks + Environment.TickCount;
         }

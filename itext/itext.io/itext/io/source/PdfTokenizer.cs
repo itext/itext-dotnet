@@ -940,47 +940,6 @@ namespace iText.IO.Source {
             return null;
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. This inner class is not used anywhere")]
-        protected internal class ReusableRandomAccessSource : IRandomAccessSource {
-            private ByteBuffer buffer;
-
-            public ReusableRandomAccessSource(ByteBuffer buffer) {
-                if (buffer == null) {
-                    throw new ArgumentException("Passed byte buffer can not be null.");
-                }
-                this.buffer = buffer;
-            }
-
-            public virtual int Get(long offset) {
-                if (offset >= buffer.Size()) {
-                    return -1;
-                }
-                return 0xff & buffer.GetInternalBuffer()[(int)offset];
-            }
-
-            public virtual int Get(long offset, byte[] bytes, int off, int len) {
-                if (buffer == null) {
-                    throw new InvalidOperationException("Already closed");
-                }
-                if (offset >= buffer.Size()) {
-                    return -1;
-                }
-                if (offset + len > buffer.Size()) {
-                    len = (int)(buffer.Size() - offset);
-                }
-                Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
-                return len;
-            }
-
-            public virtual long Length() {
-                return buffer.Size();
-            }
-
-            public virtual void Close() {
-                buffer = null;
-            }
-        }
-
         void System.IDisposable.Dispose() {
             Close();
         }

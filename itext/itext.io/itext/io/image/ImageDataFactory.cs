@@ -190,39 +190,19 @@ namespace iText.IO.Image {
         /// <param name="noHeader">Whether the image contains a header.</param>
         /// <returns>created ImageData</returns>
         public static ImageData CreateBmp(Uri url, bool noHeader) {
-            return CreateBmp(url, noHeader, 0);
-        }
-
-        /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
-        /// <param name="url">location of the image.</param>
-        /// <param name="noHeader">Whether the image contains a header.</param>
-        /// <param name="size">size of the image</param>
-        /// <returns>created ImageData</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
             ValidateImageType(url, ImageType.BMP);
-            ImageData image = new BmpImageData(url, noHeader, size);
+            ImageData image = new BmpImageData(url, noHeader);
             BmpImageHelper.ProcessImage(image);
             return image;
         }
 
         /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
         /// <param name="bytes">array containing the raw image data</param>
-        /// <param name="noHeader">Whether the image contains a header</param>
-        /// <returns>created ImageData.</returns>
-        public static ImageData CreateBmp(byte[] bytes, bool noHeader) {
-            return CreateBmp(bytes, noHeader, 0);
-        }
-
-        /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
-        /// <param name="bytes">array containing the raw image data</param>
         /// <param name="noHeader">Whether the image contains a header.</param>
-        /// <param name="size">size of the image</param>
         /// <returns>created ImageData</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size) {
+        public static ImageData CreateBmp(byte[] bytes, bool noHeader) {
             if (noHeader || ImageTypeDetector.DetectImageType(bytes) == ImageType.BMP) {
-                ImageData image = new BmpImageData(bytes, noHeader, size);
+                ImageData image = new BmpImageData(bytes, noHeader);
                 BmpImageHelper.ProcessImage(image);
                 return image;
             }

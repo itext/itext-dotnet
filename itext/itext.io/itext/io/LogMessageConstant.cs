@@ -147,7 +147,6 @@ namespace iText.IO {
 
         public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
 
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
         public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
@@ -201,9 +200,6 @@ namespace iText.IO {
         public const String IMAGE_HAS_JPXDECODE_FILTER = "Image cannot be inline if it has JPXDecode filter. It will be added as an ImageXObject";
 
         public const String IMAGE_HAS_MASK = "Image cannot be inline if it has a Mask";
-
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
-        public const String IMAGE_MASK_CLEAN_UP_NOT_SUPPORTED = "Partial clean up of transparent images with mask encoded with one of the following filters is not supported: JBIG2Decode, DCTDecode, JPXDecode. Image will become non-transparent.";
 
         public const String IMAGE_SIZE_CANNOT_BE_MORE_4KB = "Inline image size cannot be more than 4KB. It will be added as an ImageXObject";
 
@@ -290,9 +286,6 @@ namespace iText.IO {
         public const String RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES = "The {0} rectangle has negative or zero sizes. It will not be displayed.";
 
         public const String RECTANGLE_HAS_NEGATIVE_SIZE = "The {0} rectangle has negative size. It will not be displayed.";
-
-        [System.ObsoleteAttribute(@"Moved into cleanup module The constant will be removed in 7.2.")]
-        public const String REDACTION_OF_ANNOTATION_TYPE_WATERMARK_IS_NOT_SUPPORTED = "Redaction of annotation subtype /Watermark is not supported";
 
         public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The page requested to be removed has already been flushed.";
 
@@ -383,10 +376,6 @@ namespace iText.IO {
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
 
         public const String XOBJECT_HAS_NO_STRUCT_PARENTS = "XObject has no StructParents entry in its stream, no entry in ParentTree will be created for the corresponding structure elements";
-
-        [System.ObsoleteAttribute(@"Use XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT instead. The constant will be removed in 7.2."
-            )]
-        public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
 
         public const String XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }
