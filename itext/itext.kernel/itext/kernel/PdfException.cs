@@ -64,19 +64,6 @@ namespace iText.Kernel {
 
         public const String CANNOT_ADD_KID_TO_THE_FLUSHED_ELEMENT = "Cannot add kid to the flushed element.";
 
-        [Obsolete]
-        public const String CANNOT_ADD_NON_DICTIONARY_EXTGSTATE_TO_RESOURCES_1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary.";
-
-        public const String CANNOT_ADD_NON_DICTIONARY_PATTERN_TO_RESOURCES_1 = "Cannot add pattern to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream.";
-
-        public const String CANNOT_ADD_NON_DICTIONARY_PROPERTIES_TO_RESOURCES_1 = "Cannot add properties to resources. The PdfObject type is {0}, but should be PdfDictionary.";
-
-        public const String CANNOT_ADD_NON_DICTIONARY_SHADING_TO_RESOURCES_1 = "Cannot add shading to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream.";
-
-        public const String CANNOT_ADD_NON_STREAM_FORM_TO_RESOURCES_1 = "Cannot add form to resources. The PdfObject type is {0}, but should be PdfStream.";
-
-        public const String CANNOT_ADD_NON_STREAM_IMAGE_TO_RESOURCES_1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream.";
-
         public const String CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS = "{0} cannot be embedded due to licensing restrictions.";
 
         public const String CANNOT_CLOSE_DOCUMENT = "Cannot close document.";
@@ -166,9 +153,6 @@ namespace iText.Kernel {
         public const String CANNOT_REMOVE_MARKED_CONTENT_REFERENCE_BECAUSE_ITS_PAGE_WAS_ALREADY_FLUSHED = "Cannot remove marked content reference, because its page has been already flushed.";
 
         public const String CANNOT_REMOVE_TAG_BECAUSE_ITS_PARENT_IS_FLUSHED = "Cannot remove tag, because its parent is flushed.";
-
-        [Obsolete]
-        public const String CANNOT_SET_DATA_TO_PDFSTREAM_WHICH_WAS_CREATED_BY_INPUT_STREAM = "Cannot set data to PdfStream which was created by InputStream.";
 
         public const String CANNOT_SET_DATA_TO_PDF_STREAM_WHICH_WAS_CREATED_BY_INPUT_STREAM = "Cannot set data to PdfStream which was created by InputStream.";
 
@@ -289,15 +273,9 @@ namespace iText.Kernel {
 
         public const String FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED = "FontProvider and FontSet are empty. Cannot resolve font family name (see ElementPropertyContainer#setFontFamily) without initialized FontProvider (see RootElement#setFontProvider).";
 
-        [Obsolete]
-        public const String FONT_SIZE_IS_TOO_SMALL = "Font size is too small.";
-
         public const String FORM_XOBJECT_MUST_HAVE_BBOX = "Form XObject must have BBox.";
 
         public const String FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE = "Function is not compatible with ColorSpace.";
-
-        [Obsolete]
-        public const String GIVEN_ACCESSIBLE_ELEMENT_IS_NOT_CONNECTED_TO_ANY_TAG = "Given accessible element is not connected to any tag.";
 
         public const String ILLEGAL_CHARACTER_IN_ASCIIHEXDECODE = "illegal character in ASCIIHexDecode.";
 
@@ -371,9 +349,6 @@ namespace iText.Kernel {
         
         public const String NO_KID_WITH_SUCH_ROLE = "No kid with such role.";
 
-        [System.ObsoleteAttribute(@"Now we log a warning rather than throw an exception.")]
-        public const String NO_MAX_LEN_PRESENT = "No /MaxLen has been set even though the Comb flag has been set.";
-
         public const String NONINVERTIBLE_MATRIX_CANNOT_BE_PROCESSED = "A noninvertible matrix has been parsed. The behaviour is unpredictable.";
 
         public const String NOT_A_PLACEABLE_WINDOWS_METAFILE = "Not a placeable windows metafile.";
@@ -405,8 +380,6 @@ namespace iText.Kernel {
         public const String PAGE_ALREADY_FLUSHED = "The page has been already flushed.";
 
         public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
-
-        public const String PDF_ENCODINGS = "PdfEncodings exception.";
 
         public const String PDF_ENCRYPTION = "PdfEncryption exception.";
 
@@ -547,9 +520,6 @@ namespace iText.Kernel {
         public const String WMF_IMAGE_EXCEPTION = "WMF image exception.";
 
         public const String WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD = "Wrong form field. Add annotation to the field.";
-
-        [System.ObsoleteAttribute(@"in favour of more informative named constant")]
-        public const String WRONG_MEDIA_BOX_SIZE_1 = "Wrong media box size: {0}.";
 
         public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 arguments";
 
