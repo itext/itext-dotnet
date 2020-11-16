@@ -478,7 +478,7 @@ namespace iText.Kernel.Pdf {
                             ((PdfArray)decodeParms).Add(0, new PdfNull());
                         }
                         else {
-                            throw new PdfException(PdfException.DECODE_PARAMETER_TYPE_1_IS_NOT_SUPPORTED).SetMessageParams(decodeParms
+                            throw new PdfException(PdfException.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED).SetMessageParams(decodeParms
                                 .GetType().ToString());
                         }
                     }
@@ -527,7 +527,7 @@ namespace iText.Kernel.Pdf {
                         decodeParams = decodeParamsArray.GetAsDictionary(0);
                     }
                     else {
-                        throw new PdfException(PdfException.DECODE_PARAMETER_TYPE_1_IS_NOT_SUPPORTED).SetMessageParams(decodeParamsObject
+                        throw new PdfException(PdfException.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED).SetMessageParams(decodeParamsObject
                             .GetType().ToString());
                     }
                 }

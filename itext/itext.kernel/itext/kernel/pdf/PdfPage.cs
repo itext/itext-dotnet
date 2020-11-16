@@ -701,7 +701,8 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 if (mediaBoxSize < 4) {
-                    throw new PdfException(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS).SetMessageParams(mediaBox.Size());
+                    throw new PdfException(PdfException.WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS).SetMessageParams(mediaBox.Size
+                        ());
                 }
             }
             PdfNumber llx = mediaBox.GetAsNumber(0);

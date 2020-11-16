@@ -1987,7 +1987,7 @@ namespace iText.Kernel.Pdf {
                         TryInitTagStructure(str);
                     }
                     if (properties.appendMode && (reader.HasRebuiltXref() || reader.HasFixedXref())) {
-                        throw new PdfException(PdfException.APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_WAS_POSSIBLE
+                        throw new PdfException(PdfException.APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE
                             );
                     }
                 }
@@ -2191,8 +2191,8 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, page);
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
-                throw new PdfException(PdfException.PAGE_1_CANNOT_BE_ADDED_TO_DOCUMENT_2_BECAUSE_IT_BELONGS_TO_DOCUMENT_3)
-                    .SetMessageParams(page, this, page.GetDocument());
+                throw new PdfException(PdfException.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
+                    ).SetMessageParams(page, this, page.GetDocument());
             }
             catalog.GetPageTree().AddPage(index, page);
         }
@@ -2208,8 +2208,8 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, page);
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
-                throw new PdfException(PdfException.PAGE_1_CANNOT_BE_ADDED_TO_DOCUMENT_2_BECAUSE_IT_BELONGS_TO_DOCUMENT_3)
-                    .SetMessageParams(page, this, page.GetDocument());
+                throw new PdfException(PdfException.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
+                    ).SetMessageParams(page, this, page.GetDocument());
             }
             catalog.GetPageTree().AddPage(page);
         }

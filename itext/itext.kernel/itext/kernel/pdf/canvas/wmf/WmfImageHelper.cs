@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 }
                 InputMeta @in = new InputMeta(@is);
                 if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7))) {
-                    throw new PdfException(PdfException._1_IS_NOT_A_VALID_PLACEABLE_WINDOWS_METAFILE, errorID);
+                    throw new PdfException(PdfException.NOT_A_VALID_PLACEABLE_WINDOWS_METAFILE, errorID);
                 }
                 @in.ReadWord();
                 int left = @in.ReadShort();

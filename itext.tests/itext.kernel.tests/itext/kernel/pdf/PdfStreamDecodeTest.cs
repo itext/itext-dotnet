@@ -60,7 +60,7 @@ namespace iText.Kernel.Pdf {
             pdfStream.Put(PdfName.Filter, new PdfArray(JavaUtil.ArraysAsList((PdfObject)PdfName.FlateDecode, (PdfObject
                 )PdfName.JBIG2Decode)));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfStream.GetBytes(true));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.FILTER_1_IS_NOT_SUPPORTED, PdfName.JBIG2Decode
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.THIS_FILTER_IS_NOT_SUPPORTED, PdfName.JBIG2Decode
                 ), e.Message);
         }
 

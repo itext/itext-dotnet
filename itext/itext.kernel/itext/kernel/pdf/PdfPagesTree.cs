@@ -364,7 +364,7 @@ namespace iText.Kernel.Pdf {
             PdfPages parent = parents[parentIndex];
             PdfArray kids = parent.GetKids();
             if (kids == null) {
-                throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE_1).SetMessageParams(pageNum + 1);
+                throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1);
             }
             int kidsCount = parent.GetCount();
             // we should handle separated pages, it means every PdfArray kids must contain either PdfPage or PdfPages,
@@ -375,7 +375,7 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary page = kids.GetAsDictionary(i);
                 // null values not allowed in pages tree.
                 if (page == null) {
-                    throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE_1).SetMessageParams(pageNum + 1);
+                    throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1);
                 }
                 PdfObject pageKids = page.Get(PdfName.Kids);
                 if (pageKids != null) {
@@ -384,7 +384,7 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         // kids must be of type array
-                        throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE_1).SetMessageParams(pageNum + 1);
+                        throw new PdfException(PdfException.INVALID_PAGE_STRUCTURE).SetMessageParams(pageNum + 1);
                     }
                 }
                 if (document.GetReader().IsMemorySavingMode() && !findPdfPages && parent.GetFrom() + i != pageNum) {

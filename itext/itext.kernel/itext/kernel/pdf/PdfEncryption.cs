@@ -665,7 +665,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_R_EQ_1).SetMessageParams(rValue);
+                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_R).SetMessageParams(rValue);
                 }
             }
             revision = SetCryptoMode(cryptoMode, length);
@@ -741,7 +741,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_V_EQ_1, vValue);
+                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_V, vValue);
                 }
             }
             return SetCryptoMode(cryptoMode, length);

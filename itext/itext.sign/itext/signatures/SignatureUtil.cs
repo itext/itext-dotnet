@@ -493,7 +493,7 @@ namespace iText.Signatures {
                         break;
                     }
                     if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                        tokens.ThrowError(PdfException.DICTIONARY_KEY_1_IS_NOT_A_NAME, tokens.GetStringValue());
+                        tokens.ThrowError(PdfException.THIS_DICTIONARY_KEY_IS_NOT_A_NAME, tokens.GetStringValue());
                     }
                     PdfName name = ReadPdfName(true);
                     PdfObject obj;

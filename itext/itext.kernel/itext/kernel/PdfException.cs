@@ -48,15 +48,9 @@ using iText.IO.Util;
 namespace iText.Kernel {
     /// <summary>Exception class for exceptions in kernel module.</summary>
     public class PdfException : Exception {
-        public const String _1_IS_AN_UNKNOWN_GRAPHICS_STATE_DICTIONARY = "{0} is an unknown graphics state dictionary.";
-
-        public const String _1_IS_NOT_AN_ACCEPTABLE_VALUE_FOR_THE_FIELD_2 = "{0} is not an acceptable value for the field {1}.";
-
-        public const String _1_IS_NOT_A_VALID_PLACEABLE_WINDOWS_METAFILE = "{0} is not a valid placeable windows metafile.";
-
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
 
-        public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_WAS_POSSIBLE = "Append mode requires a document without errors, even if recovery is possible.";
+        public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE = "Append mode requires a document without errors, even if recovery is possible.";
 
         public const String AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST = "Authenticated attribute is missing the digest.";
 
@@ -188,9 +182,9 @@ namespace iText.Kernel {
 
         public const String CANNOT_WRITE_OBJECT_AFTER_IT_WAS_RELEASED = "Cannot write object after it was released. In normal situation the object must be read once again before being written.";
 
-        public const String CANNOT_DECODE_PKCS7_SIGNEDDATA_OBJECT = "Cannot decode PKCS#7 SignedData object.";
+        public const String CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT = "Cannot decode PKCS#7 SignedData object.";
 
-        public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_SERIAL_1 = "Cannot find signing certificate with serial {0}.";
+        public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_THIS_SERIAL = "Cannot find signing certificate with serial {0}.";
 
         public const String CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed to PdfReader constructor with properties. See ReaderProperties#setPublicKeySecurityParams() method.";
 
@@ -209,17 +203,15 @@ namespace iText.Kernel {
 
         public const String DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED = "Data handler counter has been disabled";
 
-        public const String DECODE_PARAMETER_TYPE_1_IS_NOT_SUPPORTED = "Decode parameter type {0} is not supported.";
+        public const String THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED = "Decode parameter type {0} is not supported.";
 
         public const String DEFAULT_APPEARANCE_NOT_FOUND = "DefaultAppearance is required but not found";
 
         public const String DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION = "/DefaultCryptFilter not found (encryption).";
 
-        public const String DICTIONARY_KEY_1_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
+        public const String THIS_DICTIONARY_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
-        /// <summary>Exception message in case of dictionary does not have specified font data.</summary>
-        [System.ObsoleteAttribute(@"Will be removed in nex major release as there are no usages left.")]
-        public const String DICTIONARY_DOES_NOT_HAVE_1_FONT_DATA = "Dictionary doesn't have {0} font data.";
+        public const String DICTIONARY_DOES_NOT_HAVE_THIS_FONT_DATA = "Dictionary doesn't have {0} font data.";
 
         public const String DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA = "Dictionary doesn't have supported font data.";
 
@@ -263,6 +255,11 @@ namespace iText.Kernel {
 
         public const String EXTERNAL_ENTITY_ELEMENT_FOUND_IN_XML = "External entity element found in XML. This entity will not be parsed to prevent XML attacks.";
 
+		public const String FAILED_TO_GET_TSA_RESPONSE = "Failed to get TSA response from {0}.";
+
+
+		public const String FAILED_TO_GET_TSA_RESPONSE = "Failed to get TSA response from {0}.";
+
 		public const String FAILED_TO_GET_TSA_RESPONSE_FROM_1 = "Failed to get TSA response from {0}.";
         public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported in append mode.";
 
@@ -272,9 +269,9 @@ namespace iText.Kernel {
 
         public const String FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE = "Field type is not a signature field type.";
 
-        public const String FILTER_1_IS_NOT_SUPPORTED = "Filter {0} is not supported.";
+        public const String THIS_FILTER_IS_NOT_SUPPORTED = "Filter {0} is not supported.";
 
-        public const String FILE_POSITION_1_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "file position {0} cross reference entry in this xref subsection.";
+        public const String FILE_POSITION_0_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "file position 0 cross reference entry in this xref subsection.";
 
         public const String FILTER_CCITTFAXDECODE_IS_ONLY_SUPPORTED_FOR_IMAGES = "Filter CCITTFaxDecode is only supported for images";
 
@@ -318,9 +315,9 @@ namespace iText.Kernel {
 
         public const String IN_CODABAR_START_STOP_CHARACTERS_ARE_ONLY_ALLOWED_AT_THE_EXTREMES = "In Codabar, start/stop characters are only allowed at the extremes.";
 
-        public const String INVALID_HTTP_RESPONSE_1 = "Invalid http response {0}.";
+        public const String INVALID_HTTP_RESPONSE = "Invalid http response {0}.";
 
-        public const String INVALID_TSA_1_RESPONSE_CODE_2 = "Invalid TSA {0} response code {1}.";
+        public const String INVALID_TSA_RESPONSE = "Invalid TSA {0} response code {1}.";
 
         public const String INCORRECT_NUMBER_OF_COMPONENTS = "Incorrect number of components.";
 
@@ -328,17 +325,17 @@ namespace iText.Kernel {
 
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry in this xref subsection.";
 
-        public const String INVALID_INDIRECT_REFERENCE_1 = "Invalid indirect reference {0}.";
+        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0}.";
 
         public const String INVALID_MEDIA_BOX_VALUE = "Tne media box object has incorrect values.";
 
-        public const String INVALID_PAGE_STRUCTURE_1 = "Invalid page structure {0}.";
+        public const String INVALID_PAGE_STRUCTURE = "Invalid page structure {0}.";
 
         public const String INVALID_PAGE_STRUCTURE_PAGES_MUST_BE_PDF_DICTIONARY = "Invalid page structure. /Pages must be PdfDictionary.";
 
         public const String INVALID_RANGE_ARRAY = "Invalid range array.";
 
-        public const String INVALID_OFFSET_FOR_OBJECT_1 = "Invalid offset for object {0}.";
+        public const String INVALID_OFFSET_FOR_THIS_OBJECT = "Invalid offset for object {0}.";
 
         public const String INVALID_XREF_STREAM = "Invalid xref stream.";
 
@@ -361,6 +358,8 @@ namespace iText.Kernel {
         public const String MissingRequiredFieldInFontDictionary = "Missing required field {0} in font dictionary.";
 
         public const String MUST_BE_A_TAGGED_DOCUMENT = "Must be a tagged document.";
+
+        public const String NOT_A_VALID_PLACEABLE_WINDOWS_METAFILE = "{0} is not a valid placeable windows metafile.";
 
         public const String NUMBER_OF_ENTRIES_IN_THIS_XREF_SUBSECTION_NOT_FOUND = "Number of entries in this xref subsection not found.";
 
@@ -399,7 +398,7 @@ namespace iText.Kernel {
 
         public const String OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA = "Operator EI not found after the end of image data.";
 
-        public const String PAGE_1_CANNOT_BE_ADDED_TO_DOCUMENT_2_BECAUSE_IT_BELONGS_TO_DOCUMENT_3 = "Page {0} cannot be added to document {1}, because it belongs to document {2}.";
+        public const String PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT = "Page {0} cannot be added to document {1}, because it belongs to document {2}.";
 
         public const String PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE = "Page is not set for the pdf tag structure.";
 
@@ -429,7 +428,7 @@ namespace iText.Kernel {
 
         public const String PDF_INDIRECT_OBJECT_BELONGS_TO_OTHER_PDF_DOCUMENT = "Pdf indirect object belongs to other PDF document. Copy object to current pdf document.";
 
-        public const String PDF_VERSION_NOT_VALID = "PDF version is not valid.";
+        public const String PDF_VERSION_IS_NOT_VALID = "PDF version is not valid.";
 
         public const String REF_ARRAY_ITEMS_IN_STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_INDIRECT_OBJECTS = "Ref array items in structure element dictionary shall be indirect objects.";
 
@@ -441,7 +440,7 @@ namespace iText.Kernel {
 
         public const String RESOURCES_CANNOT_BE_NULL = "Resources cannot be null.";
 
-        public const String RESOURCES_DO_NOT_CONTAIN_EXTGSTATE_ENTRY_UNABLE_TO_PROCESS_OPERATOR_1 = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
+        public const String RESOURCES_DO_NOT_CONTAIN_EXTGSTATE_ENTRY_UNABLE_TO_PROCESS_THIS_OPERATOR = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
 
         public const String ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE = "Role \"{0}\" is not mapped to any standard role.";
 
@@ -449,7 +448,7 @@ namespace iText.Kernel {
 
         public const String SHADING_TYPE_NOT_FOUND = "Shading type not found.";
 
-        public const String SIGNATURE_WITH_NAME_1_IS_NOT_THE_LAST_IT_DOESNT_COVER_WHOLE_DOCUMENT = "Signature with name {0} is not the last. It doesn't cover the whole document.";
+        public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature with name {0} is not the last. It doesn't cover the whole document.";
 
         public const String STDCF_NOT_FOUND_ENCRYPTION = "/StdCF not found (encryption)";
 
@@ -481,11 +480,11 @@ namespace iText.Kernel {
 
         public const String TWO_BARCODE_MUST_BE_EXTERNALLY = "The two barcodes must be composed externally.";
 
-        public const String THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128_IN_1 = "There are illegal characters for barcode 128 in {0}.";
+        public const String THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128 = "There are illegal characters for barcode 128.";
 
         public const String THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS = "There is no associate PdfWriter for making indirects.";
 
-        public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME_1 = "There is no field in the document with such name: {0}.";
+        public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document with such name: {0}.";
 
         public const String THIS_PKCS7_OBJECT_HAS_MULTIPLE_SIGNERINFOS_ONLY_ONE_IS_SUPPORTED_AT_THIS_TIME = "This PKCS#7 object has multiple SignerInfos. Only one is supported at this time.";
 
@@ -493,11 +492,13 @@ namespace iText.Kernel {
 
         public const String TO_FLUSH_THIS_WRAPPER_UNDERLYING_OBJECT_MUST_BE_ADDED_TO_DOCUMENT = "To manually flush this wrapper, you have to ensure that the object behind this wrapper is added to the document, i.e. it has an indirect reference.";
 
-        public const String TSA_1_FAILED_TO_RETURN_TIME_STAMP_TOKEN_2 = "TSA {0} failed to return time stamp token: {1}.";
+        public const String THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN = "TSA {0} failed to return time stamp token: {1}.";
 
         public const String TRAILER_NOT_FOUND = "Trailer not found.";
 
         public const String TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION = "Trailer prev entry points to its own cross reference section.";
+
+        public const String UNACCEPTABLE_FIELD_VALUE = "{0} is not an acceptable value for the field {1}.";
 
         public const String UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS = "Unbalanced begin/end marked content operators.";
 
@@ -505,11 +506,11 @@ namespace iText.Kernel {
 
         public const String UNBALANCED_SAVE_RESTORE_STATE_OPERATORS = "Unbalanced save restore state operators.";
 
-        public const String UNEXPECTED_CHARACTER_1_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} found after ID in inline image.";
+        public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} found after ID in inline image.";
 
         public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
 
-        public const String UNEXPECTED_COLOR_SPACE_1 = "Unexpected ColorSpace: {0}.";
+        public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 
         public const String UNEXPECTED_END_OF_FILE = "Unexpected end of file.";
 
@@ -517,18 +518,20 @@ namespace iText.Kernel {
 
         public const String UNEXPECTED_SHADING_TYPE = "Unexpected shading type.";
 
-        public const String UNKNOWN_ENCRYPTION_TYPE_R_EQ_1 = "Unknown encryption type R == {0}.";
+        public const String UNKNOWN_ENCRYPTION_TYPE_R = "Unknown encryption type R == {0}.";
 
-        public const String UNKNOWN_ENCRYPTION_TYPE_V_EQ_1 = "Unknown encryption type V == {0}.";
+        public const String UNKNOWN_ENCRYPTION_TYPE_V = "Unknown encryption type V == {0}.";
+
+        public const String UNKNOWN_GRAPHICS_STATE_DICTIONARY = "{0} is an unknown graphics state dictionary.";
 
         public const String UNKNOWN_PDF_EXCEPTION = "Unknown PdfException.";
 
-        public const String UNKNOWN_HASH_ALGORITHM_1 = "Unknown hash algorithm: {0}.";
+        public const String UNKNOWN_HASH_ALGORITHM = "Unknown hash algorithm: {0}.";
 
-        public const String UNKNOWN_KEY_ALGORITHM_1 = "Unknown key algorithm: {0}.";
+        public const String UNKNOWN_KEY_ALGORITHM = "Unknown key algorithm: {0}.";
 
         [Obsolete]
-        public const String UNSUPPORTED_DEFAULT_COLOR_SPACE_NAME_1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
+        public const String UNSUPPORTED_DEFAULT_COLOR_SPACE_NAME = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
 
         public const String UNSUPPORTED_FONT_EMBEDDING_STRATEGY = "Unsupported font embedding strategy.";
 
@@ -548,7 +551,7 @@ namespace iText.Kernel {
         [System.ObsoleteAttribute(@"in favour of more informative named constant")]
         public const String WRONG_MEDIA_BOX_SIZE_1 = "Wrong media box size: {0}.";
 
-        public const String WRONGMEDIABOXSIZETOOFEWARGUMENTS = "Wrong media box size: {0}. Need at least 4 arguments";
+        public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 arguments";
 
         public const String XREF_SUBSECTION_NOT_FOUND = "xref subsection not found.";
 

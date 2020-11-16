@@ -244,8 +244,8 @@ namespace iText.Kernel.Pdf.Collection {
                     return new PdfNumber(Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
-            throw new PdfException(PdfException._1_IS_NOT_AN_ACCEPTABLE_VALUE_FOR_THE_FIELD_2).SetMessageParams(value, 
-                GetPdfObject().GetAsString(PdfName.N).GetValue());
+            throw new PdfException(PdfException.UNACCEPTABLE_FIELD_VALUE).SetMessageParams(value, GetPdfObject().GetAsString
+                (PdfName.N).GetValue());
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

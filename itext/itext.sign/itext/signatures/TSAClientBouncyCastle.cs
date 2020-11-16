@@ -194,15 +194,14 @@ namespace iText.Signatures {
             int value = (failure == null) ? 0 : failure.IntValue;
             if (value != 0) {
                 // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
-                throw new PdfException(PdfException.INVALID_TSA_1_RESPONSE_CODE_2).SetMessageParams(tsaURL, value.ToString
-                    ());
+                throw new PdfException(PdfException.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value.ToString());
             }
             // @todo: validate the time stap certificate chain (if we want
             //        assure we do not sign using an invalid timestamp).
             // extract just the time stamp token (removes communication status info)
             TimeStampToken tsToken = response.TimeStampToken;
             if (tsToken == null) {
-                throw new PdfException(PdfException.TSA_1_FAILED_TO_RETURN_TIME_STAMP_TOKEN_2).SetMessageParams(tsaURL, response
+                throw new PdfException(PdfException.THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN).SetMessageParams(tsaURL, response
                     .GetStatusString());
             }
             TimeStampTokenInfo tsTokenInfo = tsToken.TimeStampInfo;

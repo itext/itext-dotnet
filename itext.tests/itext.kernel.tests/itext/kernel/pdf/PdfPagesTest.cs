@@ -467,7 +467,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage pageOne = pdfDoc.GetPage(1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pageOne.GetPageSize());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS, 3)
                 , e.Message);
         }
 

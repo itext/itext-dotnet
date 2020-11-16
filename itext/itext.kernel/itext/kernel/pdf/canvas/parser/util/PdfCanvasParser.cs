@@ -138,7 +138,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     break;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    tokeniser.ThrowError(PdfException.DICTIONARY_KEY_1_IS_NOT_A_NAME, tokeniser.GetStringValue());
+                    tokeniser.ThrowError(PdfException.THIS_DICTIONARY_KEY_IS_NOT_A_NAME, tokeniser.GetStringValue());
                 }
                 PdfName name = new PdfName(tokeniser.GetStringValue());
                 PdfObject obj = ReadObject();

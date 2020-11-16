@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     }
                 }
             }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_COLOR_SPACE_1).SetMessageParams
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_COLOR_SPACE).SetMessageParams
                 (colorSpaceName);
         }
 
@@ -197,7 +197,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             }
             int ch = ps.GetTokeniser().Read();
             if (!PdfTokenizer.IsWhitespace(ch)) {
-                throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_CHARACTER_1_FOUND_AFTER_ID_IN_INLINE_IMAGE
+                throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE
                     ).SetMessageParams(ch);
             }
             return dict;

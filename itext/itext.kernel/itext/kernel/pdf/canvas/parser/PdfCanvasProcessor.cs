@@ -821,15 +821,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfName dictionaryName = (PdfName)operands[0];
                 PdfDictionary extGState = processor.GetResources().GetResource(PdfName.ExtGState);
                 if (extGState == null) {
-                    throw new PdfException(PdfException.RESOURCES_DO_NOT_CONTAIN_EXTGSTATE_ENTRY_UNABLE_TO_PROCESS_OPERATOR_1)
-                        .SetMessageParams(@operator);
+                    throw new PdfException(PdfException.RESOURCES_DO_NOT_CONTAIN_EXTGSTATE_ENTRY_UNABLE_TO_PROCESS_THIS_OPERATOR
+                        ).SetMessageParams(@operator);
                 }
                 PdfDictionary gsDic = extGState.GetAsDictionary(dictionaryName);
                 if (gsDic == null) {
                     gsDic = extGState.GetAsStream(dictionaryName);
                     if (gsDic == null) {
-                        throw new PdfException(PdfException._1_IS_AN_UNKNOWN_GRAPHICS_STATE_DICTIONARY).SetMessageParams(dictionaryName
-                            );
+                        throw new PdfException(PdfException.UNKNOWN_GRAPHICS_STATE_DICTIONARY).SetMessageParams(dictionaryName);
                     }
                 }
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);
