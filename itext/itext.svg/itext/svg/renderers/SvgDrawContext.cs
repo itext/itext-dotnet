@@ -188,10 +188,10 @@ namespace iText.Svg.Renderers {
         /// <param name="namedObject">object to be referenced</param>
         public virtual void AddNamedObject(String name, ISvgNodeRenderer namedObject) {
             if (namedObject == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.NAMED_OBJECT_NULL);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.NAMED_OBJECT_NULL);
             }
             if (name == null || String.IsNullOrEmpty(name)) {
-                throw new SvgProcessingException(SvgLogMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY);
             }
             if (!this.namedObjects.ContainsKey(name)) {
                 this.namedObjects.Put(name, namedObject);

@@ -46,6 +46,7 @@ using Common.Logging;
 using iText.IO.Util;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
@@ -97,20 +98,20 @@ namespace iText.Svg.Renderers.Factories {
         public virtual ISvgNodeRenderer CreateSvgNodeRendererForTag(IElementNode tag, ISvgNodeRenderer parent) {
             ISvgNodeRenderer result;
             if (tag == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.TAGPARAMETERNULL);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.TAG_PARAMETER_NULL);
             }
             try {
                 Type clazz = rendererMap.Get(tag.Name());
                 if (clazz == null) {
                     ILog logger = LogManager.GetLogger(this.GetType());
-                    logger.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPEDTAG, tag.Name()));
+                    logger.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
                     return null;
                 }
                 result = (ISvgNodeRenderer)System.Activator.CreateInstance(rendererMap.Get(tag.Name()));
             }
             catch (MissingMethodException ex) {
-                throw new SvgProcessingException(SvgLogMessageConstant.COULDNOTINSTANTIATE, ex).SetMessageParams(tag.Name(
-                    ));
+                throw new SvgProcessingException(SvgExceptionMessageConstant.COULD_NOT_INSTANTIATE, ex).SetMessageParams(tag
+                    .Name());
             }
             // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only serves as a storage
             if (parent != null && !(result is INoDrawSvgNodeRenderer) && !(parent is DefsSvgNodeRenderer)) {

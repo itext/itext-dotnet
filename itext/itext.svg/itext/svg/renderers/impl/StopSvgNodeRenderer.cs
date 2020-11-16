@@ -85,7 +85,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
     }
 }

@@ -56,6 +56,7 @@ using iText.StyledXmlParser.Util;
 using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Css.Impl {

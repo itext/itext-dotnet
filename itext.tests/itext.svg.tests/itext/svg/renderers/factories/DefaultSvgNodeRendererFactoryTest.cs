@@ -51,7 +51,7 @@ namespace iText.Svg.Renderers.Factories {
             ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory(null);
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => nodeRendererFactory.CreateSvgNodeRendererForTag
                 (null, null));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TAGPARAMETERNULL, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TAG_PARAMETER_NULL, e.Message);
         }
     }
 }

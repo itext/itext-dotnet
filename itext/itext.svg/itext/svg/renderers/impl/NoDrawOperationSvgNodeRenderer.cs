@@ -55,7 +55,7 @@ namespace iText.Svg.Renderers.Impl {
         )]
     public class NoDrawOperationSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
+            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {

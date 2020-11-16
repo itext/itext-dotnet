@@ -319,7 +319,7 @@ namespace iText.Svg.Renderers.Impl {
                     font = PdfFontFactory.CreateFont();
                 }
                 catch (System.IO.IOException e) {
-                    throw new SvgProcessingException(SvgLogMessageConstant.FONT_NOT_FOUND, e);
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.FONT_NOT_FOUND, e);
                 }
             }
         }

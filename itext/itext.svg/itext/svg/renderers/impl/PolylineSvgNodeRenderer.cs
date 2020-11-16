@@ -89,8 +89,8 @@ namespace iText.Svg.Renderers.Impl {
             }
             IList<String> points = SvgCssUtils.SplitValueList(pointsAttribute);
             if (points.Count % 2 != 0) {
-                throw new SvgProcessingException(SvgLogMessageConstant.POINTS_ATTRIBUTE_INVALID_LIST).SetMessageParams(pointsAttribute
-                    );
+                throw new SvgProcessingException(SvgExceptionMessageConstant.POINTS_ATTRIBUTE_INVALID_LIST).SetMessageParams
+                    (pointsAttribute);
             }
             this.points.Clear();
             float x;

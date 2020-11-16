@@ -25,7 +25,7 @@ using Common.Logging;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 

@@ -115,7 +115,7 @@ namespace iText.Svg.Renderers.Impl {
             float portHeight = 0f;
             PdfStream contentStream = context.GetCurrentCanvas().GetContentStream();
             if (!contentStream.ContainsKey(PdfName.BBox)) {
-                throw new SvgProcessingException(SvgLogMessageConstant.ROOT_SVG_NO_BBOX);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.ROOT_SVG_NO_BBOX);
             }
             PdfArray bboxArray = contentStream.GetAsArray(PdfName.BBox);
             portX = bboxArray.GetAsNumber(0).FloatValue();

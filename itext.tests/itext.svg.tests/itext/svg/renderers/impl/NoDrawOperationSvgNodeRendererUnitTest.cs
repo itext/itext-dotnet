@@ -50,7 +50,7 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void DontDrawTest() {
             NoDrawOperationSvgNodeRenderer renderer = new NoDrawOperationSvgNodeRenderer();
             Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => renderer.DoDraw(null));
-            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.DRAW_NO_DRAW, e.Message);
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.DRAW_NO_DRAW, e.Message);
         }
     }
 }

@@ -46,7 +46,7 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Font;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;

@@ -57,6 +57,7 @@ using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -78,7 +79,7 @@ namespace iText.Svg.Converter {
 
         private static void CheckNull(Object o) {
             if (o == null) {
-                throw new SvgProcessingException(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL);
             }
         }
 
@@ -1228,7 +1229,7 @@ namespace iText.Svg.Converter {
                 nodeTree = parser.Parse(svgStream, charset);
             }
             catch (Exception e) {
-                throw new SvgProcessingException(SvgLogMessageConstant.FAILED_TO_PARSE_INPUTSTREAM, e);
+                throw new SvgProcessingException(SvgExceptionMessageConstant.FAILED_TO_PARSE_INPUTSTREAM, e);
             }
             return new DefaultSvgProcessor().Process(nodeTree, props);
         }

@@ -51,7 +51,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
