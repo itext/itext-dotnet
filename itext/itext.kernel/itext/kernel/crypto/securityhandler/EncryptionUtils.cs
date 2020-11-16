@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 
 using System;
 using System.Globalization;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
@@ -74,11 +75,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         }
                     }
                 } catch (Exception f) {
-                    throw new PdfException(PdfException.PDF_DECRYPTION, f);
+                    throw new PdfException(KernelExceptionMessageConstant.PDF_DECRYPTION, f);
                 }
             }
             if (!foundRecipient || envelopedData == null) {
-                throw new PdfException(PdfException.BAD_CERTIFICATE_AND_KEY);
+                throw new PdfException(KernelExceptionMessageConstant.BAD_CERTIFICATE_AND_KEY);
             }
             return envelopedData;
         }

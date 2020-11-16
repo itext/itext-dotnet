@@ -48,6 +48,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -93,7 +94,7 @@ namespace iText.Kernel.Font {
                     fontProgram = FontProgramFactory.CreateFont(baseFontName.GetValue(), true);
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.IO_EXCEPTION_WHILE_CREATING_FONT, e);
+                    throw new PdfException(KernelExceptionMessageConstant.IO_EXCEPTION_WHILE_CREATING_FONT, e);
                 }
             }
             else {

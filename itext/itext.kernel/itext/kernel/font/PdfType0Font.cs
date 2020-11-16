@@ -51,6 +51,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -81,11 +82,11 @@ namespace iText.Kernel.Font {
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
-                throw new PdfException(PdfException.ONLY_IDENTITY_CMAPS_SUPPORTS_WITH_TRUETYPE);
+                throw new PdfException(KernelExceptionMessageConstant.ONLY_IDENTITY_CMAPS_SUPPORTS_WITH_TRUETYPE);
             }
             if (!ttf.GetFontNames().AllowEmbedding()) {
-                throw new PdfException(PdfException.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams(ttf
-                    .GetFontNames().GetFontName() + ttf.GetFontNames().GetStyle());
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams
+                    (ttf.GetFontNames().GetFontName() + ttf.GetFontNames().GetStyle());
             }
             this.fontProgram = ttf;
             this.embedded = true;
@@ -170,8 +171,8 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (fontProgram == null) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CANNOT_RECOGNISE_DOCUMENT_FONT_WITH_ENCODING, 
-                        cidFontName, cmap));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_RECOGNISE_DOCUMENT_FONT_WITH_ENCODING
+                        , cidFontName, cmap));
                 }
             }
             // DescendantFonts is a one-element array specifying the CIDFont dictionary that is the descendant of this Type 0 font.

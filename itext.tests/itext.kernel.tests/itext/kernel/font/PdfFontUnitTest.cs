@@ -46,6 +46,7 @@ using System.Text.RegularExpressions;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -513,7 +514,7 @@ namespace iText.Kernel.Font {
         public virtual void GetEmptyPdfStreamTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => font.GetPdfFontStream(null, null));
-            NUnit.Framework.Assert.AreEqual(PdfException.FONT_EMBEDDING_ISSUE, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -127,7 +128,7 @@ namespace iText.Kernel.Font {
         /// </returns>
         public static PdfFont CreateFont(PdfDictionary fontDictionary) {
             if (fontDictionary == null) {
-                throw new PdfException(PdfException.CANNOT_CREATE_FONT_FROM_NULL_FONT_DICTIONARY);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_CREATE_FONT_FROM_NULL_PDF_DICTIONARY);
             }
             PdfObject subtypeObject = fontDictionary.Get(PdfName.Subtype);
             if (PdfName.Type1.Equals(subtypeObject)) {
@@ -151,7 +152,7 @@ namespace iText.Kernel.Font {
                                 return new PdfType1Font(fontDictionary);
                             }
                             else {
-                                throw new PdfException(PdfException.DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA);
+                                throw new PdfException(KernelExceptionMessageConstant.DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA);
                             }
                         }
                     }
@@ -1235,7 +1236,7 @@ namespace iText.Kernel.Font {
             switch (embeddingStrategy) {
                 case PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED: {
                     if (fontProgram.IsBuiltInFont()) {
-                        throw new PdfException(PdfException.CANNOT_EMBED_STANDARD_FONT);
+                        throw new PdfException(KernelExceptionMessageConstant.CANNOT_EMBED_STANDARD_FONT);
                     }
                     embedded = true;
                     break;
@@ -1254,7 +1255,7 @@ namespace iText.Kernel.Font {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
+                    throw new PdfException(KernelExceptionMessageConstant.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
                 }
             }
             return new PdfType1Font(fontProgram, encoding, embedded);
@@ -1263,8 +1264,8 @@ namespace iText.Kernel.Font {
         private static PdfType0Font CreateType0FontFromTrueTypeFontProgram(TrueTypeFont fontProgram, String encoding
             , PdfFontFactory.EmbeddingStrategy embeddingStrategy) {
             if (!fontProgram.GetFontNames().AllowEmbedding()) {
-                throw new PdfException(PdfException.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams(fontProgram
-                    .GetFontNames().GetFontName() + fontProgram.GetFontNames().GetStyle());
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams
+                    (fontProgram.GetFontNames().GetFontName() + fontProgram.GetFontNames().GetStyle());
             }
             switch (embeddingStrategy) {
                 case PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED:
@@ -1275,11 +1276,12 @@ namespace iText.Kernel.Font {
                 }
 
                 case PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED: {
-                    throw new PdfException(PdfException.CANNON_CREATE_TYPE_0_FONT_WITH_TRUE_TYPE_FONT_PROGRAM_WITHOUT_EMBEDDING);
+                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_CREATE_TYPE_0_FONT_WITH_TRUE_TYPE_FONT_PROGRAM_WITHOUT_EMBEDDING_IT
+                        );
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
+                    throw new PdfException(KernelExceptionMessageConstant.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
                 }
             }
         }
@@ -1290,8 +1292,8 @@ namespace iText.Kernel.Font {
             switch (embeddingStrategy) {
                 case PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED: {
                     if (!fontProgram.GetFontNames().AllowEmbedding()) {
-                        throw new PdfException(PdfException.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams(fontProgram
-                            .GetFontNames().GetFontName() + fontProgram.GetFontNames().GetStyle());
+                        throw new PdfException(KernelExceptionMessageConstant.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams
+                            (fontProgram.GetFontNames().GetFontName() + fontProgram.GetFontNames().GetStyle());
                     }
                     embedded = true;
                     break;
@@ -1309,7 +1311,7 @@ namespace iText.Kernel.Font {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
+                    throw new PdfException(KernelExceptionMessageConstant.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
                 }
             }
             return new PdfTrueTypeFont(fontProgram, encoding, embedded);
@@ -1322,7 +1324,7 @@ namespace iText.Kernel.Font {
             }
             switch (embeddingStrategy) {
                 case PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED: {
-                    throw new PdfException(PdfException.CANNOT_EMBED_TYPE_0_FONT_WITH_CID_FONT_PROGRAM);
+                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_EMBED_TYPE_0_FONT_WITH_CID_FONT_PROGRAM);
                 }
 
                 case PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED:
@@ -1333,7 +1335,7 @@ namespace iText.Kernel.Font {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
+                    throw new PdfException(KernelExceptionMessageConstant.UNSUPPORTED_FONT_EMBEDDING_STRATEGY);
                 }
             }
         }

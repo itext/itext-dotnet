@@ -47,6 +47,7 @@ using System.IO;
 using System.Text;
 using Common.Logging;
 using iText.Forms.Fields.Borders;
+using iText.Forms.Exceptions;
 using iText.Forms.Util;
 using iText.IO.Codec;
 using iText.IO.Font;
@@ -2911,7 +2912,7 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 PdfArray kids = field.GetAsArray(PdfName.Kids);
                 if (kids == null) {
-                    throw new PdfException(PdfException.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD);
+                    throw new PdfException(FormsExceptionMessageConstant.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD);
                 }
                 rect = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
             }

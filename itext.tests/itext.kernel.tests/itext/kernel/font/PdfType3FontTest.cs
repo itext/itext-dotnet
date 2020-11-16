@@ -24,6 +24,7 @@ using System;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -175,7 +176,8 @@ namespace iText.Kernel.Font {
             PdfType3Font type3Font = new PdfType3FontTest.DisableEnsureUnderlyingObjectHasIndirectReference(this, dictionary
                 );
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => type3Font.Flush());
-            NUnit.Framework.Assert.AreEqual(PdfException.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -246,7 +248,7 @@ namespace iText.Kernel.Font {
             dictionary.Put(PdfName.ToUnicode, PdfName.IdentityH);
             dictionary.Put(PdfName.Encoding, new PdfName("zapfdingbatsencoding"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType3Font(dictionary));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY
                 , PdfName.FontMatrix), e.Message);
         }
 
@@ -257,7 +259,7 @@ namespace iText.Kernel.Font {
             dictionary.Put(PdfName.ToUnicode, PdfName.IdentityH);
             dictionary.Put(PdfName.Encoding, new PdfName("zapfdingbatsencoding"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType3Font(dictionary));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY
                 , PdfName.Widths), e.Message);
         }
 

@@ -46,6 +46,7 @@ using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -351,7 +352,7 @@ namespace iText.Layout {
         /// <summary>Checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (GetPdfDocument().IsClosed()) {
-                throw new PdfException(PdfException.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION);
+                throw new PdfException(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION);
             }
         }
     }

@@ -45,6 +45,7 @@ using System;
 using Common.Logging;
 using iText.Kernel;
 using iText.Kernel.Geom;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
@@ -91,7 +92,7 @@ namespace iText.Kernel.Pdf.Xobject {
                     return new PdfImageXObject(stream);
                 }
                 else {
-                    throw new NotSupportedException(PdfException.UNSUPPORTED_XOBJECT_TYPE);
+                    throw new NotSupportedException(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE);
                 }
             }
         }

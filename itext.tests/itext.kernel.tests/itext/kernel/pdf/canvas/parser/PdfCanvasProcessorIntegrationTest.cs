@@ -47,6 +47,7 @@ using System.Text;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Colors;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;

@@ -49,6 +49,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto.Securityhandler;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Filters;
 using iText.Kernel.XMP;
 
@@ -297,7 +298,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>true, if PdfReader rebuilt Cross-Reference section.</returns>
         public virtual bool HasRebuiltXref() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return rebuiltXref;
         }
@@ -309,7 +310,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>true, if the document has hybrid Cross-Reference section.</returns>
         public virtual bool HasHybridXref() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return hybridXref;
         }
@@ -318,7 +319,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>true, if the document has Cross-Reference Streams.</returns>
         public virtual bool HasXrefStm() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return xrefStm;
         }
@@ -334,7 +335,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>true, if PdfReader fixed offsets of PdfObjects.</returns>
         public virtual bool HasFixedXref() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return fixedXref;
         }
@@ -343,7 +344,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>-1 if Cross-Reference table has rebuilt, otherwise position of the last Cross-Reference table.</returns>
         public virtual long GetLastXref() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return lastXref;
         }
@@ -528,7 +529,8 @@ namespace iText.Kernel.Pdf {
                 PdfName filterName = (PdfName)filters.Get(j);
                 IFilterHandler filterHandler = filterHandlers.Get(filterName);
                 if (filterHandler == null) {
-                    throw new PdfException(PdfException.THIS_FILTER_IS_NOT_SUPPORTED).SetMessageParams(filterName);
+                    throw new PdfException(KernelExceptionMessageConstant.THIS_FILTER_IS_NOT_SUPPORTED).SetMessageParams(filterName
+                        );
                 }
                 PdfDictionary decodeParams;
                 if (j < dp.Size()) {
@@ -541,8 +543,8 @@ namespace iText.Kernel.Pdf {
                             decodeParams = (PdfDictionary)dpEntry;
                         }
                         else {
-                            throw new PdfException(PdfException.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED).SetMessageParams(dpEntry.
-                                GetType().ToString());
+                            throw new PdfException(KernelExceptionMessageConstant.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED).SetMessageParams
+                                (dpEntry.GetType().ToString());
                         }
                     }
                 }
@@ -594,7 +596,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual bool IsOpenedWithFullPermission() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return !encrypted || decrypt.IsOpenedWithFullPermission() || unethicalReading;
         }
@@ -613,7 +615,7 @@ namespace iText.Kernel.Pdf {
             * when this method would work incorrectly right now.
             */
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             long perm = 0;
             if (encrypted && decrypt.GetPermissions() != null) {
@@ -631,7 +633,7 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             if (decrypt == null) {
                 return -1;
@@ -675,7 +677,7 @@ namespace iText.Kernel.Pdf {
         ///     </returns>
         public virtual byte[] ComputeUserPassword() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             if (!encrypted || !decrypt.IsOpenedWithFullPermission()) {
                 return null;
@@ -702,7 +704,7 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="PdfDocument.GetOriginalDocumentId()"/>
         public virtual byte[] GetOriginalFileId() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             PdfArray id = trailer.GetAsArray(PdfName.ID);
             if (id != null && id.Size() == 2) {
@@ -732,7 +734,7 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="PdfDocument.GetModifiedDocumentId()"/>
         public virtual byte[] GetModifiedFileId() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             PdfArray id = trailer.GetAsArray(PdfName.ID);
             if (id != null && id.Size() == 2) {
@@ -758,7 +760,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual bool IsEncrypted() {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
             return encrypted;
         }
@@ -770,7 +772,7 @@ namespace iText.Kernel.Pdf {
                 this.headerPdfVersion = PdfVersion.FromString(version);
             }
             catch (ArgumentException) {
-                throw new PdfException(PdfException.PDF_VERSION_IS_NOT_VALID, version);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_VERSION_IS_NOT_VALID, version);
             }
             try {
                 ReadXref();
@@ -817,7 +819,7 @@ namespace iText.Kernel.Pdf {
                     address[k] = tokens.GetIntValue() + first;
                 }
                 if (!ok) {
-                    throw new PdfException(PdfException.ERROR_WHILE_READING_OBJECT_STREAM);
+                    throw new PdfException(KernelExceptionMessageConstant.ERROR_WHILE_READING_OBJECT_STREAM);
                 }
                 for (int k = 0; k < n; ++k) {
                     tokens.Seek(address[k]);
@@ -882,8 +884,8 @@ namespace iText.Kernel.Pdf {
                         return CreatePdfNullInstance(readAsDirect);
                     }
                     else {
-                        throw new PdfException(PdfException.INVALID_INDIRECT_REFERENCE, MessageFormatUtil.Format("{0} {1} R", reference
-                            .GetObjNumber(), reference.GetGenNumber()));
+                        throw new PdfException(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, MessageFormatUtil.Format
+                            ("{0} {1} R", reference.GetObjNumber(), reference.GetGenNumber()));
                     }
                 }
             }
@@ -963,7 +965,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case PdfTokenizer.TokenType.EndOfFile: {
-                    throw new PdfException(PdfException.UNEXPECTED_END_OF_FILE);
+                    throw new PdfException(KernelExceptionMessageConstant.UNEXPECTED_END_OF_FILE);
                 }
 
                 default: {
@@ -1014,16 +1016,17 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
                 if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    tokens.ThrowError(PdfException.THIS_DICTIONARY_KEY_IS_NOT_A_NAME, tokens.GetStringValue());
+                    tokens.ThrowError(KernelExceptionMessageConstant.THIS_DICTIONARY_KEY_IS_NOT_A_NAME, tokens.GetStringValue(
+                        ));
                 }
                 PdfName name = ReadPdfName(true);
                 PdfObject obj = ReadObject(true, objStm);
                 if (obj == null) {
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(PdfException.UNEXPECTED_GT_GT);
+                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                        tokens.ThrowError(PdfException.UNEXPECTED_CLOSE_BRACKET);
+                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
                     }
                 }
                 dic.Put(name, obj);
@@ -1040,7 +1043,7 @@ namespace iText.Kernel.Pdf {
                         break;
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                        tokens.ThrowError(PdfException.UNEXPECTED_GT_GT);
+                        tokens.ThrowError(KernelExceptionMessageConstant.UNEXPECTED_GT_GT);
                     }
                 }
                 array.Add(obj);
@@ -1052,11 +1055,11 @@ namespace iText.Kernel.Pdf {
             tokens.Seek(tokens.GetStartxref());
             tokens.NextToken();
             if (!tokens.TokenValueEqualsTo(PdfTokenizer.Startxref)) {
-                throw new PdfException(PdfException.PDF_STARTXREF_NOT_FOUND, tokens);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND, tokens);
             }
             tokens.NextToken();
             if (tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
-                throw new PdfException(PdfException.PDF_STARTXREF_IS_NOT_FOLLOWED_BY_A_NUMBER, tokens);
+                throw new PdfException(KernelExceptionMessageConstant.PDF_STARTXREF_IS_NOT_FOLLOWED_BY_A_NUMBER, tokens);
             }
             long startxref = tokens.GetLongValue();
             lastXref = startxref;
@@ -1084,7 +1087,8 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
                 if (prev.LongValue() == startxref) {
-                    throw new PdfException(PdfException.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION);
+                    throw new PdfException(KernelExceptionMessageConstant.TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION
+                        );
                 }
                 startxref = prev.LongValue();
                 tokens.Seek(startxref);
@@ -1092,14 +1096,14 @@ namespace iText.Kernel.Pdf {
             }
             int? xrefSize = trailer.GetAsInt(PdfName.Size);
             if (xrefSize == null) {
-                throw new PdfException(PdfException.INVALID_XREF_TABLE);
+                throw new PdfException(KernelExceptionMessageConstant.INVALID_XREF_TABLE);
             }
         }
 
         protected internal virtual PdfDictionary ReadXrefSection() {
             tokens.NextValidToken();
             if (!tokens.TokenValueEqualsTo(PdfTokenizer.Xref)) {
-                tokens.ThrowError(PdfException.XREF_SUBSECTION_NOT_FOUND);
+                tokens.ThrowError(KernelExceptionMessageConstant.XREF_SUBSECTION_NOT_FOUND);
             }
             PdfXrefTable xref = pdfDocument.GetXref();
             while (true) {
@@ -1108,12 +1112,13 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
                 if (tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
-                    tokens.ThrowError(PdfException.OBJECT_NUMBER_OF_THE_FIRST_OBJECT_IN_THIS_XREF_SUBSECTION_NOT_FOUND);
+                    tokens.ThrowError(KernelExceptionMessageConstant.OBJECT_NUMBER_OF_THE_FIRST_OBJECT_IN_THIS_XREF_SUBSECTION_NOT_FOUND
+                        );
                 }
                 int start = tokens.GetIntValue();
                 tokens.NextValidToken();
                 if (tokens.GetTokenType() != PdfTokenizer.TokenType.Number) {
-                    tokens.ThrowError(PdfException.NUMBER_OF_ENTRIES_IN_THIS_XREF_SUBSECTION_NOT_FOUND);
+                    tokens.ThrowError(KernelExceptionMessageConstant.NUMBER_OF_ENTRIES_IN_THIS_XREF_SUBSECTION_NOT_FOUND);
                 }
                 int end = tokens.GetIntValue() + start;
                 for (int num = start; num < end; num++) {
@@ -1157,7 +1162,8 @@ namespace iText.Kernel.Pdf {
                     }
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.N)) {
                         if (pos == 0) {
-                            tokens.ThrowError(PdfException.FILE_POSITION_0_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION);
+                            tokens.ThrowError(KernelExceptionMessageConstant.FILE_POSITION_0_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION
+                                );
                         }
                     }
                     else {
@@ -1167,7 +1173,7 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         else {
-                            tokens.ThrowError(PdfException.INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION);
+                            tokens.ThrowError(KernelExceptionMessageConstant.INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION);
                         }
                     }
                     if (refFirstEncountered) {
@@ -1292,7 +1298,7 @@ namespace iText.Kernel.Pdf {
                             }
 
                             default: {
-                                throw new PdfException(PdfException.INVALID_XREF_STREAM);
+                                throw new PdfException(KernelExceptionMessageConstant.INVALID_XREF_STREAM);
                             }
                         }
                         PdfIndirectReference reference = xref.Get(@base);
@@ -1400,7 +1406,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (trailer == null) {
-                throw new PdfException(PdfException.TRAILER_NOT_FOUND);
+                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
             }
         }
 
@@ -1420,7 +1426,7 @@ namespace iText.Kernel.Pdf {
             PdfName filter = enc.GetAsName(PdfName.Filter);
             if (PdfName.Adobe_PubSec.Equals(filter)) {
                 if (properties.certificate == null) {
-                    throw new PdfException(PdfException.CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE
+                    throw new PdfException(KernelExceptionMessageConstant.CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE
                         );
                 }
                 decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
@@ -1490,7 +1496,7 @@ namespace iText.Kernel.Pdf {
                             tokens.NextValidToken();
                             if (tokens.GetTokenType() != PdfTokenizer.TokenType.Obj || tokens.GetObjNr() != reference.GetObjNumber() ||
                                  tokens.GetGenNr() != reference.GetGenNumber()) {
-                                tokens.ThrowError(PdfException.INVALID_OFFSET_FOR_THIS_OBJECT, reference.ToString());
+                                tokens.ThrowError(KernelExceptionMessageConstant.INVALID_OFFSET_FOR_THIS_OBJECT, reference.ToString());
                             }
                             @object = ReadObject(false);
                         }
@@ -1511,7 +1517,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CANNOT_READ_PDF_OBJECT, e);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_READ_PDF_OBJECT, e);
             }
         }
 

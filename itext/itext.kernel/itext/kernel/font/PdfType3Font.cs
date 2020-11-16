@@ -48,6 +48,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
@@ -478,7 +479,7 @@ namespace iText.Kernel.Font {
 
         private void FlushFontData() {
             if (((Type3Font)GetFontProgram()).GetNumberOfGlyphs() < 1) {
-                throw new PdfException(PdfException.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT);
+                throw new PdfException(KernelExceptionMessageConstant.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT);
             }
             PdfDictionary charProcs = new PdfDictionary();
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
@@ -513,7 +514,7 @@ namespace iText.Kernel.Font {
         private double[] ReadWidths(PdfDictionary fontDictionary) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);
             if (pdfWidths == null) {
-                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.Widths);
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams(PdfName.Widths);
             }
             double[] widths = new double[pdfWidths.Size()];
             for (int i = 0; i < pdfWidths.Size(); i++) {
@@ -548,7 +549,7 @@ namespace iText.Kernel.Font {
         private double[] ReadFontMatrix() {
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (fontMatrixArray == null) {
-                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.FontMatrix
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams(PdfName.FontMatrix
                     );
             }
             double[] fontMatrix = new double[6];

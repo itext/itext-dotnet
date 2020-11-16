@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
@@ -149,7 +150,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     PdfDictionary top = GetTopmostParent(mcr);
                     if (top != null) {
                         if (top.IsFlushed()) {
-                            throw new PdfException(PdfException.CANNOT_MOVE_FLUSHED_TAG);
+                            throw new PdfException(KernelExceptionMessageConstant.CANNOT_MOVE_FLUSHED_TAG);
                         }
                         topsToMove.Add(top);
                     }
@@ -206,7 +207,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         firstPartElems.Add(mcr.GetPdfObject());
                         PdfDictionary top = AddAllParentsToSet(mcr, firstPartElems);
                         if (top != null && top.IsFlushed()) {
-                            throw new PdfException(PdfException.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
+                            throw new PdfException(KernelExceptionMessageConstant.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
                                 );
                         }
                     }
@@ -320,7 +321,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         PdfDictionary top = AddAllParentsToSet(mcr, objectsToCopy);
                         if (top != null) {
                             if (top.IsFlushed()) {
-                                throw new PdfException(PdfException.CANNOT_COPY_FLUSHED_TAG);
+                                throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_FLUSHED_TAG);
                             }
                             if (!topsToFirstDestPage.ContainsKey(top)) {
                                 topsToFirstDestPage.Put(top, page.Value.GetPdfObject());
@@ -540,7 +541,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         }
                         else {
                             if (dictKid.IsFlushed()) {
-                                throw new PdfException(PdfException.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
+                                throw new PdfException(KernelExceptionMessageConstant.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
                                     );
                             }
                             // elems with no kids will not be marked as from the first part,

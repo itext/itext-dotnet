@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Threading;
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Counter.Data;
 using iText.Kernel.Counter.Event;
 using iText.Test;
@@ -63,7 +63,8 @@ namespace iText.Kernel.Counter {
             counter.Close();
             Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => counter.OnEvent(testEvent
                 , null));
-            NUnit.Framework.Assert.AreEqual(PdfException.DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED, e.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]

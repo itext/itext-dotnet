@@ -49,6 +49,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Renderer;
 
 namespace iText.Layout {
@@ -325,7 +326,7 @@ namespace iText.Layout {
 
         private static PdfCanvas InitPdfCanvasOrThrowIfPageIsFlushed(PdfPage page) {
             if (page.IsFlushed()) {
-                throw new PdfException(PdfException.CANNOT_DRAW_ELEMENTS_ON_ALREADY_FLUSHED_PAGES);
+                throw new PdfException(LayoutExceptionMessageConstant.CANNOT_DRAW_ELEMENTS_ON_ALREADY_FLUSHED_PAGES);
             }
             return new PdfCanvas(page);
         }

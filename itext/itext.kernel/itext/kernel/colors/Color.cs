@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
@@ -245,7 +246,7 @@ namespace iText.Kernel.Colors {
         /// <param name="value">new color value</param>
         public virtual void SetColorValue(float[] value) {
             if (colorValue.Length != value.Length) {
-                throw new PdfException(PdfException.INCORRECT_NUMBER_OF_COMPONENTS, this);
+                throw new PdfException(KernelExceptionMessageConstant.INCORRECT_NUMBER_OF_COMPONENTS, this);
             }
             colorValue = value;
         }

@@ -56,6 +56,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.Util;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa;
+using iText.Pdfa.Exceptions;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -311,7 +312,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.CANNOT_PARSE_CONTENT_STREAM, e);
+                    throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
                 }
             }
         }

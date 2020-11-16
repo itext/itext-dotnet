@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Kernel {
+namespace iText.Kernel.Logs {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelLogMessageConstant {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";

@@ -49,6 +49,7 @@ using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Colorspace;
@@ -629,7 +630,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private static ImageData CheckImageType(ImageData image) {
             if (image is WmfImageData) {
-                throw new PdfException(PdfException.CANNOT_CREATE_PDF_IMAGE_XOBJECT_BY_WMF_IMAGE);
+                throw new PdfException(KernelExceptionMessageConstant.CANNOT_CREATE_PDF_IMAGE_XOBJECT_BY_WMF_IMAGE);
             }
             return image;
         }

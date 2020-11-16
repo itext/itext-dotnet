@@ -51,6 +51,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
@@ -493,7 +494,7 @@ namespace iText.Signatures {
                         break;
                     }
                     if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                        tokens.ThrowError(PdfException.THIS_DICTIONARY_KEY_IS_NOT_A_NAME, tokens.GetStringValue());
+                        tokens.ThrowError(SignExceptionMessageConstant.DICTIONARY_THIS_KEY_IS_NOT_A_NAME, tokens.GetStringValue());
                     }
                     PdfName name = ReadPdfName(true);
                     PdfObject obj;
@@ -525,10 +526,10 @@ namespace iText.Signatures {
                     }
                     if (obj == null) {
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                            tokens.ThrowError(PdfException.UNEXPECTED_GT_GT);
+                            tokens.ThrowError(SignExceptionMessageConstant.UNEXPECTED_GT_GT);
                         }
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                            tokens.ThrowError(PdfException.UNEXPECTED_CLOSE_BRACKET);
+                            tokens.ThrowError(SignExceptionMessageConstant.UNEXPECTED_CLOSE_BRACKET);
                         }
                     }
                     dic.Put(name, obj);

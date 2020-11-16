@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
@@ -106,7 +107,7 @@ namespace iText.Kernel.Pdf {
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
             if (pdfObject == null) {
-                throw new PdfException(PdfException.DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT);
+                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
             GetPdfObject().Put(PdfName.Type, PdfName.Catalog);

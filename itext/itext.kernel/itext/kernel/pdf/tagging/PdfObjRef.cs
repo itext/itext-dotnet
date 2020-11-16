@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
@@ -75,7 +76,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private static PdfDocument GetDocEnsureIndirect(PdfStructElem structElem) {
             PdfIndirectReference indRef = structElem.GetPdfObject().GetIndirectReference();
             if (indRef == null) {
-                throw new PdfException(PdfException.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
+                throw new PdfException(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                     );
             }
             return indRef.GetDocument();
