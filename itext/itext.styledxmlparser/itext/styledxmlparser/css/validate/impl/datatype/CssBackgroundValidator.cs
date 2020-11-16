@@ -78,12 +78,9 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (IsPropertyValueCorrespondsPropertyType(propertyValues[index])) {
                 if (propertyValues.Count == MAX_AMOUNT_OF_VALUES) {
                     if (IsMultiValueAllowedForThisType() && IsMultiValueAllowedForThisValue(propertyValues[index])) {
-                        // TODO DEVSIX-2106 Some extra validations for currently not supported properties.
                         return CheckMultiValuePositionXY(propertyValues, index);
                     }
-                    else {
-                        return false;
-                    }
+                    return false;
                 }
                 return true;
             }
