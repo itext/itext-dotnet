@@ -63,7 +63,7 @@ namespace iText.Kernel.Counter {
             counter.Close();
             Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => counter.OnEvent(testEvent
                 , null));
-            NUnit.Framework.Assert.AreEqual(PdfException.DataHandlerCounterHasBeenDisabled, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED, e.Message);
         }
 
         [NUnit.Framework.Test]

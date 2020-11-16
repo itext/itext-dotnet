@@ -59,7 +59,7 @@ namespace iText.Kernel.Pdf {
         /// method).
         /// </param>
         public MemoryLimitsAwareException(Exception cause)
-            : this(UnknownPdfException, cause) {
+            : this(UNKNOWN_PDF_EXCEPTION, cause) {
         }
 
         /// <summary>Creates a new instance of MemoryLimitsAwareException.</summary>

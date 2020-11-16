@@ -147,7 +147,7 @@ namespace iText.Layout.Renderer {
                 EnsureDocumentHasNPages(pageNum, null);
                 PdfPage correspondingPage = pdfDocument.GetPage(pageNum);
                 if (correspondingPage.IsFlushed()) {
-                    throw new PdfException(PdfException.CannotDrawElementsOnAlreadyFlushedPages);
+                    throw new PdfException(PdfException.CANNOT_DRAW_ELEMENTS_ON_ALREADY_FLUSHED_PAGES);
                 }
                 bool wrapOldContent = pdfDocument.GetReader() != null && pdfDocument.GetWriter() != null && correspondingPage
                     .GetContentStreamCount() > 0 && correspondingPage.GetLastContentStream().GetLength() > 0 && !wrappedContentPage

@@ -111,7 +111,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestSingleStream(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed;
+            String expectedExceptionMessage = PdfException.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int limit = handler.GetMaxSizeOfSingleDecompressedPdfStream();
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestMultipleStreams(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = PdfException.DuringDecompressionMultipleStreamsInSumOccupiedMoreMemoryThanAllowed;
+            String expectedExceptionMessage = PdfException.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int i = 0;

@@ -751,7 +751,7 @@ namespace iText.Layout.Element {
 
         private static ImageData CheckImageType(ImageData image) {
             if (image is WmfImageData) {
-                throw new PdfException(PdfException.CannotCreateLayoutImageByWmfImage);
+                throw new PdfException(PdfException.CANNOT_CREATE_LAYOUT_IMAGE_BY_WMF_IMAGE);
             }
             return image;
         }

@@ -70,7 +70,7 @@ namespace iText.Kernel.Colors {
             Color color = Color.MakeColor(PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB), colorValues);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => color.SetColorValue(new float[] { 0.1f
                 , 0.2f }));
-            NUnit.Framework.Assert.AreEqual(PdfException.IncorrectNumberOfComponents, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.INCORRECT_NUMBER_OF_COMPONENTS, e.Message);
         }
 
         [NUnit.Framework.Test]

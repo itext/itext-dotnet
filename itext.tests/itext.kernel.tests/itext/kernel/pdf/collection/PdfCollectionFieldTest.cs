@@ -163,7 +163,7 @@ namespace iText.Kernel.Pdf.Collection {
             // this line will throw an exception as getValue() method is not
             // supported for subType which differs from S, N and D.
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => field.GetValue(stringValue));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException._1IsNotAnAcceptableValueForTheField2
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException._1_IS_NOT_AN_ACCEPTABLE_VALUE_FOR_THE_FIELD_2
                 , stringValue, fieldName), e.Message);
         }
 

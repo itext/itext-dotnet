@@ -117,7 +117,7 @@ namespace iText.Kernel.Pdf {
         public PdfStream(PdfDocument doc, Stream inputStream, int compressionLevel)
             : base() {
             if (doc == null) {
-                throw new PdfException(PdfException.CannotCreatePdfStreamByInputStreamWithoutPdfDocument);
+                throw new PdfException(PdfException.CANNOT_CREATE_PDFSTREAM_BY_INPUT_STREAM_WITHOUT_PDF_DOCUMENT);
             }
             MakeIndirect(doc);
             if (inputStream == null) {
@@ -273,7 +273,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual byte[] GetBytes(bool decoded) {
             if (IsFlushed()) {
-                throw new PdfException(PdfException.CannotOperateWithFlushedPdfStream);
+                throw new PdfException(PdfException.CANNOT_OPERATE_WITH_FLUSHED_PDF_STREAM);
             }
             if (inputStream != null) {
                 LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream." + "getBytes() always returns null in this case"
@@ -292,7 +292,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 catch (System.IO.IOException ioe) {
-                    throw new PdfException(PdfException.CannotGetPdfStreamBytes, ioe, this);
+                    throw new PdfException(PdfException.CANNOT_GET_PDF_STREAM_BYTES, ioe, this);
                 }
             }
             else {
@@ -305,7 +305,7 @@ namespace iText.Kernel.Pdf {
                             bytes = reader.ReadStreamBytes(this, decoded);
                         }
                         catch (System.IO.IOException ioe) {
-                            throw new PdfException(PdfException.CannotGetPdfStreamBytes, ioe, this);
+                            throw new PdfException(PdfException.CANNOT_GET_PDF_STREAM_BYTES, ioe, this);
                         }
                     }
                 }
@@ -343,10 +343,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void SetData(byte[] bytes, bool append) {
             if (IsFlushed()) {
-                throw new PdfException(PdfException.CannotOperateWithFlushedPdfStream);
+                throw new PdfException(PdfException.CANNOT_OPERATE_WITH_FLUSHED_PDF_STREAM);
             }
             if (inputStream != null) {
-                throw new PdfException(PdfException.CannotSetDataToPdfStreamWhichWasCreatedByInputStream);
+                throw new PdfException(PdfException.CANNOT_SET_DATA_TO_PDF_STREAM_WHICH_WAS_CREATED_BY_INPUT_STREAM);
             }
             bool outputStreamIsUninitialized = outputStream == null;
             if (outputStreamIsUninitialized) {
@@ -362,7 +362,7 @@ namespace iText.Kernel.Pdf {
                         oldBytes = GetBytes();
                     }
                     catch (PdfException ex) {
-                        throw new PdfException(PdfException.CannotReadAStreamInOrderToAppendNewBytes, ex);
+                        throw new PdfException(PdfException.CANNOT_READ_A_STREAM_IN_ORDER_TO_APPEND_NEW_BYTES, ex);
                     }
                     outputStream.AssignBytes(oldBytes, oldBytes.Length);
                 }
@@ -410,7 +410,7 @@ namespace iText.Kernel.Pdf {
                 outputStream.Write(bytes);
             }
             catch (System.IO.IOException ioe) {
-                throw new PdfException(PdfException.CannotCopyObjectContent, ioe, stream);
+                throw new PdfException(PdfException.CANNOT_COPY_OBJECT_CONTENT, ioe, stream);
             }
         }
 
@@ -430,7 +430,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoException, e);
+                throw new PdfException(PdfException.IO_EXCEPTION, e);
             }
         }
 

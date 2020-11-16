@@ -81,11 +81,11 @@ namespace iText.Kernel.Font {
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
-                throw new PdfException(PdfException.OnlyIdentityCMapsSupportsWithTrueType);
+                throw new PdfException(PdfException.ONLY_IDENTITY_CMAPS_SUPPORTS_WITH_TRUETYPE);
             }
             if (!ttf.GetFontNames().AllowEmbedding()) {
-                throw new PdfException(PdfException.CannotBeEmbeddedDueToLicensingRestrictions).SetMessageParams(ttf.GetFontNames
-                    ().GetFontName() + ttf.GetFontNames().GetStyle());
+                throw new PdfException(PdfException.CANNOT_BE_EMBEDDED_DUE_TO_LICENSING_RESTRICTIONS).SetMessageParams(ttf
+                    .GetFontNames().GetFontName() + ttf.GetFontNames().GetStyle());
             }
             this.fontProgram = ttf;
             this.embedded = true;
@@ -170,8 +170,8 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (fontProgram == null) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CannotRecogniseDocumentFontWithEncoding, cidFontName
-                        , cmap));
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CANNOT_RECOGNISE_DOCUMENT_FONT_WITH_ENCODING, 
+                        cidFontName, cmap));
                 }
             }
             // DescendantFonts is a one-element array specifying the CIDFont dictionary that is the descendant of this Type 0 font.

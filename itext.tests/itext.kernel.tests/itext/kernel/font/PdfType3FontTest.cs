@@ -175,7 +175,7 @@ namespace iText.Kernel.Font {
             PdfType3Font type3Font = new PdfType3FontTest.DisableEnsureUnderlyingObjectHasIndirectReference(this, dictionary
                 );
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => type3Font.Flush());
-            NUnit.Framework.Assert.AreEqual(PdfException.NoGlyphsDefinedForType3Font, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT, e.Message);
         }
 
         [NUnit.Framework.Test]

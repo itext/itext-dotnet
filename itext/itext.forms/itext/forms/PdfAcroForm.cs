@@ -735,7 +735,7 @@ namespace iText.Forms {
         /// </remarks>
         public virtual void FlattenFields() {
             if (document.IsAppendMode()) {
-                throw new PdfException(PdfException.FieldFlatteningIsNotSupportedInAppendMode);
+                throw new PdfException(PdfException.FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE);
             }
             ICollection<PdfFormField> fields;
             if (fieldsForFlattening.Count == 0) {
@@ -805,7 +805,8 @@ namespace iText.Forms {
                         xObject.Put(PdfName.Subtype, PdfName.Form);
                         Rectangle annotBBox = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                            throw new PdfException(PdfException.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                                );
                         }
                         PdfCanvas canvas = new PdfCanvas(page, !wrappedPages.Contains(page));
                         wrappedPages.Add(page);
@@ -1101,7 +1102,8 @@ namespace iText.Forms {
             PdfDictionary pageDic = annot.GetPageObject();
             if (pageDic != null) {
                 if (warnIfPageFlushed && pageDic.IsFlushed()) {
-                    throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
+                    throw new PdfException(PdfException.PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING
+                        );
                 }
                 PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
                 PdfPage widgetPage = doc.GetPage(pageDic);

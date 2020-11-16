@@ -580,15 +580,15 @@ namespace iText.Barcodes {
             int pad;
             if ((options & PDF417_USE_RAW_CODEWORDS) != 0) {
                 if (lenCodewords > MAX_DATA_CODEWORDS || lenCodewords < 1 || lenCodewords != codewords[0]) {
-                    throw new PdfException(PdfException.InvalidCodewordSize);
+                    throw new PdfException(PdfException.INVALID_CODEWORD_SIZE);
                 }
             }
             else {
                 if (code == null) {
-                    throw new PdfException(PdfException.TextCannotBeNull);
+                    throw new PdfException(PdfException.TEXT_CANNOT_BE_NULL);
                 }
                 if (code.Length > ABSOLUTE_MAX_TEXT_SIZE) {
-                    throw new PdfException(PdfException.TextIsTooBig);
+                    throw new PdfException(PdfException.TEXT_IS_TOO_BIG);
                 }
                 segmentList = new BarcodePDF417.SegmentList();
                 BreakString();
@@ -1175,7 +1175,7 @@ namespace iText.Barcodes {
             int j;
             int size = length / 6 * 5 + length % 6;
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(PdfException.TextIsTooBig);
+                throw new PdfException(PdfException.TEXT_IS_TOO_BIG);
             }
             length += start;
             for (k = start; k < length; k += 6) {
@@ -1373,7 +1373,7 @@ namespace iText.Barcodes {
                 size = full + size / 3 + 1;
             }
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(PdfException.TextIsTooBig);
+                throw new PdfException(PdfException.TEXT_IS_TOO_BIG);
             }
             length += start;
             for (k = start; k < length; k += 44) {
@@ -1384,13 +1384,13 @@ namespace iText.Barcodes {
 
         private void MacroCodes() {
             if (macroSegmentId < 0) {
-                throw new PdfException(PdfException.MacroSegmentIdMustBeGtOrEqZero);
+                throw new PdfException(PdfException.MACRO_SEGMENT_ID_MUST_BE_GT_OR_EQ_ZERO);
             }
             if (macroSegmentId >= macroSegmentCount) {
-                throw new PdfException(PdfException.MacroSegmentIdMustBeLtMacroSegmentCount);
+                throw new PdfException(PdfException.MACRO_SEGMENT_ID_MUST_BE_LT_MACRO_SEGMENT_COUNT);
             }
             if (macroSegmentCount < 1) {
-                throw new PdfException(PdfException.MacroSegmentIdMustBeGtZero);
+                throw new PdfException(PdfException.MACRO_SEGMENT_ID_MUST_BE_GT_ZERO);
             }
             macroIndex = cwPtr;
             codewords[cwPtr++] = MACRO_SEGMENT_ID;
@@ -1578,7 +1578,7 @@ namespace iText.Barcodes {
             }
             size = (ptr + fullBytes) / 2;
             if (size + cwPtr > MAX_DATA_CODEWORDS) {
-                throw new PdfException(PdfException.TextIsTooBig);
+                throw new PdfException(PdfException.TEXT_IS_TOO_BIG);
             }
             length = ptr;
             ptr = 0;

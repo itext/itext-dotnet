@@ -493,7 +493,7 @@ namespace iText.Signatures {
                         break;
                     }
                     if (tokens.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                        tokens.ThrowError(PdfException.DictionaryKey1IsNotAName, tokens.GetStringValue());
+                        tokens.ThrowError(PdfException.DICTIONARY_KEY_1_IS_NOT_A_NAME, tokens.GetStringValue());
                     }
                     PdfName name = ReadPdfName(true);
                     PdfObject obj;
@@ -525,10 +525,10 @@ namespace iText.Signatures {
                     }
                     if (obj == null) {
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
-                            tokens.ThrowError(PdfException.UnexpectedGtGt);
+                            tokens.ThrowError(PdfException.UNEXPECTED_GT_GT);
                         }
                         if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
-                            tokens.ThrowError(PdfException.UnexpectedCloseBracket);
+                            tokens.ThrowError(PdfException.UNEXPECTED_CLOSE_BRACKET);
                         }
                     }
                     dic.Put(name, obj);

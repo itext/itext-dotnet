@@ -636,23 +636,23 @@ namespace iText.Kernel.Pdf {
                 document.GetPage(-30);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30
-                    ), e.Message);
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    , -30), e.Message);
             }
             try {
                 document.GetPage(0);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0)
-                    , e.Message);
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    , 0), e.Message);
             }
             document.GetPage(1);
             try {
                 document.GetPage(25);
             }
             catch (IndexOutOfRangeException e) {
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25
-                    ), e.Message);
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    , 25), e.Message);
             }
             document.Close();
         }
@@ -710,7 +710,8 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.Fail("Expect exception");
             }
             catch (PdfException e) {
-                NUnit.Framework.Assert.AreEqual(PdfException.InvalidPageStructurePagesPagesMustBePdfDictionary, e.Message);
+                NUnit.Framework.Assert.AreEqual(PdfException.INVALID_PAGE_STRUCTURE_PAGES_MUST_BE_PDF_DICTIONARY, e.Message
+                    );
             }
             finally {
                 reader.Close();
@@ -1452,7 +1453,7 @@ namespace iText.Kernel.Pdf {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc1 = new PdfDocument(reader);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-            NUnit.Framework.Assert.AreEqual(PdfException.PdfReaderHasBeenAlreadyUtilized, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.PDF_READER_HAS_BEEN_ALREADY_UTILIZED, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1503,7 +1504,7 @@ namespace iText.Kernel.Pdf {
             PdfReader hasRebuiltXrefReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => hasRebuiltXrefReader.HasRebuiltXref
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1529,7 +1530,7 @@ namespace iText.Kernel.Pdf {
             PdfReader hasHybridXrefPdfReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => hasHybridXrefPdfReader.HasHybridXref
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1554,7 +1555,7 @@ namespace iText.Kernel.Pdf {
         public virtual void HasXrefStmPdfDocumentNotReadTest() {
             PdfReader hasXrefStmReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => hasXrefStmReader.HasXrefStm());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1579,7 +1580,7 @@ namespace iText.Kernel.Pdf {
         public virtual void HasFixedXrefPdfDocumentNotReadTest() {
             PdfReader hasFixedXrefReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => hasFixedXrefReader.HasFixedXref());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1604,7 +1605,7 @@ namespace iText.Kernel.Pdf {
         public virtual void GetLastXrefPdfDocumentNotReadTest() {
             PdfReader getLastXrefReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getLastXrefReader.GetLastXref());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1630,7 +1631,7 @@ namespace iText.Kernel.Pdf {
             PdfReader getPermissionsReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getPermissionsReader.GetPermissions
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1656,7 +1657,7 @@ namespace iText.Kernel.Pdf {
             PdfReader isOpenedWithFullPReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => isOpenedWithFullPReader.IsOpenedWithFullPermission
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1682,7 +1683,7 @@ namespace iText.Kernel.Pdf {
             PdfReader getCryptoModeReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getCryptoModeReader.GetCryptoMode()
                 );
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1708,7 +1709,7 @@ namespace iText.Kernel.Pdf {
             PdfReader computeUserPasswordReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => computeUserPasswordReader.ComputeUserPassword
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1734,7 +1735,7 @@ namespace iText.Kernel.Pdf {
             PdfReader getOriginalFileIdReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getOriginalFileIdReader.GetOriginalFileId
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1760,7 +1761,7 @@ namespace iText.Kernel.Pdf {
             PdfReader getModifiedFileIdReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getModifiedFileIdReader.GetModifiedFileId
                 ());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1785,7 +1786,7 @@ namespace iText.Kernel.Pdf {
         public virtual void IsEncryptedPdfDocumentNotReadTest() {
             PdfReader isEncryptedReader = PdfDocumentNotReadTestInit();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => isEncryptedReader.IsEncrypted());
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1819,7 +1820,7 @@ namespace iText.Kernel.Pdf {
 
         private void ReadingNotCompletedTest(PdfReader reader) {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNotBeenReadYet, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         private static PdfDictionary GetTestPdfDictionary() {

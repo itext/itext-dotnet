@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf.Collection {
             // method should be exactly the same as number of keys of PdfCollectionSort
             // here we have one key but two params
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscendings));
-            NUnit.Framework.Assert.AreEqual(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary, e.Message
+            NUnit.Framework.Assert.AreEqual(PdfException.YOU_NEED_A_SINGLE_BOOLEAN_FOR_THIS_COLLECTION_SORT_DICTIONARY, e.Message
                 );
         }
 
@@ -108,7 +108,7 @@ namespace iText.Kernel.Pdf.Collection {
             // method should be exactly the same as number of keys of PdfCollectionSort
             // here we have three keys but one param
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscending));
-            NUnit.Framework.Assert.AreEqual(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary, 
+            NUnit.Framework.Assert.AreEqual(PdfException.YOU_HAVE_TO_DEFINE_A_BOOLEAN_ARRAY_FOR_THIS_COLLECTION_SORT_DICTIONARY, 
                 e.Message);
         }
 
@@ -121,7 +121,7 @@ namespace iText.Kernel.Pdf.Collection {
             // method should be exactly the same as number of keys of PdfCollectionSort
             // here we have three keys but two params
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscendings));
-            NUnit.Framework.Assert.AreEqual(PdfException.NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields
+            NUnit.Framework.Assert.AreEqual(PdfException.NUMBER_OF_BOOLEANS_IN_THE_ARRAY_DOES_NOT_CORRESPOND_WITH_THE_NUMBER_OF_FIELDS
                 , e.Message);
         }
 

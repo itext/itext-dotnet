@@ -875,7 +875,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             canvas.Release();
             document.Close();
-            NUnit.Framework.Assert.AreEqual(PdfException.UnbalancedBeginEndMarkedContentOperators, message);
+            NUnit.Framework.Assert.AreEqual(PdfException.UNBALANCED_BEGIN_END_MARKED_CONTENT_OPERATORS, message);
         }
 
         [NUnit.Framework.Test]

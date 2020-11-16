@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf {
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
             if (pdfObject == null) {
-                throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
+                throw new PdfException(PdfException.DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
             GetPdfObject().Put(PdfName.Type, PdfName.Catalog);

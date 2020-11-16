@@ -153,7 +153,7 @@ namespace iText.Kernel.Pdf.Collection {
             // only if value was set previously
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => item.SetPrefix(fieldName, fieldPrefix
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfException.YouMustSetAValueBeforeAddingAPrefix, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.YOU_MUST_SET_A_VALUE_BEFORE_ADDING_A_PREFIX, e.Message);
         }
 
         [NUnit.Framework.Test]

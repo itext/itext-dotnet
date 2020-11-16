@@ -355,7 +355,7 @@ namespace iText.Kernel.Pdf {
                 md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(PdfException.PDF_ENCRYPTION, e);
             }
             long time = SystemUtil.GetTimeBasedSeed();
             long mem = SystemUtil.GetFreeMemory();
@@ -463,7 +463,7 @@ namespace iText.Kernel.Pdf {
                 ose.Write(b);
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(PdfException.PDF_ENCRYPTION, e);
             }
             ose.Finish();
             return ba.ToArray();
@@ -484,7 +484,7 @@ namespace iText.Kernel.Pdf {
                 return ba.ToArray();
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(PdfException.PDF_ENCRYPTION, e);
             }
         }
 
@@ -587,7 +587,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.NoValidEncryptionMode);
+                    throw new PdfException(PdfException.NO_VALID_ENCRYPTION_MODE);
                 }
             }
             return revision;
@@ -598,7 +598,7 @@ namespace iText.Kernel.Pdf {
             int length = 0;
             PdfNumber rValue = encDict.GetAsNumber(PdfName.R);
             if (rValue == null) {
-                throw new PdfException(PdfException.IllegalRValue);
+                throw new PdfException(PdfException.ILLEGAL_R_VALUE);
             }
             int revision = rValue.IntValue();
             bool embeddedFilesOnlyMode = ReadEmbeddedFilesOnlyFromEncryptDictionary(encDict);
@@ -611,11 +611,11 @@ namespace iText.Kernel.Pdf {
                 case 3: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
                     if (lengthValue == null) {
-                        throw new PdfException(PdfException.IllegalLengthValue);
+                        throw new PdfException(PdfException.ILLEGAL_LENGTH_VALUE);
                     }
                     length = lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
-                        throw new PdfException(PdfException.IllegalLengthValue);
+                        throw new PdfException(PdfException.ILLEGAL_LENGTH_VALUE);
                     }
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
                     break;
@@ -624,11 +624,11 @@ namespace iText.Kernel.Pdf {
                 case 4: {
                     PdfDictionary dic = (PdfDictionary)encDict.Get(PdfName.CF);
                     if (dic == null) {
-                        throw new PdfException(PdfException.CfNotFoundEncryption);
+                        throw new PdfException(PdfException.CF_NOT_FOUND_ENCRYPTION);
                     }
                     dic = (PdfDictionary)dic.Get(PdfName.StdCF);
                     if (dic == null) {
-                        throw new PdfException(PdfException.StdcfNotFoundEncryption);
+                        throw new PdfException(PdfException.STDCF_NOT_FOUND_ENCRYPTION);
                     }
                     if (PdfName.V2.Equals(dic.Get(PdfName.CFM))) {
                         cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -638,7 +638,7 @@ namespace iText.Kernel.Pdf {
                             cryptoMode = EncryptionConstants.ENCRYPTION_AES_128;
                         }
                         else {
-                            throw new PdfException(PdfException.NoCompatibleEncryptionFound);
+                            throw new PdfException(PdfException.NO_COMPATIBLE_ENCRYPTION_FOUND);
                         }
                     }
                     PdfBoolean em = encDict.GetAsBoolean(PdfName.EncryptMetadata);
@@ -665,7 +665,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UnknownEncryptionTypeREq1).SetMessageParams(rValue);
+                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_R_EQ_1).SetMessageParams(rValue);
                 }
             }
             revision = SetCryptoMode(cryptoMode, length);
@@ -677,7 +677,7 @@ namespace iText.Kernel.Pdf {
             int length = 0;
             PdfNumber vValue = encDict.GetAsNumber(PdfName.V);
             if (vValue == null) {
-                throw new PdfException(PdfException.IllegalVValue);
+                throw new PdfException(PdfException.ILLEGAL_V_VALUE);
             }
             int v = vValue.IntValue();
             bool embeddedFilesOnlyMode = ReadEmbeddedFilesOnlyFromEncryptDictionary(encDict);
@@ -691,11 +691,11 @@ namespace iText.Kernel.Pdf {
                 case 2: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
                     if (lengthValue == null) {
-                        throw new PdfException(PdfException.IllegalLengthValue);
+                        throw new PdfException(PdfException.ILLEGAL_LENGTH_VALUE);
                     }
                     length = lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
-                        throw new PdfException(PdfException.IllegalLengthValue);
+                        throw new PdfException(PdfException.ILLEGAL_LENGTH_VALUE);
                     }
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
                     break;
@@ -705,11 +705,11 @@ namespace iText.Kernel.Pdf {
                 case 5: {
                     PdfDictionary dic = encDict.GetAsDictionary(PdfName.CF);
                     if (dic == null) {
-                        throw new PdfException(PdfException.CfNotFoundEncryption);
+                        throw new PdfException(PdfException.CF_NOT_FOUND_ENCRYPTION);
                     }
                     dic = (PdfDictionary)dic.Get(PdfName.DefaultCryptFilter);
                     if (dic == null) {
-                        throw new PdfException(PdfException.DefaultcryptfilterNotFoundEncryption);
+                        throw new PdfException(PdfException.DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION);
                     }
                     if (PdfName.V2.Equals(dic.Get(PdfName.CFM))) {
                         cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -726,7 +726,7 @@ namespace iText.Kernel.Pdf {
                                 length = 256;
                             }
                             else {
-                                throw new PdfException(PdfException.NoCompatibleEncryptionFound);
+                                throw new PdfException(PdfException.NO_COMPATIBLE_ENCRYPTION_FOUND);
                             }
                         }
                     }
@@ -741,7 +741,7 @@ namespace iText.Kernel.Pdf {
                 }
 
                 default: {
-                    throw new PdfException(PdfException.UnknownEncryptionTypeVEq1, vValue);
+                    throw new PdfException(PdfException.UNKNOWN_ENCRYPTION_TYPE_V_EQ_1, vValue);
                 }
             }
             return SetCryptoMode(cryptoMode, length);

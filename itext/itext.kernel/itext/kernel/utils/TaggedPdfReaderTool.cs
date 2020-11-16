@@ -102,7 +102,7 @@ namespace iText.Kernel.Utils {
             // get the StructTreeRoot from the document
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             if (structTreeRoot == null) {
-                throw new PdfException(PdfException.DocumentDoesntContainStructTreeRoot);
+                throw new PdfException(PdfException.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT);
             }
             // Inspect the child or children of the StructTreeRoot
             InspectKids(structTreeRoot.GetKids());

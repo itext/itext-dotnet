@@ -170,7 +170,7 @@ namespace iText.Kernel.Pdf.Action {
                 PdfTarget target = PdfTarget.Create(new PdfDictionary());
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => target.SetAnnotation(annotation, document
                     ));
-                NUnit.Framework.Assert.AreEqual(PdfException.AnnotationShallHaveReferenceToPage, e.Message);
+                NUnit.Framework.Assert.AreEqual(PdfException.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE, e.Message);
             }
         }
 

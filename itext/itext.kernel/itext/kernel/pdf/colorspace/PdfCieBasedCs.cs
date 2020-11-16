@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public CalGray(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(PdfException.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public CalRgb(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(PdfException.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));
@@ -162,7 +162,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Lab(float[] whitePoint)
                 : this(GetInitialPdfArray()) {
                 if (whitePoint == null || whitePoint.Length != 3) {
-                    throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
+                    throw new PdfException(PdfException.WHITE_POINT_IS_INCORRECTLY_SPECIFIED, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
                 d.Put(PdfName.WhitePoint, new PdfArray(whitePoint));

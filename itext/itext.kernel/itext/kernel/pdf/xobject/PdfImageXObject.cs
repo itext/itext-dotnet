@@ -629,7 +629,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private static ImageData CheckImageType(ImageData image) {
             if (image is WmfImageData) {
-                throw new PdfException(PdfException.CannotCreatePdfImageXObjectByWmfImage);
+                throw new PdfException(PdfException.CANNOT_CREATE_PDF_IMAGE_XOBJECT_BY_WMF_IMAGE);
             }
             return image;
         }

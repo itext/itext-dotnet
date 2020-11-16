@@ -480,7 +480,7 @@ namespace iText.Kernel.Pdf {
                 return new Rectangle(llx, lly, urx - llx, ury - lly);
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.CannotConvertPdfArrayToRectanle, e, this);
+                throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_RECTANGLE, e, this);
             }
         }
 
@@ -496,7 +496,7 @@ namespace iText.Kernel.Pdf {
                 return rslt;
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.CannotConvertPdfArrayToFloatArray, e, this);
+                throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_FLOAT_ARRAY, e, this);
             }
         }
 
@@ -513,7 +513,7 @@ namespace iText.Kernel.Pdf {
                 return rslt;
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.CannotConvertPdfArrayToDoubleArray, e, this);
+                throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_DOUBLE_ARRAY, e, this);
             }
         }
 
@@ -529,7 +529,7 @@ namespace iText.Kernel.Pdf {
                 return rslt;
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.CannotConvertPdfArrayToLongArray, e, this);
+                throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_LONG_ARRAY, e, this);
             }
         }
 
@@ -545,7 +545,7 @@ namespace iText.Kernel.Pdf {
                 return rslt;
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.CannotConvertPdfArrayToIntArray, e, this);
+                throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_INT_ARRAY, e, this);
             }
         }
 
@@ -559,7 +559,7 @@ namespace iText.Kernel.Pdf {
             for (int k = 0; k < rslt.Length; ++k) {
                 tmp = GetAsBoolean(k);
                 if (tmp == null) {
-                    throw new PdfException(PdfException.CannotConvertPdfArrayToBooleanArray, this);
+                    throw new PdfException(PdfException.CANNOT_CONVERT_PDF_ARRAY_TO_AN_ARRAY_OF_BOOLEANS, this);
                 }
                 rslt[k] = tmp.GetValue();
             }

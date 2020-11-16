@@ -356,16 +356,16 @@ namespace iText.Signatures {
         public virtual void SetFieldName(String fieldName) {
             if (fieldName != null) {
                 if (fieldName.IndexOf('.') >= 0) {
-                    throw new ArgumentException(PdfException.FieldNamesCannotContainADot);
+                    throw new ArgumentException(PdfException.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
                 }
                 PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
                 if (acroForm.GetField(fieldName) != null) {
                     PdfFormField field = acroForm.GetField(fieldName);
                     if (!PdfName.Sig.Equals(field.GetFormType())) {
-                        throw new ArgumentException(PdfException.FieldTypeIsNotASignatureFieldType);
+                        throw new ArgumentException(PdfException.FIELD_TYPE_IS_NOT_A_SIGNATURE_FIELD_TYPE);
                     }
                     if (field.GetValue() != null) {
-                        throw new ArgumentException(PdfException.FieldAlreadySigned);
+                        throw new ArgumentException(PdfException.FIELD_ALREADY_SIGNED);
                     }
                     appearance.SetFieldName(fieldName);
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
@@ -477,11 +477,11 @@ namespace iText.Signatures {
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype, SignaturePolicyIdentifier signaturePolicy) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
+                throw new PdfException(PdfException.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
             if (certificationLevel > 0 && IsDocumentPdf2()) {
                 if (DocumentContainsCertificationOrApprovalSignatures()) {
-                    throw new PdfException(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs);
+                    throw new PdfException(PdfException.CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS);
                 }
             }
             ICollection<byte[]> crlBytes = null;
@@ -565,7 +565,7 @@ namespace iText.Signatures {
         public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer, int estimatedSize
             ) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
+                throw new PdfException(PdfException.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
             PdfSignature dic = new PdfSignature();
             PdfSignatureAppearance appearance = GetSignatureAppearance();
@@ -607,7 +607,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void Timestamp(ITSAClient tsa, String signatureName) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
+                throw new PdfException(PdfException.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
             int contentEstimated = tsa.GetTokenSizeEstimate();
             if (!IsDocumentPdf2()) {
@@ -659,11 +659,12 @@ namespace iText.Signatures {
             SignatureUtil signatureUtil = new SignatureUtil(document);
             PdfSignature signature = signatureUtil.GetSignature(fieldName);
             if (signature == null) {
-                throw new PdfException(PdfException.ThereIsNoFieldInTheDocumentWithSuchName1).SetMessageParams(fieldName);
+                throw new PdfException(PdfException.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME_1).SetMessageParams(fieldName
+                    );
             }
             if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
-                throw new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams
-                    (fieldName);
+                throw new PdfException(PdfException.SIGNATURE_WITH_NAME_1_IS_NOT_THE_LAST_IT_DOESNT_COVER_WHOLE_DOCUMENT).
+                    SetMessageParams(fieldName);
             }
             PdfArray b = signature.GetByteRange();
             long[] gaps = b.ToLongArray();
@@ -679,7 +680,7 @@ namespace iText.Signatures {
             }
             spaceAvailable /= 2;
             if (spaceAvailable < signedContent.Length) {
-                throw new PdfException(PdfException.AvailableSpaceIsNotEnoughForSignature);
+                throw new PdfException(PdfException.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
             }
             StreamUtil.CopyBytes(readerSource, 0, gaps[1] + 1, outs);
             ByteBuffer bb = new ByteBuffer(spaceAvailable * 2);
@@ -749,7 +750,7 @@ namespace iText.Signatures {
         /// </param>
         protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes) {
             if (preClosed) {
-                throw new PdfException(PdfException.DocumentAlreadyPreClosed);
+                throw new PdfException(PdfException.DOCUMENT_ALREADY_PRE_CLOSED);
             }
             preClosed = true;
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
@@ -759,7 +760,7 @@ namespace iText.Signatures {
             acroForm.SetSignatureFlags(PdfAcroForm.SIGNATURE_EXIST | PdfAcroForm.APPEND_ONLY);
             PdfSigFieldLock fieldLock = null;
             if (cryptoDictionary == null) {
-                throw new PdfException(PdfException.NoCryptoDictionaryDefined);
+                throw new PdfException(PdfException.NO_CRYPTO_DICTIONARY_DEFINED);
             }
             cryptoDictionary.GetPdfObject().MakeIndirect(document);
             if (fieldExist) {
@@ -986,7 +987,7 @@ namespace iText.Signatures {
         protected internal virtual void Close(PdfDictionary update) {
             try {
                 if (!preClosed) {
-                    throw new PdfException(PdfException.DocumentMustBePreClosed);
+                    throw new PdfException(PdfException.DOCUMENT_MUST_BE_PRE_CLOSED);
                 }
                 MemoryStream bous = new MemoryStream();
                 PdfOutputStream os = new PdfOutputStream(bous);

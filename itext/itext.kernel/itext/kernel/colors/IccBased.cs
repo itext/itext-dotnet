@@ -75,7 +75,7 @@ namespace iText.Kernel.Colors {
         public IccBased(Stream iccStream, float[] range, float[] value)
             : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
             if (GetNumberOfComponents() * 2 != range.Length) {
-                throw new PdfException(PdfException.InvalidRangeArray, this);
+                throw new PdfException(PdfException.INVALID_RANGE_ARRAY, this);
             }
         }
     }

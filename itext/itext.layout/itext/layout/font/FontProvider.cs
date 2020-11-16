@@ -686,7 +686,7 @@ namespace iText.Layout.Font {
                     // Even though softening of checked exceptions can be handled at higher levels in order to let
                     // the caller of this method know that font creation failed, we prefer to avoid bloating highlevel API
                     // and avoid making higher level code depend on low-level code because of the exceptions handling.
-                    throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
+                    throw new PdfException(PdfException.IO_EXCEPTION_WHILE_CREATING_FONT, e);
                 }
                 pdfFonts.Put(fontInfo, pdfFont);
                 return pdfFont;

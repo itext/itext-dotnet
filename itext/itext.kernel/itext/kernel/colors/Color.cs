@@ -245,7 +245,7 @@ namespace iText.Kernel.Colors {
         /// <param name="value">new color value</param>
         public virtual void SetColorValue(float[] value) {
             if (colorValue.Length != value.Length) {
-                throw new PdfException(PdfException.IncorrectNumberOfComponents, this);
+                throw new PdfException(PdfException.INCORRECT_NUMBER_OF_COMPONENTS, this);
             }
             colorValue = value;
         }

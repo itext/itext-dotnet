@@ -97,7 +97,7 @@ namespace iText.Signatures {
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             if (digestAlgorithmOid == null) {
-                throw new PdfException(PdfException.UnknownHashAlgorithm1).SetMessageParams(hashAlgorithm);
+                throw new PdfException(PdfException.UNKNOWN_HASH_ALGORITHM_1).SetMessageParams(hashAlgorithm);
             }
             // Copy the certificates
             signCert = (X509Certificate)certChain[0];
@@ -119,7 +119,8 @@ namespace iText.Signatures {
                         digestEncryptionAlgorithmOid = SecurityIDs.ID_DSA;
                     }
                     else {
-                        throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(digestEncryptionAlgorithmOid);
+                        throw new PdfException(PdfException.UNKNOWN_KEY_ALGORITHM_1).SetMessageParams(digestEncryptionAlgorithmOid
+                            );
                     }
                 }
             }
@@ -176,15 +177,15 @@ namespace iText.Signatures {
                     pkcs = din.ReadObject();
                 }
                 catch (System.IO.IOException) {
-                    throw new ArgumentException(PdfException.CannotDecodePkcs7SigneddataObject);
+                    throw new ArgumentException(PdfException.CANNOT_DECODE_PKCS7_SIGNEDDATA_OBJECT);
                 }
                 if (!(pkcs is Asn1Sequence)) {
-                    throw new ArgumentException(PdfException.NotAValidPkcs7ObjectNotASequence);
+                    throw new ArgumentException(PdfException.NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE);
                 }
                 Asn1Sequence signedData = (Asn1Sequence)pkcs;
                 DerObjectIdentifier objId = (DerObjectIdentifier)signedData[0];
                 if (!objId.Id.Equals(SecurityIDs.ID_PKCS7_SIGNED_DATA)) {
-                    throw new ArgumentException(PdfException.NotAValidPkcs7ObjectNotSignedData);
+                    throw new ArgumentException(PdfException.NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA);
                 }
                 Asn1Sequence content = (Asn1Sequence)((Asn1TaggedObject)signedData[1]).GetObject();
                 // the positions that we care are:
@@ -254,7 +255,7 @@ namespace iText.Signatures {
                 // the signerInfos
                 Asn1Set signerInfos = (Asn1Set)content[next];
                 if (signerInfos.Count != 1) {
-                    throw new ArgumentException(PdfException.ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime
+                    throw new ArgumentException(PdfException.THIS_PKCS7_OBJECT_HAS_MULTIPLE_SIGNERINFOS_ONLY_ONE_IS_SUPPORTED_AT_THIS_TIME
                         );
                 }
                 Asn1Sequence signerInfo = (Asn1Sequence)signerInfos[0];
@@ -277,8 +278,8 @@ namespace iText.Signatures {
                     }
                 }
                 if (signCert == null) {
-                    throw new PdfException(PdfException.CannotFindSigningCertificateWithSerial1).SetMessageParams(issuer.ToString
-                        () + " / " + serialNumber.ToString(16));
+                    throw new PdfException(PdfException.CANNOT_FIND_SIGNING_CERTIFICATE_WITH_SERIAL_1).SetMessageParams(issuer
+                        .ToString() + " / " + serialNumber.ToString(16));
                 }
                 SignCertificateChain();
                 digestAlgorithmOid = ((DerObjectIdentifier)((Asn1Sequence)signerInfo[2])[0]).Id;
@@ -351,7 +352,7 @@ namespace iText.Signatures {
                         }
                     }
                     if (digestAttr == null) {
-                        throw new ArgumentException(PdfException.AuthenticatedAttributeIsMissingTheDigest);
+                        throw new ArgumentException(PdfException.AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST);
                     }
                     ++next;
                 }
@@ -568,7 +569,7 @@ namespace iText.Signatures {
                             this.digestEncryptionAlgorithmOid = SecurityIDs.ID_ECDSA;
                         }
                         else {
-                            throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(digestEncryptionAlgorithm);
+                            throw new PdfException(PdfException.UNKNOWN_KEY_ALGORITHM_1).SetMessageParams(digestEncryptionAlgorithm);
                         }
                     }
                 }

@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Tagging {
         public PdfStructElem(PdfDocument document, PdfName role, PdfAnnotation annot)
             : this(document, role) {
             if (annot.GetPage() == null) {
-                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
+                throw new PdfException(PdfException.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE);
             }
             // Explicitly using object indirect reference here in order to correctly process released objects.
             GetPdfObject().Put(PdfName.Pg, annot.GetPage().GetPdfObject().GetIndirectReference());
@@ -348,7 +348,8 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </param>
         public virtual void AddRef(iText.Kernel.Pdf.Tagging.PdfStructElem @ref) {
             if (!@ref.GetPdfObject().IsIndirect()) {
-                throw new PdfException(PdfException.RefArrayItemsInStructureElementDictionaryShallBeIndirectObjects);
+                throw new PdfException(PdfException.REF_ARRAY_ITEMS_IN_STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_INDIRECT_OBJECTS
+                    );
             }
             VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Ref, PdfName.StructElem
                 );
@@ -585,10 +586,10 @@ namespace iText.Kernel.Pdf.Tagging {
 
         internal static void AddKidObject(PdfDictionary parent, int index, PdfObject kid) {
             if (parent.IsFlushed()) {
-                throw new PdfException(PdfException.CannotAddKidToTheFlushedElement);
+                throw new PdfException(PdfException.CANNOT_ADD_KID_TO_THE_FLUSHED_ELEMENT);
             }
             if (!parent.ContainsKey(PdfName.P)) {
-                throw new PdfException(PdfException.StructureElementShallContainParentObject, parent);
+                throw new PdfException(PdfException.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT, parent);
             }
             PdfObject k = parent.Get(PdfName.K);
             if (k == null) {
@@ -614,7 +615,7 @@ namespace iText.Kernel.Pdf.Tagging {
             parent.SetModified();
             if (kid is PdfDictionary && IsStructElem((PdfDictionary)kid)) {
                 if (!parent.IsIndirect()) {
-                    throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                    throw new PdfException(PdfException.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                         );
                 }
                 ((PdfDictionary)kid).Put(PdfName.P, parent);
@@ -640,7 +641,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private PdfDocument GetDocEnsureIndirectForKids() {
             PdfDocument doc = GetDocument();
             if (doc == null) {
-                throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                throw new PdfException(PdfException.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                     );
             }
             return doc;

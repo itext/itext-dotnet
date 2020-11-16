@@ -91,7 +91,7 @@ namespace iText.Kernel.Pdf.Xobject {
                     return new PdfImageXObject(stream);
                 }
                 else {
-                    throw new NotSupportedException(PdfException.UnsupportedXObjectType);
+                    throw new NotSupportedException(PdfException.UNSUPPORTED_XOBJECT_TYPE);
                 }
             }
         }

@@ -76,7 +76,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private void CheckNoColor() {
             if (!tilingPattern.IsColored()) {
-                throw new PdfException(PdfException.ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters
+                throw new PdfException(PdfException.CONTENT_STREAM_MUST_NOT_INVOKE_OPERATORS_THAT_SPECIFY_COLORS_OR_OTHER_COLOR_RELATED_PARAMETERS
                     );
             }
         }

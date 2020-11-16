@@ -423,7 +423,7 @@ namespace iText.Kernel.Pdf {
                 pdfDoc1.Close();
                 pdfDoc2.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten
+            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
                 );
         }
 
@@ -446,7 +446,7 @@ namespace iText.Kernel.Pdf {
             finally {
                 pdfDoc.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentForCopyToCannotBeNull);
+            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL);
         }
 
         [NUnit.Framework.Test]

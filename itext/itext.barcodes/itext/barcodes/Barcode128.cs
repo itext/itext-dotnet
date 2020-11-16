@@ -283,7 +283,7 @@ namespace iText.Barcodes {
             for (int k = 0; k < tLen; ++k) {
                 c = text[k];
                 if (c > 127 && c != FNC1) {
-                    throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                    throw new PdfException(PdfException.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128_IN_1);
                 }
             }
             c = text[0];
@@ -325,7 +325,7 @@ namespace iText.Barcodes {
                 }
             }
             if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet)) {
-                throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                throw new PdfException(PdfException.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128_IN_1);
             }
             while (index < tLen) {
                 switch (currentCode) {
@@ -416,7 +416,7 @@ namespace iText.Barcodes {
                     }
                 }
                 if (codeSet != Barcode128.Barcode128CodeSet.AUTO && currentCode != GetStartSymbol(codeSet)) {
-                    throw new PdfException(PdfException.ThereAreIllegalCharactersForBarcode128In1);
+                    throw new PdfException(PdfException.THERE_ARE_ILLEGAL_CHARACTERS_FOR_BARCODE_128_IN_1);
                 }
             }
             return @out;

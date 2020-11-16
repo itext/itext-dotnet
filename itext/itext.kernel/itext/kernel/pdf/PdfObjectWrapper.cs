@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual void EnsureUnderlyingObjectHasIndirectReference() {
             if (GetPdfObject().GetIndirectReference() == null) {
-                throw new PdfException(PdfException.ToFlushThisWrapperUnderlyingObjectMustBeAddedToDocument);
+                throw new PdfException(PdfException.TO_FLUSH_THIS_WRAPPER_UNDERLYING_OBJECT_MUST_BE_ADDED_TO_DOCUMENT);
             }
         }
 
@@ -165,7 +165,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object) {
             if (@object.GetIndirectReference() == null) {
-                throw new PdfException(PdfException.ObjectMustBeIndirectToWorkWithThisWrapper);
+                throw new PdfException(PdfException.OBJECT_MUST_BE_INDIRECT_TO_WORK_WITH_THIS_WRAPPER);
             }
         }
     }

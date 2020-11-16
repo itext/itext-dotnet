@@ -136,7 +136,8 @@ namespace iText.Kernel.Pdf.Navigation {
 
         private iText.Kernel.Pdf.Navigation.PdfStructureDestination Add(PdfStructElem elem) {
             if (elem.GetPdfObject().GetIndirectReference() == null) {
-                throw new PdfException(PdfException.StructureElementInStructureDestinationShallBeAnIndirectObject);
+                throw new PdfException(PdfException.STRUCTURE_ELEMENT_IN_STRUCTURE_DESTINATION_SHALL_BE_AN_INDIRECT_OBJECT
+                    );
             }
             ((PdfArray)GetPdfObject()).Add(elem.GetPdfObject());
             return this;

@@ -74,11 +74,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         }
                     }
                 } catch (Exception f) {
-                    throw new PdfException(PdfException.PdfDecryption, f);
+                    throw new PdfException(PdfException.PDF_DECRYPTION, f);
                 }
             }
             if (!foundRecipient || envelopedData == null) {
-                throw new PdfException(PdfException.BadCertificateAndKey);
+                throw new PdfException(PdfException.BAD_CERTIFICATE_AND_KEY);
             }
             return envelopedData;
         }

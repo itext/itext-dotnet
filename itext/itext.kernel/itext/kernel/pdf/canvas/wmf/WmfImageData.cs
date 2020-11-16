@@ -64,7 +64,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             : base(url, ImageType.WMF) {
             byte[] imageType = ReadImageType(url);
             if (!ImageTypeIs(imageType, wmf)) {
-                throw new PdfException(PdfException.NotAWmfImage);
+                throw new PdfException(PdfException.NOT_A_WMF_IMAGE);
             }
         }
 
@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             : base(bytes, ImageType.WMF) {
             byte[] imageType = ReadImageType(bytes);
             if (!ImageTypeIs(imageType, wmf)) {
-                throw new PdfException(PdfException.NotAWmfImage);
+                throw new PdfException(PdfException.NOT_A_WMF_IMAGE);
             }
         }
 
@@ -96,7 +96,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 return bytes;
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoException, e);
+                throw new PdfException(PdfException.IO_EXCEPTION, e);
             }
             finally {
                 if (@is != null) {

@@ -107,11 +107,11 @@ namespace iText.Kernel.Pdf {
             int minCapacity = (int) this.Position + len;
             if (minCapacity < 0) {
                 // overflow
-                throw new MemoryLimitsAwareException(PdfException.DuringDecompressionSingleStreamOccupiedMoreThanMaxIntegerValue
+                throw new MemoryLimitsAwareException(PdfException.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_THAN_MAX_INTEGER_VALUE
                     );
             }
             if (minCapacity > maxStreamSize) {
-                throw new MemoryLimitsAwareException(PdfException.DuringDecompressionSingleStreamOccupiedMoreMemoryThanAllowed
+                throw new MemoryLimitsAwareException(PdfException.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
                     );
             }
             // calculate new capacity

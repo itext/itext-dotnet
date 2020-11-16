@@ -83,7 +83,7 @@ namespace iText.Signatures {
                     algorithm = "ECDSA";
                 }
             } else {
-                throw new PdfException(PdfException.UnknownKeyAlgorithm1).SetMessageParams(cp.ToString());
+                throw new PdfException(PdfException.UNKNOWN_KEY_ALGORITHM_1).SetMessageParams(cp.ToString());
             }
 
             return algorithm;
@@ -120,7 +120,7 @@ namespace iText.Signatures {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
+                throw new PdfException(PdfException.INVALID_HTTP_RESPONSE_1).SetMessageParams(response.StatusCode);
             return response.GetResponseStream();
         }
 
@@ -139,7 +139,7 @@ namespace iText.Signatures {
             outp.Dispose();
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
+                throw new PdfException(PdfException.INVALID_HTTP_RESPONSE_1).SetMessageParams(response.StatusCode);
 
             return response.GetResponseStream();
         }
@@ -209,7 +209,7 @@ namespace iText.Signatures {
             try {
                 con = (HttpWebRequest) WebRequest.Create(tsaUrl);
             } catch (Exception e) {
-                throw new PdfException(PdfException.FailedToGetTsaResponseFrom1).SetMessageParams(tsaUrl);
+                throw new PdfException(PdfException.FAILED_TO_GET_TSA_RESPONSE_FROM_1).SetMessageParams(tsaUrl);
             }
             con.ContentLength = requestBytes.Length;
             con.ContentType = "application/timestamp-query";

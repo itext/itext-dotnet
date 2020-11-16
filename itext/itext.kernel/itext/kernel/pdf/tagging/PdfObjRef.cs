@@ -75,7 +75,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private static PdfDocument GetDocEnsureIndirect(PdfStructElem structElem) {
             PdfIndirectReference indRef = structElem.GetPdfObject().GetIndirectReference();
             if (indRef == null) {
-                throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                throw new PdfException(PdfException.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                     );
             }
             return indRef.GetDocument();

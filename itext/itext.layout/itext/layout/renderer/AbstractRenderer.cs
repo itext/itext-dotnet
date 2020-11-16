@@ -2485,11 +2485,11 @@ namespace iText.Layout.Renderer {
                     }
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(PdfException.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED);
                     }
                     FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
                     if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
-                        throw new InvalidOperationException(PdfException.FontProviderNotSetFontFamilyNotResolved);
+                        throw new InvalidOperationException(PdfException.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED);
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     return ResolveFirstPdfFont((String[])font, provider, fc, fontSet);

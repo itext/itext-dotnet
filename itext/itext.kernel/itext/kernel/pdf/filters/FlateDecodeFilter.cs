@@ -203,7 +203,7 @@ namespace iText.Kernel.Pdf.Filters {
 
                     default: {
                         // Error -- unknown filter type
-                        throw new PdfException(PdfException.PngFilterUnknown);
+                        throw new PdfException(PdfException.PNG_FILTER_UNKNOWN);
                     }
                 }
                 try {

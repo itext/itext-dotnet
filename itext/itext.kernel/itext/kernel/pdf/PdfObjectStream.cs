@@ -89,7 +89,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="object">object to add.</param>
         public virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
-                throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);
+                throw new PdfException(PdfException.PDF_OBJECT_STREAM_REACH_MAX_SIZE);
             }
             PdfOutputStream outputStream = GetOutputStream();
             indexStream.WriteInteger(@object.GetIndirectReference().GetObjNumber()).WriteSpace().WriteLong(outputStream

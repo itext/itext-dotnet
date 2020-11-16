@@ -51,7 +51,7 @@ namespace iText.Kernel.Font {
             TrueTypeFont ttf = new TrueTypeFont(sourceFolder + "NotoSerif-Regular_v1.7.ttf");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(ttf, PdfEncodings.
                 WINANSI));
-            NUnit.Framework.Assert.AreEqual(PdfException.OnlyIdentityCMapsSupportsWithTrueType, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.ONLY_IDENTITY_CMAPS_SUPPORTS_WITH_TRUETYPE, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -93,7 +93,7 @@ namespace iText.Kernel.Font {
                     fontProgram = FontProgramFactory.CreateFont(baseFontName.GetValue(), true);
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
+                    throw new PdfException(PdfException.IO_EXCEPTION_WHILE_CREATING_FONT, e);
                 }
             }
             else {

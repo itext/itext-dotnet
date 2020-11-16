@@ -112,7 +112,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 md5 = DigestUtilities.GetDigest("MD5");
             }
             catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(PdfException.PDF_ENCRYPTION, e);
             }
         }
     }

@@ -689,7 +689,7 @@ namespace iText.Kernel.Pdf {
                 mediaBox = (PdfArray)GetInheritedValue(PdfName.MediaBox, PdfObject.ARRAY);
             }
             if (mediaBox == null) {
-                throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
+                throw new PdfException(PdfException.CANNOT_RETRIEVE_MEDIA_BOX_ATTRIBUTE);
             }
             int mediaBoxSize;
             if ((mediaBoxSize = mediaBox.Size()) != 4) {
@@ -709,7 +709,7 @@ namespace iText.Kernel.Pdf {
             PdfNumber urx = mediaBox.GetAsNumber(2);
             PdfNumber ury = mediaBox.GetAsNumber(3);
             if (llx == null || lly == null || urx == null || ury == null) {
-                throw new PdfException(PdfException.InvalidMediaBoxValue);
+                throw new PdfException(PdfException.INVALID_MEDIA_BOX_VALUE);
             }
             return new Rectangle(Math.Min(llx.FloatValue(), urx.FloatValue()), Math.Min(lly.FloatValue(), ury.FloatValue
                 ()), Math.Abs(urx.FloatValue() - llx.FloatValue()), Math.Abs(ury.FloatValue() - lly.FloatValue()));
@@ -924,7 +924,7 @@ namespace iText.Kernel.Pdf {
                 return baos.ToArray();
             }
             catch (System.IO.IOException ioe) {
-                throw new PdfException(PdfException.CannotGetContentBytes, ioe, this);
+                throw new PdfException(PdfException.CANNOT_GET_CONTENT_BYTES, ioe, this);
             }
         }
 
@@ -939,7 +939,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>calculated MCID reference.</returns>
         public virtual int GetNextMcid() {
             if (!GetDocument().IsTagged()) {
-                throw new PdfException(PdfException.MustBeATaggedDocument);
+                throw new PdfException(PdfException.MUST_BE_A_TAGGED_DOCUMENT);
             }
             if (mcid == -1) {
                 PdfStructTreeRoot structTreeRoot = GetDocument().GetStructTreeRoot();
@@ -1267,7 +1267,7 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyle? numberingStyle, String labelPrefix
             , int firstPage) {
             if (firstPage < 1) {
-                throw new PdfException(PdfException.InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1);
+                throw new PdfException(PdfException.IN_A_PAGE_LABEL_THE_PAGE_NUMBERS_MUST_BE_GREATER_OR_EQUAL_TO_1);
             }
             PdfDictionary pageLabel = new PdfDictionary();
             if (numberingStyle != null) {
@@ -1555,7 +1555,7 @@ namespace iText.Kernel.Pdf {
                 GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
             }
             catch (Exception ex) {
-                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
+                throw new PdfException(PdfException.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, ex);
             }
         }
 

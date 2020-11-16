@@ -101,7 +101,7 @@ namespace iText.Kernel.Geom {
                 return newPoints;
             }
             catch (NoninvertibleTransformException e) {
-                throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
+                throw new PdfException(PdfException.NONINVERTIBLE_MATRIX_CANNOT_BE_PROCESSED, e);
             }
         }
     }

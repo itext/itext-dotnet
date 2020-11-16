@@ -67,10 +67,11 @@ namespace iText.Kernel.Pdf {
         public static iText.Kernel.Pdf.PdfEncryptedPayload Wrap(PdfDictionary dictionary) {
             PdfName type = dictionary.GetAsName(PdfName.Type);
             if (type != null && !type.Equals(PdfName.EncryptedPayload)) {
-                throw new PdfException(PdfException.EncryptedPayloadShallHaveTypeEqualsToEncryptedPayloadIfPresent);
+                throw new PdfException(PdfException.ENCRYPTED_PAYLOAD_SHALL_HAVE_TYPE_EQUALS_TO_ENCRYPTED_PAYLOAD_IF_PRESENT
+                    );
             }
             if (dictionary.GetAsName(PdfName.Subtype) == null) {
-                throw new PdfException(PdfException.EncryptedPayloadShallHaveSubtype);
+                throw new PdfException(PdfException.ENCRYPTED_PAYLOAD_SHALL_HAVE_SUBTYPE);
             }
             return new iText.Kernel.Pdf.PdfEncryptedPayload(dictionary);
         }

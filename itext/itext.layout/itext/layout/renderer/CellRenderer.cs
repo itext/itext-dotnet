@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
                     transform = transform.CreateInverse();
                 }
                 catch (NoninvertibleTransformException e) {
-                    throw new PdfException(PdfException.NoninvertibleMatrixCannotBeProcessed, e);
+                    throw new PdfException(PdfException.NONINVERTIBLE_MATRIX_CANNOT_BE_PROCESSED, e);
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);

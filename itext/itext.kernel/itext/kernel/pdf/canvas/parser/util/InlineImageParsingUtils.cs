@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     }
                 }
             }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedColorSpace1).SetMessageParams
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_COLOR_SPACE_1).SetMessageParams
                 (colorSpaceName);
         }
 
@@ -197,7 +197,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             }
             int ch = ps.GetTokeniser().Read();
             if (!PdfTokenizer.IsWhitespace(ch)) {
-                throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedCharacter1FoundAfterIDInInlineImage
+                throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UNEXPECTED_CHARACTER_1_FOUND_AFTER_ID_IN_INLINE_IMAGE
                     ).SetMessageParams(ch);
             }
             return dict;
@@ -290,7 +290,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             for (int i = startIndex; i < bytesToRead; i++) {
                 int ch = tokeniser.Read();
                 if (ch == -1) {
-                    throw new InlineImageParsingUtils.InlineImageParseException(PdfException.EndOfContentStreamReachedBeforeEndOfImageData
+                    throw new InlineImageParsingUtils.InlineImageParseException(PdfException.END_OF_CONTENT_STREAM_REACHED_BEFORE_END_OF_IMAGE_DATA
                         );
                 }
                 bytes[i] = (byte)ch;
@@ -301,7 +301,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 // Let's try to handle that case here.
                 PdfObject ei2 = ps.ReadObject();
                 if (!"EI".Equals(ei2.ToString())) {
-                    throw new InlineImageParsingUtils.InlineImageParseException(PdfException.OperatorEINotFoundAfterEndOfImageData
+                    throw new InlineImageParsingUtils.InlineImageParseException(PdfException.OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA
                         );
                 }
             }
@@ -360,7 +360,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     }
                 }
             }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.CannotFindImageDataOrEI);
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.CANNOT_FIND_IMAGE_DATA_OR_EI);
         }
 
         private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic) {

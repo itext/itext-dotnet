@@ -149,7 +149,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     PdfDictionary top = GetTopmostParent(mcr);
                     if (top != null) {
                         if (top.IsFlushed()) {
-                            throw new PdfException(PdfException.CannotMoveFlushedTag);
+                            throw new PdfException(PdfException.CANNOT_MOVE_FLUSHED_TAG);
                         }
                         topsToMove.Add(top);
                     }
@@ -206,7 +206,8 @@ namespace iText.Kernel.Pdf.Tagging {
                         firstPartElems.Add(mcr.GetPdfObject());
                         PdfDictionary top = AddAllParentsToSet(mcr, firstPartElems);
                         if (top != null && top.IsFlushed()) {
-                            throw new PdfException(PdfException.TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags);
+                            throw new PdfException(PdfException.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
+                                );
                         }
                     }
                 }
@@ -319,7 +320,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         PdfDictionary top = AddAllParentsToSet(mcr, objectsToCopy);
                         if (top != null) {
                             if (top.IsFlushed()) {
-                                throw new PdfException(PdfException.CannotCopyFlushedTag);
+                                throw new PdfException(PdfException.CANNOT_COPY_FLUSHED_TAG);
                             }
                             if (!topsToFirstDestPage.ContainsKey(top)) {
                                 topsToFirstDestPage.Put(top, page.Value.GetPdfObject());
@@ -539,7 +540,8 @@ namespace iText.Kernel.Pdf.Tagging {
                         }
                         else {
                             if (dictKid.IsFlushed()) {
-                                throw new PdfException(PdfException.TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags);
+                                throw new PdfException(PdfException.TAG_FROM_THE_EXISTING_TAG_STRUCTURE_IS_FLUSHED_CANNOT_ADD_COPIED_PAGE_TAGS
+                                    );
                             }
                             // elems with no kids will not be marked as from the first part,
                             // but nonetheless we don't want to move all of them to the second part; we just leave them as is

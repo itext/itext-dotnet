@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf.Filters {
             PdfNumber wn = streamDictionary.GetAsNumber(PdfName.Width);
             PdfNumber hn = streamDictionary.GetAsNumber(PdfName.Height);
             if (wn == null || hn == null) {
-                throw new PdfException(PdfException.FilterCcittfaxdecodeIsOnlySupportedForImages);
+                throw new PdfException(PdfException.FILTER_CCITTFAXDECODE_IS_ONLY_SUPPORTED_FOR_IMAGES);
             }
             int width = wn.IntValue();
             int height = hn.IntValue();

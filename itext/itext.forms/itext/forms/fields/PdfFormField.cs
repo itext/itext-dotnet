@@ -2911,7 +2911,7 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 PdfArray kids = field.GetAsArray(PdfName.Kids);
                 if (kids == null) {
-                    throw new PdfException(PdfException.WrongFormFieldAddAnnotationToTheField);
+                    throw new PdfException(PdfException.WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD);
                 }
                 rect = ((PdfDictionary)kids.Get(0)).GetAsArray(PdfName.Rect);
             }

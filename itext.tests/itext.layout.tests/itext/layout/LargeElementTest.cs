@@ -952,7 +952,7 @@ namespace iText.Layout {
                 doc.Add(table);
             }
             catch (PdfException e) {
-                if (!e.Message.Equals(PdfException.CannotAddCellToCompletedLargeTable)) {
+                if (!e.Message.Equals(PdfException.CANNOT_ADD_CELL_TO_COMPLETED_LARGE_TABLE)) {
                     throw;
                 }
             }

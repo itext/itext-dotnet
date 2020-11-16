@@ -459,7 +459,8 @@ namespace iText.Kernel.Pdf.Tagging {
         public virtual void Move(PdfPage fromPage, int insertBeforePage) {
             for (int i = 1; i <= GetDocument().GetNumberOfPages(); ++i) {
                 if (GetDocument().GetPage(i).IsFlushed()) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CannotMovePagesInPartlyFlushedDocument, i));
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CANNOT_MOVE_PAGES_IN_PARTLY_FLUSHED_DOCUMENT, 
+                        i));
                 }
             }
             StructureTreeCopier.Move(GetDocument(), fromPage, insertBeforePage);
@@ -549,7 +550,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             if (PdfStructElem.IsStructElem(structElem)) {
                 if (GetPdfObject().GetIndirectReference() == null) {
-                    throw new PdfException(PdfException.StructureElementDictionaryShallBeAnIndirectObjectInOrderToHaveChildren
+                    throw new PdfException(PdfException.STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_AN_INDIRECT_OBJECT_IN_ORDER_TO_HAVE_CHILDREN
                         );
                 }
                 structElem.Put(PdfName.P, GetPdfObject());

@@ -311,7 +311,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.CannotParseContentStream, e);
+                    throw new PdfException(PdfException.CANNOT_PARSE_CONTENT_STREAM, e);
                 }
             }
         }

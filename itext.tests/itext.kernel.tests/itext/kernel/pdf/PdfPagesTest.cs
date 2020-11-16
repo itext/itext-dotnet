@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             pdfDoc.RemovePage(page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(1, page));
-            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -207,7 +207,7 @@ namespace iText.Kernel.Pdf {
             page.Flush();
             pdfDoc.RemovePage(page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(page));
-            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
+            NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, e.Message);
         }
 
         [NUnit.Framework.Test]

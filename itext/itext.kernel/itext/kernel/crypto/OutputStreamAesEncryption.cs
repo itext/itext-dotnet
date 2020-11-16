@@ -73,7 +73,7 @@ namespace iText.Kernel.Crypto {
                 Write(iv);
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
+                throw new PdfException(PdfException.PDF_ENCRYPTION, e);
             }
         }
 
@@ -166,7 +166,7 @@ namespace iText.Kernel.Crypto {
                     @out.Write(b, 0, b.Length);
                 }
                 catch (System.IO.IOException e) {
-                    throw new PdfException(PdfException.PdfEncryption, e);
+                    throw new PdfException(PdfException.PDF_ENCRYPTION, e);
                 }
             }
         }

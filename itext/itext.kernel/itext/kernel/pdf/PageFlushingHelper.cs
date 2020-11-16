@@ -207,7 +207,7 @@ namespace iText.Kernel.Pdf {
         ///     </param>
         public virtual void UnsafeFlushDeep(int pageNum) {
             if (pdfDoc.GetWriter() == null) {
-                throw new ArgumentException(PdfException.FlushingHelperFLushingModeIsNotForDocReadingMode);
+                throw new ArgumentException(PdfException.FLUSHING_HELPER_FLUSHING_MODE_IS_NOT_FOR_DOC_READING_MODE);
             }
             release = false;
             FlushPage(pageNum);
@@ -280,7 +280,7 @@ namespace iText.Kernel.Pdf {
         ///     </param>
         public virtual void AppendModeFlush(int pageNum) {
             if (pdfDoc.GetWriter() == null) {
-                throw new ArgumentException(PdfException.FlushingHelperFLushingModeIsNotForDocReadingMode);
+                throw new ArgumentException(PdfException.FLUSHING_HELPER_FLUSHING_MODE_IS_NOT_FOR_DOC_READING_MODE);
             }
             PdfPage page = pdfDoc.GetPage(pageNum);
             if (page.IsFlushed()) {

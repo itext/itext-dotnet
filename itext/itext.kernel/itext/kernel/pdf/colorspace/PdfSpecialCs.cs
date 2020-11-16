@@ -117,7 +117,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Separation(String name, PdfColorSpace alternateSpace, PdfFunction tintTransform)
                 : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
                 if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace)) {
-                    throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
+                    throw new PdfException(PdfException.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
             }
 
@@ -160,7 +160,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
                 if (tintTransform.GetInputSize() != GetNumberOfComponents() || tintTransform.GetOutputSize() != alternateSpace
                     .GetNumberOfComponents()) {
-                    throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
+                    throw new PdfException(PdfException.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
             }
 
@@ -202,7 +202,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject(), attributes) {
                 if (tintTransform.GetInputSize() != 1 || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
                     ()) {
-                    throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
+                    throw new PdfException(PdfException.FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE, this);
                 }
             }
 

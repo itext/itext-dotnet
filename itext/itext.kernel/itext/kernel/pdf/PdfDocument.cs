@@ -508,8 +508,8 @@ namespace iText.Kernel.Pdf {
         public virtual void MovePage(int pageNumber, int insertBefore) {
             CheckClosingStatus();
             if (insertBefore < 1 || insertBefore > GetNumberOfPages() + 1) {
-                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.RequestedPageNumberIsOutOfBounds, 
-                    insertBefore));
+                throw new IndexOutOfRangeException(MessageFormatUtil.Format(PdfException.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    , insertBefore));
             }
             PdfPage page = GetPage(pageNumber);
             if (IsTagged()) {
@@ -720,7 +720,7 @@ namespace iText.Kernel.Pdf {
             try {
                 if (writer != null) {
                     if (catalog.IsFlushed()) {
-                        throw new PdfException(PdfException.CannotCloseDocumentWithAlreadyFlushedPdfCatalog);
+                        throw new PdfException(PdfException.CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG);
                     }
                     UpdateProducerInInfoDictionary();
                     UpdateXmpMetadata();
@@ -867,7 +867,7 @@ namespace iText.Kernel.Pdf {
                 RemoveAllHandlers();
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotCloseDocument, e, this);
+                throw new PdfException(PdfException.CANNOT_CLOSE_DOCUMENT, e, this);
             }
             finally {
                 if (writer != null && IsCloseWriter()) {
@@ -962,7 +962,7 @@ namespace iText.Kernel.Pdf {
             CheckClosingStatus();
             if (tagStructureContext == null) {
                 if (!IsTagged()) {
-                    throw new PdfException(PdfException.MustBeATaggedDocument);
+                    throw new PdfException(PdfException.MUST_BE_A_TAGGED_DOCUMENT);
                 }
                 InitTagStructureContext();
             }
@@ -1215,7 +1215,8 @@ namespace iText.Kernel.Pdf {
                         toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
                     }
                     catch (Exception ex) {
-                        throw new PdfException(PdfException.TagStructureCopyingFailedItMightBeCorruptedInOneOfTheDocuments, ex);
+                        throw new PdfException(PdfException.TAG_STRUCTURE_COPYING_FAILED_IT_MIGHT_BE_CORRUPTED_IN_ONE_OF_THE_DOCUMENTS
+                            , ex);
                     }
                 }
                 else {
@@ -1627,10 +1628,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void SetEncryptedPayload(PdfFileSpec fs) {
             if (GetWriter() == null) {
-                throw new PdfException(PdfException.CannotSetEncryptedPayloadToDocumentOpenedInReadingMode);
+                throw new PdfException(PdfException.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_DOCUMENT_OPENED_IN_READING_MODE);
             }
             if (WriterHasEncryption()) {
-                throw new PdfException(PdfException.CannotSetEncryptedPayloadToEncryptedDocument);
+                throw new PdfException(PdfException.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT);
             }
             if (!PdfName.EncryptedPayload.Equals(((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship))) {
                 LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
@@ -1638,7 +1639,8 @@ namespace iText.Kernel.Pdf {
             }
             PdfEncryptedPayload encryptedPayload = PdfEncryptedPayload.ExtractFrom(fs);
             if (encryptedPayload == null) {
-                throw new PdfException(PdfException.EncryptedPayloadFileSpecDoesntHaveEncryptedPayloadDictionary);
+                throw new PdfException(PdfException.ENCRYPTED_PAYLOAD_FILE_SPEC_DOES_NOT_HAVE_ENCRYPTED_PAYLOAD_DICTIONARY
+                    );
             }
             PdfCollection collection = GetCatalog().GetCollection();
             if (collection != null) {
@@ -1953,7 +1955,7 @@ namespace iText.Kernel.Pdf {
                 bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
                     if (reader.pdfDocument != null) {
-                        throw new PdfException(PdfException.PdfReaderHasBeenAlreadyUtilized);
+                        throw new PdfException(PdfException.PDF_READER_HAS_BEEN_ALREADY_UTILIZED);
                     }
                     reader.pdfDocument = this;
                     memoryLimitsAwareHandler = reader.properties.memoryLimitsAwareHandler;
@@ -1985,7 +1987,8 @@ namespace iText.Kernel.Pdf {
                         TryInitTagStructure(str);
                     }
                     if (properties.appendMode && (reader.HasRebuiltXref() || reader.HasFixedXref())) {
-                        throw new PdfException(PdfException.AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible);
+                        throw new PdfException(PdfException.APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_WAS_POSSIBLE
+                            );
                     }
                 }
                 xref.InitFreeReferencesList(this);
@@ -2101,7 +2104,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotOpenDocument, e, this);
+                throw new PdfException(PdfException.CANNOT_OPEN_DOCUMENT, e, this);
             }
         }
 
@@ -2185,11 +2188,11 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void CheckAndAddPage(int index, PdfPage page) {
             if (page.IsFlushed()) {
-                throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
+                throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, page);
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
-                throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3).SetMessageParams
-                    (page, this, page.GetDocument());
+                throw new PdfException(PdfException.PAGE_1_CANNOT_BE_ADDED_TO_DOCUMENT_2_BECAUSE_IT_BELONGS_TO_DOCUMENT_3)
+                    .SetMessageParams(page, this, page.GetDocument());
             }
             catalog.GetPageTree().AddPage(index, page);
         }
@@ -2202,11 +2205,11 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void CheckAndAddPage(PdfPage page) {
             if (page.IsFlushed()) {
-                throw new PdfException(PdfException.FlushedPageCannotBeAddedOrInserted, page);
+                throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, page);
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
-                throw new PdfException(PdfException.Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3).SetMessageParams
-                    (page, this, page.GetDocument());
+                throw new PdfException(PdfException.PAGE_1_CANNOT_BE_ADDED_TO_DOCUMENT_2_BECAUSE_IT_BELONGS_TO_DOCUMENT_3)
+                    .SetMessageParams(page, this, page.GetDocument());
             }
             catalog.GetPageTree().AddPage(page);
         }
@@ -2214,7 +2217,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (closed) {
-                throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
+                throw new PdfException(PdfException.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION);
             }
         }
 
@@ -2295,7 +2298,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (Exception ex) {
-                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
+                throw new PdfException(PdfException.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, ex);
             }
         }
 

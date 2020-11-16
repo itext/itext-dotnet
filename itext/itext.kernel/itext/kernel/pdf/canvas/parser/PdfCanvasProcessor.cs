@@ -244,7 +244,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <param name="resources">the resources of the content stream. Must not be null.</param>
         public virtual void ProcessContent(byte[] contentBytes, PdfResources resources) {
             if (resources == null) {
-                throw new PdfException(PdfException.ResourcesCannotBeNull);
+                throw new PdfException(PdfException.RESOURCES_CANNOT_BE_NULL);
             }
             this.resourcesStack.Push(resources);
             PdfTokenizer tokeniser = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
@@ -258,7 +258,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotParseContentStream, e);
+                throw new PdfException(PdfException.CANNOT_PARSE_CONTENT_STREAM, e);
             }
             this.resourcesStack.Pop();
         }
@@ -821,14 +821,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfName dictionaryName = (PdfName)operands[0];
                 PdfDictionary extGState = processor.GetResources().GetResource(PdfName.ExtGState);
                 if (extGState == null) {
-                    throw new PdfException(PdfException.ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1).SetMessageParams
-                        (@operator);
+                    throw new PdfException(PdfException.RESOURCES_DO_NOT_CONTAIN_EXTGSTATE_ENTRY_UNABLE_TO_PROCESS_OPERATOR_1)
+                        .SetMessageParams(@operator);
                 }
                 PdfDictionary gsDic = extGState.GetAsDictionary(dictionaryName);
                 if (gsDic == null) {
                     gsDic = extGState.GetAsStream(dictionaryName);
                     if (gsDic == null) {
-                        throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
+                        throw new PdfException(PdfException._1_IS_AN_UNKNOWN_GRAPHICS_STATE_DICTIONARY).SetMessageParams(dictionaryName
+                            );
                     }
                 }
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);

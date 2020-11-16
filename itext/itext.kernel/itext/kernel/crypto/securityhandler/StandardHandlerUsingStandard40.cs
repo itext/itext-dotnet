@@ -202,7 +202,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 userKey = ComputeUserKey();
                 // computed user key should be equal to uValue
                 if (IsValidPassword(uValue, userKey)) {
-                    throw new BadPasswordException(PdfException.BadUserPassword);
+                    throw new BadPasswordException(PdfException.BAD_USER_PASSWORD);
                 }
                 usedOwnerPassword = false;
             }

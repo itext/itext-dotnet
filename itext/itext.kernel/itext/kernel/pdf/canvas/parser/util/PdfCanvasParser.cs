@@ -132,13 +132,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             PdfDictionary dic = new PdfDictionary();
             while (true) {
                 if (!NextValidToken()) {
-                    throw new PdfException(PdfException.UnexpectedEndOfFile);
+                    throw new PdfException(PdfException.UNEXPECTED_END_OF_FILE);
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
                     break;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    tokeniser.ThrowError(PdfException.DictionaryKey1IsNotAName, tokeniser.GetStringValue());
+                    tokeniser.ThrowError(PdfException.DICTIONARY_KEY_1_IS_NOT_A_NAME, tokeniser.GetStringValue());
                 }
                 PdfName name = new PdfName(tokeniser.GetStringValue());
                 PdfObject obj = ReadObject();
@@ -159,7 +159,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic && obj.GetObjectType() != PdfObject.DICTIONARY
                     ) {
-                    tokeniser.ThrowError(PdfException.UnexpectedGtGt);
+                    tokeniser.ThrowError(PdfException.UNEXPECTED_GT_GT);
                 }
                 array.Add(obj);
             }

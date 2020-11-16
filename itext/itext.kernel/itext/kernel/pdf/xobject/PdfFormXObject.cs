@@ -139,7 +139,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public static Rectangle CalculateBBoxMultipliedByMatrix(iText.Kernel.Pdf.Xobject.PdfFormXObject form) {
             PdfArray pdfArrayBBox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (pdfArrayBBox == null) {
-                throw new PdfException(PdfException.PdfFormXobjectHasInvalidBbox);
+                throw new PdfException(PdfException.PDF_FORM_XOBJECT_HAS_INVALID_BBOX);
             }
             float[] bBoxArray = pdfArrayBBox.ToFloatArray();
             PdfArray pdfArrayMatrix = form.GetPdfObject().GetAsArray(PdfName.Matrix);
@@ -272,7 +272,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public override void Flush() {
             resources = null;
             if (GetPdfObject().Get(PdfName.BBox) == null) {
-                throw new PdfException(PdfException.FormXObjectMustHaveBbox);
+                throw new PdfException(PdfException.FORM_XOBJECT_MUST_HAVE_BBOX);
             }
             base.Flush();
         }

@@ -109,7 +109,7 @@ namespace iText.Kernel.Counter {
         /// </param>
         protected internal override void OnEvent(IEvent @event, IMetaInfo metaInfo) {
             if (this.closed) {
-                throw new InvalidOperationException(PdfException.DataHandlerCounterHasBeenDisabled);
+                throw new InvalidOperationException(PdfException.DATA_HANDLER_COUNTER_HAS_BEEN_DISABLED);
             }
             this.dataHandler.Register(@event, metaInfo);
         }

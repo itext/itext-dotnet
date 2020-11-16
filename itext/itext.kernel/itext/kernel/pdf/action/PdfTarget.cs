@@ -183,7 +183,7 @@ namespace iText.Kernel.Pdf.Action {
             PdfDocument pdfDocument) {
             PdfPage page = pdfAnnotation.GetPage();
             if (null == page) {
-                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
+                throw new PdfException(PdfException.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE);
             }
             else {
                 Put(PdfName.P, new PdfNumber(pdfDocument.GetPageNumber(page) - 1));

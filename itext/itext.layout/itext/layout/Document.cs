@@ -351,7 +351,7 @@ namespace iText.Layout {
         /// <summary>Checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (GetPdfDocument().IsClosed()) {
-                throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
+                throw new PdfException(PdfException.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION);
             }
         }
     }
