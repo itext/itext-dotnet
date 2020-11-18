@@ -43,12 +43,8 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
-#if NETSTANDARD2_0
-using System.Net.Http;
-#endif
 
 namespace iText.IO.Util {
     /// <summary>
@@ -76,15 +72,10 @@ namespace iText.IO.Util {
                 // UNC path.
                 isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);     
             } else {
-#if !NETSTANDARD2_0
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
                 using (Stream rs = res.GetResponseStream()) {
-#else
-                HttpClient client = new HttpClient();
-                using (Stream rs = client.GetStreamAsync(url).Result) {
-#endif
                     // We don't want to leave the response stream in an open state as it
                     // may lead to running out of server connections what will block processing
                     // of new requests. Therefore copying the state of the stream to a MemoryStream 

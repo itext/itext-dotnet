@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using System.Security;
 using System.Threading;
 using Common.Logging;
-using iText.IO.Util;
 
 namespace iText.Kernel.Counter.Data {
     /// <summary>
@@ -77,13 +76,8 @@ namespace iText.Kernel.Counter.Data {
         public static void RegisterProcessAllShutdownHook<T, V>(EventDataHandler<T, V> dataHandler)
             where V : EventData<T> {
             try {
-#if !NETSTANDARD2_0
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => dataHandler.TryProcessRest();
                 AppDomain.CurrentDomain.DomainUnload += (s, e) => dataHandler.TryProcessRest();
-#else
-                AssemblyLoadContextUtil.RegisterUnloadingEvent(context => dataHandler.TryProcessRest());
-                AssemblyLoadContextUtil.RegisterUnloadingEvent(context => dataHandler.TryProcessRest());
-#endif
             }
             catch (SecurityException) {
                 LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
@@ -112,11 +106,9 @@ namespace iText.Kernel.Counter.Data {
                         Thread.Sleep((int) dataHandler.GetWaitTime().GetTime());
                         dataHandler.TryProcessNextAsync(false);
                     }
-#if !NETSTANDARD2_0
                     catch (ThreadInterruptedException any) {
                         break;
                     }
-#endif
                     catch (Exception any) {
                         LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
                             .UNEXPECTED_EVENT_HANDLER_SERVICE_THREAD_EXCEPTION, any);

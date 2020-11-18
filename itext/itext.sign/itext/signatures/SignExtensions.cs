@@ -189,15 +189,5 @@ namespace iText.Signatures {
             dgst.Update(input);
             return dgst.Digest();
         }
-
-#if NETSTANDARD2_0
-        public static WebResponse GetResponse(this WebRequest request) {
-            return request.GetResponseAsync().Result;
-        }
-
-        public static Stream GetRequestStream(this HttpWebRequest request) {
-            return request.GetRequestStreamAsync().Result;
-        }
-#endif
     }
 }

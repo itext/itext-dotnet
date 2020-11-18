@@ -82,7 +82,6 @@ namespace iText.Kernel.XMP {
             return encoding.GetMaxCharCount(byteCount);
         }
 
-#if !NETSTANDARD2_0
         public override string BodyName {
             get {
                 return encoding.BodyName;
@@ -125,7 +124,6 @@ namespace iText.Kernel.XMP {
             }
         }
     
-#endif
 
         public override int CodePage {
             get {
