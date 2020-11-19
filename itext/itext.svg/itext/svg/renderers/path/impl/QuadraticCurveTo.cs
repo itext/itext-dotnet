@@ -68,10 +68,10 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw(PdfCanvas canvas) {
-            float x1 = CssUtils.ParseAbsoluteLength(coordinates[0]);
-            float y1 = CssUtils.ParseAbsoluteLength(coordinates[1]);
-            float x = CssUtils.ParseAbsoluteLength(coordinates[2]);
-            float y = CssUtils.ParseAbsoluteLength(coordinates[3]);
+            float x1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
+            float y1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
+            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[2]);
+            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[3]);
             canvas.CurveTo(x1, y1, x, y);
         }
 

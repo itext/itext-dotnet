@@ -52,7 +52,7 @@ namespace iText.Svg.Css {
     /// </summary>
     public class SvgCssContext : AbstractCssContext {
         /// <summary>The root font size value in pt.</summary>
-        private float rootFontSize = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
+        private float rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
             .FONT_SIZE));
 
         /// <summary>Gets the root font size.</summary>
@@ -64,7 +64,7 @@ namespace iText.Svg.Css {
         /// <summary>Sets the root font size.</summary>
         /// <param name="fontSizeStr">the new root font size</param>
         public virtual void SetRootFontSize(String fontSizeStr) {
-            this.rootFontSize = CssUtils.ParseAbsoluteFontSize(fontSizeStr);
+            this.rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeStr);
         }
     }
 }

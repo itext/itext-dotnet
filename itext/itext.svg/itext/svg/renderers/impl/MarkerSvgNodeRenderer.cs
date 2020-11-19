@@ -62,8 +62,8 @@ namespace iText.Svg.Renderers.Impl {
             float markerHeight = markerWidthHeight[1];
             String xAttribute = this.GetAttribute(SvgConstants.Attributes.X);
             String yAttribute = this.GetAttribute(SvgConstants.Attributes.Y);
-            float x = xAttribute != null ? CssUtils.ParseAbsoluteLength(xAttribute) : 0f;
-            float y = yAttribute != null ? CssUtils.ParseAbsoluteLength(yAttribute) : 0f;
+            float x = xAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute) : 0f;
+            float y = yAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute) : 0f;
             Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }
@@ -110,12 +110,12 @@ namespace iText.Svg.Renderers.Impl {
             float markerWidth = DEFAULT_MARKER_WIDTH;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_WIDTH)) {
                 String markerWidthRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_WIDTH);
-                markerWidth = CssUtils.ParseAbsoluteLength(markerWidthRawValue);
+                markerWidth = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidthRawValue);
             }
             float markerHeight = DEFAULT_MARKER_HEIGHT;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_HEIGHT)) {
                 String markerHeightRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_HEIGHT);
-                markerHeight = CssUtils.ParseAbsoluteLength(markerHeightRawValue);
+                markerHeight = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeightRawValue);
             }
             return new float[] { markerWidth, markerHeight };
         }
@@ -126,7 +126,7 @@ namespace iText.Svg.Renderers.Impl {
             String markerHeight = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_HEIGHT);
             bool isCorrect = true;
             if (markerWidth != null) {
-                float absoluteMarkerWidthValue = CssUtils.ParseAbsoluteLength(markerWidth);
+                float absoluteMarkerWidthValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidth);
                 if (absoluteMarkerWidthValue == 0) {
                     log.Warn(SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
                     isCorrect = false;
@@ -139,7 +139,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             if (markerHeight != null) {
-                float absoluteMarkerHeightValue = CssUtils.ParseAbsoluteLength(markerHeight);
+                float absoluteMarkerHeightValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeight);
                 if (absoluteMarkerHeightValue == 0) {
                     log.Warn(SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
                     isCorrect = false;
@@ -171,8 +171,9 @@ namespace iText.Svg.Renderers.Impl {
                         rotAngle = ((IMarkerCapable)GetParent()).GetAutoOrientAngle(this, true);
                     }
                     else {
-                        if (CssUtils.IsAngleValue(orient) || CssUtils.IsNumericValue(orient)) {
-                            rotAngle = CssUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT));
+                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumericValue(orient)) {
+                            rotAngle = CssDimensionParsingUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT
+                                ));
                         }
                     }
                 }

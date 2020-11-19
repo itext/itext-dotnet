@@ -131,19 +131,21 @@ namespace iText.Svg.Renderers.Impl {
 
         private void SetParameters() {
             if (GetAttribute(SvgConstants.Attributes.X) != null) {
-                x = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.X));
+                x = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.X));
             }
             if (GetAttribute(SvgConstants.Attributes.Y) != null) {
-                y = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
+                y = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
             }
-            width = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.WIDTH));
-            height = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.HEIGHT));
+            width = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.WIDTH));
+            height = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.HEIGHT));
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
-                rx = CheckRadius(CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX)), width);
+                rx = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX)), width
+                    );
                 rxPresent = true;
             }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RY)) {
-                ry = CheckRadius(CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY)), height);
+                ry = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY)), height
+                    );
                 ryPresent = true;
             }
         }

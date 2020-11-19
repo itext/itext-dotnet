@@ -186,11 +186,11 @@ namespace iText.Svg.Renderers.Impl {
             float y = 0f;
             // if x attribute of svg is present, then x value of current viewport should be set according to it
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                x = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                x = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
             }
             // if y attribute of svg is present, then y value of current viewport should be set according to it
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                y = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                y = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
             }
             if (!(this is MarkerSvgNodeRenderer)) {
                 x -= currentViewPort.GetX();
@@ -354,7 +354,7 @@ namespace iText.Svg.Renderers.Impl {
             IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
             float[] values = new float[valueStrings.Count];
             for (int i = 0; i < values.Length; i++) {
-                values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+                values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
             }
             return values;
         }

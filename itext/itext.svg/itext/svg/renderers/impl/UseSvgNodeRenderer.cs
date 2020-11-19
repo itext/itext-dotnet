@@ -77,10 +77,10 @@ namespace iText.Svg.Renderers.Impl {
                             float x = 0f;
                             float y = 0f;
                             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                                x = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X));
+                                x = CssDimensionParsingUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X));
                             }
                             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                                y = CssUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                                y = CssDimensionParsingUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
                             }
                             AffineTransform inverseMatrix = null;
                             if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {

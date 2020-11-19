@@ -56,10 +56,10 @@ namespace iText.StyledXmlParser.Util {
                 if (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.EM) || ValueIsOfMeasurement(parentPropValue, 
                     CommonCssConstants.EX) || ValueIsOfMeasurement(parentPropValue, CommonCssConstants.PERCENTAGE) && fontSizeDependentPercentage
                     .Contains(styleProperty)) {
-                    float absoluteParentFontSize = CssUtils.ParseAbsoluteLength(parentFontSizeString);
+                    float absoluteParentFontSize = CssDimensionParsingUtils.ParseAbsoluteLength(parentFontSizeString);
                     // Format to 4 decimal places to prevent differences between Java and C#
-                    styles.Put(styleProperty, DecimalFormatUtil.FormatNumber(CssUtils.ParseRelativeValue(parentPropValue, absoluteParentFontSize
-                        ), "0.####") + CommonCssConstants.PT);
+                    styles.Put(styleProperty, DecimalFormatUtil.FormatNumber(CssDimensionParsingUtils.ParseRelativeValue(parentPropValue
+                        , absoluteParentFontSize), "0.####") + CommonCssConstants.PT);
                 }
                 else {
                     styles.Put(styleProperty, parentPropValue);
@@ -106,8 +106,8 @@ namespace iText.StyledXmlParser.Util {
             if (value == null) {
                 return false;
             }
-            return value.EndsWith(measurement) && CssUtils.IsNumericValue(value.JSubstring(0, value.Length - measurement
-                .Length).Trim());
+            return value.EndsWith(measurement) && CssTypesValidationUtils.IsNumericValue(value.JSubstring(0, value.Length
+                 - measurement.Length).Trim());
         }
     }
 }

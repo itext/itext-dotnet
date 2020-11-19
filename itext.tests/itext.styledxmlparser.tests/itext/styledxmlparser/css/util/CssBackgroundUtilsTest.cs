@@ -20,11 +20,34 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Util {
     public class CssBackgroundUtilsTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void ParseBackgroundRepeatTest() {
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("repeat"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("RePeAt"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("no-repeat"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("no- repeat"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.ROUND, CssBackgroundUtils.ParseBackgroundRepeat
+                ("round"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("ro!und"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.SPACE, CssBackgroundUtils.ParseBackgroundRepeat
+                ("space"));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                (" space "));
+            NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, CssBackgroundUtils.ParseBackgroundRepeat
+                ("something"));
+        }
+
         [NUnit.Framework.Test]
         public virtual void ResolveBackgroundPropertyTypeTest() {
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.UNDEFINED, CssBackgroundUtils.ResolveBackgroundPropertyType

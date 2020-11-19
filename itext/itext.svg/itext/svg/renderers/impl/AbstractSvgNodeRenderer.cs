@@ -176,7 +176,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Return font-size of the current element</summary>
         /// <returns>absolute value of font-size</returns>
         public virtual float GetCurrentFontSize() {
-            return CssUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
+            return CssDimensionParsingUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace iText.Svg.Renderers.Impl {
                             // 1 px = 0,75 pt
                             float strokeWidth = 0.75f;
                             if (strokeWidthRawValue != null) {
-                                strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                                strokeWidth = CssDimensionParsingUtils.ParseAbsoluteLength(strokeWidthRawValue);
                             }
                             float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
                             Color strokeColor = null;
@@ -393,13 +393,13 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>absolute value in points</returns>
         protected internal virtual float ParseAbsoluteLength(String length, float percentRelativeValue, float defaultValue
             , SvgDrawContext context) {
-            if (CssUtils.IsPercentageValue(length)) {
-                return CssUtils.ParseRelativeValue(length, percentRelativeValue);
+            if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                return CssDimensionParsingUtils.ParseRelativeValue(length, percentRelativeValue);
             }
             else {
                 float em = GetCurrentFontSize();
                 float rem = context.GetCssContext().GetRootFontSize();
-                UnitValue unitValue = CssUtils.ParseLengthValueToPt(length, em, rem);
+                UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(length, em, rem);
                 if (unitValue != null && unitValue.IsPointValue()) {
                     return unitValue.GetValue();
                 }

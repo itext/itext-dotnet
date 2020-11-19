@@ -279,10 +279,10 @@ namespace iText.Svg.Renderers.Impl {
                 xMove = 0f;
                 yMove = 0f;
                 if (!xValuesList.IsEmpty()) {
-                    xMove = CssUtils.ParseAbsoluteLength(xValuesList[0]);
+                    xMove = CssDimensionParsingUtils.ParseAbsoluteLength(xValuesList[0]);
                 }
                 if (!yValuesList.IsEmpty()) {
-                    yMove = CssUtils.ParseAbsoluteLength(yValuesList[0]);
+                    yMove = CssDimensionParsingUtils.ParseAbsoluteLength(yValuesList[0]);
                 }
                 moveResolved = true;
             }
@@ -351,7 +351,7 @@ namespace iText.Svg.Renderers.Impl {
             if (!valuesList.IsEmpty()) {
                 result = new float[valuesList.Count];
                 for (int i = 0; i < valuesList.Count; i++) {
-                    result[i] = CssUtils.ParseAbsoluteLength(valuesList[i]);
+                    result[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valuesList[i]);
                 }
             }
             return result;

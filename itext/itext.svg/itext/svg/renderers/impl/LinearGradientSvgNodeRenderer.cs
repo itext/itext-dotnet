@@ -137,14 +137,14 @@ namespace iText.Svg.Renderers.Impl {
         private double GetCoordinateForObjectBoundingBox(String attributeName, double defaultValue) {
             String attributeValue = GetAttribute(attributeName);
             double absoluteValue = defaultValue;
-            if (CssUtils.IsPercentageValue(attributeValue)) {
-                absoluteValue = CssUtils.ParseRelativeValue(attributeValue, 1);
+            if (CssTypesValidationUtils.IsPercentageValue(attributeValue)) {
+                absoluteValue = CssDimensionParsingUtils.ParseRelativeValue(attributeValue, 1);
             }
             else {
-                if (CssUtils.IsNumericValue(attributeValue) || CssUtils.IsMetricValue(attributeValue) || CssUtils.IsRelativeValue
-                    (attributeValue)) {
+                if (CssTypesValidationUtils.IsNumericValue(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
+                    ) || CssTypesValidationUtils.IsRelativeValue(attributeValue)) {
                     // if there is incorrect value metric, then we do not need to parse the value
-                    int unitsPosition = CssUtils.DeterminePositionBetweenValueAndUnit(attributeValue);
+                    int unitsPosition = CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(attributeValue);
                     if (unitsPosition > 0) {
                         // We want to ignore the unit type. From the svg specification:
                         // "the normal of the linear gradient is perpendicular to the gradient vector in
@@ -156,7 +156,7 @@ namespace iText.Svg.Renderers.Impl {
                         // i.e. for value '0.5cm' the top/left of the object bounding box would be (1cm, 1cm),
                         // for value '0.5em' the top/left of the object bounding box would be (1em, 1em) and etc.
                         // no null pointer should be thrown as determine
-                        absoluteValue = CssUtils.ParseDouble(attributeValue.JSubstring(0, unitsPosition)).Value;
+                        absoluteValue = CssDimensionParsingUtils.ParseDouble(attributeValue.JSubstring(0, unitsPosition)).Value;
                     }
                 }
             }
@@ -170,7 +170,7 @@ namespace iText.Svg.Renderers.Impl {
              length, float em, float rem) {
             String attributeValue = GetAttribute(attributeName);
             double absoluteValue;
-            UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
+            UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(attributeValue, em, rem);
             if (unitValue == null) {
                 absoluteValue = defaultValue;
             }

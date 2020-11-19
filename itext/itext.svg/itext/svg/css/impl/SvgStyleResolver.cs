@@ -66,8 +66,8 @@ namespace iText.Svg.Css.Impl {
             (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
             )new SvgAttributeInheritance())));
 
-        private static readonly float DEFAULT_FONT_SIZE = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue
-            (SvgConstants.Attributes.FONT_SIZE));
+        private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
+            .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
 
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
 
@@ -162,25 +162,25 @@ namespace iText.Svg.Css.Impl {
              parentFontSizeStr) {
             String elementFontSize = styles.Get(SvgConstants.Attributes.FONT_SIZE);
             String resolvedFontSize;
-            if (CssUtils.IsNegativeValue(elementFontSize)) {
+            if (CssTypesValidationUtils.IsNegativeValue(elementFontSize)) {
                 elementFontSize = parentFontSizeStr;
             }
-            if (CssUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize) || CommonCssConstants
-                .SMALLER.Equals(elementFontSize)) {
+            if (CssTypesValidationUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize
+                ) || CommonCssConstants.SMALLER.Equals(elementFontSize)) {
                 float baseFontSize;
-                if (CssUtils.IsRemValue(elementFontSize)) {
+                if (CssTypesValidationUtils.IsRemValue(elementFontSize)) {
                     baseFontSize = cssContext == null ? DEFAULT_FONT_SIZE : cssContext.GetRootFontSize();
                 }
                 else {
                     if (parentFontSizeStr == null) {
-                        baseFontSize = CssUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes.FONT_SIZE
-                            ));
+                        baseFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
+                            .FONT_SIZE));
                     }
                     else {
-                        baseFontSize = CssUtils.ParseAbsoluteLength(parentFontSizeStr);
+                        baseFontSize = CssDimensionParsingUtils.ParseAbsoluteLength(parentFontSizeStr);
                     }
                 }
-                float absoluteFontSize = CssUtils.ParseRelativeFontSize(elementFontSize, baseFontSize);
+                float absoluteFontSize = CssDimensionParsingUtils.ParseRelativeFontSize(elementFontSize, baseFontSize);
                 // Format to 4 decimal places to prevent differences between Java and C#
                 resolvedFontSize = DecimalFormatUtil.FormatNumber(absoluteFontSize, "0.####");
             }
@@ -189,8 +189,8 @@ namespace iText.Svg.Css.Impl {
                     resolvedFontSize = DecimalFormatUtil.FormatNumber(DEFAULT_FONT_SIZE, "0.####");
                 }
                 else {
-                    resolvedFontSize = DecimalFormatUtil.FormatNumber(CssUtils.ParseAbsoluteFontSize(elementFontSize), "0.####"
-                        );
+                    resolvedFontSize = DecimalFormatUtil.FormatNumber(CssDimensionParsingUtils.ParseAbsoluteFontSize(elementFontSize
+                        ), "0.####");
                 }
             }
             styles.Put(SvgConstants.Attributes.FONT_SIZE, resolvedFontSize + CommonCssConstants.PT);

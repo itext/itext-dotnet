@@ -1329,7 +1329,7 @@ namespace iText.Svg.Converter {
                 IList<String> valueStrings = SvgCssUtils.SplitValueList(vbString);
                 values = new float[valueStrings.Count];
                 for (int i = 0; i < values.Length; i++) {
-                    values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+                    values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
                 }
                 viewBoxPresent = true;
             }
@@ -1346,11 +1346,11 @@ namespace iText.Svg.Converter {
                     //Log Warning
                     LOGGER.Warn(SvgLogMessageConstant.MISSING_WIDTH);
                     //Set to browser default
-                    width = CssUtils.ParseAbsoluteLength("300px");
+                    width = CssDimensionParsingUtils.ParseAbsoluteLength("300px");
                 }
             }
             else {
-                width = CssUtils.ParseAbsoluteLength(wString);
+                width = CssDimensionParsingUtils.ParseAbsoluteLength(wString);
             }
             hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
             if (hString == null) {
@@ -1361,11 +1361,11 @@ namespace iText.Svg.Converter {
                     //Log Warning
                     LOGGER.Warn(SvgLogMessageConstant.MISSING_HEIGHT);
                     //Set to browser default
-                    height = CssUtils.ParseAbsoluteLength("150px");
+                    height = CssDimensionParsingUtils.ParseAbsoluteLength("150px");
                 }
             }
             else {
-                height = CssUtils.ParseAbsoluteLength(hString);
+                height = CssDimensionParsingUtils.ParseAbsoluteLength(hString);
             }
             res[0] = width;
             res[1] = height;

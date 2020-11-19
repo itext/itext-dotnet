@@ -53,7 +53,7 @@ using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
     public class CssUtilsTest : ExtendedITextTest {
-        public static float EPS = 0.0001f;
+        private static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
         public virtual void ExtractShorthandPropertiesFromEmptyStringTest() {

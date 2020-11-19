@@ -65,7 +65,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.IShorthandResolver#resolveShorthand(java.lang.String)
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
-            if (CssUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
+            if (CssTypesValidationUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
                 return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.BACKGROUND_COLOR, shorthandExpression), 
                     new CssDeclaration(CommonCssConstants.BACKGROUND_IMAGE, shorthandExpression), new CssDeclaration(CommonCssConstants
                     .BACKGROUND_POSITION, shorthandExpression), new CssDeclaration(CommonCssConstants.BACKGROUND_SIZE, shorthandExpression

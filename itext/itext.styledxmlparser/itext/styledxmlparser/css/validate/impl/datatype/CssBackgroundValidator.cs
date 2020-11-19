@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (objectString == null) {
                 return false;
             }
-            if (CssUtils.IsInitialOrInheritOrUnset(objectString)) {
+            if (CssTypesValidationUtils.IsInitialOrInheritOrUnset(objectString)) {
                 return true;
             }
             // Actually it's not shorthand but extractShorthandProperties method works exactly as needed in this case

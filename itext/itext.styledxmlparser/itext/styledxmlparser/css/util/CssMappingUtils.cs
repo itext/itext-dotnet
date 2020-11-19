@@ -42,10 +42,10 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Layout.Properties;
-using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS mapping operations.</summary>
+    [System.ObsoleteAttribute(@"will be removed in 7.2, use CssBackgroundUtils instead")]
     public sealed class CssMappingUtils {
         /// <summary>
         /// Creates a new
@@ -62,25 +62,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <see cref="iText.Layout.Properties.BackgroundRepeat.BackgroundRepeatValue"/>
         /// instance
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssBackgroundUtils.ParseBackgroundRepeat(System.String) instead"
+            )]
         public static BackgroundRepeat.BackgroundRepeatValue ParseBackgroundRepeat(String value) {
-            switch (value) {
-                case CommonCssConstants.NO_REPEAT: {
-                    return BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT;
-                }
-
-                case CommonCssConstants.ROUND: {
-                    return BackgroundRepeat.BackgroundRepeatValue.ROUND;
-                }
-
-                case CommonCssConstants.SPACE: {
-                    return BackgroundRepeat.BackgroundRepeatValue.SPACE;
-                }
-
-                case CommonCssConstants.REPEAT:
-                default: {
-                    return BackgroundRepeat.BackgroundRepeatValue.REPEAT;
-                }
-            }
+            return CssBackgroundUtils.ParseBackgroundRepeat(value);
         }
     }
 }

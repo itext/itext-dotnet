@@ -91,7 +91,7 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual float GetAttribute(IDictionary<String, String> attributes, String key) {
             String value = attributes.Get(key);
             if (value != null && !String.IsNullOrEmpty(value)) {
-                return CssUtils.ParseAbsoluteLength(attributes.Get(key));
+                return CssDimensionParsingUtils.ParseAbsoluteLength(attributes.Get(key));
             }
             return 0;
         }

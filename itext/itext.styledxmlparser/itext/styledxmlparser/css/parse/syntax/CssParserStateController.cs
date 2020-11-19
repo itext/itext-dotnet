@@ -355,7 +355,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                             )) {
                             String url = token.GetValue().Trim();
                             url = url.JSubstring(4, url.Length - 1).Trim();
-                            if (CssUtils.IsBase64Data(url)) {
+                            if (CssTypesValidationUtils.IsBase64Data(url)) {
                                 strToAppend = token.GetValue().Trim();
                             }
                             else {

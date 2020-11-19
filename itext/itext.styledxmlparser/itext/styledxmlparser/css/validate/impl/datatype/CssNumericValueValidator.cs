@@ -59,10 +59,10 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
             if (CommonCssConstants.NORMAL.Equals(objectString)) {
                 return this.allowedNormal;
             }
-            if (!CssUtils.IsValidNumericValue(objectString)) {
+            if (!CssTypesValidationUtils.IsValidNumericValue(objectString)) {
                 return false;
             }
-            if (CssUtils.IsPercentageValue(objectString)) {
+            if (CssTypesValidationUtils.IsPercentageValue(objectString)) {
                 return this.allowedPercent;
             }
             return true;

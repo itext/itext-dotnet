@@ -38,12 +38,12 @@ namespace iText.Svg.Renderers.Impl {
         public virtual double GetOffset() {
             double? offset = null;
             String offsetAttribute = GetAttribute(SvgConstants.Attributes.OFFSET);
-            if (CssUtils.IsPercentageValue(offsetAttribute)) {
-                offset = (double)CssUtils.ParseRelativeValue(offsetAttribute, 1);
+            if (CssTypesValidationUtils.IsPercentageValue(offsetAttribute)) {
+                offset = (double)CssDimensionParsingUtils.ParseRelativeValue(offsetAttribute, 1);
             }
             else {
-                if (CssUtils.IsNumericValue(offsetAttribute)) {
-                    offset = CssUtils.ParseDouble(offsetAttribute);
+                if (CssTypesValidationUtils.IsNumericValue(offsetAttribute)) {
+                    offset = CssDimensionParsingUtils.ParseDouble(offsetAttribute);
                 }
             }
             double result = offset != null ? offset.Value : 0d;
@@ -73,7 +73,7 @@ namespace iText.Svg.Renderers.Impl {
             float? result = null;
             String opacityValue = GetAttribute(SvgConstants.Tags.STOP_OPACITY);
             if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                result = CssUtils.ParseFloat(opacityValue);
+                result = CssDimensionParsingUtils.ParseFloat(opacityValue);
             }
             return result != null ? result.Value : 1f;
         }

@@ -54,16 +54,18 @@ namespace iText.Svg.Renderers.Impl {
             float portHeight = currentViewPort.GetHeight();
             if (attributesAndStyles != null) {
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                    portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                    portX = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                    portY = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                    portY = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                    portWidth = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH));
+                    portWidth = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH
+                        ));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                    portHeight = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT));
+                    portHeight = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.
+                        HEIGHT));
                 }
             }
             return new Rectangle(portX, portY, portWidth, portHeight);

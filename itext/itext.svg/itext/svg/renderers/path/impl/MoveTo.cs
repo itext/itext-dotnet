@@ -61,8 +61,8 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 
         public override void Draw(PdfCanvas canvas) {
-            float x = CssUtils.ParseAbsoluteLength(coordinates[0]);
-            float y = CssUtils.ParseAbsoluteLength(coordinates[1]);
+            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
+            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
             canvas.MoveTo(x, y);
         }
 
