@@ -83,9 +83,11 @@ namespace iText.Kernel.Utils {
     /// for the content of the cmpDoc and "but was" part stands for the content of the outDoc.
     /// </remarks>
     public class CompareTool {
+        private const String FILE_PROTOCOL = "file://";
+
         private const String UNEXPECTED_NUMBER_OF_PAGES = "Unexpected number of pages for <filename>.";
 
-        private const String DIFFERENT_PAGES = "File file:///<filename> differs on page <pagenumber>.";
+        private const String DIFFERENT_PAGES = "File " + FILE_PROTOCOL + "<filename> differs on page <pagenumber>.";
 
         private const String IGNORED_AREAS_PREFIX = "ignored_areas_";
 
@@ -1160,8 +1162,8 @@ namespace iText.Kernel.Utils {
                         if (!imageMagickHelper.RunImageMagickImageCompare(imageFiles[i].FullName, cmpImageFiles[i].FullName, diffName
                             )) {
                             FileInfo diffFile = new FileInfo(diffName);
-                            differentPagesFail += "\nPlease, examine " + "file:///" + UrlUtil.ToNormalizedURI(diffFile).AbsolutePath +
-                                 " for more details.";
+                            differentPagesFail += "\nPlease, examine " + FILE_PROTOCOL + UrlUtil.ToNormalizedURI(diffFile).AbsolutePath
+                                 + " for more details.";
                         }
                     }
                     System.Console.Out.WriteLine(differentPagesFail);
@@ -1251,10 +1253,10 @@ namespace iText.Kernel.Utils {
         }
 
         private void PrintOutCmpDirectories() {
-            System.Console.Out.WriteLine("Out file folder: file://" + UrlUtil.ToNormalizedURI(new FileInfo(outPdf).DirectoryName
-                ).AbsolutePath);
-            System.Console.Out.WriteLine("Cmp file folder: file://" + UrlUtil.ToNormalizedURI(new FileInfo(cmpPdf).DirectoryName
-                ).AbsolutePath);
+            System.Console.Out.WriteLine("Out file folder: " + FILE_PROTOCOL + UrlUtil.ToNormalizedURI(new FileInfo(outPdf
+                ).DirectoryName).AbsolutePath);
+            System.Console.Out.WriteLine("Cmp file folder: " + FILE_PROTOCOL + UrlUtil.ToNormalizedURI(new FileInfo(cmpPdf
+                ).DirectoryName).AbsolutePath);
         }
 
         private String CompareByContent(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
