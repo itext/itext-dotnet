@@ -42,7 +42,6 @@
     <ProjectReference Include="..\..\itext\itext.forms\itext.forms.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.io\itext.io.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.netstandard.csproj" />
-    <ProjectReference Include="..\..\itext\itext.layout\itext.layout.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.netstandard.csproj" />
     <ProjectReference Include="..\..\itext\itext.sign\itext.sign.netstandard.csproj" />
   </ItemGroup>
