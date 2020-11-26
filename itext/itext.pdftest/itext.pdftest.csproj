@@ -76,7 +76,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\verapdf\greenfield-apps-1.14.8.jar">
+    <Content Include="lib\verapdf\greenfield-apps-1.16.1.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="lib\verapdf\VeraPDF_license.txt">
