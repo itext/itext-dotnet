@@ -282,7 +282,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
-                (THAI_WORD.Length + 1, specialScriptLayoutResults, false, new List<IRenderer>());
+                (THAI_WORD.Length + 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(5, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -312,7 +312,7 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(indexOfThaiRenderer, new LayoutResult(LayoutResult.NOTHING, layoutArea, null
                 , null));
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
-                (indexOfThaiRenderer, specialScriptLayoutResults, false, new List<IRenderer>());
+                (indexOfThaiRenderer, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(indexOfThaiRenderer, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -349,7 +349,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
-                (THAI_WORD.Length - 1, specialScriptLayoutResults, false, new List<IRenderer>());
+                (THAI_WORD.Length - 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(THAI_WORD.Length - 1, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(specialScriptLayoutResults.Get(THAI_WORD.Length - 1), lastFittingChildRendererData
                 .childLayoutResult);
@@ -754,6 +754,50 @@ namespace iText.Layout.Renderer {
             LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
                 (0);
             NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT, status);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowXSingleWordSingleRenderer() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(THAI_WORD));
+            textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(textRenderer);
+            float minWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
+            lineRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            LayoutArea layoutArea = new LayoutArea(1, new Rectangle(minWidth / 2, 100));
+            LayoutResult layoutResult = lineRenderer.Layout(new LayoutContext(layoutArea));
+            NUnit.Framework.Assert.AreEqual(LayoutResult.FULL, layoutResult.GetStatus());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowXSingleWordOneGlyphPerTextRenderer() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            TextRenderer textRendererForMinMaxWidth = new TextRenderer(new iText.Layout.Element.Text(THAI_WORD));
+            textRendererForMinMaxWidth.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H
+                ));
+            textRendererForMinMaxWidth.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            textRendererForMinMaxWidth.SetParent(document.GetRenderer());
+            float minWidth = textRendererForMinMaxWidth.GetMinMaxWidth().GetMinWidth();
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            TextRenderer[] textRenderers = new TextRenderer[THAI_WORD.Length];
+            for (int i = 0; i < textRenderers.Length; i++) {
+                textRenderers[i] = new TextRenderer(new iText.Layout.Element.Text(""));
+                textRenderers[i].SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+                textRenderers[i].SetText(new String(new char[] { THAI_WORD[i] }));
+                textRenderers[i].SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(i + 1 != textRenderers
+                    .Length ? -1 : 1)));
+                lineRenderer.AddChild(textRenderers[i]);
+            }
+            lineRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            LayoutArea layoutArea = new LayoutArea(1, new Rectangle(minWidth / 2, 100));
+            LayoutResult layoutResult = lineRenderer.Layout(new LayoutContext(layoutArea));
+            NUnit.Framework.Assert.AreEqual(LayoutResult.FULL, layoutResult.GetStatus());
         }
     }
 }

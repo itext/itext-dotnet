@@ -335,7 +335,7 @@ namespace iText.Layout.Renderer {
                             nonBreakingHyphenRelatedChunkWidth = 0;
                         }
                     }
-                    if (firstCharacterWhichExceedsAllowedWidth == -1) {
+                    if (firstCharacterWhichExceedsAllowedWidth == -1 || !IsOverflowFit(overflowX)) {
                         nonBreakablePartWidthWhichDoesNotExceedAllowedWidth += glyphWidth + xAdvance;
                     }
                     nonBreakablePartFullWidth += glyphWidth + xAdvance;
@@ -468,7 +468,8 @@ namespace iText.Layout.Renderer {
                                 }
                             }
                         }
-                        bool specialScriptWordSplit = TextContainsSpecialScriptGlyphs(true) && !isSplitForcedByNewLine;
+                        bool specialScriptWordSplit = TextContainsSpecialScriptGlyphs(true) && !isSplitForcedByNewLine && IsOverflowFit
+                            (overflowX);
                         if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar
                              || -1 != nonBreakingHyphenRelatedChunkStart || specialScriptWordSplit) {
                             // if the word is too long for a single line we will have to split it
@@ -1203,6 +1204,10 @@ namespace iText.Layout.Renderer {
 
         internal virtual void SetSpecialScriptFirstNotFittingIndex(int lastFittingIndex) {
             this.specialScriptFirstNotFittingIndex = lastFittingIndex;
+        }
+
+        internal virtual int GetSpecialScriptFirstNotFittingIndex() {
+            return specialScriptFirstNotFittingIndex;
         }
 
         protected internal override Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
