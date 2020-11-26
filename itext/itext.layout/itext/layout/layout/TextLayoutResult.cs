@@ -111,11 +111,11 @@ namespace iText.Layout.Layout {
         }
 
         /// <summary>
-        /// Indicates whether some word in a rendered text was splitted during
+        /// Indicates whether some word in a rendered text was split during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// </summary>
         /// <remarks>
-        /// Indicates whether some word in a rendered text was splitted during
+        /// Indicates whether some word in a rendered text was split during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// The value will be set as true if, for example, the rendered words width is bigger than the width of layout area.
         /// </remarks>
@@ -129,7 +129,7 @@ namespace iText.Layout.Layout {
         /// <see cref="wordHasBeenSplit"/>
         /// </summary>
         /// <param name="wordHasBeenSplit">
-        /// indicates that some word was splitted during
+        /// indicates that some word was split during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// </param>
         /// <returns>

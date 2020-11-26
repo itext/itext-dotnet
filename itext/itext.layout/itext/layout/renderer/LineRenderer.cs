@@ -143,6 +143,7 @@ namespace iText.Layout.Renderer {
                 LayoutResult childResult = null;
                 Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
                     , layoutBox.GetHeight());
+                RenderingMode? childRenderingMode = childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
                 if (childRenderer is TextRenderer) {
                     // Delete these properties in case of relayout. We might have applied them during justify().
                     childRenderer.DeleteOwnProperty(Property.CHARACTER_SPACING);
@@ -373,8 +374,7 @@ namespace iText.Layout.Renderer {
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is ILeafElementRenderer && childResult.GetStatus() != LayoutResult.NOTHING) {
-                    if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && 
-                        childRenderer is TextRenderer) {
+                    if (RenderingMode.HTML_MODE == childRenderingMode && childRenderer is TextRenderer) {
                         float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender((TextRenderer)childRenderer);
                         childAscent = ascenderDescender[0];
                         childDescent = ascenderDescender[1];
@@ -404,22 +404,29 @@ namespace iText.Layout.Renderer {
                 bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
                     ());
                 bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
-                bool wordWasSplitAndItWillFitOntoNextLine = false;
+                bool forceOverflowForTextRendererPartialResult = false;
                 // if childRenderer contains scripts which require word wrapping,
                 // we don't need to attempt to relayout it and see if the split word could fit the next line
                 // word wrapping is handled on shouldBreakLayouting
                 if (shouldBreakLayouting && childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit
                     () && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true)) {
-                    if (wasXOverflowChanged) {
-                        SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                    if (RenderingMode.HTML_MODE == childRenderingMode && anythingPlaced) {
+                        // we don't really know if it will fit,
+                        // it's just used as a flag to mark that the entire word should be pushed to the next line
+                        forceOverflowForTextRendererPartialResult = true;
                     }
-                    LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
-                        ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
-                    if (wasXOverflowChanged) {
-                        SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
-                    }
-                    if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
-                        wordWasSplitAndItWillFitOntoNextLine = true;
+                    else {
+                        if (wasXOverflowChanged) {
+                            SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                        }
+                        LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
+                            ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
+                        if (wasXOverflowChanged) {
+                            SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                        }
+                        if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
+                            forceOverflowForTextRendererPartialResult = true;
+                        }
                     }
                 }
                 else {
@@ -433,7 +440,7 @@ namespace iText.Layout.Renderer {
                         childResult = lastFittingChildRendererData.childLayoutResult;
                     }
                 }
-                if (!wordWasSplitAndItWillFitOntoNextLine) {
+                if (!forceOverflowForTextRendererPartialResult) {
                     maxAscent = Math.Max(maxAscent, childAscent);
                     if (childRenderer is TextRenderer) {
                         maxTextAscent = Math.Max(maxTextAscent, childAscent);
@@ -493,14 +500,14 @@ namespace iText.Layout.Renderer {
                         widthHandler.UpdateMaxChildWidth(maxChildWidth_1 + currChildTextIndent);
                     }
                 }
-                if (!wordWasSplitAndItWillFitOntoNextLine) {
+                if (!forceOverflowForTextRendererPartialResult) {
                     occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
                         curWidth, maxHeight));
                 }
                 if (shouldBreakLayouting) {
                     LineRenderer[] split = Split();
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
-                    if (wordWasSplitAndItWillFitOntoNextLine) {
+                    if (forceOverflowForTextRendererPartialResult) {
                         split[1].childRenderers.Add(childRenderer);
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                     }

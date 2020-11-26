@@ -161,6 +161,12 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = area.GetBBox().Clone();
             bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            OverflowWrapPropertyValue? overflowWrap = this.GetProperty<OverflowWrapPropertyValue?>(Property.OVERFLOW_WRAP
+                );
+            if (overflowWrap == OverflowWrapPropertyValue.ANYWHERE || overflowWrap == OverflowWrapPropertyValue.BREAK_WORD
+                ) {
+                overflowX = OverflowPropertyValue.FIT;
+            }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
@@ -347,6 +353,11 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                     }
+                    if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
+                        widthHandler.UpdateMinChildWidth((float)((double)glyphWidth + (double)xAdvance + (double)italicSkewAddition
+                             + (double)boldSimulationAddition));
+                        widthHandler.UpdateMaxChildWidth((float)((double)glyphWidth + (double)xAdvance));
+                    }
                     bool endOfWordBelongingToSpecialScripts = TextContainsSpecialScriptGlyphs(true) && FindPossibleBreaksSplitPosition
                         (specialScriptsWordBreakPoints, ind + 1, true) >= 0;
                     if (ind + 1 == text.end || splitCharacters.IsSplitCharacter(text, ind) || splitCharacters.IsSplitCharacter
@@ -367,10 +378,15 @@ namespace iText.Layout.Renderer {
                     currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                     currentTextPos = nonBreakablePartEnd + 1;
                     currentLineWidth += nonBreakablePartFullWidth;
-                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
-                        + boldSimulationAddition);
-                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
-                        + boldSimulationAddition);
+                    if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
+                        widthHandler.UpdateMaxChildWidth((float)((double)italicSkewAddition + (double)boldSimulationAddition));
+                    }
+                    else {
+                        widthHandler.UpdateMinChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
+                            )italicSkewAddition + (double)boldSimulationAddition));
+                        widthHandler.UpdateMaxChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
+                            )italicSkewAddition + (double)boldSimulationAddition));
+                    }
                     anythingPlaced = true;
                 }
                 else {
@@ -423,10 +439,15 @@ namespace iText.Layout.Renderer {
                                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                                 currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                                widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                    );
-                                                widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
-                                                    );
+                                                if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
+                                                    widthHandler.UpdateMaxChildWidth((float)((double)italicSkewAddition + (double)boldSimulationAddition));
+                                                }
+                                                else {
+                                                    widthHandler.UpdateMinChildWidth((float)((double)currentHyphenationChoicePreTextWidth + (double)italicSkewAddition
+                                                         + (double)boldSimulationAddition));
+                                                    widthHandler.UpdateMaxChildWidth((float)((double)currentHyphenationChoicePreTextWidth + (double)italicSkewAddition
+                                                         + (double)boldSimulationAddition));
+                                                }
                                                 currentTextPos = wordBounds[0] + pre.Length;
                                                 break;
                                             }
@@ -467,10 +488,15 @@ namespace iText.Layout.Renderer {
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
-                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
-                                    + boldSimulationAddition);
-                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
-                                    + boldSimulationAddition);
+                                if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
+                                    widthHandler.UpdateMaxChildWidth((float)((double)italicSkewAddition + (double)boldSimulationAddition));
+                                }
+                                else {
+                                    widthHandler.UpdateMinChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
+                                        )italicSkewAddition + (double)boldSimulationAddition));
+                                    widthHandler.UpdateMaxChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
+                                        )italicSkewAddition + (double)boldSimulationAddition));
+                                }
                             }
                             else {
                                 // process empty line (e.g. '\n')
@@ -774,7 +800,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_814();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_855();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -836,8 +862,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_814 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_814() {
+        private sealed class _IGlyphLineFilter_855 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_855() {
             }
 
             public bool Accept(Glyph glyph) {

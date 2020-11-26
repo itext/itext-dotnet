@@ -457,6 +457,9 @@ namespace iText.StyledXmlParser.Css {
         public const String WRITING_MODE = "writing-mode";
 
         // property values
+        /// <summary>The Constant ANYWHERE.</summary>
+        public const String ANYWHERE = "anywhere";
+
         /// <summary>The Constant ALWAYS.</summary>
         public const String ALWAYS = "always";
 
@@ -483,6 +486,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant BOTTOM.</summary>
         public const String BOTTOM = "bottom";
+
+        /// <summary>The Constant BREAK_WORD.</summary>
+        public const String BREAK_WORD = "break-word";
 
         /// <summary>The Constant CAPTION.</summary>
         public const String CAPTION = "caption";

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.StyledXmlParser.Css;
 using iText.Test;
 
@@ -297,6 +298,30 @@ namespace iText.StyledXmlParser.Css.Validate {
                 .BACKGROUND_IMAGE, "url(img.jpg) url(img2.jpg)")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "initial,url(img.jpg)")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapTest() {
+            String[] overflowWrapOrWordWrap = new String[] { CommonCssConstants.OVERFLOW_WRAP, CommonCssConstants.WORDWRAP
+                 };
+            foreach (String overflowWrap in overflowWrapOrWordWrap) {
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "normal")));
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "anywhere")));
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "break-word")));
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "inherit")));
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "unset")));
+                NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "initial")));
+                NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "auto")));
+                NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(overflowWrap
+                    , "norm")));
+            }
         }
     }
 }

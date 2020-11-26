@@ -256,6 +256,8 @@ namespace iText.Layout.Properties {
             )]
         public const int OVERFLOW = 102;
 
+        public const int OVERFLOW_WRAP = 127;
+
         public const int OVERFLOW_X = 103;
 
         public const int OVERFLOW_Y = 104;
@@ -358,7 +360,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 125;
+        private const int MAX_INHERITED_PROPERTY_ID = 127;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -399,6 +401,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TYPOGRAPHY_CONFIG] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_HEIGHT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.OVERFLOW_WRAP] = true;
         }
 
         private Property() {
