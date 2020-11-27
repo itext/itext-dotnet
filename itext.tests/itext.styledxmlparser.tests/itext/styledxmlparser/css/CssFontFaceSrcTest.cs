@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css.Font;
 using iText.StyledXmlParser.Css.Parse;
@@ -49,14 +48,13 @@ namespace iText.StyledXmlParser.Css {
             String[] sources = iText.IO.Util.StringUtil.Split(src.GetExpression(), ",");
             NUnit.Framework.Assert.AreEqual(27, sources.Length, "27 sources expected");
             for (int i = 0; i < sources.Length; i++) {
-                Match m = iText.IO.Util.StringUtil.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
-                NUnit.Framework.Assert.IsTrue(m.Success, "Expression doesn't match pattern: " + sources[i]);
-                String format = iText.IO.Util.StringUtil.Group(m, CssFontFace.CssFontFaceSrc.FormatGroup);
-                String source2 = MessageFormatUtil.Format("{0}({1}){2}", iText.IO.Util.StringUtil.Group(m, CssFontFace.CssFontFaceSrc
-                    .TypeGroup), iText.IO.Util.StringUtil.Group(m, CssFontFace.CssFontFaceSrc.UrlGroup), format != null ? 
-                    MessageFormatUtil.Format(" format({0})", format) : "");
-                String url = CssFontFace.CssFontFaceSrc.Unquote(iText.IO.Util.StringUtil.Group(m, CssFontFace.CssFontFaceSrc
-                    .UrlGroup));
+                Matcher m = iText.IO.Util.Matcher.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
+                NUnit.Framework.Assert.IsTrue(m.Matches(), "Expression doesn't match pattern: " + sources[i]);
+                String format = m.Group(CssFontFace.CssFontFaceSrc.FormatGroup);
+                String source2 = MessageFormatUtil.Format("{0}({1}){2}", m.Group(CssFontFace.CssFontFaceSrc.TypeGroup), m.
+                    Group(CssFontFace.CssFontFaceSrc.UrlGroup), format != null ? MessageFormatUtil.Format(" format({0})", 
+                    format) : "");
+                String url = CssFontFace.CssFontFaceSrc.Unquote(m.Group(CssFontFace.CssFontFaceSrc.UrlGroup));
                 NUnit.Framework.Assert.IsTrue(url.StartsWith(fontSrc), "Invalid url: " + url);
                 NUnit.Framework.Assert.IsTrue(format == null || CssFontFace.CssFontFaceSrc.ParseFormat(format) != CssFontFace.FontFormat
                     .None, "Invalid format: " + format);
@@ -107,13 +105,13 @@ namespace iText.StyledXmlParser.Css {
             String[] sources = CssFontFace.SplitSourcesSequence(src.GetExpression());
             NUnit.Framework.Assert.AreEqual(8, sources.Length, "8 sources expected");
             for (int i = 0; i < 6; i++) {
-                Match m = iText.IO.Util.StringUtil.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
-                NUnit.Framework.Assert.IsTrue(m.Success, "Expression doesn't match pattern: " + sources[i]);
+                Matcher m = iText.IO.Util.Matcher.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
+                NUnit.Framework.Assert.IsTrue(m.Matches(), "Expression doesn't match pattern: " + sources[i]);
             }
             for (int i = 6; i < sources.Length; i++) {
-                Match m = iText.IO.Util.StringUtil.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
-                NUnit.Framework.Assert.IsFalse(m.Success, "Expression matches pattern (though it shouldn't!): " + sources[
-                    i]);
+                Matcher m = iText.IO.Util.Matcher.Match(CssFontFace.CssFontFaceSrc.UrlPattern, sources[i]);
+                NUnit.Framework.Assert.IsFalse(m.Matches(), "Expression matches pattern (though it shouldn't!): " + sources
+                    [i]);
             }
         }
     }

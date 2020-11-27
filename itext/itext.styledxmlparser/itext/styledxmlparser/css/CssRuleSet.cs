@@ -159,8 +159,7 @@ namespace iText.StyledXmlParser.Css {
             > normalDeclarations, IList<CssDeclaration> importantDeclarations) {
             foreach (CssDeclaration declaration in declarations) {
                 int exclIndex = declaration.GetExpression().IndexOf('!');
-                if (exclIndex > 0 && iText.IO.Util.StringUtil.Match(importantMatcher, declaration.GetExpression()).Success
-                    ) {
+                if (exclIndex > 0 && iText.IO.Util.Matcher.Match(importantMatcher, declaration.GetExpression()).Matches()) {
                     importantDeclarations.Add(new CssDeclaration(declaration.GetProperty(), declaration.GetExpression().JSubstring
                         (0, exclIndex).Trim()));
                 }

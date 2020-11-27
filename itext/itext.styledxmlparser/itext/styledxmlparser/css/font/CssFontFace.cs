@@ -252,13 +252,12 @@ namespace iText.StyledXmlParser.Css.Font {
             /// object
             /// </returns>
             public static CssFontFace.CssFontFaceSrc Create(String src) {
-                Match m = iText.IO.Util.StringUtil.Match(UrlPattern, src);
-                if (!m.Success) {
+                Matcher m = iText.IO.Util.Matcher.Match(UrlPattern, src);
+                if (!m.Matches()) {
                     return null;
                 }
-                return new CssFontFace.CssFontFaceSrc(Unquote(iText.IO.Util.StringUtil.Group(m, UrlGroup)), "local".Equals
-                    (iText.IO.Util.StringUtil.Group(m, TypeGroup)), ParseFormat(iText.IO.Util.StringUtil.Group(m, FormatGroup
-                    )));
+                return new CssFontFace.CssFontFaceSrc(Unquote(m.Group(UrlGroup)), "local".Equals(m.Group(TypeGroup)), ParseFormat
+                    (m.Group(FormatGroup)));
             }
 
             /// <summary>
