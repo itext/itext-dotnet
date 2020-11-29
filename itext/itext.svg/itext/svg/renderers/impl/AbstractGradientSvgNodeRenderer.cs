@@ -38,31 +38,10 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation for gradient tags
     /// (&lt;linearGradient&gt;, &lt;radialGradient&gt;).
     /// </summary>
-    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer {
+    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, ISvgPaintServer {
         protected internal override void DoDraw(SvgDrawContext context) {
             throw new NotSupportedException(SvgLogMessageConstant.DRAW_NO_DRAW);
         }
-
-        /// <summary>
-        /// Creates the
-        /// <see cref="iText.Kernel.Colors.Color"/>
-        /// that represents the corresponding gradient for specified object box
-        /// </summary>
-        /// <param name="context">the current svg draw context</param>
-        /// <param name="objectBoundingBox">
-        /// the coloring object bounding box without any adjustments
-        /// (additional stroke width or others)
-        /// </param>
-        /// <param name="objectBoundingBoxMargin">
-        /// the objectBoundingBoxMargin of the object bounding box
-        /// to be colored (for example - the part of stroke width
-        /// that exceeds the object bounding box, i.e. the half of stroke
-        /// width value)
-        /// </param>
-        /// <param name="parentOpacity">current parent opacity modifier</param>
-        /// <returns>the created color</returns>
-        public abstract Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
-            , float parentOpacity);
 
         /// <summary>Checks whether the gradient units values are on user space on use or object bounding box</summary>
         /// <returns>
@@ -74,12 +53,11 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         protected internal virtual bool IsObjectBoundingBoxUnits() {
             String gradientUnits = GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS);
-            if (SvgConstants.Values.GRADIENT_UNITS_USER_SPACE_ON_USE.Equals(gradientUnits)) {
+            if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(gradientUnits)) {
                 return false;
             }
             else {
-                if (gradientUnits != null && !SvgConstants.Values.GRADIENT_UNITS_OBJECT_BOUNDING_BOX.Equals(gradientUnits)
-                    ) {
+                if (gradientUnits != null && !SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(gradientUnits)) {
                     LogManager.GetLogger(this.GetType()).Warn(MessageFormatUtil.Format(SvgLogMessageConstant.GRADIENT_INVALID_GRADIENT_UNITS_LOG
                         , gradientUnits));
                 }
@@ -149,5 +127,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+
+        public abstract Color CreateColor(SvgDrawContext arg1, Rectangle arg2, float arg3, float arg4);
     }
 }

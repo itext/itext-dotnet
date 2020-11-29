@@ -459,6 +459,16 @@ namespace iText.Svg {
             /// <summary>Attribute defining the orientation of a marker</summary>
             public const String ORIENT = "orient";
 
+            /// <summary>Attribute defining the coordinate system for attributes x, y, width , and height in pattern.</summary>
+            public static readonly String PATTERN_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "patternUnits".ToLowerInvariant();
+
+            /// <summary>Attribute defining the coordinate system for the pattern content.</summary>
+            public static readonly String PATTERN_CONTENT_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "patternContentUnits".ToLowerInvariant();
+
             /// <summary>Close Path Operator.</summary>
             public const String PATH_DATA_CLOSE_PATH = "Z";
 
@@ -655,16 +665,21 @@ namespace iText.Svg {
             public const String FILL_RULE_NONZERO = "nonzero";
 
             /// <summary>Value representing the gradient units relation "objectBoundingBox".</summary>
-            public const String GRADIENT_UNITS_OBJECT_BOUNDING_BOX = "objectBoundingBox";
+            [System.ObsoleteAttribute(@"it will be removed in the 7.2 update. Use OBJECT_BOUNDING_BOX instead.")]
+            public const String GRADIENT_UNITS_OBJECT_BOUNDING_BOX = SvgConstants.Values.OBJECT_BOUNDING_BOX;
 
             /// <summary>Value representing the gradient units relation "userSpaceOnUse".</summary>
-            public const String GRADIENT_UNITS_USER_SPACE_ON_USE = "userSpaceOnUse";
+            [System.ObsoleteAttribute(@"it will be removed in the 7.2 update. Use USER_SPACE_ON_USE instead.")]
+            public const String GRADIENT_UNITS_USER_SPACE_ON_USE = SvgConstants.Values.USER_SPACE_ON_USE;
 
             /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
             public const String MEET = "meet";
 
             /// <summary>Value representing the "none" value".</summary>
             public const String NONE = "none";
+
+            /// <summary>Value representing the units relation "objectBoundingBox".</summary>
+            public const String OBJECT_BOUNDING_BOX = "objectBoundingBox";
 
             /// <summary>The value representing slice for the preserve aspect ratio calculations;</summary>
             public const String SLICE = "slice";
@@ -695,6 +710,9 @@ namespace iText.Svg {
             /// <summary>The value for markerUnits that represent values in a coordinate system which has a single unit equal the size in user units of the current stroke width.
             ///     </summary>
             public const String STROKEWIDTH = "strokeWidth";
+
+            /// <summary>Value representing the units relation "userSpaceOnUse".</summary>
+            public const String USER_SPACE_ON_USE = "userSpaceOnUse";
 
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";

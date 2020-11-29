@@ -350,8 +350,8 @@ namespace iText.Svg.Renderers.Impl {
                             }
                             float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
                             Color strokeColor = null;
-                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, strokeWidth / 2, strokeOpacity
-                                );
+                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, (float)((double)strokeWidth
+                                 / 2.0), strokeOpacity);
                             if (transparentColor != null) {
                                 strokeColor = transparentColor.GetColor();
                                 strokeOpacity = transparentColor.GetOpacity();
@@ -424,14 +424,10 @@ namespace iText.Svg.Renderers.Impl {
                 Color resolvedColor = null;
                 float resolvedOpacity = 1;
                 String normalizedName = tokenValue.JSubstring(5, tokenValue.Length - 1).Trim();
-                ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
-                // Clone template
-                ISvgNodeRenderer colorRenderer = template == null ? null : template.CreateDeepCopy();
-                // Resolve parent inheritance
-                SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, colorRenderer, context.GetCssContext());
-                if (colorRenderer is AbstractGradientSvgNodeRenderer) {
-                    resolvedColor = ((AbstractGradientSvgNodeRenderer)colorRenderer).CreateColor(context, GetObjectBoundingBox
-                        (context), objectBoundingBoxMargin, parentOpacity);
+                ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
+                if (colorRenderer is ISvgPaintServer) {
+                    resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, GetObjectBoundingBox(context), objectBoundingBoxMargin
+                        , parentOpacity);
                 }
                 if (resolvedColor != null) {
                     return new TransparentColor(resolvedColor, resolvedOpacity);

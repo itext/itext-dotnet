@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Geom;
+using iText.Layout.Properties;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Utils {
@@ -80,6 +82,32 @@ namespace iText.Svg.Utils {
         /// <returns>angle between vectors in radians units</returns>
         public static double CalculateAngleBetweenTwoVectors(Vector vectorA, Vector vectorB) {
             return Math.Acos((double)vectorA.Dot(vectorB) / ((double)vectorA.Length() * (double)vectorB.Length()));
+        }
+
+        /// <summary>Returns absolute value for attribute in userSpaceOnUse coordinate system.</summary>
+        /// <param name="attributeValue">value of attribute.</param>
+        /// <param name="defaultValue">default value.</param>
+        /// <param name="start">start border for calculating percent value.</param>
+        /// <param name="length">length for calculating percent value.</param>
+        /// <param name="em">em value.</param>
+        /// <param name="rem">rem value.</param>
+        /// <returns>absolute value in the userSpaceOnUse coordinate system.</returns>
+        public static double GetCoordinateForUserSpaceOnUse(String attributeValue, double defaultValue, double start
+            , double length, float em, float rem) {
+            double absoluteValue;
+            UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
+            if (unitValue == null) {
+                absoluteValue = defaultValue;
+            }
+            else {
+                if (unitValue.GetUnitType() == UnitValue.PERCENT) {
+                    absoluteValue = start + (length * unitValue.GetValue() / 100);
+                }
+                else {
+                    absoluteValue = unitValue.GetValue();
+                }
+            }
+            return absoluteValue;
         }
     }
 }

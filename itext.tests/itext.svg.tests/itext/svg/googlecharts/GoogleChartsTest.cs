@@ -90,7 +90,7 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         public virtual void CalendarChart() {
-            //TODO update cmp file after DEVSIX-3347 will be fixed
+            //TODO DEVSIX-4782 Support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
             PageSize pageSize = PageSize.A4;
             TestUtils.ConvertSVGtoPDF(destinationFolder + "calendarChart.pdf", sourceFolder + "calendarChart.svg", 1, 
                 pageSize);

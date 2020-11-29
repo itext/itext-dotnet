@@ -67,6 +67,8 @@ namespace iText.Svg.Renderers {
 
         private readonly Stack<String> useIds = new Stack<String>();
 
+        private readonly Stack<String> patternIds = new Stack<String>();
+
         private readonly ResourceResolver resourceResolver;
 
         private readonly FontProvider fontProvider;
@@ -326,6 +328,37 @@ namespace iText.Svg.Renderers {
         /// <param name="cssContext">the SVG CSS context</param>
         public virtual void SetCssContext(SvgCssContext cssContext) {
             this.cssContext = cssContext;
+        }
+
+        /// <summary>Add pattern id to stack.</summary>
+        /// <remarks>
+        /// Add pattern id to stack. Check if the id is already in the stack.
+        /// If it is, then return
+        /// <see langword="false"/>
+        /// and not add, if it is not - add and return
+        /// <see langword="true"/>.
+        /// </remarks>
+        /// <param name="patternId">pattern id</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if pattern id was not on the stack and was pushed;
+        /// <see langword="false"/>
+        /// if it is on the stack
+        /// </returns>
+        public virtual bool PushPatternId(String patternId) {
+            if (this.patternIds.Contains(patternId)) {
+                return false;
+            }
+            else {
+                this.patternIds.Push(patternId);
+                return true;
+            }
+        }
+
+        /// <summary>Pops the last template id from the stack.</summary>
+        public virtual void PopPatternId() {
+            this.patternIds.Pop();
         }
     }
 }

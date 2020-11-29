@@ -25,17 +25,17 @@ using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
-using iText.Layout.Properties;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;linearGradient&gt; tag.
     /// </summary>
-    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer, INoDrawSvgNodeRenderer {
+    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer {
         public override Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
             , float parentOpacity) {
             if (objectBoundingBox == null) {
@@ -126,10 +126,12 @@ namespace iText.Svg.Renderers.Impl {
                 double height = currentViewPort.GetHeight();
                 float em = GetCurrentFontSize();
                 float rem = context.GetCssContext().GetRootFontSize();
-                start = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X1, x, x, width, em, rem), GetCoordinateForUserSpaceOnUse
-                    (SvgConstants.Attributes.Y1, y, y, height, em, rem));
-                end = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X2, x + width, x, width, em, rem), 
-                    GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.Y2, y, y, height, em, rem));
+                start = new Point(SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X1
+                    ), x, x, width, em, rem), SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes
+                    .Y1), y, y, height, em, rem));
+                end = new Point(SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X2)
+                    , x + width, x, width, em, rem), SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes
+                    .Y2), y, y, height, em, rem));
             }
             return new Point[] { start, end };
         }
@@ -164,25 +166,6 @@ namespace iText.Svg.Renderers.Impl {
             // would be transformed into (0.75, 0.75) point instead of (1, 1). The reason described
             // as a comment inside the method constructing the gradient transformation
             return absoluteValue * 0.75;
-        }
-
-        private double GetCoordinateForUserSpaceOnUse(String attributeName, double defaultValue, double start, double
-             length, float em, float rem) {
-            String attributeValue = GetAttribute(attributeName);
-            double absoluteValue;
-            UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(attributeValue, em, rem);
-            if (unitValue == null) {
-                absoluteValue = defaultValue;
-            }
-            else {
-                if (unitValue.GetUnitType() == UnitValue.PERCENT) {
-                    absoluteValue = start + (length * unitValue.GetValue() / 100);
-                }
-                else {
-                    absoluteValue = unitValue.GetValue();
-                }
-            }
-            return absoluteValue;
         }
     }
 }

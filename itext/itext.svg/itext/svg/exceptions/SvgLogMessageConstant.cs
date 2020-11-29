@@ -107,6 +107,10 @@ namespace iText.Svg.Exceptions {
 
         public const String NOROOT = "No root found";
 
+        public const String PATTERN_INVALID_PATTERN_UNITS_LOG = "Could not recognize patternUnits value {0}";
+
+        public const String PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG = "Could not recognize patternContentUnits value {0}";
+
         public const String PATH_WRONG_NUMBER_OF_ARGUMENTS = "Path operator {0} has received {1} arguments, but expects between {2} and {3} arguments. \n Resulting SVG will be incorrect.";
 
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";

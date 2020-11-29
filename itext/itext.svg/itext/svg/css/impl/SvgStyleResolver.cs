@@ -66,6 +66,9 @@ namespace iText.Svg.Css.Impl {
             (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
             )new SvgAttributeInheritance())));
 
+        private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
+            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.PATTERN };
+
         private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
             .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
 
@@ -240,12 +243,11 @@ namespace iText.Svg.Css.Impl {
         }
 
         private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
-            if (SvgConstants.Tags.MARKER.Equals(element.Name()) || iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested
-                (element, SvgConstants.Tags.MARKER)) {
-                return false;
-            }
-            if (SvgConstants.Tags.LINEAR_GRADIENT.Equals(element.Name())) {
-                return false;
+            foreach (String elementInheritingParentStyles in ELEMENTS_INHERITING_PARENT_STYLES) {
+                if (elementInheritingParentStyles.Equals(element.Name()) || iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested
+                    (element, elementInheritingParentStyles)) {
+                    return false;
+                }
             }
             return iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested(element, SvgConstants.Tags.DEFS);
         }
