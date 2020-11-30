@@ -85,8 +85,7 @@ namespace iText.StyledXmlParser.Css.Util {
                             i = AppendQuotedString(sb, str, i);
                         }
                         else {
-                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
-                                ()) {
+                            if ((str[i] == 'u' || str[i] == 'U') && iText.IO.Util.Matcher.Match(URL_PATTERN, str.Substring(i)).Find()) {
                                 sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
                                 i = AppendUrlContent(sb, str, i + 4);
                             }
