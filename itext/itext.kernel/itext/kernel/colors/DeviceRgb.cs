@@ -102,6 +102,7 @@ namespace iText.Kernel.Colors {
             : this(0f, 0f, 0f) {
         }
 
+#if !NETSTANDARD2_0
         /// <summary>
         /// Create DeviceRGB color from R, G, B values of System.Drawing.Color
         /// <br/>
@@ -116,6 +117,7 @@ namespace iText.Kernel.Colors {
                 LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
             }
         }
+#endif
 
 
         /// <summary>
