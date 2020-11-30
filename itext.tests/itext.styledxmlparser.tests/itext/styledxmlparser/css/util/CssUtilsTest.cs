@@ -376,6 +376,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
         public virtual void SplitStringWithCommaTest() {
             NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitStringWithComma(null));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma
@@ -392,6 +393,25 @@ namespace iText.StyledXmlParser.Css.Util {
                 .SplitStringWithComma("value1,( v2,v3),(v4, v5),value3"));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("v.al*ue1\"", "( v2,v3)", "\"(v4,v5;);", "value3"), 
                 CssUtils.SplitStringWithComma("v.al*ue1\",( v2,v3),\"(v4,v5;);,value3"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitStringTest() {
+            NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitString(null, ','));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with,comma)", "value3"), CssUtils.
+                SplitString("value1,(value,with,comma),value3", ',', new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1 ", " (val(ue,with,comma),value3"), CssUtils.
+                SplitString("value1 , (val(ue,with,comma),value3", ',', new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some", " text in", " brackets)", " \"some, text, in quotes,\""
+                ), CssUtils.SplitString("some text, (some, text in, brackets), \"some, text, in quotes,\"", ',', new EscapeGroup
+                ('\"')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some. text in. brackets)", " \"some. text. in quotes.\""
+                ), CssUtils.SplitString("some text. (some. text in. brackets). \"some. text. in quotes.\"", '.', new EscapeGroup
+                ('\"'), new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value", "with", "comma)", "value3"), CssUtils
+                .SplitString("value1,(value,with,comma),value3", ','));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value", "with", "comma", "value3"), CssUtils
+                .SplitString("value1,value,with,comma,value3", ',', new EscapeGroup(',')));
         }
 
         [NUnit.Framework.Test]

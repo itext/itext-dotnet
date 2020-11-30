@@ -86,26 +86,46 @@ namespace iText.StyledXmlParser.Css.Util {
         /// of split result
         /// </returns>
         public static IList<String> SplitStringWithComma(String value) {
+            return SplitString(value, ',', new EscapeGroup('(', ')'));
+        }
+
+        /// <summary>
+        /// Splits the provided
+        /// <see cref="System.String"/>
+        /// by split character with respect of escape characters.
+        /// </summary>
+        /// <param name="value">value to split</param>
+        /// <param name="splitChar">character to split the String</param>
+        /// <param name="escapeCharacters">escape characters</param>
+        /// <returns>
+        /// the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of split result
+        /// </returns>
+        public static IList<String> SplitString(String value, char splitChar, params EscapeGroup[] escapeCharacters
+            ) {
             if (value == null) {
                 return new List<String>();
             }
             IList<String> resultList = new List<String>();
-            int lastComma = 0;
-            int notClosedBrackets = 0;
+            int lastSplitChar = 0;
             for (int i = 0; i < value.Length; ++i) {
-                if (value[i] == ',' && notClosedBrackets == 0) {
-                    resultList.Add(value.JSubstring(lastComma, i));
-                    lastComma = i + 1;
+                char currentChar = value[i];
+                bool isEscaped = false;
+                foreach (EscapeGroup character in escapeCharacters) {
+                    if (currentChar == splitChar) {
+                        isEscaped = isEscaped || character.IsEscaped();
+                    }
+                    else {
+                        character.ProcessCharacter(currentChar);
+                    }
                 }
-                if (value[i] == '(') {
-                    ++notClosedBrackets;
-                }
-                if (value[i] == ')') {
-                    --notClosedBrackets;
-                    notClosedBrackets = Math.Max(notClosedBrackets, 0);
+                if (currentChar == splitChar && !isEscaped) {
+                    resultList.Add(value.JSubstring(lastSplitChar, i));
+                    lastSplitChar = i + 1;
                 }
             }
-            String lastToken = value.Substring(lastComma);
+            String lastToken = value.Substring(lastSplitChar);
             if (!String.IsNullOrEmpty(lastToken)) {
                 resultList.Add(lastToken);
             }

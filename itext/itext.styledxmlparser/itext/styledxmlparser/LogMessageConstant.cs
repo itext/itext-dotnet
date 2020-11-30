@@ -89,6 +89,9 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant INVALID_CSS_PROPERTY_DECLARATION.</summary>
         public const String INVALID_CSS_PROPERTY_DECLARATION = "Invalid css property declaration: {0}";
 
+        /// <summary>The Constant INCORRECT_CHARACTER_SEQUENCE.</summary>
+        public const String INCORRECT_CHARACTER_SEQUENCE = "Incorrect character sequence.";
+
         public const String INCORRECT_RESOLUTION_UNIT_VALUE = "Resolution value unit should be either dpi, dppx or dpcm!";
 
         /// <summary>The Constant RULE_IS_NOT_SUPPORTED.</summary>
