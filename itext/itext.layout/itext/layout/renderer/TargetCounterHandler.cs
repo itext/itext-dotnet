@@ -30,8 +30,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Pages for all renderers with id.</summary>
         private IDictionary<String, int?> renderersPages = new Dictionary<String, int?>();
 
-        /// <summary>Indicates if relayout is required.</summary>
-        private bool isRelayoutRequired = false;
+        private IDictionary<String, int?> previousRenderersPages = new Dictionary<String, int?>();
 
         /// <summary>
         /// Creates a copy of the given
@@ -45,6 +44,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public TargetCounterHandler(iText.Layout.Renderer.TargetCounterHandler targetCounterHandler) {
             this.renderersPages = targetCounterHandler.renderersPages;
+            this.previousRenderersPages = targetCounterHandler.previousRenderersPages;
         }
 
         /// <summary>
@@ -62,12 +62,8 @@ namespace iText.Layout.Renderer {
             if (id != null) {
                 iText.Layout.Renderer.TargetCounterHandler targetCounterHandler = GetTargetCounterHandler(renderer);
                 if (targetCounterHandler != null && renderer.GetOccupiedArea() != null) {
-                    int? prevPageNumber = targetCounterHandler.renderersPages.Get(id);
                     int currentPageNumber = renderer.GetOccupiedArea().GetPageNumber();
-                    if (prevPageNumber == null || currentPageNumber > prevPageNumber) {
-                        targetCounterHandler.renderersPages.Put(id, currentPageNumber);
-                        targetCounterHandler.isRelayoutRequired = true;
-                    }
+                    targetCounterHandler.renderersPages.Put(id, currentPageNumber);
                 }
             }
         }
@@ -78,14 +74,14 @@ namespace iText.Layout.Renderer {
         /// <returns>page on which renderer was layouted</returns>
         public static int? GetPageByID(IRenderer renderer, String id) {
             iText.Layout.Renderer.TargetCounterHandler targetCounterHandler = GetTargetCounterHandler(renderer);
-            return targetCounterHandler == null ? null : targetCounterHandler.renderersPages.Get(id);
+            return targetCounterHandler == null ? null : targetCounterHandler.previousRenderersPages.Get(id);
         }
 
         /// <summary>Indicates if page value was defined for this id.</summary>
         /// <param name="renderer">renderer from which root renderer will be taken</param>
         /// <param name="id">target id</param>
         /// <returns>true if value is defined for this id, false otherwise</returns>
-        public static bool IsValueDefinedForThisID(IRenderer renderer, String id) {
+        public static bool IsValueDefinedForThisId(IRenderer renderer, String id) {
             iText.Layout.Renderer.TargetCounterHandler targetCounterHandler = GetTargetCounterHandler(renderer);
             return targetCounterHandler != null && targetCounterHandler.renderersPages.ContainsKey(id);
         }
@@ -93,7 +89,17 @@ namespace iText.Layout.Renderer {
         /// <summary>Indicates if relayout is required.</summary>
         /// <returns>true if relayout is required, false otherwise</returns>
         public virtual bool IsRelayoutRequired() {
-            return isRelayoutRequired;
+            foreach (KeyValuePair<String, int?> rendererPage in renderersPages) {
+                if (!rendererPage.Value.Equals(previousRenderersPages.Get(rendererPage.Key))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Prepares handler to relayout.</summary>
+        public virtual void PrepareHandlerToRelayout() {
+            previousRenderersPages = new Dictionary<String, int?>(renderersPages);
         }
 
         private static iText.Layout.Renderer.TargetCounterHandler GetTargetCounterHandler(IRenderer renderer) {

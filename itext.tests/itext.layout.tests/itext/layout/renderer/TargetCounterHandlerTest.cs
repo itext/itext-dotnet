@@ -34,73 +34,85 @@ namespace iText.Layout.Renderer {
     public class TargetCounterHandlerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BlockRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             DivRenderer divRenderer = new DivRenderer(new Div());
-            divRenderer.SetParent(new DocumentRenderer(null));
+            divRenderer.SetParent(documentRenderer);
             String id = "id5";
             divRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             divRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(divRenderer, id));
         }
 
         [NUnit.Framework.Test]
         public virtual void TextRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             TextRenderer textRenderer = new TextRenderer(new Text("a"));
             textRenderer.SetProperty(Property.TEXT_RISE, 20F);
             textRenderer.SetProperty(Property.CHARACTER_SPACING, 20F);
             textRenderer.SetProperty(Property.WORD_SPACING, 20F);
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             textRenderer.SetProperty(Property.FONT_SIZE, new UnitValue(UnitValue.POINT, 20));
-            textRenderer.SetParent(new DocumentRenderer(null));
+            textRenderer.SetParent(documentRenderer);
             String id = "id7";
             textRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             textRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(textRenderer, id));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             TableRenderer tableRenderer = new TableRenderer(new Table(5));
-            tableRenderer.SetParent(new DocumentRenderer(null));
+            tableRenderer.SetParent(documentRenderer);
             String id = "id5";
             tableRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             tableRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(tableRenderer, id));
         }
 
         [NUnit.Framework.Test]
         public virtual void ParagraphRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             ParagraphRenderer paragraphRenderer = new ParagraphRenderer(new Paragraph());
-            paragraphRenderer.SetParent(new DocumentRenderer(null));
+            paragraphRenderer.SetParent(documentRenderer);
             String id = "id5";
             paragraphRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             paragraphRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(paragraphRenderer, id));
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             ImageRenderer imageRenderer = new ImageRenderer(new Image(ImageDataFactory.CreateRawImage(new byte[] { 50, 
                 21 })));
-            imageRenderer.SetParent(new DocumentRenderer(null));
+            imageRenderer.SetParent(documentRenderer);
             String id = "id6";
             imageRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             imageRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(imageRenderer, id));
         }
 
         [NUnit.Framework.Test]
         public virtual void LineRendererAddByIDTest() {
+            DocumentRenderer documentRenderer = new DocumentRenderer(null);
             LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.SetParent(new DocumentRenderer(null));
+            lineRenderer.SetParent(documentRenderer);
             String id = "id6";
             lineRenderer.SetProperty(Property.ID, id);
             LayoutContext layoutContext = new LayoutContext(new LayoutArea(4, new Rectangle(50, 50)));
             lineRenderer.Layout(layoutContext);
+            documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(lineRenderer, id));
         }
     }

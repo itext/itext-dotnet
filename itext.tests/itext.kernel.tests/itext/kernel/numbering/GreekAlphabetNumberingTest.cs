@@ -84,5 +84,11 @@ namespace iText.Kernel.Numbering {
             // Symbol font use regular WinAnsi codes for greek letters.
             NUnit.Framework.Assert.AreEqual("abgdezhqiklmnxoprstufcywaa", builder.ToString());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void IntIsNotEnoughForInternalCalculationsTest() {
+            NUnit.Framework.Assert.AreEqual("ζλαββωσ", GreekAlphabetNumbering.ToGreekAlphabetNumberLowerCase(1234567890
+                ));
+        }
     }
 }

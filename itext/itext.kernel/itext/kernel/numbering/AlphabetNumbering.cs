@@ -68,17 +68,17 @@ namespace iText.Kernel.Numbering {
             int cardinality = alphabet.Length;
             number--;
             int bytes = 1;
-            int start = 0;
-            int symbols = cardinality;
+            long start = 0;
+            long symbols = cardinality;
             while (number >= symbols + start) {
                 bytes++;
                 start += symbols;
                 symbols *= cardinality;
             }
-            int c = number - start;
+            long c = number - start;
             char[] value = new char[bytes];
             while (bytes > 0) {
-                value[--bytes] = alphabet[c % cardinality];
+                value[--bytes] = alphabet[(int)(c % cardinality)];
                 c /= cardinality;
             }
             return new String(value);
