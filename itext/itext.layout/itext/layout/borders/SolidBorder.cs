@@ -65,7 +65,7 @@ namespace iText.Layout.Borders {
         /// <summary>Creates a SolidBorder with the specified width, color and opacity.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        /// <param name="opacity">width of the border</param>
+        /// <param name="opacity">the opacity which border should have</param>
         public SolidBorder(Color color, float width, float opacity)
             : base(color, width, opacity) {
         }
