@@ -55,7 +55,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class HighlightItemsTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/HighlightItemsTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/HighlightItemsTest/";
 
         private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/parser/HighlightItemsTest/";
 
