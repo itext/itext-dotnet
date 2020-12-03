@@ -532,5 +532,243 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.IsTrue(matcher.Find());
             NUnit.Framework.Assert.IsFalse(matcher.Find());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbabbbbbbbbbbbbbbb");
+            matcher.Region(6, 13);
+            // abbbbbb [6, 13)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.IsFalse(matcher.Find());
+            NUnit.Framework.Assert.IsTrue(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RegionSeveralMatchesTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbabababbbbbbbbbbb");
+            matcher.Region(6, 13);
+            // ab [6, 8)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            // ab [8, 10)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            // abb [10, 13)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.IsFalse(matcher.Find());
+            NUnit.Framework.Assert.IsFalse(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StringMatchesButRegionDoesNotMatchTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.IsTrue(matcher.Matches());
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.IsFalse(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeStartOfRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Region(-1, 10);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TooLargeStartOfRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Region(24, 24);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeEndOfRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Region(1, -1);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TooLargeEndOfRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Region(1, 24);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndGreaterThenStartRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Region(10, 9);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartAndEndEqualRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Region(9, 9);
+            // *empty string* [9, 9)
+            NUnit.Framework.Assert.IsFalse(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartAndEndEqualRegionMatchTest() {
+            Regex patternAcceptingEmptyString = iText.IO.Util.StringUtil.RegexCompile("(a+)?");
+            Matcher matcher = iText.IO.Util.Matcher.Match(patternAcceptingEmptyString, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Region(9, 9);
+            // *empty string* [9, 9)
+            NUnit.Framework.Assert.IsTrue(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SeveralRegionCallsTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbabababbbbbbbbbbb");
+            matcher.Region(6, 13);
+            // abababb [6, 13)
+            NUnit.Framework.Assert.IsFalse(matcher.Matches());
+            matcher.Region(0, 3);
+            // abb [0, 3)
+            NUnit.Framework.Assert.IsTrue(matcher.Matches());
+            matcher.Region(0, 4);
+            // abbb [0, 4)
+            NUnit.Framework.Assert.IsTrue(matcher.Matches());
+            matcher.Region(0, 7);
+            // abbbbba [0, 7)
+            NUnit.Framework.Assert.IsFalse(matcher.Matches());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartEndFullRegionMatchesTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbabbbbbbbbbbbbbbb");
+            matcher.Region(6, 13);
+            // ab [6, 13)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual(6, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(13, matcher.End());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartEndPartiallyRegionMatchesTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbabbabbbbbbbbb");
+            matcher.Region(6, 13);
+            // abb [9, 12)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual(9, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(12, matcher.End());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartRegionDoesNotMatchesTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.IsFalse(matcher.Find());
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Start();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndRegionDoesNotMatchesTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.IsFalse(matcher.Find());
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.End();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GroupsAndRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbabababbbbbbbbbbb");
+            matcher.Region(6, 8);
+            // ab [6, 8)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual("ab", matcher.Group());
+            NUnit.Framework.Assert.AreEqual("ab", matcher.Group(0));
+            NUnit.Framework.Assert.AreEqual("a", matcher.Group(1));
+            NUnit.Framework.Assert.AreEqual("b", matcher.Group(2));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RegionResetsSearchTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "bbbbbbabbbbbbbbbabbbbb");
+            // abbbbbbbbb [6, 16)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual(6, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(16, matcher.End());
+            // abbbbb [16, 22)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual(16, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(22, matcher.End());
+            matcher.Region(6, 13);
+            // abbbbbb [6, 16)
+            NUnit.Framework.Assert.IsTrue(matcher.Find());
+            NUnit.Framework.Assert.AreEqual(6, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(13, matcher.End());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FindWithParamResetsRegionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Region(6, 13);
+            // bbbbbbb [6, 13)
+            NUnit.Framework.Assert.IsFalse(matcher.Find());
+            NUnit.Framework.Assert.IsTrue(matcher.Find(0));
+            NUnit.Framework.Assert.AreEqual("abbbbbbbbbbbbbbbbbbbbb", matcher.Group());
+            NUnit.Framework.Assert.AreEqual(0, matcher.Start());
+            NUnit.Framework.Assert.AreEqual(22, matcher.End());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartAfterRegionThrowsExceptionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Find();
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Start();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EndAfterRegionThrowsExceptionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Find();
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.End();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GroupAfterRegionThrowsExceptionTest() {
+            Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
+            matcher.Find();
+            matcher.Region(6, 13);
+            NUnit.Framework.Assert.That(() =>  {
+                matcher.Group();
+            }
+            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
+;
+        }
     }
 }
