@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class PatternTest : SvgIntegrationTest {
@@ -40,77 +41,66 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInCmUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support 'viewbox'
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInCmUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInInchUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support 'viewbox'
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInInchUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInEmUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support 'viewbox'
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInEmUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInExUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support 'viewbox'
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInExUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInPercentsDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support viewbox
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInPercentsDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInPxUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support viewbox
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInPxUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInMmUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support 'viewbox'
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInMmUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYInPtUnitDiffPatternUnitsTest() {
             //TODO: DEVSIX-4782 support viewbox
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYInPtUnitDiffPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightXYNoMeasureUnitTest() {
             //TODO: DEVSIX-4782 support viewbox
-            //TODO: DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightXYNoMeasureUnit");
         }
 
         [NUnit.Framework.Test]
         public virtual void HrefAttributeTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefAttribute");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternUnitsObjectBoundingBoxTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternUnitsObjectBoundingBox");
         }
 
@@ -122,34 +112,31 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PatternContentUnitsUserSpaceOnUseTest() {
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsUserSpaceOnUse");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternContentUnitsObjBoundBoxTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjBoundBox");
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 8)]
         public virtual void PatternContentUnitsObjBoundBoxAbsoluteCoordTest() {
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
+            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjBoundBoxAbsoluteCoord");
         }
 
         [NUnit.Framework.Test]
         public virtual void ViewBoxAndAbsoluteCoordinatesTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxAndAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternTransformSimpleTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             //TODO DEVSIX-4811 support 'patternTransform' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformSimple");
         }
@@ -157,7 +144,6 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PatternTransformUnitsObjectBoundingBoxTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             //TODO DEVSIX-4811 support 'patternTransform' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformUnitsObjectBoundingBox");
         }
@@ -172,48 +158,41 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioXMaxYMidMeetTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioXMaxYMidMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioXMaxYMidSliceTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioXMaxYMidSlice");
         }
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioXMidYMaxMeetTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioXMidYMaxMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioXMidYMaxSliceTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioXMidYMaxSlice");
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeUnitsResolveFromDefsTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeUnitsResolveFromDefs");
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeUnitsResolveFromPatternTest() {
             //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeUnitsResolveFromPattern");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradientInsidePatternTest() {
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradientInsidePattern");
         }
 
@@ -223,26 +202,27 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
         public virtual void SeveralComplexElementsInsidePatternTest() {
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
+            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "severalComplexElementsInsidePattern");
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedPatternsWithComplexElementsInsideTest() {
-            //TODO DEVSIX-4781 support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
+            //TODO DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPatternsWithComplexElementsInside");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternUseItselfTest() {
-            // Behavior differs from browser. We use default color for element with cycled pattern.
+            // Behavior differs from browser. In our implementation we use default color for element with cycled pattern.
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternUseItself");
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedPatternsLinkedToEachOtherTest() {
-            // TODO DEVSIX-4781 Support 'objectBoundingBox' value for SVG pattern element 'patternContentUnits' and 'patternUnits'
+            // Behavior differs from browser. In our implementation we use default color for element with cycled pattern.
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPatternsLinkedToEachOther");
         }
 
@@ -273,7 +253,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PatternContentUnitsObjectBoundingBoxTest() {
-            // TODO DEVSIX-4781 Support 'objectBoundingBox' value
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjectBoundingBox");
         }
 
@@ -281,6 +260,33 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void CycledPatternsUserSpaceOnUseTest() {
             // Behavior differs from browser. We use default color instead cycled pattern.
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cycledPatternsUserSpaceOnUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ObjBoundingBoxWithMarginsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objBoundingBoxWithMargins");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ObjBoundingBoxUserSpaceOnUseTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objBoundingBoxUserSpaceOnUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UserSpaceOnUseObjBoundingBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseObjBoundingBox");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternDefaultWidthTest() {
+            // we print the default color that is black
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternDefaultWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternDefaultHeightTest() {
+            // we print the default color that is black
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternDefaultHeight");
         }
     }
 }

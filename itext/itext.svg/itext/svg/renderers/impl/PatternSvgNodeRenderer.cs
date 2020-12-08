@@ -56,7 +56,7 @@ using iText.Svg.Utils;
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Implementation for the svg &lt;pattern&gt; tag.</summary>
     public class PatternSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
-        private const double ZERO = 1E-10;
+        private const double CONVERT_COEFF = 0.75;
 
         public override ISvgNodeRenderer CreateDeepCopy() {
             PatternSvgNodeRenderer copy = new PatternSvgNodeRenderer();
@@ -72,7 +72,7 @@ namespace iText.Svg.Renderers.Impl {
                 return null;
             }
             try {
-                PdfPattern.Tiling tilingPattern = CreateTilingPattern(context);
+                PdfPattern.Tiling tilingPattern = CreateTilingPattern(context, objectBoundingBox);
                 DrawPatternContent(context, tilingPattern);
                 return (tilingPattern == null) ? null : new PatternColor(tilingPattern);
             }
@@ -81,40 +81,54 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private PdfPattern.Tiling CreateTilingPattern(SvgDrawContext context) {
+        private PdfPattern.Tiling CreateTilingPattern(SvgDrawContext context, Rectangle objectBoundingBox) {
             bool isObjectBoundingBoxInPatternUnits = IsObjectBoundingBoxInPatternUnits();
             bool isObjectBoundingBoxInPatternContentUnits = IsObjectBoundingBoxInPatternContentUnits();
             bool isViewBoxExist = GetAttribute(SvgConstants.Attributes.VIEWBOX) != null;
+            // evaluate pattern rectangle on target pattern units
+            Rectangle originalPatternRectangle = CalculateOriginalPatternRectangle(context, isObjectBoundingBoxInPatternUnits
+                );
+            // get xStep and yStep on target pattern units
+            double xStep = originalPatternRectangle.GetWidth();
+            double yStep = originalPatternRectangle.GetHeight();
+            if (xStep == 0 || yStep == 0) {
+                return null;
+            }
+            // transform user space to target pattern rectangle origin and scale
             AffineTransform patternAffineTransform = new AffineTransform();
-            double xOffset;
-            double yOffset;
-            double xStep;
-            double yStep;
-            Rectangle bbox;
-            if (isObjectBoundingBoxInPatternUnits || isViewBoxExist || isObjectBoundingBoxInPatternContentUnits) {
+            if (isObjectBoundingBoxInPatternUnits) {
+                patternAffineTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
+            }
+            patternAffineTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
+            double bboxWidth;
+            double bboxHeight;
+            if (isViewBoxExist) {
+                // TODO: DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
                 return null;
             }
             else {
-                Rectangle currentViewPort = context.GetCurrentViewPort();
-                double viewPortX = currentViewPort.GetX();
-                double viewPortY = currentViewPort.GetY();
-                double viewPortWidth = currentViewPort.GetWidth();
-                double viewPortHeight = currentViewPort.GetHeight();
-                float em = GetCurrentFontSize();
-                float rem = context.GetCssContext().GetRootFontSize();
-                xOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X), viewPortX
-                    , viewPortX, viewPortWidth, em, rem);
-                yOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.Y), viewPortY
-                    , viewPortY, viewPortHeight, em, rem);
-                xStep = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.WIDTH), viewPortX
-                    , viewPortX, viewPortWidth, em, rem);
-                yStep = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.HEIGHT), viewPortX
-                    , viewPortX, viewPortHeight, em, rem);
-                bbox = new Rectangle(0F, 0F, (float)xStep, (float)yStep);
-                if (!IsZero(xOffset, ZERO) || !IsZero(yOffset, ZERO)) {
-                    patternAffineTransform.Translate(xOffset, yOffset);
+                if (isObjectBoundingBoxInPatternUnits != isObjectBoundingBoxInPatternContentUnits) {
+                    // If pattern units are not the same as pattern content units, then we need to scale
+                    // the resulted space into a space to draw pattern content. The pattern rectangle origin
+                    // is already in place, but measures should be adjusted.
+                    double scaleX;
+                    double scaleY;
+                    if (isObjectBoundingBoxInPatternContentUnits) {
+                        scaleX = objectBoundingBox.GetWidth() / CONVERT_COEFF;
+                        scaleY = objectBoundingBox.GetHeight() / CONVERT_COEFF;
+                    }
+                    else {
+                        scaleX = CONVERT_COEFF / objectBoundingBox.GetWidth();
+                        scaleY = CONVERT_COEFF / objectBoundingBox.GetHeight();
+                    }
+                    patternAffineTransform.Concatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
+                    xStep /= scaleX;
+                    yStep /= scaleY;
                 }
+                bboxWidth = xStep;
+                bboxHeight = yStep;
             }
+            Rectangle bbox = new Rectangle(0F, 0F, (float)bboxWidth, (float)bboxHeight);
             return CreateColoredTilingPatternInstance(patternAffineTransform, bbox, xStep, yStep);
         }
 
@@ -149,6 +163,43 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        private Rectangle CalculateOriginalPatternRectangle(SvgDrawContext context, bool isObjectBoundingBoxInPatternUnits
+            ) {
+            double xOffset;
+            double yOffset;
+            double xStep;
+            double yStep;
+            if (isObjectBoundingBoxInPatternUnits) {
+                xOffset = SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes.X), 0)
+                     * CONVERT_COEFF;
+                yOffset = SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes.Y), 0)
+                     * CONVERT_COEFF;
+                xStep = SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes.WIDTH), 
+                    0) * CONVERT_COEFF;
+                yStep = SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes.HEIGHT), 
+                    0) * CONVERT_COEFF;
+            }
+            else {
+                Rectangle currentViewPort = context.GetCurrentViewPort();
+                double viewPortX = currentViewPort.GetX();
+                double viewPortY = currentViewPort.GetY();
+                double viewPortWidth = currentViewPort.GetWidth();
+                double viewPortHeight = currentViewPort.GetHeight();
+                float em = GetCurrentFontSize();
+                float rem = context.GetCssContext().GetRootFontSize();
+                // get pattern coordinates in userSpaceOnUse coordinate system
+                xOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X), viewPortX
+                    , viewPortX, viewPortWidth, em, rem);
+                yOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.Y), viewPortY
+                    , viewPortY, viewPortHeight, em, rem);
+                xStep = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.WIDTH), viewPortX
+                    , viewPortX, viewPortWidth, em, rem);
+                yStep = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.HEIGHT), viewPortY
+                    , viewPortY, viewPortHeight, em, rem);
+            }
+            return new Rectangle((float)xOffset, (float)yOffset, (float)xStep, (float)yStep);
+        }
+
         private bool IsObjectBoundingBoxInPatternUnits() {
             String patternUnits = GetAttribute(SvgConstants.Attributes.PATTERN_UNITS);
             if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(patternUnits)) {
@@ -177,8 +228,12 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        private static bool IsZero(double val, double delta) {
-            return -delta < val && val < delta;
+        private AffineTransform GetTransformToUserSpaceOnUse(Rectangle objectBoundingBox) {
+            AffineTransform transform = new AffineTransform();
+            transform.Translate(objectBoundingBox.GetX(), objectBoundingBox.GetY());
+            transform.Scale(objectBoundingBox.GetWidth() / CONVERT_COEFF, objectBoundingBox.GetHeight() / CONVERT_COEFF
+                );
+            return transform;
         }
     }
 }

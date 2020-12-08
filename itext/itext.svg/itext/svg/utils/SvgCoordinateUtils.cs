@@ -109,5 +109,41 @@ namespace iText.Svg.Utils {
             }
             return absoluteValue;
         }
+
+        /// <summary>Returns a value relative to the object bounding box.</summary>
+        /// <remarks>
+        /// Returns a value relative to the object bounding box.
+        /// We should only call this method for attributes with coordinates relative to the object bounding rectangle.
+        /// </remarks>
+        /// <param name="attributeValue">attribute value to parse</param>
+        /// <param name="defaultValue">this value will be returned if an error occurs while parsing the attribute value
+        ///     </param>
+        /// <returns>
+        /// if
+        /// <paramref name="attributeValue"/>
+        /// is a percentage value, the given percentage of 1 will be returned.
+        /// And if it's a valid value with a number, the number will be extracted from that value.
+        /// </returns>
+        public static double GetCoordinateForObjectBoundingBox(String attributeValue, double defaultValue) {
+            if (CssTypesValidationUtils.IsPercentageValue(attributeValue)) {
+                return CssDimensionParsingUtils.ParseRelativeValue(attributeValue, 1);
+            }
+            else {
+                if (CssTypesValidationUtils.IsNumericValue(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
+                    ) || CssTypesValidationUtils.IsRelativeValue(attributeValue)) {
+                    // if there is incorrect value metric, then we do not need to parse the value
+                    int unitsPosition = CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(attributeValue);
+                    if (unitsPosition > 0) {
+                        // We want to ignore the unit type how this is done in the "Google Chrome" approach
+                        // which treats the "abstract coordinate system" in the coordinate metric measure,
+                        // i.e. for value '0.5cm' the top/left of the object bounding box would be (1cm, 1cm),
+                        // for value '0.5em' the top/left of the object bounding box would be (1em, 1em) and etc.
+                        // no null pointer should be thrown as determine
+                        return CssDimensionParsingUtils.ParseDouble(attributeValue.JSubstring(0, unitsPosition)).Value;
+                    }
+                }
+            }
+            return defaultValue;
+        }
     }
 }
