@@ -73,6 +73,8 @@ namespace iText.Layout {
         private const String MEDIUM_TEXT = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr" + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
              + " At vero eos et accusam et justo duo dolores et ea rebum.\n ";
 
+        private const String SMALL_TEXT = "Short text";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
@@ -845,6 +847,31 @@ namespace iText.Layout {
                     CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
                     canvas.Add(main);
                 }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherInDivWithKidsFloatTest() {
+            //TODO: DEVSIX-4720 (invalid positioning of child element)
+            String filename = "keepTogetherInDivWithKidsFloat.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+                doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
+                Div main = new Div().SetKeepTogether(true);
+                main.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                Div child1 = CreateChildDivWithText(main, SMALL_TEXT);
+                child1.SetBackgroundColor(ColorConstants.YELLOW).SetWidth(UnitValue.CreatePercentValue(30)).SetProperty(Property
+                    .FLOAT, FloatPropertyValue.LEFT);
+                Div child2 = CreateChildDivWithText(main, BIG_TEXT);
+                child2.SetBackgroundColor(ColorConstants.GREEN).SetWidth(UnitValue.CreatePercentValue(70)).SetProperty(Property
+                    .FLOAT, FloatPropertyValue.LEFT);
+                Div child3 = CreateChildDivWithText(main, "Test");
+                child3.SetBackgroundColor(ColorConstants.ORANGE);
+                Div child4 = CreateChildDivWithText(main, MEDIUM_TEXT);
+                child4.SetBackgroundColor(ColorConstants.ORANGE);
+                doc.Add(main);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
         }
