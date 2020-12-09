@@ -172,9 +172,9 @@ namespace iText.IO.Util {
             return ArrayUtil.ToIntArray(charCodes);
         }
 
-        /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).</summary>
+        /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
-        /// <returns>the corresponding characters in a String</returns>
+        /// <returns>the corresponding char array</returns>
         public static char[] ConvertFromUtf32(int codePoint) {
             if (codePoint < 0x10000) {
                 return new char[] { (char)codePoint };
