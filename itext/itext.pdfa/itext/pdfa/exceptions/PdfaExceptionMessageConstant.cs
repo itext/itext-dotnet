@@ -26,5 +26,8 @@ namespace iText.Pdfa.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class PdfaExceptionMessageConstant {
         public const String CANNOT_PARSE_CONTENT_STREAM = "Cannot parse content stream.";
+
+        private PdfaExceptionMessageConstant() {
+        }
     }
 }

@@ -25,15 +25,19 @@ using System;
 namespace iText.Signatures.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class SignExceptionMessageConstant {
-        public const String AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST = "Authenticated attribute is missing the digest.";
+        public const String AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST = "Authenticated attribute is missing " 
+            + "the digest.";
 
-        public const String AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE = "Available space is not enough for signature.";
+        public const String AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE = "Available space is not enough for " + "signature.";
 
         public const String CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT = "Cannot decode PKCS#7 SignedData object.";
 
-        public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_THIS_SERIAL = "Cannot find signing certificate with serial {0}.";
+        public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_THIS_SERIAL = "Cannot find signing certificate " 
+            + "with serial {0}.";
 
-        public const String CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS = "Certification signature creation failed. Document shall not contain any certification or approval signatures before signing with certification signature.";
+        public const String CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS = "Certification " 
+            + "signature creation failed. Document shall not contain any certification or approval signatures before "
+             + "signing with certification signature.";
 
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
@@ -57,17 +61,23 @@ namespace iText.Signatures.Exceptions {
 
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE = "Not a valid PKCS#7 object - not a sequence";
 
-        public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed data.";
+        public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
+             "data.";
 
-        public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature with name {0} is not the last. It doesn't cover the whole document.";
+        public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
+             + "with name {0} is not the last. It doesn't cover the whole document.";
 
-        public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document with such name: {0}.";
+        public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document "
+             + "with such name: {0}.";
 
-        public const String THIS_PKCS7_OBJECT_HAS_MULTIPLE_SIGNERINFOS_ONLY_ONE_IS_SUPPORTED_AT_THIS_TIME = "This PKCS#7 object has multiple SignerInfos. Only one is supported at this time.";
+        public const String THIS_PKCS7_OBJECT_HAS_MULTIPLE_SIGNERINFOS_ONLY_ONE_IS_SUPPORTED_AT_THIS_TIME = "This "
+             + "PKCS#7 object has multiple SignerInfos. Only one is supported at this time.";
 
-        public const String THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED = "This instance of PdfSigner has been already closed.";
+        public const String THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED = "This instance of PdfSigner has been " + 
+            "already closed.";
 
-        public const String THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN = "TSA {0} failed to return time stamp token: {1}.";
+        public const String THIS_TSA_FAILED_TO_RETURN_TIME_STAMP_TOKEN = "TSA {0} failed to return time stamp " + 
+            "token: {1}.";
 
         public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
 
@@ -78,5 +88,8 @@ namespace iText.Signatures.Exceptions {
         public const String UNKNOWN_KEY_ALGORITHM = "Unknown key algorithm: {0}.";
 
         public const String VERIFICATION_ALREADY_OUTPUT = "Verification already output.";
+
+        private SignExceptionMessageConstant() {
+        }
     }
 }

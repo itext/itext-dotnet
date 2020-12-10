@@ -49,9 +49,8 @@ namespace iText.Kernel.Logs {
 
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
-        public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
-             + "in append mode but the original document has cross-reference table, not cross-reference stream. " 
-            + "Falling back to cross-reference table in appended document and switching full compression off";
+        public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode " + "requested in append mode but the original document has cross-reference table, not cross-reference "
+             + "stream. Falling back to cross-reference table in appended document and switching full compression off";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was " 
             + "requested to be switched off in append mode but the original document has cross-reference stream, not "
@@ -60,7 +59,7 @@ namespace iText.Kernel.Logs {
 
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG2000 format";
 
-        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} color space";
+        public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} " + "color space";
 
         private KernelLogMessageConstant() {
         }

@@ -121,7 +121,8 @@ namespace iText.Signatures {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
+                throw new PdfException(
+                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
             return response.GetResponseStream();
         }
 
@@ -140,7 +141,8 @@ namespace iText.Signatures {
             outp.Dispose();
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
+                throw new PdfException(
+                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
 
             return response.GetResponseStream();
         }

@@ -45,15 +45,19 @@ using System;
 namespace iText.Svg.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class SvgExceptionMessageConstant {
-        public const String ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(rx ry rot largearc sweep x y)+ parameters are expected for elliptical arcs. Got: {0}";
+        public const String ARC_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(rx ry rot largearc sweep x y)+ parameters "
+             + "are expected for elliptical arcs. Got: {0}";
 
-        public const String COORDINATE_ARRAY_LENGTH_MUST_BY_DIVISIBLE_BY_CURRENT_COORDINATES_ARRAY_LENGTH = "Array of current coordinates must have length that is divisible by the length of the array with current coordinates";
+        public const String COORDINATE_ARRAY_LENGTH_MUST_BY_DIVISIBLE_BY_CURRENT_COORDINATES_ARRAY_LENGTH = "Array "
+             + "of current coordinates must have length that is divisible by the length of the array with current "
+             + "coordinates";
 
-        public const String COULD_NOT_DETERMINE_MIDDLE_POINT_OF_ELLIPTICAL_ARC = "Could not determine the middle point of the ellipse traced by this elliptical arc";
+        public const String COULD_NOT_DETERMINE_MIDDLE_POINT_OF_ELLIPTICAL_ARC = "Could not determine the middle "
+             + "point of the ellipse traced by this elliptical arc";
 
         public const String COULD_NOT_INSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
-        public const String CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x2 y2 x y)+ parameters are expected for curves. Got: {0}";
+        public const String CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x2 y2 x y)+ parameters are " + "expected for curves. Got: {0}";
 
         public const String DRAW_NO_DRAW = "Can't draw a NoDrawOperationSvgNodeRenderer.";
 
@@ -63,19 +67,21 @@ namespace iText.Svg.Exceptions {
 
         public const String I_NODE_ROOT_IS_NULL = "Input root value is null";
 
-        public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before a move to operation (M)";
+        public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before "
+             + "a move to operation (M)";
 
-        public const String INVALID_PATH_D_ATTRIBUTE_OPERATORS = "Invalid operators found in path data attribute: {0}";
+        public const String INVALID_PATH_D_ATTRIBUTE_OPERATORS = "Invalid operators found in path data " + "attribute: {0}";
 
-        public const String INVALID_SMOOTH_CURVE_USE = "The smooth curve operations (S, s, T, t) may not be used as a first operator in path.";
+        public const String INVALID_SMOOTH_CURVE_USE = "The smooth curve operations (S, s, T, t) may not be used "
+             + "as a first operator in path.";
 
         public const String INVALID_TRANSFORM_DECLARATION = "Transformation declaration is not formed correctly.";
 
-        public const String LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for lineTo operator. Got: {0}";
+        public const String LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for " + "lineTo operator. Got: {0}";
 
         public const String MEET_OR_SLICE_ARGUMENT_IS_INCORRECT = "The meetOrSlice argument is incorrect. It must be `meet`, `slice` or null.";
 
-        public const String MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for moveTo operator. Got: {0}";
+        public const String MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for " + "moveTo operator. Got: {0}";
 
         public const String NAMED_OBJECT_NAME_NULL_OR_EMPTY = "The name of the named object can't be null or empty.";
 
@@ -89,11 +95,12 @@ namespace iText.Svg.Exceptions {
 
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
 
-        public const String PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE = "A Path object must have an attribute with the name 'd'.";
+        public const String PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE = "A Path object must have an attribute with " + "the name 'd'.";
 
-        public const String POINTS_ATTRIBUTE_INVALID_LIST = "Points attribute {0} on polyline tag does not contain a valid set of points";
+        public const String POINTS_ATTRIBUTE_INVALID_LIST = "Points attribute {0} on polyline tag does not contain "
+             + "a valid set of points";
 
-        public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters are expected for quadratic curves. Got: {0}";
+        public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters " + "are expected for quadratic curves. Got: {0}";
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 
@@ -101,10 +108,13 @@ namespace iText.Svg.Exceptions {
 
         public const String TRANSFORM_EMPTY = "The transformation value is empty.";
 
-        public const String TRANSFORM_INCORRECT_NUMBER_OF_VALUES = "Transformation doesn't contain the right number of values.";
+        public const String TRANSFORM_INCORRECT_NUMBER_OF_VALUES = "Transformation doesn't contain the right " + "number of values.";
 
         public const String TRANSFORM_NULL = "The transformation value is null.";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+
+        private SvgExceptionMessageConstant() {
+        }
     }
 }

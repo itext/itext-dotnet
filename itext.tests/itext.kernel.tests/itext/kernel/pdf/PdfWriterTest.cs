@@ -424,8 +424,8 @@ namespace iText.Kernel.Pdf {
                 pdfDoc1.Close();
                 pdfDoc2.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
-                );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_COPY_INDIRECT_OBJECT_FROM_THE_DOCUMENT_THAT_IS_BEING_WRITTEN
+                , exceptionMessage);
         }
 
         /// <summary>Attempts to copy to copy with null document</summary>
@@ -447,7 +447,7 @@ namespace iText.Kernel.Pdf {
             finally {
                 pdfDoc.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, KernelExceptionMessageConstant.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_FOR_COPY_TO_CANNOT_BE_NULL, exceptionMessage
                 );
         }
 

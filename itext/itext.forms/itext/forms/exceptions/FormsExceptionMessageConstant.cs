@@ -25,10 +25,17 @@ using System;
 namespace iText.Forms.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class FormsExceptionMessageConstant {
-        public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported in append mode.";
+        public const String FIELD_FLATTENING_IS_NOT_SUPPORTED_IN_APPEND_MODE = "Field flattening is not supported "
+             + "in append mode.";
 
-        public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
+        public const String PAGE_ALREADY_FLUSHED_USE_ADD_FIELD_APPEARANCE_TO_PAGE_METHOD_BEFORE_PAGE_FLUSHING = ""
+             + "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page "
+             + "flushing.";
 
-        public const String WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD = "Wrong form field. Add annotation to the field.";
+        public const String WRONG_FORM_FIELD_ADD_ANNOTATION_TO_THE_FIELD = "Wrong form field. Add annotation to the "
+             + "field.";
+
+        private FormsExceptionMessageConstant() {
+        }
     }
 }
