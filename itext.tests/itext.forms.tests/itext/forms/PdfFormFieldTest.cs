@@ -1134,5 +1134,22 @@ namespace iText.Forms {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ReleaseAcroformTest() {
+            String srcFile = sourceFolder + "formFieldFile.pdf";
+            String outPureStamping = destinationFolder + "formFieldFileStamping.pdf";
+            String outStampingRelease = destinationFolder + "formFieldFileStampingRelease.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outPureStamping));
+            // We open/close document to make sure that the results of release logic and simple overwriting coincide.
+            doc.Close();
+            using (PdfDocument stamperRelease = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outStampingRelease
+                ))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(stamperRelease, false);
+                form.Release();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outStampingRelease, outPureStamping, destinationFolder
+                ));
+        }
     }
 }
