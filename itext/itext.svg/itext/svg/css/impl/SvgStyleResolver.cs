@@ -297,7 +297,7 @@ namespace iText.Svg.Css.Impl {
         /// <param name="attributesMap">the element styles map</param>
         private void ProcessXLink(IAttribute attr, IDictionary<String, String> attributesMap) {
             String xlinkValue = attr.GetValue();
-            if (!IsStartedWithHash(xlinkValue)) {
+            if (!IsStartedWithHash(xlinkValue) && !new ResourceResolver("").IsDataSrc(xlinkValue)) {
                 try {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }

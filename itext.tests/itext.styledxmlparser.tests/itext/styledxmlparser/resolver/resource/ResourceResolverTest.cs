@@ -186,7 +186,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
         
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI)]
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI)]
         public virtual void RetrieveImageExtendedIncorrectBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             PdfXObject image = resourceResolver.RetrieveImageExtended(bLogoCorruptedData);
@@ -194,7 +194,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         }
 
         [Test]
-        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI,
+        [LogMessage(LogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI,
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void RetrieveImageExtendedCorruptedDataBase64Test() {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
