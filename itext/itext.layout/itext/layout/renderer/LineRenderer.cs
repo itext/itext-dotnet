@@ -427,8 +427,7 @@ namespace iText.Layout.Renderer {
                             bool isOverflowFit = wasXOverflowChanged ? (oldXOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this
                                 .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X));
                             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                                (childPos, specialScriptLayoutResults, wasParentsHeightClipped, floatsOverflowedToNextLine, isOverflowFit
-                                );
+                                (childPos, specialScriptLayoutResults, wasParentsHeightClipped, isOverflowFit);
                             if (lastFittingChildRendererData == null) {
                                 moveForwardsSpecialScriptsOverflowX = true;
                                 shouldBreakLayouting = false;
@@ -449,8 +448,7 @@ namespace iText.Layout.Renderer {
                                 bool isOverflowFit = wasXOverflowChanged ? (oldXOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this
                                     .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X));
                                 LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = GetIndexAndLayoutResultOfTheLastTextRendererWithNoSpecialScripts
-                                    (childPos, textRendererLayoutResults, wasParentsHeightClipped, floatsOverflowedToNextLine, isOverflowFit
-                                    , floatsPlaced, oldFloats);
+                                    (childPos, textRendererLayoutResults, wasParentsHeightClipped, isOverflowFit, floatsPlaced, oldFloats);
                                 if (lastFittingChildRendererData == null) {
                                     moveForwardsTextRenderer = true;
                                     shouldBreakLayouting = false;
@@ -1325,7 +1323,7 @@ namespace iText.Layout.Renderer {
                 specialScriptLayoutResults.Put(childPos, childResult);
             }
             else {
-                if (!specialScriptLayoutResults.IsEmpty() && !IsChildFloating(childRenderer)) {
+                if (!specialScriptLayoutResults.IsEmpty()) {
                     while (childPos >= 0) {
                         if (specialScriptLayoutResults.Get(childPos) != null) {
                             break;
@@ -1349,7 +1347,7 @@ namespace iText.Layout.Renderer {
                 textRendererLayoutResults.Put(childPos, childResult);
             }
             else {
-                if (!textRendererLayoutResults.IsEmpty() && !IsChildFloating(childRenderer)) {
+                if (!textRendererLayoutResults.IsEmpty()) {
                     while (childPos >= 0) {
                         if (textRendererLayoutResults.Get(childPos) != null) {
                             break;
@@ -1490,18 +1488,23 @@ namespace iText.Layout.Renderer {
              moveForwardsTextRenderer, int childPos, IRenderer childRenderer, LayoutResult childResult, bool wasXOverflowChanged
             ) {
             bool shouldBreakLayouting = false;
+            bool lastElemOfTextSequence = childPos + 1 == childRenderers.Count || IsChildFloating(childRenderers[childPos
+                 + 1]) || !(childRenderers[childPos + 1] is TextRenderer);
             if (moveForwardsSpecialScriptsOverflowX) {
-                if (((TextRenderer)childRenderer).GetSpecialScriptFirstNotFittingIndex() > 0) {
+                if (!(childRenderer is TextRenderer) || ((TextRenderer)childRenderer).GetSpecialScriptFirstNotFittingIndex
+                    () > 0 || lastElemOfTextSequence) {
                     shouldBreakLayouting = true;
                 }
-                ((TextRenderer)childRenderer).SetSpecialScriptFirstNotFittingIndex(-1);
+                if (childRenderer is TextRenderer) {
+                    ((TextRenderer)childRenderer).SetSpecialScriptFirstNotFittingIndex(-1);
+                }
                 if (wasXOverflowChanged) {
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
             }
             if (moveForwardsTextRenderer) {
-                if ((childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsContainsPossibleBreak()) || childPos
-                     + 1 == childRenderers.Count || !(childRenderers[childPos + 1] is TextRenderer)) {
+                if ((childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsContainsPossibleBreak()) || lastElemOfTextSequence
+                    ) {
                     shouldBreakLayouting = true;
                 }
                 if (wasXOverflowChanged) {
@@ -1702,7 +1705,7 @@ namespace iText.Layout.Renderer {
                 textRendererSequenceAscentDescent.Put(childPos, childAscentDescent);
             }
             else {
-                if (!textRendererSequenceAscentDescent.IsEmpty() && !IsChildFloating(childRenderer)) {
+                if (!textRendererSequenceAscentDescent.IsEmpty()) {
                     textRendererSequenceAscentDescent.Clear();
                     preTextSequenceAscentDescent = null;
                 }
@@ -1715,24 +1718,19 @@ namespace iText.Layout.Renderer {
              minMaxWidthOfTextRendererSequenceHelper, bool anythingPlaced, IDictionary<int, LayoutResult> textRendererLayoutResults
             , IDictionary<int, LayoutResult> specialScriptLayoutResults, float textIndent) {
             IRenderer childRenderer = childRenderers[childPos];
-            if (IsChildFloating(childRenderer)) {
+            if (childRenderer is TextRenderer) {
+                bool firstTextRendererWithSpecialScripts = ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true
+                    ) && specialScriptLayoutResults.Count == 1;
+                bool firstTextRendererWithoutSpecialScripts = !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+                    (true) && textRendererLayoutResults.Count == 1;
+                if (firstTextRendererWithoutSpecialScripts || firstTextRendererWithSpecialScripts) {
+                    minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper(widthHandler
+                        .minMaxWidth.GetChildrenMinWidth(), textIndent, anythingPlaced);
+                }
                 return minMaxWidthOfTextRendererSequenceHelper;
             }
             else {
-                if (childRenderer is TextRenderer) {
-                    bool firstTextRendererWithSpecialScripts = ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true
-                        ) && specialScriptLayoutResults.Count == 1;
-                    bool firstTextRendererWithoutSpecialScripts = !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
-                        (true) && textRendererLayoutResults.Count == 1;
-                    if (firstTextRendererWithoutSpecialScripts || firstTextRendererWithSpecialScripts) {
-                        minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper(widthHandler
-                            .minMaxWidth.GetChildrenMinWidth(), textIndent, anythingPlaced);
-                    }
-                    return minMaxWidthOfTextRendererSequenceHelper;
-                }
-                else {
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -1808,6 +1806,8 @@ namespace iText.Layout.Renderer {
         /// In this method we preprocess a sequence containing special scripts only,
         /// skipping floating renderers as they're not part of a regular layout flow,
         /// and breaking the prelayout processing once a non-special script containing renderer occurs.
+        /// Note! Even though floats are skipped during calculating correct word boundaries,
+        /// floats themselves are considered as soft-wrap opportunities.
         /// Prelayout processing includes the following steps:
         /// -
         /// <see cref="GetSpecialScriptsContainingTextRendererSequenceInfo(int)"/>
@@ -1894,7 +1894,7 @@ namespace iText.Layout.Renderer {
 
         internal virtual LineRenderer.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererWithNoSpecialScripts
             (int childPos, IDictionary<int, LayoutResult> textSequenceLayoutResults, bool wasParentsHeightClipped, 
-            IList<IRenderer> floatsOverflowedToNextLine, bool isOverflowFit, bool floatsPlaced, bool oldFloats) {
+            bool isOverflowFit, bool floatsPlaced, bool oldFloats) {
             LayoutResult lastAnalyzedTextLayoutResult = textSequenceLayoutResults.Get(childPos);
             if (lastAnalyzedTextLayoutResult.GetStatus() == LayoutResult.PARTIAL && !((TextLayoutResult)lastAnalyzedTextLayoutResult
                 ).IsWordHasBeenSplit()) {
@@ -1904,60 +1904,54 @@ namespace iText.Layout.Renderer {
             }
             lastAnalyzedTextLayoutResult = null;
             int lastAnalyzedTextRenderer = childPos;
-            ICollection<int> indicesOfFloats = new HashSet<int>();
             for (int i = childPos; i >= 0; i--) {
-                if (IsChildFloating(childRenderers[i])) {
-                    // floating elements are out of regular flow so simply skip it
-                    indicesOfFloats.Add(i);
-                }
-                else {
-                    if (childRenderers[i] is TextRenderer) {
-                        TextRenderer textRenderer = (TextRenderer)childRenderers[i];
-                        if (!textRenderer.TextContainsSpecialScriptGlyphs(true)) {
-                            TextLayoutResult textLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(i);
-                            TextLayoutResult previousTextLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(lastAnalyzedTextRenderer
-                                );
-                            if (i != lastAnalyzedTextRenderer && (textLayoutResult.GetStatus() == LayoutResult.FULL && (previousTextLayoutResult
-                                .IsLineStartsWithWhiteSpace() || textLayoutResult.IsLineEndsWithSplitCharacterOrWhiteSpace()))) {
-                                lastAnalyzedTextLayoutResult = previousTextLayoutResult.GetStatus() == LayoutResult.NOTHING ? previousTextLayoutResult
-                                     : new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer]);
-                                break;
-                            }
-                            if (textLayoutResult.IsContainsPossibleBreak() && textLayoutResult.GetStatus() != LayoutResult.NOTHING) {
-                                textRenderer.SetFirstIndexExceedingAvailableWidth(textRenderer.line.end);
-                                // todo ? relayout in original bBox rather than occupied on the first layout area
-                                LayoutArea layoutArea = textRenderer.GetOccupiedArea().Clone();
-                                layoutArea.GetBBox().IncreaseHeight(0.0001F).IncreaseWidth(0.0001F);
-                                LayoutResult newChildLayoutResult = textRenderer.Layout(new LayoutContext(layoutArea, wasParentsHeightClipped
-                                    ));
-                                textRenderer.SetFirstIndexExceedingAvailableWidth(-1);
-                                if (newChildLayoutResult.GetStatus() == LayoutResult.FULL) {
-                                    lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
-                                        ]);
-                                }
-                                else {
-                                    lastAnalyzedTextLayoutResult = newChildLayoutResult;
-                                    lastAnalyzedTextRenderer = i;
-                                }
-                                break;
-                            }
-                            lastAnalyzedTextRenderer = i;
-                        }
-                        else {
-                            lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
-                                ]);
+                if (childRenderers[i] is TextRenderer && !IsChildFloating(childRenderers[i])) {
+                    TextRenderer textRenderer = (TextRenderer)childRenderers[i];
+                    if (!textRenderer.TextContainsSpecialScriptGlyphs(true)) {
+                        TextLayoutResult textLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(i);
+                        TextLayoutResult previousTextLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(lastAnalyzedTextRenderer
+                            );
+                        if (i != lastAnalyzedTextRenderer && (textLayoutResult.GetStatus() == LayoutResult.FULL && (previousTextLayoutResult
+                            .IsLineStartsWithWhiteSpace() || textLayoutResult.IsLineEndsWithSplitCharacterOrWhiteSpace()))) {
+                            lastAnalyzedTextLayoutResult = previousTextLayoutResult.GetStatus() == LayoutResult.NOTHING ? previousTextLayoutResult
+                                 : new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer]);
                             break;
                         }
+                        if (textLayoutResult.IsContainsPossibleBreak() && textLayoutResult.GetStatus() != LayoutResult.NOTHING) {
+                            textRenderer.SetFirstIndexExceedingAvailableWidth(textRenderer.line.end);
+                            // todo ? relayout in original bBox rather than occupied on the first layout area
+                            LayoutArea layoutArea = textRenderer.GetOccupiedArea().Clone();
+                            layoutArea.GetBBox().IncreaseHeight(0.0001F).IncreaseWidth(0.0001F);
+                            LayoutResult newChildLayoutResult = textRenderer.Layout(new LayoutContext(layoutArea, wasParentsHeightClipped
+                                ));
+                            textRenderer.SetFirstIndexExceedingAvailableWidth(-1);
+                            if (newChildLayoutResult.GetStatus() == LayoutResult.FULL) {
+                                lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
+                                    ]);
+                            }
+                            else {
+                                lastAnalyzedTextLayoutResult = newChildLayoutResult;
+                                lastAnalyzedTextRenderer = i;
+                            }
+                            break;
+                        }
+                        lastAnalyzedTextRenderer = i;
                     }
                     else {
-                        if (childRenderers[i] is ImageRenderer || IsInlineBlockChild(childRenderers[i])) {
-                            lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
-                                ]);
-                            break;
-                        }
-                        else {
-                            break;
-                        }
+                        lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
+                            ]);
+                        break;
+                    }
+                }
+                else {
+                    if (IsChildFloating(childRenderers[i]) || childRenderers[i] is ImageRenderer || IsInlineBlockChild(childRenderers
+                        [i])) {
+                        lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
+                            ]);
+                        break;
+                    }
+                    else {
+                        break;
                     }
                 }
             }
@@ -1980,7 +1974,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (lastAnalyzedTextLayoutResult != null) {
-                UpdateFloatsOverflowedToNextLine(floatsOverflowedToNextLine, indicesOfFloats, lastAnalyzedTextRenderer);
                 return new LineRenderer.LastFittingChildRendererData(this, lastAnalyzedTextRenderer, lastAnalyzedTextLayoutResult
                     );
             }
@@ -1991,13 +1984,12 @@ namespace iText.Layout.Renderer {
 
         internal virtual LineRenderer.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
             (int childPos, IDictionary<int, LayoutResult> specialScriptLayoutResults, bool wasParentsHeightClipped
-            , IList<IRenderer> floatsOverflowedToNextLine, bool isOverflowFit) {
+            , bool isOverflowFit) {
             int indexOfRendererContainingLastFullyFittingWord = childPos;
             int splitPosition = 0;
             bool needToSplitRendererContainingLastFullyFittingWord = false;
             int fittingLengthWithTrailingRightSideSpaces = 0;
             int amountOfTrailingRightSideSpaces = 0;
-            ICollection<int> indicesOfFloats = new HashSet<int>();
             LayoutResult childPosLayoutResult = specialScriptLayoutResults.Get(childPos);
             LayoutResult returnLayoutResult = null;
             for (int analyzedTextRendererIndex = childPos; analyzedTextRendererIndex >= 0; analyzedTextRendererIndex--
@@ -2032,22 +2024,11 @@ namespace iText.Layout.Renderer {
                             needToSplitRendererContainingLastFullyFittingWord = splitPosition != textRenderer.text.end;
                             if (!needToSplitRendererContainingLastFullyFittingWord) {
                                 analyzedTextRendererIndex++;
-                                while (analyzedTextRendererIndex <= childPos && IsChildFloating(childRenderers[analyzedTextRendererIndex])
-                                    ) {
-                                    analyzedTextRendererIndex++;
-                                }
                             }
                             indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex;
                             break;
                         }
                     }
-                }
-                int amountOfFloating = 0;
-                while (analyzedTextRendererIndex - 1 >= 0 && IsChildFloating(childRenderers[analyzedTextRendererIndex - 1]
-                    )) {
-                    indicesOfFloats.Add(analyzedTextRendererIndex - 1);
-                    analyzedTextRendererIndex--;
-                    amountOfFloating++;
                 }
                 LineRenderer.SpecialScriptsContainingSequenceStatus status = GetSpecialScriptsContainingSequenceStatus(analyzedTextRendererIndex
                     );
@@ -2075,12 +2056,10 @@ namespace iText.Layout.Renderer {
                 // move the entire renderer on the next line
                 if (status == LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
                     ) {
-                    indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex + amountOfFloating;
+                    indexOfRendererContainingLastFullyFittingWord = analyzedTextRendererIndex;
                     break;
                 }
             }
-            UpdateFloatsOverflowedToNextLine(floatsOverflowedToNextLine, indicesOfFloats, indexOfRendererContainingLastFullyFittingWord
-                );
             if (returnLayoutResult == null) {
                 returnLayoutResult = childPosLayoutResult;
                 TextRenderer childRenderer = (TextRenderer)childRenderers[indexOfRendererContainingLastFullyFittingWord];
@@ -2102,15 +2081,6 @@ namespace iText.Layout.Renderer {
                 returnLayoutResult);
         }
 
-        internal virtual void UpdateFloatsOverflowedToNextLine(IList<IRenderer> floatsOverflowedToNextLine, ICollection
-            <int> indicesOfFloats, int indexOfRendererContainingLastFullyFittingWord) {
-            foreach (int index in indicesOfFloats) {
-                if (index > indexOfRendererContainingLastFullyFittingWord) {
-                    floatsOverflowedToNextLine.Remove(childRenderers[index]);
-                }
-            }
-        }
-
         /// <summary>
         /// This method defines how to proceed with a
         /// <see cref="TextRenderer"/>
@@ -2124,7 +2094,7 @@ namespace iText.Layout.Renderer {
         /// - Preceding renderer is also an instance of
         /// <see cref="TextRenderer"/>
         /// and does contain special scripts:
-        /// <see cref="GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(int, System.Collections.Generic.IDictionary{K, V}, bool, System.Collections.Generic.IList{E}, bool)
+        /// <see cref="GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(int, System.Collections.Generic.IDictionary{K, V}, bool, bool)
         ///     "/>
         /// will proceed to analyze the preceding
         /// <see cref="TextRenderer"/>
@@ -2154,7 +2124,7 @@ namespace iText.Layout.Renderer {
             bool moveToPreviousTextRendererContainingSpecialScripts = false;
             if (analyzedTextRendererIndex > 0) {
                 IRenderer prevChildRenderer = childRenderers[analyzedTextRendererIndex - 1];
-                if (prevChildRenderer is TextRenderer) {
+                if (prevChildRenderer is TextRenderer && !IsChildFloating(prevChildRenderer)) {
                     if (((TextRenderer)prevChildRenderer).TextContainsSpecialScriptGlyphs(true)) {
                         moveToPreviousTextRendererContainingSpecialScripts = true;
                     }
@@ -2163,13 +2133,13 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (prevChildRenderer is ImageRenderer || IsInlineBlockChild(prevChildRenderer)) {
+                    if (IsChildFloating(prevChildRenderer) || prevChildRenderer is ImageRenderer || IsInlineBlockChild(prevChildRenderer
+                        )) {
                         moveSequenceContainingSpecialScriptsOnNextLine = true;
                     }
                 }
             }
-            bool forcedSplit = !(moveToPreviousTextRendererContainingSpecialScripts || moveSequenceContainingSpecialScriptsOnNextLine
-                );
+            bool forcedSplit = !moveToPreviousTextRendererContainingSpecialScripts && !moveSequenceContainingSpecialScriptsOnNextLine;
             if (moveSequenceContainingSpecialScriptsOnNextLine) {
                 return LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE;
             }

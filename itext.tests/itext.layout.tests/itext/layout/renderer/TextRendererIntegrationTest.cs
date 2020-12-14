@@ -231,6 +231,104 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        public virtual void WordSplitRenderersWithFittingFloatingElementInBetween() {
+            String outFileName = destinationFolder + "wordSplitRenderersWithFittingFloatingElementInBetween.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithFittingFloatingElementInBetween.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Text reg = new Text("reg").SetFontColor(ColorConstants.LIGHT_GRAY);
+            Text ul = new Text("ul").SetFontColor(ColorConstants.DARK_GRAY);
+            Text aaaaaaaaaaaaaaaaaaaaaaati = new Text("aaaaaaaaaaaaaaaaaaaaaaati").SetFontColor(ColorConstants.GRAY);
+            Text ngAndRestOfText = new Text("ng overflow text renderers with floating elements between them").SetFontColor
+                (ColorConstants.RED);
+            Div floatDiv = new Div().SetWidth(20).SetHeight(60).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder
+                (new SolidBorder(2));
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph().Add(reg).Add(ul).Add(floatDiv).Add(aaaaaaaaaaaaaaaaaaaaaaati).Add(ngAndRestOfText
+                ).SetBackgroundColor(ColorConstants.CYAN).SetWidth(150).SetBorder(new SolidBorder(1));
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WordSplitRenderersWithNotFittingFloatingElementInBetween() {
+            String outFileName = destinationFolder + "wordSplitRenderersWithNotFittingFloatingElementInBetween.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithNotFittingFloatingElementInBetween.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Text loooooooooooo = new Text("loooooooooooo").SetFontColor(ColorConstants.GREEN);
+            Text oooongWords = new Text("oooong words").SetFontColor(ColorConstants.BLUE);
+            Text floating = new Text("floating").SetFontColor(ColorConstants.RED);
+            floating.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph paragraph = new Paragraph().Add(loooooooooooo).Add(floating).Add(oooongWords).SetBackgroundColor
+                (ColorConstants.YELLOW).SetWidth(150).SetBorder(new SolidBorder(1));
+            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WordSplitRenderersWithFittingFloatingInBetweenInSecondWord() {
+            String outFileName = destinationFolder + "wordSplitRenderersWithFittingFloatingInBetweenInSecondWord.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithFittingFloatingInBetweenInSecondWord.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Text itsAndSpace = new Text("It's ");
+            Text reg = new Text("reg").SetFontColor(ColorConstants.LIGHT_GRAY);
+            Text ul = new Text("ul").SetFontColor(ColorConstants.DARK_GRAY);
+            Text aaaaaaaaaaaaaaaaaaaaaaati = new Text("aaaaaaaaaaaaaaaaaaaaaaati").SetFontColor(ColorConstants.GRAY);
+            Text ngAndRestOfText = new Text("ng overflow text renderers with floating elements between them").SetFontColor
+                (ColorConstants.RED);
+            Div floatDiv = new Div().SetWidth(20).SetHeight(60).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder
+                (new SolidBorder(2));
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph().Add(itsAndSpace).Add(reg).Add(ul).Add(floatDiv).Add(aaaaaaaaaaaaaaaaaaaaaaati
+                ).Add(ngAndRestOfText).SetBackgroundColor(ColorConstants.CYAN).SetWidth(150).SetBorder(new SolidBorder
+                (1));
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WordSplitRenderersWithOverflowedFloatingElementInBetween() {
+            String outFileName = destinationFolder + "wordSplitRenderersWithOverflowedFloatingElementInBetween.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithOverflowedFloatingElementInBetween.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Text reg = new Text("reg").SetFontColor(ColorConstants.LIGHT_GRAY);
+            Text ul = new Text("ul").SetFontColor(ColorConstants.DARK_GRAY);
+            Text aaaaaaaaaaaaaaaaaaaaaaati = new Text("aaaaaaaaaaaaaaaaaaaaaaati").SetFontColor(ColorConstants.GRAY);
+            Text ngAndRestOfText = new Text("ng overflow text renderers with floating elements between them").SetFontColor
+                (ColorConstants.RED);
+            Div floatDiv = new Div().SetWidth(20).SetHeight(60).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder
+                (new SolidBorder(2));
+            floatDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p = new Paragraph().Add(reg).Add(ul).Add(aaaaaaaaaaaaaaaaaaaaaaati).Add(floatDiv).Add(ngAndRestOfText
+                ).SetBackgroundColor(ColorConstants.CYAN).SetWidth(150).SetBorder(new SolidBorder(1));
+            p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            doc.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void WordSplitAcrossMutipleTextRenderersWithinFloatingContainer() {
             String outFileName = destinationFolder + "wordSplitAcrossMutipleTextRenderersWithinFloatingContainer.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossMutipleTextRenderersWithinFloatingContainer.pdf";
@@ -242,8 +340,6 @@ namespace iText.Layout.Renderer {
             Text ooooowNextWords = new Text("ooooow next words").SetFontColor(ColorConstants.DARK_GRAY);
             Paragraph floatingParagraph = new Paragraph().Add(oooooooooover).Add(flooooo).Add(ooooowNextWords).SetBackgroundColor
                 (ColorConstants.CYAN).SetWidth(150).SetBorder(new SolidBorder(1));
-            // TODO DEVSIX-1438 bring reviewer's attention: if overflow is set on the div, then forced split occurs.
-            // is it expected?
             floatingParagraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             floatingParagraph.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             Text regularText = new Text("regular words regular words regular words regular words regular words regular "
@@ -253,28 +349,6 @@ namespace iText.Layout.Renderer {
                 (ColorConstants.YELLOW);
             div.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
             doc.Add(div);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void WordSplitRenderersWithFloatingElementInsertedInBetween() {
-            String outFileName = destinationFolder + "wordSplitRenderersWithFloatingElementInsertedInBetween.pdf";
-            String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithFloatingElementInsertedInBetween.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDocument);
-            doc.SetFontSize(20);
-            Text loooooooooooo = new Text("loooooooooooo").SetFontColor(ColorConstants.GREEN);
-            Text oooongWords = new Text("oooong words").SetFontColor(ColorConstants.BLUE);
-            Text floating = new Text("floating").SetFontColor(ColorConstants.RED);
-            floating.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
-            Paragraph paragraph = new Paragraph().Add(loooooooooooo).Add(floating).Add(oooongWords).SetBackgroundColor
-                (ColorConstants.YELLOW).SetWidth(150).SetBorder(new SolidBorder(1));
-            // todo mention that it's crucial to set both overflow and rendering_mode!!!
-            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
-            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-            doc.Add(paragraph);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));

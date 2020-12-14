@@ -282,7 +282,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (THAI_WORD.Length + 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
+                (THAI_WORD.Length + 1, specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(5, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -312,7 +312,7 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(indexOfThaiRenderer, new LayoutResult(LayoutResult.NOTHING, layoutArea, null
                 , null));
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (indexOfThaiRenderer, specialScriptLayoutResults, false, new List<IRenderer>(), true);
+                (indexOfThaiRenderer, specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(indexOfThaiRenderer, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -349,7 +349,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (THAI_WORD.Length - 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
+                (THAI_WORD.Length - 1, specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(THAI_WORD.Length - 1, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(specialScriptLayoutResults.Get(THAI_WORD.Length - 1), lastFittingChildRendererData
                 .childLayoutResult);
@@ -664,29 +664,6 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(2, simpleDecrement);
             float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, specialScriptLayoutResults);
             NUnit.Framework.Assert.AreEqual(widthOfNewPartialResult + simpleWidth, decrement, 0.00001);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void UpdateFloatsOverflowedToNextLine() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-            Document document = new Document(pdfDocument);
-            LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.SetParent(document.GetRenderer());
-            IList<IRenderer> floatsOverflowedToNextLineIRenderers = new List<IRenderer>();
-            ICollection<int> indicesOfFloats = new HashSet<int>();
-            IRenderer onlyFloatToRemain;
-            for (int i = 0; i < 6; i++) {
-                TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("text"));
-                if (i % 2 == 0) {
-                    floatsOverflowedToNextLineIRenderers.Add(textRenderer);
-                    indicesOfFloats.Add(i);
-                }
-                lineRenderer.AddChild(textRenderer);
-            }
-            onlyFloatToRemain = lineRenderer.GetChildRenderers()[0];
-            lineRenderer.UpdateFloatsOverflowedToNextLine(floatsOverflowedToNextLineIRenderers, indicesOfFloats, 1);
-            NUnit.Framework.Assert.AreEqual(1, floatsOverflowedToNextLineIRenderers.Count);
-            NUnit.Framework.Assert.AreEqual(onlyFloatToRemain, floatsOverflowedToNextLineIRenderers[0]);
         }
 
         [NUnit.Framework.Test]
