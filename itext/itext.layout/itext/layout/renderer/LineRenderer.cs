@@ -1956,10 +1956,12 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (lastAnalyzedTextLayoutResult == null) {
-                OverflowWrapPropertyValue? overflowWrapPropertyValue = childRenderers[childPos].GetProperty<OverflowWrapPropertyValue?
+                OverflowWrapPropertyValue? overflowWrapValue = childRenderers[childPos].GetProperty<OverflowWrapPropertyValue?
                     >(Property.OVERFLOW_WRAP);
-                if (overflowWrapPropertyValue == OverflowWrapPropertyValue.ANYWHERE || overflowWrapPropertyValue == OverflowWrapPropertyValue
-                    .BREAK_WORD || isOverflowFit) {
+                bool overflowWrapNotNormal = overflowWrapValue == OverflowWrapPropertyValue.ANYWHERE || overflowWrapValue 
+                    == OverflowWrapPropertyValue.BREAK_WORD;
+                if (overflowWrapNotNormal && textSequenceLayoutResults.Get(lastAnalyzedTextRenderer).GetStatus() != LayoutResult
+                    .NOTHING || isOverflowFit) {
                     lastAnalyzedTextRenderer = childPos;
                     lastAnalyzedTextLayoutResult = textSequenceLayoutResults.Get(lastAnalyzedTextRenderer);
                 }
@@ -2038,10 +2040,11 @@ namespace iText.Layout.Renderer {
                 // otherwise return null as a flag to move forward across this.childRenderers
                 // till the end of the unbreakable word
                 if (status == LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT) {
-                    OverflowWrapPropertyValue? overflowWrapPropertyValue = childRenderers[childPos].GetProperty<OverflowWrapPropertyValue?
+                    OverflowWrapPropertyValue? overflowWrapValue = childRenderers[childPos].GetProperty<OverflowWrapPropertyValue?
                         >(Property.OVERFLOW_WRAP);
-                    if (overflowWrapPropertyValue == OverflowWrapPropertyValue.ANYWHERE || overflowWrapPropertyValue == OverflowWrapPropertyValue
-                        .BREAK_WORD || isOverflowFit) {
+                    bool overflowWrapNotNormal = overflowWrapValue == OverflowWrapPropertyValue.ANYWHERE || overflowWrapValue 
+                        == OverflowWrapPropertyValue.BREAK_WORD;
+                    if (overflowWrapNotNormal && childPosLayoutResult.GetStatus() != LayoutResult.NOTHING || isOverflowFit) {
                         if (childPosLayoutResult.GetStatus() != LayoutResult.NOTHING) {
                             returnLayoutResult = childPosLayoutResult;
                         }

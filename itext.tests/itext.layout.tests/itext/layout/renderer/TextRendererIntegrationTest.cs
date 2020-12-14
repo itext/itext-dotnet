@@ -406,5 +406,24 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapBreakWordWithOverflowXTest() {
+            String outFileName = destinationFolder + "overflowWrapBreakWordWithOverflowXTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_overflowWrapBreakWordWithOverflowXTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(40);
+            Text text = new Text("wow");
+            Paragraph paragraph = new Paragraph().Add(text).SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetBorder
+                (new SolidBorder(1));
+            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            paragraph.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.BREAK_WORD);
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
     }
 }

@@ -165,8 +165,9 @@ namespace iText.Layout.Renderer {
             OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowWrapPropertyValue? overflowWrap = this.GetProperty<OverflowWrapPropertyValue?>(Property.OVERFLOW_WRAP
                 );
-            if (overflowWrap == OverflowWrapPropertyValue.ANYWHERE || overflowWrap == OverflowWrapPropertyValue.BREAK_WORD
-                ) {
+            bool overflowWrapNotNormal = overflowWrap == OverflowWrapPropertyValue.ANYWHERE || overflowWrap == OverflowWrapPropertyValue
+                .BREAK_WORD;
+            if (overflowWrapNotNormal) {
                 overflowX = OverflowPropertyValue.FIT;
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
@@ -336,9 +337,13 @@ namespace iText.Layout.Renderer {
                         ) > layoutBox.GetWidth() - currentLineWidth && firstCharacterWhichExceedsAllowedWidth == -1 || ind == 
                         specialScriptFirstNotFittingIndex) {
                         firstCharacterWhichExceedsAllowedWidth = ind;
-                        if (iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind))) {
-                            containsPossibleBreak = true;
-                            wordBreakGlyphAtLineEnding = currentGlyph;
+                        bool spaceOrWhitespace = iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind));
+                        OverflowPropertyValue? parentOverflowX = parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                        if (spaceOrWhitespace || overflowWrapNotNormal && !IsOverflowFit(parentOverflowX)) {
+                            if (spaceOrWhitespace) {
+                                containsPossibleBreak = true;
+                                wordBreakGlyphAtLineEnding = currentGlyph;
+                            }
                             if (ind == firstPrintPos) {
                                 forcePartialSplitOnFirstChar = true;
                                 firstCharacterWhichExceedsAllowedWidth = ind + 1;
@@ -886,7 +891,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_948();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_953();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -948,8 +953,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_948 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_948() {
+        private sealed class _IGlyphLineFilter_953 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_953() {
             }
 
             public bool Accept(Glyph glyph) {
