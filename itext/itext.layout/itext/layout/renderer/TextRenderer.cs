@@ -189,6 +189,12 @@ namespace iText.Layout.Renderer {
             else {
                 widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
             }
+            float leftMinWidth = -1f;
+            float[] leftMarginBorderPadding = new float[] { margins[3].GetValue(), borders[3] == null ? 0.0f : borders
+                [3].GetWidth(), paddings[3].GetValue() };
+            float rightMinWidth = -1f;
+            float[] rightMarginBorderPadding = new float[] { margins[1].GetValue(), borders[1] == null ? 0.0f : borders
+                [1].GetWidth(), paddings[1].GetValue() };
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             TargetCounterHandler.AddPageByID(this);
@@ -373,8 +379,15 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
-                        widthHandler.UpdateMinChildWidth((float)((double)glyphWidth + (double)xAdvance + (double)italicSkewAddition
-                             + (double)boldSimulationAddition));
+                        float childMinWidth = (float)((double)glyphWidth + (double)xAdvance + (double)italicSkewAddition + (double
+                            )boldSimulationAddition);
+                        if (leftMinWidth == -1f) {
+                            leftMinWidth = childMinWidth;
+                        }
+                        else {
+                            rightMinWidth = childMinWidth;
+                        }
+                        widthHandler.UpdateMinChildWidth(childMinWidth);
                         widthHandler.UpdateMaxChildWidth((float)((double)glyphWidth + (double)xAdvance));
                     }
                     bool endOfWordBelongingToSpecialScripts = TextContainsSpecialScriptGlyphs(true) && FindPossibleBreaksSplitPosition
@@ -411,10 +424,16 @@ namespace iText.Layout.Renderer {
                         widthHandler.UpdateMaxChildWidth((float)((double)italicSkewAddition + (double)boldSimulationAddition));
                     }
                     else {
-                        widthHandler.UpdateMinChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
-                            )italicSkewAddition + (double)boldSimulationAddition));
-                        widthHandler.UpdateMaxChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
-                            )italicSkewAddition + (double)boldSimulationAddition));
+                        float childMinWidth = (float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double)italicSkewAddition
+                             + (double)boldSimulationAddition);
+                        if (leftMinWidth == -1f) {
+                            leftMinWidth = childMinWidth;
+                        }
+                        else {
+                            rightMinWidth = childMinWidth;
+                        }
+                        widthHandler.UpdateMinChildWidth(childMinWidth);
+                        widthHandler.UpdateMaxChildWidth(childMinWidth);
                     }
                     anythingPlaced = true;
                 }
@@ -525,10 +544,16 @@ namespace iText.Layout.Renderer {
                                     widthHandler.UpdateMaxChildWidth((float)((double)italicSkewAddition + (double)boldSimulationAddition));
                                 }
                                 else {
-                                    widthHandler.UpdateMinChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
-                                        )italicSkewAddition + (double)boldSimulationAddition));
-                                    widthHandler.UpdateMaxChildWidth((float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double
-                                        )italicSkewAddition + (double)boldSimulationAddition));
+                                    float childMinWidth = (float)((double)nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + (double)italicSkewAddition
+                                         + (double)boldSimulationAddition);
+                                    if (leftMinWidth == -1f) {
+                                        leftMinWidth = childMinWidth;
+                                    }
+                                    else {
+                                        rightMinWidth = childMinWidth;
+                                    }
+                                    widthHandler.UpdateMinChildWidth(childMinWidth);
+                                    widthHandler.UpdateMaxChildWidth(childMinWidth);
                                 }
                             }
                             else {
@@ -622,6 +647,25 @@ namespace iText.Layout.Renderer {
                 }
             }
             result.SetMinMaxWidth(countedMinMaxWidth);
+            if (!noSoftWrap) {
+                foreach (float dimension in leftMarginBorderPadding) {
+                    leftMinWidth += dimension;
+                }
+                foreach (float dimension in rightMarginBorderPadding) {
+                    if (rightMinWidth < 0) {
+                        leftMinWidth += dimension;
+                    }
+                    else {
+                        rightMinWidth += dimension;
+                    }
+                }
+                result.SetLeftMinWidth(leftMinWidth);
+                result.SetRightMinWidth(rightMinWidth);
+            }
+            else {
+                result.SetLeftMinWidth(countedMinMaxWidth.GetMinWidth());
+                result.SetRightMinWidth(-1f);
+            }
             bool[] startsEnds_1 = IsLineStartsWithWhiteSpaceAndEndsWithSplitCharacter(splitCharacters);
             result.SetLineStartsWithWhiteSpace(startsEnds_1[0]).SetLineEndsWithSplitCharacterOrWhiteSpace(startsEnds_1
                 [1]);
@@ -842,7 +886,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_912();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_947();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -904,8 +948,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_912 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_912() {
+        private sealed class _IGlyphLineFilter_947 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_947() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1687,7 +1731,15 @@ namespace iText.Layout.Renderer {
             bool startsWithBreak = line.start < line.end && splitCharacters.IsSplitCharacter(text, line.start) && iText.IO.Util.TextUtil
                 .IsSpaceOrWhitespace(text.Get(line.start));
             bool endsWithBreak = line.start < line.end && splitCharacters.IsSplitCharacter(text, line.end - 1);
-            return new bool[] { startsWithBreak, endsWithBreak };
+            if (specialScriptsWordBreakPoints == null || specialScriptsWordBreakPoints.IsEmpty()) {
+                return new bool[] { startsWithBreak, endsWithBreak };
+            }
+            else {
+                if (!endsWithBreak) {
+                    endsWithBreak = specialScriptsWordBreakPoints.Contains(line.end);
+                }
+                return new bool[] { startsWithBreak, endsWithBreak };
+            }
         }
 
         internal static bool CodePointIsOfSpecialScript(int codePoint) {

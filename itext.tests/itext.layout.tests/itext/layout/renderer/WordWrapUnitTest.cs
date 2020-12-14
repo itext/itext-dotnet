@@ -536,29 +536,46 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void UpdateSpecialScriptLayoutResultsNonTextRenderer() {
             IDictionary<int, LayoutResult> specialScriptLayoutResults = new Dictionary<int, LayoutResult>();
-            LayoutResult res = new LayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10, 10)), 
-                null, null);
-            specialScriptLayoutResults.Put(-1, res);
+            TextLayoutResult res = new TextLayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10
+                , 10)), null, null, null);
+            specialScriptLayoutResults.Put(0, res);
             NUnit.Framework.Assert.IsFalse(specialScriptLayoutResults.IsEmpty());
             TabRenderer tabRenderer = new TabRenderer(new Tab());
-            LineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, tabRenderer, 0, res);
+            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
+                (0f, 0f, false);
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(tabRenderer);
+            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, tabRenderer, 1, res, minMaxWidthOfTextRendererSequenceHelper
+                , false, widthHandler);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
         [NUnit.Framework.Test]
         public virtual void UpdateSpecialScriptLayoutResultsFloatingRenderer() {
             IDictionary<int, LayoutResult> specialScriptLayoutResults = new Dictionary<int, LayoutResult>();
-            LayoutResult res = new LayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10, 10)), 
-                null, null);
-            int childPosToRemain = -1;
+            TextLayoutResult res = new TextLayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10
+                , 10)), null, null, null);
+            int childPosToRemain = 0;
             specialScriptLayoutResults.Put(childPosToRemain, res);
             NUnit.Framework.Assert.IsFalse(specialScriptLayoutResults.IsEmpty());
             Tab tab = new Tab();
             tab.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             TabRenderer tabRenderer = new TabRenderer(tab);
-            int childPosNotToBeAdded = 0;
-            LineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, tabRenderer, childPosNotToBeAdded
-                , res);
+            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
+                (0f, 0f, false);
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(tabRenderer);
+            int childPosNotToBeAdded = 1;
+            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, tabRenderer, childPosNotToBeAdded
+                , res, minMaxWidthOfTextRendererSequenceHelper, false, widthHandler);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(childPosToRemain));
             NUnit.Framework.Assert.IsFalse(specialScriptLayoutResults.ContainsKey(childPosNotToBeAdded));
         }
@@ -568,10 +585,19 @@ namespace iText.Layout.Renderer {
             IDictionary<int, LayoutResult> specialScriptLayoutResults = new Dictionary<int, LayoutResult>();
             LayoutResult res = new LayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10, 10)), 
                 null, null);
-            specialScriptLayoutResults.Put(-1, res);
+            specialScriptLayoutResults.Put(0, res);
             NUnit.Framework.Assert.IsFalse(specialScriptLayoutResults.IsEmpty());
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
-            LineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, 1, res);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(textRenderer);
+            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
+                (0f, 0f, false);
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
+            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, 1, res, minMaxWidthOfTextRendererSequenceHelper
+                , true, widthHandler);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
@@ -585,8 +611,17 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(specialScriptLayoutResults.IsEmpty());
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(-1)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(textRenderer);
+            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
+                (0f, 0f, false);
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int secondKey = firstKey + 1;
-            LineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, secondKey, res);
+            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, secondKey, res, minMaxWidthOfTextRendererSequenceHelper
+                , true, widthHandler);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(secondKey));
         }

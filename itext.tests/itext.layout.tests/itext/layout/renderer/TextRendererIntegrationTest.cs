@@ -33,6 +33,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class TextRendererIntegrationTest : ExtendedITextTest {
@@ -298,6 +299,35 @@ namespace iText.Layout.Renderer {
             doc.Add(paragraph);
             paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
             doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void MinMaxWidthWordSplitAcrossMultipleTextRenderers() {
+            String outFileName = destinationFolder + "minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
+            String cmpFileName = sourceFolder + "cmp_minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Text wissen = new Text("Wissen").SetFontColor(ColorConstants.PINK).SetBackgroundColor(ColorConstants.YELLOW
+                );
+            Text schaft = new Text("schaft").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants.YELLOW
+                );
+            Text ler = new Text("ler is a long German word!").SetFontColor(ColorConstants.RED).SetBackgroundColor(ColorConstants
+                .YELLOW);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "bulb.gif"
+                ));
+            image.SetWidth(30);
+            Paragraph text = new Paragraph().Add(wissen).Add(schaft).Add(ler);
+            float[] colWidth = new float[] { 10, 20, 30, 40, 50 };
+            Table table = new Table(UnitValue.CreatePercentArray(colWidth));
+            for (int i = 0; i < colWidth.Length; i++) {
+                table.AddCell(new Cell().Add(text));
+            }
+            doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));

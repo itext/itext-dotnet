@@ -64,6 +64,10 @@ namespace iText.Layout.Layout {
 
         protected internal bool lineEndsWithSplitCharacterOrWhiteSpace = false;
 
+        protected internal float leftMinWidth;
+
+        protected internal float rightMinWidth;
+
         /// <summary>
         /// Creates the
         /// <see cref="LayoutResult"/>
@@ -249,6 +253,66 @@ namespace iText.Layout.Layout {
         /// <seealso cref="iText.Layout.Splitting.ISplitCharacters"/>
         public virtual bool IsLineEndsWithSplitCharacterOrWhiteSpace() {
             return lineEndsWithSplitCharacterOrWhiteSpace;
+        }
+
+        /// <summary>Sets min width of the leftmost unbreakable part of the TextRenderer#line after layout.</summary>
+        /// <remarks>
+        /// Sets min width of the leftmost unbreakable part of the TextRenderer#line after layout.
+        /// This value includes left-side additional width, i.e. left margin, border and padding widths.
+        /// In case when entire TextRenderer#line is unbreakable, leftMinWidth also includes right-side additional width.
+        /// </remarks>
+        /// <param name="leftMinWidth">min width of the leftmost unbreakable part of the TextRenderer#line after layout.
+        ///     </param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        public virtual iText.Layout.Layout.TextLayoutResult SetLeftMinWidth(float leftMinWidth) {
+            this.leftMinWidth = leftMinWidth;
+            return this;
+        }
+
+        /// <summary>Gets min width of the leftmost unbreakable part of the TextRenderer#line after layout.</summary>
+        /// <remarks>
+        /// Gets min width of the leftmost unbreakable part of the TextRenderer#line after layout.
+        /// This value leftMinWidth includes left-side additional width, i.e. left margin, border and padding widths.
+        /// In case when entire TextRenderer#line is unbreakable, leftMinWidth also includes right-side additional width.
+        /// </remarks>
+        /// <returns>min width of the leftmost unbreakable part of the TextRenderer#line after layout.</returns>
+        public virtual float GetLeftMinWidth() {
+            return leftMinWidth;
+        }
+
+        /// <summary>Sets min width of the rightmost unbreakable part of the TextRenderer#line after layout.</summary>
+        /// <remarks>
+        /// Sets min width of the rightmost unbreakable part of the TextRenderer#line after layout.
+        /// This value includes right-side additional width, i.e. right margin, border and padding widths.
+        /// In case when entire TextRenderer#line is unbreakable, this value must be -1
+        /// and right-side additional width must be included in leftMinWidth.
+        /// </remarks>
+        /// <param name="rightMinWidth">min width of the rightmost unbreakable part of the TextRenderer#line after layout.
+        ///     </param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        public virtual iText.Layout.Layout.TextLayoutResult SetRightMinWidth(float rightMinWidth) {
+            this.rightMinWidth = rightMinWidth;
+            return this;
+        }
+
+        /// <summary>Gets min width of the rightmost unbreakable part of the TextRenderer#line after layout.</summary>
+        /// <remarks>
+        /// Gets min width of the rightmost unbreakable part of the TextRenderer#line after layout.
+        /// This value includes right-side additional width, i.e. right margin, border and padding widths.
+        /// In case when entire TextRenderer#line is unbreakable, this value must be -1
+        /// and right-side additional width must be included in leftMinWidth.
+        /// </remarks>
+        /// <returns>min width of the leftmost unbreakable part of the TextRenderer#line after layout.</returns>
+        public virtual float GetRightMinWidth() {
+            return rightMinWidth;
         }
     }
 }
