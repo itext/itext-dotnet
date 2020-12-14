@@ -186,6 +186,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant BOX_SHADOW.</summary>
         public const String BOX_SHADOW = "box-shadow";
 
+        /// <summary>The Constant BREAK_ALL.</summary>
+        public const String BREAK_ALL = "break-all";
+
         /// <summary>The Constant CAPTION_SIDE.</summary>
         public const String CAPTION_SIDE = "caption-side";
 
@@ -287,6 +290,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant INLINE-BLOCK</summary>
         public const String INLINE_BLOCK = "inline-block";
+
+        /// <summary>The Constant KEEP_ALL.</summary>
+        public const String KEEP_ALL = "keep-all";
 
         /// <summary>The Constant LETTER_SPACING.</summary>
         public const String LETTER_SPACING = "letter-spacing";

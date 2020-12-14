@@ -323,5 +323,27 @@ namespace iText.StyledXmlParser.Css.Validate {
                     , "norm")));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void WordWrapTest() {
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "normal")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "break-all")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "keep-all")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "break-word")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "inherit")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "unset")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "initial")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "auto")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .WORD_BREAK, "norm")));
+        }
     }
 }

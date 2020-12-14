@@ -56,13 +56,16 @@ namespace iText.Layout.Splitting {
             }
             int charCode = text.Get(glyphPos).GetUnicode();
             //Check if a hyphen proceeds a digit to denote negative value
+            // TODO: DEVSIX-4863 why is glyphPos == 0? negative value could be preceded by a whitespace!
             if ((glyphPos == 0) && (charCode == '-') && (text.Size() - 1 > glyphPos) && (IsADigitChar(text, glyphPos +
                  1))) {
                 return false;
             }
-            return (charCode <= ' ' || charCode == '-' || charCode == '\u2010' || (charCode >= 0x2002 && charCode <= 0x200b
-                ) || (charCode >= 0x2e80 && charCode < 0xd7a0) || (charCode >= 0xf900 && charCode < 0xfb00) || (charCode
-                 >= 0xfe30 && charCode < 0xfe50) || (charCode >= 0xff61 && charCode < 0xffa0));
+            return (charCode <= ' ' || charCode == '-' || charCode == '\u2010' || 
+                        // block of whitespaces
+                        (charCode >= 0x2002 && charCode <= 0x200b) || (charCode >= 0x2e80 && charCode < 0xd7a0) || (charCode >= 0xf900
+                 && charCode < 0xfb00) || (charCode >= 0xfe30 && charCode < 0xfe50) || (charCode >= 0xff61 && charCode
+                 < 0xffa0));
         }
 
         private bool IsADigitChar(GlyphLine text, int glyphPos) {
