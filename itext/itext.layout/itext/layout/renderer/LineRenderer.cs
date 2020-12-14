@@ -156,6 +156,14 @@ namespace iText.Layout.Renderer {
                 Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
                     , layoutBox.GetHeight());
                 RenderingMode? childRenderingMode = childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+                if (IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(childRenderer) && TypographyUtils.IsPdfCalligraphAvailable
+                    ()) {
+                    SpecialScriptPreLayoutProcessing(childPos);
+                }
+                ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, childRenderer, childPos, minMaxWidthOfTextRendererSequenceHelper
+                    , noSoftWrap, widthHandler);
+                ResetTextSequenceIfItEnded(textRendererLayoutResults, false, childRenderer, childPos, minMaxWidthOfTextRendererSequenceHelper
+                    , noSoftWrap, widthHandler);
                 if (childRenderer is TextRenderer) {
                     // Delete these properties in case of relayout. We might have applied them during justify().
                     childRenderer.DeleteOwnProperty(Property.CHARACTER_SPACING);
@@ -340,10 +348,6 @@ namespace iText.Layout.Renderer {
                 }
                 bool shouldBreakLayouting = false;
                 if (childResult == null) {
-                    if (TypographyUtils.IsPdfCalligraphAvailable() && IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
-                        (childRenderer)) {
-                        SpecialScriptPreLayoutProcessing(childPos);
-                    }
                     bool setOverflowFitCausedBySpecialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer)
                         .TextContainsSpecialScriptGlyphs(true);
                     bool setOverflowFitCausedByTextRenderer = RenderingMode.HTML_MODE == childRenderingMode && childRenderer is
@@ -360,10 +364,8 @@ namespace iText.Layout.Renderer {
                         ), bbox), wasParentsHeightClipped));
                     shouldBreakLayouting = TextRendererMoveForwardsPostProcessing(moveForwardsSpecialScriptsOverflowX, moveForwardsTextRenderer
                         , childPos, childRenderer, childResult, wasXOverflowChanged);
-                    UpdateTextRendererLayoutResults(textRendererLayoutResults, childRenderer, childPos, childResult, minMaxWidthOfTextRendererSequenceHelper
-                        , noSoftWrap, widthHandler);
-                    UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, childRenderer, childPos, childResult, minMaxWidthOfTextRendererSequenceHelper
-                        , noSoftWrap, widthHandler);
+                    UpdateTextRendererLayoutResults(textRendererLayoutResults, childRenderer, childPos, childResult);
+                    UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, childRenderer, childPos, childResult);
                     // it means that we've already increased layout area by MIN_MAX_WIDTH_CORRECTION_EPS
                     if (childResult is MinMaxWidthLayoutResult && null != childBlockMinMaxWidth) {
                         MinMaxWidth childResultMinMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
@@ -438,9 +440,10 @@ namespace iText.Layout.Renderer {
                                     );
                                 childPos = lastFittingChildRendererData.childIndex;
                                 childResult = lastFittingChildRendererData.childLayoutResult;
-                                minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
-                                UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, childPos, childResult, widthHandler
-                                    , minMaxWidthOfTextRendererSequenceHelper, specialScriptLayoutResults);
+                                specialScriptLayoutResults.Put(childPos, childResult);
+                                MinMaxWidth textSequenceElemminMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
+                                minChildWidth_1 = textSequenceElemminMaxWidth.GetMinWidth();
+                                maxChildWidth_1 = textSequenceElemminMaxWidth.GetMaxWidth();
                             }
                         }
                         else {
@@ -463,9 +466,10 @@ namespace iText.Layout.Renderer {
                                         , textRendererSequenceAscentDescent);
                                     childPos = lastFittingChildRendererData.childIndex;
                                     childResult = lastFittingChildRendererData.childLayoutResult;
-                                    minChildWidth_1 = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth().GetMinWidth();
-                                    UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, childPos, childResult, widthHandler
-                                        , minMaxWidthOfTextRendererSequenceHelper, textRendererLayoutResults);
+                                    textRendererLayoutResults.Put(childPos, childResult);
+                                    MinMaxWidth textSequenceElemminMaxWidth = ((MinMaxWidthLayoutResult)childResult).GetMinMaxWidth();
+                                    minChildWidth_1 = textSequenceElemminMaxWidth.GetMinWidth();
+                                    maxChildWidth_1 = textSequenceElemminMaxWidth.GetMaxWidth();
                                 }
                             }
                         }
@@ -588,26 +592,11 @@ namespace iText.Layout.Renderer {
                         childPos++;
                     }
                 }
-                if (childPos == childRenderers.Count && (!specialScriptLayoutResults.IsEmpty() || !textRendererLayoutResults
-                    .IsEmpty())) {
-                    int lastTextRenderer = childPos;
-                    bool nonSpecialScripts = specialScriptLayoutResults.IsEmpty();
-                    while (lastTextRenderer >= 0) {
-                        if (nonSpecialScripts ? textRendererLayoutResults.Get(lastTextRenderer) != null : specialScriptLayoutResults
-                            .Get(lastTextRenderer) != null) {
-                            break;
-                        }
-                        else {
-                            lastTextRenderer--;
-                        }
-                    }
-                    LayoutResult lastTextLayoutResult = nonSpecialScripts ? textRendererLayoutResults.Get(lastTextRenderer) : 
-                        specialScriptLayoutResults.Get(lastTextRenderer);
-                    UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, lastTextRenderer, lastTextLayoutResult
-                        , widthHandler, minMaxWidthOfTextRendererSequenceHelper, nonSpecialScripts ? textRendererLayoutResults
-                         : specialScriptLayoutResults);
-                }
             }
+            ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, null, childPos, minMaxWidthOfTextRendererSequenceHelper
+                , noSoftWrap, widthHandler);
+            ResetTextSequenceIfItEnded(textRendererLayoutResults, false, null, childPos, minMaxWidthOfTextRendererSequenceHelper
+                , noSoftWrap, widthHandler);
             if (result == null) {
                 bool noOverflowedFloats = floatsOverflowedToNextLine.IsEmpty() && floatsToNextPageOverflowRenderers.IsEmpty
                     ();
@@ -1306,7 +1295,8 @@ namespace iText.Layout.Renderer {
 
         internal static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer) {
             return childRenderer is TextRenderer && ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints() ==
-                 null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false);
+                 null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false) && !IsChildFloating(childRenderer
+                );
         }
 
         internal static bool IsChildFloating(IRenderer childRenderer) {
@@ -1316,51 +1306,41 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual void UpdateSpecialScriptLayoutResults(IDictionary<int, LayoutResult> specialScriptLayoutResults
-            , IRenderer childRenderer, int childPos, LayoutResult childResult, LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-             minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler) {
+            , IRenderer childRenderer, int childPos, LayoutResult childResult) {
             if ((childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true))
                 ) {
                 specialScriptLayoutResults.Put(childPos, childResult);
             }
-            else {
-                if (!specialScriptLayoutResults.IsEmpty()) {
-                    while (childPos >= 0) {
-                        if (specialScriptLayoutResults.Get(childPos) != null) {
-                            break;
-                        }
-                        else {
-                            childPos--;
-                        }
-                    }
-                    childResult = specialScriptLayoutResults.Get(childPos);
-                    UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, childPos, childResult, widthHandler
-                        , minMaxWidthOfTextRendererSequenceHelper, specialScriptLayoutResults);
-                    specialScriptLayoutResults.Clear();
-                }
-            }
         }
 
         internal virtual void UpdateTextRendererLayoutResults(IDictionary<int, LayoutResult> textRendererLayoutResults
-            , IRenderer childRenderer, int childPos, LayoutResult childResult, LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-             minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler) {
+            , IRenderer childRenderer, int childPos, LayoutResult childResult) {
             if (childRenderer is TextRenderer && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true)) {
                 textRendererLayoutResults.Put(childPos, childResult);
             }
-            else {
-                if (!textRendererLayoutResults.IsEmpty()) {
-                    while (childPos >= 0) {
-                        if (textRendererLayoutResults.Get(childPos) != null) {
-                            break;
-                        }
-                        else {
-                            childPos--;
-                        }
+        }
+
+        internal virtual void ResetTextSequenceIfItEnded(IDictionary<int, LayoutResult> textRendererLayoutResults, 
+            bool specialScripts, IRenderer childRenderer, int childPos, LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
+             minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler) {
+            if (childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true) ==
+                 specialScripts && !IsChildFloating(childRenderer)) {
+                return;
+            }
+            if (!textRendererLayoutResults.IsEmpty()) {
+                int lastChildInTextSequence = childPos;
+                while (lastChildInTextSequence >= 0) {
+                    if (textRendererLayoutResults.Get(lastChildInTextSequence) != null) {
+                        break;
                     }
-                    childResult = textRendererLayoutResults.Get(childPos);
-                    UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, childPos, childResult, widthHandler
-                        , minMaxWidthOfTextRendererSequenceHelper, textRendererLayoutResults);
-                    textRendererLayoutResults.Clear();
+                    else {
+                        lastChildInTextSequence--;
+                    }
                 }
+                LayoutResult childResult = textRendererLayoutResults.Get(lastChildInTextSequence);
+                UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, lastChildInTextSequence, childResult
+                    , widthHandler, minMaxWidthOfTextRendererSequenceHelper, textRendererLayoutResults);
+                textRendererLayoutResults.Clear();
             }
         }
 
@@ -1919,7 +1899,6 @@ namespace iText.Layout.Renderer {
                         }
                         if (textLayoutResult.IsContainsPossibleBreak() && textLayoutResult.GetStatus() != LayoutResult.NOTHING) {
                             textRenderer.SetFirstIndexExceedingAvailableWidth(textRenderer.line.end);
-                            // todo ? relayout in original bBox rather than occupied on the first layout area
                             LayoutArea layoutArea = textRenderer.GetOccupiedArea().Clone();
                             layoutArea.GetBBox().IncreaseHeight(0.0001F).IncreaseWidth(0.0001F);
                             LayoutResult newChildLayoutResult = textRenderer.Layout(new LayoutContext(layoutArea, wasParentsHeightClipped

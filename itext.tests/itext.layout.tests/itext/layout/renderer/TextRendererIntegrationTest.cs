@@ -408,6 +408,33 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void MinWidthForWordInMultipleTextRenderersFollowedByFloatTest() {
+            String outFileName = destinationFolder + "minWidthForSpanningWordFollowedByFloat.pdf";
+            String cmpFileName = sourceFolder + "cmp_minWidthForSpanningWordFollowedByFloat.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(40);
+            // add elements to the table in narrow parent div, so table width would be completely based on min-width
+            Div narrowDivWithTable = new Div().SetBorder(new DashedBorder(ColorConstants.DARK_GRAY, 3)).SetWidth(10);
+            Table table = new Table(1);
+            table.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+            Div floatingDiv = new Div();
+            floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+            floatingDiv.SetWidth(40).SetHeight(20).SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph().Add(new Text("s")).Add(new Text("i")).Add(new Text("n")).Add(new Text
+                ("g")).Add(new Text("l")).Add(new Text("e")).Add(floatingDiv).SetBorder(new SolidBorder(1));
+            paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            table.AddCell(paragraph);
+            narrowDivWithTable.Add(table);
+            doc.Add(narrowDivWithTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void OverflowWrapBreakWordWithOverflowXTest() {
             String outFileName = destinationFolder + "overflowWrapBreakWordWithOverflowXTest.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowWrapBreakWordWithOverflowXTest.pdf";
