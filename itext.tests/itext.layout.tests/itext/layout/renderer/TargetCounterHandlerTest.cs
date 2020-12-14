@@ -28,6 +28,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Splitting;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
@@ -54,6 +55,7 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.WORD_SPACING, 20F);
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
             textRenderer.SetProperty(Property.FONT_SIZE, new UnitValue(UnitValue.POINT, 20));
+            textRenderer.SetProperty(Property.SPLIT_CHARACTERS, new DefaultSplitCharacters());
             textRenderer.SetParent(documentRenderer);
             String id = "id7";
             textRenderer.SetProperty(Property.ID, id);

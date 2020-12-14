@@ -281,7 +281,7 @@ namespace iText.Layout.Renderer {
                     specialScriptLayoutResults.Put(i, new LayoutResult(LayoutResult.FULL, layoutArea, null, null));
                 }
             }
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
+            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
                 (THAI_WORD.Length + 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(5, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
@@ -311,7 +311,7 @@ namespace iText.Layout.Renderer {
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(0, 0, 0, 100));
             specialScriptLayoutResults.Put(indexOfThaiRenderer, new LayoutResult(LayoutResult.NOTHING, layoutArea, null
                 , null));
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
+            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
                 (indexOfThaiRenderer, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(indexOfThaiRenderer, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
@@ -348,7 +348,7 @@ namespace iText.Layout.Renderer {
                     specialScriptLayoutResults.Put(i, new LayoutResult(LayoutResult.FULL, layoutArea, null, null));
                 }
             }
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastRendererToRemainOnTheLine
+            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
                 (THAI_WORD.Length - 1, specialScriptLayoutResults, false, new List<IRenderer>(), true);
             NUnit.Framework.Assert.AreEqual(THAI_WORD.Length - 1, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(specialScriptLayoutResults.Get(THAI_WORD.Length - 1), lastFittingChildRendererData
@@ -760,8 +760,9 @@ namespace iText.Layout.Renderer {
         public virtual void OverflowXSingleWordSingleRenderer() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
-            TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(THAI_WORD));
+            TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
+            textRenderer.SetText(THAI_WORD);
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());

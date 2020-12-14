@@ -50,13 +50,19 @@ namespace iText.Layout.Layout {
     /// </summary>
     public class TextLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>
-        /// Indicates whether some word was splitted during
+        /// Indicates whether some word was split during
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>.
         /// </summary>
         protected internal bool wordHasBeenSplit;
 
         /// <summary>Indicates whether split was forced by new line symbol in text or not.</summary>
         protected internal bool splitForcedByNewline;
+
+        protected internal bool containsPossibleBreak = false;
+
+        protected internal bool lineStartsWithWhiteSpace = false;
+
+        protected internal bool lineEndsWithSplitCharacterOrWhiteSpace = false;
 
         /// <summary>
         /// Creates the
@@ -80,7 +86,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)"/>
         /// </param>
         /// <param name="occupiedArea">the area occupied by the content</param>
-        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="splitRenderer">the renderer to draw the split part of the content</param>
         /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
@@ -99,7 +105,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)"/>
         /// </param>
         /// <param name="occupiedArea">the area occupied by the content</param>
-        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="splitRenderer">the renderer to draw the split part of the content</param>
         /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         /// <param name="cause">
         /// the first renderer to produce
@@ -119,7 +125,7 @@ namespace iText.Layout.Layout {
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>.
         /// The value will be set as true if, for example, the rendered words width is bigger than the width of layout area.
         /// </remarks>
-        /// <returns>whether some word was splitted or not.</returns>
+        /// <returns>whether some word was split or not.</returns>
         public virtual bool IsWordHasBeenSplit() {
             return wordHasBeenSplit;
         }
@@ -168,6 +174,81 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
+        }
+
+        /// <summary>Indicates whether split renderer contains possible break.</summary>
+        /// <remarks>
+        /// Indicates whether split renderer contains possible break.
+        /// Possible breaks are either whitespaces or split characters.
+        /// </remarks>
+        /// <returns>true if there's a possible break within the split renderer.</returns>
+        /// <seealso cref="iText.Layout.Splitting.ISplitCharacters"/>
+        public virtual bool IsContainsPossibleBreak() {
+            return containsPossibleBreak;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="IsContainsPossibleBreak()"/>.
+        /// </summary>
+        /// <param name="containsPossibleBreak">indicates that split renderer contains possible break.</param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="IsContainsPossibleBreak()"/>
+        public virtual iText.Layout.Layout.TextLayoutResult SetContainsPossibleBreak(bool containsPossibleBreak) {
+            this.containsPossibleBreak = containsPossibleBreak;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="IsLineStartsWithWhiteSpace()"/>.
+        /// </summary>
+        /// <param name="lineStartsWithWhiteSpace">indicates if TextRenderer#line starts with a whitespace.</param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="IsLineStartsWithWhiteSpace()"/>
+        public virtual iText.Layout.Layout.TextLayoutResult SetLineStartsWithWhiteSpace(bool lineStartsWithWhiteSpace
+            ) {
+            this.lineStartsWithWhiteSpace = lineStartsWithWhiteSpace;
+            return this;
+        }
+
+        /// <summary>Indicates whether TextRenderer#line starts with a whitespace.</summary>
+        /// <returns>true if TextRenderer#line starts with a whitespace.</returns>
+        public virtual bool IsLineStartsWithWhiteSpace() {
+            return lineStartsWithWhiteSpace;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="IsLineEndsWithSplitCharacterOrWhiteSpace()"/>.
+        /// </summary>
+        /// <param name="lineEndsWithSplitCharacterOrWhiteSpace">indicates if TextRenderer#line ends with a splitCharacter.
+        ///     </param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="IsLineEndsWithSplitCharacterOrWhiteSpace()"/>
+        public virtual iText.Layout.Layout.TextLayoutResult SetLineEndsWithSplitCharacterOrWhiteSpace(bool lineEndsWithSplitCharacterOrWhiteSpace
+            ) {
+            this.lineEndsWithSplitCharacterOrWhiteSpace = lineEndsWithSplitCharacterOrWhiteSpace;
+            return this;
+        }
+
+        /// <summary>Indicates whether TextRenderer#line ends with a splitCharacter.</summary>
+        /// <returns>true if TextRenderer#line ends with a splitCharacter.</returns>
+        /// <seealso cref="iText.Layout.Splitting.ISplitCharacters"/>
+        public virtual bool IsLineEndsWithSplitCharacterOrWhiteSpace() {
+            return lineEndsWithSplitCharacterOrWhiteSpace;
         }
     }
 }
