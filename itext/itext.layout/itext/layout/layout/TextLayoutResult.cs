@@ -60,9 +60,9 @@ namespace iText.Layout.Layout {
 
         protected internal bool containsPossibleBreak = false;
 
-        protected internal bool lineStartsWithWhiteSpace = false;
+        protected internal bool startsWithSplitCharacterWhiteSpace = false;
 
-        protected internal bool lineEndsWithSplitCharacterOrWhiteSpace = false;
+        protected internal bool endsWithSplitCharacter = false;
 
         protected internal float leftMinWidth;
 
@@ -209,50 +209,51 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Sets
-        /// <see cref="IsLineStartsWithWhiteSpace()"/>.
+        /// <see cref="IsStartsWithSplitCharacterWhiteSpace()"/>.
         /// </summary>
-        /// <param name="lineStartsWithWhiteSpace">indicates if TextRenderer#line starts with a whitespace.</param>
+        /// <param name="startsWithSplitCharacterWhiteSpace">
+        /// indicates if TextRenderer#line starts with a split character that is
+        /// also a whitespace.
+        /// </param>
         /// <returns>
         /// 
         /// <see cref="TextLayoutResult">this layout result</see>
         /// the setting was applied on.
         /// </returns>
-        /// <seealso cref="IsLineStartsWithWhiteSpace()"/>
-        public virtual iText.Layout.Layout.TextLayoutResult SetLineStartsWithWhiteSpace(bool lineStartsWithWhiteSpace
+        /// <seealso cref="IsStartsWithSplitCharacterWhiteSpace()"/>
+        public virtual iText.Layout.Layout.TextLayoutResult SetStartsWithSplitCharacterWhiteSpace(bool startsWithSplitCharacterWhiteSpace
             ) {
-            this.lineStartsWithWhiteSpace = lineStartsWithWhiteSpace;
+            this.startsWithSplitCharacterWhiteSpace = startsWithSplitCharacterWhiteSpace;
             return this;
         }
 
         /// <summary>Indicates whether TextRenderer#line starts with a whitespace.</summary>
         /// <returns>true if TextRenderer#line starts with a whitespace.</returns>
-        public virtual bool IsLineStartsWithWhiteSpace() {
-            return lineStartsWithWhiteSpace;
+        public virtual bool IsStartsWithSplitCharacterWhiteSpace() {
+            return startsWithSplitCharacterWhiteSpace;
         }
 
         /// <summary>
         /// Sets
-        /// <see cref="IsLineEndsWithSplitCharacterOrWhiteSpace()"/>.
+        /// <see cref="IsEndsWithSplitCharacter()"/>.
         /// </summary>
-        /// <param name="lineEndsWithSplitCharacterOrWhiteSpace">indicates if TextRenderer#line ends with a splitCharacter.
-        ///     </param>
+        /// <param name="endsWithSplitCharacter">indicates if TextRenderer#line ends with a splitCharacter.</param>
         /// <returns>
         /// 
         /// <see cref="TextLayoutResult">this layout result</see>
         /// the setting was applied on.
         /// </returns>
-        /// <seealso cref="IsLineEndsWithSplitCharacterOrWhiteSpace()"/>
-        public virtual iText.Layout.Layout.TextLayoutResult SetLineEndsWithSplitCharacterOrWhiteSpace(bool lineEndsWithSplitCharacterOrWhiteSpace
-            ) {
-            this.lineEndsWithSplitCharacterOrWhiteSpace = lineEndsWithSplitCharacterOrWhiteSpace;
+        /// <seealso cref="IsEndsWithSplitCharacter()"/>
+        public virtual iText.Layout.Layout.TextLayoutResult SetEndsWithSplitCharacter(bool endsWithSplitCharacter) {
+            this.endsWithSplitCharacter = endsWithSplitCharacter;
             return this;
         }
 
         /// <summary>Indicates whether TextRenderer#line ends with a splitCharacter.</summary>
         /// <returns>true if TextRenderer#line ends with a splitCharacter.</returns>
         /// <seealso cref="iText.Layout.Splitting.ISplitCharacters"/>
-        public virtual bool IsLineEndsWithSplitCharacterOrWhiteSpace() {
-            return lineEndsWithSplitCharacterOrWhiteSpace;
+        public virtual bool IsEndsWithSplitCharacter() {
+            return endsWithSplitCharacter;
         }
 
         /// <summary>Sets min width of the leftmost unbreakable part of the TextRenderer#line after layout.</summary>

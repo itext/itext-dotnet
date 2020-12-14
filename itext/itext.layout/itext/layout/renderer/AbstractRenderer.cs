@@ -90,6 +90,30 @@ namespace iText.Layout.Renderer {
         /// <summary>The infinity value which is used while layouting</summary>
         protected internal const float INF = 1e6f;
 
+        /// <summary>
+        /// The common ordering index of top side in arrays of four elements which define top, right, bottom,
+        /// left sides values (e.g. margins, borders, paddings).
+        /// </summary>
+        internal const int TOP_SIDE = 0;
+
+        /// <summary>
+        /// The common ordering index of right side in arrays of four elements which define top, right, bottom,
+        /// left sides values (e.g. margins, borders, paddings).
+        /// </summary>
+        internal const int RIGHT_SIDE = 1;
+
+        /// <summary>
+        /// The common ordering index of bottom side in arrays of four elements which define top, right, bottom,
+        /// left sides values (e.g. margins, borders, paddings).
+        /// </summary>
+        internal const int BOTTOM_SIDE = 2;
+
+        /// <summary>
+        /// The common ordering index of left side in arrays of four elements which define top, right, bottom,
+        /// left sides values (e.g. margins, borders, paddings).
+        /// </summary>
+        internal const int LEFT_SIDE = 3;
+
         // TODO linkedList?
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
@@ -1653,28 +1677,28 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyMargins(Rectangle rect, UnitValue[] margins, bool reverse) {
-            if (!margins[0].IsPointValue()) {
+            if (!margins[TOP_SIDE].IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_TOP));
             }
-            if (!margins[1].IsPointValue()) {
+            if (!margins[RIGHT_SIDE].IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_RIGHT));
             }
-            if (!margins[2].IsPointValue()) {
+            if (!margins[BOTTOM_SIDE].IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_BOTTOM));
             }
-            if (!margins[3].IsPointValue()) {
+            if (!margins[LEFT_SIDE].IsPointValue()) {
                 ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Property
                     .MARGIN_LEFT));
             }
-            return rect.ApplyMargins(margins[0].GetValue(), margins[1].GetValue(), margins[2].GetValue(), margins[3].GetValue
-                (), reverse);
+            return rect.ApplyMargins(margins[TOP_SIDE].GetValue(), margins[RIGHT_SIDE].GetValue(), margins[BOTTOM_SIDE
+                ].GetValue(), margins[LEFT_SIDE].GetValue(), reverse);
         }
 
         /// <summary>Returns margins of the renderer</summary>

@@ -60,8 +60,8 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new Text(THAI_TEXT));
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(THAI_TEXT);
-            NUnit.Framework.Assert.IsTrue(LineRenderer.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer
-                ));
+            NUnit.Framework.Assert.IsTrue(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
+                (textRenderer));
         }
 
         [NUnit.Framework.Test]
@@ -70,15 +70,15 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(THAI_TEXT);
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>());
-            NUnit.Framework.Assert.IsFalse(LineRenderer.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer
-                ));
+            NUnit.Framework.Assert.IsFalse(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
+                (textRenderer));
         }
 
         [NUnit.Framework.Test]
         public virtual void IsNotTextRenderer() {
             TabRenderer tabRenderer = new TabRenderer(new Tab());
-            NUnit.Framework.Assert.IsFalse(LineRenderer.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(tabRenderer
-                ));
+            NUnit.Framework.Assert.IsFalse(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
+                (tabRenderer));
         }
 
         [NUnit.Framework.Test]
@@ -88,7 +88,7 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(REGULAR_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(nonSpecialScriptText);
             NUnit.Framework.Assert.IsNull(textRenderer.GetSpecialScriptsWordBreakPoints());
-            LineRenderer.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer);
+            TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer);
             NUnit.Framework.Assert.IsNotNull(textRenderer.GetSpecialScriptsWordBreakPoints());
             NUnit.Framework.Assert.IsTrue(textRenderer.GetSpecialScriptsWordBreakPoints().IsEmpty());
             // layout is needed prior to calling #split() in order to fill TextRenderer fields required to be non-null
@@ -169,8 +169,8 @@ namespace iText.Layout.Renderer {
             lineRenderer.AddChild(floatingNonTextRenderer);
             lineRenderer.AddChild(textRendererSecondPart);
             lineRenderer.AddChild(regularNonTextRenderer);
-            LineRenderer.SpecialScriptsContainingTextRendererSequenceInfo info = lineRenderer.GetSpecialScriptsContainingTextRendererSequenceInfo
-                (0);
+            TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo info = TextSequenceWordWrapping.
+                GetSpecialScriptsContainingTextRendererSequenceInfo(lineRenderer, 0);
             int numberOfSequentialTextRenderers = info.numberOfSequentialTextRenderers;
             String sequentialTextContent = info.sequentialTextContent;
             IList<int> indicesOfFloating = info.indicesOfFloating;
@@ -179,8 +179,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(1, indicesOfFloating.Count);
             NUnit.Framework.Assert.AreEqual(1, (int)indicesOfFloating[0]);
             IList<int> possibleBreaks = new List<int>(JavaUtil.ArraysAsList(3, 8, 10, 12, 15, 20, 23, 26, 28, 30, 36));
-            lineRenderer.DistributePossibleBreakPointsOverSequentialTextRenderers(0, numberOfSequentialTextRenderers, 
-                possibleBreaks, indicesOfFloating);
+            TextSequenceWordWrapping.DistributePossibleBreakPointsOverSequentialTextRenderers(lineRenderer, 0, numberOfSequentialTextRenderers
+                , possibleBreaks, indicesOfFloating);
             IList<int> possibleBreaksFirstPart = textRendererFirstPart.GetSpecialScriptsWordBreakPoints();
             NUnit.Framework.Assert.IsNotNull(possibleBreaksFirstPart);
             IList<int> possibleBreaksSecondPart = textRendererSecondPart.GetSpecialScriptsWordBreakPoints();
@@ -213,8 +213,8 @@ namespace iText.Layout.Renderer {
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(specialScriptRenderer);
             lineRenderer.AddChild(nonSpecialScriptRenderer);
-            LineRenderer.SpecialScriptsContainingTextRendererSequenceInfo info = lineRenderer.GetSpecialScriptsContainingTextRendererSequenceInfo
-                (0);
+            TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo info = TextSequenceWordWrapping.
+                GetSpecialScriptsContainingTextRendererSequenceInfo(lineRenderer, 0);
             NUnit.Framework.Assert.AreEqual(1, info.numberOfSequentialTextRenderers);
             NUnit.Framework.Assert.AreEqual(THAI_TEXT, info.sequentialTextContent);
             NUnit.Framework.Assert.IsTrue(info.indicesOfFloating.IsEmpty());
@@ -235,8 +235,8 @@ namespace iText.Layout.Renderer {
             }
             IList<int> possibleBreaks = new List<int>(1);
             possibleBreaks.Add(THAI_WORD.Length);
-            lineRenderer.DistributePossibleBreakPointsOverSequentialTextRenderers(0, THAI_WORD.Length, possibleBreaks, 
-                new List<int>());
+            TextSequenceWordWrapping.DistributePossibleBreakPointsOverSequentialTextRenderers(lineRenderer, 0, THAI_WORD
+                .Length, possibleBreaks, new List<int>());
             IList<IRenderer> childRenderers = lineRenderer.GetChildRenderers();
             for (int i = 0; i < THAI_WORD.Length; i++) {
                 IList<int> possibleBreaksPerRenderer = ((TextRenderer)childRenderers[i]).GetSpecialScriptsWordBreakPoints(
@@ -281,8 +281,9 @@ namespace iText.Layout.Renderer {
                     specialScriptLayoutResults.Put(i, new LayoutResult(LayoutResult.FULL, layoutArea, null, null));
                 }
             }
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (THAI_WORD.Length + 1, specialScriptLayoutResults, false, true);
+            TextSequenceWordWrapping.LastFittingChildRendererData lastFittingChildRendererData = TextSequenceWordWrapping
+                .GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(lineRenderer, THAI_WORD.Length +
+                 1, specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(5, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -311,8 +312,9 @@ namespace iText.Layout.Renderer {
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(0, 0, 0, 100));
             specialScriptLayoutResults.Put(indexOfThaiRenderer, new LayoutResult(LayoutResult.NOTHING, layoutArea, null
                 , null));
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (indexOfThaiRenderer, specialScriptLayoutResults, false, true);
+            TextSequenceWordWrapping.LastFittingChildRendererData lastFittingChildRendererData = TextSequenceWordWrapping
+                .GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(lineRenderer, indexOfThaiRenderer
+                , specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(indexOfThaiRenderer, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, lastFittingChildRendererData.childLayoutResult.GetStatus
                 ());
@@ -348,8 +350,9 @@ namespace iText.Layout.Renderer {
                     specialScriptLayoutResults.Put(i, new LayoutResult(LayoutResult.FULL, layoutArea, null, null));
                 }
             }
-            LineRenderer.LastFittingChildRendererData lastFittingChildRendererData = lineRenderer.GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
-                (THAI_WORD.Length - 1, specialScriptLayoutResults, false, true);
+            TextSequenceWordWrapping.LastFittingChildRendererData lastFittingChildRendererData = TextSequenceWordWrapping
+                .GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(lineRenderer, THAI_WORD.Length -
+                 1, specialScriptLayoutResults, false, true);
             NUnit.Framework.Assert.AreEqual(THAI_WORD.Length - 1, lastFittingChildRendererData.childIndex);
             NUnit.Framework.Assert.AreEqual(specialScriptLayoutResults.Get(THAI_WORD.Length - 1), lastFittingChildRendererData
                 .childLayoutResult);
@@ -540,11 +543,10 @@ namespace iText.Layout.Renderer {
                 , 10)), null, null, null);
             textRendererLayoutResults.Put(0, res);
             TabRenderer tabRenderer = new TabRenderer(new Tab());
-            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-                (0f, 0f, false);
+            TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = 
+                new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
-            LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
+            TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
                 , false, widthHandler);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
@@ -559,12 +561,11 @@ namespace iText.Layout.Renderer {
             iText.Layout.Element.Text text = new iText.Layout.Element.Text("float");
             text.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             TextRenderer tabRenderer = new TextRenderer(text);
-            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-                (0f, 0f, false);
+            TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = 
+                new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
-            LineRenderer lineRenderer = new LineRenderer();
             int childPosDuringResetAttempt = 1;
-            lineRenderer.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, childPosDuringResetAttempt
+            TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, childPosDuringResetAttempt
                 , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
@@ -574,9 +575,8 @@ namespace iText.Layout.Renderer {
             IDictionary<int, LayoutResult> textRendererLayoutResults = new Dictionary<int, LayoutResult>();
             Tab tab = new Tab();
             TabRenderer tabRenderer = new TabRenderer(tab);
-            LineRenderer lineRenderer = new LineRenderer();
             int childPosNotToBeAdded = 1;
-            lineRenderer.UpdateSpecialScriptLayoutResults(textRendererLayoutResults, tabRenderer, childPosNotToBeAdded
+            TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(textRendererLayoutResults, true, tabRenderer, childPosNotToBeAdded
                 , new LayoutResult(LayoutResult.FULL, new LayoutArea(1, new Rectangle(10, 10)), null, null, null));
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
@@ -588,11 +588,10 @@ namespace iText.Layout.Renderer {
                 null, null);
             specialScriptLayoutResults.Put(0, res);
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
-            LineRenderer lineRenderer = new LineRenderer();
-            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-                (0f, 0f, false);
+            TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = 
+                new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
-            lineRenderer.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
+            TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
                 , true, widthHandler);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
@@ -603,8 +602,8 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
             LayoutResult res = new LayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10, 10)), 
                 null, null);
-            LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, 1, res);
+            TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(specialScriptLayoutResults, true, textRenderer, 1
+                , res);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
@@ -617,13 +616,12 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(firstKey, res);
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(-1)));
-            LineRenderer lineRenderer = new LineRenderer();
-            LineRenderer.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = new LineRenderer.MinMaxWidthOfTextRendererSequenceHelper
-                (0f, 0f, false);
+            TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper minMaxWidthOfTextRendererSequenceHelper = 
+                new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int secondKey = firstKey + 1;
-            lineRenderer.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, secondKey, minMaxWidthOfTextRendererSequenceHelper
-                , true, widthHandler);
+            TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, secondKey
+                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler);
             NUnit.Framework.Assert.AreEqual(1, specialScriptLayoutResults.Count);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
         }
@@ -637,9 +635,9 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(firstKey, res);
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text("whatever"));
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(-1)));
-            LineRenderer lineRenderer = new LineRenderer();
             int secondKey = firstKey + 1;
-            lineRenderer.UpdateSpecialScriptLayoutResults(specialScriptLayoutResults, textRenderer, secondKey, res);
+            TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(specialScriptLayoutResults, true, textRenderer, secondKey
+                , res);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(secondKey));
             NUnit.Framework.Assert.AreEqual(2, specialScriptLayoutResults.Count);
@@ -648,8 +646,8 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void CurWidthZeroDecrement() {
             int oldNewChildPos = 1;
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(oldNewChildPos, oldNewChildPos, new Dictionary
-                <int, LayoutResult>());
+            float decrement = TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(oldNewChildPos, oldNewChildPos
+                , new Dictionary<int, LayoutResult>());
             NUnit.Framework.Assert.AreEqual(0.0f, decrement, 0.0001);
         }
 
@@ -665,7 +663,8 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(0, oldResult);
             // leave specialScriptLayoutResults.get(1) null, as if childRenderers.get(1) is floating
             specialScriptLayoutResults.Put(2, simpleDecrement);
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, specialScriptLayoutResults);
+            float decrement = TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(3, 0, specialScriptLayoutResults
+                );
             NUnit.Framework.Assert.AreEqual(widthOfNewNothingResult + simpleWidth, decrement, 0.00001);
         }
 
@@ -681,7 +680,8 @@ namespace iText.Layout.Renderer {
             specialScriptLayoutResults.Put(0, oldResult);
             // leave specialScriptLayoutResults.get(1) null, as if childRenderers.get(1) is floating
             specialScriptLayoutResults.Put(2, simpleDecrement);
-            float decrement = LineRenderer.GetCurWidthSpecialScriptsDecrement(3, 0, specialScriptLayoutResults);
+            float decrement = TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(3, 0, specialScriptLayoutResults
+                );
             NUnit.Framework.Assert.AreEqual(widthOfNewPartialResult + simpleWidth, decrement, 0.00001);
         }
 
@@ -705,8 +705,8 @@ namespace iText.Layout.Renderer {
             textRenderer.SetText(glyphLine, PdfFontFactory.CreateFont(KHMER_FONT, PdfEncodings.IDENTITY_H));
             lineRenderer.AddChild(textRenderer);
             IList<int> possibleBreakPoints = new List<int>(JavaUtil.ArraysAsList(1, 2, 3, 4, 5, 6, 7));
-            lineRenderer.DistributePossibleBreakPointsOverSequentialTextRenderers(0, 1, possibleBreakPoints, new List<
-                int>());
+            TextSequenceWordWrapping.DistributePossibleBreakPointsOverSequentialTextRenderers(lineRenderer, 0, 1, possibleBreakPoints
+                , new List<int>());
             IList<int> distributed = ((TextRenderer)lineRenderer.GetChildRenderers()[0]).GetSpecialScriptsWordBreakPoints
                 ();
             NUnit.Framework.Assert.AreEqual(new List<int>(JavaUtil.ArraysAsList(3, 6)), distributed);
@@ -746,9 +746,9 @@ namespace iText.Layout.Renderer {
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(nonThaiTextRenderer);
             lineRenderer.AddChild(thaiTextRenderer);
-            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
-                (1);
-            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
+            TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus status = TextSequenceWordWrapping.GetSpecialScriptsContainingSequenceStatus
+                (lineRenderer, 1);
+            NUnit.Framework.Assert.AreEqual(TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
                 , status);
         }
 
@@ -765,9 +765,9 @@ namespace iText.Layout.Renderer {
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(inlineBlock);
             lineRenderer.AddChild(thaiTextRenderer);
-            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
-                (1);
-            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
+            TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus status = TextSequenceWordWrapping.GetSpecialScriptsContainingSequenceStatus
+                (lineRenderer, 1);
+            NUnit.Framework.Assert.AreEqual(TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus.MOVE_SEQUENCE_CONTAINING_SPECIAL_SCRIPTS_ON_NEXT_LINE
                 , status);
         }
 
@@ -782,9 +782,10 @@ namespace iText.Layout.Renderer {
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(thaiTextRenderer);
-            LineRenderer.SpecialScriptsContainingSequenceStatus status = lineRenderer.GetSpecialScriptsContainingSequenceStatus
-                (0);
-            NUnit.Framework.Assert.AreEqual(LineRenderer.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT, status);
+            TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus status = TextSequenceWordWrapping.GetSpecialScriptsContainingSequenceStatus
+                (lineRenderer, 0);
+            NUnit.Framework.Assert.AreEqual(TextSequenceWordWrapping.SpecialScriptsContainingSequenceStatus.FORCED_SPLIT
+                , status);
         }
 
         [NUnit.Framework.Test]
