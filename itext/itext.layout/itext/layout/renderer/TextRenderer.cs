@@ -116,7 +116,7 @@ namespace iText.Layout.Renderer {
 
         private int specialScriptFirstNotFittingIndex = -1;
 
-        private bool layoutUntilTheLastPossibleBreak = false;
+        private int firstIndexExceedingAvailableWidth = -1;
 
         /// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
         /// <param name="textElement">
@@ -303,8 +303,9 @@ namespace iText.Layout.Renderer {
                              == mode) {
                             containsPossibleBreak = true;
                         }
-                        if (ind + 1 == text.end || nextGlyphIsSpaceOrWhiteSpace) {
-                            if (ind + 1 == text.end && layoutUntilTheLastPossibleBreak) {
+                        if (ind + 1 == text.end || nextGlyphIsSpaceOrWhiteSpace || (ind + 1 >= firstIndexExceedingAvailableWidth &&
+                             firstIndexExceedingAvailableWidth != -1)) {
+                            if (ind + 1 >= firstIndexExceedingAvailableWidth && firstIndexExceedingAvailableWidth != -1) {
                                 firstCharacterWhichExceedsAllowedWidth = currentTextPos;
                                 break;
                             }
@@ -386,8 +387,8 @@ namespace iText.Layout.Renderer {
                         containsPossibleBreak = true;
                     }
                     if (ind + 1 == text.end || endOfNonBreakablePartCausedBySplitCharacter || endOfWordBelongingToSpecialScripts
-                        ) {
-                        if (ind + 1 == text.end && layoutUntilTheLastPossibleBreak && !endOfNonBreakablePartCausedBySplitCharacter
+                         || (ind + 1 >= firstIndexExceedingAvailableWidth && firstIndexExceedingAvailableWidth != -1)) {
+                        if (ind + 1 >= firstIndexExceedingAvailableWidth && firstIndexExceedingAvailableWidth != -1 && !endOfNonBreakablePartCausedBySplitCharacter
                             ) {
                             firstCharacterWhichExceedsAllowedWidth = currentTextPos;
                         }
@@ -440,7 +441,7 @@ namespace iText.Layout.Renderer {
                         // cannot fit a word as a whole
                         bool wordSplit = false;
                         bool hyphenationApplied = false;
-                        if (hyphenationConfig != null && !layoutUntilTheLastPossibleBreak) {
+                        if (hyphenationConfig != null && firstIndexExceedingAvailableWidth == -1) {
                             if (-1 == nonBreakingHyphenRelatedChunkStart) {
                                 int[] wordBounds = GetWordBoundsForHyphenation(text, currentTextPos, text.end, Math.Max(currentTextPos, firstCharacterWhichExceedsAllowedWidth
                                      - 1));
@@ -841,7 +842,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_909();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_912();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -903,8 +904,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_909 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_909() {
+        private sealed class _IGlyphLineFilter_912 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_912() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1250,8 +1251,8 @@ namespace iText.Layout.Renderer {
             return specialScriptFirstNotFittingIndex;
         }
 
-        internal virtual void SetLayoutUntilTheLastPossibleBreak(bool layoutUntilTheLastPossibleBreak) {
-            this.layoutUntilTheLastPossibleBreak = layoutUntilTheLastPossibleBreak;
+        internal virtual void SetFirstIndexExceedingAvailableWidth(int firstIndexExceedingAvailableWidth) {
+            this.firstIndexExceedingAvailableWidth = firstIndexExceedingAvailableWidth;
         }
 
         protected internal override Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {

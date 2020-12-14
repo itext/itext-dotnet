@@ -1795,13 +1795,13 @@ namespace iText.Layout.Renderer {
                                 break;
                             }
                             if (textLayoutResult.IsContainsPossibleBreak() && textLayoutResult.GetStatus() != LayoutResult.NOTHING) {
-                                textRenderer.SetLayoutUntilTheLastPossibleBreak(true);
+                                textRenderer.SetFirstIndexExceedingAvailableWidth(textRenderer.line.end);
                                 // todo ? relayout in original bBox rather than occupied on the first layout area
                                 LayoutArea layoutArea = textRenderer.GetOccupiedArea().Clone();
                                 layoutArea.GetBBox().IncreaseHeight(0.0001F).IncreaseWidth(0.0001F);
                                 LayoutResult newChildLayoutResult = textRenderer.Layout(new LayoutContext(layoutArea, wasParentsHeightClipped
                                     ));
-                                textRenderer.SetLayoutUntilTheLastPossibleBreak(false);
+                                textRenderer.SetFirstIndexExceedingAvailableWidth(-1);
                                 if (newChildLayoutResult.GetStatus() == LayoutResult.FULL) {
                                     lastAnalyzedTextLayoutResult = new TextLayoutResult(LayoutResult.NOTHING, null, null, childRenderers[lastAnalyzedTextRenderer
                                         ]);
