@@ -1,4 +1,8 @@
 /*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2020 iText Group NV
+Authors: iText Software.
+>>>>>>> 8cdd194... Add missing copyright headers
 
 This program is offered under a commercial and under the AGPL license.
 For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
