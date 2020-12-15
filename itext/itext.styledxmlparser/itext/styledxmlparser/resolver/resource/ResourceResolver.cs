@@ -53,6 +53,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     public class ResourceResolver {
         // TODO handle <base href=".."> tag?
         /// <summary>Identifier string used when loading in base64 images.</summary>
+        public const String BASE64_IDENTIFIER = "base64";
+
+        /// <summary>Identifier string used when loading in base64 images.</summary>
+        [System.ObsoleteAttribute(@"This variable will be replaced by BASE64_IDENTIFIER in 7.2 release")]
         public const String BASE64IDENTIFIER = "base64";
 
         /// <summary>Identifier string used to detect that the source is under data URI scheme.</summary>
@@ -333,7 +337,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         protected internal virtual PdfXObject TryResolveBase64ImageSource(String src) {
             try {
                 String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
-                fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
+                fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64_IDENTIFIER, StringComparison.Ordinal) + BASE64_IDENTIFIER
+                    .Length + 1);
                 PdfXObject imageXObject = imageCache.GetImage(fixedSrc);
                 if (imageXObject == null) {
                     imageXObject = new PdfImageXObject(ImageDataFactory.Create(Convert.FromBase64String(fixedSrc)));
@@ -381,7 +386,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             if (IsContains64Mark(src)) {
                 try {
                     String fixedSrc = iText.IO.Util.StringUtil.ReplaceAll(src, "\\s", "");
-                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64IDENTIFIER, StringComparison.Ordinal) + 7);
+                    fixedSrc = fixedSrc.Substring(fixedSrc.IndexOf(BASE64_IDENTIFIER, StringComparison.Ordinal) + BASE64_IDENTIFIER
+                        .Length + 1);
                     return Convert.FromBase64String(fixedSrc);
                 }
                 catch (Exception) {
@@ -398,7 +404,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <param name="src">string to test</param>
         /// <returns>true if string contains base64 mark</returns>
         private bool IsContains64Mark(String src) {
-            return src.Contains(BASE64IDENTIFIER);
+            return src.Contains(BASE64_IDENTIFIER);
         }
     }
 }
