@@ -85,5 +85,41 @@ namespace iText.Signatures.Sign {
             signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             PadesSigTest.BasicCheckSignedDoc(outFileName, signatureName);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SecondSignOfTaggedDocTest() {
+            String signCertFileName = certsSrc + "signCertRsa01.p12";
+            String outFileName = destinationFolder + "secondSignOfTagged.pdf";
+            String srcFileName = sourceFolder + "taggedAndSignedDoc.pdf";
+            X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
+            ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
+            IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
+            String signatureName = "Signature2";
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
+                new StampingProperties().UseAppendMode());
+            PdfDocument document = signer.GetDocument();
+            document.GetWriter().SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            signer.SetFieldName(signatureName);
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetPageNumber(1);
+            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 550, 200, 100)).SetReason("Test2").SetLocation
+                ("TestCity2").SetLayer2Text("Approval test signature #2.\nCreated by iText7.");
+            signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature2");
+            using (PdfDocument twiceSigned = new PdfDocument(new PdfReader(outFileName))) {
+                using (PdfDocument resource = new PdfDocument(new PdfReader(srcFileName))) {
+                    float resourceStrElemNumber = resource.GetStructTreeRoot().GetPdfObject().GetAsArray(PdfName.K).GetAsDictionary
+                        (0).GetAsArray(PdfName.K).Size();
+                    float outStrElemNumber = twiceSigned.GetStructTreeRoot().GetPdfObject().GetAsArray(PdfName.K).GetAsDictionary
+                        (0).GetAsArray(PdfName.K).Size();
+                    // Here we assert the amount of objects in StructTreeRoot in resource file and twice signed file
+                    // as the original signature validation failed by Adobe because of struct tree change. If the fix
+                    // would make this tree unchanged, then the assertion should be adjusted with comparing the tree of
+                    // objects in StructTreeRoot to ensure that it won't be changed.
+                    NUnit.Framework.Assert.AreNotEqual(resourceStrElemNumber, outStrElemNumber);
+                }
+            }
+        }
     }
 }
