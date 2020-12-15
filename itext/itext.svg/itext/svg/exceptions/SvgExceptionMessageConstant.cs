@@ -54,10 +54,14 @@ namespace iText.Svg.Exceptions {
 
         public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters are expected for quadratic curves. Got: {0}";
 
+        public const String MEET_OR_SLICE_ARGUMENT_IS_INCORRECT = "The meetOrSlice argument is incorrect. It must be `meet`, `slice` or null.";
+
         public const String MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for moveTo operator. Got: {0}";
 
         public const String LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for lineTo operator. Got: {0}";
 
         public const String COULD_NOT_DETERMINE_MIDDLE_POINT_OF_ELLIPTICAL_ARC = "Could not determine the middle point of the ellipse traced by this elliptical arc";
+
+        public const String VIEWBOX_APPLYING_COULD_NOT_BE_PROCESSED = "The viewBox or the current viewport is null. The viewBox applying could not be processed.";
     }
 }

@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using Common.Logging;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
@@ -204,11 +203,8 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyCoordinatesTranslation(SvgDrawContext context) {
             float xScale = 1;
             float yScale = 1;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
-                //Parse viewbox parameters stuff
-                String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
-                IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
-                float[] viewBox = GetViewBoxValues();
+            float[] viewBox = GetViewBoxValues();
+            if (viewBox.Length == VIEWBOX_VALUES_NUMBER) {
                 xScale = context.GetCurrentViewPort().GetWidth() / viewBox[2];
                 yScale = context.GetCurrentViewPort().GetHeight() / viewBox[3];
             }
@@ -232,20 +228,14 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private float[] GetViewBoxValues(float defaultWidth, float defaultHeight) {
-            float[] values;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
-                //Parse viewbox parameters stuff
-                values = base.GetViewBoxValues();
+            float[] values = base.GetViewBoxValues();
+            if (values.Length < VIEWBOX_VALUES_NUMBER) {
+                //If viewBox is not specified or incorrect, it's width and height are the same as passed defaults
+                return new float[] { 0, 0, defaultWidth, defaultHeight };
             }
             else {
-                //If viewbox is not specified, it's width and height are the same as passed defaults
-                values = new float[4];
-                values[0] = 0;
-                values[1] = 0;
-                values[2] = defaultWidth;
-                values[3] = defaultHeight;
+                return values;
             }
-            return values;
         }
     }
 }

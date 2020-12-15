@@ -56,6 +56,8 @@ using iText.Svg.Utils;
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Implementation for the svg &lt;pattern&gt; tag.</summary>
     public class PatternSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(PatternSvgNodeRenderer));
+
         private const double CONVERT_COEFF = 0.75;
 
         public override ISvgNodeRenderer CreateDeepCopy() {
@@ -84,29 +86,24 @@ namespace iText.Svg.Renderers.Impl {
         private PdfPattern.Tiling CreateTilingPattern(SvgDrawContext context, Rectangle objectBoundingBox) {
             bool isObjectBoundingBoxInPatternUnits = IsObjectBoundingBoxInPatternUnits();
             bool isObjectBoundingBoxInPatternContentUnits = IsObjectBoundingBoxInPatternContentUnits();
-            bool isViewBoxExist = GetAttribute(SvgConstants.Attributes.VIEWBOX) != null;
             // evaluate pattern rectangle on target pattern units
             Rectangle originalPatternRectangle = CalculateOriginalPatternRectangle(context, isObjectBoundingBoxInPatternUnits
                 );
             // get xStep and yStep on target pattern units
             double xStep = originalPatternRectangle.GetWidth();
             double yStep = originalPatternRectangle.GetHeight();
-            if (xStep == 0 || yStep == 0) {
+            if (!XStepYStepAreValid(xStep, yStep)) {
                 return null;
             }
             // transform user space to target pattern rectangle origin and scale
-            AffineTransform patternAffineTransform = new AffineTransform();
+            AffineTransform patternAffineTransform = context.GetCurrentCanvasTransform();
             if (isObjectBoundingBoxInPatternUnits) {
                 patternAffineTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
             }
             patternAffineTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
-            double bboxWidth;
-            double bboxHeight;
-            if (isViewBoxExist) {
-                // TODO: DEVSIX-4782 support 'viewbox' and `preserveAspectRatio' attribute for SVG pattern element
-                return null;
-            }
-            else {
+            float[] viewBoxValues = GetViewBoxValues();
+            Rectangle bbox;
+            if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
                 if (isObjectBoundingBoxInPatternUnits != isObjectBoundingBoxInPatternContentUnits) {
                     // If pattern units are not the same as pattern content units, then we need to scale
                     // the resulted space into a space to draw pattern content. The pattern rectangle origin
@@ -121,22 +118,46 @@ namespace iText.Svg.Renderers.Impl {
                         scaleX = CONVERT_COEFF / objectBoundingBox.GetWidth();
                         scaleY = CONVERT_COEFF / objectBoundingBox.GetHeight();
                     }
-                    patternAffineTransform.Concatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
+                    patternAffineTransform.Scale(scaleX, scaleY);
                     xStep /= scaleX;
                     yStep /= scaleY;
                 }
-                bboxWidth = xStep;
-                bboxHeight = yStep;
+                bbox = new Rectangle(0F, 0F, (float)xStep, (float)yStep);
             }
-            Rectangle bbox = new Rectangle(0F, 0F, (float)bboxWidth, (float)bboxHeight);
+            else {
+                if (IsViewBoxInvalid(viewBoxValues)) {
+                    return null;
+                }
+                // Here we revert scaling to the object's bounding box coordinate system
+                // to keep the aspect ratio of the original viewport of the pattern.
+                if (isObjectBoundingBoxInPatternUnits) {
+                    double scaleX = CONVERT_COEFF / objectBoundingBox.GetWidth();
+                    double scaleY = CONVERT_COEFF / objectBoundingBox.GetHeight();
+                    patternAffineTransform.Scale(scaleX, scaleY);
+                    xStep /= scaleX;
+                    yStep /= scaleY;
+                }
+                Rectangle viewBox = new Rectangle(viewBoxValues[0], viewBoxValues[1], viewBoxValues[2], viewBoxValues[3]);
+                Rectangle appliedViewBox = CalculateAppliedViewBox(viewBox, xStep, yStep);
+                patternAffineTransform.Translate(appliedViewBox.GetX(), appliedViewBox.GetY());
+                double scaleX_1 = (double)appliedViewBox.GetWidth() / (double)viewBox.GetWidth();
+                double scaleY_1 = (double)appliedViewBox.GetHeight() / (double)viewBox.GetHeight();
+                patternAffineTransform.Scale(scaleX_1, scaleY_1);
+                xStep /= scaleX_1;
+                yStep /= scaleY_1;
+                patternAffineTransform.Translate(-viewBox.GetX(), -viewBox.GetY());
+                double bboxXOriginal = viewBox.GetX() - appliedViewBox.GetX() / scaleX_1;
+                double bboxYOriginal = viewBox.GetY() - appliedViewBox.GetY() / scaleY_1;
+                bbox = new Rectangle((float)bboxXOriginal, (float)bboxYOriginal, (float)xStep, (float)yStep);
+            }
             return CreateColoredTilingPatternInstance(patternAffineTransform, bbox, xStep, yStep);
         }
 
-        private PdfPattern.Tiling CreateColoredTilingPatternInstance(AffineTransform patternAffineTransform, Rectangle
-             bbox, double xStep, double yStep) {
-            PdfPattern.Tiling coloredTilingPattern = new PdfPattern.Tiling(bbox, (float)xStep, (float)yStep, true);
-            SetPatternMatrix(coloredTilingPattern, patternAffineTransform);
-            return coloredTilingPattern;
+        private Rectangle CalculateAppliedViewBox(Rectangle viewBox, double xStep, double yStep) {
+            String[] preserveAspectRatio = RetrieveAlignAndMeet();
+            Rectangle patternRect = new Rectangle(0f, 0f, (float)xStep, (float)yStep);
+            return SvgCoordinateUtils.ApplyViewBox(viewBox, patternRect, preserveAspectRatio[0], preserveAspectRatio[1
+                ]);
         }
 
         private void DrawPatternContent(SvgDrawContext context, PdfPattern.Tiling pattern) {
@@ -152,14 +173,6 @@ namespace iText.Svg.Renderers.Impl {
             }
             finally {
                 context.PopCanvas();
-            }
-        }
-
-        private void SetPatternMatrix(PdfPattern.Tiling pattern, AffineTransform affineTransform) {
-            if (!affineTransform.IsIdentity()) {
-                double[] patternMatrix = new double[6];
-                affineTransform.GetMatrix(patternMatrix);
-                pattern.SetMatrix(new PdfArray(patternMatrix));
             }
         }
 
@@ -228,12 +241,61 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        private AffineTransform GetTransformToUserSpaceOnUse(Rectangle objectBoundingBox) {
+        private static PdfPattern.Tiling CreateColoredTilingPatternInstance(AffineTransform patternAffineTransform
+            , Rectangle bbox, double xStep, double yStep) {
+            PdfPattern.Tiling coloredTilingPattern = new PdfPattern.Tiling(bbox, (float)xStep, (float)yStep, true);
+            SetPatternMatrix(coloredTilingPattern, patternAffineTransform);
+            return coloredTilingPattern;
+        }
+
+        private static void SetPatternMatrix(PdfPattern.Tiling pattern, AffineTransform affineTransform) {
+            if (!affineTransform.IsIdentity()) {
+                double[] patternMatrix = new double[6];
+                affineTransform.GetMatrix(patternMatrix);
+                pattern.SetMatrix(new PdfArray(patternMatrix));
+            }
+        }
+
+        private static AffineTransform GetTransformToUserSpaceOnUse(Rectangle objectBoundingBox) {
             AffineTransform transform = new AffineTransform();
             transform.Translate(objectBoundingBox.GetX(), objectBoundingBox.GetY());
             transform.Scale(objectBoundingBox.GetWidth() / CONVERT_COEFF, objectBoundingBox.GetHeight() / CONVERT_COEFF
                 );
             return transform;
+        }
+
+        private static bool XStepYStepAreValid(double xStep, double yStep) {
+            if (xStep < 0 || yStep < 0) {
+                if (LOGGER.IsWarnEnabled) {
+                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE));
+                }
+                return false;
+            }
+            else {
+                if (xStep == 0 || yStep == 0) {
+                    if (LOGGER.IsInfoEnabled) {
+                        LOGGER.Info(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_ZERO));
+                    }
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+        private static bool IsViewBoxInvalid(float[] viewBoxValues) {
+            // if viewBox width or height is zero we should disable rendering
+            // of the element (according to the viewBox documentation)
+            if (viewBoxValues[2] == 0 || viewBoxValues[3] == 0) {
+                if (LOGGER.IsInfoEnabled) {
+                    LOGGER.Info(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO));
+                }
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 }
