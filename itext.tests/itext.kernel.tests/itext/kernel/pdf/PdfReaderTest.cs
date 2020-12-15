@@ -1815,6 +1815,36 @@ namespace iText.Kernel.Pdf {
             new PdfDocument(new PdfReader(fileName));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NoPdfVersionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader pdfReader = new PdfReader(sourceFolder + "noPdfVersion.pdf");
+                pdfReader.ReadPdf();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_VERSION_IS_NOT_VALID))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartxrefIsNotFollowedByANumberTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader pdfReader = new PdfReader(sourceFolder + "startxrefIsNotFollowedByANumber.pdf");
+                pdfReader.ReadXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_IS_NOT_FOLLOWED_BY_A_NUMBER))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartxrefNotFoundTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader pdfReader = new PdfReader(sourceFolder + "startxrefNotFound.pdf");
+                pdfReader.ReadXref();
+            }
+            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(KernelExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND))
+;
+        }
+
         private PdfReader PdfDocumentNotReadTestInit() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
             return new PdfReader(filename);

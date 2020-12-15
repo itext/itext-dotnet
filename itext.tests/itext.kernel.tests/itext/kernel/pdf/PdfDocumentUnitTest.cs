@@ -51,6 +51,12 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf.Layer;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Pdf.Filespec;
+using iText.Test;
+
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentUnitTest : ExtendedITextTest {
@@ -327,6 +333,109 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(layerDictionary.Get(PdfName.Name));
             String layerNameString = layerDictionary.Get(PdfName.Name).ToString();
             NUnit.Framework.Assert.AreEqual(name, layerNameString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetTagStructureForUntaggedDocumentTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.GetTagStructureContext();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.MUST_BE_A_TAGGED_DOCUMENT))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageAfterDocumentIsClosedTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage(1);
+                pdfDoc.Close();
+                pdfDoc.AddNewPage(2);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToZeroPositionTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, 0);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 0)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToNegativePosition() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, -1);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, -1)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotMovePageToOneMorePositionThanPagesNumberTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                pdfDoc.AddNewPage();
+                pdfDoc.MovePage(1, 3);
+            }
+            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS, 3)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageToAnotherDocumentTest01() {
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc1.AddNewPage(1);
+            NUnit.Framework.Assert.That(() =>  {
+                pdfDoc2.CheckAndAddPage(1, pdfDoc1.GetPage(1));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1.GetPage(1), pdfDoc2, pdfDoc1)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotAddPageToAnotherDocumentTest02() {
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc1.AddNewPage(1);
+            NUnit.Framework.Assert.That(() =>  {
+                pdfDoc2.CheckAndAddPage(pdfDoc1.GetPage(1));
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1.GetPage(1), pdfDoc2, pdfDoc1)))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotSetEncryptedPayloadInReadingModeTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "setEncryptedPayloadInReadingModeTest.pdf"
+                    ));
+                pdfDoc.SetEncryptedPayload(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_DOCUMENT_OPENED_IN_READING_MODE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotSetEncryptedPayloadToEncryptedDocTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                WriterProperties writerProperties = new WriterProperties();
+                writerProperties.SetStandardEncryption(new byte[] {  }, new byte[] {  }, 1, 1);
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), writerProperties));
+                PdfFileSpec fs = PdfFileSpec.CreateExternalFileSpec(pdfDoc, sourceFolder + "testPath");
+                pdfDoc.SetEncryptedPayload(fs);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT))
+;
         }
     }
 }

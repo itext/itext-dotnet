@@ -42,6 +42,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -75,6 +77,25 @@ namespace iText.Kernel.Utils {
             if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {
                 NUnit.Framework.Assert.Fail("Resultant xml is different.");
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoStructTreeRootInDocTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                String outXmlPath = destinationFolder + "noStructTreeRootInDoc.xml";
+                try {
+                    PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+                    TaggedPdfReaderTool tool = new TaggedPdfReaderTool(pdfDocument);
+                    using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+                        tool.ConvertToXml(outXml, "UTF-8");
+                    }
+                }
+                catch (System.IO.IOException) {
+                    NUnit.Framework.Assert.Fail("IOException is not expected to be triggered");
+                }
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT))
+;
         }
     }
 }
