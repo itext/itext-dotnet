@@ -22,7 +22,7 @@ using Versions.Attributes;
 
 [assembly: Guid("be4c62cc-6495-47e1-ab00-05b1bfe331f6")]
 
-[assembly: KeyVersion("3.1.2.0")]
+[assembly: KeyVersion("3.1.3.0")]
 
 [assembly: AssemblyVersion("7.1.14.0")]
 [assembly: AssemblyFileVersion("7.1.14.0")]
