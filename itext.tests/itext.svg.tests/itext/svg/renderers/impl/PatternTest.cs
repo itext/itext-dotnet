@@ -216,20 +216,57 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PatternTransformSimpleTest() {
-            //TODO DEVSIX-4811 support 'patternTransform' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformSimple");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternTransformUnitsObjectBoundingBoxTest() {
-            //TODO DEVSIX-4811 support 'patternTransform' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformUnitsObjectBoundingBox");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternTransformUnitsUserSpaceOnUseTest() {
-            //TODO DEVSIX-4811 support 'patternTransform' attribute for SVG pattern element
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformUnitsUserSpaceOnUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformObjBoundingBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformObjBoundingBox");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformUserSpaceOnUseTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformUserSpaceOnUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformMixed1Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformMixed1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformMixed2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformMixed2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformViewBoxUsrSpaceOnUseTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformViewBoxUsrSpaceOnUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformViewBoxObjBoundBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformViewBoxObjBoundBox");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformElementTransformTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformElementTransform", PageSize.A8);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternTransformTranslateTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternTransformTranslate");
         }
 
         [NUnit.Framework.Test]

@@ -459,16 +459,6 @@ namespace iText.Svg {
             /// <summary>Attribute defining the orientation of a marker</summary>
             public const String ORIENT = "orient";
 
-            /// <summary>Attribute defining the coordinate system for attributes x, y, width , and height in pattern.</summary>
-            public static readonly String PATTERN_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "patternUnits".ToLowerInvariant();
-
-            /// <summary>Attribute defining the coordinate system for the pattern content.</summary>
-            public static readonly String PATTERN_CONTENT_UNITS = 
-                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                        "patternContentUnits".ToLowerInvariant();
-
             /// <summary>Close Path Operator.</summary>
             public const String PATH_DATA_CLOSE_PATH = "Z";
 
@@ -537,6 +527,21 @@ namespace iText.Svg {
 
             /// <summary>Relative Quadratic CurveTo Path Operator.</summary>
             public const String PATH_DATA_REL_QUAD_CURVE_TO = "q";
+
+            /// <summary>Attribute defining the coordinate system for the pattern content.</summary>
+            public static readonly String PATTERN_CONTENT_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "patternContentUnits".ToLowerInvariant();
+
+            /// <summary>Attribute defining list of transform definitions for the pattern element.</summary>
+            public static readonly String PATTERN_TRANSFORM = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "patternTransform".ToLowerInvariant();
+
+            /// <summary>Attribute defining the coordinate system for attributes x, y, width , and height in pattern.</summary>
+            public static readonly String PATTERN_UNITS = 
+                        // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
+                        "patternUnits".ToLowerInvariant();
 
             /// <summary>Attribute defining the points of a polyline or polygon.</summary>
             public const String POINTS = "points";

@@ -95,12 +95,13 @@ namespace iText.Svg.Renderers.Impl {
             if (!XStepYStepAreValid(xStep, yStep)) {
                 return null;
             }
-            // transform user space to target pattern rectangle origin and scale
-            AffineTransform patternAffineTransform = context.GetCurrentCanvasTransform();
+            // we have to consider transforming an element that use pattern in corresponding  with SVG logic
+            AffineTransform patternMatrixTransform = context.GetCurrentCanvasTransform();
+            patternMatrixTransform.Concatenate(GetPatternTransform());
             if (isObjectBoundingBoxInPatternUnits) {
-                patternAffineTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
+                patternMatrixTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
             }
-            patternAffineTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
+            patternMatrixTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
             float[] viewBoxValues = GetViewBoxValues();
             Rectangle bbox;
             if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
@@ -118,7 +119,7 @@ namespace iText.Svg.Renderers.Impl {
                         scaleX = CONVERT_COEFF / objectBoundingBox.GetWidth();
                         scaleY = CONVERT_COEFF / objectBoundingBox.GetHeight();
                     }
-                    patternAffineTransform.Scale(scaleX, scaleY);
+                    patternMatrixTransform.Scale(scaleX, scaleY);
                     xStep /= scaleX;
                     yStep /= scaleY;
                 }
@@ -133,24 +134,24 @@ namespace iText.Svg.Renderers.Impl {
                 if (isObjectBoundingBoxInPatternUnits) {
                     double scaleX = CONVERT_COEFF / objectBoundingBox.GetWidth();
                     double scaleY = CONVERT_COEFF / objectBoundingBox.GetHeight();
-                    patternAffineTransform.Scale(scaleX, scaleY);
+                    patternMatrixTransform.Scale(scaleX, scaleY);
                     xStep /= scaleX;
                     yStep /= scaleY;
                 }
                 Rectangle viewBox = new Rectangle(viewBoxValues[0], viewBoxValues[1], viewBoxValues[2], viewBoxValues[3]);
                 Rectangle appliedViewBox = CalculateAppliedViewBox(viewBox, xStep, yStep);
-                patternAffineTransform.Translate(appliedViewBox.GetX(), appliedViewBox.GetY());
+                patternMatrixTransform.Translate(appliedViewBox.GetX(), appliedViewBox.GetY());
                 double scaleX_1 = (double)appliedViewBox.GetWidth() / (double)viewBox.GetWidth();
                 double scaleY_1 = (double)appliedViewBox.GetHeight() / (double)viewBox.GetHeight();
-                patternAffineTransform.Scale(scaleX_1, scaleY_1);
+                patternMatrixTransform.Scale(scaleX_1, scaleY_1);
                 xStep /= scaleX_1;
                 yStep /= scaleY_1;
-                patternAffineTransform.Translate(-viewBox.GetX(), -viewBox.GetY());
+                patternMatrixTransform.Translate(-viewBox.GetX(), -viewBox.GetY());
                 double bboxXOriginal = viewBox.GetX() - appliedViewBox.GetX() / scaleX_1;
                 double bboxYOriginal = viewBox.GetY() - appliedViewBox.GetY() / scaleY_1;
                 bbox = new Rectangle((float)bboxXOriginal, (float)bboxYOriginal, (float)xStep, (float)yStep);
             }
-            return CreateColoredTilingPatternInstance(patternAffineTransform, bbox, xStep, yStep);
+            return CreateColoredTilingPatternInstance(patternMatrixTransform, bbox, xStep, yStep);
         }
 
         private Rectangle CalculateAppliedViewBox(Rectangle viewBox, double xStep, double yStep) {
@@ -296,6 +297,14 @@ namespace iText.Svg.Renderers.Impl {
             else {
                 return false;
             }
+        }
+
+        private AffineTransform GetPatternTransform() {
+            String patternTransform = GetAttribute(SvgConstants.Attributes.PATTERN_TRANSFORM);
+            if (patternTransform != null && !String.IsNullOrEmpty(patternTransform)) {
+                return TransformUtils.ParseTransform(patternTransform);
+            }
+            return new AffineTransform();
         }
     }
 }
