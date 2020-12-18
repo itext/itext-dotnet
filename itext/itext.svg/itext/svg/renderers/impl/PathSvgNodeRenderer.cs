@@ -366,7 +366,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal virtual bool ContainsInvalidAttributes(String attributes) {
-            return SvgRegexUtils.ContainsAtLeastOneMatch(invalidRegexPattern, attributes);
+            return iText.IO.Util.Matcher.Match(invalidRegexPattern, attributes).Find();
         }
 
         internal virtual ICollection<String> ParsePathOperations() {

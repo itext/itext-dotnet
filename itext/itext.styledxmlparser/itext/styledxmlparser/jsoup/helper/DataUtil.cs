@@ -234,9 +234,9 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (contentType == null) {
                 return null;
             }
-            Match m = iText.IO.Util.StringUtil.Match(charsetPattern, contentType);
-            if (PortUtil.IsSuccessful(m)) {
-                String charset = iText.IO.Util.StringUtil.Group(m, 1).Trim();
+            Matcher m = iText.IO.Util.Matcher.Match(charsetPattern, contentType);
+            if (m.Find()) {
+                String charset = m.Group(1).Trim();
                 charset = charset.Replace("charset=", "");
                 return ValidateCharset(charset);
             }

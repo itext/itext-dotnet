@@ -256,7 +256,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return element.HasAttr(key) && PortUtil.HasMatch(pattern, element.Attr(key));
+                return element.HasAttr(key) && iText.IO.Util.Matcher.Match(pattern, element.Attr(key)).Find();
             }
 
             public override String ToString() {
@@ -643,7 +643,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
-                return PortUtil.HasMatch(pattern, element.OwnText());
+                return iText.IO.Util.Matcher.Match(pattern, element.OwnText()).Find();
             }
 
             public override String ToString() {
@@ -662,7 +662,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
              element) {
-            return PortUtil.HasMatch(pattern, element.Text());
+            return iText.IO.Util.Matcher.Match(pattern, element.Text()).Find();
         }
 
         public override String ToString() {
