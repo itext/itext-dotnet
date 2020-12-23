@@ -42,7 +42,7 @@ address: sales@itextpdf.com
 */
 
 // System.Drawing doesn't exist within .netcoreapp
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
 
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;

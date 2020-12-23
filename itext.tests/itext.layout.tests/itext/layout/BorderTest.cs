@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -98,6 +100,27 @@ namespace iText.Layout {
             list.Add(roundDotsBorderItem);
             doc.Add(list);
             CloseDocumentAndCompareOutputs(doc);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawBordersByRectangleTest() {
+            String outPdf = destinationFolder + "drawBordersByRectangle.pdf";
+            String cmpPdf = sourceFolder + "cmp_drawBordersByRectangle.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfPage page = pdfDocument.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                new SolidBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(50, 700, 100, 100));
+                new DashedBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(200, 700, 100, 100));
+                new DottedBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(350, 700, 100, 100));
+                new DoubleBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(50, 550, 100, 100));
+                new GrooveBorder(new DeviceRgb(0, 255, 0), 5).Draw(canvas, new Rectangle(200, 550, 100, 100));
+                new InsetBorder(new DeviceRgb(0, 255, 0), 5).Draw(canvas, new Rectangle(350, 550, 100, 100));
+                new OutsetBorder(new DeviceRgb(0, 255, 0), 5).Draw(canvas, new Rectangle(50, 400, 100, 100));
+                new RidgeBorder(new DeviceRgb(0, 255, 0), 5).Draw(canvas, new Rectangle(200, 400, 100, 100));
+                new RoundDotsBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(350, 400, 100, 100));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
         }
 
         [NUnit.Framework.Test]

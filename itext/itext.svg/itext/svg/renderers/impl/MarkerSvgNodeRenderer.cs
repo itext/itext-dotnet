@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using Common.Logging;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
@@ -62,8 +61,8 @@ namespace iText.Svg.Renderers.Impl {
             float markerHeight = markerWidthHeight[1];
             String xAttribute = this.GetAttribute(SvgConstants.Attributes.X);
             String yAttribute = this.GetAttribute(SvgConstants.Attributes.Y);
-            float x = xAttribute != null ? CssUtils.ParseAbsoluteLength(xAttribute) : 0f;
-            float y = yAttribute != null ? CssUtils.ParseAbsoluteLength(yAttribute) : 0f;
+            float x = xAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute) : 0f;
+            float y = yAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute) : 0f;
             Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }
@@ -110,12 +109,12 @@ namespace iText.Svg.Renderers.Impl {
             float markerWidth = DEFAULT_MARKER_WIDTH;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_WIDTH)) {
                 String markerWidthRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_WIDTH);
-                markerWidth = CssUtils.ParseAbsoluteLength(markerWidthRawValue);
+                markerWidth = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidthRawValue);
             }
             float markerHeight = DEFAULT_MARKER_HEIGHT;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_HEIGHT)) {
                 String markerHeightRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_HEIGHT);
-                markerHeight = CssUtils.ParseAbsoluteLength(markerHeightRawValue);
+                markerHeight = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeightRawValue);
             }
             return new float[] { markerWidth, markerHeight };
         }
@@ -126,7 +125,7 @@ namespace iText.Svg.Renderers.Impl {
             String markerHeight = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_HEIGHT);
             bool isCorrect = true;
             if (markerWidth != null) {
-                float absoluteMarkerWidthValue = CssUtils.ParseAbsoluteLength(markerWidth);
+                float absoluteMarkerWidthValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidth);
                 if (absoluteMarkerWidthValue == 0) {
                     log.Warn(SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
                     isCorrect = false;
@@ -139,7 +138,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             if (markerHeight != null) {
-                float absoluteMarkerHeightValue = CssUtils.ParseAbsoluteLength(markerHeight);
+                float absoluteMarkerHeightValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeight);
                 if (absoluteMarkerHeightValue == 0) {
                     log.Warn(SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
                     isCorrect = false;
@@ -171,8 +170,9 @@ namespace iText.Svg.Renderers.Impl {
                         rotAngle = ((IMarkerCapable)GetParent()).GetAutoOrientAngle(this, true);
                     }
                     else {
-                        if (CssUtils.IsAngleValue(orient) || CssUtils.IsNumericValue(orient)) {
-                            rotAngle = CssUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT));
+                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumericValue(orient)) {
+                            rotAngle = CssDimensionParsingUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT
+                                ));
                         }
                     }
                 }
@@ -203,11 +203,8 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyCoordinatesTranslation(SvgDrawContext context) {
             float xScale = 1;
             float yScale = 1;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
-                //Parse viewbox parameters stuff
-                String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
-                IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
-                float[] viewBox = GetViewBoxValues();
+            float[] viewBox = GetViewBoxValues();
+            if (viewBox.Length == VIEWBOX_VALUES_NUMBER) {
                 xScale = context.GetCurrentViewPort().GetWidth() / viewBox[2];
                 yScale = context.GetCurrentViewPort().GetHeight() / viewBox[3];
             }
@@ -231,20 +228,14 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private float[] GetViewBoxValues(float defaultWidth, float defaultHeight) {
-            float[] values;
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX)) {
-                //Parse viewbox parameters stuff
-                values = base.GetViewBoxValues();
+            float[] values = base.GetViewBoxValues();
+            if (values.Length < VIEWBOX_VALUES_NUMBER) {
+                //If viewBox is not specified or incorrect, it's width and height are the same as passed defaults
+                return new float[] { 0, 0, defaultWidth, defaultHeight };
             }
             else {
-                //If viewbox is not specified, it's width and height are the same as passed defaults
-                values = new float[4];
-                values[0] = 0;
-                values[1] = 0;
-                values[2] = defaultWidth;
-                values[3] = defaultHeight;
+                return values;
             }
-            return values;
         }
     }
 }

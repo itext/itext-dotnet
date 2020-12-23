@@ -88,7 +88,7 @@ namespace iText.Layout.Renderer {
 
         public override void AddChild(IRenderer renderer) {
             if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
-                LogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
+                LogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn(iText.IO.LogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED
                     );
             }
             else {

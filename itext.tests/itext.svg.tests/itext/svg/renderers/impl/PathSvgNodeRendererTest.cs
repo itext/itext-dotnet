@@ -369,5 +369,29 @@ namespace iText.Svg.Renderers.Impl {
             , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiplePairsAfterMoveToRelativeTest() {
+            //TODO: update cmp-file after DEVSIX-4701 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToRelative");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiplePairsAfterMoveToAbsoluteTest() {
+            //TODO: update cmp-file after DEVSIX-4701 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToAbsolute");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PathHOperatorAbsoluteAfterMultiplePairsTest() {
+            //TODO: update cmp-file after DEVSIX-4701 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorAbsoluteAfterMultiplePairs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PathHOperatorRelativeAfterMultiplePairsTest() {
+            //TODO: update cmp-file after DEVSIX-4701 will be fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorRelativeAfterMultiplePairs");
+        }
     }
 }

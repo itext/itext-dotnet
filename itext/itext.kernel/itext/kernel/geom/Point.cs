@@ -23,7 +23,7 @@ using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
     public class Point
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
  : ICloneable
 #endif
  {

@@ -1,5 +1,4 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2020 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
@@ -41,16 +40,15 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.StyledXmlParser.Css.Selector.Item;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
+using iText.StyledXmlParser.Css.Selector.Item;
 
-namespace iText.StyledXmlParser.Css.Parse
-{
+namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse CSS page selectors.</summary>
-    public sealed class CssPageSelectorParser
-    {
+    public sealed class CssPageSelectorParser {
         /// <summary>The pattern string for page selectors.</summary>
         private const String PAGE_SELECTOR_PATTERN_STR = "(^-?[_a-zA-Z][\\w-]*)|(:(?i)(left|right|first|blank))";
 
@@ -58,23 +56,29 @@ namespace iText.StyledXmlParser.Css.Parse
         private static readonly Regex selectorPattern = iText.IO.Util.StringUtil.RegexCompile(PAGE_SELECTOR_PATTERN_STR
             );
 
-        /// <summary>Parses the selector items into a list of <see cref="ICssSelectorItem"/> instances.</summary>
-        /// <param name="selectorItemsStr">the selector items in the form of a <see cref="String"/></param>
-        /// <returns>the resulting list of <see cref="ICssSelectorItem"/> instances</returns>
-        public static IList<ICssSelectorItem> ParseSelectorItems(String selectorItemsStr)
-        {
+        /// <summary>
+        /// Parses the selector items into a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+        /// instances.
+        /// </summary>
+        /// <param name="selectorItemsStr">
+        /// the selector items in the form of a
+        /// <see cref="System.String"/>
+        /// </param>
+        /// <returns>
+        /// the resulting list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+        /// instances
+        /// </returns>
+        public static IList<ICssSelectorItem> ParseSelectorItems(String selectorItemsStr) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
-            Match itemMatcher = iText.IO.Util.StringUtil.Match(selectorPattern, selectorItemsStr);
-            while (itemMatcher.Success)
-            {
-                String selectorItem = iText.IO.Util.StringUtil.Group(itemMatcher, 0);
-                itemMatcher = itemMatcher.NextMatch();
-                if (selectorItem[0] == ':')
-                {
+            Matcher itemMatcher = iText.IO.Util.Matcher.Match(selectorPattern, selectorItemsStr);
+            while (itemMatcher.Find()) {
+                String selectorItem = itemMatcher.Group(0);
+                if (selectorItem[0] == ':') {
                     selectorItems.Add(new CssPagePseudoClassSelectorItem(selectorItem.Substring(1).ToLowerInvariant()));
                 }
-                else
-                {
+                else {
                     selectorItems.Add(new CssPageTypeSelectorItem(selectorItem));
                 }
             }

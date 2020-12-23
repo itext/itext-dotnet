@@ -68,12 +68,12 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 
         public override void Draw(PdfCanvas canvas) {
-            float x1 = CssUtils.ParseAbsoluteLength(coordinates[0]);
-            float y1 = CssUtils.ParseAbsoluteLength(coordinates[1]);
-            float x2 = CssUtils.ParseAbsoluteLength(coordinates[2]);
-            float y2 = CssUtils.ParseAbsoluteLength(coordinates[3]);
-            float x = CssUtils.ParseAbsoluteLength(coordinates[4]);
-            float y = CssUtils.ParseAbsoluteLength(coordinates[5]);
+            float x1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
+            float y1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
+            float x2 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[2]);
+            float y2 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[3]);
+            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[4]);
+            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[5]);
             canvas.CurveTo(x1, y1, x2, y2, x, y);
         }
 

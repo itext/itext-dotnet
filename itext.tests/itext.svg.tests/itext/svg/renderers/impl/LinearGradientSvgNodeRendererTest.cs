@@ -318,7 +318,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TextTest() {
-            // TODO DEVSIX-4140 remove log message check and update cmp
+            // TODO DEVSIX-4140 font-relative values doesn't support
             ConvertAndCompare(sourceFolder, destinationFolder, "text");
         }
 
@@ -365,22 +365,17 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-4140 update cmp file
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TextGradientEmUnitsRelated() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelated");
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-4140 update cmp file
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void TextGradientEmUnitsRelatedNotDefs() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedNotDefs");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientEmUnitsRelatedDefault() {
-            // TODO DEVSIX-4140 update cmp file
             ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedDefault");
         }
 
@@ -466,7 +461,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithUnitsRelativeToFontTest() {
-            // TODO DEVSIX-4140 update after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithUnitsRelativeToFont");
         }
 
@@ -478,7 +472,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseDiffRelativeUnitsInGradientTest() {
-            // TODO: DEVSIX-4140, DEVSIX-3596 update cmp_ after fix ("ch" "vmin"+"vmax"+"vw"+"vh" not implemented yet)
+            // TODO: DEVSIX-3596 update cmp_ after fix ("ch" "vmin"+"vmax"+"vw"+"vh" not implemented yet)
             ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseDiffRelativeUnitsInGradient");
         }
 

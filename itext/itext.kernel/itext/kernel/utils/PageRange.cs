@@ -114,21 +114,20 @@ namespace iText.Kernel.Utils {
                 }
             }
             else {
-                Match matcher;
-                if ((matcher = iText.IO.Util.StringUtil.Match(SEQUENCE_PATTERN, rangeDef)).Success) {
-                    int start = Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1), System.Globalization.CultureInfo.InvariantCulture
-                        );
-                    if (iText.IO.Util.StringUtil.Group(matcher, 2) != null) {
-                        return new PageRange.PageRangePartSequence(start, Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 
-                            2), System.Globalization.CultureInfo.InvariantCulture));
+                Matcher matcher;
+                if ((matcher = iText.IO.Util.Matcher.Match(SEQUENCE_PATTERN, rangeDef)).Matches()) {
+                    int start = Convert.ToInt32(matcher.Group(1), System.Globalization.CultureInfo.InvariantCulture);
+                    if (matcher.Group(2) != null) {
+                        return new PageRange.PageRangePartSequence(start, Convert.ToInt32(matcher.Group(2), System.Globalization.CultureInfo.InvariantCulture
+                            ));
                     }
                     else {
                         return new PageRange.PageRangePartAfter(start);
                     }
                 }
                 else {
-                    if ((matcher = iText.IO.Util.StringUtil.Match(SINGLE_PAGE_PATTERN, rangeDef)).Success) {
-                        return new PageRange.PageRangePartSingle(Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1), System.Globalization.CultureInfo.InvariantCulture
+                    if ((matcher = iText.IO.Util.Matcher.Match(SINGLE_PAGE_PATTERN, rangeDef)).Matches()) {
+                        return new PageRange.PageRangePartSingle(Convert.ToInt32(matcher.Group(1), System.Globalization.CultureInfo.InvariantCulture
                             ));
                     }
                     else {

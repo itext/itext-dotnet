@@ -46,25 +46,18 @@ using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
+using iText.Svg;
 
 namespace iText.Svg.Css.Impl {
     [System.ObsoleteAttribute(@"use iText.StyledXmlParser.Util.StyleUtil instead. Utility class for resolving parent-inheritance of style and attribute declarations"
         )]
     public class StyleResolverUtil {
-        private ICollection<IStyleInheritance> inheritanceRules;
-
         /// <summary>List to store the properties whose value can depend on parent or element font-size</summary>
         private static readonly IList<String> fontSizeDependentPercentage = new List<String>(2);
 
         static StyleResolverUtil() {
-            fontSizeDependentPercentage.Add(CommonCssConstants.FONT_SIZE);
+            fontSizeDependentPercentage.Add(SvgConstants.Attributes.FONT_SIZE);
             fontSizeDependentPercentage.Add(CommonCssConstants.LINE_HEIGHT);
-        }
-
-        public StyleResolverUtil() {
-            this.inheritanceRules = new HashSet<IStyleInheritance>();
-            inheritanceRules.Add(new CssInheritance());
-            inheritanceRules.Add(new SvgAttributeInheritance());
         }
 
         /// <summary>Merge parent style declarations for passed styleProperty into passed style map</summary>
@@ -80,10 +73,10 @@ namespace iText.Svg.Css.Impl {
                 if (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.EM) || ValueIsOfMeasurement(parentPropValue, 
                     CommonCssConstants.EX) || (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.PERCENTAGE) && fontSizeDependentPercentage
                     .Contains(styleProperty))) {
-                    float absoluteParentFontSize = CssUtils.ParseAbsoluteLength(parentFontSizeString);
+                    float absoluteParentFontSize = CssDimensionParsingUtils.ParseAbsoluteLength(parentFontSizeString);
                     // Format to 4 decimal places to prevent differences between Java and C#
-                    styles.Put(styleProperty, DecimalFormatUtil.FormatNumber(CssUtils.ParseRelativeValue(parentPropValue, absoluteParentFontSize
-                        ), "0.####") + CommonCssConstants.PT);
+                    styles.Put(styleProperty, DecimalFormatUtil.FormatNumber(CssDimensionParsingUtils.ParseRelativeValue(parentPropValue
+                        , absoluteParentFontSize), "0.####") + CommonCssConstants.PT);
                 }
                 else {
                     //Property is inherited, add to element style declarations
@@ -111,7 +104,7 @@ namespace iText.Svg.Css.Impl {
         /// false if it is not marked as inheritable in all rule-sets
         /// </returns>
         private bool CheckInheritance(String styleProperty) {
-            foreach (IStyleInheritance inheritanceRule in inheritanceRules) {
+            foreach (IStyleInheritance inheritanceRule in SvgStyleResolver.INHERITANCE_RULES) {
                 if (inheritanceRule.IsInheritable(styleProperty)) {
                     return true;
                 }
@@ -128,8 +121,8 @@ namespace iText.Svg.Css.Impl {
             if (value == null) {
                 return false;
             }
-            if (value.EndsWith(measurement) && CssUtils.IsNumericValue(value.JSubstring(0, value.Length - measurement.
-                Length).Trim())) {
+            if (value.EndsWith(measurement) && CssTypesValidationUtils.IsNumericValue(value.JSubstring(0, value.Length
+                 - measurement.Length).Trim())) {
                 return true;
             }
             return false;

@@ -73,13 +73,13 @@ namespace iText.Kernel.Pdf {
         //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
         private bool outlineMode;
 
-        private static readonly ICollection<PdfName> PAGE_MODES = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
-            .UseNone, PdfName.UseOutlines, PdfName.UseThumbs, PdfName.FullScreen, PdfName.UseOC, PdfName.UseAttachments
-            ));
+        private static readonly ICollection<PdfName> PAGE_MODES = JavaCollectionsUtil.UnmodifiableSet(new HashSet<
+            PdfName>(JavaUtil.ArraysAsList(PdfName.UseNone, PdfName.UseOutlines, PdfName.UseThumbs, PdfName.FullScreen
+            , PdfName.UseOC, PdfName.UseAttachments)));
 
-        private static readonly ICollection<PdfName> PAGE_LAYOUTS = new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName
-            .SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.TwoColumnRight, PdfName.TwoPageLeft, PdfName
-            .TwoPageRight));
+        private static readonly ICollection<PdfName> PAGE_LAYOUTS = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <PdfName>(JavaUtil.ArraysAsList(PdfName.SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.
+            TwoColumnRight, PdfName.TwoPageLeft, PdfName.TwoPageRight)));
 
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {

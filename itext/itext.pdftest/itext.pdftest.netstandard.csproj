@@ -6,7 +6,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>library</OutputType>
@@ -19,7 +19,7 @@
     <RootNamespace />
     <AssemblyName>itext.pdftest</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="NUnit" Version="3.7.1" />
-	<PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+	<PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
   </ItemGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
@@ -47,7 +47,7 @@
     <ProjectReference Include="..\itext.io\itext.io.netstandard.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lib\verapdf\greenfield-apps-1.14.8.jar">
+	<Content Include="lib\verapdf\greenfield-apps-1.16.1.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 	<Content Include="lib\verapdf\VeraPDF_license.txt">

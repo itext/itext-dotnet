@@ -54,24 +54,40 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.StyledXmlParser.Util;
 using iText.Svg;
+using iText.Svg.Css;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors.Impl;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default implementation of SVG`s styles and attribute resolver .</summary>
     public class SvgStyleResolver : ICssResolver {
+        // It is necessary to cast parameters asList method to IStyleInheritance to C# compiler understand which types is used
+        public static readonly ICollection<IStyleInheritance> INHERITANCE_RULES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
+            )new SvgAttributeInheritance())));
+
+        private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
+            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.PATTERN };
+
+        private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
+            .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
+
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
+
         private CssStyleSheet css;
 
         private const String DEFAULT_CSS_PATH = "iText.Svg.default.css";
+
+        private bool isFirstSvgElement = true;
 
         /// <summary>The device description.</summary>
         private MediaDeviceDescription deviceDescription;
 
         /// <summary>The list of fonts.</summary>
-        private IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
+        private readonly IList<CssFontFaceRule> fonts = new List<CssFontFaceRule>();
 
         /// <summary>The resource resolver</summary>
-        private ResourceResolver resourceResolver;
+        private readonly ResourceResolver resourceResolver;
 
         /// <summary>
         /// Creates a
@@ -119,8 +135,7 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             catch (System.IO.IOException e) {
-                ILog logger = LogManager.GetLogger(this.GetType());
-                logger.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
+                LOGGER.Warn(SvgLogMessageConstant.ERROR_INITIALIZING_DEFAULT_CSS, e);
                 this.css = new CssStyleSheet();
             }
             this.resourceResolver = context.GetResourceResolver();
@@ -146,31 +161,63 @@ namespace iText.Svg.Css.Impl {
             CollectFonts();
         }
 
-        public virtual IDictionary<String, String> ResolveStyles(INode node, AbstractCssContext context) {
-            IDictionary<String, String> styles = ResolveNativeStyles(node, context);
-            //Load in and merge inherited declarations from parent
-            if (node.ParentNode() is IStylesContainer) {
-                IStylesContainer parentNode = (IStylesContainer)node.ParentNode();
-                IDictionary<String, String> parentStyles = parentNode.GetStyles();
-                if (parentStyles == null && !(node.ParentNode() is IDocumentNode)) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
-                    logger.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+        public static void ResolveFontSizeStyle(IDictionary<String, String> styles, SvgCssContext cssContext, String
+             parentFontSizeStr) {
+            String elementFontSize = styles.Get(SvgConstants.Attributes.FONT_SIZE);
+            String resolvedFontSize;
+            if (CssTypesValidationUtils.IsNegativeValue(elementFontSize)) {
+                elementFontSize = parentFontSizeStr;
+            }
+            if (CssTypesValidationUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize
+                ) || CommonCssConstants.SMALLER.Equals(elementFontSize)) {
+                float baseFontSize;
+                if (CssTypesValidationUtils.IsRemValue(elementFontSize)) {
+                    baseFontSize = cssContext == null ? DEFAULT_FONT_SIZE : cssContext.GetRootFontSize();
                 }
-                ICollection<IStyleInheritance> inheritanceRules = new HashSet<IStyleInheritance>();
-                inheritanceRules.Add(new CssInheritance());
-                inheritanceRules.Add(new SvgAttributeInheritance());
-                if (parentStyles != null) {
-                    foreach (KeyValuePair<String, String> entry in parentStyles) {
-                        String parentFontSizeString = parentStyles.Get(CommonCssConstants.FONT_SIZE);
-                        if (parentFontSizeString == null) {
-                            parentFontSizeString = "0";
-                        }
-                        styles = StyleUtil.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeString, inheritanceRules
-                            );
+                else {
+                    if (parentFontSizeStr == null) {
+                        baseFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
+                            .FONT_SIZE));
+                    }
+                    else {
+                        baseFontSize = CssDimensionParsingUtils.ParseAbsoluteLength(parentFontSizeStr);
                     }
                 }
+                float absoluteFontSize = CssDimensionParsingUtils.ParseRelativeFontSize(elementFontSize, baseFontSize);
+                // Format to 4 decimal places to prevent differences between Java and C#
+                resolvedFontSize = DecimalFormatUtil.FormatNumber(absoluteFontSize, "0.####");
             }
-            return styles;
+            else {
+                if (elementFontSize == null) {
+                    resolvedFontSize = DecimalFormatUtil.FormatNumber(DEFAULT_FONT_SIZE, "0.####");
+                }
+                else {
+                    resolvedFontSize = DecimalFormatUtil.FormatNumber(CssDimensionParsingUtils.ParseAbsoluteFontSize(elementFontSize
+                        ), "0.####");
+                }
+            }
+            styles.Put(SvgConstants.Attributes.FONT_SIZE, resolvedFontSize + CommonCssConstants.PT);
+        }
+
+        public static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {
+            if (!(element.ParentNode() is IElementNode)) {
+                return false;
+            }
+            IElementNode parentElement = (IElementNode)element.ParentNode();
+            if (parentElement == null) {
+                return false;
+            }
+            if (parentElement.Name() != null && parentElement.Name().Equals(parentElementNameForSearch)) {
+                return true;
+            }
+            return IsElementNested(parentElement, parentElementNameForSearch);
+        }
+
+        public virtual IDictionary<String, String> ResolveStyles(INode element, AbstractCssContext context) {
+            if (context is SvgCssContext) {
+                return ResolveStyles(element, (SvgCssContext)context);
+            }
+            throw new SvgProcessingException(SvgLogMessageConstant.CUSTOM_ABSTRACT_CSS_CONTEXT_NOT_SUPPORTED);
         }
 
         /// <summary>Resolves node styles without inheritance of parent element styles.</summary>
@@ -195,29 +242,75 @@ namespace iText.Svg.Css.Impl {
             return styles;
         }
 
+        private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
+            foreach (String elementInheritingParentStyles in ELEMENTS_INHERITING_PARENT_STYLES) {
+                if (elementInheritingParentStyles.Equals(element.Name()) || iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested
+                    (element, elementInheritingParentStyles)) {
+                    return false;
+                }
+            }
+            return iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested(element, SvgConstants.Tags.DEFS);
+        }
+
+        private IDictionary<String, String> ResolveStyles(INode element, SvgCssContext context) {
+            // Resolves node styles without inheritance of parent element styles
+            IDictionary<String, String> styles = ResolveNativeStyles(element, context);
+            if (element is IElementNode && iText.Svg.Css.Impl.SvgStyleResolver.OnlyNativeStylesShouldBeResolved((IElementNode
+                )element)) {
+                return styles;
+            }
+            String parentFontSizeStr = null;
+            // Load in and merge inherited styles from parent
+            if (element.ParentNode() is IStylesContainer) {
+                IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
+                IDictionary<String, String> parentStyles = parentNode.GetStyles();
+                if (parentStyles == null && !(parentNode is IDocumentNode)) {
+                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ERROR_RESOLVING_PARENT_STYLES);
+                }
+                if (parentStyles != null) {
+                    parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
+                    foreach (KeyValuePair<String, String> entry in parentStyles) {
+                        styles = StyleUtil.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeStr, INHERITANCE_RULES
+                            );
+                    }
+                }
+            }
+            iText.Svg.Css.Impl.SvgStyleResolver.ResolveFontSizeStyle(styles, context, parentFontSizeStr);
+            // Set root font size
+            bool isSvgElement = element is IElementNode && SvgConstants.Tags.SVG.Equals(((IElementNode)element).Name()
+                );
+            if (isFirstSvgElement && isSvgElement) {
+                isFirstSvgElement = false;
+                String rootFontSize = styles.Get(SvgConstants.Attributes.FONT_SIZE);
+                if (rootFontSize != null) {
+                    context.SetRootFontSize(styles.Get(SvgConstants.Attributes.FONT_SIZE));
+                }
+            }
+            return styles;
+        }
+
         /// <summary>
-        /// Resolves the full path of Link href attribute,
+        /// Resolves the full path of link href attribute,
         /// thanks to the resource resolver.
         /// </summary>
-        /// <param name="attr">attribute to process</param>
-        /// <param name="attributesMap"/>
+        /// <param name="attr">the attribute to process</param>
+        /// <param name="attributesMap">the element styles map</param>
         private void ProcessXLink(IAttribute attr, IDictionary<String, String> attributesMap) {
             String xlinkValue = attr.GetValue();
-            if (!IsStartedWithHash(xlinkValue)) {
+            if (!IsStartedWithHash(xlinkValue) && !new ResourceResolver("").IsDataSrc(xlinkValue)) {
                 try {
                     xlinkValue = this.resourceResolver.ResolveAgainstBaseUri(attr.GetValue()).ToExternalForm();
                 }
                 catch (UriFormatException mue) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
-                    logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, mue);
+                    LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_RESOLVE_IMAGE_URL, mue);
                 }
             }
             attributesMap.Put(attr.GetKey(), xlinkValue);
         }
 
         /// <summary>Checks if string starts with #.</summary>
-        /// <param name="s">test string</param>
-        /// <returns/>
+        /// <param name="s">the test string</param>
+        /// <returns>true if the string starts with #, otherwise false</returns>
         private bool IsStartedWithHash(String s) {
             return s != null && s.StartsWith("#");
         }
@@ -233,7 +326,7 @@ namespace iText.Svg.Css.Impl {
                 if (currentNode is IElementNode) {
                     IElementNode headChildElement = (IElementNode)currentNode;
                     if (SvgConstants.Tags.STYLE.Equals(headChildElement.Name())) {
-                        //XML parser will parse style tag contents as text nodes
+                        // XML parser will parse style tag contents as text nodes
                         if (!currentNode.ChildNodes().IsEmpty() && (currentNode.ChildNodes()[0] is IDataNode || currentNode.ChildNodes
                             ()[0] is ITextNode)) {
                             String styleData;
@@ -262,8 +355,7 @@ namespace iText.Svg.Css.Impl {
                                 }
                             }
                             catch (Exception exc) {
-                                ILog logger = LogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver));
-                                logger.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
+                                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE, exc);
                             }
                         }
                     }

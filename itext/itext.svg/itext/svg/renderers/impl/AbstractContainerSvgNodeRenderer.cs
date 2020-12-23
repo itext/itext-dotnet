@@ -20,24 +20,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     public abstract class AbstractContainerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
-        public override float GetCurrentFontSize() {
-            String fontSizeValue = GetAttribute(SvgConstants.Attributes.FONT_SIZE);
-            if (fontSizeValue == null) {
-                fontSizeValue = CssDefaults.GetDefaultValue(CommonCssConstants.FONT_SIZE);
-            }
-            return CssUtils.ParseAbsoluteFontSize(fontSizeValue);
-        }
-
         public override bool CanConstructViewPort() {
             return true;
         }
@@ -65,16 +54,18 @@ namespace iText.Svg.Renderers.Impl {
             float portHeight = currentViewPort.GetHeight();
             if (attributesAndStyles != null) {
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                    portX = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                    portX = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                    portY = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                    portY = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                    portWidth = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH));
+                    portWidth = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH
+                        ));
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                    portHeight = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT));
+                    portHeight = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.
+                        HEIGHT));
                 }
             }
             return new Rectangle(portX, portY, portWidth, portHeight);

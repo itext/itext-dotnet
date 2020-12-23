@@ -77,13 +77,14 @@ namespace iText.Kernel.Geom {
         /// <summary>the row=3, col=3 position (always 1 for 2-D) in the matrix.</summary>
         public const int I33 = 8;
 
-        /// <summary>the values inside the matrix (the identity matrix by default).</summary>
+        /// <summary>The values inside the matrix (the identity matrix by default).</summary>
         /// <remarks>
-        /// the values inside the matrix (the identity matrix by default).
-        /// <para />For reference, the indeces are as follows:<para />
-        /// I11 I12 I13<para />
-        /// I21 I22 I23<para />
-        /// I31 I32 I33<para />
+        /// The values inside the matrix (the identity matrix by default).
+        /// <para />
+        /// For reference, the indeces are as follows:
+        /// <br />I11 I12 I13
+        /// <br />I21 I22 I23
+        /// <br />I31 I32 I33
         /// </remarks>
         private readonly float[] vals = new float[] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
 
@@ -91,7 +92,7 @@ namespace iText.Kernel.Geom {
         public Matrix() {
         }
 
-        /// <summary>Constructs a matrix that represents translation</summary>
+        /// <summary>Constructs a matrix that represents translation.</summary>
         /// <param name="tx">x-axis translation</param>
         /// <param name="ty">y-axis translation</param>
         public Matrix(float tx, float ty) {
@@ -99,7 +100,7 @@ namespace iText.Kernel.Geom {
             vals[I32] = ty;
         }
 
-        /// <summary>Creates a Matrix with 9 specified entries</summary>
+        /// <summary>Creates a Matrix with 9 specified entries.</summary>
         /// <param name="e11">element at position (1,1)</param>
         /// <param name="e12">element at position (1,2)</param>
         /// <param name="e13">element at position (1,3)</param>
@@ -122,11 +123,12 @@ namespace iText.Kernel.Geom {
             vals[I33] = e33;
         }
 
-        /// <summary>
-        /// Creates a Matrix with 6 specified entries
+        /// <summary>Creates a Matrix with 6 specified entries.</summary>
+        /// <remarks>
+        /// Creates a Matrix with 6 specified entries.
         /// The third column will always be [0 0 1]
         /// (row, column)
-        /// </summary>
+        /// </remarks>
         /// <param name="a">element at (1,1)</param>
         /// <param name="b">element at (1,2)</param>
         /// <param name="c">element at (2,1)</param>
@@ -148,10 +150,11 @@ namespace iText.Kernel.Geom {
         /// <summary>Gets a specific value inside the matrix.</summary>
         /// <remarks>
         /// Gets a specific value inside the matrix.
-        /// <para />For reference, the indeces are as follows:<para />
-        /// I11 I12 I13<para />
-        /// I21 I22 I23<para />
-        /// I31 I32 I33<para />
+        /// <para />
+        /// For reference, the indeces are as follows:
+        /// <br />I11 I12 I13
+        /// <br />I21 I22 I23
+        /// <br />I31 I32 I33
         /// </remarks>
         /// <param name="index">an array index corresponding with a value inside the matrix</param>
         /// <returns>the value at that specific position.</returns>
@@ -159,10 +162,11 @@ namespace iText.Kernel.Geom {
             return vals[index];
         }
 
-        /// <summary>
-        /// multiplies this matrix by 'b' and returns the result
+        /// <summary>multiplies this matrix by 'b' and returns the result.</summary>
+        /// <remarks>
+        /// multiplies this matrix by 'b' and returns the result.
         /// See http://en.wikipedia.org/wiki/Matrix_multiplication
-        /// </summary>
+        /// </remarks>
         /// <param name="by">The matrix to multiply by</param>
         /// <returns>the resulting matrix</returns>
         public virtual iText.Kernel.Geom.Matrix Multiply(iText.Kernel.Geom.Matrix by) {
@@ -182,7 +186,7 @@ namespace iText.Kernel.Geom {
             return rslt;
         }
 
-        /// <summary>adds a matrix from this matrix and returns the results</summary>
+        /// <summary>Adds a matrix from this matrix and returns the results.</summary>
         /// <param name="arg">the matrix to subtract from this matrix</param>
         /// <returns>a Matrix object</returns>
         public virtual iText.Kernel.Geom.Matrix Add(iText.Kernel.Geom.Matrix arg) {
@@ -202,7 +206,7 @@ namespace iText.Kernel.Geom {
             return rslt;
         }
 
-        /// <summary>Subtracts a matrix from this matrix and returns the results</summary>
+        /// <summary>Subtracts a matrix from this matrix and returns the results.</summary>
         /// <param name="arg">the matrix to subtract from this matrix</param>
         /// <returns>a Matrix object</returns>
         public virtual iText.Kernel.Geom.Matrix Subtract(iText.Kernel.Geom.Matrix arg) {

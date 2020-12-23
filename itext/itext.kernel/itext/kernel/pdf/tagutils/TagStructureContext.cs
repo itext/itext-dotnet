@@ -67,14 +67,17 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>.
     /// </remarks>
     public class TagStructureContext {
-        private static readonly ICollection<String> allowedRootTagRoles = new HashSet<String>();
+        private static readonly ICollection<String> ALLOWED_ROOT_TAG_ROLES;
 
         static TagStructureContext() {
-            allowedRootTagRoles.Add(StandardRoles.DOCUMENT);
-            allowedRootTagRoles.Add(StandardRoles.PART);
-            allowedRootTagRoles.Add(StandardRoles.ART);
-            allowedRootTagRoles.Add(StandardRoles.SECT);
-            allowedRootTagRoles.Add(StandardRoles.DIV);
+            // HashSet is required in order to autoport correctly in .Net
+            HashSet<String> tempSet = new HashSet<String>();
+            tempSet.Add(StandardRoles.DOCUMENT);
+            tempSet.Add(StandardRoles.PART);
+            tempSet.Add(StandardRoles.ART);
+            tempSet.Add(StandardRoles.SECT);
+            tempSet.Add(StandardRoles.DIV);
+            ALLOWED_ROOT_TAG_ROLES = JavaCollectionsUtil.UnmodifiableSet(tempSet);
         }
 
         private PdfDocument document;
@@ -767,7 +770,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 return StandardRoles.DOCUMENT.Equals(role);
             }
             else {
-                return allowedRootTagRoles.Contains(role);
+                return ALLOWED_ROOT_TAG_ROLES.Contains(role);
             }
         }
 

@@ -77,6 +77,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.LINE, typeof(LineSvgNodeRenderer));
             result.Put(SvgConstants.Tags.LINEAR_GRADIENT, typeof(LinearGradientSvgNodeRenderer));
             result.Put(SvgConstants.Tags.MARKER, typeof(MarkerSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.PATTERN, typeof(PatternSvgNodeRenderer));
             result.Put(SvgConstants.Tags.PATH, typeof(PathSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYGON, typeof(PolygonSvgNodeRenderer));
             result.Put(SvgConstants.Tags.POLYLINE, typeof(PolylineSvgNodeRenderer));
@@ -137,7 +138,6 @@ namespace iText.Svg.Renderers.Factories {
             ignored.Add(SvgConstants.Tags.MASK);
             ignored.Add(SvgConstants.Tags.METADATA);
             ignored.Add(SvgConstants.Tags.MISSING_GLYPH);
-            ignored.Add(SvgConstants.Tags.PATTERN);
             ignored.Add(SvgConstants.Tags.RADIAL_GRADIENT);
             ignored.Add(SvgConstants.Tags.STYLE);
             ignored.Add(SvgConstants.Tags.TITLE);

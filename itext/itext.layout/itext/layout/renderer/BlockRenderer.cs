@@ -122,6 +122,7 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
                 GetHeight(), parentBBox.GetWidth(), 0));
             ShrinkOccupiedAreaForAbsolutePosition();
+            TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
             // rectangles are compared by instances
@@ -153,11 +154,17 @@ namespace iText.Layout.Renderer {
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     result = new LayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
-                    int layoutResult = anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
+                    bool isKeepTogether = IsKeepTogether();
+                    int layoutResult = anythingPlaced && !isKeepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
                     AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                     AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
+                    if (isKeepTogether) {
+                        splitRenderer = null;
+                        overflowRenderer.childRenderers.Clear();
+                        overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
+                    }
                     UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);

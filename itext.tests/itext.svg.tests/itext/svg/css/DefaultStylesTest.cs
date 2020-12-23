@@ -60,7 +60,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("1", resolvedStyles.Get(SvgConstants.Attributes.STROKE_OPACITY));
             NUnit.Framework.Assert.AreEqual("1px", resolvedStyles.Get(SvgConstants.Attributes.STROKE_WIDTH));
             NUnit.Framework.Assert.AreEqual(SvgConstants.Values.NONE, resolvedStyles.Get(SvgConstants.Attributes.STROKE
@@ -79,7 +79,7 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("black", resolvedStyles.Get(SvgConstants.Attributes.FILL));
             NUnit.Framework.Assert.AreEqual(SvgConstants.Values.FILL_RULE_NONZERO, resolvedStyles.Get(SvgConstants.Attributes
                 .FILL_RULE));
@@ -92,9 +92,9 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("helvetica", resolvedStyles.Get(SvgConstants.Attributes.FONT_FAMILY));
-            NUnit.Framework.Assert.AreEqual("12px", resolvedStyles.Get(SvgConstants.Attributes.FONT_SIZE));
+            NUnit.Framework.Assert.AreEqual("9pt", resolvedStyles.Get(SvgConstants.Attributes.FONT_SIZE));
         }
 
         [NUnit.Framework.Test]
@@ -104,8 +104,9 @@ namespace iText.Svg.Css {
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
             INode svgNode = new JsoupElementNode(svg);
-            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, null);
-            NUnit.Framework.Assert.AreEqual(0, resolvedStyles.Count);
+            IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
+            NUnit.Framework.Assert.AreEqual(1, resolvedStyles.Count);
+            NUnit.Framework.Assert.AreEqual("12pt", resolvedStyles.Get(SvgConstants.Attributes.FONT_SIZE));
         }
 
         [NUnit.Framework.Test]

@@ -55,7 +55,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class HighlightItemsTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/HighlightItemsTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/HighlightItemsTest/";
 
         private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/parser/HighlightItemsTest/";
 
@@ -152,6 +152,81 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String cmp = sourceFolder + "cmp_notdefWidth.pdf";
             ParseAndHighlight(input, output, false);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillStandardEncodingType1NoDescriptorTest() {
+            String input = sourceFolder + "fillStandardEncodingType1NoDescriptorTest.pdf";
+            String output = outputPath + "fillStandardEncodingType1NoDescriptorTest.pdf";
+            String cmp = sourceFolder + "cmp_fillStandardEncodingType1NoDescriptorTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillStandardEncodingTrueTypeFontDescriptorTest() {
+            String input = sourceFolder + "fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
+            String output = outputPath + "fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
+            String cmp = sourceFolder + "cmp_fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillStandardEncodingType1FontDescriptorTest() {
+            String input = sourceFolder + "fillStandardEncodingType1FontDescriptorTest.pdf";
+            String output = outputPath + "fillStandardEncodingType1FontDescriptorTest.pdf";
+            String cmp = sourceFolder + "cmp_fillStandardEncodingType1FontDescriptorTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectAscentFontDescriptorTest() {
+            // As the negative ascent is not covered by pdf specification in details,
+            // we work with it as usual (which results with not very beautiful view).
+            String input = sourceFolder + "incorrectAscentFontDescriptorTest.pdf";
+            String output = outputPath + "incorrectAscentFontDescriptorTest.pdf";
+            String cmp = sourceFolder + "cmp_incorrectAscentFontDescriptorTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectDescentFontDescriptorTest() {
+            String input = sourceFolder + "incorrectDescentFontDescriptorTest.pdf";
+            String output = outputPath + "incorrectDescentFontDescriptorTest.pdf";
+            String cmp = sourceFolder + "cmp_incorrectDescentFontDescriptorTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontDictWidthArrayMissingWidthTest() {
+            String input = sourceFolder + "fontDictWidthArrayMissingWidthTest.pdf";
+            String output = outputPath + "fontDictWidthArrayMissingWidthTest.pdf";
+            String cmp = sourceFolder + "cmp_fontDictWidthArrayMissingWidthTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TrueTypeCIDFontWithDWWithoutProperWidthGlyphTest() {
+            String input = sourceFolder + "trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
+            String output = outputPath + "trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
+            String cmp = sourceFolder + "cmp_trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidHighlightTest() {
+            //TODO: DEVSIX-4784 (incorrect displaying of highlights)
+            String input = sourceFolder + "invalidHighlight.pdf";
+            String output = outputPath + "invalidHighlightOutput.pdf";
+            String cmp = sourceFolder + "cmp_invalidHighlight.pdf";
+            ParseAndHighlight(input, output, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
         private void ParseAndHighlight(String input, String output, bool singleCharacters) {

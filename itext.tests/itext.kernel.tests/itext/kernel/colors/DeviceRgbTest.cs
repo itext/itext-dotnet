@@ -68,7 +68,6 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(multiplier * (150f / 255), darkerRgbColor.GetColorValue()[2], 0.0001);
         }
 
-#if !NETSTANDARD1_6
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorConstantTest() {
             // RED
@@ -90,9 +89,7 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(0, rgbColorValue[1], 0.0001);
             NUnit.Framework.Assert.AreEqual(1, rgbColorValue[2], 0.0001);
         }
-#endif // !NETSTANDARD1_6
 
-#if !NETSTANDARD1_6
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorTest() {
             System.Drawing.Color color = System.Drawing.Color.FromArgb(50, 100, 150);
@@ -102,9 +99,7 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(100f / 255, rgbColorValue[1], 0.0001);
             NUnit.Framework.Assert.AreEqual(150f / 255, rgbColorValue[2], 0.0001);
         }
-#endif // !NETSTANDARD1_6
 
-#if !NETSTANDARD1_6
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID, Count = 14)]
         public virtual void InvalidConstructorArgumentsTest() {
@@ -123,7 +118,6 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(0, GetSumOfColorValues(new DeviceRgb(-2f, -2f, -2f)), 0.001f);
             NUnit.Framework.Assert.AreEqual(3, GetSumOfColorValues(new DeviceRgb(2f, 2f, 2f)), 0.001f);
         }
-#endif // !NETSTANDARD1_6
 
         private float GetSumOfColorValues(DeviceRgb deviceRgb) {
             float sum = 0;

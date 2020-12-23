@@ -105,7 +105,7 @@ namespace iText.Signatures {
             : this((AsymmetricAlgorithm) algorithm, hashAlgorithm) {
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         public AsymmetricAlgorithmSignature(DSACryptoServiceProvider algorithm)
             : this((AsymmetricAlgorithm) algorithm, null) {
         }
@@ -117,7 +117,7 @@ namespace iText.Signatures {
 
             if (algorithm is RSACryptoServiceProvider)
                 encryptionAlgorithm = "RSA";
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             else if (algorithm is DSACryptoServiceProvider)
                 encryptionAlgorithm = "DSA";
 #endif
@@ -130,7 +130,7 @@ namespace iText.Signatures {
                 RSACryptoServiceProvider rsa = (RSACryptoServiceProvider) algorithm;
                 return rsa.SignData(message, hashAlgorithm);
             }
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             else
             {
             DSACryptoServiceProvider dsa = (DSACryptoServiceProvider) algorithm;

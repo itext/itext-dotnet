@@ -40,7 +40,7 @@ namespace iText.Kernel.XMP {
     /// </remarks>
     /// <since>20.01.2006</since>
     public interface XMPMeta
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
  : ICloneable
 #endif
  {

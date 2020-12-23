@@ -143,7 +143,7 @@ namespace iText.Signatures {
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="seq">an ASN1 Sequence</param>
             public X500Name(Asn1Sequence seq) {
-                IEnumerator e = seq.GetObjects();
+                IEnumerator e = seq.GetEnumerator();
                 while (e.MoveNext()) {
                     Asn1Set set = (Asn1Set)e.Current;
                     for (int i = 0; i < set.Count; i++) {

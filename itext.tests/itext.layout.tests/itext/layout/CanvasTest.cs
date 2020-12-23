@@ -145,5 +145,69 @@ namespace iText.Layout {
             pdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementWithAbsolutePositioningInCanvasTest() {
+            String testName = "elementWithAbsolutePositioningInCanvas";
+            String @out = destinationFolder + testName + ".pdf";
+            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+                pdf.AddNewPage();
+                iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
+                    650, 60, 80));
+                Div notFittingDiv = new Div().SetWidth(100).Add(new Paragraph("Paragraph in Div with Not set position"));
+                canvas.Add(notFittingDiv);
+                Div divWithPosition = new Div().SetFixedPosition(120, 300, 80);
+                divWithPosition.Add(new Paragraph("Paragraph in Div with set position"));
+                canvas.Add(divWithPosition);
+                canvas.Close();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        //TODO: DEVSIX-4820 (discuss the displaying of element with absolute position)
+        [LogMessage(iText.IO.LogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED)]
+        public virtual void ParentElemWithAbsolPositionKidNotSuitCanvasTest() {
+            String testName = "parentElemWithAbsolPositionKidNotSuitCanvas";
+            String @out = destinationFolder + testName + ".pdf";
+            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+                pdf.AddNewPage();
+                iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
+                    650, 55, 80));
+                Div notFittingDiv = new Div().SetWidth(100).Add(new Paragraph("Paragraph in Div with Not set position"));
+                canvas.Add(notFittingDiv);
+                Div divWithPosition = new Div().SetFixedPosition(120, 300, 80);
+                divWithPosition.Add(new Paragraph("Paragraph in Div with set position"));
+                canvas.Add(divWithPosition);
+                canvas.Close();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedElementWithAbsolutePositioningInCanvasTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                //TODO: DEVSIX-4820 (NullPointerException on processing absolutely positioned elements in small canvas area)
+                String testName = "nestedElementWithAbsolutePositioningInCanvas";
+                String @out = destinationFolder + testName + ".pdf";
+                String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+                using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+                    pdf.AddNewPage();
+                    iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
+                        650, 55, 80));
+                    Div notFittingDiv = new Div().SetWidth(100).Add(new Paragraph("Paragraph in Div with Not set position"));
+                    Div divWithPosition = new Div().SetFixedPosition(50, 20, 80);
+                    divWithPosition.Add(new Paragraph("Paragraph in Div with set position"));
+                    notFittingDiv.Add(divWithPosition);
+                    canvas.Add(notFittingDiv);
+                    canvas.Close();
+                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
     }
 }

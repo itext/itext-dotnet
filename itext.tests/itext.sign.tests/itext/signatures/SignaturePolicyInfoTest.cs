@@ -146,9 +146,9 @@ namespace iText.Signatures {
             DerObjectIdentifier asn1ObjectIdentifier = new DerObjectIdentifier(algId);
             AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(asn1ObjectIdentifier);
             OtherHashAlgAndValue otherHashAlgAndValue = new OtherHashAlgAndValue(algorithmIdentifier, derOctetString);
-            DerObjectIdentifier derObjectIdentifier = new DerObjectIdentifier(POLICY_IDENTIFIER);
-            DerObjectIdentifier derObjectIdentifierInstance = DerObjectIdentifier.GetInstance(derObjectIdentifier);
-            SignaturePolicyId signaturePolicyId = new SignaturePolicyId(derObjectIdentifierInstance, otherHashAlgAndValue
+            DerObjectIdentifier objectIdentifier = new DerObjectIdentifier(POLICY_IDENTIFIER);
+            DerObjectIdentifier objectIdentifierInstance = DerObjectIdentifier.GetInstance(objectIdentifier);
+            SignaturePolicyId signaturePolicyId = new SignaturePolicyId(objectIdentifierInstance, otherHashAlgAndValue
                 , SignUtils.CreateSigPolicyQualifiers(sigPolicyQualifierInfo));
             SignaturePolicyIdentifier expected = new SignaturePolicyIdentifier(signaturePolicyId);
             NUnit.Framework.Assert.AreEqual(expected.ToAsn1Object(), actual.ToAsn1Object());

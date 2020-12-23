@@ -68,14 +68,17 @@ namespace iText.IO.Util {
             return regex;
         }
 
+        [Obsolete]
         public static Match Match(Regex r, String s) {
             return r.Match(s);
         }
-
+        
+        [Obsolete]
         public static String Group(Match match, int index) {
             return match.Groups[index].Success ? match.Groups[index].Value : null;
         }
 
+        [Obsolete]
         public static String Group(Match match) {
             return Group(match, 0);
         }

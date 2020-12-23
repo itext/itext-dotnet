@@ -48,7 +48,7 @@ using System.Text;
 
 namespace iText.IO.Util
 {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
     /// <summary>This file is a helper class for internal usage only.</summary>
     /// <remarks>
     /// This file is a helper class for internal usage only.

@@ -676,14 +676,16 @@ namespace iText.Svg.Converter {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(pdfDest, writerProps));
             // Process
             ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
-            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
             ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
                 props);
-            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
-                .GetRootRenderer());
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
+            if (processorResult is SvgProcessorResult) {
+                drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            }
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             // Add temp fonts
             drawContext.SetTempFonts(processorResult.GetTempFonts());
+            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
             // Extract topmost dimensions
             CheckNull(topSvgRenderer);
             CheckNull(pdfDocument);
@@ -869,8 +871,10 @@ namespace iText.Svg.Converter {
             ISvgConverterProperties props) {
             ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
                 props);
-            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider(), processorResult
-                .GetRootRenderer());
+            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
+            if (processorResult is SvgProcessorResult) {
+                drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            }
             drawContext.SetTempFonts(processorResult.GetTempFonts());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
             return ConvertToXObject(processorResult.GetRootRenderer(), document, drawContext);
@@ -1308,7 +1312,12 @@ namespace iText.Svg.Converter {
         /// defaulting to respective viewbox values if either one is not present or
         /// to browser default if viewbox is missing as well
         /// </summary>
-        /// <param name="topSvgRenderer"/>
+        /// <param name="topSvgRenderer">
+        /// the
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// instance that contains
+        /// the renderer tree
+        /// </param>
         /// <returns>float[2], width is in position 0, height in position 1</returns>
         public static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
             float[] res = new float[2];
@@ -1320,7 +1329,7 @@ namespace iText.Svg.Converter {
                 IList<String> valueStrings = SvgCssUtils.SplitValueList(vbString);
                 values = new float[valueStrings.Count];
                 for (int i = 0; i < values.Length; i++) {
-                    values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+                    values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
                 }
                 viewBoxPresent = true;
             }
@@ -1337,11 +1346,11 @@ namespace iText.Svg.Converter {
                     //Log Warning
                     LOGGER.Warn(SvgLogMessageConstant.MISSING_WIDTH);
                     //Set to browser default
-                    width = CssUtils.ParseAbsoluteLength("300px");
+                    width = CssDimensionParsingUtils.ParseAbsoluteLength("300px");
                 }
             }
             else {
-                width = CssUtils.ParseAbsoluteLength(wString);
+                width = CssDimensionParsingUtils.ParseAbsoluteLength(wString);
             }
             hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
             if (hString == null) {
@@ -1352,11 +1361,11 @@ namespace iText.Svg.Converter {
                     //Log Warning
                     LOGGER.Warn(SvgLogMessageConstant.MISSING_HEIGHT);
                     //Set to browser default
-                    height = CssUtils.ParseAbsoluteLength("150px");
+                    height = CssDimensionParsingUtils.ParseAbsoluteLength("150px");
                 }
             }
             else {
-                height = CssUtils.ParseAbsoluteLength(hString);
+                height = CssDimensionParsingUtils.ParseAbsoluteLength(hString);
             }
             res[0] = width;
             res[1] = height;

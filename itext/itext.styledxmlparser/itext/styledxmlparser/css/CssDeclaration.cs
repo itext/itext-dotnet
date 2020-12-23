@@ -57,7 +57,7 @@ namespace iText.StyledXmlParser.Css {
         /// <param name="property">the property</param>
         /// <param name="expression">the expression</param>
         public CssDeclaration(String property, String expression) {
-            this.property = CssUtils.NormalizeCssProperty(property);
+            this.property = ResolveAlias(CssUtils.NormalizeCssProperty(property));
             this.expression = CssUtils.NormalizeCssProperty(expression);
         }
 
@@ -84,6 +84,20 @@ namespace iText.StyledXmlParser.Css {
         /// <param name="expression">the new expression</param>
         public virtual void SetExpression(String expression) {
             this.expression = expression;
+        }
+
+        /// <summary>Resolves css property aliases.</summary>
+        /// <remarks>
+        /// Resolves css property aliases.
+        /// For example, word-wrap is an alias for overflow-wrap property.
+        /// </remarks>
+        /// <param name="normalizedCssProperty">css property to be resolved as alias</param>
+        /// <returns>resolved property if the provided property was an alias, otherwise original provided property.</returns>
+        internal virtual String ResolveAlias(String normalizedCssProperty) {
+            if (CommonCssConstants.WORDWRAP.Equals(normalizedCssProperty)) {
+                return CommonCssConstants.OVERFLOW_WRAP;
+            }
+            return normalizedCssProperty;
         }
     }
 }

@@ -38,8 +38,8 @@
     <DocumentationFile>bin\Release\itext.pdftest.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\Portable.BouncyCastle.1.8.5\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
       <HintPath>$(SolutionDir)\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -76,7 +76,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\verapdf\greenfield-apps-1.14.8.jar">
+    <Content Include="lib\verapdf\greenfield-apps-1.16.1.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="lib\verapdf\VeraPDF_license.txt">

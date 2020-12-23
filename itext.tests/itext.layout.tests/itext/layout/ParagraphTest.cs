@@ -97,9 +97,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void WordWasSplitAndItWillFitOntoNextLineTest01() {
-            String outFileName = destinationFolder + "wordWasSplitAndItWillFitOntoNextLineTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_wordWasSplitAndItWillFitOntoNextLineTest01.pdf";
+        public virtual void ForceOverflowForTextRendererPartialResult01() {
+            String outFileName = destinationFolder + "forceOverflowForTextRendererPartialResult01.pdf";
+            String cmpFileName = sourceFolder + "cmp_forceOverflowForTextRendererPartialResult01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0)).SetTextAlignment(TextAlignment

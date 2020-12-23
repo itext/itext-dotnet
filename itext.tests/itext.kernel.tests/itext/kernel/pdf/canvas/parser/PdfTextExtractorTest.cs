@@ -54,22 +54,76 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoSpecifiedDictionaryInPropertiesTest() {
             String inFile = sourceFolder + "noSpecifiedDictionaryInProperties.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
-            // Here we check that no NPE wasn't thrown. There is no text on the page so the extracted string should be empty.
-            NUnit.Framework.Assert.AreEqual("", text);
-            pdfDocument.Close();
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                // Here we check that no NPE wasn't thrown. There is no text on the page so the extracted string should be empty.
+                NUnit.Framework.Assert.AreEqual("", text);
+            }
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoPropertiesInResourcesTest() {
             String inFile = sourceFolder + "noPropertiesInResources.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile));
-            String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
-            // Here we check that no NPE wasn't thrown. There is no text on the page so the extracted string should be empty.
-            NUnit.Framework.Assert.AreEqual("", text);
-            pdfDocument.Close();
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                // Here we check that no NPE wasn't thrown. There is no text on the page so the extracted string should be empty.
+                NUnit.Framework.Assert.AreEqual("", text);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Type3FontNoCMapTest() {
+            String inFile = sourceFolder + "type3NoCMap.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("*0*", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoBaseEncodingTest() {
+            String inFile = sourceFolder + "noBaseEncoding.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("HELLO WORLD", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleFontWithoutEncodingToUnicodeTest() {
+            String inFile = sourceFolder + "simpleFontWithoutEncodingToUnicode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("MyriadPro-Bold font.", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage
+                    (1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Type0FontToUnicodeTest() {
+            String inFile = sourceFolder + "type0FontToUnicode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("€ 390", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseTextDiacriticShiftedLessThanTwo() {
+            String inFile = sourceFolder + "diacriticShiftedLessThanTwo.pdf";
+            // संस्कृत म्
+            String expected = "\u0938\u0902\u0938\u094d\u0915\u0943\u0924 \u092e\u094d";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual(expected, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseTextDiacriticShiftedMoreThanTwo() {
+            String inFile = sourceFolder + "diacriticShiftedMoreThanTwo.pdf";
+            // ृ
+            //संस्कृत म्
+            String expected = "\u0943\n\u0938\u0902\u0938\u094d\u0915\u0943\u0924 \u092e\u094d";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual(expected, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
         }
     }
 }

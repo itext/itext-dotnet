@@ -90,22 +90,22 @@ namespace iText.Svg.Renderers.Impl {
             cx = 0;
             cy = 0;
             if (GetAttribute(SvgConstants.Attributes.CX) != null) {
-                cx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
+                cx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
             }
             if (GetAttribute(SvgConstants.Attributes.CY) != null) {
-                cy = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
+                cy = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
             }
-            if (GetAttribute(SvgConstants.Attributes.RX) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
-                .RX)) > 0) {
-                rx = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
+            if (GetAttribute(SvgConstants.Attributes.RX) != null && CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute
+                (SvgConstants.Attributes.RX)) > 0) {
+                rx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
             }
             else {
                 //No drawing if rx is absent
                 return false;
             }
-            if (GetAttribute(SvgConstants.Attributes.RY) != null && CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes
-                .RY)) > 0) {
-                ry = CssUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
+            if (GetAttribute(SvgConstants.Attributes.RY) != null && CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute
+                (SvgConstants.Attributes.RY)) > 0) {
+                ry = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
             }
             else {
                 //No drawing if ry is absent

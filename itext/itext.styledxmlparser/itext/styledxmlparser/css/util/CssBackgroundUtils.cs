@@ -21,9 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Util {
+    /// <summary>Utilities class for CSS background parsing.</summary>
     public sealed class CssBackgroundUtils {
         /// <summary>
         /// Creates a new
@@ -31,6 +33,34 @@ namespace iText.StyledXmlParser.Css.Util {
         /// instance.
         /// </summary>
         private CssBackgroundUtils() {
+        }
+
+        /// <summary>Parses the background repeat string value.</summary>
+        /// <param name="value">the string which stores the background repeat value</param>
+        /// <returns>
+        /// the background repeat as a
+        /// <see cref="iText.Layout.Properties.BackgroundRepeat.BackgroundRepeatValue"/>
+        /// instance
+        /// </returns>
+        public static BackgroundRepeat.BackgroundRepeatValue ParseBackgroundRepeat(String value) {
+            switch (value) {
+                case CommonCssConstants.NO_REPEAT: {
+                    return BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT;
+                }
+
+                case CommonCssConstants.ROUND: {
+                    return BackgroundRepeat.BackgroundRepeatValue.ROUND;
+                }
+
+                case CommonCssConstants.SPACE: {
+                    return BackgroundRepeat.BackgroundRepeatValue.SPACE;
+                }
+
+                case CommonCssConstants.REPEAT:
+                default: {
+                    return BackgroundRepeat.BackgroundRepeatValue.REPEAT;
+                }
+            }
         }
 
         /// <summary>Gets background property name corresponding to its type.</summary>
@@ -114,14 +144,14 @@ namespace iText.StyledXmlParser.Css.Util {
             if (CommonCssConstants.CENTER.Equals(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION;
             }
-            if (((int?)0).Equals(CssUtils.ParseInteger(value)) || CssUtils.IsMetricValue(value) || CssUtils.IsRelativeValue
-                (value)) {
+            if (((int?)0).Equals(CssDimensionParsingUtils.ParseInteger(value)) || CssTypesValidationUtils.IsMetricValue
+                (value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE;
             }
             if (CommonCssConstants.BACKGROUND_SIZE_VALUES.Contains(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_SIZE;
             }
-            if (CssUtils.IsColorProperty(value)) {
+            if (CssTypesValidationUtils.IsColorProperty(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR;
             }
             if (CommonCssConstants.BACKGROUND_ORIGIN_OR_CLIP_VALUES.Contains(value)) {

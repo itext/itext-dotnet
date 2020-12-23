@@ -50,6 +50,7 @@ using iText.Layout.Properties;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
+using iText.Svg.Css.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -63,7 +64,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
             .MARKER_START, MarkerVertexType.MARKER_END };
 
-        /// <summary>Map that contains attributes and styles used for drawing operations</summary>
+        /// <summary>Map that contains attributes and styles used for drawing operations.</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
         internal bool partOfClipPath;
@@ -175,8 +176,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Return font-size of the current element</summary>
         /// <returns>absolute value of font-size</returns>
         public virtual float GetCurrentFontSize() {
-            // TODO DEVSIX-4140 check work of this method with relative unit
-            return CssUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
+            return CssDimensionParsingUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
         }
 
         /// <summary>
@@ -196,7 +196,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
 
-        /// <summary>Evaluate the current object bounding box</summary>
+        /// <summary>Evaluate the current object bounding box.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
@@ -345,12 +346,12 @@ namespace iText.Svg.Renderers.Impl {
                             // 1 px = 0,75 pt
                             float strokeWidth = 0.75f;
                             if (strokeWidthRawValue != null) {
-                                strokeWidth = CssUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                                strokeWidth = CssDimensionParsingUtils.ParseAbsoluteLength(strokeWidthRawValue);
                             }
                             float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
                             Color strokeColor = null;
-                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, strokeWidth / 2, strokeOpacity
-                                );
+                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, (float)((double)strokeWidth
+                                 / 2.0), strokeOpacity);
                             if (transparentColor != null) {
                                 strokeColor = transparentColor.GetColor();
                                 strokeOpacity = transparentColor.GetOpacity();
@@ -392,13 +393,13 @@ namespace iText.Svg.Renderers.Impl {
         /// <returns>absolute value in points</returns>
         protected internal virtual float ParseAbsoluteLength(String length, float percentRelativeValue, float defaultValue
             , SvgDrawContext context) {
-            if (CssUtils.IsPercentageValue(length)) {
-                return CssUtils.ParseRelativeValue(length, percentRelativeValue);
+            if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                return CssDimensionParsingUtils.ParseRelativeValue(length, percentRelativeValue);
             }
             else {
                 float em = GetCurrentFontSize();
-                float rem = context.GetRemValue();
-                UnitValue unitValue = CssUtils.ParseLengthValueToPt(length, em, rem);
+                float rem = context.GetCssContext().GetRootFontSize();
+                UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(length, em, rem);
                 if (unitValue != null && unitValue.IsPointValue()) {
                     return unitValue.GetValue();
                 }
@@ -424,9 +425,9 @@ namespace iText.Svg.Renderers.Impl {
                 float resolvedOpacity = 1;
                 String normalizedName = tokenValue.JSubstring(5, tokenValue.Length - 1).Trim();
                 ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
-                if (colorRenderer is AbstractGradientSvgNodeRenderer) {
-                    resolvedColor = ((AbstractGradientSvgNodeRenderer)colorRenderer).CreateColor(context, GetObjectBoundingBox
-                        (context), objectBoundingBoxMargin, parentOpacity);
+                if (colorRenderer is ISvgPaintServer) {
+                    resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, GetObjectBoundingBox(context), objectBoundingBoxMargin
+                        , parentOpacity);
                 }
                 if (resolvedColor != null) {
                     return new TransparentColor(resolvedColor, resolvedOpacity);
@@ -459,6 +460,8 @@ namespace iText.Svg.Renderers.Impl {
                 //Clone template to avoid muddying the state
                 if (template is ClipPathSvgNodeRenderer) {
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
+                    // Resolve parent inheritance
+                    SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());
                     clipPath.SetClippedRenderer(this);
                     clipPath.Draw(context);
                     return !clipPath.GetChildren().IsEmpty();

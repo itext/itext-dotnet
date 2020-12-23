@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.hyph</id>
-    <version>7.1.13</version>
+    <version>7.1.14</version>
     <title>iText 7 Hyph</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -20,8 +20,8 @@
   <files>
     <file src="bin\Release\net40\itext.hyph.dll" target="lib\net40" />
     <file src="bin\Release\net40\itext.hyph.xml" target="lib\net40" />
-    <file src="bin\Release\netstandard1.6\itext.hyph.dll" target="lib\netstandard1.6" />
-    <file src="bin\Release\netstandard1.6\itext.hyph.xml" target="lib\netstandard1.6" />
+    <file src="bin\Release\netstandard2.0\itext.hyph.dll" target="lib\netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\itext.hyph.xml" target="lib\netstandard2.0" />
     <file src="..\..\gnu-agpl-v3.0.md" target="" />
     <file src="..\..\LICENSE.md" target="" />
 	<file src="..\..\ITSC-avatar.png" target="" />

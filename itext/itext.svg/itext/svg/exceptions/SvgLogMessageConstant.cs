@@ -53,6 +53,8 @@ namespace iText.Svg.Exceptions {
 
         public const String COULDNOTINSTANTIATE = "Could not instantiate Renderer for tag {0}";
 
+        public const String CUSTOM_ABSTRACT_CSS_CONTEXT_NOT_SUPPORTED = "Custom AbstractCssContext implementations are not supported yet";
+
         public const String DRAW_NO_DRAW = "Can't draw current SvgNodeRenderer.";
 
         [Obsolete]
@@ -105,6 +107,14 @@ namespace iText.Svg.Exceptions {
 
         public const String NOROOT = "No root found";
 
+        public const String PATTERN_INVALID_PATTERN_UNITS_LOG = "Could not recognize patternUnits value {0}";
+
+        public const String PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG = "Could not recognize patternContentUnits value {0}";
+
+        public const String PATTERN_WIDTH_OR_HEIGHT_IS_ZERO = "Pattern width or height is zero. This pattern will not be rendered.";
+
+        public const String PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE = "Pattern width or height is negative value. This pattern will not be rendered.";
+
         public const String PATH_WRONG_NUMBER_OF_ARGUMENTS = "Path operator {0} has received {1} arguments, but expects between {2} and {3} arguments. \n Resulting SVG will be incorrect.";
 
         public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
@@ -133,6 +143,12 @@ namespace iText.Svg.Exceptions {
         public const String UNMAPPEDTAG = "Could not find implementation for tag {0}";
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
+
+        public const String VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS = "The viewBox value must be 4 numbers. This viewBox=\"{0}\" will not be processed.";
+
+        public const String VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE = "The viewBox width and height cannot be negative. This viewBox=\"{0}\" will not be processed.";
+
+        public const String VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO = "The viewBox width or height is zero. The element with this viewBox will not be rendered.";
 
         private SvgLogMessageConstant() {
         }

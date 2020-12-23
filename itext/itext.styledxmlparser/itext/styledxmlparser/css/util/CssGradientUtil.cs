@@ -31,7 +31,7 @@ using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Util {
-    /// <summary>Utilities class for CSS gradient functions parsing</summary>
+    /// <summary>Utilities class for CSS gradient functions parsing.</summary>
     public sealed class CssGradientUtil {
         private const String LINEAR_GRADIENT_FUNCTION_SUFFIX = "linear-gradient(";
 
@@ -129,8 +129,8 @@ namespace iText.StyledXmlParser.Css.Util {
             builder.SetSpreadMethod(gradientSpreadMethod);
             int colorStopListStartIndex;
             String firstArgument = argumentsList[0];
-            if (CssUtils.IsAngleValue(firstArgument)) {
-                double radAngle = CssUtils.ParseAngle(firstArgument);
+            if (CssTypesValidationUtils.IsAngleValue(firstArgument)) {
+                double radAngle = CssDimensionParsingUtils.ParseAngle(firstArgument);
                 // we need to negate the angle as css specifies the clockwise rotation angle
                 builder.SetGradientDirectionAsCentralRotationAngle(-radAngle);
                 colorStopListStartIndex = 1;
@@ -168,8 +168,8 @@ namespace iText.StyledXmlParser.Css.Util {
                     throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
                         , argument));
                 }
-                if (CssUtils.IsColorProperty(elementsList[0])) {
-                    float[] rgba = CssUtils.ParseRgbaColor(elementsList[0]);
+                if (CssTypesValidationUtils.IsColorProperty(elementsList[0])) {
+                    float[] rgba = CssDimensionParsingUtils.ParseRgbaColor(elementsList[0]);
                     if (elementsList.Count == 1) {
                         UnitValue offset = i == stopsStartIndex ? new UnitValue(UnitValue.PERCENT, 0f) : i == lastStopIndex ? new 
                             UnitValue(UnitValue.PERCENT, 100f) : null;
@@ -178,13 +178,13 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                     else {
                         for (int j = 1; j < elementsList.Count; ++j) {
-                            if (CssUtils.IsNumericValue(elementsList[j])) {
+                            if (CssTypesValidationUtils.IsNumericValue(elementsList[j])) {
                                 // the numeric value is invalid in linear gradient function.
                                 // So check it here as parsing method will use the default pt metric
                                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
                                     , argument));
                             }
-                            UnitValue offset = CssUtils.ParseLengthValueToPt(elementsList[j], emValue, remValue);
+                            UnitValue offset = CssDimensionParsingUtils.ParseLengthValueToPt(elementsList[j], emValue, remValue);
                             if (offset == null) {
                                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
                                     , argument));
@@ -203,7 +203,7 @@ namespace iText.StyledXmlParser.Css.Util {
                         throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
                             , argument));
                     }
-                    UnitValue hint = CssUtils.ParseLengthValueToPt(elementsList[0], emValue, remValue);
+                    UnitValue hint = CssDimensionParsingUtils.ParseLengthValueToPt(elementsList[0], emValue, remValue);
                     if (hint == null) {
                         throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
                             , argument));

@@ -44,31 +44,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
-using iText.IO.Util;
-using iText.Kernel.Colors;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
-using iText.StyledXmlParser.Exceptions;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
     public class CssUtils {
-        // TODO (DEVSIX-3595) The list of the angle measurements is not full. Required to
-        //  add 'turn' units to array and move this array to the CommonCssConstants
-        private static readonly String[] ANGLE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.DEG, CommonCssConstants
-            .GRAD, CommonCssConstants.RAD };
-
-        // TODO (DEVSIX-3596) The list of the relative measurements is not full.
-        //  Add new relative units to array and move this array to the CommonCssConstants
-        private static readonly String[] RELATIVE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.PERCENTAGE
-            , CommonCssConstants.EM, CommonCssConstants.EX, CommonCssConstants.REM };
-
         // TODO (DEVSIX-3596) The list of the font-relative measurements is not full.
         //  Add 'ch' units to array and move this array to the CommonCssConstants
+        [Obsolete]
         private static readonly String[] FONT_RELATIVE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.EM, 
             CommonCssConstants.EX, CommonCssConstants.REM };
 
@@ -85,6 +73,7 @@ namespace iText.StyledXmlParser.Css.Util {
         private CssUtils() {
         }
 
+        // Empty constructor
         /// <summary>
         /// Splits the provided
         /// <see cref="System.String"/>
@@ -97,26 +86,46 @@ namespace iText.StyledXmlParser.Css.Util {
         /// of split result
         /// </returns>
         public static IList<String> SplitStringWithComma(String value) {
+            return SplitString(value, ',', new EscapeGroup('(', ')'));
+        }
+
+        /// <summary>
+        /// Splits the provided
+        /// <see cref="System.String"/>
+        /// by split character with respect of escape characters.
+        /// </summary>
+        /// <param name="value">value to split</param>
+        /// <param name="splitChar">character to split the String</param>
+        /// <param name="escapeCharacters">escape characters</param>
+        /// <returns>
+        /// the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of split result
+        /// </returns>
+        public static IList<String> SplitString(String value, char splitChar, params EscapeGroup[] escapeCharacters
+            ) {
             if (value == null) {
                 return new List<String>();
             }
             IList<String> resultList = new List<String>();
-            int lastComma = 0;
-            int notClosedBrackets = 0;
+            int lastSplitChar = 0;
             for (int i = 0; i < value.Length; ++i) {
-                if (value[i] == ',' && notClosedBrackets == 0) {
-                    resultList.Add(value.JSubstring(lastComma, i));
-                    lastComma = i + 1;
+                char currentChar = value[i];
+                bool isEscaped = false;
+                foreach (EscapeGroup character in escapeCharacters) {
+                    if (currentChar == splitChar) {
+                        isEscaped = isEscaped || character.IsEscaped();
+                    }
+                    else {
+                        character.ProcessCharacter(currentChar);
+                    }
                 }
-                if (value[i] == '(') {
-                    ++notClosedBrackets;
-                }
-                if (value[i] == ')') {
-                    --notClosedBrackets;
-                    notClosedBrackets = Math.Max(notClosedBrackets, 0);
+                if (currentChar == splitChar && !isEscaped) {
+                    resultList.Add(value.JSubstring(lastSplitChar, i));
+                    lastSplitChar = i + 1;
                 }
             }
-            String lastToken = value.Substring(lastComma);
+            String lastToken = value.Substring(lastSplitChar);
             if (!String.IsNullOrEmpty(lastToken)) {
                 resultList.Add(lastToken);
             }
@@ -262,46 +271,28 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Parses an integer without throwing an exception if something goes wrong.</summary>
         /// <param name="str">a string that might be an integer value</param>
         /// <returns>the integer value, or null if something went wrong</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseInteger(System.String) instead"
+            )]
         public static int? ParseInteger(String str) {
-            if (str == null) {
-                return null;
-            }
-            try {
-                return Convert.ToInt32(str, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (FormatException) {
-                return null;
-            }
+            return CssDimensionParsingUtils.ParseInteger(str);
         }
 
         /// <summary>Parses a float without throwing an exception if something goes wrong.</summary>
         /// <param name="str">a string that might be a float value</param>
         /// <returns>the float value, or null if something went wrong</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseFloat(System.String) instead"
+            )]
         public static float? ParseFloat(String str) {
-            if (str == null) {
-                return null;
-            }
-            try {
-                return float.Parse(str, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (FormatException) {
-                return null;
-            }
+            return CssDimensionParsingUtils.ParseFloat(str);
         }
 
         /// <summary>Parses a double without throwing an exception if something goes wrong.</summary>
         /// <param name="str">a string that might be a double value</param>
         /// <returns>the double value, or null if something went wrong</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseDouble(System.String) instead"
+            )]
         public static double? ParseDouble(String str) {
-            if (str == null) {
-                return null;
-            }
-            try {
-                return Double.Parse(str, System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (FormatException) {
-                return null;
-            }
+            return CssDimensionParsingUtils.ParseDouble(str);
         }
 
         /// <summary>
@@ -311,35 +302,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="angle">String containing the angle to parse</param>
         /// <param name="defaultMetric">default metric to use in case the input string does not specify a metric</param>
         /// <returns>the angle in radians</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAngle(System.String, System.String) instead"
+            )]
         public static float ParseAngle(String angle, String defaultMetric) {
-            int pos = DeterminePositionBetweenValueAndUnit(angle);
-            if (pos == 0) {
-                if (angle == null) {
-                    angle = "null";
-                }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, angle));
-            }
-            float floatValue = float.Parse(angle.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
-            String unit = angle.Substring(pos);
-            // Degrees
-            if (unit.StartsWith(CommonCssConstants.DEG) || unit.Equals("") && CommonCssConstants.DEG.Equals(defaultMetric
-                )) {
-                return (float)Math.PI * floatValue / 180f;
-            }
-            // Grads
-            if (unit.StartsWith(CommonCssConstants.GRAD) || unit.Equals("") && CommonCssConstants.GRAD.Equals(defaultMetric
-                )) {
-                return (float)Math.PI * floatValue / 200f;
-            }
-            // Radians
-            if (unit.StartsWith(CommonCssConstants.RAD) || unit.Equals("") && CommonCssConstants.RAD.Equals(defaultMetric
-                )) {
-                return floatValue;
-            }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
-                , unit.Equals("") ? defaultMetric : unit));
-            return floatValue;
+            return CssDimensionParsingUtils.ParseAngle(angle, defaultMetric);
         }
 
         /// <summary>
@@ -352,28 +318,19 @@ namespace iText.StyledXmlParser.Css.Util {
         /// </remarks>
         /// <param name="angle">String containing the angle to parse</param>
         /// <returns>the angle in radians</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAngle(System.String) instead"
+            )]
         public static float ParseAngle(String angle) {
-            return ParseAngle(angle, CommonCssConstants.DEG);
+            return CssDimensionParsingUtils.ParseAngle(angle);
         }
 
         /// <summary>Parses an aspect ratio into an array with two integers.</summary>
         /// <param name="str">a string that might contain two integer values</param>
         /// <returns>the aspect ratio as an array of two integer values</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAspectRatio(System.String) instead"
+            )]
         public static int[] ParseAspectRatio(String str) {
-            int indexOfSlash = str.IndexOf('/');
-            try {
-                int first = Convert.ToInt32(str.JSubstring(0, indexOfSlash), System.Globalization.CultureInfo.InvariantCulture
-                    );
-                int second = Convert.ToInt32(str.Substring(indexOfSlash + 1), System.Globalization.CultureInfo.InvariantCulture
-                    );
-                return new int[] { first, second };
-            }
-            catch (FormatException) {
-                return null;
-            }
-            catch (NullReferenceException) {
-                return null;
-            }
+            return CssDimensionParsingUtils.ParseAspectRatio(str);
         }
 
         /// <summary>
@@ -382,110 +339,38 @@ namespace iText.StyledXmlParser.Css.Util {
         /// A numeric value (without px, pt, etc in the given length string) is considered to be in the default metric that
         /// was given.
         /// </summary>
-        /// <param name="length">the string containing the length.</param>
+        /// <param name="length">the string containing the length</param>
         /// <param name="defaultMetric">
         /// the string containing the metric if it is possible that the length string does not contain
-        /// one. If null the length is considered to be in px as is default in HTML/CSS.
+        /// one. If null the length is considered to be in px as is default in HTML/CSS
         /// </param>
         /// <returns>parsed value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAbsoluteLength(System.String, System.String) instead"
+            )]
         public static float ParseAbsoluteLength(String length, String defaultMetric) {
-            int pos = DeterminePositionBetweenValueAndUnit(length);
-            if (pos == 0) {
-                if (length == null) {
-                    length = "null";
-                }
-                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, length));
-            }
-            // Use double type locally to have better precision of the result after applying arithmetic operations
-            double f = Double.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
-            String unit = length.Substring(pos);
-            //points
-            if (unit.StartsWith(CommonCssConstants.PT) || unit.Equals("") && defaultMetric.Equals(CommonCssConstants.PT
-                )) {
-                return (float)f;
-            }
-            // inches
-            if (unit.StartsWith(CommonCssConstants.IN) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
-                IN))) {
-                return (float)(f * 72);
-            }
-            else {
-                // centimeters
-                if (unit.StartsWith(CommonCssConstants.CM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
-                    CM))) {
-                    return (float)((f / 2.54) * 72);
-                }
-                else {
-                    // quarter of a millimeter (1/40th of a centimeter).
-                    if (unit.StartsWith(CommonCssConstants.Q) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.Q
-                        ))) {
-                        return (float)((f / 2.54) * 72 / 40);
-                    }
-                    else {
-                        // millimeters
-                        if (unit.StartsWith(CommonCssConstants.MM) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
-                            MM))) {
-                            return (float)((f / 25.4) * 72);
-                        }
-                        else {
-                            // picas
-                            if (unit.StartsWith(CommonCssConstants.PC) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
-                                PC))) {
-                                return (float)(f * 12);
-                            }
-                            else {
-                                // pixels (1px = 0.75pt).
-                                if (unit.StartsWith(CommonCssConstants.PX) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
-                                    PX))) {
-                                    return (float)(f * 0.75);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            logger.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-                , unit.Equals("") ? defaultMetric : unit));
-            return (float)f;
+            return CssDimensionParsingUtils.ParseAbsoluteLength(length, defaultMetric);
         }
 
         /// <summary>Parses the absolute length.</summary>
         /// <param name="length">the length as a string</param>
         /// <returns>the length as a float</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAbsoluteLength(System.String) instead"
+            )]
         public static float ParseAbsoluteLength(String length) {
-            return ParseAbsoluteLength(length, CommonCssConstants.PX);
+            return CssDimensionParsingUtils.ParseAbsoluteLength(length);
         }
 
         /// <summary>
         /// Parses an relative value based on the base value that was given, in the metric unit of the base value.<br />
         /// (e.g. margin=10% should be based on the page width, so if an A4 is used, the margin = 0.10*595.0 = 59.5f)
         /// </summary>
-        /// <param name="relativeValue">in %, em or ex.</param>
-        /// <param name="baseValue">the value the returned float is based on.</param>
-        /// <returns>the parsed float in the metric unit of the base value.</returns>
+        /// <param name="relativeValue">in %, em or ex</param>
+        /// <param name="baseValue">the value the returned float is based on</param>
+        /// <returns>the parsed float in the metric unit of the base value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseRelativeValue(System.String, float) instead"
+            )]
         public static float ParseRelativeValue(String relativeValue, float baseValue) {
-            int pos = DeterminePositionBetweenValueAndUnit(relativeValue);
-            if (pos == 0) {
-                return 0f;
-            }
-            // Use double type locally to have better precision of the result after applying arithmetic operations
-            double f = Double.Parse(relativeValue.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
-            String unit = relativeValue.Substring(pos);
-            if (unit.StartsWith(CommonCssConstants.PERCENTAGE)) {
-                f = baseValue * f / 100;
-            }
-            else {
-                if (unit.StartsWith(CommonCssConstants.EM) || unit.StartsWith(CommonCssConstants.REM)) {
-                    f = baseValue * f;
-                }
-                else {
-                    if (unit.StartsWith(CommonCssConstants.EX)) {
-                        f = baseValue * f / 2;
-                    }
-                }
-            }
-            return (float)f;
+            return CssDimensionParsingUtils.ParseRelativeValue(relativeValue, baseValue);
         }
 
         /// <summary>Convenience method for parsing a value to pt.</summary>
@@ -503,38 +388,19 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="emValue">the em value</param>
         /// <param name="remValue">the root em value</param>
         /// <returns>the unit value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseLengthValueToPt(System.String, float, float) instead"
+            )]
         public static UnitValue ParseLengthValueToPt(String value, float emValue, float remValue) {
-            // TODO (DEVSIX-3596) Add support of 'lh' 'ch' units and viewport-relative units
-            if (IsMetricValue(value) || IsNumericValue(value)) {
-                return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
-            }
-            else {
-                if (value != null && value.EndsWith(CommonCssConstants.PERCENTAGE)) {
-                    return new UnitValue(UnitValue.PERCENT, float.Parse(value.JSubstring(0, value.Length - 1), System.Globalization.CultureInfo.InvariantCulture
-                        ));
-                }
-                else {
-                    if (IsRemValue(value)) {
-                        return new UnitValue(UnitValue.POINT, ParseRelativeValue(value, remValue));
-                    }
-                    else {
-                        if (IsRelativeValue(value)) {
-                            return new UnitValue(UnitValue.POINT, ParseRelativeValue(value, emValue));
-                        }
-                    }
-                }
-            }
-            return null;
+            return CssDimensionParsingUtils.ParseLengthValueToPt(value, emValue, remValue);
         }
 
         /// <summary>Checks if a string is in a valid format.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value is in a valid format.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value is in a valid format</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsValidNumericValue(System.String) instead"
+            )]
         public static bool IsValidNumericValue(String value) {
-            if (value == null || value.Contains(" ")) {
-                return false;
-            }
-            return IsRelativeValue(value) || IsMetricValue(value) || IsNumericValue(value);
+            return CssTypesValidationUtils.IsValidNumericValue(value);
         }
 
         /// <summary>Parses the absolute font size.</summary>
@@ -556,20 +422,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// the font size value as a
         /// <c>float</c>
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAbsoluteFontSize(System.String, System.String) instead"
+            )]
         public static float ParseAbsoluteFontSize(String fontSizeValue, String defaultMetric) {
-            if (null != fontSizeValue && CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.ContainsKey(fontSizeValue
-                )) {
-                fontSizeValue = CommonCssConstants.FONT_ABSOLUTE_SIZE_KEYWORDS_VALUES.Get(fontSizeValue);
-            }
-            try {
-                /* Styled XML Parser will throw an exception when it can't parse the given value
-                but in html2pdf, we want to fall back to the default value of 0
-                */
-                return iText.StyledXmlParser.Css.Util.CssUtils.ParseAbsoluteLength(fontSizeValue, defaultMetric);
-            }
-            catch (StyledXMLParserException) {
-                return 0f;
-            }
+            return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeValue, defaultMetric);
         }
 
         /// <summary>Parses the absolute font size.</summary>
@@ -586,8 +442,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// the font size value as a
         /// <c>float</c>
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseAbsoluteFontSize(System.String) instead"
+            )]
         public static float ParseAbsoluteFontSize(String fontSizeValue) {
-            return ParseAbsoluteFontSize(fontSizeValue, CommonCssConstants.PX);
+            return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeValue);
         }
 
         /// <summary>Parses the relative font size.</summary>
@@ -600,16 +458,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// the relative font size value as a
         /// <c>float</c>
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseRelativeFontSize(System.String, float) instead"
+            )]
         public static float ParseRelativeFontSize(String relativeFontSizeValue, float baseValue) {
-            if (CommonCssConstants.SMALLER.Equals(relativeFontSizeValue)) {
-                return (float)(baseValue / 1.2);
-            }
-            else {
-                if (CommonCssConstants.LARGER.Equals(relativeFontSizeValue)) {
-                    return (float)(baseValue * 1.2);
-                }
-            }
-            return iText.StyledXmlParser.Css.Util.CssUtils.ParseRelativeValue(relativeFontSizeValue, baseValue);
+            return CssDimensionParsingUtils.ParseRelativeFontSize(relativeFontSizeValue, baseValue);
         }
 
         /// <summary>Parses the border radius of specific corner.</summary>
@@ -621,44 +473,20 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <see cref="iText.Layout.Properties.UnitValue">UnitValues</see>
         /// that define horizontal and vertical border radius values
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useCssDimensionParsingUtils.ParseSpecificCornerBorderRadius(System.String, float, float) instead"
+            )]
         public static UnitValue[] ParseSpecificCornerBorderRadius(String specificBorderRadius, float emValue, float
              remValue) {
-            if (null == specificBorderRadius) {
-                return null;
-            }
-            UnitValue[] cornerRadii = new UnitValue[2];
-            String[] props = iText.IO.Util.StringUtil.Split(specificBorderRadius, "\\s+");
-            cornerRadii[0] = ParseLengthValueToPt(props[0], emValue, remValue);
-            cornerRadii[1] = 2 == props.Length ? ParseLengthValueToPt(props[1], emValue, remValue) : cornerRadii[0];
-            return cornerRadii;
+            return CssDimensionParsingUtils.ParseSpecificCornerBorderRadius(specificBorderRadius, emValue, remValue);
         }
 
         /// <summary>Parses the resolution.</summary>
         /// <param name="resolutionStr">the resolution as a string</param>
         /// <returns>a value in dpi</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseResolution(System.String) instead"
+            )]
         public static float ParseResolution(String resolutionStr) {
-            int pos = DeterminePositionBetweenValueAndUnit(resolutionStr);
-            if (pos == 0) {
-                return 0f;
-            }
-            double f = Double.Parse(resolutionStr.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
-            String unit = resolutionStr.Substring(pos);
-            if (unit.StartsWith(CommonCssConstants.DPCM)) {
-                f *= 2.54;
-            }
-            else {
-                if (unit.StartsWith(CommonCssConstants.DPPX)) {
-                    f *= 96;
-                }
-                else {
-                    if (!unit.StartsWith(CommonCssConstants.DPI)) {
-                        throw new StyledXMLParserException(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE
-                            );
-                    }
-                }
-            }
-            return (float)f;
+            return CssDimensionParsingUtils.ParseResolution(resolutionStr);
         }
 
         /// <summary>
@@ -673,82 +501,52 @@ namespace iText.StyledXmlParser.Css.Util {
         /// int position between the numeric value and unit or 0 if string is null or string started with a
         /// non-numeric value.
         /// </returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useCssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(System.String) instead"
+            )]
         public static int DeterminePositionBetweenValueAndUnit(String @string) {
-            if (@string == null) {
-                return 0;
-            }
-            int pos = 0;
-            while (pos < @string.Length) {
-                if (@string[pos] == '+' || @string[pos] == '-' || @string[pos] == '.' || IsDigit(@string[pos]) || IsExponentNotation
-                    (@string, pos)) {
-                    pos++;
-                }
-                else {
-                    break;
-                }
-            }
-            return pos;
+            return CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(@string);
         }
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; px, in, cm, mm, pc, Q or pt.
         ///     </summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains an allowed metric value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed metric value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsMetricValue(System.String) instead"
+            )]
         public static bool IsMetricValue(String value) {
-            if (value == null) {
-                return false;
-            }
-            foreach (String metricPostfix in CommonCssConstants.METRIC_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
-                    return true;
-                }
-            }
-            return false;
+            return CssTypesValidationUtils.IsMetricValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; rad, deg and grad.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains an allowed angle value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed angle value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsAngleValue(System.String) instead"
+            )]
         public static bool IsAngleValue(String value) {
-            if (value == null) {
-                return false;
-            }
-            foreach (String metricPostfix in ANGLE_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
-                    return true;
-                }
-            }
-            return false;
+            return CssTypesValidationUtils.IsAngleValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains an allowed metric value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed metric value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsRelativeValue(System.String) instead"
+            )]
         public static bool IsRelativeValue(String value) {
-            if (value == null) {
-                return false;
-            }
-            foreach (String relativePostfix in RELATIVE_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(relativePostfix) && IsNumericValue(value.JSubstring(0, value.Length - relativePostfix.Length
-                    ).Trim())) {
-                    return true;
-                }
-            }
-            return false;
+            return CssTypesValidationUtils.IsRelativeValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to font.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains an allowed font relative value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed font relative value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsRelativeValue(System.String) method instead"
+            )]
         public static bool IsFontRelativeValue(String value) {
             if (value == null) {
                 return false;
             }
             foreach (String relativePostfix in FONT_RELATIVE_MEASUREMENTS_VALUES) {
-                if (value.EndsWith(relativePostfix) && IsNumericValue(value.JSubstring(0, value.Length - relativePostfix.Length
-                    ).Trim())) {
+                if (value.EndsWith(relativePostfix) && CssTypesValidationUtils.IsNumericValue(value.JSubstring(0, value.Length
+                     - relativePostfix.Length).Trim())) {
                     return true;
                 }
             }
@@ -758,33 +556,37 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Checks whether a string contains a percentage value</summary>
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed percentage value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsPercentageValue(System.String) method instead"
+            )]
         public static bool IsPercentageValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0
-                , value.Length - CommonCssConstants.PERCENTAGE.Length).Trim());
+            return CssTypesValidationUtils.IsPercentageValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set root value.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains a rem value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains a rem value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsRemValue(System.String) method instead"
+            )]
         public static bool IsRemValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumericValue(value.JSubstring(0, value
-                .Length - CommonCssConstants.REM.Length).Trim());
+            return CssTypesValidationUtils.IsRemValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to parent value.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains a em value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains a em value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsEmValue(System.String) method instead"
+            )]
         public static bool IsEmValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EM.Length).Trim());
+            return CssTypesValidationUtils.IsEmValue(value);
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to element font height.</summary>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains a ex value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains a ex value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsExValue(System.String) method instead"
+            )]
         public static bool IsExValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.EX) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EX.Length).Trim());
+            return CssTypesValidationUtils.IsExValue(value);
         }
 
         /// <summary>Checks whether a string matches a numeric value (e.g. 123, 1.23, .123).</summary>
@@ -792,11 +594,25 @@ namespace iText.StyledXmlParser.Css.Util {
         /// Checks whether a string matches a numeric value (e.g. 123, 1.23, .123). All these metric values are allowed in
         /// HTML/CSS.
         /// </remarks>
-        /// <param name="value">the string that needs to be checked.</param>
-        /// <returns>boolean true if value contains an allowed metric value.</returns>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains an allowed metric value</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsNumericValue(System.String) method instead"
+            )]
         public static bool IsNumericValue(String value) {
-            return value != null && (value.Matches("^[-+]?\\d\\d*\\.\\d*$") || value.Matches("^[-+]?\\d\\d*$") || value
-                .Matches("^[-+]?\\.\\d\\d*$"));
+            return CssTypesValidationUtils.IsNumericValue(value);
+        }
+
+        /// <summary>Checks whether a string matches a negative value (e.g. -123, -2em, -0.123).</summary>
+        /// <remarks>
+        /// Checks whether a string matches a negative value (e.g. -123, -2em, -0.123).
+        /// All these metric values are allowed in HTML/CSS.
+        /// </remarks>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>true if value is negative</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsNegativeValue(System.String) method instead"
+            )]
+        public static bool IsNegativeValue(String value) {
+            return CssTypesValidationUtils.IsNegativeValue(value);
         }
 
         /// <summary>
@@ -834,8 +650,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Checks if a data is base 64 encoded.</summary>
         /// <param name="data">the data</param>
         /// <returns>true, if the data is base 64 encoded</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsBase64Data(System.String) method instead"
+            )]
         public static bool IsBase64Data(String data) {
-            return data.Matches("^data:([^\\s]*);base64,([^\\s]*)");
+            return CssTypesValidationUtils.IsBase64Data(data);
         }
 
         /// <summary>Find the next unescaped character.</summary>
@@ -859,9 +677,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Checks if a value is a color property.</summary>
         /// <param name="value">the value</param>
         /// <returns>true, if the value contains a color property</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssTypesValidationUtils.IsColorProperty(System.String) method instead"
+            )]
         public static bool IsColorProperty(String value) {
-            return value.StartsWith("rgb(") || value.StartsWith("rgba(") || value.StartsWith("#") || WebColors.NAMES.Contains
-                (value.ToLowerInvariant()) || CommonCssConstants.TRANSPARENT.Equals(value);
+            return CssTypesValidationUtils.IsColorProperty(value);
         }
 
         /// <summary>Helper method for comparing floating point numbers</summary>
@@ -883,13 +702,10 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Parses the RGBA color.</summary>
         /// <param name="colorValue">the color value</param>
         /// <returns>an RGBA value expressed as an array with four float values</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, use CssDimensionParsingUtils.ParseRgbaColor(System.String) method instead"
+            )]
         public static float[] ParseRgbaColor(String colorValue) {
-            float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
-            if (rgbaColor == null) {
-                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, colorValue));
-                rgbaColor = new float[] { 0, 0, 0, 1 };
-            }
-            return rgbaColor;
+            return CssDimensionParsingUtils.ParseRgbaColor(colorValue);
         }
 
         /// <summary>Parses the unicode range.</summary>
@@ -955,11 +771,12 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks if value is initial, inherit or unset.</summary>
-        /// <param name="value">value to check.</param>
-        /// <returns>true if value is initial, inherit or unset. false otherwise.</returns>
+        /// <param name="value">value to check</param>
+        /// <returns>true if value is initial, inherit or unset. false otherwise</returns>
+        [System.ObsoleteAttribute(@"will be removed in 7.2, useCssTypesValidationUtils.IsInitialOrInheritOrUnset(System.String) method instead"
+            )]
         public static bool IsInitialOrInheritOrUnset(String value) {
-            return CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value) || CommonCssConstants
-                .UNSET.Equals(value);
+            return CssTypesValidationUtils.IsInitialOrInheritOrUnset(value);
         }
 
         private static bool AddRange(RangeBuilder builder, String range) {
@@ -990,18 +807,6 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             builder.AddRange(l, r);
             return true;
-        }
-
-        private static bool IsDigit(char ch) {
-            return ch >= '0' && ch <= '9';
-        }
-
-        private static bool IsExponentNotation(String s, int index) {
-            return index < s.Length && s[index] == 'e' && 
-                        // e.g. 12e5
-                        (index + 1 < s.Length && IsDigit(s[index + 1]) || 
-                        // e.g. 12e-5, 12e+5
-                        index + 2 < s.Length && (s[index + 1] == '-' || s[index + 1] == '+') && IsDigit(s[index + 2]));
         }
     }
 }

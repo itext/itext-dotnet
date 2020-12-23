@@ -209,5 +209,20 @@ namespace iText.Svg.Renderers.Impl {
             //TODO: update cmp-file after DEVSIX-2270 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "text_decoration");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanDefaultFontSizeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanDefaultFontSize");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanInheritTextFontSizeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanInheritTextFontSize");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanInheritAncestorsTspanFontSizeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanInheritAncestorsTspanFontSize");
+        }
     }
 }

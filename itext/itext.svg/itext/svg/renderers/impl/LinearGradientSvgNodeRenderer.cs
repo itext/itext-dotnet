@@ -20,22 +20,22 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
-using iText.Layout.Properties;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for the &lt;linearGradient&gt; tag.
     /// </summary>
-    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer, INoDrawSvgNodeRenderer {
+    public class LinearGradientSvgNodeRenderer : AbstractGradientSvgNodeRenderer {
+        private const double CONVERT_COEFF = 0.75;
+
         public override Color CreateColor(SvgDrawContext context, Rectangle objectBoundingBox, float objectBoundingBoxMargin
             , float parentOpacity) {
             if (objectBoundingBox == null) {
@@ -100,7 +100,8 @@ namespace iText.Svg.Renderers.Impl {
                 // as we parse translate(1, 1) to translation(0.75, 0.75) the bounding box in
                 // the gradient vector space should be 0.75x0.75 in order for such translation
                 // to shift by the complete size of bounding box.
-                gradientTransform.Scale(objectBoundingBox.GetWidth() / 0.75, objectBoundingBox.GetHeight() / 0.75);
+                gradientTransform.Scale(objectBoundingBox.GetWidth() / CONVERT_COEFF, objectBoundingBox.GetHeight() / CONVERT_COEFF
+                    );
             }
             AffineTransform svgGradientTransformation = GetGradientTransform();
             if (svgGradientTransformation != null) {
@@ -113,10 +114,15 @@ namespace iText.Svg.Renderers.Impl {
             Point start;
             Point end;
             if (isObjectBoundingBox) {
-                start = new Point(GetCoordinateForObjectBoundingBox(SvgConstants.Attributes.X1, 0), GetCoordinateForObjectBoundingBox
-                    (SvgConstants.Attributes.Y1, 0));
-                end = new Point(GetCoordinateForObjectBoundingBox(SvgConstants.Attributes.X2, 1), GetCoordinateForObjectBoundingBox
-                    (SvgConstants.Attributes.Y2, 0));
+                // need to multiply by 0.75 as further the (top, right) coordinates of the object bbox
+                // would be transformed into (0.75, 0.75) point instead of (1, 1). The reason described
+                // as a comment inside the method constructing the gradient transformation
+                start = new Point(SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes
+                    .X1), 0) * CONVERT_COEFF, SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes
+                    .Y1), 0) * CONVERT_COEFF);
+                end = new Point(SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes.
+                    X2), 1) * CONVERT_COEFF, SvgCoordinateUtils.GetCoordinateForObjectBoundingBox(GetAttribute(SvgConstants.Attributes
+                    .Y2), 0) * CONVERT_COEFF);
             }
             else {
                 Rectangle currentViewPort = context.GetCurrentViewPort();
@@ -125,64 +131,15 @@ namespace iText.Svg.Renderers.Impl {
                 double width = currentViewPort.GetWidth();
                 double height = currentViewPort.GetHeight();
                 float em = GetCurrentFontSize();
-                float rem = context.GetRemValue();
-                start = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X1, x, x, width, em, rem), GetCoordinateForUserSpaceOnUse
-                    (SvgConstants.Attributes.Y1, y, y, height, em, rem));
-                end = new Point(GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.X2, x + width, x, width, em, rem), 
-                    GetCoordinateForUserSpaceOnUse(SvgConstants.Attributes.Y2, y, y, height, em, rem));
+                float rem = context.GetCssContext().GetRootFontSize();
+                start = new Point(SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X1
+                    ), x, x, width, em, rem), SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes
+                    .Y1), y, y, height, em, rem));
+                end = new Point(SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X2)
+                    , x + width, x, width, em, rem), SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes
+                    .Y2), y, y, height, em, rem));
             }
             return new Point[] { start, end };
-        }
-
-        private double GetCoordinateForObjectBoundingBox(String attributeName, double defaultValue) {
-            String attributeValue = GetAttribute(attributeName);
-            double absoluteValue = defaultValue;
-            if (CssUtils.IsPercentageValue(attributeValue)) {
-                absoluteValue = CssUtils.ParseRelativeValue(attributeValue, 1);
-            }
-            else {
-                if (CssUtils.IsNumericValue(attributeValue) || CssUtils.IsMetricValue(attributeValue) || CssUtils.IsRelativeValue
-                    (attributeValue)) {
-                    // if there is incorrect value metric, then we do not need to parse the value
-                    int unitsPosition = CssUtils.DeterminePositionBetweenValueAndUnit(attributeValue);
-                    if (unitsPosition > 0) {
-                        // We want to ignore the unit type. From the svg specification:
-                        // "the normal of the linear gradient is perpendicular to the gradient vector in
-                        // object bounding box space (i.e., the abstract coordinate system where (0,0)
-                        // is at the top/left of the object bounding box and (1,1) is at the bottom/right
-                        // of the object bounding box)".
-                        // Different browsers treats this differently. We chose the "Google Chrome" approach
-                        // which treats the "abstract coordinate system" in the coordinate metric measure,
-                        // i.e. for value '0.5cm' the top/left of the object bounding box would be (1cm, 1cm),
-                        // for value '0.5em' the top/left of the object bounding box would be (1em, 1em) and etc.
-                        // no null pointer should be thrown as determine
-                        absoluteValue = CssUtils.ParseDouble(attributeValue.JSubstring(0, unitsPosition)).Value;
-                    }
-                }
-            }
-            // need to multiply by 0.75 as further the (top, right) coordinates of the object bbox
-            // would be transformed into (0.75, 0.75) point instead of (1, 1). The reason described
-            // as a comment inside the method constructing the gradient transformation
-            return absoluteValue * 0.75;
-        }
-
-        private double GetCoordinateForUserSpaceOnUse(String attributeName, double defaultValue, double start, double
-             length, float em, float rem) {
-            String attributeValue = GetAttribute(attributeName);
-            double absoluteValue;
-            UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
-            if (unitValue == null) {
-                absoluteValue = defaultValue;
-            }
-            else {
-                if (unitValue.GetUnitType() == UnitValue.PERCENT) {
-                    absoluteValue = start + (length * unitValue.GetValue() / 100);
-                }
-                else {
-                    absoluteValue = unitValue.GetValue();
-                }
-            }
-            return absoluteValue;
         }
     }
 }

@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Parser;
@@ -443,8 +444,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
 
         private void CssNthChild(bool backwards, bool ofType) {
             String argS = tq.ChompTo(")").Trim().ToLowerInvariant();
-            Match mAB = iText.IO.Util.StringUtil.Match(NTH_AB, argS);
-            Match mB = iText.IO.Util.StringUtil.Match(NTH_B, argS);
+            Matcher mAB = iText.IO.Util.Matcher.Match(NTH_AB, argS);
+            Matcher mB = iText.IO.Util.Matcher.Match(NTH_B, argS);
             int a;
             int b;
             if ("odd".Equals(argS)) {
@@ -457,16 +458,16 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                     b = 0;
                 }
                 else {
-                    if (mAB.Success) {
-                        a = iText.IO.Util.StringUtil.Group(mAB, 3) != null ? Convert.ToInt32(iText.IO.Util.StringUtil.Group(mAB, 1
-                            ).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture) : 1;
-                        b = iText.IO.Util.StringUtil.Group(mAB, 4) != null ? Convert.ToInt32(iText.IO.Util.StringUtil.Group(mAB, 4
-                            ).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture) : 0;
+                    if (mAB.Matches()) {
+                        a = mAB.Group(3) != null ? Convert.ToInt32(mAB.Group(1).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture
+                            ) : 1;
+                        b = mAB.Group(4) != null ? Convert.ToInt32(mAB.Group(4).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture
+                            ) : 0;
                     }
                     else {
-                        if (mB.Success) {
+                        if (mB.Matches()) {
                             a = 0;
-                            b = Convert.ToInt32(iText.IO.Util.StringUtil.Group(mB).ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture
+                            b = Convert.ToInt32(mB.Group().ReplaceFirst("^\\+", ""), System.Globalization.CultureInfo.InvariantCulture
                                 );
                         }
                         else {

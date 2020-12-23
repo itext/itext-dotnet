@@ -124,5 +124,11 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues"
                 );
         }
+
+        [NUnit.Framework.Test]
+        public virtual void PreserveAspectRationAllOptionsTest() {
+            //TODO DEVSIX-4861 change cmp after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRationAllOptions");
+        }
     }
 }

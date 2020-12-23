@@ -94,6 +94,10 @@ namespace iText.Layout.Borders {
         /// <seealso cref="RidgeBorder"/>
         public const int _3D_RIDGE = 8;
 
+        /// <summary>The fixed dashed border.</summary>
+        /// <seealso cref="FixedDashedBorder"/>
+        public const int DASHED_FIXED = 9;
+
         /// <summary>The color of the border.</summary>
         /// <seealso cref="iText.Layout.Properties.TransparentColor"/>
         protected internal TransparentColor transparentColor;
@@ -185,6 +189,20 @@ namespace iText.Layout.Borders {
         /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
         public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side defaultSide
             , float borderWidthBefore, float borderWidthAfter);
+
+        /// <summary>Draw borders around the target rectangle.</summary>
+        /// <param name="canvas">PdfCanvas to be written to</param>
+        /// <param name="rectangle">border positions rectangle</param>
+        public virtual void Draw(PdfCanvas canvas, Rectangle rectangle) {
+            float left = rectangle.GetX();
+            float bottom = rectangle.GetY();
+            float right = rectangle.GetX() + rectangle.GetWidth();
+            float top = rectangle.GetY() + rectangle.GetHeight();
+            Draw(canvas, left, top, right, top, Border.Side.TOP, width, width);
+            Draw(canvas, right, top, right, bottom, Border.Side.RIGHT, width, width);
+            Draw(canvas, right, bottom, left, bottom, Border.Side.BOTTOM, width, width);
+            Draw(canvas, left, bottom, left, top, Border.Side.LEFT, width, width);
+        }
 
         /// <summary>
         /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the

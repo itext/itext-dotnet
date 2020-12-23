@@ -5,11 +5,11 @@
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.kernel.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>PORTABLE;NEW_REFLECTION</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>library</OutputType>
@@ -24,9 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />

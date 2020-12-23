@@ -60,8 +60,9 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-3
     /// </remarks>
     public class PdfA3Checker : PdfA2Checker {
-        protected internal static readonly ICollection<PdfName> allowedAFRelationships = new HashSet<PdfName>(JavaUtil.ArraysAsList
-            (PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
+        protected internal static readonly ICollection<PdfName> allowedAFRelationships = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName
+            .Supplement, PdfName.Unspecified)));
 
         /// <summary>Creates a PdfA3Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">

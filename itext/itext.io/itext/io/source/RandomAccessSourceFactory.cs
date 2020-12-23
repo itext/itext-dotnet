@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Net;
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
 using System.Net.Http;
 #endif
 using iText.IO.Util;
@@ -152,22 +152,12 @@ namespace iText.IO.Source
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
         public IRandomAccessSource CreateSource(Uri url) {
-#if !NETSTANDARD1_6
 			// Creation of web request via url.AbsoluteUri breaks UNC pathes (like \\computer-name\\img.jpg),
 			// url.LocalPath and url.AbsolutePath - break http links (like https://website.com/img.jpg).
 			// It seems enough to simply pass Uri instance as is, WebRequest seems to handle both escaping and UNC issues.
             WebRequest wr = WebRequest.Create(url);
             wr.Credentials = CredentialCache.DefaultCredentials;
             Stream isp = wr.GetResponse().GetResponseStream();
-#else
-		    Stream isp;
-		    if (url.IsFile) {
-		        isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-		    } else {
-                HttpClient client = new HttpClient();
-                isp = client.GetStreamAsync(url).Result;
-            }
-#endif
             try
             {
                 return CreateSource(isp);

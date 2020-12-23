@@ -428,6 +428,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets encryption algorithm and access permissions.</summary>
+        /// <returns>the crypto mode value</returns>
         /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             return cryptoMode;

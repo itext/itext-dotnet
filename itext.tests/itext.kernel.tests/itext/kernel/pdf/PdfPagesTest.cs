@@ -152,7 +152,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RandomNumberPagesTest() {
             String filename = "randomNumberPagesTest.pdf";
-            int pageCount = 3000;
+            int pageCount = 1000;
             int[] indexes = new int[pageCount];
             for (int i = 0; i < indexes.Length; i++) {
                 indexes[i] = i + 1;

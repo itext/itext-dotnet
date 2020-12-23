@@ -43,10 +43,12 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using iText.IO.Font.Constants;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -62,6 +64,17 @@ namespace iText.Layout {
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/KeepTogetherTest/";
+
+        private const String BIG_TEXT = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n" + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n"
+             + " sed diam voluptua.\n\n At vero eos et accusam et justo duo dolores et ea rebum.\n\n " + " Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n"
+             + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n" + " sed diam voluptua.\n\n At vero eos et accusam et justo duo dolores et ea rebum.\n\n "
+             + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n sed diam nonumy eirmod tempor" + " invidunt ut labore et dolore magna aliquyam erat,\n sed diam voluptua.\n\n"
+             + " At vero eos et accusam et justo duo dolores et ea rebum.\n\n ";
+
+        private const String MEDIUM_TEXT = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr" + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+             + " At vero eos et accusam et justo duo dolores et ea rebum.\n ";
+
+        private const String SMALL_TEXT = "Short text";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -190,6 +203,56 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherDivWithInnerClearDiv() {
+            String cmpFileName = sourceFolder + "cmp_keepTogetherDivWithInnerClearDiv.pdf";
+            String outFile = destinationFolder + "keepTogetherDivWithInnerClearDiv.pdf";
+            using (PdfWriter pdfWriter = new PdfWriter(outFile)) {
+                using (PdfDocument pdfDoc = new PdfDocument(pdfWriter)) {
+                    using (Document doc = new Document(pdfDoc)) {
+                        Div keepTogetherDiv = new Div();
+                        keepTogetherDiv.SetKeepTogether(true);
+                        keepTogetherDiv.SetBackgroundColor(ColorConstants.BLUE);
+                        Div shortFloat = new Div();
+                        shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                        shortFloat.SetWidth(UnitValue.CreatePercentValue(30));
+                        shortFloat.SetBackgroundColor(ColorConstants.GREEN);
+                        shortFloat.Add(new Paragraph("Short text"));
+                        keepTogetherDiv.Add(shortFloat);
+                        Div longFloat = new Div();
+                        longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                        longFloat.SetWidth(UnitValue.CreatePercentValue(70));
+                        longFloat.SetBackgroundColor(ColorConstants.ORANGE);
+                        longFloat.Add(new Paragraph("Lorem ipsum dolor sit amet, consetetur sadipscing " + "elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
+                             + "aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " + "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est "
+                             + "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur " + "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et "
+                             + "dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et " + "justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata "
+                             + "sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, " + "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut "
+                             + "labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et " + "accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea "
+                             + "takimata sanctus est Lorem ipsum dolor sit amet.\n" + "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse "
+                             + "molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero " + "eros et accumsan et iusto odio dignissim qui blandit praesent luptatum "
+                             + "zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum " + "dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod "
+                             + "tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" + "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper "
+                             + "suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel " + "eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, "
+                             + "vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et " + "iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis "
+                             + "dolore te feugait nulla facilisi."));
+                        keepTogetherDiv.Add(longFloat);
+                        Div clearDiv = new Div();
+                        clearDiv.SetProperty(Property.CLEAR, ClearPropertyValue.BOTH);
+                        keepTogetherDiv.Add(clearDiv);
+                        // on first add we could see how the div should be rendered when it fits the page area
+                        doc.Add(keepTogetherDiv);
+                        // on second add the div should not fit the left space and, since we have keep together
+                        // property set, should be fully placed on the second page with the same appearance
+                        // as the first add
+                        doc.Add(keepTogetherDiv);
+                    }
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
         }
@@ -714,6 +777,193 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void ContentOverlappingInDivWithKeepTogetherTest() {
+            String filename = "contentOverlappingInDivWithKeepTogether.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+                doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
+                Div main = new Div();
+                Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                CreateChildDivWithText(child1, BIG_TEXT).SetKeepTogether(true);
+                Div div1_2 = CreateChildDivWithText(child1, null).SetKeepTogether(true);
+                CreateChildDivWithText(div1_2, "Section A");
+                CreateChildDivWithText(div1_2, null).Add(new Paragraph(MEDIUM_TEXT).SetFirstLineIndent(20));
+                Div child2 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                CreateChildDivWithText(child2, "Section B");
+                CreateChildDivWithText(child2, null);
+                CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
+                doc.Add(main);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void MissContentAndOverlappingInDivNoKeepTogetherTest() {
+            String filename = "missContentAndOverlappingInDivNoKeepTogether.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+                doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
+                Div main = new Div();
+                Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                CreateChildDivWithText(child1, BIG_TEXT);
+                Div div1_2 = CreateChildDivWithText(child1, null).SetKeepTogether(true);
+                CreateChildDivWithText(div1_2, "Section A");
+                CreateChildDivWithText(div1_2, null).Add(new Paragraph(MEDIUM_TEXT).SetFirstLineIndent(20));
+                // KEEP_TOGETHER is not set here
+                Div child2 = CreateChildDivWithText(main, null);
+                CreateChildDivWithText(child2, "Section B");
+                CreateChildDivWithText(child2, null);
+                CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
+                doc.Add(main);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void ContentOverlappingDivKeepTogetherInRectTest() {
+            String filename = "contentOverlappingDivKeepTogetherInRect.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile))) {
+                PdfPage page = pdfDoc.AddNewPage(PageSize.A5.Rotate());
+                Rectangle rectangle = new Rectangle(10, 10, 500, 350);
+                PdfCanvas pdfCanvas = new PdfCanvas(page);
+                using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, rectangle)) {
+                    Div main = new Div();
+                    Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                    CreateChildDivWithText(child1, BIG_TEXT).SetKeepTogether(true);
+                    CreateChildDivWithText(child1, "Section A").SetKeepTogether(true).Add(new Paragraph(MEDIUM_TEXT).SetFirstLineIndent
+                        (20));
+                    Div child2 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                    CreateChildDivWithText(child2, "Section B");
+                    CreateChildDivWithText(child2, null);
+                    CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
+                    canvas.Add(main);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherInDivWithKidsFloatTest() {
+            //TODO: DEVSIX-4720 (invalid positioning of child element)
+            String filename = "keepTogetherInDivWithKidsFloat.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+                doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
+                Div main = new Div().SetKeepTogether(true);
+                main.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                Div child1 = CreateChildDivWithText(main, SMALL_TEXT);
+                child1.SetBackgroundColor(ColorConstants.YELLOW).SetWidth(UnitValue.CreatePercentValue(30)).SetProperty(Property
+                    .FLOAT, FloatPropertyValue.LEFT);
+                Div child2 = CreateChildDivWithText(main, BIG_TEXT);
+                child2.SetBackgroundColor(ColorConstants.GREEN).SetWidth(UnitValue.CreatePercentValue(70)).SetProperty(Property
+                    .FLOAT, FloatPropertyValue.LEFT);
+                Div child3 = CreateChildDivWithText(main, "Test");
+                child3.SetBackgroundColor(ColorConstants.ORANGE);
+                Div child4 = CreateChildDivWithText(main, MEDIUM_TEXT);
+                child4.SetBackgroundColor(ColorConstants.ORANGE);
+                doc.Add(main);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatingElementsInDivAndKeepTogetherElemTest() {
+            //TODO: update cmp file when DEVSIX-4681 will be fixed
+            String cmpFileName = sourceFolder + "cmp_floatingElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingElementsInDivAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            Div mainDiv = new Div();
+            iText.Layout.Element.Image first = new Image(ImageDataFactory.Create(sourceFolder + "1.png"));
+            first.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            first.SetHeight(350);
+            iText.Layout.Element.Image second = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
+                "2.png"));
+            second.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            second.SetHeight(350);
+            mainDiv.Add(first);
+            mainDiv.Add(second);
+            doc.Add(mainDiv);
+            doc.Add(new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                ).SetKeepTogether(true).SetFontSize(24));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void FloatingEmptyElementsInDivAndKeepTogetherElemTest() {
+            //TODO: update cmp file when DEVSIX-4681 will be fixed
+            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage(PageSize.A5.Rotate());
+            Document doc = new Document(pdfDoc);
+            Div mainDiv = new Div();
+            Paragraph p1 = new Paragraph();
+            p1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p2 = new Paragraph();
+            p2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph ktp = new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! ").SetKeepTogether
+                (true).SetFontSize(20);
+            mainDiv.Add(p1);
+            mainDiv.Add(p2);
+            doc.Add(mainDiv);
+            doc.Add(ktp);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatingEmptyElementsAndKeepTogetherElemTest() {
+            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsAndKeepTogetherElem.pdf";
+            String outFile = destinationFolder + "floatingEmptyElementsAndKeepTogetherElem.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            pdfDoc.AddNewPage(PageSize.A5.Rotate());
+            Document doc = new Document(pdfDoc);
+            Paragraph p1 = new Paragraph();
+            p1.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph p2 = new Paragraph();
+            p2.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            Paragraph ktp = new Paragraph("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! ").SetKeepTogether
+                (true).SetFontSize(20);
+            doc.Add(p1);
+            doc.Add(p2);
+            doc.Add(ktp);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        private Div CreateChildDivWithText(Div parent, String text) {
+            Div child = new Div();
+            if (text != null) {
+                child.Add(new Paragraph(text));
+            }
+            parent.Add(child);
+            return child;
         }
 
         private static Div CreateKeptTogetherDivWithSmallFloat(int divHeight) {

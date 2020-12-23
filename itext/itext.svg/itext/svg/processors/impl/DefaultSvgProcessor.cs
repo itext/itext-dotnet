@@ -45,7 +45,6 @@ using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 using iText.Svg;
-using iText.Svg.Css;
 using iText.Svg.Css.Impl;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
@@ -78,8 +77,6 @@ namespace iText.Svg.Processors.Impl {
         private ISvgNodeRendererFactory rendererFactory;
 
         private IDictionary<String, ISvgNodeRenderer> namedObjects;
-
-        private SvgCssContext cssContext;
 
         private SvgProcessorContext context;
 
@@ -129,7 +126,6 @@ namespace iText.Svg.Processors.Impl {
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
             //TODO DEVSIX-2264
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
-            cssContext = new SvgCssContext();
         }
 
         /// <summary>Start the depth-first traversal of the INode tree, pushing the results on the stack</summary>
@@ -140,7 +136,8 @@ namespace iText.Svg.Processors.Impl {
                 IElementNode rootElementNode = (IElementNode)startingNode;
                 ISvgNodeRenderer startingRenderer = rendererFactory.CreateSvgNodeRendererForTag(rootElementNode, null);
                 if (startingRenderer != null) {
-                    IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, cssContext);
+                    IDictionary<String, String> attributesAndStyles = cssResolver.ResolveStyles(startingNode, context.GetCssContext
+                        ());
                     rootElementNode.SetStyles(attributesAndStyles);
                     startingRenderer.SetAttributesAndStyles(attributesAndStyles);
                     processorState.Push(startingRenderer);
@@ -176,13 +173,7 @@ namespace iText.Svg.Processors.Impl {
                     ISvgNodeRenderer parentRenderer = processorState.Top();
                     ISvgNodeRenderer renderer = rendererFactory.CreateSvgNodeRendererForTag(element, parentRenderer);
                     if (renderer != null) {
-                        IDictionary<String, String> styles;
-                        if (cssResolver is SvgStyleResolver && OnlyNativeStylesShouldBeResolved(element)) {
-                            styles = ((SvgStyleResolver)cssResolver).ResolveNativeStyles(node, cssContext);
-                        }
-                        else {
-                            styles = cssResolver.ResolveStyles(node, cssContext);
-                        }
+                        IDictionary<String, String> styles = cssResolver.ResolveStyles(node, context.GetCssContext());
                         // For inheritance
                         element.SetStyles(styles);
                         // For drawing operations
@@ -227,26 +218,6 @@ namespace iText.Svg.Processors.Impl {
                     ProcessText((ITextNode)node);
                 }
             }
-        }
-
-        private static bool OnlyNativeStylesShouldBeResolved(IElementNode element) {
-            return !SvgConstants.Tags.LINEAR_GRADIENT.Equals(element.Name()) && !SvgConstants.Tags.MARKER.Equals(element
-                .Name()) && IsElementNested(element, SvgConstants.Tags.DEFS) && !IsElementNested(element, SvgConstants.Tags
-                .MARKER);
-        }
-
-        private static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {
-            if (!(element.ParentNode() is IElementNode)) {
-                return false;
-            }
-            IElementNode parentElement = (IElementNode)element.ParentNode();
-            if (parentElement.Name().Equals(parentElementNameForSearch)) {
-                return true;
-            }
-            if (element.ParentNode() != null) {
-                return IsElementNested(parentElement, parentElementNameForSearch);
-            }
-            return false;
         }
 
         /// <summary>Check if this node is a text node that needs to be processed by the parent</summary>

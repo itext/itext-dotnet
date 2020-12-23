@@ -61,7 +61,12 @@ namespace iText.Svg.Renderers.Impl {
     /// as a parent.
     /// </summary>
     public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
+        /// <summary>The number of viewBox values.</summary>
+        protected internal const int VIEWBOX_VALUES_NUMBER = 4;
+
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
+
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
 
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
@@ -114,17 +119,16 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         internal virtual void ApplyViewBox(SvgDrawContext context) {
-            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.VIEWBOX
-                )) {
-                float[] values = GetViewBoxValues();
-                Rectangle currentViewPort = context.GetCurrentViewPort();
-                CalculateAndApplyViewBox(context, values, currentViewPort);
-            }
-            else {
+            float[] viewBoxValues = GetViewBoxValues();
+            if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
                 float[] values = new float[] { 0, 0, context.GetCurrentViewPort().GetWidth(), context.GetCurrentViewPort()
                     .GetHeight() };
                 Rectangle currentViewPort = context.GetCurrentViewPort();
                 CalculateAndApplyViewBox(context, values, currentViewPort);
+            }
+            else {
+                Rectangle currentViewPort = context.GetCurrentViewPort();
+                CalculateAndApplyViewBox(context, viewBoxValues, currentViewPort);
             }
         }
 
@@ -186,11 +190,11 @@ namespace iText.Svg.Renderers.Impl {
             float y = 0f;
             // if x attribute of svg is present, then x value of current viewport should be set according to it
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                x = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                x = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
             }
             // if y attribute of svg is present, then y value of current viewport should be set according to it
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                y = CssUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                y = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
             }
             if (!(this is MarkerSvgNodeRenderer)) {
                 x -= currentViewPort.GetX();
@@ -314,6 +318,7 @@ namespace iText.Svg.Renderers.Impl {
 
         internal virtual void CalculateAndApplyViewBox(SvgDrawContext context, float[] values, Rectangle currentViewPort
             ) {
+            // TODO DEVSIX-4861 change this method with using of SvgCoordinateUtils#applyViewBox
             String[] alignAndMeet = RetrieveAlignAndMeet();
             String align = alignAndMeet[0];
             String meetOrSlice = alignAndMeet[1];
@@ -350,11 +355,34 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         internal virtual float[] GetViewBoxValues() {
+            if (this.attributesAndStyles == null) {
+                return new float[] {  };
+            }
             String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
+            if (viewBoxValues == null) {
+                return new float[] {  };
+            }
             IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
             float[] values = new float[valueStrings.Count];
             for (int i = 0; i < values.Length; i++) {
-                values[i] = CssUtils.ParseAbsoluteLength(valueStrings[i]);
+                values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
+            }
+            // the value for viewBox should be 4 numbers according to the viewBox documentation
+            if (values.Length != VIEWBOX_VALUES_NUMBER) {
+                if (LOGGER.IsWarnEnabled) {
+                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
+                        ));
+                }
+                return new float[] {  };
+            }
+            // case when viewBox width or height is negative value is an error and
+            // invalidates the ‘viewBox’ attribute (according to the viewBox documentation)
+            if (values[2] < 0 || values[3] < 0) {
+                if (LOGGER.IsWarnEnabled) {
+                    LOGGER.Warn(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE, viewBoxValues
+                        ));
+                }
+                return new float[] {  };
             }
             return values;
         }

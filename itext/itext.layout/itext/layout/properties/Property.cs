@@ -59,9 +59,6 @@ namespace iText.Layout.Properties {
     /// as its potential keys.
     /// </remarks>
     public sealed class Property {
-        private Property() {
-        }
-
         public const int ACTION = 1;
 
         public const int APPEARANCE_STREAM_LAYOUT = 82;
@@ -187,6 +184,8 @@ namespace iText.Layout.Properties {
 
         public const int HYPHENATION = 30;
 
+        public const int ID = 126;
+
         public const int IGNORE_FOOTER = 96;
 
         public const int IGNORE_HEADER = 97;
@@ -256,6 +255,8 @@ namespace iText.Layout.Properties {
         [System.ObsoleteAttribute(@"Use OVERFLOW_X and/or OVERFLOW_Y instead. The OVERFLOW property doesn't have any affect and will be removed in iText 7.2"
             )]
         public const int OVERFLOW = 102;
+
+        public const int OVERFLOW_WRAP = 127;
 
         public const int OVERFLOW_X = 103;
 
@@ -359,7 +360,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 125;
+        private const int MAX_INHERITED_PROPERTY_ID = 127;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -400,6 +401,10 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TYPOGRAPHY_CONFIG] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_HEIGHT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.OVERFLOW_WRAP] = true;
+        }
+
+        private Property() {
         }
 
         /// <summary>

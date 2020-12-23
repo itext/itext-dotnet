@@ -54,7 +54,7 @@ namespace iText.IO.Util {
     public static class EncodingUtil {
 
         static EncodingUtil() {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
         }

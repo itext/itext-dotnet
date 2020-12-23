@@ -173,12 +173,12 @@ namespace iText.Svg.Utils {
             float fontSize = float.NaN;
             String elementFontSize = renderer.GetAttribute(SvgConstants.Attributes.FONT_SIZE);
             if (null != elementFontSize && !String.IsNullOrEmpty(elementFontSize)) {
-                if (CssUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize) || CommonCssConstants
-                    .SMALLER.Equals(elementFontSize)) {
-                    fontSize = CssUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
+                if (CssTypesValidationUtils.IsRelativeValue(elementFontSize) || CommonCssConstants.LARGER.Equals(elementFontSize
+                    ) || CommonCssConstants.SMALLER.Equals(elementFontSize)) {
+                    fontSize = CssDimensionParsingUtils.ParseRelativeFontSize(elementFontSize, parentFontSize);
                 }
                 else {
-                    fontSize = CssUtils.ParseAbsoluteFontSize(elementFontSize, CommonCssConstants.PX);
+                    fontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(elementFontSize, CommonCssConstants.PX);
                 }
             }
             if ((float.IsNaN(fontSize)) || fontSize < 0f) {

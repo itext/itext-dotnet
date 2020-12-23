@@ -42,9 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Util;
 using iText.Svg;
+using iText.Svg.Css;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
@@ -52,32 +52,35 @@ namespace iText.Svg.Css.Impl {
     /// <summary>
     /// Style and attribute inheritance resolver for
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-    /// objects
+    /// objects.
     /// </summary>
     public class SvgNodeRendererInheritanceResolver {
+        [Obsolete]
         public SvgNodeRendererInheritanceResolver() {
         }
 
-        /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree</summary>
-        /// <param name="root">Renderer to consider as the root of the substree</param>
+        // After removing this constructor, make this class final and add private constructor
+        /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree.</summary>
+        /// <param name="root">the renderer to consider as the root of the subtree</param>
         /// <param name="subTree">
-        /// tree of
+        /// the tree of
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-        /// s
         /// </param>
-        public virtual void ApplyInheritanceToSubTree(ISvgNodeRenderer root, ISvgNodeRenderer subTree) {
-            //Merge inherited style declarations from parent into child
-            ApplyStyles(root, subTree);
-            //If subtree, iterate over tree
+        /// <param name="cssContext">the current SVG CSS context</param>
+        public static void ApplyInheritanceToSubTree(ISvgNodeRenderer root, ISvgNodeRenderer subTree, SvgCssContext
+             cssContext) {
+            // Merge inherited style declarations from parent into child
+            ApplyStyles(root, subTree, cssContext);
+            // If subtree, iterate over tree
             if (subTree is AbstractBranchSvgNodeRenderer) {
                 AbstractBranchSvgNodeRenderer subTreeAsBranch = (AbstractBranchSvgNodeRenderer)subTree;
                 foreach (ISvgNodeRenderer child in subTreeAsBranch.GetChildren()) {
-                    ApplyInheritanceToSubTree(subTreeAsBranch, child);
+                    ApplyInheritanceToSubTree(subTreeAsBranch, child, cssContext);
                 }
             }
         }
 
-        protected internal virtual void ApplyStyles(ISvgNodeRenderer parent, ISvgNodeRenderer child) {
+        private static void ApplyStyles(ISvgNodeRenderer parent, ISvgNodeRenderer child, SvgCssContext cssContext) {
             if (parent != null && child != null) {
                 IDictionary<String, String> childStyles = child.GetAttributeMapCopy();
                 if (childStyles == null) {
@@ -85,18 +88,30 @@ namespace iText.Svg.Css.Impl {
                 }
                 IDictionary<String, String> parentStyles = parent.GetAttributeMapCopy();
                 String parentFontSize = parent.GetAttribute(SvgConstants.Attributes.FONT_SIZE);
-                if (parentFontSize == null) {
-                    parentFontSize = "0";
-                }
-                ICollection<IStyleInheritance> inheritanceRules = new HashSet<IStyleInheritance>();
-                inheritanceRules.Add(new CssInheritance());
-                inheritanceRules.Add(new SvgAttributeInheritance());
                 foreach (KeyValuePair<String, String> parentAttribute in parentStyles) {
                     childStyles = StyleUtil.MergeParentStyleDeclaration(childStyles, parentAttribute.Key, parentAttribute.Value
-                        , parentFontSize, inheritanceRules);
+                        , parentFontSize, SvgStyleResolver.INHERITANCE_RULES);
                 }
+                SvgStyleResolver.ResolveFontSizeStyle(childStyles, cssContext, parentFontSize);
                 child.SetAttributesAndStyles(childStyles);
             }
+        }
+
+        /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree.</summary>
+        /// <param name="root">renderer to consider as the root of the subtree</param>
+        /// <param name="subTree">
+        /// tree of
+        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+        /// </param>
+        [System.ObsoleteAttribute(@"will be removed in 7.2 release, useApplyInheritanceToSubTree(iText.Svg.Renderers.ISvgNodeRenderer, iText.Svg.Renderers.ISvgNodeRenderer, iText.Svg.Css.SvgCssContext) instead"
+            )]
+        public virtual void ApplyInheritanceToSubTree(ISvgNodeRenderer root, ISvgNodeRenderer subTree) {
+            iText.Svg.Css.Impl.SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(root, subTree, null);
+        }
+
+        [Obsolete]
+        protected internal virtual void ApplyStyles(ISvgNodeRenderer parent, ISvgNodeRenderer child) {
+            iText.Svg.Css.Impl.SvgNodeRendererInheritanceResolver.ApplyStyles(parent, child, null);
         }
     }
 }

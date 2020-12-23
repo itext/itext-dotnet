@@ -4,5 +4,6 @@
 def repoName = "itextcore"
 def dependencyRegex = ""
 def solutionFile = "iTextCore.netstandard.sln"
+def csprojFramework = "netcoreapp2.0"
 
-automaticDotnetBuild(repoName, dependencyRegex, solutionFile)
+automaticDotnetBuild(repoName, dependencyRegex, solutionFile, csprojFramework)

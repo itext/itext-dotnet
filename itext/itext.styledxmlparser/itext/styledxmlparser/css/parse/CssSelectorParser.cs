@@ -51,13 +51,16 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse a CSS selector.</summary>
     public sealed class CssSelectorParser {
         /// <summary>Set of legacy pseudo elements (first-line, first-letter, before, after).</summary>
-        private static readonly ICollection<String> legacyPseudoElements = new HashSet<String>();
+        private static readonly ICollection<String> LEGACY_PSEUDO_ELEMENTS;
 
         static CssSelectorParser() {
-            legacyPseudoElements.Add("first-line");
-            legacyPseudoElements.Add("first-letter");
-            legacyPseudoElements.Add("before");
-            legacyPseudoElements.Add("after");
+            // HashSet is required in order to autoport correctly in .Net
+            HashSet<String> tempSet = new HashSet<String>();
+            tempSet.Add("first-line");
+            tempSet.Add("first-letter");
+            tempSet.Add("before");
+            tempSet.Add("after");
+            LEGACY_PSEUDO_ELEMENTS = JavaCollectionsUtil.UnmodifiableSet(tempSet);
         }
 
         /// <summary>The pattern string for selectors.</summary>
@@ -223,7 +226,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                 selectorItems.Add(new CssPseudoElementSelectorItem(pseudoSelector.Substring(2)));
             }
             else {
-                if (pseudoSelector.StartsWith(":") && legacyPseudoElements.Contains(pseudoSelector.Substring(1))) {
+                if (pseudoSelector.StartsWith(":") && LEGACY_PSEUDO_ELEMENTS.Contains(pseudoSelector.Substring(1))) {
                     selectorItems.Add(new CssPseudoElementSelectorItem(pseudoSelector.Substring(1)));
                 }
                 else {

@@ -43,39 +43,37 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 
 namespace iText.Layout.Font {
-
-    /// <summary>
-    /// Split CSS font-family string into list of font-families or generic-families
-    /// </summary>
-    /// <depricated>
-    /// Will be moved to styled-xml-parser module in iText 7.2.
-    /// </depricated>
-    [Obsolete]
+    /// <summary>Split CSS 'font-family' string into list of font-families or generic-families</summary>
+    [System.ObsoleteAttribute(@"will be moved to styled-xml-parser module in iText 7.2.")]
     public sealed class FontFamilySplitter {
-        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
+        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$"
+            );
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$"
+            );
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("[\\w-]+( +[\\w-]+)*");
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("[\\w-]+( +[\\w-]+)*"
+            );
 
-        public static IList<String> SplitFontFamily(String fontFamily) {
-            if (fontFamily == null) {
+        public static IList<String> SplitFontFamily(String fontFamilies) {
+            if (fontFamilies == null) {
                 return null;
             }
-            String[] names = iText.IO.Util.StringUtil.Split(fontFamily, ",");
+            String[] names = iText.IO.Util.StringUtil.Split(fontFamilies, ",");
             IList<String> result = new List<String>(names.Length);
             foreach (String name in names) {
                 // TODO DEVSIX-2534 improve pattern matching according to CSS specification. E.g. unquoted font-families with spaces.
-                if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN, name).Success) {
+                if (iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN, name).Matches()) {
                     result.Add(name.Trim());
                 }
                 else {
-                    if (iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED, name).Success) {
-                        Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
-                        if (selectMatcher.Success) {
-                            result.Add(iText.IO.Util.StringUtil.Group(selectMatcher));
+                    if (iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED, name).Matches()) {
+                        Matcher selectMatcher = iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, name);
+                        if (selectMatcher.Find()) {
+                            result.Add(selectMatcher.Group());
                         }
                     }
                 }
@@ -84,9 +82,9 @@ namespace iText.Layout.Font {
         }
 
         public static String RemoveQuotes(String fontFamily) {
-            Match selectMatcher = iText.IO.Util.StringUtil.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
-            if (selectMatcher.Success) {
-                return iText.IO.Util.StringUtil.Group(selectMatcher);
+            Matcher selectMatcher = iText.IO.Util.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
+            if (selectMatcher.Find()) {
+                return selectMatcher.Group();
             }
             return null;
         }

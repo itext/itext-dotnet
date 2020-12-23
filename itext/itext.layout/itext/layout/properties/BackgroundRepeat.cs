@@ -130,6 +130,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         /// <param name="imageRectangle">the image rectangle which will be changed</param>
         /// <param name="backgroundArea">the background available area</param>
+        /// <param name="backgroundSize">the image background size property</param>
         /// <returns>the necessary whitespace between backgrounds</returns>
         public virtual Point PrepareRectangleToDrawingAndGetWhitespace(Rectangle imageRectangle, Rectangle backgroundArea
             , BackgroundSize backgroundSize) {

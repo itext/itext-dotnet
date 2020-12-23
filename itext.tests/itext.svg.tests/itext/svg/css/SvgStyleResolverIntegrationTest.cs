@@ -206,9 +206,9 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 2)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED)]
         public virtual void RelativeStyleInheritanceTest() {
-            // TODO DEVSIX-4140 update cmp, remove logger check
+            // TODO DEVSIX-4140 font-relative values doesn't support
             ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");
         }
     }

@@ -85,6 +85,37 @@ namespace iText.IO.Util {
             Helper(true, 1, new Glyph(0, 0, 'a'), carriageReturn, lineFeed);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void IsLetterPositiveTest() {
+            Glyph glyph = new Glyph(0, 0, 'a');
+            NUnit.Framework.Assert.IsTrue(iText.IO.Util.TextUtil.IsLetterOrDigit(glyph));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsDigitPositiveTest() {
+            Glyph glyph = new Glyph(0, 0, '8');
+            NUnit.Framework.Assert.IsTrue(iText.IO.Util.TextUtil.IsLetterOrDigit(glyph));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsLetterOrDigitNegativeTest() {
+            Glyph glyph = new Glyph(0, 0, '-');
+            NUnit.Framework.Assert.IsFalse(iText.IO.Util.TextUtil.IsLetterOrDigit(glyph));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsMarkPositiveTest() {
+            // TAI THAM SIGN KHUEN TONE-3
+            Glyph glyph = new Glyph(0, 0, 0x1A77);
+            NUnit.Framework.Assert.IsTrue(iText.IO.Util.TextUtil.IsMark(glyph));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsMarkNegativeTest() {
+            Glyph glyph = new Glyph(0, 0, '-');
+            NUnit.Framework.Assert.IsFalse(iText.IO.Util.TextUtil.IsMark(glyph));
+        }
+
         private void Helper(bool expected, int currentCRPosition, params Glyph[] glyphs) {
             GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyphs));
             NUnit.Framework.Assert.IsTrue(expected == iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(glyphLine

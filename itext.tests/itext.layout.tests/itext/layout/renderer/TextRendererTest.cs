@@ -51,6 +51,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test.Attributes;
 
@@ -247,6 +248,104 @@ namespace iText.Layout.Renderer {
         public virtual void CyrillicCharacterDoesntBelongToSpecificScripts() {
             // u0433 Cyrillic Small Letter U
             NUnit.Framework.Assert.IsFalse(TextRenderer.CodePointIsOfSpecialScript(1091));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapAnywhereProperty() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wow");
+            text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            MinMaxWidth minMaxWidth = textRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.IsTrue(minMaxWidth.GetMinWidth() < minMaxWidth.GetMaxWidth());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapBreakWordProperty() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wooow");
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            // overflow is set here to mock LineRenderer#layout behavior
+            documentRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            float fullWordWidth = textRenderer.GetMinMaxWidth().GetMaxWidth();
+            LayoutArea layoutArea = new LayoutArea(1, new Rectangle(fullWordWidth / 2, AbstractRenderer.INF));
+            TextLayoutResult result = (TextLayoutResult)textRenderer.Layout(new LayoutContext(layoutArea));
+            NUnit.Framework.Assert.IsFalse(result.IsWordHasBeenSplit());
+            textRenderer.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.BREAK_WORD);
+            result = (TextLayoutResult)textRenderer.Layout(new LayoutContext(layoutArea));
+            NUnit.Framework.Assert.IsTrue(result.IsWordHasBeenSplit());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapAnywhereBoldSimulationMaxWidth() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wow");
+            text.SetBold();
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
+            text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
+            float maxWidthAndOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
+            NUnit.Framework.Assert.AreEqual(maxWidthAndOverflowWrap, maxWidthNoOverflowWrap, 0.0001);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapAnywhereItalicSimulationMaxWidth() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wow");
+            text.SetItalic();
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
+            text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
+            float maxWidthAndOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
+            NUnit.Framework.Assert.AreEqual(maxWidthAndOverflowWrap, maxWidthNoOverflowWrap, 0.0001);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapAnywhereBoldSimulationMinWidth() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wow");
+            text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            float minWidthNoBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
+            text.SetBold();
+            float minWidthAndBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
+            NUnit.Framework.Assert.IsTrue(minWidthAndBoldSimulation > minWidthNoBoldSimulation);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverflowWrapAnywhereItalicSimulationMinWidth() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDoc.AddNewPage();
+            Document doc = new Document(pdfDoc);
+            RootRenderer documentRenderer = doc.GetRenderer();
+            Text text = new Text("wow");
+            text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
+            TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
+            textRenderer.SetParent(documentRenderer);
+            float minWidthNoItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
+            text.SetItalic();
+            float minWidthAndItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
+            NUnit.Framework.Assert.IsTrue(minWidthAndItalicSimulation > minWidthNoItalicSimulation);
         }
     }
 }

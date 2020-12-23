@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
         /// <see cref="DashedLine"/>
         /// with the specified line width.
         /// </summary>
-        /// <param name="lineWidth"/>
+        /// <param name="lineWidth">the line width</param>
         public DashedLine(float lineWidth) {
             this.lineWidth = lineWidth;
         }
@@ -76,13 +76,13 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
                  / 2).Stroke().RestoreState();
         }
 
-        /// <summary>Gets line width in points</summary>
+        /// <summary>Gets line width in points.</summary>
         /// <returns>line thickness</returns>
         public virtual float GetLineWidth() {
             return lineWidth;
         }
 
-        /// <summary>Sets line width in points</summary>
+        /// <summary>Sets line width in points.</summary>
         /// <param name="lineWidth">new line width</param>
         public virtual void SetLineWidth(float lineWidth) {
             this.lineWidth = lineWidth;

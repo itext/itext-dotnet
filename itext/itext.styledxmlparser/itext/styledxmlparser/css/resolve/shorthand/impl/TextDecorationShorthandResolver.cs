@@ -29,13 +29,13 @@ using iText.StyledXmlParser.Css.Resolve.Shorthand;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     public class TextDecorationShorthandResolver : IShorthandResolver {
-        private static readonly ICollection<String> TEXT_DECORATION_LINE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (CommonCssConstants.UNDERLINE, CommonCssConstants.OVERLINE, CommonCssConstants.LINE_THROUGH, CommonCssConstants
-            .BLINK));
+        private static readonly ICollection<String> TEXT_DECORATION_LINE_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.UNDERLINE, CommonCssConstants.OVERLINE, 
+            CommonCssConstants.LINE_THROUGH, CommonCssConstants.BLINK)));
 
-        private static readonly ICollection<String> TEXT_DECORATION_STYLE_VALUES = new HashSet<String>(JavaUtil.ArraysAsList
-            (CommonCssConstants.SOLID, CommonCssConstants.DOUBLE, CommonCssConstants.DOTTED, CommonCssConstants.DASHED
-            , CommonCssConstants.WAVY));
+        private static readonly ICollection<String> TEXT_DECORATION_STYLE_VALUES = JavaCollectionsUtil.UnmodifiableSet
+            (new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.SOLID, CommonCssConstants.DOUBLE, CommonCssConstants
+            .DOTTED, CommonCssConstants.DASHED, CommonCssConstants.WAVY)));
 
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression

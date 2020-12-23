@@ -1193,9 +1193,9 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection1() {
             lock (this) {
@@ -1213,9 +1213,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection2() {
             lock (this) {
@@ -1230,9 +1230,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection3() {
             lock (this) {
@@ -1247,9 +1247,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection4() {
             lock (this) {
@@ -1264,9 +1264,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection5() {
             lock (this) {
@@ -1281,9 +1281,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection6() {
             lock (this) {
@@ -1298,9 +1298,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection7() {
             lock (this) {
@@ -1315,9 +1315,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection8() {
             lock (this) {
@@ -1332,9 +1332,9 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [NUnit.Framework.Timeout(1000)]
-#endif // !NETSTANDARD1_6
+#endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection9() {
             lock (this) {

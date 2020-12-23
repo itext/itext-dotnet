@@ -12,11 +12,7 @@ namespace iText.IO.Util
         public static void BeforeClass() {
             CultureInfo culture = (CultureInfo) new System.Globalization.CultureInfo("ru-RU");
             culture.NumberFormat.NegativeSign = "--";
-            #if NETSTANDARD1_6
-            CultureInfo.CurrentCulture = culture;
-            #else
             Thread.CurrentThread.CurrentCulture = culture;
-            #endif
         }
         
         [NUnit.Framework.Test]

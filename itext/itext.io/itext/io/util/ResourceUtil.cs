@@ -47,7 +47,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyModel;
 #endif
@@ -123,7 +123,7 @@ namespace iText.IO.Util {
                 }
             }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
                 if (assembly.GetName().Name.StartsWith("itext")) {
                     istr = SearchResourceInAssembly(key, assembly);
@@ -170,7 +170,7 @@ namespace iText.IO.Util {
                     string dir = (string)obj;
                     try
                     {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
                         istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
 #else
                         istr = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(key).GetManifestResourceStream(key);
@@ -204,7 +204,7 @@ namespace iText.IO.Util {
         }
 
         private static void LoadITextResourceAssemblies() {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where( a=> !a.IsDynamic).ToList();
             List<string> loadedPaths = new List<string>();
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())

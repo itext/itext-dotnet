@@ -164,6 +164,7 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
                 GetHeight(), parentBBox.GetWidth(), 0));
             ShrinkOccupiedAreaForAbsolutePosition();
+            TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
             lines = new List<LineRenderer>();

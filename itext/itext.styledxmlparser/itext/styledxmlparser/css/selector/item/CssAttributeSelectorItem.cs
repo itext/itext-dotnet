@@ -132,7 +132,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 
                     case '~': {
                         String pattern = MessageFormatUtil.Format("(^{0}\\s+)|(\\s+{1}\\s+)|(\\s+{2}$)", value, value, value);
-                        return iText.IO.Util.StringUtil.Match(iText.IO.Util.StringUtil.RegexCompile(pattern), attributeValue).Success;
+                        return iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(pattern), attributeValue).Matches
+                            ();
                     }
 
                     case '*': {

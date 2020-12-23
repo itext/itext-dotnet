@@ -91,8 +91,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }
-                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssUtils.IsNumericValue(value) || CssUtils.IsMetricValue
-                    (value) || CssUtils.IsRelativeValue(value)) {
+                if (CommonCssConstants.BORDER_WIDTH_VALUES.Contains(value) || CssTypesValidationUtils.IsNumericValue(value
+                    ) || CssTypesValidationUtils.IsMetricValue(value) || CssTypesValidationUtils.IsRelativeValue(value)) {
                     borderWidthValue = value;
                 }
                 else {
@@ -101,7 +101,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                         borderStyleValue = value;
                     }
                     else {
-                        if (CssUtils.IsColorProperty(value)) {
+                        if (CssTypesValidationUtils.IsColorProperty(value)) {
                             borderColorValue = value;
                         }
                     }

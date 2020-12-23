@@ -365,6 +365,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), (float)tableWidth, 0));
+            TargetCounterHandler.AddPageByID(this);
             if (footerRenderer != null) {
                 // apply the difference to set footer and table left/right margins identical
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());

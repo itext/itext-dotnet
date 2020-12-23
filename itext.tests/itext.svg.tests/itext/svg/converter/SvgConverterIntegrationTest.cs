@@ -524,6 +524,7 @@ namespace iText.Svg.Converter {
             root.SetAttribute("version", "1.1");
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
+            root.SetAttribute("font-size", "12pt");
             ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
             ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
             NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()

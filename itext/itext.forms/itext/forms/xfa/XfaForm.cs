@@ -657,14 +657,10 @@ namespace iText.Forms.Xfa
 		            OmitXmlDeclaration = true,
 			        NewLineChars = "\n",
 		        };
-		        XmlWriter writer = XmlWriter.Create(fout, settings);
-		        n.WriteTo(writer);
-#if !NETSTANDARD1_6
-                writer.Close();
-#else
-                writer.Dispose();
-#endif
-            }
+		        using (XmlWriter writer = XmlWriter.Create(fout, settings)) {
+			        n.WriteTo(writer);
+		        }
+		    }
             fout.Dispose();
 		    return fout.ToArray();
 		}

@@ -197,7 +197,7 @@ namespace iText.Signatures {
                 version = ((DerInteger)content[0]).Value.IntValue;
                 // the digestAlgorithms
                 digestalgos = new HashSet<String>();
-                IEnumerator e_1 = ((Asn1Set)content[1]).GetObjects();
+                IEnumerator e_1 = ((Asn1Set)content[1]).GetEnumerator();
                 while (e_1.MoveNext()) {
                     Asn1Sequence s = (Asn1Sequence)e_1.Current;
                     DerObjectIdentifier o = (DerObjectIdentifier)s[0];

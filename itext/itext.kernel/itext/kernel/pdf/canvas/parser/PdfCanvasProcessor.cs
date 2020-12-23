@@ -464,10 +464,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <remarks>
         /// Creates a
         /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// object by a font dictionary. The font may have been cached in case it is an indirect object.
+        /// object by a font dictionary. The font may have been cached in case
+        /// it is an indirect object.
         /// </remarks>
-        /// <param name="fontDict"/>
-        /// <returns>the font</returns>
+        /// <param name="fontDict">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary">font dictionary</see>
+        /// to create the font from
+        /// </param>
+        /// <returns>the created font</returns>
         protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {
             if (fontDict.GetIndirectReference() == null) {
                 return PdfFontFactory.CreateFont(fontDict);

@@ -76,8 +76,8 @@ namespace iText.Kernel.XMP.Impl
 
 		/// <summary>a set of all rdf attribute qualifier</summary>
 		internal static readonly ICollection<String> RDF_ATTR_QUALIFIER = new HashSet<String
-			>(iText.IO.Util.JavaUtil.ArraysAsList(new String[] { XMPConst.XML_LANG, "rdf:resource"
-			, "rdf:ID", "rdf:bagID", "rdf:nodeID" }));
+			>(iText.IO.Util.JavaUtil.ArraysAsList(XMPConst.XML_LANG, "rdf:resource",
+			"rdf:ID", "rdf:bagID", "rdf:nodeID"));
 
 		/// <summary>the metadata object to be serialized.</summary>
 		private XMPMetaImpl xmp;

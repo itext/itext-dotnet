@@ -163,7 +163,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerRefXYTest() {
-            // TODO DEVSIX-4140 update cmp
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerRefXYTest");
         }
 
@@ -189,7 +188,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO: update when DEVSIX-3432 and DEVSIX-4140 will be fixed
+        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 3)]
         public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValues"
@@ -203,7 +202,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO: update when DEVSIX-3432 will be fixed
+        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
         [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED, Count = 3)]
         public virtual void TestMarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValues() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "testMarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValues"
@@ -243,7 +242,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void FontRelativeValueInRefXDefault() {
-            // TODO DEVSIX-4140 update cmp
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fontRelativeValueInRefXDefault");
         }
 

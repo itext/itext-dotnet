@@ -42,29 +42,33 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.IO.Font.Constants {
     public sealed class StandardFonts {
         private StandardFonts() {
         }
 
-        private static readonly ICollection<String> BUILTIN_FONTS = new HashSet<String>();
+        private static readonly ICollection<String> BUILTIN_FONTS;
 
         static StandardFonts() {
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLDOBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.COURIER_OBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLDOBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_OBLIQUE);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.SYMBOL);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLD);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLDITALIC);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ITALIC);
-            BUILTIN_FONTS.Add(iText.IO.Font.Constants.StandardFonts.ZAPFDINGBATS);
+            // HashSet is required in order to autoport correctly in .Net
+            HashSet<String> tempSet = new HashSet<String>();
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.COURIER);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLD);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.COURIER_BOLDOBLIQUE);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.COURIER_OBLIQUE);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLDOBLIQUE);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.HELVETICA_OBLIQUE);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.SYMBOL);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ROMAN);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLD);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.TIMES_BOLDITALIC);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.TIMES_ITALIC);
+            tempSet.Add(iText.IO.Font.Constants.StandardFonts.ZAPFDINGBATS);
+            BUILTIN_FONTS = JavaCollectionsUtil.UnmodifiableSet(tempSet);
         }
 
         public static bool IsStandardFont(String fontName) {

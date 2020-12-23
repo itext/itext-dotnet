@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Common.Logging;
+using iText.Forms.Fields.Borders;
 using iText.Forms.Util;
 using iText.IO.Codec;
 using iText.IO.Font;
@@ -63,6 +64,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -2650,13 +2652,7 @@ namespace iText.Forms.Fields {
         }
 
         public virtual iText.Forms.Fields.PdfFormField SetBorderStyle(PdfDictionary style) {
-            //PdfDictionary bs = getWidgets().get(0).getBorderStyle();
             GetWidgets()[0].SetBorderStyle(style);
-            //        if (bs == null) {
-            //            bs = new PdfDictionary();
-            //            put(PdfName.BS, bs);
-            //        }
-            //        bs.put(PdfName.S, style);
             RegenerateField();
             return this;
         }
@@ -3267,18 +3263,15 @@ namespace iText.Forms.Fields {
             if (borderWidth > 0 && borderColor != null) {
                 borderWidth = Math.Max(1, borderWidth);
                 canvas.SetStrokeColor(borderColor).SetLineWidth(borderWidth);
-                if (bs != null) {
-                    PdfName borderType = bs.GetAsName(PdfName.S);
-                    if (borderType != null && borderType.Equals(PdfName.D)) {
-                        PdfArray dashArray = bs.GetAsArray(PdfName.D);
-                        int unitsOn = dashArray != null ? (dashArray.Size() > 0 ? (dashArray.GetAsNumber(0) != null ? dashArray.GetAsNumber
-                            (0).IntValue() : 3) : 3) : 3;
-                        int unitsOff = dashArray != null ? (dashArray.Size() > 1 ? (dashArray.GetAsNumber(1) != null ? dashArray.GetAsNumber
-                            (1).IntValue() : unitsOn) : unitsOn) : unitsOn;
-                        canvas.SetLineDash(unitsOn, unitsOff, 0);
-                    }
+                Border border = FormBorderFactory.GetBorder(bs, borderWidth, borderColor, backgroundColor);
+                if (border != null) {
+                    float borderWidthX2 = borderWidth + borderWidth;
+                    border.Draw(canvas, new Rectangle(borderWidth, borderWidth, width - borderWidthX2, height - borderWidthX2)
+                        );
                 }
-                canvas.Rectangle(0, 0, width, height).Stroke();
+                else {
+                    canvas.Rectangle(0, 0, width, height).Stroke();
+                }
             }
             ApplyRotation(xObject, height, width);
             canvas.RestoreState();

@@ -40,12 +40,15 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -249,6 +252,32 @@ namespace iText.Layout.Renderer {
             Rectangle bboxLineHeightNotSet = layoutResLineHeightNotSet.GetOccupiedArea().GetBBox();
             Rectangle bboxLineHeightNormal = layoutResLineHeightNormal.GetOccupiedArea().GetBBox();
             NUnit.Framework.Assert.IsTrue(bboxLineHeightNotSet.EqualsWithEpsilon(bboxLineHeightNormal));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinMaxWidthEqualsActualMarginsBordersPaddings() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document document = new Document(pdfDocument);
+            Text ranText = new Text("ran");
+            ranText.SetProperty(Property.MARGIN_LEFT, new UnitValue(UnitValue.POINT, 8f));
+            ranText.SetProperty(Property.MARGIN_RIGHT, new UnitValue(UnitValue.POINT, 10f));
+            ranText.SetProperty(Property.BORDER_RIGHT, new SolidBorder(3));
+            ranText.SetProperty(Property.PADDING_RIGHT, new UnitValue(UnitValue.POINT, 13f));
+            TextRenderer ran = new TextRenderer(ranText);
+            Text domText = new Text("dom");
+            domText.SetProperty(Property.MARGIN_LEFT, new UnitValue(UnitValue.POINT, 17f));
+            domText.SetProperty(Property.BORDER_LEFT, new SolidBorder(4));
+            domText.SetProperty(Property.PADDING_LEFT, new UnitValue(UnitValue.POINT, 12f));
+            domText.SetProperty(Property.MARGIN_RIGHT, new UnitValue(UnitValue.POINT, 2f));
+            TextRenderer dom = new TextRenderer(domText);
+            LayoutArea layoutArea = new LayoutArea(1, new Rectangle(AbstractRenderer.INF, AbstractRenderer.INF));
+            LineRenderer lineRenderer = new LineRenderer();
+            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.AddChild(ran);
+            lineRenderer.AddChild(dom);
+            float countedMinWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
+            LayoutResult result = lineRenderer.Layout(new LayoutContext(layoutArea));
+            NUnit.Framework.Assert.AreEqual(result.GetOccupiedArea().GetBBox().GetWidth(), countedMinWidth, 0.0001);
         }
     }
 }

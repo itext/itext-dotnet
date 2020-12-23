@@ -50,12 +50,12 @@ namespace iText.Layout.Properties {
             contain = false;
         }
 
-        /// <summary>Clear all current properties and sets new width and height values.</summary>
+        /// <summary>Clears all current properties and sets new width and height values.</summary>
         /// <remarks>
-        /// Clear all current properties and sets new width and height values.
-        /// One of the parameters can be null. Note that in this case CalculationUtil will scale null property
-        /// so that it becomes proportionally equals with the not null value.
-        /// If both parameters are set to null, that the default image size will be used.
+        /// Clears all current properties and sets new width and height values. One of the parameters
+        /// can be null. Note that in this case null property will be scaled so that it becomes
+        /// proportionally equal with the non-null value. If both parameters are set to null, then
+        /// the default image size will be used.
         /// </remarks>
         /// <param name="width">
         /// a
@@ -67,8 +67,8 @@ namespace iText.Layout.Properties {
         /// <see cref="UnitValue"/>
         /// object
         /// </param>
-        /// <seealso cref="com.itextpdf.layout.renderer.BackgroundSizeCalculationUtil#calculateBackgroundImageSize"/>
         public virtual void SetBackgroundSizeToValues(UnitValue width, UnitValue height) {
+            // See also BackgroundSizeCalculationUtil#calculateBackgroundImageSize
             Clear();
             this.backgroundWidthSize = width;
             this.backgroundHeightSize = height;

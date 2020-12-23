@@ -96,8 +96,8 @@ namespace iText.Svg.Renderers.Impl {
             float x;
             float y;
             for (int i = 0; i < points.Count; i = i + 2) {
-                x = CssUtils.ParseAbsoluteLength(points[i]);
-                y = CssUtils.ParseAbsoluteLength(points[i + 1]);
+                x = CssDimensionParsingUtils.ParseAbsoluteLength(points[i]);
+                y = CssDimensionParsingUtils.ParseAbsoluteLength(points[i + 1]);
                 this.points.Add(new Point(x, y));
             }
         }

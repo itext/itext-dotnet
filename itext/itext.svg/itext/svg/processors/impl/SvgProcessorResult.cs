@@ -53,17 +53,17 @@ namespace iText.Svg.Processors.Impl {
     /// objects.
     /// </summary>
     public class SvgProcessorResult : ISvgProcessorResult {
-        private IDictionary<String, ISvgNodeRenderer> namedObjects;
+        private readonly IDictionary<String, ISvgNodeRenderer> namedObjects;
 
-        private ISvgNodeRenderer root;
-
-        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
-        private FontProvider fontProvider;
+        private readonly ISvgNodeRenderer root;
 
         [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
-        private FontSet tempFonts;
+        private readonly FontProvider fontProvider;
 
-        private SvgProcessorContext context;
+        [System.ObsoleteAttribute(@"Will be removed in 7.2.")]
+        private readonly FontSet tempFonts;
+
+        private readonly SvgProcessorContext context;
 
         /// <summary>
         /// Creates new
@@ -101,6 +101,7 @@ namespace iText.Svg.Processors.Impl {
             this.root = root;
             this.fontProvider = fontProvider;
             this.tempFonts = tempFonts;
+            this.context = new SvgProcessorContext(new SvgConverterProperties());
         }
 
         /// <summary>
@@ -130,9 +131,9 @@ namespace iText.Svg.Processors.Impl {
              context) {
             this.namedObjects = namedObjects;
             this.root = root;
+            this.context = context;
             this.fontProvider = context.GetFontProvider();
             this.tempFonts = context.GetTempFonts();
-            this.context = context;
         }
 
         public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {

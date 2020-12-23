@@ -96,17 +96,17 @@ namespace iText.Svg.Renderers.Path.Impl {
         public override void Draw(PdfCanvas canvas) {
             Point start = new Point(startPoint.x * .75, startPoint.y * .75);
             // pixels to points
-            double rx = Math.Abs(CssUtils.ParseAbsoluteLength(coordinates[0]));
-            double ry = Math.Abs(CssUtils.ParseAbsoluteLength(coordinates[1]));
+            double rx = Math.Abs(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]));
+            double ry = Math.Abs(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]));
             // φ is taken mod 360 degrees.
             double rotation = Double.Parse(coordinates[2], System.Globalization.CultureInfo.InvariantCulture) % 360.0;
             // rotation argument is given in degrees, but we need radians for easier trigonometric calculations
             rotation = MathUtil.ToRadians(rotation);
             // binary flags (Value correction: any nonzero value for either of the flags fA or fS is taken to mean the value 1.)
-            bool largeArc = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinates[3]), 0);
-            bool sweep = !CssUtils.CompareFloats((float)CssUtils.ParseFloat(coordinates[4]), 0);
-            Point end = new Point(CssUtils.ParseAbsoluteLength(coordinates[5]), CssUtils.ParseAbsoluteLength(coordinates
-                [6]));
+            bool largeArc = !CssUtils.CompareFloats((float)CssDimensionParsingUtils.ParseFloat(coordinates[3]), 0);
+            bool sweep = !CssUtils.CompareFloats((float)CssDimensionParsingUtils.ParseFloat(coordinates[4]), 0);
+            Point end = new Point(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[5]), CssDimensionParsingUtils
+                .ParseAbsoluteLength(coordinates[6]));
             if (CssUtils.CompareFloats(start.x, end.x) && CssUtils.CompareFloats(start.y, end.y)) {
                 /* edge case: If the endpoints (x1, y1) and (x2, y2) are identical,
                 * then this is equivalent to omitting the elliptical arc segment entirely.
@@ -361,7 +361,7 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         private double GetCoordinate(int index) {
             // casting to double fot porting compatibility
-            return (double)CssUtils.ParseDouble(coordinates[index]);
+            return (double)CssDimensionParsingUtils.ParseDouble(coordinates[index]);
         }
 
         /// <summary>

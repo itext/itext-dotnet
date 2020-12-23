@@ -41,7 +41,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
-            if (CssUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
+            if (CssTypesValidationUtils.IsInitialOrInheritOrUnset(shorthandExpression)) {
                 return JavaUtil.ArraysAsList(new CssDeclaration(CommonCssConstants.BACKGROUND_POSITION_X, shorthandExpression
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_POSITION_Y, shorthandExpression));
             }

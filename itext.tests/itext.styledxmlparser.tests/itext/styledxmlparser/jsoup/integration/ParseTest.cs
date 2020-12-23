@@ -205,35 +205,35 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
         [NUnit.Framework.Test]
         public virtual void ParseDoubleIntegerValueTest() {
             double? expectedString = 5.0;
-            double? actualString = CssUtils.ParseDouble("5");
+            double? actualString = CssDimensionParsingUtils.ParseDouble("5");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseDoubleManyCharsAfterDotTest() {
             double? expectedString = 5.123456789;
-            double? actualString = CssUtils.ParseDouble("5.123456789");
+            double? actualString = CssDimensionParsingUtils.ParseDouble("5.123456789");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseDoubleManyCharsAfterDotNegativeTest() {
             double? expectedString = -5.123456789;
-            double? actualString = CssUtils.ParseDouble("-5.123456789");
+            double? actualString = CssDimensionParsingUtils.ParseDouble("-5.123456789");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseDoubleNullValueTest() {
             double? expectedString = null;
-            double? actualString = CssUtils.ParseDouble(null);
+            double? actualString = CssDimensionParsingUtils.ParseDouble(null);
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseDoubleNegativeTextTest() {
             double? expectedString = null;
-            double? actualString = CssUtils.ParseDouble("text");
+            double? actualString = CssDimensionParsingUtils.ParseDouble("text");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
         }
 

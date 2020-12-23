@@ -53,7 +53,7 @@ using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Util {
     public class CssUtilsTest : ExtendedITextTest {
-        public static float EPS = 0.0001f;
+        private static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
         public virtual void ExtractShorthandPropertiesFromEmptyStringTest() {
@@ -376,6 +376,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
         public virtual void SplitStringWithCommaTest() {
             NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitStringWithComma(null));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma
@@ -392,6 +393,25 @@ namespace iText.StyledXmlParser.Css.Util {
                 .SplitStringWithComma("value1,( v2,v3),(v4, v5),value3"));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("v.al*ue1\"", "( v2,v3)", "\"(v4,v5;);", "value3"), 
                 CssUtils.SplitStringWithComma("v.al*ue1\",( v2,v3),\"(v4,v5;);,value3"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitStringTest() {
+            NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitString(null, ','));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with,comma)", "value3"), CssUtils.
+                SplitString("value1,(value,with,comma),value3", ',', new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1 ", " (val(ue,with,comma),value3"), CssUtils.
+                SplitString("value1 , (val(ue,with,comma),value3", ',', new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some", " text in", " brackets)", " \"some, text, in quotes,\""
+                ), CssUtils.SplitString("some text, (some, text in, brackets), \"some, text, in quotes,\"", ',', new EscapeGroup
+                ('\"')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some. text in. brackets)", " \"some. text. in quotes.\""
+                ), CssUtils.SplitString("some text. (some. text in. brackets). \"some. text. in quotes.\"", '.', new EscapeGroup
+                ('\"'), new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value", "with", "comma)", "value3"), CssUtils
+                .SplitString("value1,(value,with,comma),value3", ','));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value", "with", "comma", "value3"), CssUtils
+                .SplitString("value1,value,with,comma,value3", ',', new EscapeGroup(',')));
         }
 
         [NUnit.Framework.Test]
@@ -423,6 +443,26 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("invalid"));
             NUnit.Framework.Assert.AreEqual(BlendMode.NORMAL, CssUtils.ParseBlendMode("SCREEN"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsNegativeValueTest() {
+            // Invalid values
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(null));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("-..23"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12 34"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("12reeem"));
+            // Valid not negative values
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue(".23"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("+123"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("57%"));
+            NUnit.Framework.Assert.IsFalse(CssUtils.IsNegativeValue("3.7em"));
+            // Valid negative values
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-1.7rem"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-43.56%"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-12"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-0.123"));
+            NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-.34"));
         }
     }
 }

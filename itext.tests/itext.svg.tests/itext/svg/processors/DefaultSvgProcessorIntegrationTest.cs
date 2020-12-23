@@ -66,7 +66,7 @@ namespace iText.Svg.Processors {
                 ();
             //Attribute comparison from the known RedCircle.svg
             IDictionary<String, String> attrs = actual.GetChildren()[0].GetAttributeMapCopy();
-            NUnit.Framework.Assert.AreEqual(11, attrs.Keys.Count, "Number of parsed attributes is wrong");
+            NUnit.Framework.Assert.AreEqual(12, attrs.Keys.Count, "Number of parsed attributes is wrong");
             NUnit.Framework.Assert.AreEqual("1", attrs.Get("stroke-opacity"), "The stroke-opacity attribute doesn't correspond it's value"
                 );
             NUnit.Framework.Assert.AreEqual("1.76388889", attrs.Get("stroke-width"), "The stroke-width attribute doesn't correspond it's value"

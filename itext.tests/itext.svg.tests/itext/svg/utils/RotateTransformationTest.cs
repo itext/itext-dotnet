@@ -51,8 +51,8 @@ namespace iText.Svg.Utils {
     public class RotateTransformationTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NormalRotateTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(10), CssUtils.ParseAbsoluteLength
-                ("5"), CssUtils.ParseAbsoluteLength("10"));
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(10), CssDimensionParsingUtils
+                .ParseAbsoluteLength("5"), CssDimensionParsingUtils.ParseAbsoluteLength("10"));
             AffineTransform actual = TransformUtils.ParseTransform("rotate(10, 5, 10)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -84,8 +84,8 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void ThreeRotateValuesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(23), CssUtils.ParseAbsoluteLength
-                ("58"), CssUtils.ParseAbsoluteLength("57"));
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(23), CssDimensionParsingUtils
+                .ParseAbsoluteLength("58"), CssDimensionParsingUtils.ParseAbsoluteLength("57"));
             AffineTransform actual = TransformUtils.ParseTransform("rotate(23, 58, 57)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
@@ -101,8 +101,8 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void NegativeRotateValuesTest() {
-            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(-23), CssUtils.ParseAbsoluteLength
-                ("-58"), CssUtils.ParseAbsoluteLength("-1"));
+            AffineTransform expected = AffineTransform.GetRotateInstance(MathUtil.ToRadians(-23), CssDimensionParsingUtils
+                .ParseAbsoluteLength("-58"), CssDimensionParsingUtils.ParseAbsoluteLength("-1"));
             AffineTransform actual = TransformUtils.ParseTransform("rotate(-23,-58,-1)");
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

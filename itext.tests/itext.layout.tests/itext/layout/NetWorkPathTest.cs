@@ -59,13 +59,8 @@ namespace iText.Layout {
         public virtual void NetworkPathImageTest() {
             String fullImagePath = @"\\someVeryRandomWords\SomeVeryRandomName.img";
             String startOfMsg = null;
-#if !NETSTANDARD1_6
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-#else
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
-#endif
             try {
                 Image drawing = new Image(ImageDataFactory.Create(fullImagePath));
             } catch (Exception e) {

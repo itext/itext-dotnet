@@ -49,17 +49,17 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Data {
-    /// <summary>Represents image data from a PDF</summary>
+    /// <summary>Represents image data from a PDF.</summary>
     public class ImageRenderInfo : AbstractRenderInfo {
-        /// <summary>The coordinate transformation matrix that was in effect when the image was rendered</summary>
+        /// <summary>The coordinate transformation matrix that was in effect when the image was rendered.</summary>
         private Matrix ctm;
 
         private PdfImageXObject image;
 
-        /// <summary>the color space dictionary from resources which are associated with the image</summary>
+        /// <summary>The color space dictionary from resources which are associated with the image.</summary>
         private PdfDictionary colorSpaceDictionary;
 
-        /// <summary>defines if the encountered image was inline</summary>
+        /// <summary>Defines if the encountered image was inline.</summary>
         private bool isInline;
 
         private PdfName resourceName;
@@ -68,10 +68,22 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         ///     </summary>
         private IList<CanvasTag> canvasTagHierarchy;
 
-        /// <summary>Create an ImageRenderInfo</summary>
+        /// <summary>Creates an ImageRenderInfo.</summary>
+        /// <param name="canvasTagHierarchy">
+        /// the hierarchy of nested canvas tags for the text from the most
+        /// inner (nearest to text) tag to the most outer
+        /// </param>
+        /// <param name="gs">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState">canvas graphics state</see>
+        /// </param>
         /// <param name="ctm">the coordinate transformation matrix at the time the image is rendered</param>
-        /// <param name="imageStream">image stream object</param>
-        /// <param name="resourceName"/>
+        /// <param name="imageStream">the image stream object</param>
+        /// <param name="resourceName">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName">name</see>
+        /// of the image resource
+        /// </param>
         /// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
         ///     </param>
         /// <param name="isInline">defines if the encountered image was inline</param>
@@ -87,9 +99,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             this.isInline = isInline;
         }
 
-        /// <summary>Gets an image wrapped in ImageXObject.</summary>
+        /// <summary>Gets the image wrapped in ImageXObject.</summary>
         /// <remarks>
-        /// Gets an image wrapped in ImageXObject.
+        /// Gets the image wrapped in ImageXObject.
         /// You can:
         /// <list type="bullet">
         /// <item><description>get image bytes with
@@ -109,36 +121,62 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </description></item>
         /// </list>
         /// </remarks>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject">image</see>
+        /// </returns>
         public virtual PdfImageXObject GetImage() {
             return image;
         }
 
+        /// <summary>Gets the name of the image resource.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName">name</see>
+        /// of the image resource
+        /// </returns>
         public virtual PdfName GetImageResourceName() {
             return resourceName;
         }
 
-        /// <returns>a vector in User space representing the start point of the image</returns>
+        /// <summary>Gets the vector in User space representing the start point of the image.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Vector">vector</see>
+        /// in User space representing the start point of the image
+        /// </returns>
         public virtual Vector GetStartPoint() {
             return new Vector(0, 0, 1).Cross(ctm);
         }
 
-        /// <returns>The coordinate transformation matrix which was active when this image was rendered. Coordinates are in User space.
-        ///     </returns>
+        /// <summary>Gets the coordinate transformation matrix in User space which was active when this image was rendered.
+        ///     </summary>
+        /// <returns>
+        /// the coordinate transformation matrix in User space which was active when this image
+        /// was rendered
+        /// </returns>
         public virtual Matrix GetImageCtm() {
             return ctm;
         }
 
+        /// <summary>Gets the size of the image in User space units.</summary>
         /// <returns>the size of the image, in User space units</returns>
         public virtual float GetArea() {
             // the image space area is 1, so we multiply that by the determinant of the CTM to get the transformed area
             return ctm.GetDeterminant();
         }
 
-        /// <returns>true if image was inlined in original stream.</returns>
+        /// <summary>Gets the inline flag.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if image was inlined in original stream
+        /// </returns>
         public virtual bool IsInline() {
             return isInline;
         }
 
+        /// <summary>Gets the color space dictionary of the image.</summary>
         /// <returns>the color space dictionary from resources which are associated with the image</returns>
         public virtual PdfDictionary GetColorSpaceDictionary() {
             return colorSpaceDictionary;
