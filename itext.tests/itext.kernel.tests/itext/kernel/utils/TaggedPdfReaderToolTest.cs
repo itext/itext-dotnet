@@ -64,13 +64,13 @@ namespace iText.Kernel.Utils {
             String outXmlPath = destinationFolder + "outXml01.xml";
             String cmpXmlPath = sourceFolder + "cmpXml01.xml";
             PdfReader reader = new PdfReader(sourceFolder + filename);
-            PdfDocument document = new PdfDocument(reader);
-            FileStream outXml = new FileStream(outXmlPath, FileMode.Create);
-            TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
-            tool.SetRootTag("root");
-            tool.ConvertToXml(outXml);
-            outXml.Dispose();
-            document.Close();
+            using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+                using (PdfDocument document = new PdfDocument(reader)) {
+                    TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
+                    tool.SetRootTag("root");
+                    tool.ConvertToXml(outXml);
+                }
+            }
             CompareTool compareTool = new CompareTool();
             if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {
                 NUnit.Framework.Assert.Fail("Resultant xml is different.");
