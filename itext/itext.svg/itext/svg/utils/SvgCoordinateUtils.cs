@@ -95,7 +95,6 @@ namespace iText.Svg.Utils {
         /// <returns>absolute value in the userSpaceOnUse coordinate system.</returns>
         public static double GetCoordinateForUserSpaceOnUse(String attributeValue, double defaultValue, double start
             , double length, float em, float rem) {
-            // TODO DEVSIX-4867 add tests for this method
             double absoluteValue;
             UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
             if (unitValue == null) {
@@ -127,7 +126,6 @@ namespace iText.Svg.Utils {
         /// And if it's a valid value with a number, the number will be extracted from that value.
         /// </returns>
         public static double GetCoordinateForObjectBoundingBox(String attributeValue, double defaultValue) {
-            // TODO DEVSIX-4867 add tests for this method
             if (CssTypesValidationUtils.IsPercentageValue(attributeValue)) {
                 return CssDimensionParsingUtils.ParseRelativeValue(attributeValue, 1);
             }
@@ -182,9 +180,11 @@ namespace iText.Svg.Utils {
         /// </returns>
         public static Rectangle ApplyViewBox(Rectangle viewBox, Rectangle currentViewPort, String align, String meetOrSlice
             ) {
-            // TODO DEVSIX-4867 add tests for this method
-            if (viewBox == null || currentViewPort == null) {
-                throw new ArgumentException(SvgExceptionMessageConstant.VIEWBOX_APPLYING_COULD_NOT_BE_PROCESSED);
+            if (currentViewPort == null) {
+                throw new ArgumentException(SvgExceptionMessageConstant.CURRENT_VIEWPORT_IS_NULL);
+            }
+            if (viewBox == null || viewBox.GetWidth() <= 0 || viewBox.GetHeight() <= 0) {
+                throw new ArgumentException(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT);
             }
             if (align == null || (meetOrSlice != null && !SvgConstants.Values.MEET.Equals(meetOrSlice) && !SvgConstants.Values
                 .SLICE.Equals(meetOrSlice))) {
