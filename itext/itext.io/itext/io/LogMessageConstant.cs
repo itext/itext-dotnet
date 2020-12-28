@@ -244,6 +244,8 @@ namespace iText.IO {
 
         public const String ORPHANS_CONSTRAINT_VIOLATED = "Orphans constraint violated for paragraph split at page {0}. Min number of orphans: {1}; actual: {2}. \nComment: {3}";
 
+        public const String OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS = "Outline destination page number {0} is out of bounds";
+
         public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
 
         public const String PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED = "The page passed to Canvas#enableAutoTagging(PdfPage) method shall be the one on which this canvas will be rendered. However the actual passed PdfPage instance sets not such page. This might lead to creation of malformed PDF document.";

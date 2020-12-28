@@ -53,6 +53,8 @@ using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf {
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
+
         private readonly PdfPagesTree pageTree;
 
         protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new LinkedDictionary<PdfName, PdfNameTree
@@ -566,7 +568,15 @@ namespace iText.Kernel.Pdf {
         private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
             PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
             if (pageObj is PdfNumber) {
-                pageObj = GetDocument().GetPage(((PdfNumber)pageObj).IntValue() + 1).GetPdfObject();
+                int pageNumber = ((PdfNumber)pageObj).IntValue() + 1;
+                try {
+                    pageObj = GetDocument().GetPage(pageNumber).GetPdfObject();
+                }
+                catch (IndexOutOfRangeException) {
+                    pageObj = null;
+                    LOGGER.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                        , pageNumber));
+                }
             }
             if (pageObj != null) {
                 IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);

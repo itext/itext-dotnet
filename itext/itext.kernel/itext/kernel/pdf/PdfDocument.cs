@@ -531,7 +531,6 @@ namespace iText.Kernel.Pdf {
             if (removedPage != null && removedPage.IsFlushed() && (IsTagged() || HasAcroForm())) {
                 throw new PdfException(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED);
             }
-            catalog.GetPageTree().RemovePage(pageNum);
             if (removedPage != null) {
                 catalog.RemoveOutlines(removedPage);
                 RemoveUnusedWidgetsFromFields(removedPage);
@@ -544,6 +543,7 @@ namespace iText.Kernel.Pdf {
                 }
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
+            catalog.GetPageTree().RemovePage(pageNum);
         }
 
         /// <summary>Gets document information dictionary.</summary>
