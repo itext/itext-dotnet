@@ -352,6 +352,8 @@ namespace iText.Kernel {
 
         public const String NoCryptoDictionaryDefined = "No crypto dictionary defined.";
 
+        public const String NoGlyphsDefinedForType3Font = "No glyphs defined for type3 font.";
+
         public const String NoKidWithSuchRole = "No kid with such role.";
 
         [System.ObsoleteAttribute(@"Now we log a warning rather than throw an exception.")]
