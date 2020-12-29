@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup Label="Configuration">
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <RootNamespace></RootNamespace>
+    <RootNamespace />
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.styledxmlparser.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>

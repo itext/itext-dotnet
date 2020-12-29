@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7</id>
-    <version>7.1.14-SNAPSHOT</version>
+    <version>7.1.15-SNAPSHOT</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -16,7 +16,7 @@
     <copyright>Copyright (c) 1998-2020 iText Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core fdf xfa acroform forms svg digital-signatures signing security accessibility opensource open source</tags>
-	<repository type="git" url="https://github.com/itext/itext7-dotnet.git"/>
+	<repository type="git" url="https://github.com/itext/itext7-dotnet.git" />
     <dependencies>
       <group targetFramework="net40">
         <dependency id="Common.Logging" version="3.4.1" />
