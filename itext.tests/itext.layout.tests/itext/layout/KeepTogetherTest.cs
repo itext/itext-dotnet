@@ -1090,13 +1090,13 @@ namespace iText.Layout {
 
             protected internal override PageSize AddNewPage(PageSize customPageSize) {
                 PageSize newPageSize = null;
-                switch (currentPageNumber % 2) {
-                    case 1: {
+                switch (document.GetPdfDocument().GetNumberOfPages() % 2) {
+                    case 0: {
                         newPageSize = firstPageSize;
                         break;
                     }
 
-                    case 0:
+                    case 1:
                     default: {
                         newPageSize = PageSize.A4;
                         break;

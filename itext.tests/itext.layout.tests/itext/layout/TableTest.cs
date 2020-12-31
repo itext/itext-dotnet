@@ -2706,7 +2706,8 @@ namespace iText.Layout {
             }
 
             protected internal override PageSize AddNewPage(PageSize customPageSize) {
-                PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
+                int currentNumberOfPages = document.GetPdfDocument().GetNumberOfPages();
+                PageSize pageSize = currentNumberOfPages % 2 == 1 ? PageSize.A4.Rotate() : PageSize.A4;
                 pdfDoc.AddNewPage(pageSize);
                 return pageSize;
             }
