@@ -114,12 +114,31 @@ namespace iText.Signatures.Sign {
             BasicCheckSignedDoc(destinationFolder + "padesEpesProfileTest01.pdf", "Signature1");
         }
 
-        private void SignApproval(String signCertFileName, String outFileName) {
-            SignApproval(signCertFileName, outFileName, null);
+        [NUnit.Framework.Test]
+        public virtual void SignaturePolicyInfoUnavailableUrlTest() {
+            String signedFileName = destinationFolder + "signaturePolicyInfoUnavailableUrl_signed.pdf";
+            SignaturePolicyInfo spi = new SignaturePolicyInfo("1.2.3.4.5.6.7.8.9.10", "aVRleHQ0TGlmZVJhbmRvbVRleHQ=", 
+                "SHA-1", "https://signature-policy.org/not-available");
+            SignApproval(certsSrc + "signCertRsa01.p12", signedFileName, spi);
+            BasicCheckSignedDoc(signedFileName, "Signature1");
         }
 
-        private void SignApproval(String signCertFileName, String outFileName, SignaturePolicyIdentifier sigPolicyInfo
+        private void SignApproval(String signCertFileName, String outFileName) {
+            SignApproval(signCertFileName, outFileName, null, null);
+        }
+
+        private void SignApproval(String signCertFileName, String outFileName, SignaturePolicyInfo signaturePolicyInfo
             ) {
+            SignApproval(signCertFileName, outFileName, null, signaturePolicyInfo);
+        }
+
+        private void SignApproval(String signCertFileName, String outFileName, SignaturePolicyIdentifier signaturePolicyId
+            ) {
+            SignApproval(signCertFileName, outFileName, signaturePolicyId, null);
+        }
+
+        private void SignApproval(String signCertFileName, String outFileName, SignaturePolicyIdentifier sigPolicyIdentifier
+            , SignaturePolicyInfo sigPolicyInfo) {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             X509Certificate[] signChain = Pkcs12FileHelper.ReadFirstChain(signCertFileName, password);
             ICipherParameters signPrivateKey = Pkcs12FileHelper.ReadFirstKey(signCertFileName, password, password);
@@ -129,11 +148,17 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName("Signature1");
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText7.");
-            if (sigPolicyInfo == null) {
-                signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            if (sigPolicyIdentifier != null) {
+                signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyIdentifier
+                    );
             }
             else {
-                signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyInfo);
+                if (sigPolicyInfo != null) {
+                    signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyInfo);
+                }
+                else {
+                    signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+                }
             }
         }
 
