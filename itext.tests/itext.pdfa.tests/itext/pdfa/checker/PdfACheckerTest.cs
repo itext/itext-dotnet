@@ -91,8 +91,8 @@ namespace iText.Pdfa.Checker {
             public override void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces) {
             }
 
-            public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream) {
-                
+            public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
+                ) {
             }
 
             public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
@@ -103,11 +103,9 @@ namespace iText.Pdfa.Checker {
             }
 
             public override void CheckFontGlyphs(PdfFont font, PdfStream contentStream) {
-                
             }
 
             public override void CheckExtGState(CanvasGraphicsState extGState, PdfStream contentStream) {
-                
             }
 
             public override void CheckFont(PdfFont pdfFont) {
@@ -117,11 +115,9 @@ namespace iText.Pdfa.Checker {
             }
 
             protected internal override void CheckContentStream(PdfStream contentStream) {
-                
             }
 
             protected internal override void CheckContentStreamObject(PdfObject @object) {
-                
             }
 
             protected internal override long GetMaxNumberOfIndirectObjects() {
@@ -202,8 +198,8 @@ namespace iText.Pdfa.Checker {
             protected internal override void CheckTrailer(PdfDictionary trailer) {
             }
 
-            protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources) {
-                
+            protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
+                ) {
             }
         }
     }

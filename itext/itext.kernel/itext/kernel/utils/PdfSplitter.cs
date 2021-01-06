@@ -158,12 +158,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_171(splitDocuments));
+            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_172(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_171 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_171(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_172 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_172(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -195,12 +195,12 @@ namespace iText.Kernel.Utils {
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageCount(pageCount, new _IDocumentReadyListener_208(splitDocuments));
+            SplitByPageCount(pageCount, new _IDocumentReadyListener_209(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_208 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_208(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_209 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_209(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 

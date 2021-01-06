@@ -45,10 +45,7 @@ using System;
 namespace iText.Svg.Logs {
     /// <summary>Class that holds the logging and exception messages.</summary>
     public sealed class SvgLogMessageConstant {
-
         public const String CUSTOM_ABSTRACT_CSS_CONTEXT_NOT_SUPPORTED = "Custom AbstractCssContext implementations are not supported yet";
-
-        public const String DRAW_NO_DRAW = "Can't draw current SvgNodeRenderer.";
 
         public const String ERROR_INITIALIZING_DEFAULT_CSS = "Error loading the default CSS. Initializing an empty "
              + "style sheet.";
@@ -66,6 +63,14 @@ namespace iText.Svg.Logs {
 
         public const String MARKER_WIDTH_IS_ZERO_VALUE = "markerWidth has zero value. Marker will not be rendered.";
 
+        public const String PATTERN_INVALID_PATTERN_UNITS_LOG = "Could not recognize patternUnits value {0}";
+
+        public const String PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG = "Could not recognize patternContentUnits value {0}";
+
+        public const String PATTERN_WIDTH_OR_HEIGHT_IS_ZERO = "Pattern width or height is zero. This pattern will not be rendered.";
+
+        public const String PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE = "Pattern width or height is negative value. This pattern will not be rendered.";
+
         public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not "
              + "present, so browser default of 300px is used";
 
@@ -75,27 +80,19 @@ namespace iText.Svg.Logs {
         public const String NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH = "Non-invertible transformation "
              + "matrix was used in a clipping path context. Clipped elements may show undefined behavior.";
 
-        public const String PATTERN_INVALID_PATTERN_UNITS_LOG = "Could not recognize patternUnits value {0}";
-
-        public const String PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG = "Could not recognize patternContentUnits value {0}";
-
-        public const String PATTERN_WIDTH_OR_HEIGHT_IS_ZERO = "Pattern width or height is zero. This pattern will not be rendered.";
-
-        public const String PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE = "Pattern width or height is negative value. This pattern will not be rendered.";
-
         public const String UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT = "Unable to get inverse " + "transformation matrix and thus calculate a viewport for the element because some of the transformation "
              + "matrices, which are written to document, have a determinant of zero value. A bbox of zero values will "
              + "be used as a viewport for this element.";
 
         public const String UNABLE_TO_RETRIEVE_FONT = "Unable to retrieve font:\n {0}";
 
-        public const String UNMAPPED_TAG = "Could not find implementation for tag {0}";
-
         public const String VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS = "The viewBox value must be 4 numbers. This viewBox=\"{0}\" will not be processed.";
 
         public const String VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE = "The viewBox width and height cannot be negative. This viewBox=\"{0}\" will not be processed.";
 
         public const String VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO = "The viewBox width or height is zero. The element with this viewBox will not be rendered.";
+
+        public const String UNMAPPED_TAG = "Could not find implementation for tag {0}";
 
         private SvgLogMessageConstant() {
         }

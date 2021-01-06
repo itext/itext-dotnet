@@ -67,6 +67,12 @@ namespace iText.Svg.Exceptions {
 
         public const String I_NODE_ROOT_IS_NULL = "Input root value is null";
 
+        public const String MEET_OR_SLICE_ARGUMENT_IS_INCORRECT = "The meetOrSlice argument is incorrect. It must be `meet`, `slice` or null.";
+
+        public const String CURRENT_VIEWPORT_IS_NULL = "The current viewport is null. The viewBox applying could not be processed.";
+
+        public const String VIEWBOX_IS_INCORRECT = "The viewBox is incorrect. The viewBox applying could not be processed.";
+
         public const String INVALID_CLOSEPATH_OPERATOR_USE = "The close path operator (Z) may not be used before "
              + "a move to operation (M)";
 
@@ -79,15 +85,9 @@ namespace iText.Svg.Exceptions {
 
         public const String LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for " + "lineTo operator. Got: {0}";
 
-        public const String MEET_OR_SLICE_ARGUMENT_IS_INCORRECT = "The meetOrSlice argument is incorrect. It must be `meet`, `slice` or null.";
-
         public const String MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for " + "moveTo operator. Got: {0}";
 
         public const String NAMED_OBJECT_NAME_NULL_OR_EMPTY = "The name of the named object can't be null or empty.";
-
-        public const String CURRENT_VIEWPORT_IS_NULL = "The current viewport is null. The viewBox applying could not be processed.";
-
-        public const String VIEWBOX_IS_INCORRECT = "The viewBox is incorrect. The viewBox applying could not be processed.";
 
         public const String NAMED_OBJECT_NULL = "A named object can't be null.";
 
