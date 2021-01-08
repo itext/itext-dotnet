@@ -106,21 +106,6 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <summary>
         /// The
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// representing the current point in the path to be used for relative pathing operations.
-        /// </summary>
-        /// <remarks>
-        /// The
-        /// <see cref="iText.Kernel.Geom.Point"/>
-        /// representing the current point in the path to be used for relative pathing operations.
-        /// The original value is the origin, and should be set via a
-        /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
-        /// operation before it may be referenced.
-        /// </remarks>
-        private Point currentPoint = new Point(0, 0);
-
-        /// <summary>
-        /// The
         /// <see cref="iText.Svg.Renderers.Path.Impl.ClosePath"/>
         /// shape keeping track of the initial point set by a
         /// <see cref="iText.Svg.Renderers.Path.Impl.MoveTo"/>
@@ -143,7 +128,6 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% path\n");
-            currentPoint = new Point(0, 0);
             foreach (IPathShape item in GetShapes()) {
                 item.Draw(canvas);
             }
@@ -259,7 +243,6 @@ namespace iText.Svg.Renderers.Impl {
                     throw new SvgProcessingException(SvgLogMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
                 }
                 shapes.Add(zOperator);
-                currentPoint = zOperator.GetEndingPoint();
                 return shapes;
             }
             for (int index = 1; index < pathProperties.Length; index += argumentCount) {
@@ -268,17 +251,15 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0]);
                 if (pathShape is MoveTo) {
-                    shapes.AddAll(AddMoveToShapes(pathShape, pathProperties));
+                    shapes.AddAll(AddMoveToShapes(pathShape, pathProperties, previousShape));
                     return shapes;
                 }
                 String[] shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, JavaUtil.ArraysCopyOfRange(pathProperties
                     , index, index + argumentCount));
                 if (pathShape != null) {
                     if (shapeCoordinates != null) {
-                        pathShape.SetCoordinates(shapeCoordinates, currentPoint);
+                        pathShape.SetCoordinates(shapeCoordinates, GetCurrentPoint(previousShape));
                     }
-                    currentPoint = pathShape.GetEndingPoint();
-                    // unsupported operators are ignored.
                     shapes.Add(pathShape);
                 }
                 previousShape = pathShape;
@@ -286,15 +267,16 @@ namespace iText.Svg.Renderers.Impl {
             return shapes;
         }
 
-        private IList<IPathShape> AddMoveToShapes(IPathShape pathShape, String[] pathProperties) {
+        private IList<IPathShape> AddMoveToShapes(IPathShape pathShape, String[] pathProperties, IPathShape beforeMoveShape
+            ) {
             IList<IPathShape> shapes = new List<IPathShape>();
             int argumentCount = 2;
-            String[] shapeCoordinates = GetShapeCoordinates(pathShape, null, JavaUtil.ArraysCopyOfRange(pathProperties
+            String[] shapeCoordinates = GetShapeCoordinates(pathShape, beforeMoveShape, JavaUtil.ArraysCopyOfRange(pathProperties
                 , 1, 3));
             zOperator = new ClosePath(pathShape.IsRelative());
-            zOperator.SetCoordinates(shapeCoordinates, currentPoint);
-            pathShape.SetCoordinates(shapeCoordinates, currentPoint);
-            currentPoint = pathShape.GetEndingPoint();
+            Point currentPointBeforeMove = GetCurrentPoint(beforeMoveShape);
+            zOperator.SetCoordinates(shapeCoordinates, currentPointBeforeMove);
+            pathShape.SetCoordinates(shapeCoordinates, currentPointBeforeMove);
             shapes.Add(pathShape);
             IPathShape previousShape = pathShape;
             if (pathProperties.Length > 3) {
@@ -485,6 +467,10 @@ namespace iText.Svg.Renderers.Impl {
                 return v.Get(1) >= 0 && !reverse ? rotAngle : rotAngle * -1f;
             }
             return 0;
+        }
+
+        private static Point GetCurrentPoint(IPathShape previousShape) {
+            return previousShape == null ? new Point(0, 0) : previousShape.GetEndingPoint();
         }
     }
 }
