@@ -1085,8 +1085,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             }
 
             internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor processor) {
-                PdfColorSpace pdfColorSpace = null;
-                if (PdfColorSpace.directColorSpaces.Contains(colorSpace)) {
+                PdfColorSpace pdfColorSpace;
+                if (PdfColorSpace.DIRECT_COLOR_SPACES.Contains(colorSpace)) {
                     pdfColorSpace = PdfColorSpace.MakeColorSpace(colorSpace);
                 }
                 else {

@@ -61,8 +61,8 @@ namespace iText.Svg.Renderers.Impl {
             float markerHeight = markerWidthHeight[1];
             String xAttribute = this.GetAttribute(SvgConstants.Attributes.X);
             String yAttribute = this.GetAttribute(SvgConstants.Attributes.Y);
-            float x = xAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute) : 0f;
-            float y = yAttribute != null ? CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute) : 0f;
+            float x = xAttribute == null ? 0f : CssDimensionParsingUtils.ParseAbsoluteLength(xAttribute);
+            float y = yAttribute == null ? 0f : CssDimensionParsingUtils.ParseAbsoluteLength(yAttribute);
             Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }

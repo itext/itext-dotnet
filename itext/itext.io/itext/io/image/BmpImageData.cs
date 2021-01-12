@@ -45,7 +45,7 @@ using System;
 
 namespace iText.IO.Image {
     public class BmpImageData : RawImageData {
-        private bool noHeader;
+        private readonly bool noHeader;
 
         /// <summary>
         /// Creates instance of

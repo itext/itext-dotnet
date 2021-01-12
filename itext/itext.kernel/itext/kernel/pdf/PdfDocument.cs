@@ -80,7 +80,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal PageSize defaultPageSize = PageSize.Default;
 
-        [System.NonSerialized]
         protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
         /// <summary>PdfWriter associated with the document.</summary>
@@ -145,7 +144,6 @@ namespace iText.Kernel.Pdf {
 
         private PdfFont defaultFont = null;
 
-        [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
 
         private static readonly AtomicLong lastDocumentId = new AtomicLong();

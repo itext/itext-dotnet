@@ -71,7 +71,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        [System.NonSerialized]
         protected internal IDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>

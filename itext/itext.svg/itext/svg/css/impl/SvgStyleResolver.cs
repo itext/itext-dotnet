@@ -338,8 +338,8 @@ namespace iText.Svg.Css.Impl {
                                 styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
                             }
                             CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            //TODO (DEVSIX-2263): media query wrap
-                            //styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
+                            // TODO (DEVSIX-2263): media query wrap
+                            // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                             this.css.AppendCssStyleSheet(styleSheet);
                         }
                     }

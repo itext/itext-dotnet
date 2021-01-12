@@ -52,7 +52,7 @@ namespace iText.Kernel.Counter {
     /// </summary>
     public class StandardOutputEventCounterFactory : IEventCounterFactory {
         public virtual EventCounter GetCounter(Type cls) {
-            return cls != null ? new StandardOutputEventCounter(cls) : new StandardOutputEventCounter();
+            return cls == null ? new StandardOutputEventCounter() : new StandardOutputEventCounter(cls);
         }
     }
 }

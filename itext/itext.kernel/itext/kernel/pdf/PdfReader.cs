@@ -86,9 +86,6 @@ namespace iText.Kernel.Pdf {
         //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
 
-        // For internal usage only
-        private String sourcePath;
-
         protected internal PdfTokenizer tokens;
 
         protected internal PdfEncryption decrypt;
@@ -167,7 +164,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="properties">properties of the created reader</param>
         public PdfReader(String filename, ReaderProperties properties)
             : this(new RandomAccessSourceFactory().SetForceRead(false).CreateBestSource(filename), properties) {
-            this.sourcePath = filename;
         }
 
         /// <summary>Reads and parses a PDF document.</summary>

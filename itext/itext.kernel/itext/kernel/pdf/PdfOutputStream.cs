@@ -64,9 +64,6 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R");
 
-        // For internal usage only
-        private byte[] duplicateContentBuffer = null;
-
         /// <summary>Document associated with PdfOutputStream.</summary>
         protected internal PdfDocument document = null;
 

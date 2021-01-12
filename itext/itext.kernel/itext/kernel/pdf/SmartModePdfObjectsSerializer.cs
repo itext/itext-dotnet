@@ -49,7 +49,6 @@ using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        [System.NonSerialized]
         private IDigest md5;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<

@@ -234,14 +234,5 @@ namespace iText.IO.Font {
             }
             return false;
         }
-
-        private static int ToInteger(byte[] bytes) {
-            int result = 0;
-            foreach (byte b in bytes) {
-                result <<= 8;
-                result += b & 0xff;
-            }
-            return result;
-        }
     }
 }
