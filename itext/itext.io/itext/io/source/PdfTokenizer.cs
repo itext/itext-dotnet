@@ -765,14 +765,8 @@ namespace iText.IO.Source {
         /// <param name="error">message.</param>
         /// <param name="messageParams">error params.</param>
         public virtual void ThrowError(String error, params Object[] messageParams) {
-            try {
-                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
-                    (messageParams)).SetMessageParams(file.GetPosition());
-            }
-            catch (System.IO.IOException) {
-                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
-                    (messageParams)).SetMessageParams(error, "no position");
-            }
+            throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
+                (messageParams)).SetMessageParams(file.GetPosition());
         }
 
         /// <summary>

@@ -398,15 +398,11 @@ namespace iText.Signatures {
             }
             JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
             if (sorter.Count > 0) {
-                try {
-                    if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
-                        totalRevisions = sorter.Count;
-                    }
-                    else {
-                        totalRevisions = sorter.Count + 1;
-                    }
+                if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
+                    totalRevisions = sorter.Count;
                 }
-                catch (System.IO.IOException) {
+                else {
+                    totalRevisions = sorter.Count + 1;
                 }
                 for (int k = 0; k < sorter.Count; ++k) {
                     Object[] objs = sorter[k];
@@ -448,14 +444,8 @@ namespace iText.Signatures {
                 rangeIsCorrect = false;
                 PdfDictionary signature = (PdfDictionary)signatureField.GetValue();
                 int[] byteRange = ((PdfArray)signature.Get(PdfName.ByteRange)).ToIntArray();
-                try {
-                    if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
-                        [3]) {
-                        return false;
-                    }
-                }
-                catch (System.IO.IOException) {
-                    // That's not expected because if the signature is invalid, it should have already failed
+                if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
+                    [3]) {
                     return false;
                 }
                 contentsStart = byteRange[1];

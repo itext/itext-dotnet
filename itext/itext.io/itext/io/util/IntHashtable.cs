@@ -437,6 +437,5 @@ namespace iText.IO.Util {
             t.count = count;
             return t;
         }
-        // this shouldn't happen, since we are Cloneable
     }
 }

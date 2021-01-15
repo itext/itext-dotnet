@@ -158,12 +158,7 @@ namespace iText.IO.Font {
         }
 
         internal virtual void Seek(int offset) {
-            try {
-                buf.Seek(offset);
-            }
-            catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
+            buf.Seek(offset);
         }
 
         internal virtual short GetShort() {
@@ -185,12 +180,7 @@ namespace iText.IO.Font {
         }
 
         internal virtual int GetPosition() {
-            try {
-                return (int)buf.GetPosition();
-            }
-            catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
-            }
+            return (int)buf.GetPosition();
         }
 
         internal int nextIndexOffset;
