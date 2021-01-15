@@ -114,7 +114,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
                 ());
             // Assert than no exception is thrown when an empty path is handled
-            processor.ProcessPageContent(document.GetPage(1));
+            NUnit.Framework.Assert.DoesNotThrow(() => processor.ProcessPageContent(document.GetPage(1)));
         }
 
         [NUnit.Framework.Test]

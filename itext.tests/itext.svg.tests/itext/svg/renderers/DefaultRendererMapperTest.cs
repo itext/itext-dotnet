@@ -58,7 +58,7 @@ namespace iText.Svg.Renderers {
             foreach (Type rendererClazz in mapper.GetMapping().Values) {
                 // the test is that this method does not throw an exception on any class here
                 // meaning that every (non-abstract) implementation must have a public no-args constructor
-                System.Activator.CreateInstance(rendererClazz);
+                NUnit.Framework.Assert.DoesNotThrow(() => System.Activator.CreateInstance(rendererClazz));
             }
         }
     }

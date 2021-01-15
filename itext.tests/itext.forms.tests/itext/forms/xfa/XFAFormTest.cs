@@ -48,6 +48,7 @@ using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using NUnit.Framework;
 
 namespace iText.Forms.Xfa {
     public class XFAFormTest : ExtendedITextTest {
@@ -107,8 +108,7 @@ namespace iText.Forms.Xfa {
         public virtual void ReadXFAFormTest() {
             String inFileName = sourceFolder + "formTemplate.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            // Test that exception is not thrown
-            PdfAcroForm.GetAcroForm(pdfDocument, true);
+            Assert.DoesNotThrow(() => PdfAcroForm.GetAcroForm(pdfDocument, true));
         }
 
         [NUnit.Framework.Test]

@@ -62,9 +62,5 @@ namespace iText.Svg.Css.Impl {
             NUnit.Framework.Assert.AreEqual(expectedFillAttribute, rect.GetAttribute(SvgConstants.Attributes.FILL));
             NUnit.Framework.Assert.AreEqual(expectedFillAttribute, circle.GetAttribute(SvgConstants.Attributes.FILL));
         }
-
-        [NUnit.Framework.Test]
-        public virtual void ApplyInheritanceToSubTreeFillDoNotOverwriteTest() {
-        }
     }
 }

@@ -128,8 +128,7 @@ namespace iText.Layout.Renderer {
             //The BORDER property is chosen without any specific intention. It could be replaced with any other property.
             //Here we just check that no exception has been thrown.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            areaBreakRenderer.DeleteOwnProperty(Property.BORDER);
-            NUnit.Framework.Assert.IsTrue(true);
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.DeleteOwnProperty(Property.BORDER));
         }
 
         [NUnit.Framework.Test]

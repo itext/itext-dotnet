@@ -48,12 +48,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     public class DocumentTypeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankName() {
-            DocumentType fail = new DocumentType("", "", "", "");
+            NUnit.Framework.Assert.DoesNotThrow(() => new DocumentType("", "", "", ""));
         }
 
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankPublicAndSystemIds() {
-            DocumentType fail = new DocumentType("html", "", "", "");
+            NUnit.Framework.Assert.DoesNotThrow(() => new DocumentType("html", "", "", ""));
         }
 
         [NUnit.Framework.Test]

@@ -244,7 +244,7 @@ namespace iText.Svg.Processors.Impl {
             ISvgConverterProperties scp = new SvgConverterProperties();
             dsp.PerformSetup(root, scp);
             // below method must not throw a NullPointerException
-            dsp.ExecuteDepthFirstTraversal(root);
+            NUnit.Framework.Assert.DoesNotThrow(() => dsp.ExecuteDepthFirstTraversal(root));
         }
 
         [NUnit.Framework.Test]

@@ -111,8 +111,8 @@ namespace iText.Kernel.Pdf {
                 pdfDoc.MovePage(i, n + 1);
             }
             pdfDoc.Close();
-            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff");
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff"));
         }
 
         [NUnit.Framework.Test]
@@ -378,8 +378,8 @@ namespace iText.Kernel.Pdf {
                  + imageSrc)));
             new PdfCanvas(page).SetFillColor(ColorConstants.RED).Rectangle(100, 100, 400, 400).Fill();
             pdfDoc.Close();
-            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff");
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff"));
         }
 
         [NUnit.Framework.Test]
