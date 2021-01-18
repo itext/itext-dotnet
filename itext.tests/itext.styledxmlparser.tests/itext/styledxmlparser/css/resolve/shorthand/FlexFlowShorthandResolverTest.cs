@@ -118,12 +118,14 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithWrapAndDirectionValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "wrap-reverse column";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_DIRECTION, resolvedShorthand[0].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.COLUMN, resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_WRAP, resolvedShorthand[1].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.WRAP_REVERSE, resolvedShorthand[1].GetExpression());
         }
 
         [NUnit.Framework.Test]

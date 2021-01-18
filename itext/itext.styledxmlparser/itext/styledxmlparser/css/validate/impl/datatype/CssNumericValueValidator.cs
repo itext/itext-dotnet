@@ -30,6 +30,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// <see cref="iText.StyledXmlParser.Css.Validate.ICssDataTypeValidator"/>
     /// implementation for numeric elements.
     /// </summary>
+    [System.ObsoleteAttribute(@"Use CssLengthValueValidator , CssPercentageValueValidator or CssNumberValueValidator instead"
+        )]
     public class CssNumericValueValidator : ICssDataTypeValidator {
         private readonly bool allowedPercent;
 

@@ -230,12 +230,17 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneUnitAndTwoUnitlessValuesTest() {
             IShorthandResolver resolver = new FlexShorthandResolver();
             String shorthand = "5px 7 10";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
+            NUnit.Framework.Assert.AreEqual(3, resolvedShorthand.Count);
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_GROW, resolvedShorthand[0].GetProperty());
+            NUnit.Framework.Assert.AreEqual("7", resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_SHRINK, resolvedShorthand[1].GetProperty());
+            NUnit.Framework.Assert.AreEqual("10", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_BASIS, resolvedShorthand[2].GetProperty());
+            NUnit.Framework.Assert.AreEqual("5px", resolvedShorthand[2].GetExpression());
         }
 
         [NUnit.Framework.Test]

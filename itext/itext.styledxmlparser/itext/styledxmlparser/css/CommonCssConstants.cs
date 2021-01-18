@@ -592,14 +592,20 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant DOUBLE.</summary>
         public const String DOUBLE = "double";
 
+        /// <summary>The Constant EACH_LINE.</summary>
+        public const String EACH_LINE = "each-line";
+
         /// <summary>The Constant END.</summary>
         public const String END = "end";
 
-        /// <summary>The Constant FIXED.</summary>
-        public const String FIXED = "fixed";
-
         /// <summary>The Constant FIRST.</summary>
         public const String FIRST = "first";
+
+        /// <summary>The Constant FIT_CONTENT.</summary>
+        public const String FIT_CONTENT = "fit-content";
+
+        /// <summary>The Constant FIXED.</summary>
+        public const String FIXED = "fixed";
 
         /// <summary>The Constant FLEX_END.</summary>
         public const String FLEX_END = "flex-end";
@@ -615,6 +621,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant GROOVE.</summary>
         public const String GROOVE = "groove";
+
+        /// <summary>The Constant HANGING.</summary>
+        public const String HANGING = "hanging";
 
         /// <summary>The Constant HEBREW.</summary>
         public const String HEBREW = "hebrew";
@@ -699,6 +708,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant MENU.</summary>
         public const String MENU = "menu";
+
+        /// <summary>The Constant MAX_CONTENT.</summary>
+        public const String MAX_CONTENT = "max-content";
+
+        /// <summary>The Constant MIN_CONTENT.</summary>
+        public const String MIN_CONTENT = "min-content";
 
         /// <summary>The Constant MESSAGE_BOX.</summary>
         public const String MESSAGE_BOX = "message-box";

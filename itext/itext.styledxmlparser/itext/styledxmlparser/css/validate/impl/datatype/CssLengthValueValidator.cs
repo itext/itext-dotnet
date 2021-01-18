@@ -31,6 +31,18 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// implementation for numeric elements.
     /// </summary>
     public class CssLengthValueValidator : ICssDataTypeValidator {
+        private readonly bool allowedNegative;
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssLengthValueValidator"/>
+        /// instance.
+        /// </summary>
+        /// <param name="allowedNegative">is negative value allowed</param>
+        public CssLengthValueValidator(bool allowedNegative) {
+            this.allowedNegative = allowedNegative;
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual bool IsValid(String objectString) {
             if (objectString == null) {
@@ -40,8 +52,14 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
                 CommonCssConstants.UNSET.Equals(objectString)) {
                 return true;
             }
-            if (!CssTypesValidationUtils.IsMetricValue(objectString)) {
+            if (!CssTypesValidationUtils.IsMetricValue(objectString) && (!CssTypesValidationUtils.IsRelativeValue(objectString
+                ) || CssTypesValidationUtils.IsPercentageValue(objectString)) && !CssTypesValidationUtils.IsZero(objectString
+                )) {
                 return false;
+            }
+            if (CssTypesValidationUtils.IsNegativeValue(objectString) && !CssTypesValidationUtils.IsZero(objectString)
+                ) {
+                return this.allowedNegative;
             }
             return true;
         }

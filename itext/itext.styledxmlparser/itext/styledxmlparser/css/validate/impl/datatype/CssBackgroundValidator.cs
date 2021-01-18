@@ -43,7 +43,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
 
         /// <summary>
         /// Creates a new
-        /// <see cref="CssNumericValueValidator"/>
+        /// <see cref="CssBackgroundValidator"/>
         /// instance.
         /// </summary>
         /// <param name="backgroundProperty">is background property corresponding to current validator</param>

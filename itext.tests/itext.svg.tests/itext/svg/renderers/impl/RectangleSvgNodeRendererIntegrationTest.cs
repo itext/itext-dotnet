@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class RectangleSvgNodeRendererIntegrationTest : SvgIntegrationTest {
@@ -125,6 +126,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 1)]
         public virtual void NoFillRectangleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "noFillRectangle");
         }
