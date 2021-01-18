@@ -44,9 +44,12 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
             foreach (String metricPostfix in ANGLE_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -72,16 +75,28 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a em value</returns>
         public static bool IsEmValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EM.Length).Trim());
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
+            return value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.Length - CommonCssConstants
+                .EM.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to element font height.</summary>
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a ex value</returns>
         public static bool IsExValue(String value) {
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
             return value != null && value.EndsWith(CommonCssConstants.EX) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EX.Length).Trim());
+                Length - CommonCssConstants.EX.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; px, in, cm, mm, pc, Q or pt.
@@ -92,9 +107,12 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
             foreach (String metricPostfix in CommonCssConstants.METRIC_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -134,8 +152,14 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed percentage value</returns>
         public static bool IsPercentageValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0
-                , value.Length - CommonCssConstants.PERCENTAGE.Length).Trim());
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
+            return value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0, value.Length - 
+                CommonCssConstants.PERCENTAGE.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
@@ -145,9 +169,12 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
             foreach (String relativePostfix in RELATIVE_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(relativePostfix) && IsNumericValue(value.JSubstring(0, value.Length - relativePostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -158,8 +185,14 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a rem value</returns>
         public static bool IsRemValue(String value) {
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
             return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumericValue(value.JSubstring(0, value
-                .Length - CommonCssConstants.REM.Length).Trim());
+                .Length - CommonCssConstants.REM.Length));
         }
 
         /// <summary>Checks if a string is in a valid format.</summary>
