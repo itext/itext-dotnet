@@ -47,18 +47,18 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String containsInitialShorthand = "row initial ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInitialShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInitialShorthand));
             String containsInheritShorthand = "inherit wrap";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInheritShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInheritShorthand));
             String containsUnsetShorthand = "wrap unset";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsUnsetShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsUnsetShorthand));
         }
 
         [NUnit.Framework.Test]
@@ -66,11 +66,11 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         public virtual void EmptyShorthandTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String emptyShorthand = "";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(emptyShorthand)
-                );
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (emptyShorthand));
             String shorthandWithSpaces = "    ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(shorthandWithSpaces
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (shorthandWithSpaces));
         }
 
         [NUnit.Framework.Test]
@@ -88,74 +88,69 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         [NUnit.Framework.Test]
         public virtual void ShorthandWithOneWrapValueTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
-            String shorthand = "wrap-reverse";
+            String shorthand = CommonCssConstants.WRAP_REVERSE;
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 flex-direction shall be "row" and flex-wrap shall be "wrap-reverse"
             NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_DIRECTION, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("wrap-reverse", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_WRAP, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("nowrap", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_WRAP, resolvedShorthand[0].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.WRAP_REVERSE, resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_DIRECTION, resolvedShorthand[1].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW, resolvedShorthand[1].GetExpression());
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 1)]
         public virtual void ShorthandWithOneInvalidValueTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_DIRECTION, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_WRAP, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("nowrap", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
         public virtual void ShorthandWithDirectionAndWrapValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
-            String shorthand = "row-reverse wrap";
+            String shorthand = CommonCssConstants.ROW_REVERSE + " " + CommonCssConstants.WRAP;
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 flex-direction shall be "row-reverse" and flex-wrap shall be "wrap"
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_DIRECTION, resolvedShorthand[0].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW_REVERSE, resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_WRAP, resolvedShorthand[1].GetProperty());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.WRAP, resolvedShorthand[1].GetExpression());
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithWrapAndDirectionValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "wrap-reverse column";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 flex-direction shall be "column" and flex-wrap shall be "wrap-reverse"
             NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoDirectionValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "column-reverse row";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolvedShorthand);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWrapValuesTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "nowrap wrap-reverse";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolvedShorthand);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoValuesAndSecondIsInvalidTest() {
             IShorthandResolver resolver = new FlexFlowShorthandResolver();
             String shorthand = "column-reverse invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolvedShorthand);
         }
     }
 }

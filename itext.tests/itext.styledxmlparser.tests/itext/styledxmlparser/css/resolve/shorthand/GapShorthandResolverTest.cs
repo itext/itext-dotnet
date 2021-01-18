@@ -47,18 +47,18 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String containsInitialShorthand = "10px initial ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInitialShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInitialShorthand));
             String containsInheritShorthand = "inherit 10%";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInheritShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInheritShorthand));
             String containsUnsetShorthand = "0 unset";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsUnsetShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsUnsetShorthand));
         }
 
         [NUnit.Framework.Test]
@@ -66,11 +66,11 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         public virtual void EmptyShorthandTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String emptyShorthand = "";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(emptyShorthand)
-                );
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (emptyShorthand));
             String shorthandWithSpaces = "    ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(shorthandWithSpaces
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (shorthandWithSpaces));
         }
 
         [NUnit.Framework.Test]
@@ -86,16 +86,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void GapWithOneInvalidValueTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String shorthand = "10";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW_GAP, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("10", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.COLUMN_GAP, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("10", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -111,29 +107,21 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void GapWithValidAndInvalidValuesTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String shorthand = "10px 15";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW_GAP, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("10px", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.COLUMN_GAP, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("15", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void GapWithInvalidAndValidValuesTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String shorthand = "10 15px";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW_GAP, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("10", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.COLUMN_GAP, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("15px", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -149,12 +137,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void GapWithThreeValuesTest() {
             IShorthandResolver resolver = new GapShorthandResolver();
             String shorthand = "10px 15px 20px";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolvedShorthand);
         }
     }
 }

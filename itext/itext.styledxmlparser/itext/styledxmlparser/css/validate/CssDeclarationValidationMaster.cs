@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 using iText.StyledXmlParser.Css.Validate.Impl.Declaration;
@@ -92,6 +93,18 @@ namespace iText.StyledXmlParser.Css.Validate {
                 (true, false)));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.LINE_HEIGHT, new SingleTypeDeclarationValidator(new CssNumericValueValidator
                 (true, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.COLUMN_GAP, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.ROW_GAP, new SingleTypeDeclarationValidator(new CssNumericValueValidator
+                (true, true)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLEX_GROW, new SingleTypeDeclarationValidator(new CssNumberValueValidator
+                (false)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLEX_SHRINK, new SingleTypeDeclarationValidator(new CssNumberValueValidator
+                (false)));
+            CssEnumValidator flexBasisEnumValidator = new CssEnumValidator(CommonCssConstants.AUTO, CommonCssConstants
+                .CONTENT);
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLEX_BASIS, new MultiTypeDeclarationValidator(new CssLengthValueValidator
+                (), flexBasisEnumValidator));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_REPEAT, new SingleTypeDeclarationValidator(new CssBackgroundValidator
                 (CommonCssConstants.BACKGROUND_REPEAT)));
             DEFAULT_VALIDATORS.Put(CommonCssConstants.BACKGROUND_IMAGE, new SingleTypeDeclarationValidator(new CssBackgroundValidator
@@ -114,6 +127,29 @@ namespace iText.StyledXmlParser.Css.Validate {
             DEFAULT_VALIDATORS.Put(CommonCssConstants.WORD_BREAK, new SingleTypeDeclarationValidator(new CssEnumValidator
                 (CommonCssConstants.NORMAL, CommonCssConstants.BREAK_ALL, CommonCssConstants.KEEP_ALL, CommonCssConstants
                 .BREAK_WORD, CommonCssConstants.INHERIT, CommonCssConstants.INITIAL, CommonCssConstants.UNSET)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLEX_DIRECTION, new SingleTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.ROW, CommonCssConstants.ROW_REVERSE, CommonCssConstants.COLUMN, CommonCssConstants
+                .COLUMN_REVERSE, CommonCssConstants.INHERIT, CommonCssConstants.INITIAL, CommonCssConstants.UNSET)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.FLEX_WRAP, new SingleTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.NOWRAP, CommonCssConstants.WRAP, CommonCssConstants.WRAP_REVERSE, CommonCssConstants
+                .INHERIT, CommonCssConstants.INITIAL, CommonCssConstants.UNSET)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.ALIGN_ITEMS, new MultiTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.NORMAL, CommonCssConstants.STRETCH), new CssEnumValidator(JavaUtil.ArraysAsList(CommonCssConstants
+                .BASELINE), JavaUtil.ArraysAsList(CommonCssConstants.FIRST, CommonCssConstants.LAST)), new CssEnumValidator
+                (JavaUtil.ArraysAsList(CommonCssConstants.CENTER, CommonCssConstants.START, CommonCssConstants.END, CommonCssConstants
+                .FLEX_START, CommonCssConstants.FLEX_END, CommonCssConstants.SELF_START, CommonCssConstants.SELF_END), 
+                JavaUtil.ArraysAsList(CommonCssConstants.SAFE, CommonCssConstants.UNSAFE)), new CssEnumValidator(CommonCssConstants
+                .INHERIT, CommonCssConstants.INITIAL, CommonCssConstants.UNSET)));
+            DEFAULT_VALIDATORS.Put(CommonCssConstants.JUSTIFY_ITEMS, new MultiTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.NORMAL, CommonCssConstants.STRETCH), new CssEnumValidator(JavaUtil.ArraysAsList(CommonCssConstants
+                .BASELINE), JavaUtil.ArraysAsList(CommonCssConstants.FIRST, CommonCssConstants.LAST)), new CssEnumValidator
+                (JavaUtil.ArraysAsList(CommonCssConstants.CENTER, CommonCssConstants.START, CommonCssConstants.END, CommonCssConstants
+                .FLEX_START, CommonCssConstants.FLEX_END, CommonCssConstants.SELF_START, CommonCssConstants.SELF_END, 
+                CommonCssConstants.LEFT, CommonCssConstants.RIGHT), JavaUtil.ArraysAsList(CommonCssConstants.SAFE, CommonCssConstants
+                .UNSAFE)), new CssEnumValidator(CommonCssConstants.LEGACY, CommonCssConstants.LEGACY + " " + CommonCssConstants
+                .LEFT, CommonCssConstants.LEGACY + " " + CommonCssConstants.RIGHT, CommonCssConstants.LEGACY + " " + CommonCssConstants
+                .CENTER), new CssEnumValidator(CommonCssConstants.INHERIT, CommonCssConstants.INITIAL, CommonCssConstants
+                .UNSET)));
         }
 
         /// <summary>

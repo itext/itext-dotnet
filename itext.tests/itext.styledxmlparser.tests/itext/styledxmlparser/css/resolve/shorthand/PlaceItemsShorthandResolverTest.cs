@@ -47,18 +47,18 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, Count = 3)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, Count = 3)]
         public virtual void ContainsInitialOrInheritOrUnsetShorthandTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String containsInitialShorthand = "start initial ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInitialShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInitialShorthand));
             String containsInheritShorthand = "inherit safe end";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsInheritShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsInheritShorthand));
             String containsUnsetShorthand = "baseline unset";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(containsUnsetShorthand
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (containsUnsetShorthand));
         }
 
         [NUnit.Framework.Test]
@@ -66,11 +66,11 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         public virtual void EmptyShorthandTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String emptyShorthand = "";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(emptyShorthand)
-                );
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (emptyShorthand));
             String shorthandWithSpaces = "    ";
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolver.ResolveShorthand(shorthandWithSpaces
-                ));
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolver.ResolveShorthand
+                (shorthandWithSpaces));
         }
 
         [NUnit.Framework.Test]
@@ -86,29 +86,21 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneInvalidAlignItemsWordTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "legacy";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("legacy", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("legacy", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneInvalidWordTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -116,50 +108,43 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "unsafe start";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 align-items and justify-items shall be "unsafe start"
             NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("unsafe", resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual("unsafe start", resolvedShorthand[0].GetExpression());
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("start", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual("unsafe start", resolvedShorthand[1].GetExpression());
         }
 
         [NUnit.Framework.Test]
         public virtual void ShorthandWithOneWordAlignItemsAndOneWordJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
-            String shorthand = "center legacy";
+            String shorthand = CommonCssConstants.CENTER + " " + CommonCssConstants.LEGACY + " " + CommonCssConstants.
+                RIGHT;
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
             NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("center", resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.CENTER, resolvedShorthand[0].GetExpression());
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("legacy", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.LEGACY + " " + CommonCssConstants.RIGHT, resolvedShorthand
+                [1].GetExpression());
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAndFirstWordIsInvalidTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid self-end";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("self-end", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAndSecondWordIsInvalidTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "flex-start invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("flex-start", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -175,16 +160,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithOneWordAlignItemsAndInvalidTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "flex-start legacy invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("flex-start", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("legacy invalid", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -192,38 +173,29 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "unsafe flex-start normal";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 align-items shall be "unsafe flex-start" and justify-items shall be "normal"
             NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("unsafe", resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual("unsafe flex-start", resolvedShorthand[0].GetExpression());
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("flex-start normal", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual("normal", resolvedShorthand[1].GetExpression());
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAlignItemsAndInvalidOneWordJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "unsafe flex-start invalid";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("unsafe", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("flex-start invalid", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithThreeWordsAndInvalidAlignItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid safe self-end";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("safe self-end", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
@@ -239,38 +211,30 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithTwoWordsAlignItemsAndInvalidTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "first baseline invalid center";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("first baseline", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid center", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithInvalidTwoWordsAlignItemsAndTwoWordsJustifyItemsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "invalid baseline legacy left";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            // TODO DEVSIX-4933 resulting List shall be empty
-            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ALIGN_ITEMS, resolvedShorthand[0].GetProperty());
-            NUnit.Framework.Assert.AreEqual("invalid baseline", resolvedShorthand[0].GetExpression());
-            NUnit.Framework.Assert.AreEqual(CommonCssConstants.JUSTIFY_ITEMS, resolvedShorthand[1].GetProperty());
-            NUnit.Framework.Assert.AreEqual("legacy left", resolvedShorthand[1].GetExpression());
+            NUnit.Framework.Assert.AreEqual(0, resolvedShorthand.Count);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY)]
+        [LogMessage(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void ShorthandWithFiveWordsTest() {
             IShorthandResolver resolver = new PlaceItemsShorthandResolver();
             String shorthand = "last baseline unsafe safe center";
             IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
-            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList(), resolvedShorthand);
+            NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.EmptyList<CssDeclaration>(), resolvedShorthand);
         }
     }
 }

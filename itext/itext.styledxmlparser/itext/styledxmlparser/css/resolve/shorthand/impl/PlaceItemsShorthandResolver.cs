@@ -1,3 +1,45 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2021 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using Common.Logging;
@@ -19,14 +61,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     CssDeclaration(CommonCssConstants.JUSTIFY_ITEMS, shorthandExpression));
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .PLACE_ITEMS, shorthandExpression));
-                return JavaCollectionsUtil.EmptyList();
+                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                    .PLACE_ITEMS, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
-                    , CommonCssConstants.PLACE_ITEMS));
-                return JavaCollectionsUtil.EmptyList();
+                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY, 
+                    CommonCssConstants.PLACE_ITEMS, shorthandExpression);
             }
             String[] placeItemsProps = iText.IO.Util.StringUtil.Split(shorthandExpression, " ");
             switch (placeItemsProps.Length) {
@@ -48,34 +88,30 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 }
 
                 default: {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                        .PLACE_ITEMS, shorthandExpression));
-                    return JavaCollectionsUtil.EmptyList();
+                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                        .PLACE_ITEMS, shorthandExpression);
                 }
             }
         }
 
         private IList<CssDeclaration> ResolveShorthandWithOneWord(String firstWord) {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord, firstWord);
-            if (resolvedShorthand == null) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .ALIGN_ITEMS, firstWord));
-                return JavaCollectionsUtil.EmptyList();
+            if (resolvedShorthand.IsEmpty()) {
+                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                    .PLACE_ITEMS, firstWord);
             }
             return resolvedShorthand;
         }
 
         private IList<CssDeclaration> ResolveShorthandWithTwoWords(String firstWord, String secondWord) {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord, secondWord);
-            if (resolvedShorthand != null) {
-                return resolvedShorthand;
-            }
-            resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, firstWord + " " + secondWord
-                );
-            if (resolvedShorthand == null) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .ALIGN_ITEMS, firstWord + " " + secondWord));
-                return JavaCollectionsUtil.EmptyList();
+            if (resolvedShorthand.IsEmpty()) {
+                resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, firstWord + " " + secondWord
+                    );
+                if (resolvedShorthand.IsEmpty()) {
+                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                        .PLACE_ITEMS, firstWord + " " + secondWord);
+                }
             }
             return resolvedShorthand;
         }
@@ -84,14 +120,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             ) {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord, secondWord + " " + thirdWord
                 );
-            if (resolvedShorthand != null) {
-                return resolvedShorthand;
-            }
-            resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, thirdWord);
-            if (resolvedShorthand == null) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .ALIGN_ITEMS, firstWord + " " + secondWord));
-                return JavaCollectionsUtil.EmptyList();
+            if (resolvedShorthand.IsEmpty()) {
+                resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, thirdWord);
+                if (resolvedShorthand.IsEmpty()) {
+                    return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                        .PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord);
+                }
             }
             return resolvedShorthand;
         }
@@ -100,10 +134,9 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             , String fourthWord) {
             IList<CssDeclaration> resolvedShorthand = ResolveAlignItemsAndJustifyItems(firstWord + " " + secondWord, thirdWord
                  + " " + fourthWord);
-            if (resolvedShorthand == null) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .ALIGN_ITEMS, firstWord + " " + secondWord));
-                return JavaCollectionsUtil.EmptyList();
+            if (resolvedShorthand.IsEmpty()) {
+                return HandleExpressionError(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, CommonCssConstants
+                    .PLACE_ITEMS, firstWord + " " + secondWord + " " + thirdWord + " " + fourthWord);
             }
             return resolvedShorthand;
         }
@@ -116,11 +149,17 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 if (CssDeclarationValidationMaster.CheckDeclaration(justifyItemsDeclaration)) {
                     return JavaUtil.ArraysAsList(alignItemsDeclaration, justifyItemsDeclaration);
                 }
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
-                    .JUSTIFY_ITEMS, justifyItemsDeclaration.GetExpression()));
-                return JavaCollectionsUtil.EmptyList();
+                return JavaCollectionsUtil.EmptyList<CssDeclaration>();
             }
-            return null;
+            else {
+                return JavaCollectionsUtil.EmptyList<CssDeclaration>();
+            }
+        }
+
+        private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
+            ) {
+            LOGGER.Warn(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
     }
 }
