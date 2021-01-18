@@ -180,6 +180,17 @@ namespace iText.StyledXmlParser.Css.Util {
                 .UNSET.Equals(value);
         }
 
+        /// <summary>Checks if value contains initial, inherit or unset.</summary>
+        /// <param name="value">value to check</param>
+        /// <returns>true if value contains initial, inherit or unset. False otherwise</returns>
+        public static bool ContainsInitialOrInheritOrUnset(String value) {
+            if (value == null) {
+                return false;
+            }
+            return value.Contains(CommonCssConstants.INITIAL) || value.Contains(CommonCssConstants.INHERIT) || value.Contains
+                (CommonCssConstants.UNSET);
+        }
+
         /// <summary>
         /// Creates a new
         /// <see cref="CssTypesValidationUtils"/>

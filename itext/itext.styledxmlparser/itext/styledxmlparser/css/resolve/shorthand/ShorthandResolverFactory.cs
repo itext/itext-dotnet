@@ -70,6 +70,10 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             shorthandResolvers.Put(CommonCssConstants.OUTLINE, new OutlineShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.PADDING, new PaddingShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.TEXT_DECORATION, new TextDecorationShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.FLEX, new FlexShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.FLEX_FLOW, new FlexFlowShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.GAP, new GapShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.PLACE_ITEMS, new PlaceItemsShorthandResolver());
         }
 
         /// <summary>Gets a shorthand resolver.</summary>
