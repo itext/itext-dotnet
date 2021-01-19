@@ -150,7 +150,15 @@ namespace iText.Signatures {
             return SignUtils.GenerateOcspRequestWithNonce(id);
         }
 
-        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
+        /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
+        /// <param name="checkCert">to certificate to check</param>
+        /// <param name="rootCert">the parent certificate</param>
+        /// <param name="url">
+        /// to get the verification. It it's null it will be taken
+        /// from the check cert or from other implementation specific source
+        /// </param>
+        /// <returns>an OCSP response</returns>
+        internal virtual OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
             if (checkCert == null || rootCert == null) {
                 return null;
             }
