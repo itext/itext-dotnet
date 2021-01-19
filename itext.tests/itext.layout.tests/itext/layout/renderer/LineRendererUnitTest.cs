@@ -40,8 +40,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -278,6 +280,113 @@ namespace iText.Layout.Renderer {
             float countedMinWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
             LayoutResult result = lineRenderer.Layout(new LayoutContext(layoutArea));
             NUnit.Framework.Assert.AreEqual(result.GetOccupiedArea().GetBBox().GetWidth(), countedMinWidth, 0.0001);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitLineIntoGlyphsSimpleTest() {
+            Document dummyDocument = CreateDocument();
+            TextRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
+            TextRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
+            TextRenderer dummy3 = CreateLayoutedTextRenderer("!!!", dummyDocument);
+            IRenderer dummyImage1 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage2 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage3 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage4 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage5 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            LineRenderer toSplit = new LineRenderer();
+            toSplit.AddChildRenderer(dummyImage1);
+            toSplit.AddChildRenderer(dummyImage2);
+            toSplit.AddChildRenderer(dummy1);
+            toSplit.AddChildRenderer(dummyImage3);
+            toSplit.AddChildRenderer(dummy2);
+            toSplit.AddChildRenderer(dummy3);
+            toSplit.AddChildRenderer(dummyImage4);
+            toSplit.AddChildRenderer(dummyImage5);
+            LineRenderer.LineSplitIntoGlyphsData splitIntoGlyphsData = LineRenderer.SplitLineIntoGlyphs(toSplit);
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList(dummyImage1, dummyImage2), splitIntoGlyphsData.GetStarterNonTextRenderers
+                ());
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList(dummyImage3), splitIntoGlyphsData.GetInsertAfterAndRemove
+                (dummy1));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy1));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy2));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList(dummyImage4, dummyImage5), splitIntoGlyphsData.GetInsertAfterAndRemove
+                (dummy3));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy3));
+            NUnit.Framework.Assert.AreEqual(13, splitIntoGlyphsData.GetLineGlyphs().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitLineIntoGlyphsWithLineBreakTest() {
+            Document dummyDocument = CreateDocument();
+            TextRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
+            TextRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
+            dummy2.line.Set(2, new Glyph('\n', 0, '\n'));
+            TextRenderer dummy3 = CreateLayoutedTextRenderer("!!!", dummyDocument);
+            IRenderer dummyImage1 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage2 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage3 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage4 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage5 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            LineRenderer toSplit = new LineRenderer();
+            toSplit.AddChildRenderer(dummyImage1);
+            toSplit.AddChildRenderer(dummyImage2);
+            toSplit.AddChildRenderer(dummy1);
+            toSplit.AddChildRenderer(dummyImage3);
+            toSplit.AddChildRenderer(dummy2);
+            toSplit.AddChildRenderer(dummy3);
+            toSplit.AddChildRenderer(dummyImage4);
+            toSplit.AddChildRenderer(dummyImage5);
+            LineRenderer.LineSplitIntoGlyphsData splitIntoGlyphsData = LineRenderer.SplitLineIntoGlyphs(toSplit);
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList(dummyImage1, dummyImage2), splitIntoGlyphsData.GetStarterNonTextRenderers
+                ());
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList(dummyImage3), splitIntoGlyphsData.GetInsertAfterAndRemove
+                (dummy1));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy1));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy2));
+            NUnit.Framework.Assert.IsNull(splitIntoGlyphsData.GetInsertAfterAndRemove(dummy3));
+            NUnit.Framework.Assert.AreEqual(7, splitIntoGlyphsData.GetLineGlyphs().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReorderSimpleTest() {
+            Document dummyDocument = CreateDocument();
+            IRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
+            IRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
+            IRenderer dummy3 = CreateLayoutedTextRenderer("!!!", dummyDocument);
+            IRenderer dummyImage1 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage2 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage3 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage4 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            IRenderer dummyImage5 = CreateLayoutedImageRenderer(100, 100, dummyDocument);
+            LineRenderer toSplit = new LineRenderer();
+            toSplit.AddChildRenderer(dummyImage1);
+            toSplit.AddChildRenderer(dummyImage2);
+            toSplit.AddChildRenderer(dummy1);
+            toSplit.AddChildRenderer(dummyImage3);
+            toSplit.AddChildRenderer(dummy2);
+            toSplit.AddChildRenderer(dummy3);
+            toSplit.AddChildRenderer(dummyImage4);
+            toSplit.AddChildRenderer(dummyImage5);
+            LineRenderer.LineSplitIntoGlyphsData splitIntoGlyphsData = LineRenderer.SplitLineIntoGlyphs(toSplit);
+            LineRenderer.Reorder(toSplit, splitIntoGlyphsData, new int[] { 0, 1, 4, 3, 2, 6, 5, 8, 7, 10, 9, 11, 12 });
+            // validate that all non text renderers are in place and all text renderers contains
+            // the right revers ranges
+            IList<IRenderer> childRenderers = toSplit.GetChildRenderers();
+            NUnit.Framework.Assert.AreEqual(8, childRenderers.Count);
+            NUnit.Framework.Assert.AreSame(dummyImage1, childRenderers[0]);
+            NUnit.Framework.Assert.AreSame(dummyImage2, childRenderers[1]);
+            IList<int[]> firstReverseRanges = ((TextRenderer)childRenderers[2]).GetReversedRanges();
+            NUnit.Framework.Assert.AreEqual(1, firstReverseRanges.Count);
+            NUnit.Framework.Assert.AreEqual(new int[] { 2, 4 }, firstReverseRanges[0]);
+            NUnit.Framework.Assert.AreSame(dummyImage3, childRenderers[3]);
+            IList<int[]> secondReverseRanges = ((TextRenderer)childRenderers[4]).GetReversedRanges();
+            NUnit.Framework.Assert.AreEqual(2, secondReverseRanges.Count);
+            NUnit.Framework.Assert.AreEqual(new int[] { 0, 1 }, secondReverseRanges[0]);
+            NUnit.Framework.Assert.AreEqual(new int[] { 2, 3 }, secondReverseRanges[1]);
+            IList<int[]> thirdReverseRanges = ((TextRenderer)childRenderers[5]).GetReversedRanges();
+            NUnit.Framework.Assert.IsNull(thirdReverseRanges);
+            NUnit.Framework.Assert.AreSame(dummyImage4, childRenderers[6]);
+            NUnit.Framework.Assert.AreSame(dummyImage5, childRenderers[7]);
         }
     }
 }

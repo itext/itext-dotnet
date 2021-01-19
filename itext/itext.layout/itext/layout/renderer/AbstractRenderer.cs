@@ -2584,6 +2584,191 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// Add the specified
+        /// <see cref="IRenderer">renderer</see>
+        /// to the end of children list and update its
+        /// parent link to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="child">
+        /// the
+        /// <see cref="IRenderer">child renderer</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddChildRenderer(IRenderer child) {
+            child.SetParent(this);
+            this.childRenderers.Add(child);
+        }
+
+        /// <summary>
+        /// Add the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// to the end of children list and
+        /// update their parent links to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="children">
+        /// the collection of
+        /// <see cref="IRenderer">child renderers</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddAllChildRenderers(IList<IRenderer> children) {
+            if (children == null) {
+                return;
+            }
+            SetThisAsParent(children);
+            this.childRenderers.AddAll(children);
+        }
+
+        /// <summary>
+        /// Inserts the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// at the specified space of
+        /// children list and update their parent links to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="index">index at which to insert the first element from the specified collection</param>
+        /// <param name="children">
+        /// the collection of
+        /// <see cref="IRenderer">child renderers</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddAllChildRenderers(int index, IList<IRenderer> children) {
+            SetThisAsParent(children);
+            this.childRenderers.AddAll(index, children);
+        }
+
+        /// <summary>
+        /// Set the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// as the children for
+        /// <c>this</c>
+        /// element.
+        /// </summary>
+        /// <remarks>
+        /// Set the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// as the children for
+        /// <c>this</c>
+        /// element. That meant that the old collection would be cleaned, all parent links in old
+        /// children to
+        /// <c>this</c>
+        /// would be erased (i.e. set to
+        /// <see langword="null"/>
+        /// ) and then the specified
+        /// list of children would be added similar to
+        /// <see cref="AddAllChildRenderers(System.Collections.Generic.IList{E})"/>.
+        /// </remarks>
+        /// <param name="children">
+        /// the collection of children
+        /// <see cref="IRenderer">renderers</see>
+        /// to be set
+        /// </param>
+        internal virtual void SetChildRenderers(IList<IRenderer> children) {
+            RemoveThisFromParents(this.childRenderers);
+            this.childRenderers.Clear();
+            AddAllChildRenderers(children);
+        }
+
+        /// <summary>
+        /// Remove the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place.
+        /// </summary>
+        /// <remarks>
+        /// Remove the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place. If the removed renderer has
+        /// the parent link set to
+        /// <c>this</c>
+        /// and it would not present in the children list after
+        /// removal, then the parent link of the removed renderer would be erased (i.e. set to
+        /// <see langword="null"/>.
+        /// </remarks>
+        /// <param name="index">the index of the renderer to be removed</param>
+        /// <returns>the removed renderer</returns>
+        internal virtual IRenderer RemoveChildRenderer(int index) {
+            IRenderer removed = this.childRenderers.JRemoveAt(index);
+            RemoveThisFromParent(removed);
+            return removed;
+        }
+
+        /// <summary>
+        /// Remove the children
+        /// <see cref="IRenderer">renderers</see>
+        /// which are contains in the specified collection.
+        /// </summary>
+        /// <remarks>
+        /// Remove the children
+        /// <see cref="IRenderer">renderers</see>
+        /// which are contains in the specified collection.
+        /// If some of the removed renderers has the parent link set to
+        /// <c>this</c>
+        /// , then
+        /// the parent link of the removed renderer would be erased (i.e. set to
+        /// <see langword="null"/>.
+        /// </remarks>
+        /// <param name="children">the collections of renderers to be removed from children list</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the children list has been changed
+        /// </returns>
+        internal virtual bool RemoveAllChildRenderers(ICollection<IRenderer> children) {
+            RemoveThisFromParents(children);
+            return this.childRenderers.RemoveAll(children);
+        }
+
+        /// <summary>
+        /// Update the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place with the specified one.
+        /// </summary>
+        /// <remarks>
+        /// Update the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place with the specified one.
+        /// If the removed renderer has the parent link set to
+        /// <c>this</c>
+        /// , then it would be erased
+        /// (i.e. set to
+        /// <see langword="null"/>
+        /// ).
+        /// </remarks>
+        /// <param name="index">the index of the renderer to be updated</param>
+        /// <param name="child">the renderer to be set</param>
+        /// <returns>the removed renderer</returns>
+        internal virtual IRenderer SetChildRenderer(int index, IRenderer child) {
+            if (child != null) {
+                child.SetParent(this);
+            }
+            IRenderer removedElement = this.childRenderers[index] = child;
+            RemoveThisFromParent(removedElement);
+            return removedElement;
+        }
+
+        private void SetThisAsParent(ICollection<IRenderer> children) {
+            foreach (IRenderer child in children) {
+                child.SetParent(this);
+            }
+        }
+
+        private void RemoveThisFromParent(IRenderer toRemove) {
+            // we need to be sure that the removed element has no other entries in child renderers list
+            if (toRemove != null && this == toRemove.GetParent() && !this.childRenderers.Contains(toRemove)) {
+                toRemove.SetParent(null);
+            }
+        }
+
+        private void RemoveThisFromParents(ICollection<IRenderer> children) {
+            foreach (IRenderer child in children) {
+                if (child != null && this == child.GetParent()) {
+                    child.SetParent(null);
+                }
+            }
+        }
+
         private static UnitValue[] GetMargins(IRenderer renderer) {
             return new UnitValue[] { renderer.GetProperty<UnitValue>(Property.MARGIN_TOP), renderer.GetProperty<UnitValue
                 >(Property.MARGIN_RIGHT), renderer.GetProperty<UnitValue>(Property.MARGIN_BOTTOM), renderer.GetProperty
