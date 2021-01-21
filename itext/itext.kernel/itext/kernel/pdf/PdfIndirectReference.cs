@@ -181,19 +181,27 @@ namespace iText.Kernel.Pdf {
                 return false;
             }
             iText.Kernel.Pdf.PdfIndirectReference that = (iText.Kernel.Pdf.PdfIndirectReference)o;
-            return objNr == that.objNr && genNr == that.genNr;
+            bool documentsEquals = pdfDocument == that.pdfDocument;
+            if (!documentsEquals) {
+                documentsEquals = pdfDocument != null && that.pdfDocument != null && pdfDocument.GetDocumentId() == that.pdfDocument
+                    .GetDocumentId();
+            }
+            return objNr == that.objNr && genNr == that.genNr && documentsEquals;
         }
 
         public override int GetHashCode() {
             int result = objNr;
             result = 31 * result + genNr;
+            if (pdfDocument != null) {
+                result = 31 * result + (int)pdfDocument.GetDocumentId();
+            }
             return result;
         }
 
         public virtual int CompareTo(iText.Kernel.Pdf.PdfIndirectReference o) {
             if (objNr == o.objNr) {
                 if (genNr == o.genNr) {
-                    return 0;
+                    return ComparePdfDocumentLinks(o);
                 }
                 return (genNr > o.genNr) ? 1 : -1;
             }
@@ -330,6 +338,30 @@ namespace iText.Kernel.Pdf {
         internal virtual void FixOffset(long offset) {
             if (!IsFree()) {
                 this.offsetOrIndex = offset;
+            }
+        }
+
+        private int ComparePdfDocumentLinks(iText.Kernel.Pdf.PdfIndirectReference toCompare) {
+            if (pdfDocument == toCompare.pdfDocument) {
+                return 0;
+            }
+            else {
+                if (pdfDocument == null) {
+                    return -1;
+                }
+                else {
+                    if (toCompare.pdfDocument == null) {
+                        return 1;
+                    }
+                    else {
+                        long thisDocumentId = pdfDocument.GetDocumentId();
+                        long documentIdToCompare = toCompare.pdfDocument.GetDocumentId();
+                        if (thisDocumentId == documentIdToCompare) {
+                            return 0;
+                        }
+                        return (thisDocumentId > documentIdToCompare) ? 1 : -1;
+                    }
+                }
             }
         }
     }

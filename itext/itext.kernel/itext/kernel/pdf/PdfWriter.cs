@@ -72,8 +72,8 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        private IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new LinkedDictionary
-            <PdfDocument.IndirectRefDescription, PdfIndirectReference>();
+        private IDictionary<PdfIndirectReference, PdfIndirectReference> copiedObjects = new LinkedDictionary<PdfIndirectReference
+            , PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
         private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
@@ -263,11 +263,9 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();
-            PdfDocument.IndirectRefDescription copiedObjectKey = null;
             bool tryToFindDuplicate = !allowDuplicating && indirectReference != null;
             if (tryToFindDuplicate) {
-                copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
-                PdfIndirectReference copiedIndirectReference = copiedObjects.Get(copiedObjectKey);
+                PdfIndirectReference copiedIndirectReference = copiedObjects.Get(indirectReference);
                 if (copiedIndirectReference != null) {
                     return copiedIndirectReference.GetRefersTo();
                 }
@@ -277,20 +275,17 @@ namespace iText.Kernel.Pdf {
                 serializedContent = smartModeSerializer.SerializeObject(obj);
                 PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
                 if (objectRef != null) {
-                    copiedObjects.Put(copiedObjectKey, objectRef);
+                    copiedObjects.Put(indirectReference, objectRef);
                     return objectRef.refersTo;
                 }
             }
             PdfObject newObject = obj.NewInstance();
             if (indirectReference != null) {
-                if (copiedObjectKey == null) {
-                    copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
-                }
                 PdfIndirectReference indRef = newObject.MakeIndirect(documentTo).GetIndirectReference();
                 if (serializedContent != null) {
                     smartModeSerializer.SaveSerializedObject(serializedContent, indRef);
                 }
-                copiedObjects.Put(copiedObjectKey, indRef);
+                copiedObjects.Put(indirectReference, indRef);
             }
             newObject.CopyContent(obj, documentTo);
             return newObject;
@@ -384,17 +379,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>Flush all copied objects.</summary>
         /// <param name="docId">id of the source document</param>
         internal virtual void FlushCopiedObjects(long docId) {
-            IList<PdfDocument.IndirectRefDescription> remove = new List<PdfDocument.IndirectRefDescription>();
-            foreach (KeyValuePair<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObject in copiedObjects
-                ) {
-                if (copiedObject.Key.docId == docId) {
+            IList<PdfIndirectReference> remove = new List<PdfIndirectReference>();
+            foreach (KeyValuePair<PdfIndirectReference, PdfIndirectReference> copiedObject in copiedObjects) {
+                PdfDocument document = copiedObject.Key.GetDocument();
+                if (document != null && document.GetDocumentId() == docId) {
                     if (copiedObject.Value.refersTo != null) {
                         copiedObject.Value.refersTo.Flush();
                         remove.Add(copiedObject.Key);
                     }
                 }
             }
-            foreach (PdfDocument.IndirectRefDescription ird in remove) {
+            foreach (PdfIndirectReference ird in remove) {
                 copiedObjects.JRemove(ird);
             }
         }

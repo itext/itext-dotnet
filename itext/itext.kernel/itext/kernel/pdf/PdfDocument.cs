@@ -2236,6 +2236,10 @@ namespace iText.Kernel.Pdf {
             return pdfPageFactory;
         }
 
+        internal virtual long GetDocumentId() {
+            return documentId;
+        }
+
         /// <summary>Gets iText version info.</summary>
         /// <returns>iText version info.</returns>
         internal VersionInfo GetVersionInfo() {
@@ -2434,51 +2438,8 @@ namespace iText.Kernel.Pdf {
             names.SetModified();
         }
 
-        private long GetDocumentId() {
-            return documentId;
-        }
-
         private bool WriterHasEncryption() {
             return writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed();
-        }
-
-        /// <summary>A structure storing documentId, object number and generation number.</summary>
-        /// <remarks>
-        /// A structure storing documentId, object number and generation number. This structure is using to calculate
-        /// an unique object key during the copy process.
-        /// </remarks>
-        internal class IndirectRefDescription {
-            internal readonly long docId;
-
-            internal readonly int objNr;
-
-            internal readonly int genNr;
-
-            internal IndirectRefDescription(PdfIndirectReference reference) {
-                this.docId = reference.GetDocument().GetDocumentId();
-                this.objNr = reference.GetObjNumber();
-                this.genNr = reference.GetGenNumber();
-            }
-
-            public override int GetHashCode() {
-                int result = (int)docId;
-                result *= 31;
-                result += objNr;
-                result *= 31;
-                result += genNr;
-                return result;
-            }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || GetType() != o.GetType()) {
-                    return false;
-                }
-                PdfDocument.IndirectRefDescription that = (PdfDocument.IndirectRefDescription)o;
-                return docId == that.docId && objNr == that.objNr && genNr == that.genNr;
-            }
         }
 
         private String AddModifiedPostfix(String producer) {
@@ -2503,12 +2464,12 @@ namespace iText.Kernel.Pdf {
         private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
             ) {
             if (true == properties.isFullCompression && !readerHasXrefStream) {
-                ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
                 logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
             }
             else {
                 if (false == properties.isFullCompression && readerHasXrefStream) {
-                    ILog logger = LogManager.GetLogger(typeof(PdfDocument));
+                    ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
                     logger.Warn(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
                 }
             }
