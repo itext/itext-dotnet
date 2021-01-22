@@ -407,8 +407,6 @@ namespace iText.Signatures {
                 }
                 catch (System.IO.IOException) {
                 }
-                // TODO DEVSIX-3458: remove this catch since RandomAccessFileOrArray#length will not throw
-                //  IOException anymore and therefore PdfReader#getFileLength will not do so either
                 for (int k = 0; k < sorter.Count; ++k) {
                     Object[] objs = sorter[k];
                     String name = (String)objs[0];
