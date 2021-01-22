@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using Common.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -51,8 +50,6 @@ namespace iText.Kernel.Pdf {
         private double value;
 
         private bool isDouble;
-
-        private bool changed = false;
 
         public PdfNumber(double value)
             : base() {
@@ -105,7 +102,6 @@ namespace iText.Kernel.Pdf {
             this.value = value;
             this.isDouble = false;
             this.content = null;
-            this.changed = true;
         }
 
         public virtual void SetValue(double value) {
@@ -139,8 +135,13 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object o) {
-            return this == o || o != null && GetType() == o.GetType() && JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
-                )o).value, value) == 0;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            return JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber)o).GetValue(), GetValue()) == 0;
         }
 
         /// <summary>Checks if string representation of the value contains decimal point.</summary>
@@ -150,13 +151,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override int GetHashCode() {
-            if (changed) {
-                //if the instance was modified, hashCode also will be changed, it may cause inconsistency.
-                ILog logger = LogManager.GetLogger(typeof(PdfReader));
-                logger.Warn(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
-                changed = false;
-            }
-            long hash = JavaUtil.DoubleToLongBits(value);
+            long hash = JavaUtil.DoubleToLongBits(GetValue());
             return (int)(hash ^ ((long)(((ulong)hash) >> 32)));
         }
 
