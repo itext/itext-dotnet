@@ -167,6 +167,20 @@ namespace iText.IO.Font {
             return differences != null ? differences[index] : null;
         }
 
+        /// <summary>Sets a new value in the differences array.</summary>
+        /// <remarks>
+        /// Sets a new value in the differences array.
+        /// See
+        /// <see cref="differences"/>.
+        /// </remarks>
+        /// <param name="index">position to replace</param>
+        /// <param name="difference">new difference value</param>
+        public virtual void SetDifference(int index, String difference) {
+            if (index >= 0 && differences != null && index < differences.Length) {
+                differences[index] = difference;
+            }
+        }
+
         /// <summary>
         /// Converts a
         /// <c>String</c>

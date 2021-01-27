@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -267,6 +268,19 @@ namespace iText.Kernel.Pdf {
             // reading and comparing text
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotReplaceToUnicodeMappingTest() {
+            //TODO DEVSIX-4995 This test should be updated when DEVSIX-4995 is resolved
+            String filename = sourceFolder + "toUnicodeAndDifferenceFor32.pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(filename))) {
+                PdfDictionary pdfType3FontDict = (PdfDictionary)pdf.GetPdfObject(112);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
+                //should be another glyph defined in ToUnicode mapping
+                Glyph glyph = pdfType3Font.GetGlyph(32);
+                NUnit.Framework.Assert.AreEqual(0, glyph.GetWidth());
+            }
         }
 
         [NUnit.Framework.Test]
@@ -630,25 +644,25 @@ namespace iText.Kernel.Pdf {
             String outputFileName = destinationFolder + "type3Font_update.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_update.pdf";
             String title = "Type3 font iText 7 Document";
-            PdfReader reader = new PdfReader(inputFileName);
-            PdfWriter writer = new PdfWriter(outputFileName);
-            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
-            Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
-            newGlyph.SetLineWidth(100);
-            newGlyph.MoveTo(540, 5);
-            newGlyph.LineTo(5, 840);
-            newGlyph.Stroke();
-            PdfPage page = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                        // A A A A A A E E E E ~ é ö
-                        .ShowText("A A A A A A E E E E ~ \u00E9 \u00F6").EndText().RestoreState();
-            page.Flush();
-            pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
+            int numberOfGlyphs = 0;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outputFileName).SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION))) {
+                pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
+                Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                newGlyph.SetLineWidth(100);
+                newGlyph.MoveTo(540, 5);
+                newGlyph.LineTo(5, 840);
+                newGlyph.Stroke();
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                // A A A A A A E E E E ~ é ö
+                                .ShowText("A A A A A A E E E E ~ \u00E9 \u00F6").EndText().RestoreState();
+                page.Flush();
+                numberOfGlyphs = pdfType3Font.GetNumberOfGlyphs();
+            }
+            NUnit.Framework.Assert.AreEqual(6, numberOfGlyphs);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
         }
@@ -659,30 +673,57 @@ namespace iText.Kernel.Pdf {
             String outputFileName = destinationFolder + "type3Font_new.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
             String title = "Type3 font iText 7 Document";
-            PdfReader reader = new PdfReader(inputFileName);
-            PdfWriter pdfWriter = new PdfWriter(outputFileName);
-            pdfWriter.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            PdfDocument inputPdfDoc = new PdfDocument(reader);
-            PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
-            outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(5);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
-                (outputPdfDoc));
-            Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
-            newGlyph.SetLineWidth(100);
-            newGlyph.MoveTo(540, 5);
-            newGlyph.LineTo(5, 840);
-            newGlyph.Stroke();
-            PdfPage page = outputPdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                        // AAAAAA EEEE ~ é ö
-                        .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
-            page.Flush();
-            outputPdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
+            int numberOfGlyphs = 0;
+            using (PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName))) {
+                using (PdfDocument outputPdfDoc = new PdfDocument(new PdfWriter(outputFileName).SetCompressionLevel(CompressionConstants
+                    .NO_COMPRESSION))) {
+                    outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+                    PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(5);
+                    PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
+                        (outputPdfDoc));
+                    Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                    newGlyph.SetLineWidth(100);
+                    newGlyph.MoveTo(540, 5);
+                    newGlyph.LineTo(5, 840);
+                    newGlyph.Stroke();
+                    PdfPage page = outputPdfDoc.AddNewPage();
+                    PdfCanvas canvas = new PdfCanvas(page);
+                    canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                        // AAAAAA EEEE ~ é ö
+                                        .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+                    page.Flush();
+                    numberOfGlyphs = pdfType3Font.GetNumberOfGlyphs();
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(6, numberOfGlyphs);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddGlyphToType3FontWithCustomNames() {
+            String inputFile = sourceFolder + "type3FontWithCustomNames.pdf";
+            int initialGlyphsNumber = 0;
+            int finalGlyphsNumber = 0;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new ByteArrayOutputStream
+                ()))) {
+                PdfDictionary pdfType3FontDict = (PdfDictionary)pdfDoc.GetPdfObject(6);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
+                initialGlyphsNumber = pdfType3Font.GetNumberOfGlyphs();
+                Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                newGlyph.SetLineWidth(100);
+                newGlyph.MoveTo(540, 5);
+                newGlyph.LineTo(5, 840);
+                newGlyph.Stroke();
+                PdfPage page = pdfDoc.GetPage(1);
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                // AAAAAA EEEE ~ é ö
+                                .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+                page.Flush();
+                finalGlyphsNumber = pdfType3Font.GetNumberOfGlyphs();
+            }
+            NUnit.Framework.Assert.AreEqual(initialGlyphsNumber + 1, finalGlyphsNumber);
         }
 
         [NUnit.Framework.Test]

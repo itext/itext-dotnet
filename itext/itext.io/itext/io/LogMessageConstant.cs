@@ -313,6 +313,8 @@ namespace iText.IO {
 
         public const String TYPE3_FONT_ISSUE_TAGGED_PDF = "Type 3 font issue. Font Descriptor is required for tagged PDF. FontName shall be specified.";
 
+        public const String TYPE3_FONT_INITIALIZATION_ISSUE = "Type 3 font issue. Font cannot be initialized correctly.";
+
         public const String TYPOGRAPHY_NOT_FOUND = "Cannot find pdfCalligraph module, which was implicitly " + "required by one of the layout properties";
 
         public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, ignoring it";

@@ -233,8 +233,9 @@ namespace iText.Kernel.Font {
             }
             else {
                 for (int i = from; i <= to; i++) {
-                    if (fontEncoding.CanEncode(text.Get(i).GetUnicode())) {
-                        bytes[ptr++] = (byte)fontEncoding.ConvertToByte(text.Get(i).GetUnicode());
+                    Glyph glyph = text.Get(i);
+                    if (fontEncoding.CanEncode(glyph.GetUnicode())) {
+                        bytes[ptr++] = (byte)fontEncoding.ConvertToByte(glyph.GetUnicode());
                     }
                 }
             }
