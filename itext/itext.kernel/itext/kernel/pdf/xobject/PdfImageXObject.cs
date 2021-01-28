@@ -401,9 +401,6 @@ namespace iText.Kernel.Pdf.Xobject {
             if (image.GetFilter() != null) {
                 stream.Put(PdfName.Filter, new PdfName(image.GetFilter()));
             }
-            //TODO: return to this later
-            //        if (image.getLayer() != null)
-            //            put(PdfName.OC, image.getLayer().getRef());
             if (image.GetColorSpace() == -1) {
                 stream.Remove(PdfName.ColorSpace);
             }
@@ -622,7 +619,6 @@ namespace iText.Kernel.Pdf.Xobject {
                                 array.Add(CreateArray(stream, (Object[])obj));
                             }
                             else {
-                                //TODO instance of was removed due to autoport
                                 array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
                             }
                         }
