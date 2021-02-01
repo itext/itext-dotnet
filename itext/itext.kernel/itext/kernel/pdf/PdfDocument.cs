@@ -266,10 +266,15 @@ namespace iText.Kernel.Pdf {
             this.xmpMetadata = xmpMetadata;
         }
 
+        /// <summary>Sets the XMP Metadata.</summary>
+        /// <param name="xmpMeta">the xmpMetadata to set</param>
+        /// <param name="serializeOptions">serialization options</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
+        /// <summary>Sets the XMP Metadata.</summary>
+        /// <param name="xmpMeta">the xmpMetadata to set</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
@@ -1844,6 +1849,14 @@ namespace iText.Kernel.Pdf {
             return fingerPrint;
         }
 
+        /// <summary>
+        /// Find
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// from loaded fonts with corresponding fontProgram and encoding or CMAP.
+        /// </summary>
+        /// <param name="fontProgram">a font name or path to a font program</param>
+        /// <param name="encoding">an encoding or CMAP</param>
+        /// <returns>the font instance, or null if font wasn't found</returns>
         public virtual PdfFont FindFont(String fontProgram, String encoding) {
             foreach (PdfFont font in documentFonts.Values) {
                 if (!font.IsFlushed() && font.IsBuiltWith(fontProgram, encoding)) {
@@ -2153,6 +2166,7 @@ namespace iText.Kernel.Pdf {
             return documentFonts.Values;
         }
 
+        /// <summary>Flushes all newly added or loaded fonts.</summary>
         protected internal virtual void FlushFonts() {
             if (properties.appendMode) {
                 foreach (PdfFont font in GetDocumentFonts()) {
@@ -2264,6 +2278,16 @@ namespace iText.Kernel.Pdf {
             info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
         }
 
+        /// <summary>
+        /// Initializes the new instance of document's structure tree root
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>.
+        /// </summary>
+        /// <remarks>
+        /// Initializes the new instance of document's structure tree root
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>.
+        /// See ISO 32000-1, section 14.7.2 Structure Hierarchy.
+        /// </remarks>
+        /// <param name="str">dictionary to create structure tree root</param>
         protected internal virtual void TryInitTagStructure(PdfDictionary str) {
             try {
                 structTreeRoot = new PdfStructTreeRoot(str, this);
