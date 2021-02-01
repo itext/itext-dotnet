@@ -402,6 +402,31 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CellRotationParagraphIsGone() {
+            // TODO DEVSIX-5029 Content of the first cell is missing
+            String testName = "cellRotationParagraphIsGone.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + cmpPrefix + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            Table table = new Table(2);
+            table.SetFixedLayout();
+            Cell cell = new Cell().Add(new Paragraph().Add("Hello World"));
+            cell.SetRotationAngle(MathUtil.ToRadians(90));
+            cell.SetBackgroundColor(ColorConstants.RED);
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph().Add("AAAAAAAAAAAAAAAAA aaaaaaaaaaaaaaaaaaaaaaaa " + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                ));
+            cell.SetRotationAngle(MathUtil.ToRadians(90));
+            cell.SetBackgroundColor(ColorConstants.BLUE);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private Table CreateTable(float height) {
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             Cell rotatedCell = new Cell();
