@@ -552,7 +552,6 @@ namespace iText.Forms {
         /// </remarks>
         /// <param name="appearance">a String containing a sequence of valid PDF syntax</param>
         /// <returns>current AcroForm</returns>
-        /// <seealso cref="iText.Forms.Fields.PdfFormField.SetDefaultAppearance(System.String)"/>
         public virtual iText.Forms.PdfAcroForm SetDefaultAppearance(String appearance) {
             return Put(PdfName.DA, new PdfString(appearance));
         }

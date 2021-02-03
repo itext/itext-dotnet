@@ -936,17 +936,20 @@ namespace iText.Forms {
             String testName = "testDaInAppendMode.pdf";
             String srcPdf = sourceFolder + testName;
             ByteArrayOutputStream outPdf = new ByteArrayOutputStream();
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf), new StampingProperties(
-                ).UseAppendMode());
-            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
-            PdfFormField field = form.GetField("magenta");
-            field.SetDefaultAppearance("/F1 25 Tf");
-            int objectNumer = field.GetPdfObject().GetIndirectReference().GetObjNumber();
-            pdfDoc.Close();
-            pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(outPdf.ToArray())));
-            PdfString da = ((PdfDictionary)pdfDoc.GetPdfObject(objectNumer)).GetAsString(PdfName.DA);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual("/F1 25 Tf", da.ToString());
+            int objectNumber;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
+                PdfFormField field = form.GetField("magenta");
+                field.SetFontSize(35);
+                field.UpdateDefaultAppearance();
+                objectNumber = field.GetPdfObject().GetIndirectReference().GetObjNumber();
+            }
+            PdfString da;
+            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(new MemoryStream(outPdf.ToArray())))) {
+                da = ((PdfDictionary)pdfDoc_1.GetPdfObject(objectNumber)).GetAsString(PdfName.DA);
+            }
+            NUnit.Framework.Assert.AreEqual("/F1 35 Tf 1 0 1 rg", da.ToString());
         }
 
         [NUnit.Framework.Test]
