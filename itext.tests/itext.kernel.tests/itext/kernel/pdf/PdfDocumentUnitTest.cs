@@ -44,13 +44,39 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf.Layer;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentUnitTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
+        public virtual void GetFontWithDirectFontDictionaryTest() {
+            PdfDictionary initialFontDict = new PdfDictionary();
+            initialFontDict.Put(PdfName.Subtype, PdfName.Type3);
+            initialFontDict.Put(PdfName.FontMatrix, new PdfArray(new float[] { 0.001F, 0, 0, 0.001F, 0, 0 }));
+            initialFontDict.Put(PdfName.Widths, new PdfArray());
+            PdfDictionary encoding = new PdfDictionary();
+            initialFontDict.Put(PdfName.Encoding, encoding);
+            PdfArray differences = new PdfArray();
+            differences.Add(new PdfNumber(AdobeGlyphList.NameToUnicode("a")));
+            differences.Add(new PdfName("a"));
+            encoding.Put(PdfName.Differences, differences);
+            NUnit.Framework.Assert.IsNull(initialFontDict.GetIndirectReference());
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                // prevent no pages exception on close
+                doc.AddNewPage();
+                PdfType3Font font1 = (PdfType3Font)doc.GetFont(initialFontDict);
+                NUnit.Framework.Assert.IsNotNull(font1);
+                // prevent no glyphs for type3 font on close
+                font1.AddGlyph('a', 0, 0, 0, 0, 0);
+            }
+        }
+
         [NUnit.Framework.Test]
         public virtual void CopyPagesWithOCGDifferentNames() {
             IList<IList<String>> ocgNames = new List<IList<String>>();

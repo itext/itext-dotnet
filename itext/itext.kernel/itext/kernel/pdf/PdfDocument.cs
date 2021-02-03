@@ -1772,9 +1772,9 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfResources"/>.
         /// </returns>
         public virtual PdfFont GetFont(PdfDictionary dictionary) {
-            System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
-            if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
-                return documentFonts.Get(dictionary.GetIndirectReference());
+            PdfIndirectReference indirectReference = dictionary.GetIndirectReference();
+            if (indirectReference != null && documentFonts.ContainsKey(indirectReference)) {
+                return documentFonts.Get(indirectReference);
             }
             else {
                 return AddFont(PdfFontFactory.CreateFont(dictionary));

@@ -439,12 +439,16 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.FontBBox, NormalizeBBox(fontProgram.GetFontMetrics().GetBbox()));
             String fontName = fontProgram.GetFontNames().GetFontName();
             base.FlushFontData(fontName, PdfName.Type3);
+            MakeObjectIndirect(GetPdfObject().Get(PdfName.Widths));
             //BaseFont is not listed as key in Type 3 font specification.
             GetPdfObject().Remove(PdfName.BaseFont);
         }
 
         private int[] CalculateWidth(PdfDictionary fontDictionary, int firstChar) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);
+            if (pdfWidths == null) {
+                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.Widths);
+            }
             double[] multipliedWidths = new double[pdfWidths.Size()];
             for (int i = 0; i < pdfWidths.Size(); i++) {
                 multipliedWidths[i] = pdfWidths.GetAsNumber(i).DoubleValue() * GetDimensionsMultiplier();
@@ -478,6 +482,10 @@ namespace iText.Kernel.Font {
 
         private void CalculateAndSetFontMatrix() {
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
+            if (fontMatrixArray == null) {
+                throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.FontMatrix
+                    );
+            }
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
                 fontMatrix[i] = ((PdfNumber)fontMatrixArray.Get(i)).GetValue();

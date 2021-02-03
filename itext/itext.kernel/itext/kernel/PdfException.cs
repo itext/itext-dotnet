@@ -344,6 +344,8 @@ namespace iText.Kernel {
 
         public const String MacroSegmentIdMustBeLtMacroSegmentCount = "macroSegmentId must be < macroSemgentCount";
 
+        public const String MissingRequiredFieldInFontDictionary = "Missing required field {0} in font dictionary.";
+
         public const String MustBeATaggedDocument = "Must be a tagged document.";
 
         public const String NumberOfEntriesInThisXrefSubsectionNotFound = "Number of entries in this xref subsection not found.";
