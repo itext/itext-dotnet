@@ -47,6 +47,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iText.IO.Util;
@@ -154,6 +155,9 @@ namespace iText.Signatures {
                         continue;
                     }
                 }
+                catch (System.IO.IOException e) {
+                    throw new GeneralSecurityException(e.Message);
+                }
                 catch (OcspException) {
                     continue;
                 }
@@ -181,20 +185,6 @@ namespace iText.Signatures {
                 }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Verifies if an OCSP response is genuine
-        /// If it doesn't verify against the issuer certificate and response's certificates, it may verify
-        /// using a trusted anchor or cert.
-        /// </summary>
-        /// <param name="ocspResp">the OCSP response</param>
-        /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
-        ///     </param>
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.2. Use IsValidResponse(Org.BouncyCastle.Ocsp.BasicOcspResp, Org.BouncyCastle.X509.X509Certificate, System.DateTime) instead"
-            )]
-        public virtual void IsValidResponse(BasicOcspResp ocspResp, X509Certificate issuerCert) {
-            IsValidResponse(ocspResp, issuerCert, DateTimeUtil.GetCurrentUtcTime());
         }
 
         /// <summary>

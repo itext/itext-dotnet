@@ -316,7 +316,13 @@ namespace iText.Signatures {
             }
             for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
-                OcspResp ocspResponse = new OcspResp(stream.GetBytes());
+                OcspResp ocspResponse;
+                try {
+                    ocspResponse = new OcspResp(stream.GetBytes());
+                }
+                catch (System.IO.IOException e) {
+                    throw new GeneralSecurityException(e.Message);
+                }
                 if (ocspResponse.Status == 0) {
                     try {
                         ocsps.Add((BasicOcspResp)ocspResponse.GetResponseObject());

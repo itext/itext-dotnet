@@ -194,12 +194,12 @@ namespace iText.Signatures.Sign {
             byte[] signatureContent = null;
             try {
                 PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, HASH_ALGORITHM, false);
-                byte[] attributes = pkcs7.GetAuthenticatedAttributeBytes(docBytesHash, null, null, PdfSigner.CryptoStandard
-                    .CMS);
+                byte[] attributes = pkcs7.GetAuthenticatedAttributeBytes(docBytesHash, PdfSigner.CryptoStandard.CMS, null, 
+                    null);
                 PrivateKeySignature signature = new PrivateKeySignature(pk, HASH_ALGORITHM);
                 byte[] attrSign = signature.Sign(attributes);
                 pkcs7.SetExternalDigest(attrSign, null, signature.GetEncryptionAlgorithm());
-                signatureContent = pkcs7.GetEncodedPKCS7(docBytesHash, null, null, null, PdfSigner.CryptoStandard.CMS);
+                signatureContent = pkcs7.GetEncodedPKCS7(docBytesHash);
             }
             catch (GeneralSecurityException) {
             }

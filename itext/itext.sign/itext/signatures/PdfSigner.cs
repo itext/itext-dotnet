@@ -145,37 +145,6 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="reader">PdfReader that reads the PDF file</param>
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
-        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
-        [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, iText.Kernel.Pdf.StampingProperties) instead."
-            )]
-        public PdfSigner(PdfReader reader, Stream outputStream, bool append)
-            : this(reader, outputStream, null, append) {
-        }
-
-        /// <summary>Creates a PdfSigner instance.</summary>
-        /// <remarks>
-        /// Creates a PdfSigner instance. Uses a
-        /// <see cref="System.IO.MemoryStream"/>
-        /// instead of a temporary file.
-        /// </remarks>
-        /// <param name="reader">PdfReader that reads the PDF file</param>
-        /// <param name="outputStream">OutputStream to write the signed PDF file</param>
-        /// <param name="path">File to which the output is temporarily written</param>
-        /// <param name="append">boolean to indicate whether the signing should happen in append mode or not</param>
-        [System.ObsoleteAttribute(@"will be removed in next major release. Use PdfSigner(iText.Kernel.Pdf.PdfReader, System.IO.Stream, System.String, iText.Kernel.Pdf.StampingProperties) instead."
-            )]
-        public PdfSigner(PdfReader reader, Stream outputStream, String path, bool append)
-            : this(reader, outputStream, path, InitStampingProperties(append)) {
-        }
-
-        /// <summary>Creates a PdfSigner instance.</summary>
-        /// <remarks>
-        /// Creates a PdfSigner instance. Uses a
-        /// <see cref="System.IO.MemoryStream"/>
-        /// instead of a temporary file.
-        /// </remarks>
-        /// <param name="reader">PdfReader that reads the PDF file</param>
-        /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="properties">
         /// 
         /// <see cref="iText.Kernel.Pdf.StampingProperties"/>

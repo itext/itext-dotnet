@@ -66,22 +66,6 @@ namespace iText.Signatures {
 
         private int totalRevisions;
 
-        /// <summary>
-        /// Converts a
-        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// to an array of longs
-        /// </summary>
-        /// <param name="pdfArray">PdfArray to be converted</param>
-        /// <returns>long[] containing the PdfArray values</returns>
-        [System.ObsoleteAttribute(@"Will be removed in 7.2. Use iText.Kernel.Pdf.PdfArray.ToLongArray() instead")]
-        public static long[] AsLongArray(PdfArray pdfArray) {
-            long[] rslt = new long[pdfArray.Size()];
-            for (int k = 0; k < rslt.Length; ++k) {
-                rslt[k] = pdfArray.GetAsNumber(k).LongValue();
-            }
-            return rslt;
-        }
-
         /// <summary>Creates a SignatureUtil instance.</summary>
         /// <remarks>
         /// Creates a SignatureUtil instance. Sets the acroForm field to the acroForm in the PdfDocument.
@@ -92,41 +76,6 @@ namespace iText.Signatures {
             this.document = document;
             // Only create new AcroForm if there is a writer
             this.acroForm = PdfAcroForm.GetAcroForm(document, document.GetWriter() != null);
-        }
-
-        /// <summary>
-        /// Prepares an
-        /// <see cref="PdfPKCS7"/>
-        /// instance for the given signature.
-        /// </summary>
-        /// <remarks>
-        /// Prepares an
-        /// <see cref="PdfPKCS7"/>
-        /// instance for the given signature.
-        /// This method handles signature parsing and might throw an exception if
-        /// signature is malformed.
-        /// <para />
-        /// The returned
-        /// <see cref="PdfPKCS7"/>
-        /// can be used to fetch additional info about the signature
-        /// and also to perform integrity check of data signed by the given signature field.
-        /// <para />
-        /// In order to check that given signature covers the current PdfDocument revision please
-        /// use
-        /// <see cref="SignatureCoversWholeDocument(System.String)"/>
-        /// method.
-        /// </remarks>
-        /// <param name="name">the signature field name</param>
-        /// <returns>
-        /// a
-        /// <see cref="PdfPKCS7"/>
-        /// instance which can be used to fetch additional info about the signature
-        /// and also to perform integrity check of data signed by the given signature field.
-        /// </returns>
-        [System.ObsoleteAttribute(@"This method is deprecated and will be removed in future versions. Please use ReadSignatureData(System.String, System.String) instead."
-            )]
-        public virtual PdfPKCS7 VerifySignature(String name) {
-            return ReadSignatureData(name);
         }
 
         /// <summary>
