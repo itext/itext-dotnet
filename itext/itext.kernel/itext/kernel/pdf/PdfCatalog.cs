@@ -52,16 +52,30 @@ using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>The root of a document’s object hierarchy.</summary>
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
 
         private readonly PdfPagesTree pageTree;
 
+        /// <summary>
+        /// Map of the
+        /// <see cref="PdfNameTree"/>.
+        /// </summary>
+        /// <remarks>
+        /// Map of the
+        /// <see cref="PdfNameTree"/>
+        /// . Used for creation
+        /// <c>name tree</c>
+        /// dictionary.
+        /// </remarks>
         protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new LinkedDictionary<PdfName, PdfNameTree
             >();
 
+        /// <summary>Defining the page labelling for the document.</summary>
         protected internal PdfNumTree pageLabels;
 
+        /// <summary>The document’s optional content properties dictionary.</summary>
         protected internal PdfOCProperties ocProperties;
 
         private const String OutlineRoot = "Outlines";
@@ -83,6 +97,12 @@ namespace iText.Kernel.Pdf {
             <PdfName>(JavaUtil.ArraysAsList(PdfName.SinglePage, PdfName.OneColumn, PdfName.TwoColumnLeft, PdfName.
             TwoColumnRight, PdfName.TwoPageLeft, PdfName.TwoPageRight)));
 
+        /// <summary>
+        /// Create
+        /// <see cref="PdfCatalog"/>
+        /// dictionary.
+        /// </summary>
+        /// <param name="pdfObject">the dictionary to be wrapped</param>
         protected internal PdfCatalog(PdfDictionary pdfObject)
             : base(pdfObject) {
             if (pdfObject == null) {
@@ -94,6 +114,18 @@ namespace iText.Kernel.Pdf {
             pageTree = new PdfPagesTree(this);
         }
 
+        /// <summary>
+        /// Create
+        /// <see cref="PdfCatalog"/>
+        /// to
+        /// <see cref="PdfDocument"/>.
+        /// </summary>
+        /// <param name="pdfDocument">
+        /// A
+        /// <see cref="PdfDocument"/>
+        /// object representing the document
+        /// to which redaction applies
+        /// </param>
         protected internal PdfCatalog(PdfDocument pdfDocument)
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)) {
         }
@@ -101,9 +133,19 @@ namespace iText.Kernel.Pdf {
         /// <summary>Use this method to get the <b>Optional Content Properties Dictionary</b>.</summary>
         /// <remarks>
         /// Use this method to get the <b>Optional Content Properties Dictionary</b>.
-        /// Note that if you call this method, then the PdfDictionary with OCProperties will be
-        /// generated from PdfOCProperties object right before closing the PdfDocument,
-        /// so if you want to make low-level changes in Pdf structures themselves (PdfArray, PdfDictionary, etc),
+        /// Note that if you call this method, then the
+        /// <see cref="PdfDictionary"/>
+        /// with OCProperties will be
+        /// generated from
+        /// <see cref="iText.Kernel.Pdf.Layer.PdfOCProperties"/>
+        /// object right before closing the
+        /// <see cref="PdfDocument"/>
+        /// ,
+        /// so if you want to make low-level changes in Pdf structures themselves (
+        /// <see cref="PdfArray"/>
+        /// ,
+        /// <see cref="PdfDictionary"/>
+        /// , etc),
         /// then you should address directly those objects, e.g.:
         /// <c>
         /// PdfCatalog pdfCatalog = pdfDoc.getCatalog();
@@ -140,6 +182,12 @@ namespace iText.Kernel.Pdf {
             return ocProperties;
         }
 
+        /// <summary>
+        /// Get
+        /// <see cref="PdfDocument"/>
+        /// with indirect reference associated with the object.
+        /// </summary>
+        /// <returns>the resultant dictionary</returns>
         public virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
@@ -151,14 +199,46 @@ namespace iText.Kernel.Pdf {
             logger.Warn("PdfCatalog cannot be flushed manually");
         }
 
+        /// <summary>A value specifying a destination that shall be displayed when the document is opened.</summary>
+        /// <remarks>
+        /// A value specifying a destination that shall be displayed when the document is opened.
+        /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
+        /// </remarks>
+        /// <param name="destination">
+        /// instance of
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>.
+        /// </param>
+        /// <returns>destination</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
             return Put(PdfName.OpenAction, destination.GetPdfObject());
         }
 
+        /// <summary>A value specifying an action that shall be performed when the document is opened.</summary>
+        /// <remarks>
+        /// A value specifying an action that shall be performed when the document is opened.
+        /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
+        /// </remarks>
+        /// <param name="action">
+        /// instance of
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>.
+        /// </param>
+        /// <returns>action</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action) {
             return Put(PdfName.OpenAction, action.GetPdfObject());
         }
 
+        /// <summary>The actions that shall be taken in response to various trigger events affecting the document as a whole.
+        ///     </summary>
+        /// <remarks>
+        /// The actions that shall be taken in response to various trigger events affecting the document as a whole.
+        /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
+        /// </remarks>
+        /// <param name="key">the key of which the associated value needs to be returned</param>
+        /// <param name="action">
+        /// instance of
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>.
+        /// </param>
+        /// <returns>additional action</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
@@ -190,6 +270,11 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Get page mode of the document.</summary>
+        /// <returns>
+        /// current instance of
+        /// <see cref="PdfCatalog"/>
+        /// </returns>
         public virtual PdfName GetPageMode() {
             return GetPdfObject().GetAsName(PdfName.PageMode);
         }
@@ -208,6 +293,8 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Get page layout of the document.</summary>
+        /// <returns>name object of page layout that shall be used when document is opened</returns>
         public virtual PdfName GetPageLayout() {
             return GetPdfObject().GetAsName(PdfName.PageLayout);
         }
@@ -229,6 +316,8 @@ namespace iText.Kernel.Pdf {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
 
+        /// <summary>Get viewer preferences of the document.</summary>
+        /// <returns>dictionary of viewer preferences</returns>
         public virtual PdfViewerPreferences GetViewerPreferences() {
             PdfDictionary viewerPreferences = GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
             if (viewerPreferences != null) {
@@ -285,10 +374,25 @@ namespace iText.Kernel.Pdf {
             Put(PdfName.Lang, lang);
         }
 
+        /// <summary>Get natural language.</summary>
+        /// <returns>natural language</returns>
         public virtual PdfString GetLang() {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
 
+        /// <summary>
+        /// Add an extensions dictionary containing developer prefix identification and version
+        /// numbers for developer extensions that occur in this document.
+        /// </summary>
+        /// <remarks>
+        /// Add an extensions dictionary containing developer prefix identification and version
+        /// numbers for developer extensions that occur in this document.
+        /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
+        /// </remarks>
+        /// <param name="extension">
+        /// enables developers to identify their own extension
+        /// relative to a base version of PDF
+        /// </param>
         public virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {
             PdfDictionary extensions = GetPdfObject().GetAsDictionary(PdfName.Extensions);
             if (extensions == null) {
@@ -347,12 +451,23 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Add key and value to
+        /// <see cref="PdfCatalog"/>
+        /// dictionary.
+        /// </summary>
+        /// <param name="key">the dictionary key corresponding with the PDF object</param>
+        /// <param name="value">the value of key</param>
+        /// <returns>the key and value</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             SetModified();
             return this;
         }
 
+        /// <summary>Remove key from catalog dictionary.</summary>
+        /// <param name="key">the dictionary key corresponding with the PDF object</param>
+        /// <returns>the key</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
             GetPdfObject().Remove(key);
             SetModified();
@@ -459,7 +574,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method removes all outlines associated with a given page</summary>
-        /// <param name="page"/>
+        /// <param name="page">the page to remove outlines</param>
         internal virtual void RemoveOutlines(PdfPage page) {
             if (GetDocument().GetWriter() == null) {
                 return;
@@ -477,7 +592,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>This method sets the root outline element in the catalog.</summary>
-        /// <param name="outline"/>
+        /// <param name="outline">the outline dictionary that shall be the root of the document’s outline hierarchy</param>
         internal virtual void AddRootOutline(PdfOutline outline) {
             if (!outlineMode) {
                 return;

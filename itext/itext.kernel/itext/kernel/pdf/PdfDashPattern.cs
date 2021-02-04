@@ -42,6 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
+    /// <summary>Represents the line dash pattern.</summary>
+    /// <remarks>
+    /// Represents the line dash pattern. The line dash pattern shall control the pattern
+    /// of dashes and gaps used to stroke paths. It shall be specified by a dash, gap and
+    /// a dash phase.
+    /// </remarks>
     public class PdfDashPattern {
         /// <summary>This is the length of a dash.</summary>
         private float dash = -1;
@@ -52,31 +58,47 @@ namespace iText.Kernel.Pdf {
         /// <summary>This is the phase.</summary>
         private float phase = -1;
 
+        /// <summary>Creates a new line dash pattern.</summary>
         public PdfDashPattern() {
         }
 
+        /// <summary>Creates a new line dash pattern.</summary>
+        /// <param name="dash">length of dash</param>
         public PdfDashPattern(float dash) {
             this.dash = dash;
         }
 
+        /// <summary>Creates a new line dash pattern.</summary>
+        /// <param name="dash">length of dash</param>
+        /// <param name="gap">length of gap</param>
         public PdfDashPattern(float dash, float gap) {
             this.dash = dash;
             this.gap = gap;
         }
 
+        /// <summary>Creates a new line dash pattern.</summary>
+        /// <param name="dash">length of dash</param>
+        /// <param name="gap">length of gap</param>
+        /// <param name="phase">this is the phase</param>
         public PdfDashPattern(float dash, float gap, float phase)
             : this(dash, gap) {
             this.phase = phase;
         }
 
+        /// <summary>Gets dash of PdfDashPattern.</summary>
+        /// <returns>float value.</returns>
         public virtual float GetDash() {
             return dash;
         }
 
+        /// <summary>Gets gap of PdfDashPattern.</summary>
+        /// <returns>float value.</returns>
         public virtual float GetGap() {
             return gap;
         }
 
+        /// <summary>Gets phase of PdfDashPattern.</summary>
+        /// <returns>float value.</returns>
         public virtual float GetPhase() {
             return phase;
         }
