@@ -72,8 +72,7 @@ namespace iText.Kernel.Font {
 
         protected internal CMapEncoding cmapEncoding;
 
-        //longTag is actually ordered set of usedGlyphs, shall be renamed in 7.2
-        protected internal ICollection<int> longTag;
+        protected internal ICollection<int> usedGlyphs;
 
         protected internal int cidFontType;
 
@@ -92,7 +91,7 @@ namespace iText.Kernel.Font {
             this.embedded = true;
             vertical = cmap.EndsWith("V");
             cmapEncoding = new CMapEncoding(cmap);
-            longTag = new SortedSet<int>();
+            usedGlyphs = new SortedSet<int>();
             cidFontType = CID_FONT_TYPE_2;
             if (ttf.IsFontSpecific()) {
                 specificUnicodeDifferences = new char[256];
@@ -120,7 +119,7 @@ namespace iText.Kernel.Font {
             vertical = cmap.EndsWith("V");
             String uniMap = GetCompatibleUniMap(fontProgram.GetRegistry());
             cmapEncoding = new CMapEncoding(cmap, uniMap);
-            longTag = new SortedSet<int>();
+            usedGlyphs = new SortedSet<int>();
             cidFontType = CID_FONT_TYPE_0;
         }
 
@@ -190,7 +189,7 @@ namespace iText.Kernel.Font {
                     LogManager.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE);
                 }
             }
-            longTag = new SortedSet<int>();
+            usedGlyphs = new SortedSet<int>();
             subset = false;
         }
 
@@ -313,7 +312,7 @@ namespace iText.Kernel.Font {
                 byte[] bytes = new byte[totalByteCount];
                 int offset = 0;
                 for (int i = glyphLine.start; i < glyphLine.end; i++) {
-                    longTag.Add(glyphLine.Get(i).GetCode());
+                    usedGlyphs.Add(glyphLine.Get(i).GetCode());
                     offset = cmapEncoding.FillCmapBytes(glyphLine.Get(i).GetCode(), bytes, offset);
                 }
                 return bytes;
@@ -324,7 +323,7 @@ namespace iText.Kernel.Font {
         }
 
         public override byte[] ConvertToBytes(Glyph glyph) {
-            longTag.Add(glyph.GetCode());
+            usedGlyphs.Add(glyph.GetCode());
             return cmapEncoding.GetCmapBytes(glyph.GetCode());
         }
 
@@ -669,30 +668,9 @@ namespace iText.Kernel.Font {
             return GetCidFont(fontDescriptor, fontName, ttf != null && !ttf.IsCff());
         }
 
-        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        ///     </summary>
-        /// <remarks>
-        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
-        /// </remarks>
-        /// <param name="ttf">a font program of this font instance.</param>
-        /// <param name="longTag">
-        /// a set of integers, which are glyph ids that denote used glyphs.
-        /// This set is updated inside of the method if needed.
-        /// </param>
-        /// <param name="includeMetrics">
-        /// used to define whether longTag map is populated with glyph metrics.
-        /// Deprecated and is not used right now.
-        /// </param>
-        [System.ObsoleteAttribute(@"will be removed in 7.2")]
-        protected internal virtual void AddRangeUni(TrueTypeFont ttf, IDictionary<int, int[]> longTag, bool includeMetrics
-            ) {
-            AddRangeUni(ttf, longTag.Keys);
-        }
-
         private void ConvertToBytes(Glyph glyph, ByteBuffer result) {
             int code = glyph.GetCode();
-            longTag.Add(code);
+            usedGlyphs.Add(code);
             cmapEncoding.FillCmapBytes(code, result);
         }
 
@@ -728,11 +706,11 @@ namespace iText.Kernel.Font {
                     String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
                     PdfStream fontStream;
-                    ttf.UpdateUsedGlyphs((SortedSet<int>)longTag, subset, subsetRanges);
+                    ttf.UpdateUsedGlyphs((SortedSet<int>)usedGlyphs, subset, subsetRanges);
                     if (ttf.IsCff()) {
                         byte[] cffBytes;
                         if (subset) {
-                            cffBytes = new CFFFontSubset(ttf.GetFontStreamBytes(), longTag).Process();
+                            cffBytes = new CFFFontSubset(ttf.GetFontStreamBytes(), usedGlyphs).Process();
                         }
                         else {
                             cffBytes = ttf.GetFontStreamBytes();
@@ -749,7 +727,7 @@ namespace iText.Kernel.Font {
                         //getDirectoryOffset() > 0 means ttc, which shall be subsetted anyway.
                         if (subset || ttf.GetDirectoryOffset() > 0) {
                             try {
-                                ttfBytes = ttf.GetSubset(longTag, subset);
+                                ttfBytes = ttf.GetSubset(usedGlyphs, subset);
                             }
                             catch (iText.IO.IOException) {
                                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
@@ -865,7 +843,7 @@ namespace iText.Kernel.Font {
             stream.WriteByte('[');
             int lastNumber = -10;
             bool firstTime = true;
-            foreach (int code in longTag) {
+            foreach (int code in usedGlyphs) {
                 Glyph glyph = fontProgram.GetGlyphByCode(code);
                 if (glyph.GetWidth() == FontProgram.DEFAULT_WIDTH) {
                     continue;
@@ -902,7 +880,7 @@ namespace iText.Kernel.Font {
             //accumulate long tag into a subset and write it.
             List<Glyph> glyphGroup = new List<Glyph>(100);
             int bfranges = 0;
-            foreach (int? glyphId in longTag) {
+            foreach (int? glyphId in usedGlyphs) {
                 Glyph glyph = fontProgram.GetGlyphByCode((int)glyphId);
                 if (glyph.GetChars() != null) {
                     glyphGroup.Add(glyph);
@@ -945,23 +923,6 @@ namespace iText.Kernel.Font {
         private static String ToHex4(char ch) {
             String s = "0000" + JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
-        }
-
-        /// <summary>The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        ///     </summary>
-        /// <remarks>
-        /// The method will update set of used glyphs with range used in subset or with all glyphs if there is no subset.
-        /// This set of used glyphs is required for building width array and ToUnicode CMAP.
-        /// </remarks>
-        /// <param name="ttf">a font program of this font instance.</param>
-        /// <param name="longTag">
-        /// a set of integers, which are glyph ids that denote used glyphs.
-        /// This set is updated inside of the method if needed.
-        /// </param>
-        [System.ObsoleteAttribute(@"use iText.IO.Font.TrueTypeFont.UpdateUsedGlyphs(Java.Util.SortedSet{E}, bool, System.Collections.Generic.IList{E}) instead."
-            )]
-        protected internal virtual void AddRangeUni(TrueTypeFont ttf, ICollection<int> longTag) {
-            ttf.UpdateUsedGlyphs((SortedSet<int>)longTag, subset, subsetRanges);
         }
 
         private String GetCompatibleUniMap(String registry) {

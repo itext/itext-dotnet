@@ -152,7 +152,7 @@ namespace iText.Kernel.Font {
             Normalize1000UnitsToGlyphSpaceUnits(fontMatrixArray);
             NormalizeGlyphSpaceUnitsTo1000Units(fontBBoxRect);
             NormalizeGlyphSpaceUnitsTo1000Units(widthsArray);
-            int firstChar = InitializeShortTag(fontDictionary);
+            int firstChar = InitializeUsedGlyphs(fontDictionary);
             fontMatrix = fontMatrixArray;
             InitializeFontBBox(fontBBoxRect);
             InitializeTypoAscenderDescender(fontBBoxRect);
@@ -376,7 +376,7 @@ namespace iText.Kernel.Font {
             double[] widths = new double[lastChar - firstChar + 1];
             for (int k = firstChar; k <= lastChar; ++k) {
                 int i = k - firstChar;
-                if (shortTag[k] == 0) {
+                if (usedGlyphs[k] == 0) {
                     widths[i] = 0;
                 }
                 else {
@@ -524,12 +524,12 @@ namespace iText.Kernel.Font {
             return widths;
         }
 
-        private int InitializeShortTag(PdfDictionary fontDictionary) {
+        private int InitializeUsedGlyphs(PdfDictionary fontDictionary) {
             int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
             int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE
                 );
             for (int i = firstChar; i <= lastChar; i++) {
-                shortTag[i] = 1;
+                usedGlyphs[i] = 1;
             }
             return firstChar;
         }
