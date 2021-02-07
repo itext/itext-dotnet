@@ -560,7 +560,6 @@ namespace iText.Kernel.Pdf.Xobject {
                             }
                             else {
                                 if (value is byte[]) {
-                                    //TODO Check inline images
                                     PdfStream globalsStream = new PdfStream();
                                     globalsStream.GetOutputStream().WriteBytes((byte[])value);
                                     dictionary.Put(PdfName.JBIG2Globals, globalsStream);
