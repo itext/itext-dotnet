@@ -51,6 +51,15 @@ namespace iText.Layout {
         public static float EPS = 0.0001f;
 
         [NUnit.Framework.Test]
+        public virtual void CopyConstructorTest() {
+            Style myStyle = new Style();
+            myStyle.SetFontColor(ColorConstants.RED);
+            Style copiedStyle = new Style(myStyle);
+            NUnit.Framework.Assert.AreEqual(ColorConstants.RED, copiedStyle.GetProperty<TransparentColor>(Property.FONT_COLOR
+                ).GetColor());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AddingStyleBeforeSettingPropertyTest() {
             Style myStyle = new Style();
             myStyle.SetFontColor(ColorConstants.RED);

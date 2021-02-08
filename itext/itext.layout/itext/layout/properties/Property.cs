@@ -61,6 +61,10 @@ namespace iText.Layout.Properties {
     public sealed class Property {
         public const int ACTION = 1;
 
+        public const int ALIGN_CONTENT = 130;
+
+        public const int ALIGN_SELF = 129;
+
         public const int APPEARANCE_STREAM_LAYOUT = 82;
 
         public const int AREA_BREAK_TYPE = 2;
@@ -122,6 +126,8 @@ namespace iText.Layout.Properties {
         public const int FILL_AVAILABLE_AREA_ON_SPLIT = 87;
 
         public const int FIRST_LINE_INDENT = 18;
+
+        public const int FLEX_WRAP = 128;
 
         public const int FLOAT = 99;
 
