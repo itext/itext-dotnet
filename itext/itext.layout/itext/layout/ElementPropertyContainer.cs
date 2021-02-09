@@ -325,27 +325,6 @@ namespace iText.Layout {
             return this.SetFontFamily(fontFamilyNames.ToArray(new String[fontFamilyNames.Count]));
         }
 
-        /// <summary>Sets the font family of this Element.</summary>
-        /// <remarks>
-        /// Sets the font family of this Element. Note that
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// shall be set as well.
-        /// See
-        /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
-        /// </remarks>
-        /// <seealso cref="iText.IO.Font.Constants.StandardFontFamilies"/>
-        /// <param name="font">
-        /// a font name to fetch from
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// </param>
-        /// <returns>this Element.</returns>
-        [System.ObsoleteAttribute(@"This method will be removed in 7.2. Use ElementPropertyContainer{T}.SetFontFamily(System.String[]) instead."
-            )]
-        public virtual T SetFont(String font) {
-            SetProperty(Property.FONT, font);
-            return (T)(Object)this;
-        }
-
         /// <summary>Sets the font color of this Element.</summary>
         /// <param name="fontColor">
         /// a
@@ -485,7 +464,9 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundImage(BackgroundImage image) {
-            SetProperty(Property.BACKGROUND_IMAGE, image);
+            IList<BackgroundImage> backgroundImages = new List<BackgroundImage>();
+            backgroundImages.Add(image);
+            SetProperty(Property.BACKGROUND_IMAGE, backgroundImages);
             return (T)(Object)this;
         }
 

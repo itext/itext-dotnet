@@ -45,7 +45,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.Test;
 
-namespace iText.Layout {
+namespace iText.StyledXmlParser.Util {
     public class FontFamilySplitterTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FontFamilySplitter() {
@@ -63,7 +63,7 @@ namespace iText.Layout {
             String[] splitFontFamilies = iText.IO.Util.StringUtil.Split(fontFamilies, "\n");
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < splitFontFamilies.Length; i += 2) {
-                IList<String> fontFamily = iText.Layout.Font.FontFamilySplitter.SplitFontFamily(splitFontFamilies[i]);
+                IList<String> fontFamily = FontFamilySplitterUtil.SplitFontFamily(splitFontFamilies[i]);
                 result.Length = 0;
                 foreach (String ff in fontFamily) {
                     result.Append(ff).Append("; ");

@@ -129,7 +129,9 @@ namespace iText.Layout.Renderer {
                 glyphLine.Add(glyph);
             }
             renderer.SetText(new GlyphLine(), pdfFont);
-            renderer.SetText(glyphLine, 1, 2);
+            glyphLine.start = 1;
+            glyphLine.end = 2;
+            renderer.SetText(glyphLine, pdfFont);
             GlyphLine actualLine = renderer.GetText();
             NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
             Glyph glyph_1 = actualLine.Get(0);

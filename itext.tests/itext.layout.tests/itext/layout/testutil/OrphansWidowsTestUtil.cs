@@ -516,7 +516,7 @@ namespace iText.Layout.Testutil {
             Rectangle effectiveArea = document.GetPageEffectiveArea(pdfDocument.GetDefaultPageSize());
             Rectangle rectangle = new Rectangle(36, 550, effectiveArea.GetWidth(), canvasHeight + LINES_SPACE_EPS);
             pdfCanvas.SaveState().SetFillColor(ColorConstants.MAGENTA).Rectangle(rectangle).Fill().RestoreState();
-            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDocument, rectangle);
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, rectangle);
             canvas.Add(paraOnCanvas);
             canvas.Close();
         }

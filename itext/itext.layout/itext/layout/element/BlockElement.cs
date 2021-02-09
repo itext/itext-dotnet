@@ -70,7 +70,6 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case Property.OVERFLOW:
                 case Property.OVERFLOW_X:
                 case Property.OVERFLOW_Y: {
                     return (T1)(Object)OverflowPropertyValue.FIT;

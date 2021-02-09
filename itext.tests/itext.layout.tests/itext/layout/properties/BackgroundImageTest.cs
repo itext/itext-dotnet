@@ -223,7 +223,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(30), null);
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -245,7 +245,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePercentValue(30));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -268,7 +268,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePercentValue(20), UnitValue.
                     CreatePercentValue(20));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -290,7 +290,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(15), null);
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -312,7 +312,7 @@ namespace iText.Layout.Properties {
                     );
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(null, UnitValue.CreatePointValue(20));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -335,7 +335,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(50), UnitValue.CreatePointValue
                     (100));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -358,7 +358,7 @@ namespace iText.Layout.Properties {
                 textElement.SetFontSize(50);
                 backgroundImage.GetBackgroundSize().SetBackgroundSizeToValues(UnitValue.CreatePointValue(-1), UnitValue.CreatePointValue
                     (-1));
-                textElement.SetProperty(Property.BACKGROUND_IMAGE, backgroundImage);
+                textElement.SetBackgroundImage(backgroundImage);
                 doc.Add(new Paragraph(textElement));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -646,8 +646,8 @@ namespace iText.Layout.Properties {
             AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
                 GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
                 .WHITE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new iText.Layout.Properties.BackgroundImage(gradientBuilder
-                );
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+                (gradientBuilder).Build();
             AbstractLinearGradientBuilder topGradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddColorStop(new GradientColorStop(ColorConstants
                 .RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue())).AddColorStop

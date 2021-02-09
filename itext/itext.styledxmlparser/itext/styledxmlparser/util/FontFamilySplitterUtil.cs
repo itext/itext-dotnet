@@ -45,10 +45,9 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
 
-namespace iText.Layout.Font {
+namespace iText.StyledXmlParser.Util {
     /// <summary>Split CSS 'font-family' string into list of font-families or generic-families</summary>
-    [System.ObsoleteAttribute(@"will be moved to styled-xml-parser module in iText 7.2.")]
-    public sealed class FontFamilySplitter {
+    public sealed class FontFamilySplitterUtil {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$"
             );
 

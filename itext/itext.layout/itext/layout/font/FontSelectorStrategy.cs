@@ -63,14 +63,13 @@ namespace iText.Layout.Font {
 
         protected internal readonly FontProvider provider;
 
-        [System.ObsoleteAttribute(@"This field will be renamed to additionalFonts in iText Core 7.2.")]
-        protected internal readonly FontSet tempFonts;
+        protected internal readonly FontSet additionalFonts;
 
         protected internal FontSelectorStrategy(String text, FontProvider provider, FontSet additionalFonts) {
             this.text = text;
             this.index = 0;
             this.provider = provider;
-            this.tempFonts = additionalFonts;
+            this.additionalFonts = additionalFonts;
         }
 
         public virtual bool EndOfText() {
@@ -86,7 +85,7 @@ namespace iText.Layout.Font {
         /// <returns>cached or just created PdfFont on success, otherwise null.</returns>
         /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)"/>
         protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
-            return provider.GetPdfFont(fontInfo, tempFonts);
+            return provider.GetPdfFont(fontInfo, additionalFonts);
         }
     }
 }

@@ -71,9 +71,6 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
-        [Obsolete]
-        protected internal float previousDescent = 0;
-
         protected internal IList<LineRenderer> lines = null;
 
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>

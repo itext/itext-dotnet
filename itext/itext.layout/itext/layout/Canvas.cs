@@ -126,47 +126,11 @@ namespace iText.Layout {
             this.rootArea = rootArea;
         }
 
-        /// <summary>
-        /// Creates a new Canvas to manipulate a specific document and content stream, which might be for example a page
-        /// or
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// stream.
-        /// </summary>
-        /// <param name="pdfCanvas">the low-level content stream writer</param>
-        /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
-        /// <param name="rootArea">
-        /// the maximum area that the Canvas may write upon
-        /// To be removed in 7.2
-        /// </param>
-        [System.ObsoleteAttribute(@"use Canvas(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Geom.Rectangle) instead."
-            )]
-        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
-            : base() {
-            this.pdfDocument = pdfDocument;
-            this.pdfCanvas = pdfCanvas;
-            this.rootArea = rootArea;
-        }
-
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
         /// <param name="pdfCanvas">The low-level content stream writer</param>
         /// <param name="rootArea">The maximum area that the Canvas may write upon</param>
         /// <param name="immediateFlush">Whether to flush the canvas immediately after operations, false otherwise</param>
         public Canvas(PdfCanvas pdfCanvas, Rectangle rootArea, bool immediateFlush)
-            : this(pdfCanvas, rootArea) {
-            this.immediateFlush = immediateFlush;
-        }
-
-        /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>
-        /// <param name="pdfCanvas">The low-level content stream writer</param>
-        /// <param name="pdfDocument">The document that the resulting content stream will be written to</param>
-        /// <param name="rootArea">The maximum area that the Canvas may write upon</param>
-        /// <param name="immediateFlush">
-        /// Whether to flush the canvas immediately after operations, false otherwise
-        /// To be removed in 7.2
-        /// </param>
-        [System.ObsoleteAttribute(@"use Canvas(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Geom.Rectangle, bool) instead."
-            )]
-        public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool immediateFlush)
             : this(pdfCanvas, rootArea) {
             this.immediateFlush = immediateFlush;
         }

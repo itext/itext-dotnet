@@ -24,9 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iText.IO.Util;
-using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Util;
 
 namespace iText.StyledXmlParser.Css.Font {
     /// <summary>
@@ -58,7 +58,7 @@ namespace iText.StyledXmlParser.Css.Font {
             foreach (CssDeclaration descriptor in properties) {
                 if ("font-family".Equals(descriptor.GetProperty())) {
                     // TODO DEVSIX-2534
-                    fontFamily = FontFamilySplitter.RemoveQuotes(descriptor.GetExpression());
+                    fontFamily = FontFamilySplitterUtil.RemoveQuotes(descriptor.GetExpression());
                 }
                 else {
                     if ("src".Equals(descriptor.GetProperty())) {

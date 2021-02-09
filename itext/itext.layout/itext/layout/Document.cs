@@ -66,22 +66,6 @@ namespace iText.Layout {
     /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>.
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_LEFT instead."
-            )]
-        protected internal float leftMargin = 36;
-
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_RIGHT instead."
-            )]
-        protected internal float rightMargin = 36;
-
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_TOP instead."
-            )]
-        protected internal float topMargin = 36;
-
-        [System.ObsoleteAttribute(@"To be removed in 7.2. Use iText.Layout.Properties.Property.MARGIN_BOTTOM instead."
-            )]
-        protected internal float bottomMargin = 36;
-
         /// <summary>
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
@@ -248,7 +232,6 @@ namespace iText.Layout {
         /// <param name="leftMargin">a <c>float</c> containing the new left margin value</param>
         public virtual void SetLeftMargin(float leftMargin) {
             SetProperty(Property.MARGIN_LEFT, leftMargin);
-            this.leftMargin = leftMargin;
         }
 
         /// <summary>Gets the right margin, measured in points</summary>
@@ -262,7 +245,6 @@ namespace iText.Layout {
         /// <param name="rightMargin">a <c>float</c> containing the new right margin value</param>
         public virtual void SetRightMargin(float rightMargin) {
             SetProperty(Property.MARGIN_RIGHT, rightMargin);
-            this.rightMargin = rightMargin;
         }
 
         /// <summary>Gets the top margin, measured in points</summary>
@@ -276,7 +258,6 @@ namespace iText.Layout {
         /// <param name="topMargin">a <c>float</c> containing the new top margin value</param>
         public virtual void SetTopMargin(float topMargin) {
             SetProperty(Property.MARGIN_TOP, topMargin);
-            this.topMargin = topMargin;
         }
 
         /// <summary>Gets the bottom margin, measured in points</summary>
@@ -290,7 +271,6 @@ namespace iText.Layout {
         /// <param name="bottomMargin">a <c>float</c> containing the new bottom margin value</param>
         public virtual void SetBottomMargin(float bottomMargin) {
             SetProperty(Property.MARGIN_BOTTOM, bottomMargin);
-            this.bottomMargin = bottomMargin;
         }
 
         /// <summary>Convenience method to set all margins with one method.</summary>

@@ -501,14 +501,8 @@ namespace iText.Layout.Renderer {
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            Object uncastedBackgroundImage = this.GetProperty<Object>(Property.BACKGROUND_IMAGE);
-            IList<BackgroundImage> backgroundImagesList;
-            if (uncastedBackgroundImage is BackgroundImage) {
-                backgroundImagesList = JavaCollectionsUtil.SingletonList((BackgroundImage)uncastedBackgroundImage);
-            }
-            else {
-                backgroundImagesList = this.GetProperty<IList<BackgroundImage>>(Property.BACKGROUND_IMAGE);
-            }
+            IList<BackgroundImage> backgroundImagesList = this.GetProperty<IList<BackgroundImage>>(Property.BACKGROUND_IMAGE
+                );
             if (background != null || backgroundImagesList != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
                 bool isTagged = drawContext.IsTaggingEnabled();
@@ -2475,14 +2469,7 @@ namespace iText.Layout.Renderer {
                 return (PdfFont)font;
             }
             else {
-                if (font is String || font is String[]) {
-                    if (font is String) {
-                        ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
-                            );
-                        IList<String> splitFontFamily = FontFamilySplitter.SplitFontFamily((String)font);
-                        font = splitFontFamily.ToArray(new String[splitFontFamily.Count]);
-                    }
+                if (font is String[]) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
                         throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
