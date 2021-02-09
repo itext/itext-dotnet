@@ -301,7 +301,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.Count == 0) {
-                throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NO_PAGES);
+                LOGGER.Info(iText.IO.LogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
+                document.AddNewPage();
             }
             if (generated) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_PAGES_TREE_COULD_BE_GENERATED_ONLY_ONCE);

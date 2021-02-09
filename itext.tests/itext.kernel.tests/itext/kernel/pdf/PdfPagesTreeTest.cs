@@ -21,20 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.IO.Source;
-using iText.Kernel;
-using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
-    public class PdfPagesTreeUnitTest : ExtendedITextTest {
+    public class PdfPagesTreeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void CannotGenerateTreeDocHasNoPagesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                pdfDoc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.DOCUMENT_HAS_NO_PAGES))
-;
+        public virtual void GenerateTreeDocHasNoPagesTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
         }
     }
 }

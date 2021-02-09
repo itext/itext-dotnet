@@ -179,8 +179,6 @@ namespace iText.Kernel.Exceptions {
 
         public const String DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT = "Document doesn't contain StructTreeRoot.";
 
-        public const String DOCUMENT_HAS_NO_PAGES = "Document has no pages.";
-
         public const String DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT = "Document has no PDF Catalog object.";
 
         public const String DOCUMENT_HAS_NOT_BEEN_READ_YET = "The PDF document has not been read yet. Document " +

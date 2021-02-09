@@ -754,6 +754,11 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     CheckIsoConformance();
+                    if (GetNumberOfPages() == 0) {
+                        // Add new page here, not in PdfPagesTree#generateTree method, so that any page
+                        // operations are available when handling the START_PAGE and INSERT_PAGE events
+                        AddNewPage();
+                    }
                     PdfObject crypto = null;
                     ICollection<PdfIndirectReference> forbiddenToFlush = new HashSet<PdfIndirectReference>();
                     if (properties.appendMode) {

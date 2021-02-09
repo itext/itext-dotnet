@@ -58,6 +58,8 @@ namespace iText.IO {
 
         public const String ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT = "Attempt to create a tag for a hint which is already marked as finished, tag will not be created.";
 
+        public const String ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES = "Attempt to generate PDF pages tree without any pages, so a new page will be added.";
+
         public const String ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT = "An attempt is made to move the tag tree pointer to the tag parent which has been already flushed. Tag tree pointer is moved to the root tag instead.";
 
         /// <summary>The log message for hashcode method call for modified instance of PdfNumber object.</summary>
