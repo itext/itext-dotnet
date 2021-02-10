@@ -123,6 +123,16 @@ namespace iText.Layout.Font {
             return AddRange((int)ch);
         }
 
+        /// <summary>
+        /// Creates a
+        /// <see cref="Range"/>
+        /// instance based on added ranges.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="Range"/>
+        /// instance based on added ranges
+        /// </returns>
         public virtual Range Create() {
             return new Range(ranges);
         }

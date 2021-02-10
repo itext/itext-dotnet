@@ -46,12 +46,20 @@ using iText.IO.Util;
 
 namespace iText.Layout.Font {
     /// <summary>
-    /// Ordered range for
-    /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
+    /// Class represents ordered list of
+    /// <see cref="SubRange"/>.
     /// </summary>
     /// <remarks>
-    /// Ordered range for
-    /// <see cref="FontInfo.GetFontUnicodeRange()"/>.
+    /// Class represents ordered list of
+    /// <see cref="SubRange"/>.
+    /// This class is used in
+    /// <see cref="FontInfo"/>
+    /// as internal field and in one of the overloads of
+    /// the
+    /// <see cref="FontProvider.AddFont(System.String, System.String, Range)"/>
+    /// method as range
+    /// of characters to be used in font.
+    /// <para />
     /// To create a custom Range instance
     /// <see cref="RangeBuilder"/>
     /// shall be used.
