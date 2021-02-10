@@ -51,56 +51,6 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfTokeniserTest/";
 
-        private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
-            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                ))));
-            for (int i = 0; i < expectedTypes.Length; i++) {
-                tok.NextValidToken();
-                //System.out.println(tok.getTokenType() + " -> " + tok.getStringValue());
-                NUnit.Framework.Assert.AreEqual(expectedTypes[i], tok.GetTokenType(), "Position " + i);
-            }
-        }
-
-        private void CheckTokenValues(String data, params byte[][] expectedValues) {
-            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                ))));
-            for (int i = 0; i < expectedValues.Length; i++) {
-                tok.NextValidToken();
-                //System.out.println(tok.getTokenType() + " -> " + tok.getStringValue());
-                NUnit.Framework.Assert.AreEqual(expectedValues[i], tok.GetByteContent(), "Position " + i);
-            }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestOneNumber() {
-            CheckTokenTypes("/Name1 70", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
-                .EndOfFile);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestTwoNumbers() {
-            CheckTokenTypes("/Name1 70/Name 2", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
-                .Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType.EndOfFile);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TokenTypesTest() {
-            CheckTokenTypes("<</Size 70/Root 46 0 R/Info 44 0 R/ID[<8C2547D58D4BD2C6F3D32B830BE3259D><8F69587888569A458EB681A4285D5879>]/Prev 116 >>"
-                , PdfTokenizer.TokenType.StartDic, PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
-                .Name, PdfTokenizer.TokenType.Ref, PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Ref, PdfTokenizer.TokenType
-                .Name, PdfTokenizer.TokenType.StartArray, PdfTokenizer.TokenType.String, PdfTokenizer.TokenType.String
-                , PdfTokenizer.TokenType.EndArray, PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
-                .EndDic, PdfTokenizer.TokenType.EndOfFile);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NumberValueInTheEndTest() {
-            CheckTokenValues("123", new byte[] { 49, 50, 51 }, new byte[] {  });
-        }
-
-        //EndOfFile buffer
         [NUnit.Framework.Test]
         public virtual void EncodingTest() {
             RandomAccessSourceFactory factory;
@@ -256,17 +206,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(tok.GetTokenType(), PdfTokenizer.TokenType.Number);
             num = new PdfNumber(tok.GetByteContent());
             NUnit.Framework.Assert.AreEqual("-116.23", num.ToString());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TokenValueEqualsToTest() {
-            String data = "SomeString";
-            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                ))));
-            tok.NextToken();
-            NUnit.Framework.Assert.IsTrue(tok.TokenValueEqualsTo(data.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1))
-                );
         }
     }
 }
