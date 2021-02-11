@@ -78,6 +78,7 @@ namespace iText.Signatures {
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
         /// <param name="url">to get the verification</param>
+        /// <returns>OCSP response</returns>
         public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String 
             url) {
             try {

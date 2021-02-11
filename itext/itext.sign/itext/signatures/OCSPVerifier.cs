@@ -74,9 +74,9 @@ namespace iText.Signatures {
             this.ocsps = ocsps;
         }
 
-        /// <summary>Verifies if a a valid OCSP response is found for the certificate.</summary>
+        /// <summary>Verifies if a valid OCSP response is found for the certificate.</summary>
         /// <remarks>
-        /// Verifies if a a valid OCSP response is found for the certificate.
+        /// Verifies if a valid OCSP response is found for the certificate.
         /// If this method returns false, it doesn't mean the certificate isn't valid.
         /// It means we couldn't verify it against any OCSP response that was available.
         /// </remarks>
