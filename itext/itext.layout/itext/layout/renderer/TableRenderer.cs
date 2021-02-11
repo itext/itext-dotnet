@@ -1575,18 +1575,14 @@ namespace iText.Layout.Renderer {
                         float height = 0;
                         int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                         int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
-                        float[] indents = bordersHandler.GetCellBorderIndents(bordersHandler is SeparatedTableBorders ? row : targetOverflowRowIndex
-                            [col], col, rowspan, colspan);
                         for (int l = heights.Count - 1 - 1; l > targetOverflowRowIndex[col] - rowspan && l >= 0; l--) {
                             height += (float)heights[l];
                         }
                         float cellHeightInLastRow;
-                        if (bordersHandler is SeparatedTableBorders) {
-                            cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() - height;
-                        }
-                        else {
-                            cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() + indents[0] / 2 + indents[2] / 2 - height;
-                        }
+                        float[] indents = bordersHandler.GetCellBorderIndents(bordersHandler is SeparatedTableBorders ? row : targetOverflowRowIndex
+                            [col], col, rowspan, colspan);
+                        cellHeightInLastRow = cell.GetOccupiedArea().GetBBox().GetHeight() - height + indents[0] / 2 + indents[2] 
+                            / 2;
                         if (heights[heights.Count - 1] < cellHeightInLastRow) {
                             if (bordersHandler is SeparatedTableBorders) {
                                 float differenceToConsider = cellHeightInLastRow - heights[heights.Count - 1];
@@ -1649,8 +1645,6 @@ namespace iText.Layout.Renderer {
                 int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                 int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                 float rowspanOffset = 0;
-                float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row || bordersHandler is SeparatedTableBorders
-                     ? currentRowIndex : targetOverflowRowIndex[col], col, rowspan, colspan);
                 // process rowspan
                 for (int l = (currentRowIndex < row ? currentRowIndex : heights.Count - 1) - 1; l > (currentRowIndex < row
                      ? currentRowIndex : targetOverflowRowIndex[col]) - rowspan && l >= 0; l--) {
@@ -1660,9 +1654,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 height += (float)heights[currentRowIndex < row ? currentRowIndex : heights.Count - 1];
-                if (!(bordersHandler is SeparatedTableBorders)) {
-                    height -= indents[0] / 2 + indents[2] / 2;
-                }
+                float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row || bordersHandler is SeparatedTableBorders
+                     ? currentRowIndex : targetOverflowRowIndex[col], col, rowspan, colspan);
+                height -= indents[0] / 2 + indents[2] / 2;
                 // Correcting cell bbox only. We don't need #move() here.
                 // This is because of BlockRenderer's specificity regarding occupied area.
                 float shift = height - cell.GetOccupiedArea().GetBBox().GetHeight();

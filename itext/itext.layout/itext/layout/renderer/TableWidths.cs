@@ -695,12 +695,12 @@ namespace iText.Layout.Renderer {
             foreach (TableWidths.CellInfo cell in cells) {
                 cell.SetParent(tableRenderer);
                 MinMaxWidth minMax = cell.GetCell().GetMinMaxWidth();
-                float[] indents = GetCellBorderIndents(cell);
                 if (BorderCollapsePropertyValue.SEPARATE.Equals(tableRenderer.GetProperty<BorderCollapsePropertyValue?>(Property
                     .BORDER_COLLAPSE))) {
                     minMax.SetAdditionalWidth((float)(minMax.GetAdditionalWidth() - horizontalBorderSpacing));
                 }
                 else {
+                    float[] indents = GetCellBorderIndents(cell);
                     minMax.SetAdditionalWidth(minMax.GetAdditionalWidth() + indents[1] / 2 + indents[3] / 2);
                 }
                 if (cell.GetColspan() == 1) {

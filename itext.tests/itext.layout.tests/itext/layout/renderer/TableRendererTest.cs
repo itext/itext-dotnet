@@ -77,8 +77,8 @@ namespace iText.Layout.Renderer {
             tableRenderer.isOriginalNonSplitRenderer = false;
             MinMaxWidth minMaxWidth = tableRenderer.GetMinMaxWidth();
             // TODO DEVSIX-3676: currently margins and paddings are still applied as if they are in points. After the mentioned ticket is fixed, the expected values should be updated.
-            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMaxWidth(), 332.46f, 0.001);
-            NUnit.Framework.Assert.AreEqual(minMaxWidth.GetMinWidth(), 332.46f, 0.001);
+            NUnit.Framework.Assert.AreEqual(327.46f, minMaxWidth.GetMaxWidth(), 0.001);
+            NUnit.Framework.Assert.AreEqual(327.46f, minMaxWidth.GetMinWidth(), 0.001);
         }
 
         [NUnit.Framework.Test]
