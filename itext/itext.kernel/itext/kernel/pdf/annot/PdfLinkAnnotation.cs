@@ -48,6 +48,18 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf.Annot {
+    /// <summary>
+    /// A link annotation represents either a hypertext link to a destination elsewhere in the document
+    /// or an
+    /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+    /// to be performed.
+    /// </summary>
+    /// <remarks>
+    /// A link annotation represents either a hypertext link to a destination elsewhere in the document
+    /// or an
+    /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+    /// to be performed. See also ISO-320001 12.5.6.5, "Link Annotations".
+    /// </remarks>
     public class PdfLinkAnnotation : PdfAnnotation {
         private static readonly ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
             ));
@@ -62,7 +74,7 @@ namespace iText.Kernel.Pdf.Annot {
         public static readonly PdfName Push = PdfName.P;
 
         /// <summary>
-        /// Instantiates a new
+        /// Creates a new
         /// <see cref="PdfLinkAnnotation"/>
         /// instance based on
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -78,6 +90,18 @@ namespace iText.Kernel.Pdf.Annot {
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance based on
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// instance, that define the location of the annotation on the page in default user space units.
+        /// </summary>
+        /// <param name="rect">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// that define the location of the annotation
+        /// </param>
         public PdfLinkAnnotation(Rectangle rect)
             : base(rect) {
         }
@@ -86,10 +110,49 @@ namespace iText.Kernel.Pdf.Annot {
             return PdfName.Link;
         }
 
+        /// <summary>
+        /// Gets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Gets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance.
+        /// <para />
+        /// Destination shall be displayed when the annotation is activated. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <returns>
+        /// the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance
+        /// </returns>
         public virtual PdfObject GetDestinationObject() {
             return GetPdfObject().Get(PdfName.Dest);
         }
 
+        /// <summary>
+        /// Sets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Sets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance.
+        /// <para />
+        /// Destination shall be displayed when the annotation is activated. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <param name="destination">
+        /// the destination to be set as
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// instance
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfObject destination) {
             if (GetPdfObject().ContainsKey(PdfName.A)) {
                 GetPdfObject().Remove(PdfName.A);
@@ -102,10 +165,43 @@ namespace iText.Kernel.Pdf.Annot {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination);
         }
 
+        /// <summary>
+        /// Sets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Sets the annotation destination as
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>
+        /// instance.
+        /// <para />
+        /// Destination shall be displayed when the annotation is activated. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <param name="destination">
+        /// the destination to be set as
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination"/>
+        /// instance
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfDestination destination) {
             return SetDestination(destination.GetPdfObject());
         }
 
+        /// <summary>Removes the annotation destination.</summary>
+        /// <remarks>
+        /// Removes the annotation destination.
+        /// <para />
+        /// Destination shall be displayed when the annotation is activated. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation RemoveDestination() {
             GetPdfObject().Remove(PdfName.Dest);
             return this;
@@ -120,7 +216,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// which defines the characteristics and behaviour of an action.
+        /// which defines the characteristics and behaviour of an action
         /// </returns>
         public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
@@ -135,12 +231,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="action">
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that represents action to set to this annotation.
+        /// that represents action to set to this annotation
         /// </param>
         /// <returns>
         /// this
         /// <see cref="PdfLinkAnnotation"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfDictionary action) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action);
@@ -154,12 +250,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="action">
         /// 
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
-        /// to set to this annotation.
+        /// to set to this annotation
         /// </param>
         /// <returns>
         /// this
         /// <see cref="PdfLinkAnnotation"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfAction action) {
             if (GetDestinationObject() != null) {
@@ -169,27 +265,115 @@ namespace iText.Kernel.Pdf.Annot {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action.GetPdfObject());
         }
 
+        /// <summary>
+        /// Removes a
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// from this annotation.
+        /// </summary>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation RemoveAction() {
             GetPdfObject().Remove(PdfName.A);
             return this;
         }
 
+        /// <summary>Gets the annotation highlight mode.</summary>
+        /// <remarks>
+        /// Gets the annotation highlight mode.
+        /// <para />
+        /// The annotation’s highlighting mode is the visual effect that shall be used when the mouse
+        /// button is pressed or held down inside its active area. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <returns>the name of visual effect</returns>
         public virtual PdfName GetHighlightMode() {
             return GetPdfObject().GetAsName(PdfName.H);
         }
 
+        /// <summary>Sets the annotation highlight mode.</summary>
+        /// <remarks>
+        /// Sets the annotation highlight mode.
+        /// <para />
+        /// The annotation’s highlighting mode is the visual effect that shall be used when the mouse
+        /// button is pressed or held down inside its active area. See also ISO-320001, Table 173.
+        /// </remarks>
+        /// <param name="hlMode">the name of visual effect to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetHighlightMode(PdfName hlMode) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.H, hlMode);
         }
 
+        /// <summary>
+        /// Gets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// <para />
+        /// When Web Capture (see ISO-320001 14.10, “Web Capture”) changes an annotation from a URI to a
+        /// go-to action, it uses this entry to save the data from the original URI action so that it can
+        /// be changed back in case the target page for the go-to action is subsequently deleted. See also
+        /// ISO-320001, Table 173.
+        /// </remarks>
+        /// <returns>the URI action as pdfDictionary</returns>
         public virtual PdfDictionary GetUriActionObject() {
             return GetPdfObject().GetAsDictionary(PdfName.PA);
         }
 
+        /// <summary>
+        /// Sets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Sets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// instance.
+        /// <para />
+        /// When Web Capture (see ISO-320001 14.10, “Web Capture”) changes an annotation from a URI to a
+        /// go-to action, it uses this entry to save the data from the original URI action so that it can
+        /// be changed back in case the target page for the go-to action is subsequently deleted. See also
+        /// ISO-320001, Table 173.
+        /// </remarks>
+        /// <param name="action">the action to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfDictionary action) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action);
         }
 
+        /// <summary>
+        /// Sets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Sets the annotation URI action as
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// instance.
+        /// <para />
+        /// A URI action (see ISO-320001 12.6.4.7, “URI Actions”) formerly associated with this annotation.
+        /// When Web Capture (see ISO-320001 14.10, “Web Capture”) changes an annotation from a URI to a
+        /// go-to action, it uses this entry to save the data from the original URI action so that it can
+        /// be changed back in case the target page for the go-to action is subsequently deleted. See also
+        /// ISO-320001, Table 173.
+        /// </remarks>
+        /// <param name="action">the action to be set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLinkAnnotation"/>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetUriAction(PdfAction action) {
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.PA, action.GetPdfObject());
         }

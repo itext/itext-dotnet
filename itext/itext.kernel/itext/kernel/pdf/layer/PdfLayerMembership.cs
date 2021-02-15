@@ -190,6 +190,16 @@ namespace iText.Kernel.Pdf.Layer {
             return true;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// that owns that layer membership.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// that owns that layer membership
+        /// </returns>
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
