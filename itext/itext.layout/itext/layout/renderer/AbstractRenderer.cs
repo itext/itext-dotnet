@@ -1127,6 +1127,24 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        /// <summary>Applies margins, borders and paddings of the renderer on the given rectangle.</summary>
+        /// <param name="rect">a rectangle margins, borders and paddings will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether margins, borders and paddings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        internal virtual Rectangle ApplyMarginsBordersPaddings(Rectangle rect, bool reverse) {
+            ApplyMargins(rect, reverse);
+            ApplyBorderBox(rect, reverse);
+            ApplyPaddings(rect, reverse);
+            return rect;
+        }
+
         /// <summary>Applies margins of the renderer on the given rectangle</summary>
         /// <param name="rect">a rectangle margins will be applied on.</param>
         /// <param name="reverse">
@@ -2011,6 +2029,11 @@ namespace iText.Layout.Renderer {
         }
 
         // If parent has no resolved height, relative height declarations can be ignored
+        /// <summary>Calculates min and max width values for current renderer.</summary>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Minmaxwidth.MinMaxWidth"/>
+        /// </returns>
         public virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }

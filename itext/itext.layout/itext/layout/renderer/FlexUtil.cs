@@ -71,8 +71,7 @@ namespace iText.Layout.Renderer {
         public static IList<IList<FlexItemInfo>> CalculateChildrenRectangles(Rectangle flexContainerBBox, FlexContainerRenderer
              flexContainerRenderer, IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos) {
             Rectangle layoutBox = flexContainerBBox.Clone();
-            flexContainerRenderer.ApplyBordersPaddingsMargins(layoutBox, flexContainerRenderer.GetBorders(), flexContainerRenderer
-                .GetPaddings());
+            flexContainerRenderer.ApplyMarginsBordersPaddings(layoutBox, false);
             // 9.2. Line Length Determination
             // 2. Determine the available main and cross space for the flex items.
             // TODO DEVSIX-5001 min-content and max-content as width are not supported
@@ -114,9 +113,9 @@ namespace iText.Layout.Renderer {
             // 9.6. Cross-Axis Alignment
             // TODO DEVSIX-5002 margin: auto is not supported
             // 13. Resolve cross-axis auto margins
-            // TODO DEVSIX-4997 14. Align all flex items along the cross-axis
-            // TODO DEVSIX-4997 15. Determine the flex container’s used cross size:
-            // TODO DEVSIX-4997 16. Align all flex lines per align-content.
+            // TODO DEVSIX-5040 14. Align all flex items along the cross-axis
+            // TODO DEVSIX-5040 15. Determine the flex container’s used cross size:
+            // TODO DEVSIX-5040 16. Align all flex lines per align-content.
             IList<IList<FlexItemInfo>> layoutTable = new List<IList<FlexItemInfo>>();
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 IList<FlexItemInfo> layoutLine = new List<FlexItemInfo>();
@@ -181,7 +180,7 @@ namespace iText.Layout.Renderer {
             else {
                 float occupiedLineSpace = 0;
                 foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
-                    occupiedLineSpace += info.GetOuterWidth(info.hypotheticalMainSize);
+                    occupiedLineSpace += info.GetOuterMainSize(info.hypotheticalMainSize);
                     if (occupiedLineSpace > mainSize + EPSILON) {
                         // If the very first uncollected item wouldn’t fit, collect just it into the line.
                         if (currentLineInfos.IsEmpty()) {
@@ -215,7 +214,7 @@ namespace iText.Layout.Renderer {
                 // 1. Determine the used flex factor.
                 float hypotheticalMainSizesSum = 0;
                 foreach (FlexUtil.FlexItemCalculationInfo info in line) {
-                    hypotheticalMainSizesSum += info.GetOuterWidth(info.hypotheticalMainSize);
+                    hypotheticalMainSizesSum += info.GetOuterMainSize(info.hypotheticalMainSize);
                 }
                 // if the sum is less than the flex container’s inner main size,
                 // use the flex grow factor for the rest of this algorithm; otherwise, use the flex shrink factor.
@@ -324,13 +323,13 @@ namespace iText.Layout.Renderer {
         // TODO DEVSIX-5002 margin: auto is not supported
         // If the remaining free space is positive and at least one main-axis margin on this line is auto,
         // distribute the free space equally among these margins. Otherwise, set all auto margins to zero.
-        // TODO DEVSIX-4997 Align the items along the main-axis per justify-content.
+        // TODO DEVSIX-5040 Align the items along the main-axis per justify-content.
         internal static void DetermineHypotheticalCrossSizeForFlexItems(IList<IList<FlexUtil.FlexItemCalculationInfo
             >> lines) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 foreach (FlexUtil.FlexItemCalculationInfo info in line) {
-                    LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle((float)info.mainSize
-                        , 100000))));
+                    LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(info.GetOuterMainSize
+                        ((float)info.mainSize), 100000))));
                     // Since main size is clamped with min-width, we do expect the result to be full
                     System.Diagnostics.Debug.Assert(result.GetStatus() == LayoutResult.FULL);
                     info.hypotheticalCrossSize = result.GetOccupiedArea().GetBBox().GetHeight();
@@ -361,8 +360,8 @@ namespace iText.Layout.Renderer {
                         // TODO DEVSIX-5038 Support BASELINE as align-self
                         // 2. Among all the items not collected by the previous step,
                         // find the largest outer hypothetical cross size.
-                        if (largestHypotheticalCrossSize < info.GetOuterWidth(info.hypotheticalCrossSize)) {
-                            largestHypotheticalCrossSize = info.GetOuterWidth(info.hypotheticalCrossSize);
+                        if (largestHypotheticalCrossSize < info.GetOuterMainSize(info.hypotheticalCrossSize)) {
+                            largestHypotheticalCrossSize = info.GetOuterMainSize(info.hypotheticalCrossSize);
                         }
                         flexLinesCrossSize = Math.Max(0, largestHypotheticalCrossSize);
                     }
@@ -412,10 +411,10 @@ namespace iText.Layout.Renderer {
             foreach (FlexUtil.FlexItemCalculationInfo info in line) {
                 if (info.isFrozen) {
                     System.Diagnostics.Debug.Assert(null != info.mainSize);
-                    result -= info.GetOuterWidth((float)info.mainSize);
+                    result -= info.GetOuterMainSize((float)info.mainSize);
                 }
                 else {
-                    result -= info.GetOuterWidth(info.flexBaseSize);
+                    result -= info.GetOuterMainSize(info.flexBaseSize);
                 }
             }
             return result;
@@ -499,8 +498,18 @@ namespace iText.Layout.Renderer {
                 }
                 this.flexGrow = flexGrow;
                 // We always need to clamp flex item's sizes with min-width, so this calculation is necessary
+                // We also need to get min-width not based on Property.WIDTH
+                UnitValue rendererWidth = renderer.GetOwnProperty<UnitValue>(Property.WIDTH);
+                bool hasOwnWidth = renderer.HasOwnProperty(Property.WIDTH);
+                renderer.SetProperty(Property.WIDTH, null);
                 MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
-                this.minContent = minMaxWidth.GetMinWidth();
+                if (hasOwnWidth) {
+                    renderer.SetProperty(Property.WIDTH, rendererWidth);
+                }
+                else {
+                    renderer.DeleteOwnProperty(Property.WIDTH);
+                }
+                this.minContent = GetInnerMainSize(minMaxWidth.GetMinWidth());
                 bool isMaxWidthApplied = null != this.renderer.RetrieveMaxWidth(areaWidth);
                 // As for now we assume that max width should be calculated so
                 this.maxContent = isMaxWidthApplied ? minMaxWidth.GetMaxWidth() : Math.Max(minMaxWidth.GetMaxWidth(), areaWidth
@@ -508,15 +517,15 @@ namespace iText.Layout.Renderer {
             }
 
             public virtual Rectangle ToRectangle() {
-                return new Rectangle((float)mainSize, (float)crossSize);
+                return new Rectangle(GetOuterMainSize((float)mainSize), (float)crossSize);
             }
 
-            internal virtual float GetOuterWidth(float size) {
-                Rectangle tempRect = new Rectangle(size, 0);
-                renderer.ApplyMargins(tempRect, true);
-                renderer.ApplyBorderBox(tempRect, true);
-                renderer.ApplyPaddings(tempRect, true);
-                return tempRect.GetWidth();
+            internal virtual float GetOuterMainSize(float size) {
+                return renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), true).GetWidth();
+            }
+
+            internal virtual float GetInnerMainSize(float size) {
+                return renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), false).GetWidth();
             }
         }
     }

@@ -127,6 +127,12 @@ namespace iText.Layout.Properties {
 
         public const int FIRST_LINE_INDENT = 18;
 
+        public const int FLEX_BASIS = 131;
+
+        public const int FLEX_GROW = 132;
+
+        public const int FLEX_SHRINK = 133;
+
         public const int FLEX_WRAP = 128;
 
         public const int FLOAT = 99;

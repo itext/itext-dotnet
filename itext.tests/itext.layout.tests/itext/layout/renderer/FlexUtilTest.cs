@@ -351,7 +351,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DifferentBasisSumLtWidthGrow1Shrink1Item2Margin20Test01() {
+        public virtual void DifferentBasisSumLtWidthGrow1Shrink0Item2MarginBorderPadding30Test01() {
             Rectangle bBox = new Rectangle(575, 842);
             IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
                 (80f), UnitValue.CreatePointValue(100f));
@@ -381,8 +381,43 @@ namespace iText.Layout.Renderer {
             IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
                 )div.GetRenderer(), flexItemCalculationInfos);
             NUnit.Framework.Assert.AreEqual(86.66667f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
-            NUnit.Framework.Assert.AreEqual(116.66667f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(176.66667f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(136.66667f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DifferentBasisSumLtWidthGrow1Shrink1Item2MarginBorderPadding30Test01() {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                (80f), UnitValue.CreatePointValue(100f));
+            IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = new List<FlexUtil.FlexItemCalculationInfo
+                >();
+            Div div = new Div().SetWidth(200).SetHeight(100);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                Div flexItem = new Div().Add(new Paragraph("x"));
+                if (1 == i) {
+                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                    );
+                div.Add(flexItem);
+                flexItemCalculationInfos.Add(new FlexUtil.FlexItemCalculationInfo(flexItemRenderer, flexBasisValues[i], 1, 
+                    1, bBox.GetWidth()));
+            }
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            div.SetNextRenderer(flexContainerRenderer);
+            // before checks
+            foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
+                NUnit.Framework.Assert.IsNull(info.mainSize);
+                NUnit.Framework.Assert.IsNull(info.crossSize);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer(), flexItemCalculationInfos);
+            NUnit.Framework.Assert.AreEqual(30.434784f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(108.69565f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(60.869568f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
         }
 
         [NUnit.Framework.Test]
