@@ -1484,7 +1484,6 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String || font is String[]) {
                     if (font is String) {
-                        // TODO remove this if-clause before 7.2
                         ILog logger = LogManager.GetLogger(typeof(AbstractRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
                             );

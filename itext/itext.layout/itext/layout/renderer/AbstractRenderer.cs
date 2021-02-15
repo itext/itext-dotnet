@@ -493,7 +493,6 @@ namespace iText.Layout.Renderer {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             Object uncastedBackgroundImage = this.GetProperty<Object>(Property.BACKGROUND_IMAGE);
             IList<BackgroundImage> backgroundImagesList;
-            // TODO DEVSIX-3814 support only List<BackgroundImage>.
             if (uncastedBackgroundImage is BackgroundImage) {
                 backgroundImagesList = JavaCollectionsUtil.SingletonList((BackgroundImage)uncastedBackgroundImage);
             }
@@ -2396,7 +2395,6 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String || font is String[]) {
                     if (font is String) {
-                        // TODO DEVSIX-3814 remove this if-clause before 7.2
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
                             );
