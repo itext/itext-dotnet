@@ -96,28 +96,6 @@ namespace iText.Svg.Css.Impl {
         /// with a given default CSS.
         /// </summary>
         /// <param name="defaultCssStream">the default CSS</param>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(System.IO.Stream, iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver(Stream defaultCssStream)
-            : this(defaultCssStream, new SvgProcessorContext(new SvgConverterProperties())) {
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>.
-        /// </summary>
-        [System.ObsoleteAttribute(@"will be removed in next major release, useSvgStyleResolver(iText.Svg.Processors.Impl.SvgProcessorContext) instead"
-            )]
-        public SvgStyleResolver()
-            : this(new SvgProcessorContext(new SvgConverterProperties())) {
-        }
-
-        /// <summary>
-        /// Creates a
-        /// <see cref="SvgStyleResolver"/>
-        /// with a given default CSS.
-        /// </summary>
-        /// <param name="defaultCssStream">the default CSS</param>
         /// <param name="context">the processor context</param>
         public SvgStyleResolver(Stream defaultCssStream, SvgProcessorContext context) {
             this.css = CssStyleSheetParser.Parse(defaultCssStream);

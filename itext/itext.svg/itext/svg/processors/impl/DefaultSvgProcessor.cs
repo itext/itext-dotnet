@@ -107,11 +107,6 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
-        [Obsolete]
-        public virtual ISvgProcessorResult Process(INode root) {
-            return Process(root, null);
-        }
-
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
         /// <param name="converterProps">that contains configuration properties and operations</param>
         internal virtual void PerformSetup(INode root, ISvgConverterProperties converterProps) {

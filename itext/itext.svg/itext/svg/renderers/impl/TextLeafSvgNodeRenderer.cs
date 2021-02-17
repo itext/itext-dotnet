@@ -48,6 +48,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -56,7 +57,7 @@ namespace iText.Svg.Renderers.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// implementation for drawing text to a canvas.
     /// </summary>
-    public class TextLeafSvgNodeRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer, ISvgTextNodeHelper {
+    public class TextLeafSvgNodeRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
         public override ISvgNodeRenderer CreateDeepCopy() {
             TextLeafSvgNodeRenderer copy = new TextLeafSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
@@ -111,6 +112,10 @@ namespace iText.Svg.Renderers.Impl {
             else {
                 return null;
             }
+        }
+
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
         }
 
         protected internal override void DoDraw(SvgDrawContext context) {

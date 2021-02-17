@@ -42,9 +42,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.StyledXmlParser;
-using iText.StyledXmlParser.Css.Util;
-using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 
 namespace iText.Svg.Utils {
@@ -136,23 +133,6 @@ namespace iText.Svg.Utils {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NormalConvertPtsToPxTest() {
-            float[] input = new float[] { -1f, 0f, 1f };
-            float[] expected = new float[] { -1.3333334f, 0f, 1.3333334f };
-            for (int i = 0; i < input.Length; i++) {
-                float actual = SvgCssUtils.ConvertPtsToPx(input[i]);
-                NUnit.Framework.Assert.AreEqual(expected[i], actual, 0f);
-            }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ConvertFloatMaximumToPdfTest() {
-            float expected = float.PositiveInfinity;
-            float actual = SvgCssUtils.ConvertPtsToPx(float.MaxValue);
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void ConvertFloatToStringTest() {
             String expected = "0.5";
             String actual = SvgCssUtils.ConvertFloatToString(0.5f);
@@ -164,24 +144,6 @@ namespace iText.Svg.Utils {
             String expected = "0.1234567";
             String actual = SvgCssUtils.ConvertFloatToString(0.1234567f);
             NUnit.Framework.Assert.AreEqual(expected, actual);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ConvertFloatMinimumToPdfTest() {
-            float expected = 1.4E-45f;
-            float actual = SvgCssUtils.ConvertPtsToPx(float.Epsilon);
-            NUnit.Framework.Assert.AreEqual(expected, actual, 0f);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CompareIsStyleSheetLinkResult() {
-            iText.StyledXmlParser.Jsoup.Nodes.Element element = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                .ValueOf("link"), "");
-            element.Attr(CommonAttributeConstants.REL, CommonAttributeConstants.STYLESHEET);
-            JsoupElementNode elementNode = new JsoupElementNode(element);
-            bool expected = CssUtils.IsStyleSheetLink(elementNode);
-            bool actual = SvgCssUtils.IsStyleSheetLink(elementNode);
-            NUnit.Framework.Assert.AreEqual(actual, expected);
         }
     }
 }

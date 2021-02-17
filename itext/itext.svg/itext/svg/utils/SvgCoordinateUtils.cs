@@ -96,7 +96,7 @@ namespace iText.Svg.Utils {
         public static double GetCoordinateForUserSpaceOnUse(String attributeValue, double defaultValue, double start
             , double length, float em, float rem) {
             double absoluteValue;
-            UnitValue unitValue = CssUtils.ParseLengthValueToPt(attributeValue, em, rem);
+            UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(attributeValue, em, rem);
             if (unitValue == null) {
                 absoluteValue = defaultValue;
             }

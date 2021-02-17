@@ -139,17 +139,15 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
-        protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             Point lastPoint = null;
             Rectangle commonRectangle = null;
             foreach (IPathShape item in GetShapes()) {
                 if (lastPoint == null) {
                     lastPoint = item.GetEndingPoint();
                 }
-                if (item is AbstractPathShape) {
-                    Rectangle rectangle = ((AbstractPathShape)item).GetPathShapeRectangle(lastPoint);
-                    commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);
-                }
+                Rectangle rectangle = item.GetPathShapeRectangle(lastPoint);
+                commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);
                 lastPoint = item.GetEndingPoint();
             }
             return commonRectangle;

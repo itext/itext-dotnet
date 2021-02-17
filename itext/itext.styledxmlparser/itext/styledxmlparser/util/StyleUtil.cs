@@ -28,6 +28,7 @@ using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Util {
+    /// <summary>Utility class for resolving parent-inheritance of style and attribute declarations.</summary>
     public sealed class StyleUtil {
         private StyleUtil() {
         }

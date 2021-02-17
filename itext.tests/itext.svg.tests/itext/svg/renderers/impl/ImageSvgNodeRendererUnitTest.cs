@@ -21,24 +21,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
-using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class DefsSvgNodeRenderer : AbstractBranchSvgNodeRenderer, INoDrawSvgNodeRenderer {
-        protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
-        }
-
-        public override ISvgNodeRenderer CreateDeepCopy() {
-            DefsSvgNodeRenderer copy = new DefsSvgNodeRenderer();
-            DeepCopyAttributesAndStyles(copy);
-            return copy;
-        }
-
-        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+    public class ImageSvgNodeRendererUnitTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void NoObjectBoundingBoxTest() {
+            ImageSvgNodeRenderer renderer = new ImageSvgNodeRenderer();
+            NUnit.Framework.Assert.That(() =>  {
+                renderer.GetObjectBoundingBox(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
+;
         }
     }
 }

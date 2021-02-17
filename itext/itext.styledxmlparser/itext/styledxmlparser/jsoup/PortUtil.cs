@@ -58,12 +58,6 @@ namespace iText.StyledXmlParser.Jsoup {
             return file.Open(FileMode.Open, FileAccess.Read);
         }
 
-        [System.ObsoleteAttribute(@"use iText.IO.Util.Matcher.Find")]
-        public static bool HasMatch(Regex pattern, String input) {
-
-            return pattern.IsMatch(input);
-        }
-
         public static char[] ToChars(int codePoint) {
             return char.ConvertFromUtf32(codePoint).ToCharArray();
         }
@@ -83,11 +77,6 @@ namespace iText.StyledXmlParser.Jsoup {
             } catch (ArgumentException) {
                 return false;
             }
-        }
-
-        [System.ObsoleteAttribute(@"use iText.IO.Util.Matcher.Find")]
-        public static bool IsSuccessful(Match m) {
-            return m.Success;
         }
     }
 

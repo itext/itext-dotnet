@@ -39,7 +39,7 @@ namespace iText.Svg.Renderers.Impl {
     /// abstract implementation for gradient tags
     /// (&lt;linearGradient&gt;, &lt;radialGradient&gt;).
     /// </summary>
-    public abstract class AbstractGradientSvgNodeRenderer : NoDrawOperationSvgNodeRenderer, ISvgPaintServer {
+    public abstract class AbstractGradientSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
         protected internal override void DoDraw(SvgDrawContext context) {
             throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }

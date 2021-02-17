@@ -84,6 +84,7 @@ namespace iText.Svg.Renderers.Factories {
         [System.ObsoleteAttribute(@"Will be removed in 7.2. The user should use the customISvgNodeRendererFactory implementation (or the customDefaultSvgNodeRendererFactory extension) to create extensions of the factory."
             )]
         public DefaultSvgNodeRendererFactory(ISvgNodeRendererMapper mapper) {
+            // TODO DEVSIX-5081 7.2 svg: Remove deprecated API and refactor tests related to ISvgNodeRendererMapper
             if (mapper != null) {
                 rendererMap.AddAll(mapper.GetMapping());
                 ignoredTags.AddAll(mapper.GetIgnoredTags());

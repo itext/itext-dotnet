@@ -40,6 +40,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel.Geom;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -53,6 +56,10 @@ namespace iText.Svg.Renderers.Impl {
             DeepCopyAttributesAndStyles(copy);
             DeepCopyChildren(copy);
             return copy;
+        }
+
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
         }
     }
 }

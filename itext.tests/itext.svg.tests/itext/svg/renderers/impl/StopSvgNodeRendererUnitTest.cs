@@ -235,5 +235,15 @@ namespace iText.Svg.Renderers.Impl {
                 (null, null)));
             NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.DRAW_NO_DRAW, e.Message);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void NoObjectBoundingBoxTest() {
+            StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
+            NUnit.Framework.Assert.That(() =>  {
+                renderer.GetObjectBoundingBox(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
+;
+        }
     }
 }

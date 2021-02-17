@@ -57,6 +57,7 @@ namespace iText.Svg.Renderers.Factories {
     [System.ObsoleteAttribute(@"The interface will be removed in 7.2, while its implementation (DefaultSvgNodeRendererMapper ) will be used as our internal class. Users should override ISvgNodeRendererFactory (or at least DefaultSvgNodeRendererFactory ) and should not deal with the mapping class as it's more of an implementation detail."
         )]
     public interface ISvgNodeRendererMapper {
+        // TODO DEVSIX-5081 7.2 svg: Remove deprecated API and refactor tests related to ISvgNodeRendererMapper
         /// <summary>Gets the map from tag names to Renderer classes.</summary>
         /// <returns>
         /// a

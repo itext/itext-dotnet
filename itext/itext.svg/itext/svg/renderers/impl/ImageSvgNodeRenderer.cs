@@ -41,11 +41,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -61,13 +63,17 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+        }
+
         protected internal override void DoDraw(SvgDrawContext context) {
             ResourceResolver resourceResolver = context.GetResourceResolver();
             if (resourceResolver == null || this.attributesAndStyles == null) {
                 return;
             }
             String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
-            PdfXObject xObject = resourceResolver.RetrieveImageExtended(uri);
+            PdfXObject xObject = resourceResolver.RetrieveImage(uri);
             if (xObject == null) {
                 return;
             }

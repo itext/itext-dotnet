@@ -54,12 +54,10 @@ namespace iText.Svg.Css.Impl {
     /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
     /// objects.
     /// </summary>
-    public class SvgNodeRendererInheritanceResolver {
-        [Obsolete]
-        public SvgNodeRendererInheritanceResolver() {
+    public sealed class SvgNodeRendererInheritanceResolver {
+        private SvgNodeRendererInheritanceResolver() {
         }
 
-        // After removing this constructor, make this class final and add private constructor
         /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree.</summary>
         /// <param name="root">the renderer to consider as the root of the subtree</param>
         /// <param name="subTree">
@@ -95,23 +93,6 @@ namespace iText.Svg.Css.Impl {
                 SvgStyleResolver.ResolveFontSizeStyle(childStyles, cssContext, parentFontSize);
                 child.SetAttributesAndStyles(childStyles);
             }
-        }
-
-        /// <summary>Apply style and attribute inheritance to the tree formed by the root and the subTree.</summary>
-        /// <param name="root">renderer to consider as the root of the subtree</param>
-        /// <param name="subTree">
-        /// tree of
-        /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-        /// </param>
-        [System.ObsoleteAttribute(@"will be removed in 7.2 release, useApplyInheritanceToSubTree(iText.Svg.Renderers.ISvgNodeRenderer, iText.Svg.Renderers.ISvgNodeRenderer, iText.Svg.Css.SvgCssContext) instead"
-            )]
-        public virtual void ApplyInheritanceToSubTree(ISvgNodeRenderer root, ISvgNodeRenderer subTree) {
-            iText.Svg.Css.Impl.SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(root, subTree, null);
-        }
-
-        [Obsolete]
-        protected internal virtual void ApplyStyles(ISvgNodeRenderer parent, ISvgNodeRenderer child) {
-            iText.Svg.Css.Impl.SvgNodeRendererInheritanceResolver.ApplyStyles(parent, child, null);
         }
     }
 }

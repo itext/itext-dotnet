@@ -21,29 +21,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Geom;
+using System.Collections.Generic;
+using iText.Layout.Font;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers;
-using iText.Svg.Utils;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    /// <summary>An interface containing a method to simplify working with SVG text elements.</summary>
-    /// <remarks>
-    /// An interface containing a method to simplify working with SVG text elements.
-    /// Must be removed in update 7.3 as the methods of this interface will be moved to
-    /// <see cref="ISvgTextNodeRenderer"/>
-    /// </remarks>
-    [Obsolete]
-    public interface ISvgTextNodeHelper {
-        /// <summary>Return the bounding rectangle of the text element.</summary>
-        /// <param name="context">
-        /// current
-        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
-        /// </param>
-        /// <param name="basePoint">end point of previous text element</param>
-        /// <returns>
-        /// created instance of
-        /// <see cref="iText.Svg.Utils.TextRectangle"/>
-        /// </returns>
-        TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint);
+    public class PolylineSvgNodeRendererUnitTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void GetObjectBoundingBoxTest() {
+            PolylineSvgNodeRenderer renderer = new PolygonSvgNodeRenderer();
+            SvgDrawContext context = new SvgDrawContext(new ResourceResolver(""), new FontProvider());
+            renderer.SetAttributesAndStyles(new Dictionary<String, String>());
+            NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(context));
+        }
     }
 }

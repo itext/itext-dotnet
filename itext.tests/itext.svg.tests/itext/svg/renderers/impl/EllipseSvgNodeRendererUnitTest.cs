@@ -21,24 +21,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Geom;
-using iText.Svg.Exceptions;
+using System.Collections.Generic;
+using iText.Layout.Font;
+using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class DefsSvgNodeRenderer : AbstractBranchSvgNodeRenderer, INoDrawSvgNodeRenderer {
-        protected internal override void DoDraw(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
-        }
-
-        public override ISvgNodeRenderer CreateDeepCopy() {
-            DefsSvgNodeRenderer copy = new DefsSvgNodeRenderer();
-            DeepCopyAttributesAndStyles(copy);
-            return copy;
-        }
-
-        public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+    public class EllipseSvgNodeRendererUnitTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void GetObjectBoundingBoxTest() {
+            EllipseSvgNodeRenderer renderer = new EllipseSvgNodeRenderer();
+            SvgDrawContext context = new SvgDrawContext(new ResourceResolver(""), new FontProvider());
+            renderer.SetAttributesAndStyles(new Dictionary<String, String>());
+            NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(context));
         }
     }
 }

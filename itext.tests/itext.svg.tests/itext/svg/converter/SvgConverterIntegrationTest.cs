@@ -51,7 +51,6 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Font;
 using iText.Svg.Dummy.Sdk;
 using iText.Svg.Exceptions;
 using iText.Svg.Logs;
@@ -512,8 +511,6 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessSuccessTest() {
-            String name = "minimal";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
             IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();
             RectangleSvgNodeRenderer rect = new RectangleSvgNodeRenderer();
             rect.SetAttribute("fill", "none");
@@ -526,10 +523,14 @@ namespace iText.Svg.Converter {
             root.SetAttribute("width", "500");
             root.SetAttribute("height", "400");
             root.SetAttribute("font-size", "12pt");
-            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new FontProvider(), new FontSet());
-            ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
-            NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
-                .GetAttributeMapCopy());
+            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new SvgProcessorContext(new SvgConverterProperties
+                ()));
+            String name = "minimal";
+            using (FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read)) {
+                ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
+                NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
+                    .GetAttributeMapCopy());
+            }
         }
 
         [NUnit.Framework.Test]

@@ -147,12 +147,6 @@ namespace iText.Svg.Processors.Impl {
             return this;
         }
 
-        /// <summary>Gets the resource retriever.</summary>
-        /// <remarks>
-        /// Gets the resource retriever.
-        /// The resourceRetriever is used to retrieve data from resources by URL.
-        /// </remarks>
-        /// <returns>the resource retriever</returns>
         public virtual IResourceRetriever GetResourceRetriever() {
             return resourceRetriever;
         }

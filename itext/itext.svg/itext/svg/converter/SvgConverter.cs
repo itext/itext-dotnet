@@ -751,7 +751,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -798,7 +798,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -853,7 +853,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -926,7 +926,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -977,7 +977,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -1027,7 +1027,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// <see cref="ConvertToXObject(iText.Svg.Renderers.ISvgNodeRenderer, iText.Kernel.Pdf.PdfDocument)"/>
@@ -1089,7 +1089,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// this method, or look into
@@ -1134,7 +1134,7 @@ namespace iText.Svg.Converter {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// instances,
         /// please either use any of the
-        /// <see cref="Process(iText.StyledXmlParser.Node.INode)"/>
+        /// <see cref="Process(iText.StyledXmlParser.Node.INode, iText.Svg.Processors.ISvgConverterProperties)"/>
         /// overloads in this same
         /// class and convert its result to an XObject with
         /// this method, or look into
@@ -1232,19 +1232,6 @@ namespace iText.Svg.Converter {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.FAILED_TO_PARSE_INPUTSTREAM, e);
             }
             return new DefaultSvgProcessor().Process(nodeTree, props);
-        }
-
-        /// <summary>
-        /// Use the default implementation of
-        /// <see cref="iText.Svg.Processors.ISvgProcessor"/>
-        /// to convert an XML
-        /// DOM tree to a node renderer tree.
-        /// </summary>
-        /// <param name="root">the XML DOM tree</param>
-        /// <returns>a node renderer tree corresponding to the passed XML DOM tree</returns>
-        [System.ObsoleteAttribute(@"will be removed in iText 7.2.")]
-        public static ISvgProcessorResult Process(INode root) {
-            return Process(root, null);
         }
 
         /// <summary>
@@ -1403,17 +1390,10 @@ namespace iText.Svg.Converter {
 
         internal static ResourceResolver GetResourceResolver(ISvgProcessorResult processorResult, ISvgConverterProperties
              props) {
-            ResourceResolver resourceResolver = null;
             if (processorResult is SvgProcessorResult) {
-                SvgProcessorContext context = ((SvgProcessorResult)processorResult).GetContext();
-                if (context != null) {
-                    resourceResolver = context.GetResourceResolver();
-                }
+                return ((SvgProcessorResult)processorResult).GetContext().GetResourceResolver();
             }
-            if (resourceResolver == null) {
-                resourceResolver = iText.Svg.Converter.SvgConverter.CreateResourceResolver(props);
-            }
-            return resourceResolver;
+            return CreateResourceResolver(props);
         }
 
         /// <summary>
@@ -1434,12 +1414,7 @@ namespace iText.Svg.Converter {
             if (props == null) {
                 return new ResourceResolver(null);
             }
-            if (props is SvgConverterProperties) {
-                return new ResourceResolver(props.GetBaseUri(), ((SvgConverterProperties)props).GetResourceRetriever());
-            }
-            else {
-                return new ResourceResolver(props.GetBaseUri(), null);
-            }
+            return new ResourceResolver(props.GetBaseUri(), props.GetResourceRetriever());
         }
     }
 }

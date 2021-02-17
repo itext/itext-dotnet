@@ -43,9 +43,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
 
@@ -54,7 +56,7 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void NormalDrawTest() {
             byte[] expected = "1 0 0 1 7.5 0 cm\n0 0 0 rg\nf\n".GetBytes(System.Text.Encoding.UTF8);
-            ISvgNodeRenderer nodeRenderer = new _AbstractSvgNodeRenderer_69();
+            ISvgNodeRenderer nodeRenderer = new _AbstractSvgNodeRenderer_71();
             // do nothing
             IDictionary<String, String> attributeMap = new Dictionary<String, String>();
             attributeMap.Put(SvgConstants.Attributes.TRANSFORM, "translate(10)");
@@ -68,12 +70,16 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
-        private sealed class _AbstractSvgNodeRenderer_69 : AbstractSvgNodeRenderer {
-            public _AbstractSvgNodeRenderer_69() {
+        private sealed class _AbstractSvgNodeRenderer_71 : AbstractSvgNodeRenderer {
+            public _AbstractSvgNodeRenderer_71() {
             }
 
             public override ISvgNodeRenderer CreateDeepCopy() {
                 return null;
+            }
+
+            public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+                throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
             }
 
             protected internal override void DoDraw(SvgDrawContext context) {

@@ -96,6 +96,10 @@ namespace iText.Svg.Renderers.Impl {
             return null;
         }
 
+        public virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
+            throw new NotSupportedException(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX);
+        }
+
         internal virtual AffineTransform CalculateTransformation(SvgDrawContext context) {
             Rectangle viewPort = context.GetCurrentViewPort();
             float horizontal = viewPort.GetX();

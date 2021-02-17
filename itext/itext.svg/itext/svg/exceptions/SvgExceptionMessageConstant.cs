@@ -59,7 +59,7 @@ namespace iText.Svg.Exceptions {
 
         public const String CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x2 y2 x y)+ parameters are " + "expected for curves. Got: {0}";
 
-        public const String DRAW_NO_DRAW = "Can't draw a NoDrawOperationSvgNodeRenderer.";
+        public const String DRAW_NO_DRAW = "The renderer cannot be drawn.";
 
         public const String FAILED_TO_PARSE_INPUTSTREAM = "Failed to parse InputStream.";
 
@@ -93,7 +93,7 @@ namespace iText.Svg.Exceptions {
 
         public const String NO_ROOT = "No root found";
 
-        public const String PARAMETER_CANNOT_BE_NULL = "Parameters for this method cannot be null.";
+        public const String PARAMETER_CANNOT_BE_NULL = "Parameters cannot be null.";
 
         public const String PATH_OBJECT_MUST_HAVE_D_ATTRIBUTE = "A Path object must have an attribute with " + "the name 'd'.";
 
@@ -101,6 +101,8 @@ namespace iText.Svg.Exceptions {
              + "a valid set of points";
 
         public const String QUADRATIC_CURVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x1 y1 x y)+ parameters " + "are expected for quadratic curves. Got: {0}";
+
+        public const String RENDERER_WITHOUT_OBJECT_BOUNDING_BOX = "The renderer has no object bounding box.";
 
         public const String ROOT_SVG_NO_BBOX = "The root svg tag needs to have a bounding box defined.";
 

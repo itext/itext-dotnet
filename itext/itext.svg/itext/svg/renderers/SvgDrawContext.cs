@@ -102,23 +102,6 @@ namespace iText.Svg.Renderers {
             cssContext = new SvgCssContext();
         }
 
-        /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
-        /// <param name="resourceResolver">
-        /// instance of
-        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
-        /// </param>
-        /// <param name="fontProvider">
-        /// instance of
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// </param>
-        /// <param name="svgRootRenderer">svg element that is root for current file</param>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use SvgDrawContext(iText.StyledXmlParser.Resolver.Resource.ResourceResolver, iText.Layout.Font.FontProvider) instead"
-            )]
-        public SvgDrawContext(ResourceResolver resourceResolver, FontProvider fontProvider, ISvgNodeRenderer svgRootRenderer
-            )
-            : this(resourceResolver, fontProvider) {
-        }
-
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
         /// <returns>the current canvas that can be used for drawing operations.</returns>
         public virtual PdfCanvas GetCurrentCanvas() {
@@ -308,14 +291,6 @@ namespace iText.Svg.Renderers {
                     .Get(4), currentTransform.Get(6), currentTransform.Get(7));
             }
             return new AffineTransform();
-        }
-
-        /// <summary>Return the value of root svg element font-size</summary>
-        /// <returns>rem value</returns>
-        [System.ObsoleteAttribute(@"will be removed in 7.2, use GetCssContext() andiText.Svg.Css.SvgCssContext.GetRootFontSize() instead"
-            )]
-        public virtual float GetRemValue() {
-            return cssContext.GetRootFontSize();
         }
 
         /// <summary>Gets the SVG CSS context.</summary>

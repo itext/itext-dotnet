@@ -48,11 +48,6 @@ namespace iText.StyledXmlParser {
         /// <summary>The Constant SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
         public const String SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "{0} shorthand property cannot be empty.";
 
-        /// <summary>The Constant BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY.</summary>
-        [System.ObsoleteAttribute(@"LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY should be used instead."
-            )]
-        public const String BACKGROUND_SHORTHAND_PROPERTY_CANNOT_BE_EMPTY = "Background shorthand property cannot be empty.";
-
         /// <summary>The Constant DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN.</summary>
         public const String DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN = "Default value of the css property \"{0}\" is unknown.";
 
@@ -96,9 +91,6 @@ namespace iText.StyledXmlParser {
 
         /// <summary>The Constant RULE_IS_NOT_SUPPORTED.</summary>
         public const String RULE_IS_NOT_SUPPORTED = "The rule @{0} is unsupported. All selectors in this rule will be ignored.";
-
-        [System.ObsoleteAttribute(@"moved into iText.StyledXmlParser.Exceptions.StyledXMLParserException")]
-        public const String NAN = "The passed value (@{0}) is not a number";
 
         /// <summary>The Constant RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT.</summary>
         public const String RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT = "Resource with given URL ({0}) was filtered out.";
