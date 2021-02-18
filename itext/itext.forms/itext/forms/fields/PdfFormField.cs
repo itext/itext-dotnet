@@ -3271,14 +3271,14 @@ namespace iText.Forms.Fields {
             PdfCanvas canvasOn = new PdfCanvas(streamOn, new PdfResources(), GetDocument());
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             DrawBorder(canvasOn, xObjectOn, width, height);
-            DrawCheckBox(canvasOn, width, height, fontSize, true);
+            DrawCheckBox(canvasOn, width, height, fontSize);
             xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
             xObjectOn.GetResources().AddFont(GetDocument(), GetFont());
             PdfStream streamOff = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawBorder(canvasOff, xObjectOff, width, height);
-            DrawCheckBox(canvasOff, width, height, fontSize, false);
+            DrawCheckBox(canvasOff, width, height, fontSize);
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             PdfDictionary normalAppearance = new PdfDictionary();
@@ -3422,12 +3422,7 @@ namespace iText.Forms.Fields {
         /// <param name="width">the width of the button</param>
         /// <param name="height">the width of the button</param>
         /// <param name="fontSize">the size of the font</param>
-        /// <param name="on">the boolean value of the checkbox</param>
-        protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, float fontSize, 
-            bool on) {
-            if (!on) {
-                return;
-            }
+        protected internal virtual void DrawCheckBox(PdfCanvas canvas, float width, float height, float fontSize) {
             if (checkType == TYPE_CROSS) {
                 DrawingUtil.DrawCross(canvas, width, height, borderWidth);
                 return;
