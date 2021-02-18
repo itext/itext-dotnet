@@ -1,4 +1,4 @@
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
 /*
 
 This file is part of the iText (R) project.

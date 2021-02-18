@@ -58,7 +58,7 @@ namespace iText.IO.Util {
     /// <author>Bruno Lowagie (change Objects as keys into int values)</author>
     /// <author>Paulo Soares (added extra methods)</author>
     public class IntHashtable
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
  : ICloneable
 #endif
  {

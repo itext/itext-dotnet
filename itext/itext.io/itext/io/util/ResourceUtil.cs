@@ -47,6 +47,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if NET5_0
+using System.Runtime.InteropServices;
+using Microsoft.Extensions.DependencyModel;
+#endif
 #if NETSTANDARD2_0
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyModel;
@@ -123,7 +127,7 @@ namespace iText.IO.Util {
                 }
             }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
                 if (assembly.GetName().Name.StartsWith("itext")) {
                     istr = SearchResourceInAssembly(key, assembly);
@@ -135,7 +139,12 @@ namespace iText.IO.Util {
 #else
             try {
                 if (DependencyContext.Default != null) {
-                    string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+                    string runtimeId = "";
+#if NET5_0
+                    runtimeId = RuntimeInformation.RuntimeIdentifier;
+#else
+                    runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+#endif
                     IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
                     foreach (AssemblyName assemblyName in loadedAssemblies) {
                         if (assemblyName.Name.StartsWith("itext")) {
@@ -151,7 +160,6 @@ namespace iText.IO.Util {
                 }
             } catch { }
 #endif
-
             return istr;
         }
 
@@ -170,7 +178,7 @@ namespace iText.IO.Util {
                     string dir = (string)obj;
                     try
                     {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
                         istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
 #else
                         istr = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(key).GetManifestResourceStream(key);
@@ -204,7 +212,7 @@ namespace iText.IO.Util {
         }
 
         private static void LoadITextResourceAssemblies() {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where( a=> !a.IsDynamic).ToList();
             List<string> loadedPaths = new List<string>();
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
@@ -236,7 +244,12 @@ namespace iText.IO.Util {
                 }
             }
 #else
-            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+            string runtimeId = "";
+#if NET5_0
+            runtimeId = RuntimeInformation.RuntimeIdentifier;
+#else
+            runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+#endif
             List<AssemblyName> loadedAssemblies = null;
             try {
                 loadedAssemblies = DependencyContext.Default?.GetRuntimeAssemblyNames(runtimeId).ToList();

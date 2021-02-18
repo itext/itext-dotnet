@@ -164,7 +164,7 @@ namespace iText.IO.Image {
             return image;
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
         /// <param name="image">the java.awt.Image to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
@@ -174,7 +174,7 @@ namespace iText.IO.Image {
         }
 #endif // !NETSTANDARD2_0
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
         /// <param name="image">the <c>java.awt.Image</c> to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
