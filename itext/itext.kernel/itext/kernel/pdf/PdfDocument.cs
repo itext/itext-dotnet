@@ -2272,7 +2272,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
                     PdfString producerPdfStr = info.GetPdfObject().GetAsString(PdfName.Producer);
-                    producer = producerPdfStr != null ? producerPdfStr.ToUnicodeString() : null;
+                    producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
                 }
                 producer = AddModifiedPostfix(producer);
             }

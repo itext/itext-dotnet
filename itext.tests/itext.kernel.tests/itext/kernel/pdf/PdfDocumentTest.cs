@@ -70,6 +70,55 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MissingProducerTest() {
+            String inputFile = SOURCE_FOLDER + "missingProducer.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+                PdfDocumentInfo documentInfo = document.GetDocumentInfo();
+                NUnit.Framework.Assert.IsNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
+                NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
+            }
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
+                ))) {
+                PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
+                NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
+                NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullProducerTest() {
+            String inputFile = SOURCE_FOLDER + "nullProducer.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+                PdfDocumentInfo documentInfo = document.GetDocumentInfo();
+                NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, documentInfo.GetPdfObject().Get(PdfName.Producer));
+                NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
+            }
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
+                ))) {
+                PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
+                NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
+                NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NameProducerTest() {
+            String inputFile = SOURCE_FOLDER + "nameProducer.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+                PdfDocumentInfo documentInfo = document.GetDocumentInfo();
+                NUnit.Framework.Assert.AreEqual(new PdfName("producerAsName"), documentInfo.GetPdfObject().Get(PdfName.Producer
+                    ));
+                NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
+            }
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
+                ))) {
+                PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
+                NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
+                NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void WritingVersionTest01() {
             // There is a possibility to override version in stamping mode
             String @out = DESTINATION_FOLDER + "writing_pdf_version.pdf";
