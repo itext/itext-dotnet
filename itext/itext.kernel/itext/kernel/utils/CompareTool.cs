@@ -101,15 +101,15 @@ namespace iText.Kernel.Utils {
 
         private const String NEW_LINES = "\\r|\\n";
 
-        private String cmpPdf;
-
         private String cmpPdfName;
+
+        private String outPdfName;
+
+        private String cmpPdf;
 
         private String cmpImage;
 
         private String outPdf;
-
-        private String outPdfName;
 
         private String outImage;
 
@@ -183,7 +183,7 @@ namespace iText.Kernel.Utils {
         public virtual CompareTool.CompareResult CompareByCatalog(PdfDocument outDocument, PdfDocument cmpDocument
             ) {
             CompareTool.CompareResult compareResult = null;
-            compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            compareResult = new CompareTool.CompareResult(compareByContentErrorsLimit);
             ObjectPath catalogPath = new ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument
                 .GetCatalog().GetPdfObject().GetIndirectReference());
             ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Metadata
@@ -701,7 +701,7 @@ namespace iText.Kernel.Utils {
             if (outDict.GetIndirectReference() == null || cmpDict.GetIndirectReference() == null) {
                 throw new ArgumentException("The 'outDict' and 'cmpDict' objects shall have indirect references.");
             }
-            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(compareByContentErrorsLimit);
             ObjectPath currentPath = new ObjectPath(cmpDict.GetIndirectReference(), outDict.GetIndirectReference());
             if (!CompareDictionariesExtended(outDict, cmpDict, currentPath, compareResult, excludedKeys)) {
                 System.Diagnostics.Debug.Assert(!compareResult.IsOk());
@@ -740,7 +740,7 @@ namespace iText.Kernel.Utils {
         /// if streams are equal.
         /// </returns>
         public virtual CompareTool.CompareResult CompareStreamsStructure(PdfStream outStream, PdfStream cmpStream) {
-            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(compareByContentErrorsLimit);
             ObjectPath currentPath = new ObjectPath(cmpStream.GetIndirectReference(), outStream.GetIndirectReference()
                 );
             if (!CompareStreamsExtended(outStream, cmpStream, currentPath, compareResult)) {
@@ -1109,7 +1109,7 @@ namespace iText.Kernel.Utils {
                 ghostscriptHelper = new GhostscriptHelper(gsExec);
             }
             catch (ArgumentException e) {
-                throw new CompareTool.CompareToolExecutionException(this, e.Message);
+                throw new CompareTool.CompareToolExecutionException(e.Message);
             }
             ghostscriptHelper.RunGhostScriptImageGeneration(outPdf, outPath, outImage);
             ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, outPath, cmpImage);
@@ -1117,21 +1117,21 @@ namespace iText.Kernel.Utils {
         }
 
         private String CompareImagesOfPdfs(String outPath, String differenceImagePrefix, IList<int> equalPages) {
-            FileInfo[] imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.PngFileFilter(this)
-                );
+            FileInfo[] imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.PngFileFilter(outPdfName
+                ));
             FileInfo[] cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.CmpPngFileFilter
-                (this));
+                (cmpPdfName));
             bool bUnexpectedNumberOfPages = false;
             if (imageFiles.Length != cmpImageFiles.Length) {
                 bUnexpectedNumberOfPages = true;
             }
             int cnt = Math.Min(imageFiles.Length, cmpImageFiles.Length);
             if (cnt < 1) {
-                throw new CompareTool.CompareToolExecutionException(this, "No files for comparing. The result or sample pdf file is not processed by GhostScript."
+                throw new CompareTool.CompareToolExecutionException("No files for comparing. The result or sample pdf file is not processed by GhostScript."
                     );
             }
-            JavaUtil.Sort(imageFiles, new CompareTool.ImageNameComparator(this));
-            JavaUtil.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
+            JavaUtil.Sort(imageFiles, new CompareTool.ImageNameComparator());
+            JavaUtil.Sort(cmpImageFiles, new CompareTool.ImageNameComparator());
             bool compareExecIsOk;
             String imageMagickInitError = null;
             ImageMagickHelper imageMagickHelper = null;
@@ -1247,15 +1247,16 @@ namespace iText.Kernel.Utils {
                 FileUtil.CreateDirectories(outPath);
             }
             else {
-                imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.PngFileFilter(this));
+                imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.PngFileFilter(cmpPdfName));
                 foreach (FileInfo file in imageFiles) {
                     file.Delete();
                 }
-                cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.CmpPngFileFilter(this));
+                cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.CmpPngFileFilter(cmpPdfName
+                    ));
                 foreach (FileInfo file in cmpImageFiles) {
                     file.Delete();
                 }
-                diffFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.DiffPngFileFilter(this, differenceImagePrefix
+                diffFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.DiffPngFileFilter(differenceImagePrefix
                     ));
                 foreach (FileInfo file in diffFiles) {
                     file.Delete();
@@ -1290,7 +1291,7 @@ namespace iText.Kernel.Utils {
                                 return CompareVisuallyAndCombineReports("Documents have different numbers of pages.", outPath, differenceImagePrefix
                                     , ignoredAreas, null);
                             }
-                            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+                            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(compareByContentErrorsLimit);
                             IList<int> equalPages = new List<int>(cmpPages.Count);
                             for (int i = 0; i < cmpPages.Count; i++) {
                                 ObjectPath currentPath = new ObjectPath(cmpPagesRef[i], outPagesRef[i]);
@@ -2041,51 +2042,48 @@ namespace iText.Kernel.Utils {
         }
 
         private class PngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+            private String currentOutPdfName;
+
+            public PngFileFilter(String currentOutPdfName) {
+                this.currentOutPdfName = currentOutPdfName;
+            }
+
             public virtual bool Accept(FileInfo pathname) {
                 String ap = pathname.Name;
                 bool b1 = ap.EndsWith(".png");
                 bool b2 = ap.Contains("cmp_");
-                return b1 && !b2 && ap.Contains(this._enclosing.outPdfName);
+                return b1 && !b2 && ap.Contains(currentOutPdfName);
             }
-
-            internal PngFileFilter(CompareTool _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly CompareTool _enclosing;
         }
 
         private class CmpPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
+            private String currentCmpPdfName;
+
+            public CmpPngFileFilter(String currentCmpPdfName) {
+                this.currentCmpPdfName = currentCmpPdfName;
+            }
+
             public virtual bool Accept(FileInfo pathname) {
                 String ap = pathname.Name;
                 bool b1 = ap.EndsWith(".png");
                 bool b2 = ap.Contains("cmp_");
-                return b1 && b2 && ap.Contains(this._enclosing.cmpPdfName);
+                return b1 && b2 && ap.Contains(currentCmpPdfName);
             }
-
-            internal CmpPngFileFilter(CompareTool _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly CompareTool _enclosing;
         }
 
         private class DiffPngFileFilter : iText.IO.Util.FileUtil.IFileFilter {
             private String differenceImagePrefix;
 
-            public DiffPngFileFilter(CompareTool _enclosing, String differenceImagePrefix) {
-                this._enclosing = _enclosing;
+            public DiffPngFileFilter(String differenceImagePrefix) {
                 this.differenceImagePrefix = differenceImagePrefix;
             }
 
             public virtual bool Accept(FileInfo pathname) {
                 String ap = pathname.Name;
                 bool b1 = ap.EndsWith(".png");
-                bool b2 = ap.StartsWith(this.differenceImagePrefix);
+                bool b2 = ap.StartsWith(differenceImagePrefix);
                 return b1 && b2;
             }
-
-            private readonly CompareTool _enclosing;
         }
 
         private class ImageNameComparator : IComparer<FileInfo> {
@@ -2094,12 +2092,6 @@ namespace iText.Kernel.Utils {
                 String f2Name = f2.Name;
                 return string.CompareOrdinal(f1Name, f2Name);
             }
-
-            internal ImageNameComparator(CompareTool _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly CompareTool _enclosing;
         }
 
         /// <summary>Class containing results of the comparison of two documents.</summary>
@@ -2112,21 +2104,20 @@ namespace iText.Kernel.Utils {
 
             /// <summary>Creates new empty instance of CompareResult with given limit of difference messages.</summary>
             /// <param name="messageLimit">maximum number of difference messages to be handled by this CompareResult.</param>
-            public CompareResult(CompareTool _enclosing, int messageLimit) {
-                this._enclosing = _enclosing;
+            public CompareResult(int messageLimit) {
                 this.messageLimit = messageLimit;
             }
 
             /// <summary>Verifies if documents are considered equal after comparison.</summary>
             /// <returns>true if documents are equal, false otherwise.</returns>
             public virtual bool IsOk() {
-                return this.differences.Count == 0;
+                return differences.Count == 0;
             }
 
             /// <summary>Returns number of differences between two documents detected during comparison.</summary>
             /// <returns>number of differences.</returns>
             public virtual int GetErrorCount() {
-                return this.differences.Count;
+                return differences.Count;
             }
 
             /// <summary>Converts this CompareResult into text form.</summary>
@@ -2134,7 +2125,7 @@ namespace iText.Kernel.Utils {
             public virtual String GetReport() {
                 StringBuilder sb = new StringBuilder();
                 bool firstEntry = true;
-                foreach (KeyValuePair<ObjectPath, String> entry in this.differences) {
+                foreach (KeyValuePair<ObjectPath, String> entry in differences) {
                     if (!firstEntry) {
                         sb.Append("-----------------------------").Append("\n");
                     }
@@ -2152,7 +2143,7 @@ namespace iText.Kernel.Utils {
             /// </summary>
             /// <returns>differences map which could be used to find in the document the objects that are different.</returns>
             public virtual IDictionary<ObjectPath, String> GetDifferences() {
-                return this.differences;
+                return differences;
             }
 
             /// <summary>Converts this CompareResult into xml form.</summary>
@@ -2161,9 +2152,9 @@ namespace iText.Kernel.Utils {
                 XmlDocument xmlReport = XmlUtil.InitNewXmlDocument();
                 XmlElement root = xmlReport.CreateElement("report");
                 XmlElement errors = xmlReport.CreateElement("errors");
-                errors.SetAttribute("count", this.differences.Count.ToString());
+                errors.SetAttribute("count", differences.Count.ToString());
                 root.AppendChild(errors);
-                foreach (KeyValuePair<ObjectPath, String> entry in this.differences) {
+                foreach (KeyValuePair<ObjectPath, String> entry in differences) {
                     XmlNode errorNode = xmlReport.CreateElement("error");
                     XmlNode message = xmlReport.CreateElement("message");
                     message.AppendChild(xmlReport.CreateTextNode(entry.Value));
@@ -2177,16 +2168,14 @@ namespace iText.Kernel.Utils {
             }
 
             protected internal virtual bool IsMessageLimitReached() {
-                return this.differences.Count >= this.messageLimit;
+                return differences.Count >= messageLimit;
             }
 
             protected internal virtual void AddError(ObjectPath path, String message) {
-                if (this.differences.Count < this.messageLimit) {
-                    this.differences.Put(new ObjectPath(path), message);
+                if (differences.Count < messageLimit) {
+                    differences.Put(new ObjectPath(path), message);
                 }
             }
-
-            private readonly CompareTool _enclosing;
         }
 
         /// <summary>
@@ -2199,12 +2188,9 @@ namespace iText.Kernel.Utils {
             /// <see cref="CompareToolExecutionException"/>.
             /// </summary>
             /// <param name="msg">the detail message.</param>
-            public CompareToolExecutionException(CompareTool _enclosing, String msg)
+            public CompareToolExecutionException(String msg)
                 : base(msg) {
-                this._enclosing = _enclosing;
             }
-
-            private readonly CompareTool _enclosing;
         }
     }
 }
