@@ -205,7 +205,6 @@ namespace iText.Svg.Renderers.Impl {
         /// </returns>
         [Obsolete]
         protected internal virtual Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            // TODO DEVSIX-3814 move to ISvgNodeRenderer in 7.2
             return null;
         }
 

@@ -86,8 +86,6 @@ namespace iText.Svg.Processors.Impl {
                 fontProvider = new BasicFontProvider();
             }
             IResourceRetriever retriever = null;
-            // TODO DEVSIX-3814 change the clause if block to retriever = new ResourceResolver(props.getBaseUri(),
-            //  converterProperties.getResourceRetriever()) when the ISvgConverterProperties#getResourceRetriever() is added
             if (converterProperties is SvgConverterProperties) {
                 retriever = ((SvgConverterProperties)converterProperties).GetResourceRetriever();
             }

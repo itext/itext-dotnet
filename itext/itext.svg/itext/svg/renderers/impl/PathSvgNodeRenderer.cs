@@ -146,7 +146,6 @@ namespace iText.Svg.Renderers.Impl {
                 if (lastPoint == null) {
                     lastPoint = item.GetEndingPoint();
                 }
-                // TODO DEVSIX-3814 - remove this check after moving method getPathShapeRectangle to IPathShape
                 if (item is AbstractPathShape) {
                     Rectangle rectangle = ((AbstractPathShape)item).GetPathShapeRectangle(lastPoint);
                     commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, rectangle);

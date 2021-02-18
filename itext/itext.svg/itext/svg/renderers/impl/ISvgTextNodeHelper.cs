@@ -45,6 +45,5 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Svg.Utils.TextRectangle"/>
         /// </returns>
         TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint);
-        // TODO DEVSIX-3814 This method should be moved to ISvgTextNodeRenderer in 7.2 and this class should be removed
     }
 }

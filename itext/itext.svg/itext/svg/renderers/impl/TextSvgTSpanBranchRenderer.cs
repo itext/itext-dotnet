@@ -50,7 +50,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            // TODO DEVSIX-3814 change to getParent().getObjectBoundingBox(context) in 7.2 update
             if (GetParent() is AbstractSvgNodeRenderer) {
                 return ((AbstractSvgNodeRenderer)GetParent()).GetObjectBoundingBox(context);
             }

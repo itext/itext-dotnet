@@ -48,12 +48,10 @@ namespace iText.IO.Font.Otf {
         }
 
         public override ContextualSubstRule GetMatchingContextRule(GlyphLine line) {
-            // TODO DEVSIX-3814 Remove this dummy override. It's left only for binary backwards compatibility
             return base.GetMatchingContextRule(line);
         }
 
         protected internal override int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
-            // TODO DEVSIX-3814 Remove this dummy override. It's left only for binary backwards compatibility
             return base.CheckIfContextMatch(line, rule);
         }
     }
