@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup Label="Configuration">
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net40</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp2.0;net40</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <OutputType>library</OutputType>

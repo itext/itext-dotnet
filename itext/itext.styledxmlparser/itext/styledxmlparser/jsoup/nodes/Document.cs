@@ -479,10 +479,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
     /// <summary>A Document's output settings control the form of the text() and html() methods.</summary>
     public class OutputSettings
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
  : ICloneable
 #endif
- {
+    {
         private Entities.EscapeMode escapeMode = Entities.EscapeMode.@base;
 
         private System.Text.Encoding charset = EncodingUtil.GetEncoding("UTF-8");

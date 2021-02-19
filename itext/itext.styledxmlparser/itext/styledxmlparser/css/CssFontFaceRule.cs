@@ -92,8 +92,8 @@ namespace iText.StyledXmlParser.Css {
             return sb.ToString();
         }
 
-        public virtual Range ResolveUnicodeRange() {
-            Range range = null;
+        public virtual iText.Layout.Font.Range ResolveUnicodeRange() {
+            iText.Layout.Font.Range range = null;
             foreach (CssDeclaration descriptor in GetProperties()) {
                 if ("unicode-range".Equals(descriptor.GetProperty())) {
                     range = CssUtils.ParseUnicodeRange(descriptor.GetExpression());

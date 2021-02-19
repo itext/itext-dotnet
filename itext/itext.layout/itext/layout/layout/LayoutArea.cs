@@ -116,7 +116,7 @@ namespace iText.Layout.Layout {
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            HashCode hashCode = new HashCode();
+            iText.IO.Util.HashCode hashCode = new iText.IO.Util.HashCode();
             hashCode.Append(pageNumber).Append(bBox.GetHashCode());
             return hashCode.GetHashCode();
         }

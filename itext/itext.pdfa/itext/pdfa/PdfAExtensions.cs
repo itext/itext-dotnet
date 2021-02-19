@@ -87,7 +87,7 @@ namespace iText.Pdfa {
         }
 
         public static Assembly GetAssembly(this Type type) {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
             return type.Assembly;
 #else
             return type.GetTypeInfo().Assembly;

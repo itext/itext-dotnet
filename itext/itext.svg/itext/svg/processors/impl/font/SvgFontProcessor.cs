@@ -87,7 +87,7 @@ namespace iText.Svg.Processors.Impl.Font {
         /// <param name="fontFamily">the font family</param>
         /// <param name="src">the source of the font</param>
         /// <returns>true, if successful</returns>
-        private bool CreateFont(String fontFamily, CssFontFace.CssFontFaceSrc src, Range unicodeRange) {
+        private bool CreateFont(String fontFamily, CssFontFace.CssFontFaceSrc src, iText.Layout.Font.Range unicodeRange) {
             if (!CssFontFace.IsSupportedFontFormat(src.GetFormat())) {
                 return false;
             }

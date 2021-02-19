@@ -98,7 +98,7 @@ namespace iText.Kernel.Geom {
         }
 
         public override int GetHashCode() {
-            HashCode hash = new HashCode();
+            iText.IO.Util.HashCode hash = new iText.IO.Util.HashCode();
             hash.Append(GetX());
             hash.Append(GetY());
             return hash.GetHashCode();

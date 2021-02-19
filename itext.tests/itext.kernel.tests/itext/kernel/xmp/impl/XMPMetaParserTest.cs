@@ -53,7 +53,7 @@ namespace iText.Kernel.XMP.Impl {
              + "                                                                                                    \n"
              + "             \n" + "<?xpacket end=\"w\"?>";
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromString() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -76,7 +76,7 @@ namespace iText.Kernel.XMP.Impl {
         }
 #endif // NETSTANDARD2_0
         
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromByteBuffer() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);
@@ -99,7 +99,7 @@ namespace iText.Kernel.XMP.Impl {
         }
 #endif // NETSTANDARD2_0
         
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Test]
         public virtual void XxeTestFromInputStream() {
             String metadataToParse = MessageFormatUtil.Format(XMP_WITH_XXE, XXE_FILE_PATH);

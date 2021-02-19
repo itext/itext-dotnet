@@ -454,7 +454,7 @@ internal static class StyledXmlParserExtensions {
         return sb;
     }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
     public static Attribute GetCustomAttribute(this Assembly assembly, Type attributeType)
     {
         object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false);
@@ -471,14 +471,14 @@ internal static class StyledXmlParserExtensions {
 
     public static Assembly GetAssembly(this Type type)
     {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         return type.Assembly;
 #else
         return type.GetTypeInfo().Assembly;
 #endif
     }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET5_0
     public static MethodInfo GetMethod(this Type type, String methodName, Type[] parameterTypes) {
         return type.GetTypeInfo().GetMethod(methodName, parameterTypes);
     }

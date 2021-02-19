@@ -1193,7 +1193,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1213,7 +1213,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1230,7 +1230,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1247,7 +1247,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1264,7 +1264,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1281,7 +1281,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1298,7 +1298,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1315,7 +1315,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]
@@ -1332,7 +1332,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         [NUnit.Framework.Timeout(1000)]
 #endif // !NETSTANDARD2_0
         [NUnit.Framework.Test]

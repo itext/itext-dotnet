@@ -715,7 +715,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <see cref="iText.Layout.Font.Range"/>
         /// object
         /// </returns>
-        public static Range ParseUnicodeRange(String unicodeRange) {
+        public static iText.Layout.Font.Range ParseUnicodeRange(String unicodeRange) {
             String[] ranges = iText.IO.Util.StringUtil.Split(unicodeRange, ",");
             RangeBuilder builder = new RangeBuilder();
             foreach (String range in ranges) {

@@ -47,7 +47,7 @@ using System.Reflection;
 namespace iText.Test {
     internal static class PdfTestExtensions {
         public static Attribute GetCustomAttribute(this Type classType, Type attributeType) {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
             return Attribute.GetCustomAttribute(classType, attributeType);
 #else
             return classType.GetTypeInfo().GetCustomAttribute(attributeType);
@@ -55,14 +55,14 @@ namespace iText.Test {
         }
 
         public static Assembly GetAssembly(this Type type) {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
             return type.Assembly;
 #else
             return type.GetTypeInfo().Assembly;
 #endif
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET5_0
         public static object[] GetCustomAttributes(this Type type, Type attributeType, bool inherit) {
             return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit).ToArray();
         }
