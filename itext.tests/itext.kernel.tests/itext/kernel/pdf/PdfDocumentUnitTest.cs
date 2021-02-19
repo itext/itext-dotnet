@@ -33,9 +33,11 @@ using iText.Test.Attributes;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Layer;
 using iText.Test;
-
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentUnitTest : ExtendedITextTest {

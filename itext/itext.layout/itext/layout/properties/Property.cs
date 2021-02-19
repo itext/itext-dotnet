@@ -131,7 +131,7 @@ namespace iText.Layout.Properties {
 
         public const int FLEX_GROW = 132;
 
-        public const int FLEX_SHRINK = 133;
+        public const int FLEX_SHRINK = 127;
 
         public const int FLEX_WRAP = 128;
 
@@ -204,7 +204,7 @@ namespace iText.Layout.Properties {
 
         public const int ITALIC_SIMULATION = 31;
 
-        public const int JUSTIFY_CONTENT = 135;
+        public const int JUSTIFY_CONTENT = 133;
 
         public const int KEEP_TOGETHER = 32;
 
@@ -370,7 +370,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 127;
+        private const int MAX_INHERITED_PROPERTY_ID = 124;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

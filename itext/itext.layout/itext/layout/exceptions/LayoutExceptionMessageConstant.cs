@@ -39,7 +39,7 @@ namespace iText.Layout.Exceptions {
         public const String FLEX_GROW_CANNOT_BE_NEGATIVE = "Flex grow cannot be negative.";
 
         public const String FLEX_SHRINK_CANNOT_BE_NEGATIVE = "Flex shrink cannot be negative.";
-        
+
         public const String FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED = "FontProvider and FontSet are empty. "
              + "Cannot resolve font family name (see ElementPropertyContainer#setFontFamily) without initialized "
              + "FontProvider (see RootElement#setFontProvider).";

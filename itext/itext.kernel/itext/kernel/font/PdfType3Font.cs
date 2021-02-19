@@ -514,7 +514,8 @@ namespace iText.Kernel.Font {
         private double[] ReadWidths(PdfDictionary fontDictionary) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);
             if (pdfWidths == null) {
-                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams(PdfName.Widths);
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams
+                    (PdfName.Widths);
             }
             double[] widths = new double[pdfWidths.Size()];
             for (int i = 0; i < pdfWidths.Size(); i++) {
@@ -549,8 +550,8 @@ namespace iText.Kernel.Font {
         private double[] ReadFontMatrix() {
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (fontMatrixArray == null) {
-                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams(PdfName.FontMatrix
-                    );
+                throw new PdfException(KernelExceptionMessageConstant.MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY).SetMessageParams
+                    (PdfName.FontMatrix);
             }
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
