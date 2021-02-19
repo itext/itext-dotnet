@@ -90,7 +90,7 @@ namespace iText.IO.Font {
                     }
                     MemoryStream stream = new MemoryStream();
                     int read;
-                    while ((read = resource.Read(buf)) >= 0) {
+                    while ((read = resource.Read(buf)) > 0) {
                         stream.Write(buf, 0, read);
                     }
                     buf = stream.ToArray();

@@ -64,7 +64,7 @@ namespace iText.IO.Font {
                 MemoryStream stream = new MemoryStream();
                 while (true) {
                     int size = resource.Read(buf);
-                    if (size < 0) {
+                    if (size <= 0) {
                         break;
                     }
                     stream.Write(buf, 0, size);
