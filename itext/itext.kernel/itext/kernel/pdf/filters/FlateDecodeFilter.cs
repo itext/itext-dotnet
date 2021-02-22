@@ -259,7 +259,7 @@ namespace iText.Kernel.Pdf.Filters {
             byte[] b = new byte[strict ? 4092 : 1];
             try {
                 int n;
-                while ((n = zip.Read(b)) >= 0) {
+                while ((n = zip.Read(b)) > 0) {
                     @out.Write(b, 0, n);
                 }
                 zip.Dispose();
