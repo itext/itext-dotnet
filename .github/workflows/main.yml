@@ -1,0 +1,17 @@
+name: iText7 CI Pipeline
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  ci:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
+        
+      # Build process
+      
+      # Tests process
+
+# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
