@@ -116,6 +116,8 @@ namespace iText.IO {
 
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
+        public const String DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED = "During the construction of the ICC profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the image.";
+
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";

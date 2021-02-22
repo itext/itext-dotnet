@@ -50,6 +50,8 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     internal class JpegImageHelper {
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(JpegImageHelper));
+
         /// <summary>This is a type of marker.</summary>
         private const int NOT_A_MARKER = -1;
 
@@ -128,6 +130,31 @@ namespace iText.IO.Image {
                 }
             }
             UpdateAttributes(image);
+        }
+
+        internal static void AttemptToSetIccProfileToImage(byte[][] icc, ImageData image) {
+            if (icc != null) {
+                int total = 0;
+                foreach (byte[] value in icc) {
+                    if (value == null) {
+                        return;
+                    }
+                    total += value.Length - 14;
+                }
+                byte[] ficc = new byte[total];
+                total = 0;
+                foreach (byte[] bytes in icc) {
+                    Array.Copy(bytes, 14, ficc, total, bytes.Length - 14);
+                    total += bytes.Length - 14;
+                }
+                try {
+                    image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorSpace()));
+                }
+                catch (Exception e) {
+                    LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
+                        , e.GetType().Name, e.Message));
+                }
+            }
         }
 
         private static void UpdateAttributes(ImageData image) {
@@ -295,8 +322,7 @@ namespace iText.IO.Image {
                                 dx = (unitsx == 2 ? (int)(dx * 2.54f + 0.5f) : dx);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiX() != 0 && image.GetDpiX() != dx) {
-                                    ILog logger = LogManager.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
+                                    LOGGER.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
                                 }
                                 else {
                                     image.SetDpi(dx, image.GetDpiY());
@@ -306,8 +332,7 @@ namespace iText.IO.Image {
                                 dy = (unitsy == 2 ? (int)(dy * 2.54f + 0.5f) : dy);
                                 // make sure this is consistent with JFIF data
                                 if (image.GetDpiY() != 0 && image.GetDpiY() != dy) {
-                                    ILog logger = LogManager.GetLogger(typeof(JpegImageHelper));
-                                    logger.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
+                                    LOGGER.Debug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
                                 }
                                 else {
                                     image.SetDpi(image.GetDpiX(), dx);
@@ -342,30 +367,9 @@ namespace iText.IO.Image {
                     }
                 }
             }
-            if (icc != null) {
-                int total = 0;
-                for (int k = 0; k < icc.Length; ++k) {
-                    if (icc[k] == null) {
-                        icc = null;
-                        return;
-                    }
-                    total += icc[k].Length - 14;
-                }
-                byte[] ficc = new byte[total];
-                total = 0;
-                for (int k = 0; k < icc.Length; ++k) {
-                    Array.Copy(icc[k], 14, ficc, total, icc[k].Length - 14);
-                    total += icc[k].Length - 14;
-                }
-                try {
-                    image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorSpace()));
-                }
-                catch (ArgumentException) {
-                }
-            }
+            AttemptToSetIccProfileToImage(icc, image);
         }
 
-        // ignore ICC profile if it's invalid.
         /// <summary>Reads a short from the <c>InputStream</c>.</summary>
         /// <param name="jpegStream">the <c>InputStream</c></param>
         /// <returns>an int</returns>
