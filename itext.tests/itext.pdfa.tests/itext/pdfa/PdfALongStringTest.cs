@@ -81,7 +81,8 @@ namespace iText.Pdfa {
                             stringBuilder.Append(stringBuilder.ToString());
                         }
                         PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
+                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                            );
                         Paragraph p = new Paragraph(stringBuilder.ToString());
                         p.SetMinWidth(1e6f);
                         p.SetFont(font);

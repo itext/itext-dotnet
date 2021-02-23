@@ -76,7 +76,8 @@ namespace iText.Pdfa {
                 );
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
-            PdfFont textfont = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, true);
+            PdfFont textfont = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             textfont.SetSubset(true);
             List list = new List();
             ListItem listItem = new ListItem();

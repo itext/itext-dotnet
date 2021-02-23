@@ -71,7 +71,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcodeMSITest.pdf";
             String cmpPdf = cmpFolder + "cmp_barcodeMSITest.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             BarcodeMSI codeMSI = new BarcodeMSI(doc.GetPdfDocument(), font);
             FillBarcode1D(codeMSI, "1234567");
@@ -88,7 +89,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcodeInter25Test.pdf";
             String cmpPdf = cmpFolder + "cmp_barcodeInter25Test.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             BarcodeInter25 codeInter25 = new BarcodeInter25(doc.GetPdfDocument(), font);
             FillBarcode1D(codeInter25, "1234567");
@@ -105,7 +107,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcodeEANTest.pdf";
             String cmpPdf = cmpFolder + "cmp_barcodeEANTest.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             BarcodeEAN codeEAN = new BarcodeEAN(doc.GetPdfDocument(), font);
             FillBarcode1D(codeEAN, "9781935182610");
@@ -122,7 +125,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcodeCodabarTest.pdf";
             String cmpPdf = cmpFolder + "cmp_barcodeCodabarTest.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             BarcodeCodabar codeCodabar = new BarcodeCodabar(doc.GetPdfDocument(), font);
             FillBarcode1D(codeCodabar, "A123A");
@@ -139,7 +143,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcode39Test.pdf";
             String cmpPdf = cmpFolder + "cmp_barcode39Test.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             Barcode39 code39 = new Barcode39(doc.GetPdfDocument(), font);
             FillBarcode1D(code39, "1234567");
@@ -156,7 +161,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "barcode128Test.pdf";
             String cmpPdf = cmpFolder + "cmp_barcode128Test.pdf";
             Document doc = CreatePdfATaggedDocument(outPdf);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             font.SetSubset(true);
             Barcode128 code128 = new Barcode128(doc.GetPdfDocument(), font);
             FillBarcode1D(code128, "1234567");

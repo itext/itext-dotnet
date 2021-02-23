@@ -80,8 +80,7 @@ namespace iText.Forms {
             String filename = "fontsResourcesHelvFontTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelv.pdf"), new PdfWriter(destinationFolder
                  + filename));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, true
-                );
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             form.GetField("description").SetValue(TEXT, font, 12f);
@@ -108,8 +107,7 @@ namespace iText.Forms {
             String filename = "fontsResourcesHelvCourierNotoFontTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelvAndCourier.pdf"), new PdfWriter
                 (destinationFolder + filename));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, true
-                );
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             form.GetField("description").SetFont(font);

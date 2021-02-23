@@ -672,7 +672,9 @@ namespace iText.Layout.Font {
                     if (encoding == null || encoding.Length == 0) {
                         encoding = GetDefaultEncoding(fontProgram);
                     }
-                    pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
+                    PdfFontFactory.EmbeddingStrategy embeddingStrategy = GetDefaultEmbeddingFlag() ? PdfFontFactory.EmbeddingStrategy
+                        .PREFER_EMBEDDED : PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
+                    pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, embeddingStrategy);
                 }
                 catch (System.IO.IOException e) {
                     // Converting checked exceptions to unchecked RuntimeException (java-specific comment).

@@ -179,7 +179,8 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             PdfFont type0 = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
                 );
-            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", true);
+            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             Paragraph paragraph = new Paragraph().SetSpacingRatio(1).SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
             paragraph.Add("If you need to stop reading before you reach the end");
             document.Add(paragraph.SetFont(type0));

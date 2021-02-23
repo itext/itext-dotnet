@@ -180,7 +180,7 @@ namespace iText.Forms {
             String value = "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "formFieldWithStringTest.pdf"));
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
-                , true);
+                );
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfFormField form = PdfTextFormField.CreateMultilineText(pdfDoc, new Rectangle(59, 715, 127, 69), "field", 
                 "", font, 10f);

@@ -111,13 +111,21 @@ namespace iText.Kernel {
 
         public const String CannotCopyToDocumentOpenedInReadingMode = "Cannot copy to document opened in reading mode.";
 
+        public const String CannotCreateFontFromNullFontDictionary = "Cannot create font from null pdf dictionary.";
+
         public const String CannotCreateLayoutImageByWmfImage = "Cannot create layout image by WmfImage instance. First convert the image into FormXObject and then use the corresponding layout image constructor.";
 
         public const String CannotCreatePdfImageXObjectByWmfImage = "Cannot create PdfImageXObject instance by WmfImage. Use PdfFormXObject constructor instead.";
 
         public const String CannotCreatePdfStreamByInputStreamWithoutPdfDocument = "Cannot create pdfstream by InputStream without PdfDocument.";
 
+        public const String CannotCreateType0FontWithTrueTypeFontProgramWithoutEmbedding = "Cannot create Type0 font with true type font program without embedding it.";
+
         public const String CannotDrawElementsOnAlreadyFlushedPages = "Cannot draw elements on already flushed pages.";
+
+        public const String CannotEmbedStandardFont = "Standard fonts cannot be embedded.";
+
+        public const String CannotEmbedType0FontWithCidFontProgram = "Cannot embed Type0 font with CID font program based on non-generic predefined CMap.";
 
         public const String CannotGetContentBytes = "Cannot get content bytes.";
 
@@ -206,6 +214,8 @@ namespace iText.Kernel {
 
         public const String DictionaryKey1IsNotAName = "Dictionary key {0} is not a name.";
 
+        /// <summary>Exception message in case of dictionary does not have specified font data.</summary>
+        [System.ObsoleteAttribute(@"Will be removed in nex major release as there are no usages left.")]
         public const String DictionaryDoesntHave1FontData = "Dictionary doesn't have {0} font data.";
 
         public const String DictionaryDoesntHaveSupportedFontData = "Dictionary doesn't have supported font data.";
@@ -515,6 +525,8 @@ namespace iText.Kernel {
 
         [Obsolete]
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
+
+        public const String UnsupportedFontEmbeddingStrategy = "Unsupported font embedding strategy.";
 
         public const String UnsupportedXObjectType = "Unsupported XObject type.";
 

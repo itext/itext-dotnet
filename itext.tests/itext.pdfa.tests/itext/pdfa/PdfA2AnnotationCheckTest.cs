@@ -344,7 +344,8 @@ namespace iText.Pdfa {
         private PdfStream CreateAppearance(PdfADocument doc, Rectangle formRect) {
             PdfFormXObject form = new PdfFormXObject(formRect);
             PdfCanvas canvas = new PdfCanvas(form, doc);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             canvas.SetFontAndSize(font, 12);
             canvas.BeginText().SetTextMatrix(200, 50).ShowText("Hello World").EndText();
             return form.GetPdfObject();

@@ -138,7 +138,8 @@ namespace iText.Layout {
             pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
             PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
             info.SetTitle("iText7 PDF/UA test");
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, true);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             Paragraph p = new Paragraph();
             p.SetFont(font);
             p.Add(new Text("The quick brown "));

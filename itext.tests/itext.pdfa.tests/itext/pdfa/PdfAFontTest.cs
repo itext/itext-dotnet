@@ -72,7 +72,8 @@ namespace iText.Pdfa {
             PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
@@ -108,7 +109,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_NOT_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
@@ -124,7 +126,8 @@ namespace iText.Pdfa {
                 PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
                     , "http://www.color.org", "sRGB IEC61966-2.1", @is));
                 PdfPage page = doc.AddNewPage();
-                PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", true);
+                PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                    );
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                     ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
@@ -162,7 +165,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_NOT_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-2B").EndText().RestoreState();
@@ -180,7 +184,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", false);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_NOT_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-3B").EndText().RestoreState();
@@ -198,7 +203,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();
@@ -216,7 +222,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Puritan2.otf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Puritan2.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();
@@ -234,7 +241,8 @@ namespace iText.Pdfa {
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();
@@ -294,7 +302,8 @@ namespace iText.Pdfa {
             PdfDocument doc = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + fontFileName, encoding, true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + fontFileName, encoding, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();

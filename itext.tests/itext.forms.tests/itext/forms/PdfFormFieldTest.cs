@@ -531,9 +531,9 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
             PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                , true);
+                );
             hebrew.SetSubset(false);
-            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
             sileot.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             String text = "שלום וברכה";
@@ -557,9 +557,9 @@ namespace iText.Forms {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
             PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                , true);
+                );
             hebrew.SetSubset(false);
-            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
             sileot.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             CreateAcroForm(pdfDoc, form, hebrew, null, 0);
@@ -585,9 +585,9 @@ namespace iText.Forms {
             PdfWriter writer = new PdfWriter(outPdf);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                , true);
+                );
             hebrew.SetSubset(false);
-            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
             sileot.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             String text = "שלום וברכה";
@@ -608,9 +608,9 @@ namespace iText.Forms {
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfFont hebrew = PdfFontFactory.CreateFont(sourceFolder + "OpenSansHebrew-Regular.ttf", PdfEncodings.IDENTITY_H
-                , true);
+                );
             hebrew.SetSubset(false);
-            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H, true);
+            PdfFont sileot = PdfFontFactory.CreateFont(sourceFolder + "SILEOT.ttf", PdfEncodings.IDENTITY_H);
             sileot.SetSubset(false);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             CreateAcroForm(pdfDoc, form, hebrew, null, 0);

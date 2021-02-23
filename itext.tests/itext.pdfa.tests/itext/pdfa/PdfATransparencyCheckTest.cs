@@ -75,7 +75,8 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
-                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
                 PdfPage page1 = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
                 canvas.SaveState();
@@ -101,7 +102,8 @@ namespace iText.Pdfa {
             String cmpPdf = cmpFolder + "cmp_transparencyAndCS.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState();
             PdfExtGState state = new PdfExtGState();
@@ -182,7 +184,8 @@ namespace iText.Pdfa {
             String cmpPdf = cmpFolder + "cmp_transparencyObjectsAbsence.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1").EndText();
             PdfDictionary groupObj = new PdfDictionary();

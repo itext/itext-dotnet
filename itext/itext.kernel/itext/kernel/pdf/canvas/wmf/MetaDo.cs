@@ -752,8 +752,8 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             textColor = state.GetCurrentTextColor();
             cb.SetFillColor(textColor);
             cb.BeginText();
-            cb.SetFontAndSize(PdfFontFactory.CreateFont(state.GetCurrentFont().GetFont(), PdfEncodings.CP1252, true), 
-                fontSize);
+            cb.SetFontAndSize(PdfFontFactory.CreateFont(state.GetCurrentFont().GetFont(), PdfEncodings.CP1252, PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED), fontSize);
             cb.SetTextMatrix(tx, ty);
             cb.ShowText(text);
             cb.EndText();

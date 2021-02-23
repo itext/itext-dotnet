@@ -120,7 +120,8 @@ namespace iText.Signatures.Sign {
             }
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
                 ).SetLayer2Font(font).SetReuseAppearance(setReuseAppearance);

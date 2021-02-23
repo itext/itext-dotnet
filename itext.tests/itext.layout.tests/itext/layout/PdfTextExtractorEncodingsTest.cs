@@ -75,7 +75,7 @@ namespace iText.Layout {
         /// </summary>
         [NUnit.Framework.Test]
         public virtual void TestEncodedFont() {
-            PdfFont font = GetTTFont("ISO-8859-1", true);
+            PdfFont font = GetTTFont("ISO-8859-1", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
         }
@@ -86,7 +86,7 @@ namespace iText.Layout {
         /// </summary>
         [NUnit.Framework.Test]
         public virtual void TestUnicodeFont() {
-            PdfFont font = GetTTFont(PdfEncodings.IDENTITY_H, true);
+            PdfFont font = GetTTFont(PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
         }
@@ -99,8 +99,9 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual(TEXT2, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(2)));
         }
 
-        protected internal static PdfFont GetTTFont(String encoding, bool embedded) {
-            return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embedded);
+        protected internal static PdfFont GetTTFont(String encoding, PdfFontFactory.EmbeddingStrategy embeddingStrategy
+            ) {
+            return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embeddingStrategy);
         }
 
         private static byte[] CreatePdf(PdfFont font) {

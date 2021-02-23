@@ -84,7 +84,8 @@ namespace iText.Pdfa {
             PageSize pageSize = PageSize.LETTER;
             Document doc = new Document(pdf, pageSize);
             PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdf, "group", "", PdfAConformanceLevel.PDF_A_1B);
             group.SetReadOnly(true);
             Paragraph p = new Paragraph();
@@ -191,7 +192,8 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1ChoiceField";
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -213,7 +215,7 @@ namespace iText.Pdfa {
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
             PdfFont fontCJK = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
-                , true);
+                , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -232,7 +234,8 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ListField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -254,7 +257,8 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1PushButtonField";
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
@@ -293,7 +297,8 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1TextField";
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1TextField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
@@ -312,7 +317,8 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1SignatureField";
             String fileName = destinationFolder + name + ".pdf";
             String cmp = sourceFolder + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1SignatureField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
