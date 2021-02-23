@@ -158,10 +158,50 @@ namespace iText.Kernel.Pdf.Colorspace {
             return shading;
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="PdfShading"/>
+        /// object from the existing
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from which the
+        /// <see cref="PdfShading"/>
+        /// object will be created.
+        /// </param>
         protected internal PdfShading(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="PdfShading"/>
+        /// object from the existing
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// ,
+        /// using provided type and colorspace
+        /// </summary>
+        /// <param name="pdfObject">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from which the
+        /// <see cref="PdfShading"/>
+        /// object will be created.
+        /// </param>
+        /// <param name="type">
+        /// type with which this
+        /// <see cref="PdfShading"/>
+        /// object will be created.
+        /// </param>
+        /// <param name="colorSpace">
+        /// 
+        /// <see cref="PdfColorSpace"/>
+        /// with which this
+        /// <see cref="PdfShading"/>
+        /// object will be created.
+        /// </param>
         protected internal PdfShading(PdfDictionary pdfObject, int type, PdfColorSpace colorSpace)
             : base(pdfObject) {
             GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));
@@ -255,6 +295,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             base.Flush();
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
@@ -266,6 +307,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// that defines color at every point in the domain by a specified mathematical function.
         /// </summary>
         public class FunctionBased : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+            /// </summary>
+            /// <param name="pdfDictionary">
+            /// from which this
+            /// <see cref="FunctionBased"/>
+            /// will be created
+            /// </param>
             protected internal FunctionBased(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
@@ -403,6 +453,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// and extends indefinitely perpendicular to that axis.
         /// </summary>
         public class Axial : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+            /// </summary>
+            /// <param name="pdfDictionary">
+            /// from which this
+            /// <see cref="Axial"/>
+            /// will be created
+            /// </param>
             protected internal Axial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
@@ -692,6 +751,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// This type of shading shall not be used with an Indexed colour space
         /// </remarks>
         public class Radial : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+            /// </summary>
+            /// <param name="pdfDictionary">
+            /// from which this
+            /// <see cref="Radial"/>
+            /// will be created
+            /// </param>
             protected internal Radial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
@@ -1029,6 +1097,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// shall be specified for each vertex in place of the colour components c1...cn.
         /// </remarks>
         public class FreeFormGouraudShadedTriangleMesh : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
+            /// </summary>
+            /// <param name="pdfStream">
+            /// from which this
+            /// <see cref="FreeFormGouraudShadedTriangleMesh"/>
+            /// will be created
+            /// </param>
             protected internal FreeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
@@ -1248,6 +1325,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// except there is no edge flag.
         /// </remarks>
         public class LatticeFormGouraudShadedTriangleMesh : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
+            /// </summary>
+            /// <param name="pdfStream">
+            /// from which this
+            /// <see cref="LatticeFormGouraudShadedTriangleMesh"/>
+            /// will be created
+            /// </param>
             protected internal LatticeFormGouraudShadedTriangleMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
@@ -1459,6 +1545,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// shall be specified by a single parametric value t rather than by n separate colour components c1...cn.
         /// </remarks>
         public class CoonsPatchMesh : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
+            /// </summary>
+            /// <param name="pdfStream">
+            /// from which this
+            /// <see cref="CoonsPatchMesh"/>
+            /// will be created
+            /// </param>
             protected internal CoonsPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
@@ -1673,6 +1768,15 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// For the format of data stream, that defines patches, see ISO-320001 Table 86.
         /// </remarks>
         public class TensorProductPatchMesh : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the existing
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>.
+            /// </summary>
+            /// <param name="pdfStream">
+            /// from which this
+            /// <see cref="TensorProductPatchMesh"/>
+            /// will be created
+            /// </param>
             protected internal TensorProductPatchMesh(PdfStream pdfStream)
                 : base(pdfStream) {
             }
