@@ -181,7 +181,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// object from the existing
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// ,
-        /// using provided type and colorspace
+        /// using provided type and colorspace.
         /// </summary>
         /// <param name="pdfObject">
         /// 

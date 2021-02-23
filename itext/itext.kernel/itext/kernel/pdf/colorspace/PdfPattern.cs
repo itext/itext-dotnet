@@ -59,7 +59,7 @@ namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// Wraps the passed
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
         /// </summary>
         /// <param name="pdfObject">
         /// the
@@ -219,6 +219,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Creates a new Tiling Pattern instance.</summary>
             /// <remarks>
             /// Creates a new Tiling Pattern instance.
+            /// <para />
             /// By default the pattern will be colored.
             /// </remarks>
             /// <param name="width">the width of the pattern cell's bounding box</param>
@@ -238,6 +239,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Creates a new Tiling instance.</summary>
             /// <remarks>
             /// Creates a new Tiling instance.
+            /// <para />
             /// By default the pattern will be colored.
             /// </remarks>
             /// <param name="bbox">the pattern cell's bounding box</param>
@@ -255,6 +257,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Creates a new Tiling Pattern instance.</summary>
             /// <remarks>
             /// Creates a new Tiling Pattern instance.
+            /// <para />
             /// By default the pattern will be colored.
             /// </remarks>
             /// <param name="width">the width of the pattern cell's bounding box</param>
@@ -278,6 +281,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Creates a new Tiling instance.</summary>
             /// <remarks>
             /// Creates a new Tiling instance.
+            /// <para />
             /// By default the pattern will be colored.
             /// </remarks>
             /// <param name="bbox">the pattern cell's bounding box</param>
@@ -376,19 +380,19 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetModified();
             }
 
-            /// <summary>Gets the desired horizontal space between pattern cells</summary>
+            /// <summary>Gets the desired horizontal space between pattern cells.</summary>
             /// <returns>the desired horizontal space between pattern cells</returns>
             public virtual float GetXStep() {
                 return GetPdfObject().GetAsNumber(PdfName.XStep).FloatValue();
             }
 
-            /// <summary>Sets the desired horizontal space between pattern cells</summary>
+            /// <summary>Sets the desired horizontal space between pattern cells.</summary>
             public virtual void SetXStep(float xStep) {
                 GetPdfObject().Put(PdfName.XStep, new PdfNumber(xStep));
                 SetModified();
             }
 
-            /// <summary>Gets the desired vertical space between pattern cells</summary>
+            /// <summary>Gets the desired vertical space between pattern cells.</summary>
             /// <returns>the desired vertical space between pattern cells</returns>
             public virtual float GetYStep() {
                 return GetPdfObject().GetAsNumber(PdfName.YStep).FloatValue();
@@ -400,7 +404,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetModified();
             }
 
-            /// <summary>Gets the Tiling Pattern's resources</summary>
+            /// <summary>Gets the Tiling Pattern's resources.</summary>
             /// <returns>the Tiling Pattern's resources</returns>
             public virtual PdfResources GetResources() {
                 if (this.resources == null) {
@@ -469,7 +473,7 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             /// <summary>
             /// Gets the dictionary of the pattern's
-            /// <see cref="PdfShading"/>
+            /// <see cref="PdfShading"/>.
             /// </summary>
             /// <returns>
             /// the dictionary of the pattern's
@@ -482,7 +486,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>
             /// Sets the
             /// <see cref="PdfShading"/>
-            /// that specifies the details of a particular gradient fill
+            /// that specifies the details of a particular gradient fill.
             /// </summary>
             /// <param name="shading">
             /// the
@@ -494,7 +498,7 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetModified();
             }
 
-            /// <summary>Sets the dictionary which specifies the details of a particular gradient fill</summary>
+            /// <summary>Sets the dictionary which specifies the details of a particular gradient fill.</summary>
             /// <param name="shading">
             /// the dictionary of the pattern's
             /// <see cref="PdfShading"/>
