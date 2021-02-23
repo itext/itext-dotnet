@@ -387,6 +387,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary>Sets the desired horizontal space between pattern cells.</summary>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
             public virtual void SetXStep(float xStep) {
                 GetPdfObject().Put(PdfName.XStep, new PdfNumber(xStep));
                 SetModified();
@@ -398,7 +399,8 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return GetPdfObject().GetAsNumber(PdfName.YStep).FloatValue();
             }
 
-            /// <summary>Sets the desired vertical space between pattern cells</summary>
+            /// <summary>Sets the desired vertical space between pattern cells.</summary>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
             public virtual void SetYStep(float yStep) {
                 GetPdfObject().Put(PdfName.YStep, new PdfNumber(yStep));
                 SetModified();
