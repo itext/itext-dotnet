@@ -3278,7 +3278,6 @@ namespace iText.Forms.Fields {
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
             DrawBorder(canvasOff, xObjectOff, width, height);
-            DrawCheckBox(canvasOff, width, height, fontSize);
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             PdfDictionary normalAppearance = new PdfDictionary();
