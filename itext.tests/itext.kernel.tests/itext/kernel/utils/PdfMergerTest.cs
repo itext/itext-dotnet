@@ -334,6 +334,21 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
 
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("TODO: DEVSIX-5064 (when doing merge with outlines infinite loop occurs )")]
+        public virtual void MergeOutlinesWithWrongStructureTest() {
+            PdfDocument inputDoc = new PdfDocument(new PdfReader(sourceFolder + "infiniteLoopInOutlineStructure.pdf"));
+            PdfDocument outputDoc = new PdfDocument(new PdfWriter(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
+                ));
+            PdfMerger merger = new PdfMerger(outputDoc, false, true);
+            System.Console.Out.WriteLine("Doing merge");
+            merger.Merge(inputDoc, 1, 2);
+            merger.Close();
+            System.Console.Out.WriteLine("Merge done");
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
+                , sourceFolder + "cmp_infiniteLoopInOutlineStructure.pdf", destinationFolder));
+        }
+
         private void MergePdfs(IList<FileInfo> sources, String destination) {
             PdfDocument mergedDoc = new PdfDocument(new PdfWriter(destination));
             PdfMerger merger = new PdfMerger(mergedDoc);
