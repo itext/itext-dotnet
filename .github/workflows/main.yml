@@ -26,7 +26,8 @@ jobs:
       - name: Install .NET dependencies
         id: install_dotnet_dependencies
         shell: powershell
-        run: dotnet tool restore      
+        run: |
+          nuget restore .\iTextCore.netstandard.sln
 
       - name: Build solution
         id: build_solution
