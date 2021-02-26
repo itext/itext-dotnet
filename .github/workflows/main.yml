@@ -39,6 +39,6 @@ jobs:
         id: run_tests
         shell: pwsh
         run: |
-          dotnet test .\itext.tests\
+          dotnet test .\iTextCore.netstandard.sln
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
