@@ -1,4 +1,4 @@
-name: iText7 CI Pipeline
+name: iText7 CI/CD Pipeline
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -6,12 +6,20 @@ jobs:
   ci:
     runs-on: windows-latest
     steps:
+      - name: Setup MSBuild
+        id: setup_msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
-        
-      # Build process
-      
-      # Tests process
+        with:
+          fetch-depth: 0
+
+      - name: Build solution
+        id: build_solution
+        shell: pwsh
+        run: |
+          msbuild .\iTextCore.netstandard.sln
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
