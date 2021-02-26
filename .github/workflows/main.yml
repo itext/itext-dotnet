@@ -16,6 +16,14 @@ jobs:
         run: |
           choco install ghostscript -y 
 
+      - name: CD in GS dir
+        shell: pwsh
+        run: |
+          cd "C:\"
+          Get-ChildItem -Depth 0
+          cd "C:\Program Files\gs\gs9.26\bin"
+          Get-ChildItem -Depth 0
+
       - name: Install Imagemagick
         id: install_imagemagick
         shell: pwsh
