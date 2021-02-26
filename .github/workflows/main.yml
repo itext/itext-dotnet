@@ -10,23 +10,17 @@ jobs:
         id: setup_msbuild
         uses: microsoft/setup-msbuild@v1.0.2
 
-      # - name: Install Ghostscript
-      #   id: install_ghostscript
-      #   shell: pwsh
-      #   run: |
-      #     choco install ghostscript -y 
+      - name: Install Ghostscript
+        id: install_ghostscript
+        shell: pwsh
+        run: |
+          choco install ghostscript -y 
 
       - name: Install Imagemagick
         id: install_imagemagick
         shell: pwsh
         run: |
           choco install imagemagick -y
-
-      - name: CD in GS dir
-        shell: pwsh
-        run: |
-          cd "C:\Program Files\"
-          Get-ChildItem -Depth 0
 
       - name: Checkout repository
         id: checkout_repo
@@ -58,7 +52,7 @@ jobs:
         shell: pwsh
         run: |
           $env:ITEXT_GS_EXEC = "C:\Program Files\gs\gs9.53.3\bin\gswin64c.exe"
-          $env:ITEXT_MAGICK_COMPARE_EXEC = '"C:\Program Files\ImageMagick-7.0.9-Q16\magick.exe" compare'
+          $env:ITEXT_MAGICK_COMPARE_EXEC = '"C:\Program Files\ImageMagick-7.0.11-Q16-HDRI\magick.exe" compare'
           dotnet test .\iTextCore.netstandard.sln
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
