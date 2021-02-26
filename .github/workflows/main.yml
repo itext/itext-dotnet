@@ -19,7 +19,7 @@ jobs:
       - name: CD in GS dir
         shell: pwsh
         run: |
-          cd "C:\"
+          cd "C:\Program Files\gs\gs9.53.3"
           Get-ChildItem -Depth 2
 
       - name: Install Imagemagick
