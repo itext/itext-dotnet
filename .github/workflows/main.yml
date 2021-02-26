@@ -16,6 +16,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Clean .NET cache
+        id: clean_dotnet_cache
+        shell: powershell
+        run: |
+          dotnet clean .\iTextCore.netstandard.sln -c Release 
+          dotnet nuget locals all --clear
+
+      - name: Install .NET dependencies
+        id: install_dotnet_dependencies
+        shell: powershell
+        run: dotnet tool restore      
+
       - name: Build solution
         id: build_solution
         shell: pwsh
