@@ -18,14 +18,14 @@ jobs:
 
       - name: Clean .NET cache
         id: clean_dotnet_cache
-        shell: powershell
+        shell: pwsh
         run: |
           dotnet clean .\iTextCore.netstandard.sln -c Release 
           dotnet nuget locals all --clear
 
-      - name: Install .NET dependencies
-        id: install_dotnet_dependencies
-        shell: powershell
+      - name: Install NuGet packages
+        id: install_nuget_packages
+        shell: pwsh
         run: |
           nuget restore .\iTextCore.netstandard.sln
 
@@ -34,5 +34,11 @@ jobs:
         shell: pwsh
         run: |
           msbuild .\iTextCore.netstandard.sln
+
+      - name: Run tests
+        id: run_tests
+        shell: pwsh
+        run: |
+          dotnet test .\itext.tests\
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
