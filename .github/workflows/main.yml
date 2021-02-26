@@ -20,9 +20,7 @@ jobs:
         shell: pwsh
         run: |
           cd "C:\"
-          Get-ChildItem -Depth 0
-          cd "C:\Program Files\gs\gs9.26\bin"
-          Get-ChildItem -Depth 0
+          Get-ChildItem -Depth 2
 
       - name: Install Imagemagick
         id: install_imagemagick
