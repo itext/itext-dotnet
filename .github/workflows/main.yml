@@ -10,6 +10,18 @@ jobs:
         id: setup_msbuild
         uses: microsoft/setup-msbuild@v1.0.2
 
+      - name: Install Ghostscript
+        id: install_ghostscript
+        shell: pwsh
+        run: |
+          choco install ghostscript -y
+
+      - name: Install Imagemagick
+        id: install_imagemagick
+        shell: pwsh
+        run: |
+          choco install imagemagick -y
+
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
@@ -20,7 +32,7 @@ jobs:
         id: clean_dotnet_cache
         shell: pwsh
         run: |
-          dotnet clean .\iTextCore.netstandard.sln -c Release 
+          dotnet clean .\iTextCore.netstandard.sln
           dotnet nuget locals all --clear
 
       - name: Install NuGet packages
