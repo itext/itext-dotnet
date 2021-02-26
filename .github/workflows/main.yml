@@ -14,7 +14,7 @@ jobs:
         id: install_ghostscript
         shell: pwsh
         run: |
-          choco install ghostscript -y
+          choco install ghostscript -y 
 
       - name: Install Imagemagick
         id: install_imagemagick
@@ -51,6 +51,8 @@ jobs:
         id: run_tests
         shell: pwsh
         run: |
+          $env:ITEXT_GS_EXEC="D:\Program Files\gs\gs9.26\bin\gswin64c.exe"
+          $env:ITEXT_MAGICK_COMPARE_EXEC='"D:\Program Files\ImageMagick-7.0.9-Q16\magick.exe" compare'
           dotnet test .\iTextCore.netstandard.sln
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
