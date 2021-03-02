@@ -321,6 +321,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant INLINE-BLOCK</summary>
         public const String INLINE_BLOCK = "inline-block";
 
+        /// <summary>The Constant JUSTIFY_CONTENT.</summary>
+        public const String JUSTIFY_CONTENT = "justify-content";
+
         /// <summary>The Constant JUSTIFY_ITEMS.</summary>
         public const String JUSTIFY_ITEMS = "justify-items";
 

@@ -52,10 +52,6 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRenderer : DivRenderer {
-        private static float FLEX_GROW_DEFAULT_VALUE = 0;
-
-        private static float FLEX_SHRINK_DEFAULT_VALUE = 1;
-
         private IList<IList<FlexItemInfo>> lines;
 
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
@@ -76,19 +72,10 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
-            IList<FlexUtil.FlexItemCalculationInfo> flexItemInfos = new List<FlexUtil.FlexItemCalculationInfo>();
-            // TODO DEVSIX-4996 Change properties FLEX_GROW/FLEX_SHRINK/FLEX_BASIS on the combined one added in this ticket
             foreach (IRenderer childRenderer in this.GetChildRenderers()) {
                 if (childRenderer is AbstractRenderer) {
                     AbstractRenderer abstractChildRenderer = (AbstractRenderer)childRenderer;
                     abstractChildRenderer.SetParent(this);
-                    UnitValue flexBasis = abstractChildRenderer.GetProperty<UnitValue>(Property.WIDTH) == null ? UnitValue.CreatePointValue
-                        (abstractChildRenderer.GetMinMaxWidth().GetMinWidth()) : abstractChildRenderer.GetProperty<UnitValue>(
-                        Property.WIDTH);
-                    flexItemInfos.Add(new FlexUtil.FlexItemCalculationInfo((AbstractRenderer)childRenderer, childRenderer.GetProperty
-                        <UnitValue>(Property.FLEX_BASIS, flexBasis), (float)childRenderer.GetProperty<float?>(Property.FLEX_GROW
-                        , FLEX_GROW_DEFAULT_VALUE), (float)childRenderer.GetProperty<float?>(Property.FLEX_SHRINK, FLEX_SHRINK_DEFAULT_VALUE
-                        ), layoutContextRectangle.GetWidth()));
                 }
             }
             float? containerWidth = RetrieveWidth(layoutContextRectangle.GetWidth());
@@ -100,7 +87,7 @@ namespace iText.Layout.Renderer {
                 containerHeight = layoutContextRectangle.GetHeight();
             }
             lines = FlexUtil.CalculateChildrenRectangles(new Rectangle((float)containerWidth, (float)containerHeight), 
-                this, flexItemInfos);
+                this);
             IList<UnitValue> previousWidths = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
@@ -246,6 +233,7 @@ namespace iText.Layout.Renderer {
             // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll find min/max width with respect to the lines
             foreach (IRenderer childRenderer in childRenderers) {
                 MinMaxWidth childMinMaxWidth;
+                childRenderer.SetParent(this);
                 if (childRenderer is AbstractRenderer) {
                     childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth();
                 }

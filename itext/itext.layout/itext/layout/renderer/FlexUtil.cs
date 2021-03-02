@@ -53,6 +53,10 @@ namespace iText.Layout.Renderer {
     internal sealed class FlexUtil {
         private const float EPSILON = 0.00001f;
 
+        private static readonly float? FLEX_GROW_INITIAL_VALUE = 0F;
+
+        private static readonly float? FLEX_SHRINK_INITIAL_VALUE = 1F;
+
         private FlexUtil() {
         }
 
@@ -66,10 +70,11 @@ namespace iText.Layout.Renderer {
         /// </remarks>
         /// <param name="flexContainerBBox">bounding box in which flex container should be rendered</param>
         /// <param name="flexContainerRenderer">flex container's renderer</param>
-        /// <param name="flexItemCalculationInfos">list of flex item descriptions</param>
         /// <returns>list of lines</returns>
         public static IList<IList<FlexItemInfo>> CalculateChildrenRectangles(Rectangle flexContainerBBox, FlexContainerRenderer
-             flexContainerRenderer, IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos) {
+             flexContainerRenderer) {
+            IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = CreateFlexItemCalculationInfos(flexContainerRenderer
+                , flexContainerBBox);
             Rectangle layoutBox = flexContainerBBox.Clone();
             flexContainerRenderer.ApplyMarginsBordersPaddings(layoutBox, false);
             // 9.2. Line Length Determination
@@ -448,6 +453,33 @@ namespace iText.Layout.Renderer {
 
         internal static bool IsZero(float value) {
             return Math.Abs(value) < EPSILON;
+        }
+
+        private static IList<FlexUtil.FlexItemCalculationInfo> CreateFlexItemCalculationInfos(FlexContainerRenderer
+             flexContainerRenderer, Rectangle flexContainerBBox) {
+            IList<IRenderer> childRenderers = flexContainerRenderer.GetChildRenderers();
+            IList<FlexUtil.FlexItemCalculationInfo> flexItems = new List<FlexUtil.FlexItemCalculationInfo>();
+            foreach (IRenderer renderer in childRenderers) {
+                if (renderer is AbstractRenderer) {
+                    float? flexGrow = renderer.GetProperty<float?>(Property.FLEX_GROW);
+                    if (flexGrow == null) {
+                        flexGrow = FLEX_GROW_INITIAL_VALUE;
+                    }
+                    float? flexShrink = renderer.GetProperty<float?>(Property.FLEX_SHRINK);
+                    if (flexShrink == null) {
+                        flexShrink = FLEX_SHRINK_INITIAL_VALUE;
+                    }
+                    UnitValue flexBasis = renderer.GetProperty<UnitValue>(Property.FLEX_BASIS);
+                    if (flexBasis == null) {
+                        // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
+                        flexBasis = UnitValue.CreatePointValue(((AbstractRenderer)renderer).GetMinMaxWidth().GetMaxWidth());
+                    }
+                    FlexUtil.FlexItemCalculationInfo flexItemInfo = new FlexUtil.FlexItemCalculationInfo((AbstractRenderer)renderer
+                        , flexBasis, (float)flexGrow, (float)flexShrink, flexContainerBBox.GetWidth());
+                    flexItems.Add(flexItemInfo);
+                }
+            }
+            return flexItems;
         }
 
         internal class FlexItemCalculationInfo {

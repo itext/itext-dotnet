@@ -28,7 +28,6 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using iText.Layout.Renderer;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -53,7 +52,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_defaultFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(40));
@@ -75,7 +74,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerFixedHeightWidthTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(40));
@@ -99,14 +98,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(500));
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -127,7 +126,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerHeightClippedTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(500));
@@ -135,7 +134,7 @@ namespace iText.Layout {
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -158,14 +157,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(300));
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -186,7 +185,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.FORCED_PLACEMENT, true);
@@ -213,7 +212,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitVerticallyTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(600));
@@ -221,7 +220,7 @@ namespace iText.Layout {
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -245,14 +244,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetHeight(600);
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -276,7 +275,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithGrowTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetWidth(500);
@@ -309,7 +308,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexBasisTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetWidth(500);
@@ -338,7 +337,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexShrinkTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetWidth(500);
@@ -369,10 +368,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex = CreateFlexContainer();
+            Div innerFlex = new FlexContainer();
             innerFlex.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
@@ -392,10 +391,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerWithHugeBordersTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLUE, 20));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex = CreateFlexContainer();
+            Div innerFlex = new FlexContainer();
             innerFlex.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 1f);
@@ -417,17 +416,17 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex1 = CreateFlexContainer();
+            Div innerFlex1 = new FlexContainer();
             innerFlex1.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex1.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
             }
             innerFlex1.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex1.SetProperty(Property.FLEX_GROW, 1f);
-            Div innerFlex2 = CreateFlexContainer();
+            Div innerFlex2 = new FlexContainer();
             innerFlex2.Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex2.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.3f);
@@ -447,10 +446,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex1 = CreateFlexContainer();
+            Div innerFlex1 = new FlexContainer();
             innerFlex1.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex1.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
@@ -458,7 +457,7 @@ namespace iText.Layout {
             innerFlex1.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex1.SetProperty(Property.FLEX_GROW, 1f);
             innerFlex1.SetWidth(380);
-            Div innerFlex2 = CreateFlexContainer();
+            Div innerFlex2 = new FlexContainer();
             innerFlex2.Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex2.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.3f);
@@ -479,10 +478,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex1 = CreateFlexContainer();
+            Div innerFlex1 = new FlexContainer();
             innerFlex1.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex1.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
@@ -490,7 +489,7 @@ namespace iText.Layout {
             innerFlex1.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex1.SetProperty(Property.FLEX_GROW, 1f);
             innerFlex1.SetWidth(UnitValue.CreatePercentValue(40));
-            Div innerFlex2 = CreateFlexContainer();
+            Div innerFlex2 = new FlexContainer();
             innerFlex2.Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex2.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.3f);
@@ -512,10 +511,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex1 = CreateFlexContainer();
+            Div innerFlex1 = new FlexContainer();
             innerFlex1.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex1.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
@@ -523,7 +522,7 @@ namespace iText.Layout {
             innerFlex1.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex1.SetProperty(Property.FLEX_GROW, 1f);
             innerFlex1.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(380));
-            Div innerFlex2 = CreateFlexContainer();
+            Div innerFlex2 = new FlexContainer();
             innerFlex2.Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex2.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.3f);
@@ -544,10 +543,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
-            Div innerFlex1 = CreateFlexContainer();
+            Div innerFlex1 = new FlexContainer();
             innerFlex1.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex1.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.2f);
@@ -555,7 +554,7 @@ namespace iText.Layout {
             innerFlex1.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
             innerFlex1.SetProperty(Property.FLEX_GROW, 1f);
             innerFlex1.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(200));
-            Div innerFlex2 = CreateFlexContainer();
+            Div innerFlex2 = new FlexContainer();
             innerFlex2.Add(CreateNewDiv()).Add(CreateNewDiv());
             foreach (IElement children in innerFlex2.GetChildren()) {
                 children.SetProperty(Property.FLEX_GROW, 0.3f);
@@ -576,14 +575,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerFillAvailableAreaTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.FILL_AVAILABLE_AREA, true);
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
             innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -604,12 +603,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_flexContainerRotationAngleTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Div flexContainer = CreateFlexContainer();
+            Div flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(400));
             flexContainer.SetProperty(Property.ROTATION_ANGLE, 20f);
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 80 }));
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
             for (int i = 0; i < 3; i++) {
                 table.AddCell("Hello");
             }
@@ -630,19 +629,6 @@ namespace iText.Layout {
             newDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
             newDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
             return newDiv;
-        }
-
-        private static Div CreateFlexContainer() {
-            return new _Div_779();
-        }
-
-        private sealed class _Div_779 : Div {
-            public _Div_779() {
-            }
-
-            protected internal override IRenderer MakeNewRenderer() {
-                return new FlexContainerRenderer(this);
-            }
         }
     }
 }
