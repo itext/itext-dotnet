@@ -1,4 +1,4 @@
-name: iText7 CI Pipeline
+name: iText7 CI/CD Pipeline
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -6,12 +6,53 @@ jobs:
   ci:
     runs-on: windows-latest
     steps:
+      - name: Setup MSBuild
+        id: setup_msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Install Ghostscript
+        id: install_ghostscript
+        shell: pwsh
+        run: |
+          choco install ghostscript -y 
+
+      - name: Install Imagemagick
+        id: install_imagemagick
+        shell: pwsh
+        run: |
+          choco install imagemagick -y
+
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
-        
-      # Build process
-      
-      # Tests process
+        with:
+          fetch-depth: 0
+
+      - name: Clean .NET cache
+        id: clean_dotnet_cache
+        shell: pwsh
+        run: |
+          dotnet clean .\iTextCore.netstandard.sln
+          dotnet nuget locals all --clear
+
+      - name: Install NuGet packages
+        id: install_nuget_packages
+        shell: pwsh
+        run: |
+          nuget restore .\iTextCore.netstandard.sln
+
+      - name: Build solution
+        id: build_solution
+        shell: pwsh
+        run: |
+          msbuild .\iTextCore.netstandard.sln
+
+      - name: Run tests
+        id: run_tests
+        shell: pwsh
+        run: |
+          $env:ITEXT_GS_EXEC = "C:\Program Files\gs\gs9.53.3\bin\gswin64c.exe"
+          $env:ITEXT_MAGICK_COMPARE_EXEC = '"C:\Program Files\ImageMagick-7.0.11-Q16-HDRI\magick.exe" compare'
+          dotnet test .\iTextCore.netstandard.sln
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
