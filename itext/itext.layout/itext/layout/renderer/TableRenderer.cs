@@ -545,6 +545,12 @@ namespace iText.Layout.Renderer {
                     }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         , wasHeightClipped || wasParentsHeightClipped));
+                    if (cellWidthProperty != null && cellWidthProperty.IsPercentValue()) {
+                        cell.SetProperty(Property.WIDTH, cellWidthProperty);
+                        if (null != cellResult.GetOverflowRenderer()) {
+                            cellResult.GetOverflowRenderer().SetProperty(Property.WIDTH, cellWidthProperty);
+                        }
+                    }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
