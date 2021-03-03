@@ -62,7 +62,9 @@ namespace iText.Signatures {
             /// <summary>An array of PdfString values with fieldnames</summary>
             internal PdfArray fields;
 
-            /// <summary>Creates a FieldLock instance</summary>
+            /// <summary>Creates a FieldLock instance.</summary>
+            /// <param name="action">indicates the set of fields that should be locked</param>
+            /// <param name="fields">an array of text strings containing field names</param>
             public FieldLock(SignaturePermissions _enclosing, PdfName action, PdfArray fields) {
                 this._enclosing = _enclosing;
                 this.action = action;
@@ -70,11 +72,13 @@ namespace iText.Signatures {
             }
 
             /// <summary>Getter for the field lock action.</summary>
+            /// <returns>the action of field lock dictionary</returns>
             public virtual PdfName GetAction() {
                 return this.action;
             }
 
             /// <summary>Getter for the fields involved in the lock action.</summary>
+            /// <returns>the fields of field lock dictionary</returns>
             public virtual PdfArray GetFields() {
                 return this.fields;
             }
@@ -104,6 +108,8 @@ namespace iText.Signatures {
         /// in a signature dictionary as well as some of the permissions
         /// defined by the signature.
         /// </summary>
+        /// <param name="sigDict">the signature dictionary</param>
+        /// <param name="previous">the signature permissions</param>
         public SignaturePermissions(PdfDictionary sigDict, SignaturePermissions previous) {
             if (previous != null) {
                 annotationsAllowed &= previous.IsAnnotationsAllowed();

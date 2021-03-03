@@ -494,7 +494,12 @@ namespace iText.Signatures {
 
         private PdfName filterSubtype;
 
-        /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1"</summary>
+        /// <summary>Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".</summary>
+        /// <remarks>
+        /// Getter for the ID of the digest algorithm, e.g. "2.16.840.1.101.3.4.2.1".
+        /// See ISO-32000-1, section 12.8.3.3 PKCS#7 Signatures as used in ISO 32000
+        /// </remarks>
+        /// <returns>the ID of the digest algorithm</returns>
         public virtual String GetDigestAlgorithmOid() {
             return digestAlgorithmOid;
         }
@@ -509,12 +514,21 @@ namespace iText.Signatures {
         /// <summary>The encryption algorithm.</summary>
         private String digestEncryptionAlgorithmOid;
 
-        /// <summary>Getter for the digest encryption algorithm</summary>
+        /// <summary>Getter for the digest encryption algorithm.</summary>
+        /// <remarks>
+        /// Getter for the digest encryption algorithm.
+        /// See ISO-32000-1, section 12.8.3.3 PKCS#7 Signatures as used in ISO 32000
+        /// </remarks>
+        /// <returns>the encryption algorithm</returns>
         public virtual String GetDigestEncryptionAlgorithmOid() {
             return digestEncryptionAlgorithmOid;
         }
 
         /// <summary>Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".</summary>
+        /// <remarks>
+        /// Get the algorithm used to calculate the message digest, e.g. "SHA1withRSA".
+        /// See ISO-32000-1, section 12.8.3.3 PKCS#7 Signatures as used in ISO 32000
+        /// </remarks>
         /// <returns>the algorithm used to calculate the message digest</returns>
         public virtual String GetDigestAlgorithm() {
             return GetHashAlgorithm() + "with" + GetEncryptionAlgorithm();
@@ -835,7 +849,6 @@ namespace iText.Signatures {
         /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
-        /// <para />
         /// <pre>
         /// Calendar cal = Calendar.getInstance();
         /// PdfPKCS7 pk7 = new PdfPKCS7(key, chain, null, "SHA1", null, false);
@@ -877,7 +890,6 @@ namespace iText.Signatures {
         /// <see cref="GetEncodedPKCS7(byte[])"/>.
         /// <para />
         /// A simple example:
-        /// <para />
         /// <pre>
         /// Calendar cal = Calendar.getInstance();
         /// PdfPKCS7 pk7 = new PdfPKCS7(key, chain, null, "SHA1", null, false);
@@ -1306,7 +1318,8 @@ namespace iText.Signatures {
             return SignUtils.GetTimeStampDate(timeStampToken);
         }
 
-        /// <summary>Returns the filter subtype.</summary>
+        /// <summary>Getter for the filter subtype.</summary>
+        /// <returns>the filter subtype</returns>
         public virtual PdfName GetFilterSubtype() {
             return filterSubtype;
         }
