@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using System.Text;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
@@ -98,6 +99,20 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SkipKeepTogetherInCaseOfAreaBreak() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document doc = new Document(pdfDoc);
+            Div keptTogetherDiv = new Div();
+            keptTogetherDiv.SetKeepTogether(true);
+            AreaBreak areaBreak = new AreaBreak();
+            keptTogetherDiv.Add(areaBreak);
+            doc.Add(keptTogetherDiv);
+            // If this line is not triggered, then an NPE occurred
+            NUnit.Framework.Assert.IsTrue(true);
+            doc.Close();
         }
 
         [NUnit.Framework.Test]

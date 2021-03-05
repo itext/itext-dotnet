@@ -155,7 +155,7 @@ namespace iText.Layout.Renderer {
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     result = new LayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
-                    bool isKeepTogether = IsKeepTogether();
+                    bool isKeepTogether = IsKeepTogether(childRenderer);
                     int layoutResult = anythingPlaced && !isKeepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
@@ -736,7 +736,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (result.GetStatus() == LayoutResult.NOTHING) {
-                    bool keepTogether = IsKeepTogether();
+                    bool keepTogether = IsKeepTogether(causeOfNothing);
                     int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);

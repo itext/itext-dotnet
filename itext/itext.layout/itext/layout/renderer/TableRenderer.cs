@@ -887,8 +887,8 @@ namespace iText.Layout.Renderer {
                             overflowRows.SetCell(row - splitResult[0].rows.Count, entry.Key, null);
                         }
                     }
-                    if ((IsKeepTogether() && 0 == lastFlushedRowBottomBorder.Count) && !true.Equals(GetPropertyAsBoolean(Property
-                        .FORCED_PLACEMENT))) {
+                    if (IsKeepTogether(firstCauseOfNothing) && 0 == lastFlushedRowBottomBorder.Count && !true.Equals(GetPropertyAsBoolean
+                        (Property.FORCED_PLACEMENT))) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == firstCauseOfNothing ? this : firstCauseOfNothing
                             );
                     }

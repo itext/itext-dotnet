@@ -2099,7 +2099,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool IsKeepTogether() {
-            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
+            return IsKeepTogether(null);
+        }
+
+        internal virtual bool IsKeepTogether(IRenderer causeOfNothing) {
+            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER)) && !(causeOfNothing is AreaBreakRenderer);
         }
 
         // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in

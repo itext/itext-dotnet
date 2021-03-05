@@ -279,7 +279,7 @@ namespace iText.Layout.Renderer {
                         firstLineInBox = true;
                     }
                     else {
-                        bool keepTogether = IsKeepTogether();
+                        bool keepTogether = IsKeepTogether(result.GetCauseOfNothing());
                         if (keepTogether) {
                             floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing

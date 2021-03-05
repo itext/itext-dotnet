@@ -175,7 +175,7 @@ namespace iText.Layout.Renderer {
             [] borders, UnitValue[] paddings, IList<Rectangle> areas, int currentAreaPos, Rectangle layoutBox, ICollection
             <Rectangle> nonChildFloatingRendererAreas, IRenderer causeOfNothing, bool anythingPlaced, int childPos
             , LayoutResult result) {
-            bool keepTogether = IsKeepTogether();
+            bool keepTogether = IsKeepTogether(causeOfNothing);
             AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, result.GetStatus(
                 ), result, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
             AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
