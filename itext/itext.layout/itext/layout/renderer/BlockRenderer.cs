@@ -192,7 +192,9 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
                 }
-                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
+                Rectangle changedLayoutBox = RecalculateLayoutBoxBeforeChildLayout(layoutBox, childRenderer, areas[0].Clone
+                    ());
+                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, changedLayoutBox
                     ), childMarginsInfo, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped))).GetStatus() !=
                      LayoutResult.FULL) {
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
@@ -279,8 +281,7 @@ namespace iText.Layout.Renderer {
                 // The second condition check (after &&) is needed only if margins collapsing is enabled
                 if (result.GetOccupiedArea() != null && (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea
                     )) {
-                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                        ()));
+                    RecalculateOccupiedAreaAfterChildLayout(result);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                 }
                 if (marginsCollapsingEnabled) {
@@ -517,6 +518,16 @@ namespace iText.Layout.Renderer {
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
             return overflowRenderer;
+        }
+
+        internal virtual void RecalculateOccupiedAreaAfterChildLayout(LayoutResult result) {
+            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                ()));
+        }
+
+        internal virtual Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
+            , Rectangle initialLayoutBox) {
+            return layoutBox;
         }
 
         internal virtual AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, int layoutStatus, LayoutResult

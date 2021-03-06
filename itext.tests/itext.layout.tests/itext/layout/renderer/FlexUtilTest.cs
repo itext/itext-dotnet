@@ -69,23 +69,9 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(400f / 3, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void RetrieveSizePtTest01() {
-            Div div = new Div().SetWidth(UnitValue.CreatePercentValue(80));
-            float size = FlexUtil.RetrieveSize(div.CreateRendererSubTree(), Property.WIDTH, 100);
-            NUnit.Framework.Assert.AreEqual(80f, size, EPS);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void RetrieveSizeNoSetWidthTest01() {
-            Div div = new Div();
-            float size = FlexUtil.RetrieveSize(div.CreateRendererSubTree(), Property.WIDTH, 100);
-            NUnit.Framework.Assert.AreEqual(100f, size, EPS);
         }
 
         [NUnit.Framework.Test]
@@ -152,7 +138,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(100f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -166,7 +152,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(500f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -180,7 +166,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(400f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -194,7 +180,7 @@ namespace iText.Layout.Renderer {
             for (int i = 0; i < rectangleTable.Count; i++) {
                 FlexItemInfo flexItemInfo = rectangleTable[0][i];
                 NUnit.Framework.Assert.AreEqual(i == 1 ? 197 : 6f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
             }
         }
 
@@ -207,7 +193,7 @@ namespace iText.Layout.Renderer {
             for (int i = 0; i < rectangleTable.Count; i++) {
                 FlexItemInfo flexItemInfo = rectangleTable[0][i];
                 NUnit.Framework.Assert.AreEqual(i == 1 ? 388f : 6f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
             }
         }
 
@@ -220,7 +206,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(400f / 3, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -234,7 +220,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(400f / 3, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -248,7 +234,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(44.2f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -262,7 +248,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(6f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -276,7 +262,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(6f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -291,7 +277,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(50f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -306,7 +292,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(400f / 3, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -320,7 +306,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(50f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -337,7 +323,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(106.66667f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -381,8 +367,6 @@ namespace iText.Layout.Renderer {
             Rectangle bBox = new Rectangle(575, 842);
             IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
                 (80f), UnitValue.CreatePointValue(100f));
-            IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = new List<FlexUtil.FlexItemCalculationInfo
-                >();
             Div div = new Div().SetWidth(200).SetHeight(100);
             DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
                 ()))));
@@ -406,6 +390,269 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(30.434784f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(108.69565f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(60.869568f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30Test01() {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                (50f), UnitValue.CreatePointValue(50f));
+            Div div = new Div().SetWidth(200).SetHeight(300);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+            div.SetNextRenderer(flexContainerRenderer);
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                Div flexItem = new Div().Add(new Paragraph("x"));
+                if (1 == i) {
+                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                    flexItem.SetHeight(50);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                    );
+                flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                flexContainerRenderer.AddChild(flexItemRenderer);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(192.03125f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(107.96875f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentCenterAlignItemsCenterTest01
+            () {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                (50f), UnitValue.CreatePointValue(50f));
+            Div div = new Div().SetWidth(200).SetHeight(300);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+            flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.CENTER);
+            flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
+            div.SetNextRenderer(flexContainerRenderer);
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                Div flexItem = new Div().Add(new Paragraph("x"));
+                if (1 == i) {
+                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                    flexItem.SetHeight(50);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                    );
+                flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                flexContainerRenderer.AddChild(flexItemRenderer);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(20.0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(75.0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(83.046875f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(41.015625f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(41.015625f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentFlexEndAlignItemsFlexEndTest01
+            () {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                (50f), UnitValue.CreatePointValue(50f));
+            Div div = new Div().SetWidth(200).SetHeight(300);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+            flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
+            flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
+            div.SetNextRenderer(flexContainerRenderer);
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                Div flexItem = new Div().Add(new Paragraph("x"));
+                if (1 == i) {
+                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                    flexItem.SetHeight(50);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                    );
+                flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                flexContainerRenderer.AddChild(flexItemRenderer);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(40.0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(150.0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(166.09375f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentFlexStartAndNotValidAlignItemsFlexStartAndNotValidTest01
+            () {
+            JustifyContent[] justifyContentValues = new JustifyContent[] { JustifyContent.NORMAL, JustifyContent.START
+                , JustifyContent.END, JustifyContent.LEFT, JustifyContent.RIGHT, JustifyContent.FLEX_START };
+            AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.START, AlignmentPropertyValue
+                .END, AlignmentPropertyValue.SELF_START, AlignmentPropertyValue.SELF_END, AlignmentPropertyValue.BASELINE
+                , AlignmentPropertyValue.FLEX_START };
+            for (int j = 0; j < justifyContentValues.Length; ++j) {
+                Rectangle bBox = new Rectangle(575, 842);
+                IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                    (50f), UnitValue.CreatePointValue(50f));
+                Div div = new Div().SetWidth(200).SetHeight(300);
+                DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                    ()))));
+                FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+                flexContainerRenderer.SetParent(documentRenderer);
+                flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValues[j]);
+                flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, alignItemsValues[j]);
+                div.SetNextRenderer(flexContainerRenderer);
+                for (int i = 0; i < flexBasisValues.Count; i++) {
+                    Div flexItem = new Div().Add(new Paragraph("x"));
+                    if (1 == i) {
+                        flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                        flexItem.SetHeight(50);
+                    }
+                    AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                        );
+                    flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                    flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                    flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                    flexContainerRenderer.AddChild(flexItemRenderer);
+                }
+                IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                    )div.GetRenderer());
+                NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30AlignItemsStretchAndNormalTest01() {
+            AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.STRETCH, 
+                AlignmentPropertyValue.NORMAL };
+            foreach (AlignmentPropertyValue alignItemsValue in alignItemsValues) {
+                Rectangle bBox = new Rectangle(575, 842);
+                IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                    (50f), UnitValue.CreatePointValue(50f));
+                Div div = new Div().SetWidth(200).SetHeight(300);
+                DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                    ()))));
+                FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+                flexContainerRenderer.SetParent(documentRenderer);
+                flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, alignItemsValue);
+                div.SetNextRenderer(flexContainerRenderer);
+                for (int i = 0; i < flexBasisValues.Count; i++) {
+                    Div flexItem = new Div().Add(new Paragraph("x"));
+                    if (1 == i) {
+                        flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                        flexItem.SetHeight(50);
+                    }
+                    AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                        );
+                    flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                    flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                    flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                    flexContainerRenderer.AddChild(flexItemRenderer);
+                }
+                IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                    )div.GetRenderer());
+                NUnit.Framework.Assert.AreEqual(192.03125f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(107.96875f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink0Item2MarginBorderPadding30JustifyContentCenterAlignItemsCenterDontFitTest01
+            () {
+            Rectangle bBox = new Rectangle(575, 842);
+            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue
+                (100f), UnitValue.CreatePointValue(100f));
+            Div div = new Div().SetWidth(200).SetHeight(200);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.CENTER);
+            flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
+            div.SetNextRenderer(flexContainerRenderer);
+            for (int i = 0; i < flexBasisValues.Count; i++) {
+                Div flexItem = new Div().Add(new Paragraph("x"));
+                if (1 == i) {
+                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                    flexItem.SetHeight(220);
+                }
+                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                    );
+                flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 0f);
+                flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                flexContainerRenderer.AddChild(flexItemRenderer);
+            }
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(280.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][2].GetRectangle().GetHeight(), EPS);
+            NUnit.Framework.Assert.AreEqual(100.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(160.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(100.0f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(-80.0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][2].GetRectangle().GetX(), EPS);
+            NUnit.Framework.Assert.AreEqual(87.03125f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(-40.0f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+            NUnit.Framework.Assert.AreEqual(87.03125f, rectangleTable[0][2].GetRectangle().GetY(), EPS);
         }
 
         [NUnit.Framework.Test]
@@ -791,7 +1038,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(2, rectangleTable[1].Count);
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(400f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -841,7 +1088,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(50f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -858,7 +1105,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(50f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -875,7 +1122,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(106.66667f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -892,7 +1139,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(200f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -909,7 +1156,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(200f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -926,7 +1173,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(90f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -943,7 +1190,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(200f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -960,7 +1207,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(200f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -977,7 +1224,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(98.69281f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -994,7 +1241,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(88.888885f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1011,7 +1258,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1028,7 +1275,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1046,7 +1293,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
                     NUnit.Framework.Assert.AreEqual(250f, flexItemInfo.GetRectangle().GetWidth(), EPS);
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(33.333332f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
         }
@@ -1060,7 +1307,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1077,7 +1324,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1094,7 +1341,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1111,7 +1358,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1128,7 +1375,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(150f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1145,7 +1392,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(150f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1162,7 +1409,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(150f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1179,7 +1426,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1196,7 +1443,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(50.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(150f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1213,7 +1460,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(40f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1230,7 +1477,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(93.333336f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1247,7 +1494,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(40f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1264,7 +1511,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(40f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1281,7 +1528,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(93.333336f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1298,7 +1545,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(300f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1315,7 +1562,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(100f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1332,7 +1579,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(114f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1349,7 +1596,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(300f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1366,7 +1613,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(300f / 3, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1383,7 +1630,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(119.06615f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1400,7 +1647,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(112.5f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1417,7 +1664,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(120f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
@@ -1434,7 +1681,7 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
                 foreach (FlexItemInfo flexItemInfo in line) {
-                    NUnit.Framework.Assert.AreEqual(25.976562f, flexItemInfo.GetRectangle().GetHeight(), EPS);
+                    NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
             NUnit.Framework.Assert.AreEqual(120f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);

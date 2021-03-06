@@ -72,28 +72,16 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
-            foreach (IRenderer childRenderer in this.GetChildRenderers()) {
-                if (childRenderer is AbstractRenderer) {
-                    AbstractRenderer abstractChildRenderer = (AbstractRenderer)childRenderer;
-                    abstractChildRenderer.SetParent(this);
-                }
-            }
-            float? containerWidth = RetrieveWidth(layoutContextRectangle.GetWidth());
-            if (containerWidth == null) {
-                containerWidth = layoutContextRectangle.GetWidth();
-            }
-            float? containerHeight = RetrieveHeight();
-            if (containerHeight == null) {
-                containerHeight = layoutContextRectangle.GetHeight();
-            }
-            lines = FlexUtil.CalculateChildrenRectangles(new Rectangle((float)containerWidth, (float)containerHeight), 
-                this);
+            SetThisAsParent(GetChildRenderers());
+            lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
             IList<UnitValue> previousWidths = new List<UnitValue>();
+            IList<UnitValue> previousHeights = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     Rectangle rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo
                         .GetRectangle().Clone(), false);
                     previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
+                    previousHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.HEIGHT));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
@@ -108,6 +96,7 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
+                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, previousHeights[counter]);
                     ++counter;
                 }
             }
@@ -149,19 +138,17 @@ namespace iText.Layout.Renderer {
             ) {
             AbstractRenderer splitRenderer = CreateSplitRenderer(layoutStatus);
             AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutStatus);
-            IRenderer childRenderer = childRenderers[childPos];
+            IRenderer childRenderer = GetChildRenderers()[childPos];
             bool forcedPlacement = true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT));
             bool metChildRenderer = false;
             foreach (IList<FlexItemInfo> line in lines) {
                 metChildRenderer = metChildRenderer || line.Any((flexItem) => flexItem.GetRenderer() == childRenderer);
                 foreach (FlexItemInfo itemInfo in line) {
                     if (metChildRenderer && !forcedPlacement) {
-                        overflowRenderer.childRenderers.Add(itemInfo.GetRenderer());
-                        itemInfo.GetRenderer().SetParent(overflowRenderer);
+                        overflowRenderer.AddChildRenderer(itemInfo.GetRenderer());
                     }
                     else {
-                        splitRenderer.childRenderers.Add(itemInfo.GetRenderer());
-                        itemInfo.GetRenderer().SetParent(splitRenderer);
+                        splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
                     }
                 }
             }
@@ -187,17 +174,13 @@ namespace iText.Layout.Renderer {
             // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll need to update height on split
             if (keepTogether) {
                 splitRenderer = null;
-                overflowRenderer.childRenderers.Clear();
-                overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
+                overflowRenderer.SetChildRenderers(GetChildRenderers());
             }
             CorrectFixedLayout(layoutBox);
             ApplyAbsolutePositionIfNeeded(layoutContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
                 if (splitRenderer != null) {
-                    splitRenderer.childRenderers = new List<IRenderer>(childRenderers);
-                    foreach (IRenderer childRenderer in splitRenderer.childRenderers) {
-                        childRenderer.SetParent(splitRenderer);
-                    }
+                    splitRenderer.SetChildRenderers(GetChildRenderers());
                 }
                 return new LayoutResult(LayoutResult.FULL, result.GetOccupiedArea(), splitRenderer, null, null);
             }
@@ -205,7 +188,7 @@ namespace iText.Layout.Renderer {
                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                 ApplyMargins(occupiedArea.GetBBox(), true);
-                if (splitRenderer == null || splitRenderer.childRenderers.IsEmpty()) {
+                if (splitRenderer == null || splitRenderer.GetChildRenderers().IsEmpty()) {
                     return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
                         (result.GetAreaBreak());
                 }
@@ -220,18 +203,52 @@ namespace iText.Layout.Renderer {
             return returnResult.GetStatus() != LayoutResult.FULL;
         }
 
+        internal override void RecalculateOccupiedAreaAfterChildLayout(LayoutResult result) {
+            // TODO DEVSIX-5098 Occupied area shall not be bigger than width or max-width
+            Rectangle recalculatedRectangle = Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea
+                ().GetBBox());
+            occupiedArea.GetBBox().SetY(recalculatedRectangle.GetY());
+            occupiedArea.GetBBox().SetHeight(recalculatedRectangle.GetHeight());
+        }
+
         internal override void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
              childRenderer) {
             // TODO DEVSIX-5086 When flex-wrap will be fully supported
             //  we'll need to decrease layout box with respect to the lines
-            layoutBox.DecreaseWidth(result.GetOccupiedArea().GetBBox().GetWidth());
-            layoutBox.MoveRight(result.GetOccupiedArea().GetBBox().GetWidth());
+            layoutBox.DecreaseWidth(result.GetOccupiedArea().GetBBox().GetRight() - layoutBox.GetLeft());
+            layoutBox.SetX(result.GetOccupiedArea().GetBBox().GetRight());
+        }
+
+        internal override Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
+            , Rectangle initialLayoutBox) {
+            Rectangle layoutBoxCopy = layoutBox.Clone();
+            if (childRenderer is AbstractRenderer) {
+                FlexItemInfo childFlexItemInfo = FindFlexItemInfo((AbstractRenderer)childRenderer);
+                if (childFlexItemInfo != null) {
+                    layoutBoxCopy.DecreaseWidth(childFlexItemInfo.GetRectangle().GetX());
+                    layoutBoxCopy.MoveRight(childFlexItemInfo.GetRectangle().GetX());
+                    layoutBoxCopy.DecreaseHeight(childFlexItemInfo.GetRectangle().GetY());
+                }
+            }
+            return layoutBoxCopy;
+        }
+
+        private FlexItemInfo FindFlexItemInfo(AbstractRenderer renderer) {
+            foreach (IList<FlexItemInfo> line in lines) {
+                foreach (FlexItemInfo itemInfo in line) {
+                    if (itemInfo.GetRenderer().Equals(renderer)) {
+                        return itemInfo;
+                    }
+                }
+            }
+            return null;
         }
 
         private void FindMinMaxWidthIfCorrespondingPropertiesAreNotSet(MinMaxWidth minMaxWidth, AbstractWidthHandler
              minMaxWidthHandler) {
             // TODO DEVSIX-5086 When flex-wrap will be fully supported we'll find min/max width with respect to the lines
-            foreach (IRenderer childRenderer in childRenderers) {
+            SetThisAsParent(GetChildRenderers());
+            foreach (IRenderer childRenderer in GetChildRenderers()) {
                 MinMaxWidth childMinMaxWidth;
                 childRenderer.SetParent(this);
                 if (childRenderer is AbstractRenderer) {

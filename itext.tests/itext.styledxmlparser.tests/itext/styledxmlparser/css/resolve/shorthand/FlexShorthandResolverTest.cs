@@ -142,7 +142,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_SHRINK, resolvedShorthand[1].GetProperty());
             NUnit.Framework.Assert.AreEqual("1", resolvedShorthand[1].GetExpression());
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_BASIS, resolvedShorthand[2].GetProperty());
-            NUnit.Framework.Assert.AreEqual("auto", resolvedShorthand[2].GetExpression());
+            NUnit.Framework.Assert.AreEqual("0", resolvedShorthand[2].GetExpression());
         }
 
         [NUnit.Framework.Test]
@@ -179,7 +179,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_SHRINK, resolvedShorthand[1].GetProperty());
             NUnit.Framework.Assert.AreEqual("7", resolvedShorthand[1].GetExpression());
             NUnit.Framework.Assert.AreEqual(CommonCssConstants.FLEX_BASIS, resolvedShorthand[2].GetProperty());
-            NUnit.Framework.Assert.AreEqual("auto", resolvedShorthand[2].GetExpression());
+            NUnit.Framework.Assert.AreEqual("0", resolvedShorthand[2].GetExpression());
         }
 
         [NUnit.Framework.Test]

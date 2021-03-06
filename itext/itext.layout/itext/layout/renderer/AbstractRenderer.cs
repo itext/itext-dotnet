@@ -2773,7 +2773,13 @@ namespace iText.Layout.Renderer {
             return removedElement;
         }
 
-        private void SetThisAsParent(ICollection<IRenderer> children) {
+        /// <summary>
+        /// Sets current
+        /// <see cref="AbstractRenderer"/>
+        /// as parent to renderers in specified collection.
+        /// </summary>
+        /// <param name="children">the collection of renderers to set the parent renderer on</param>
+        internal virtual void SetThisAsParent(ICollection<IRenderer> children) {
             foreach (IRenderer child in children) {
                 child.SetParent(this);
             }
