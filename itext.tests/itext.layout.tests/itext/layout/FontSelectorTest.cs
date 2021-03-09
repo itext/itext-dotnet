@@ -532,6 +532,102 @@ namespace iText.Layout {
                 );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OpenSansFontWeightBoldRenderingTest() {
+            //TODO: DEVSIX-4147 (update cmp-file after the issue will be resolved)
+            String outFileName = destinationFolder + "openSansFontWeightBoldRendering.pdf";
+            String cmpFileName = sourceFolder + "cmp_openSansFontWeightBoldRendering.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            FontProvider sel = new FontProvider();
+            sel.GetFontSet().AddFont(fontsFolder + "Open_Sans/" + "OpenSans-Bold.ttf");
+            sel.GetFontSet().AddFont(fontsFolder + "Open_Sans/" + "OpenSans-ExtraBold.ttf");
+            sel.GetFontSet().AddFont(fontsFolder + "Open_Sans/" + "OpenSans-SemiBold.ttf");
+            doc.SetFontProvider(sel);
+            Div div = new Div().SetFontFamily("OpenSans");
+            Paragraph paragraph1 = new Paragraph("Hello, OpenSansExtraBold! ");
+            paragraph1.SetProperty(Property.FONT_WEIGHT, "800");
+            Paragraph paragraph2 = new Paragraph(new Text("Hello, OpenSansBold! "));
+            paragraph2.SetProperty(Property.FONT_WEIGHT, "700");
+            Paragraph paragraph3 = new Paragraph(new Text("Hello, OpenSansSemiBold!"));
+            paragraph3.SetProperty(Property.FONT_WEIGHT, "600");
+            div.Add(paragraph1).Add(paragraph2).Add(paragraph3);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansFontWeightNotBoldRenderingTest() {
+            //TODO: DEVSIX-4147 (update cmp-file after the issue will be resolved)
+            String outFileName = destinationFolder + "openSansFontWeightNotBoldRendering.pdf";
+            String cmpFileName = sourceFolder + "cmp_openSansFontWeightNotBoldRendering.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            FontProvider sel = new FontProvider();
+            sel.GetFontSet().AddFont(fontsFolder + "Open_Sans/" + "OpenSans-Regular.ttf");
+            sel.GetFontSet().AddFont(fontsFolder + "Open_Sans/" + "OpenSans-Light.ttf");
+            doc.SetFontProvider(sel);
+            Div div = new Div().SetFontFamily("OpenSans");
+            Paragraph paragraph1 = new Paragraph("Hello, OpenSansRegular! ");
+            paragraph1.SetProperty(Property.FONT_WEIGHT, "400");
+            Paragraph paragraph2 = new Paragraph(new Text("Hello, OpenSansLight! "));
+            paragraph2.SetProperty(Property.FONT_WEIGHT, "300");
+            div.Add(paragraph1).Add(paragraph2);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansOutOfBoldFontWeightTest() {
+            String openSansFolder = "Open_Sans/";
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Bold.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-ExtraBold.ttf");
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("OpenSans");
+            FontCharacteristics fc = new FontCharacteristics();
+            fc.SetFontWeight((short)400);
+            NUnit.Framework.Assert.AreEqual("OpenSans-Bold", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansOutOfMixedFontWeightTest() {
+            String openSansFolder = "Open_Sans/";
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Light.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-SemiBold.ttf");
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("OpenSans");
+            FontCharacteristics fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            NUnit.Framework.Assert.AreEqual("OpenSans-Light", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)600);
+            NUnit.Framework.Assert.AreEqual("OpenSans-SemiBold", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenSansOutOfNotBoldFontWeightTest() {
+            // TODO: DEVSIX-2120 Currently light and regular fonts have the same score. When fixed update assertion to "OpenSans-Regular"
+            String openSansFolder = "Open_Sans/";
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Light.ttf");
+            set.AddFont(fontsFolder + openSansFolder + "OpenSans-Regular.ttf");
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("OpenSans");
+            FontCharacteristics fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            NUnit.Framework.Assert.AreEqual("OpenSans-Light", new FontSelector(set.GetFonts(), fontFamilies, fc).BestMatch
+                ().GetDescriptor().GetFontName());
+        }
+
         private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal
             , String expectedBold, String expectedItalic, String expectedBoldItalic) {
             IList<String> fontFamilies = new List<String>();
