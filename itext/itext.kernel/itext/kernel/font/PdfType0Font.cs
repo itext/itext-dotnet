@@ -839,7 +839,7 @@ namespace iText.Kernel.Font {
                 }
             }
             else {
-                //The implementation should be realized in DEVSIX-2730
+                // TODO DEVSIX-31
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                 logger.Warn("Vertical writing has not been implemented yet.");
             }
