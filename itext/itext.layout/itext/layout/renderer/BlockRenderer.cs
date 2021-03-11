@@ -203,8 +203,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
-                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                                ()));
+                            RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                             FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                         }
                     }
@@ -281,7 +280,7 @@ namespace iText.Layout.Renderer {
                 // The second condition check (after &&) is needed only if margins collapsing is enabled
                 if (result.GetOccupiedArea() != null && (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea
                     )) {
-                    RecalculateOccupiedAreaAfterChildLayout(result);
+                    RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                 }
                 if (marginsCollapsingEnabled) {
@@ -520,9 +519,8 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
-        internal virtual void RecalculateOccupiedAreaAfterChildLayout(LayoutResult result) {
-            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                ()));
+        internal virtual void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight) {
+            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
         }
 
         internal virtual Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer

@@ -676,8 +676,78 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        private Div CreateFlexContainer() {
-            Div flexContainer = new FlexContainer();
+        [NUnit.Framework.Test]
+        public virtual void RespectFlexContainersHeightTest() {
+            // TODO DEVSIX-5174 content should overflow bottom
+            String outFileName = destinationFolder + "respectFlexContainersHeightTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_respectFlexContainersHeightTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Style containerStyle = new Style().SetWidth(60).SetHeight(50);
+            Div flexContainer = GetFlexContainer(null, containerStyle);
+            Div flexItem = new Div().SetBackgroundColor(ColorConstants.BLUE).Add(new Paragraph("h")).Add(new Paragraph
+                ("e")).Add(new Paragraph("l")).Add(new Paragraph("l")).Add(new Paragraph("o")).Add(new Paragraph("w"))
+                .Add(new Paragraph("o")).Add(new Paragraph("r")).Add(new Paragraph("l")).Add(new Paragraph("d"));
+            flexContainer.Add(flexItem);
+            flexContainer.Add(new Div().SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetHeight(200));
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RespectFlexContainersWidthTest() {
+            String outFileName = destinationFolder + "respectFlexContainersWidthTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_respectFlexContainersWidthTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            // default (overflow fit)
+            OverflowPropertyValue? overflowX = null;
+            Style containerStyle = new Style().SetWidth(60).SetHeight(200);
+            Style itemStyle = new Style().SetWidth(60f).SetHeight(100f);
+            Div flexContainer = GetFlexContainer(overflowX, containerStyle);
+            flexContainer.Add(GetFlexItem(overflowX, itemStyle)).Add(GetFlexItem(overflowX, itemStyle));
+            document.Add(flexContainer);
+            document.Add(new AreaBreak());
+            // default (overflow visible)
+            overflowX = OverflowPropertyValue.VISIBLE;
+            flexContainer = GetFlexContainer(overflowX, containerStyle);
+            flexContainer.Add(GetFlexItem(overflowX, itemStyle)).Add(GetFlexItem(overflowX, itemStyle));
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private Div GetFlexContainer(OverflowPropertyValue? overflowX, Style style) {
+            FlexContainer flexContainer = CreateFlexContainer();
+            flexContainer.SetBackgroundColor(ColorConstants.GREEN).SetBorderRight(new SolidBorder(60));
+            if (null != style) {
+                flexContainer.AddStyle(style);
+            }
+            if (null != overflowX) {
+                flexContainer.SetProperty(Property.OVERFLOW_X, overflowX);
+            }
+            return flexContainer;
+        }
+
+        private static Div GetFlexItem(OverflowPropertyValue? overflowX, Style style) {
+            Div flexItem = new Div();
+            flexItem.SetProperty(Property.FLEX_GROW, 0f);
+            flexItem.SetProperty(Property.FLEX_SHRINK, 0f);
+            if (null != style) {
+                flexItem.AddStyle(style);
+            }
+            flexItem.SetBackgroundColor(ColorConstants.BLUE);
+            if (null != overflowX) {
+                flexItem.SetProperty(Property.OVERFLOW_X, overflowX);
+            }
+            return flexItem;
+        }
+
+        private FlexContainer CreateFlexContainer() {
+            FlexContainer flexContainer = new FlexContainer();
             flexContainer.SetProperty(Property.ALIGN_ITEMS, alignItemsValue);
             flexContainer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValue);
             return flexContainer;
