@@ -28,13 +28,13 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Layout.Borders;
-using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Layout {
+namespace iText.Layout.Element {
     [NUnit.Framework.TestFixtureSource("AlignItemsAndJustifyContentPropertiesTestFixtureData")]
     public class FlexContainerTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

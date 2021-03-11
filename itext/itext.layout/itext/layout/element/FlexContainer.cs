@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
-    public class FlexContainer : Div {
+    internal class FlexContainer : Div {
         public FlexContainer()
             : base() {
         }
