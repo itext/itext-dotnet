@@ -40,6 +40,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.Collections.Generic;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.Layout.Renderer {
@@ -47,6 +50,42 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void VerifyPdfCalligraphIsNotAvailable() {
             NUnit.Framework.Assert.IsFalse(TypographyUtils.IsPdfCalligraphAvailable());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UpdateAnchorDeltaMarkNotReorderedTest() {
+            // original line 'abm', and 'm' is a mark based on 'b'
+            Glyph mGlyph = new Glyph(100, 'm');
+            mGlyph.SetAnchorDelta((short)-1);
+            mGlyph.SetXAdvance((short)15);
+            mGlyph.SetYAdvance((short)25);
+            LineRenderer.RendererGlyph b = new LineRenderer.RendererGlyph(new Glyph(100, 'b'), null);
+            LineRenderer.RendererGlyph m = new LineRenderer.RendererGlyph(mGlyph, null);
+            LineRenderer.RendererGlyph a = new LineRenderer.RendererGlyph(new Glyph(100, 'a'), null);
+            IList<LineRenderer.RendererGlyph> reorderedLine = JavaUtil.ArraysAsList(b, m, a);
+            int[] reorder = new int[] { 1, 2, 0 };
+            int[] inverseReorder = new int[] { 2, 0, 1 };
+            TypographyUtils.UpdateAnchorDeltaForReorderedLineGlyphs(reorder, inverseReorder, reorderedLine);
+            NUnit.Framework.Assert.AreSame(mGlyph, m.glyph);
+            NUnit.Framework.Assert.AreEqual(-1, m.glyph.GetAnchorDelta());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UpdateAnchorDeltaMarkReorderedTest() {
+            // original line 'abm', and 'm' is a mark based on 'b'
+            Glyph mGlyph = new Glyph(100, 'm');
+            mGlyph.SetAnchorDelta((short)-1);
+            mGlyph.SetXAdvance((short)15);
+            mGlyph.SetYAdvance((short)25);
+            LineRenderer.RendererGlyph m = new LineRenderer.RendererGlyph(mGlyph, null);
+            LineRenderer.RendererGlyph b = new LineRenderer.RendererGlyph(new Glyph(100, 'b'), null);
+            LineRenderer.RendererGlyph a = new LineRenderer.RendererGlyph(new Glyph(100, 'a'), null);
+            IList<LineRenderer.RendererGlyph> reorderedLine = JavaUtil.ArraysAsList(m, b, a);
+            int[] reorder = new int[] { 2, 1, 0 };
+            int[] inverseReorder = new int[] { 2, 1, 0 };
+            TypographyUtils.UpdateAnchorDeltaForReorderedLineGlyphs(reorder, inverseReorder, reorderedLine);
+            NUnit.Framework.Assert.AreNotSame(mGlyph, m.glyph);
+            NUnit.Framework.Assert.AreEqual(1, m.glyph.GetAnchorDelta());
         }
     }
 }
