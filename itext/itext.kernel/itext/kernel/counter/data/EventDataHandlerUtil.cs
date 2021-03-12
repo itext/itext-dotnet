@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security;
 using System.Threading;
@@ -57,6 +58,15 @@ namespace iText.Kernel.Counter.Data {
     /// .
     /// </summary>
     public sealed class EventDataHandlerUtil {
+        private static readonly ConcurrentDictionary<Object, EventHandler> processExitHooks = new ConcurrentDictionary<Object
+            , EventHandler>();
+        
+        private static readonly ConcurrentDictionary<Object, EventHandler> domainUnloadHooks = new ConcurrentDictionary<Object
+            , EventHandler>();
+
+        private static readonly ConcurrentDictionary<Object, Thread> scheduledTasks = new ConcurrentDictionary<Object
+            , Thread>();
+
         private EventDataHandlerUtil() {
         }
 
@@ -64,42 +74,119 @@ namespace iText.Kernel.Counter.Data {
         /// Registers shutdown hook for
         /// <see cref="EventDataHandler{T, V}"/>
         /// that will try to process all the events that are left.
-        /// It isn't guarantied that all events would be processed.
         /// </summary>
+        /// <remarks>
+        /// Registers shutdown hook for
+        /// <see cref="EventDataHandler{T, V}"/>
+        /// that will try to process all the events that are left.
+        /// It isn't guarantied that all events would be processed.
+        /// </remarks>
         /// <param name="dataHandler">
         /// the
         /// <see cref="EventDataHandler{T, V}"/>
         /// for which the hook will be registered
         /// </param>
-        /// 
-        /// 
+        /// <typeparam name="T">the data signature type</typeparam>
+        /// <typeparam name="V">the data type</typeparam>
         public static void RegisterProcessAllShutdownHook<T, V>(EventDataHandler<T, V> dataHandler)
             where V : EventData<T> {
-            try {
-                AppDomain.CurrentDomain.ProcessExit += (s, e) => dataHandler.TryProcessRest();
-                AppDomain.CurrentDomain.DomainUnload += (s, e) => dataHandler.TryProcessRest();
+            if (!processExitHooks.ContainsKey(dataHandler)) {
+                EventHandler processExitHandler = (s, e) => dataHandler.TryProcessRest();
+                processExitHooks.Put(dataHandler, processExitHandler);
+                try {
+                    AppDomain.CurrentDomain.ProcessExit += processExitHandler;
+                }
+                catch (SecurityException) {
+                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        .UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
+                    processExitHooks.JRemove(dataHandler);
+                }
+                catch (Exception) {
+                    //The other exceptions are indicating that ether hook is already registered or hooks are running,
+                    //so there is nothing to do here
+                }
             }
-            catch (SecurityException) {
-                LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
-                    .UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
-            }
-            catch (Exception) {
+            
+            if (!domainUnloadHooks.ContainsKey(dataHandler)) {
+                EventHandler domainUnloadHandler = (s, e) => dataHandler.TryProcessRest();
+                domainUnloadHooks.Put(dataHandler, domainUnloadHandler);
+                try {
+                    AppDomain.CurrentDomain.DomainUnload += domainUnloadHandler;
+                }
+                catch (SecurityException) {
+                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        .UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
+                    domainUnloadHooks.JRemove(dataHandler);
+                }
+                catch (Exception) {
+                    //The other exceptions are indicating that ether hook is already registered or hooks are running,
+                    //so there is nothing to do here
+                }
             }
         }
-
+        
         /// <summary>
-        /// Creates thread that will try to trigger event processing with time interval from specified
+        /// Unregister shutdown hook for
         /// <see cref="EventDataHandler{T, V}"/>
+        /// registered with
+        /// <see cref="RegisterProcessAllShutdownHook{T, V}(EventDataHandler{T, V})"/>.
+        /// </summary>
+        /// <param name="dataHandler">
+        /// the
+        /// <see cref="EventDataHandler{T, V}"/>
+        /// for which the hook will be unregistered
+        /// </param>
+        /// <typeparam name="T">the data signature type</typeparam>
+        /// <typeparam name="V">the data type</typeparam>
+        public static void DisableShutdownHooks<T, V>(EventDataHandler<T, V> dataHandler)
+            where V : EventData<T> {
+            EventHandler processExitToDisable = processExitHooks.JRemove(dataHandler);
+            if (processExitToDisable != null) {
+                try {
+                    AppDomain.CurrentDomain.ProcessExit -= processExitToDisable;
+                }
+                catch (SecurityException) {
+                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        .UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
+                }
+                catch (Exception) {
+                }
+            }
+            
+            EventHandler domainUnloadToDisable = domainUnloadHooks.JRemove(dataHandler);
+            if (processExitToDisable != null) {
+                try {
+                    AppDomain.CurrentDomain.DomainUnload -= domainUnloadToDisable;
+                }
+                catch (SecurityException) {
+                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        .UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK);
+                }
+                catch (Exception) {
+                    //The other exceptions are indicating that hooks are running,
+                    //so there is nothing to do here
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Creates thread that will try to trigger event processing with time interval from
+        /// specified
+        /// <see cref="EventDataHandler{T, V}"/>.
         /// </summary>
         /// <param name="dataHandler">
         /// the
         /// <see cref="EventDataHandler{T, V}"/>
         /// for which the thread will be registered
         /// </param>
-        /// 
-        /// 
+        /// <typeparam name="T">the data signature type</typeparam>
+        /// <typeparam name="V">the data type</typeparam>
         public static void RegisterTimedProcessing<T, V>(EventDataHandler<T, V> dataHandler)
             where V : EventData<T> {
+            if (scheduledTasks.ContainsKey(dataHandler)) {
+                // task already registered
+                return;
+            }
             Thread thread = new Thread(() => {
                 while (true) {
                     try {
@@ -116,20 +203,49 @@ namespace iText.Kernel.Counter.Data {
                     }
                 }
             });
+            scheduledTasks.Put(dataHandler, thread);
             thread.IsBackground = true;
             thread.Start();
         }
 
         /// <summary>
+        /// Stop the timed processing thread registered with
+        /// <see cref="RegisterTimedProcessing{T, V}(EventDataHandler{T, V})"/>.
+        /// </summary>
+        /// <param name="dataHandler">
+        /// the
+        /// <see cref="EventDataHandler{T, V}"/>
+        /// for which the thread will be registered
+        /// </param>
+        /// <typeparam name="T">the data signature type</typeparam>
+        /// <typeparam name="V">the data type</typeparam>
+        public static void DisableTimedProcessing<T, V>(EventDataHandler<T, V> dataHandler)
+            where V : EventData<T> {
+            Thread toDisable = scheduledTasks.JRemove(dataHandler);
+            if (toDisable != null) {
+                try {
+                    toDisable.Interrupt();
+                }
+                catch (SecurityException) {
+                    LogManager.GetLogger(typeof(iText.Kernel.Counter.Data.EventDataHandlerUtil)).Error(iText.IO.LogMessageConstant
+                        .UNABLE_TO_INTERRUPT_THREAD);
+                }
+            }
+        }
+
+        /// <summary>
         /// Comparator class that can be used in
-        /// <see cref="EventDataCacheComparatorBased{T, V}"/>
-        /// .
+        /// <see cref="EventDataCacheComparatorBased{T, V}"/>.
+        /// </summary>
+        /// <remarks>
+        /// Comparator class that can be used in
+        /// <see cref="EventDataCacheComparatorBased{T, V}"/>.
         /// If so, the cache will return
         /// <see cref="EventData{T}"/>
         /// with bigger count first.
-        /// </summary>
-        /// 
-        /// 
+        /// </remarks>
+        /// <typeparam name="T">the data signature type</typeparam>
+        /// <typeparam name="V">the data type</typeparam>
         public class BiggerCountComparator<T, V> : IComparer<V>
             where V : EventData<T> {
             public virtual int Compare(V o1, V o2) {

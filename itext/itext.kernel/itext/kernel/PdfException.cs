@@ -206,6 +206,8 @@ namespace iText.Kernel {
 
         public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "Content stream must not invoke operators that specify colors or other color related parameters in the graphics state.";
 
+        public const String DataHandlerCounterHasBeenDisabled = "Data handler counter has been disabled";
+
         public const String DecodeParameterType1IsNotSupported = "Decode parameter type {0} is not supported.";
 
         public const String DefaultAppearanceNotFound = "DefaultAppearance is required but not found";
