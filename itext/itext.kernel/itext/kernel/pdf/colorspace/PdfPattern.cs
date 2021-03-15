@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represent Pattern
         /// </param>
-        /// <returns>new wrapper instance.</returns>
         protected internal PdfPattern(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
