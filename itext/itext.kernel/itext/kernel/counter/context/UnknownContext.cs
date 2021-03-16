@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Actions;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter.Context {
@@ -70,6 +71,24 @@ namespace iText.Kernel.Counter.Context {
         }
 
         public virtual bool Allow(IEvent @event) {
+            return allowEvents;
+        }
+
+        /// <summary>Depending on its internal state allows or rejects all event.</summary>
+        /// <remarks>
+        /// Depending on its internal state allows or rejects all event.
+        /// Behaviour is defined via constructor
+        /// <see cref="UnknownContext(bool)"/>
+        /// </remarks>
+        /// <param name="event">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual bool IsAllowed(ITextEvent @event) {
             return allowEvents;
         }
     }

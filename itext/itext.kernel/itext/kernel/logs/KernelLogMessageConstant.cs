@@ -47,6 +47,19 @@ namespace iText.Kernel.Logs {
     public sealed class KernelLogMessageConstant {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";
 
+        /// <summary>Message warns about overriding of the identifier of identifiable element.</summary>
+        /// <remarks>
+        /// Message warns about overriding of the identifier of identifiable element. List of params:
+        /// <list type="bullet">
+        /// <item><description>0th is an original element identifier;
+        /// </description></item>
+        /// <item><description>1st is a new element identifier;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String ELEMENT_ALREADY_HAS_AN_IDENTIFIER = "Element already has sequence id: {0}, new id {1} "
+             + "will be ignored";
+
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
@@ -61,6 +74,20 @@ namespace iText.Kernel.Logs {
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG2000 format";
 
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} " + "color space";
+
+        /// <summary>
+        /// Message warns about unexpected product name which was mentioned as involved into PDF
+        /// processing.
+        /// </summary>
+        /// <remarks>
+        /// Message warns about unexpected product name which was mentioned as involved into PDF
+        /// processing. List of params:
+        /// <list type="bullet">
+        /// <item><description>0th is a name of unknown product;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String UNKNOWN_PRODUCT_INVOLVED = "Unknown product {0} was involved into PDF processing. It will be ignored";
 
         private KernelLogMessageConstant() {
         }

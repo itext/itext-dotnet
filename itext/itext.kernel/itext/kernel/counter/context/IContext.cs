@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.Kernel.Actions;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Counter.Context {
@@ -51,6 +53,15 @@ namespace iText.Kernel.Counter.Context {
     /// <see cref="iText.Kernel.Counter.ContextManager"/>
     /// </remarks>
     public interface IContext {
+        /// <summary>Determines weather event should be processed or not.</summary>
+        /// <param name="event">is an event to test</param>
+        /// <returns>true if event is allowed by the actual context</returns>
+        [System.ObsoleteAttribute(@"will be replaced with the following method")]
         bool Allow(IEvent @event);
+
+        /// <summary>Determines weather event should be processed or not.</summary>
+        /// <param name="event">is an event to test</param>
+        /// <returns>true if event is allowed by the actual context and false otherwise</returns>
+        bool IsAllowed(ITextEvent @event);
     }
 }

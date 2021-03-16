@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2021 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,53 +41,36 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel.Actions;
-using iText.Kernel.Counter.Event;
+using iText.Kernel.Actions.Ecosystem;
+using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Pdf;
+using iText.Test;
 
-namespace iText.Kernel.Counter.Context {
-    /// <summary>
-    /// Generic context that allows
-    /// <see cref="iText.Kernel.Counter.Event.IGenericEvent"/>
-    /// based on the whitelist of supported IDs
-    /// </summary>
-    public class GenericContext : IContext {
-        private readonly ICollection<String> supported = new HashSet<String>();
+namespace iText.Kernel.Counter.Event {
+    public class ITextCoreEventTest : ExtendedITextTest {
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
 
-        private readonly ICollection<String> supportedProducts = new HashSet<String>();
-
-        /// <summary>Creates a Generic Context instance with support of provided namespaces and products.</summary>
-        /// <param name="supported">is a collection of supported namespaces</param>
-        public GenericContext(ICollection<String> supported) {
-            this.supported.AddAll(supported);
+        [NUnit.Framework.Test]
+        public virtual void SequenceIdEventCreationTest() {
+            SequenceId sequenceId = new SequenceId();
+            ITextCoreEvent @event = new ITextCoreEvent(sequenceId, new TestMetaInfo("meta data"), "test event");
+            NUnit.Framework.Assert.AreEqual("test event", @event.GetEventType());
+            NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
+            NUnit.Framework.Assert.AreEqual("meta data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
+            NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());
         }
 
-        /// <summary>Creates a Generic Context instance with support of provided namespaces and products.</summary>
-        /// <param name="supported">is a collection of supported namespaces</param>
-        /// <param name="supportedProducts">is a collection of supported products</param>
-        public GenericContext(ICollection<String> supported, ICollection<String> supportedProducts) {
-            this.supported.AddAll(supported);
-            this.supportedProducts.AddAll(supportedProducts);
-        }
-
-        public virtual bool Allow(IEvent @event) {
-            if (@event is IGenericEvent) {
-                return supported.Contains(((IGenericEvent)@event).GetOriginId());
+        [NUnit.Framework.Test]
+        public virtual void DocumentEventCreationTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
+                ITextCoreEvent @event = new ITextCoreEvent(document, new TestMetaInfo("meta data"), "test event");
+                NUnit.Framework.Assert.AreEqual("test event", @event.GetEventType());
+                NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
+                NUnit.Framework.Assert.AreEqual("meta data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
+                NUnit.Framework.Assert.AreEqual(document.GetDocumentIdWrapper(), @event.GetSequenceId());
             }
-            return false;
-        }
-
-        /// <summary>Checks if the source product of the event is supported by the context.</summary>
-        /// <param name="event">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public virtual bool IsAllowed(ITextEvent @event) {
-            return supportedProducts.Contains(@event.GetProductName());
         }
     }
 }

@@ -45,11 +45,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using iText.IO;
-using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Actions;
+using iText.Kernel.Actions.Events;
+using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Crypto;
@@ -147,9 +148,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
-        private static readonly AtomicLong lastDocumentId = new AtomicLong();
-
-        private long documentId;
+        private SequenceId documentId;
 
         private VersionInfo versionInfo = iText.Kernel.Version.GetInstance().GetInfo();
 
@@ -184,7 +183,7 @@ namespace iText.Kernel.Pdf {
             if (reader == null) {
                 throw new ArgumentException("The reader in PdfDocument constructor can not be null.");
             }
-            documentId = lastDocumentId.IncrementAndGet();
+            documentId = new SequenceId();
             this.reader = reader;
             // default values of the StampingProperties doesn't affect anything
             this.properties = new StampingProperties();
@@ -213,7 +212,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
-            documentId = lastDocumentId.IncrementAndGet();
+            documentId = new SequenceId();
             this.writer = writer;
             // default values of the StampingProperties doesn't affect anything
             this.properties = new StampingProperties();
@@ -243,7 +242,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentException("The writer in PdfDocument constructor can not be null.");
             }
-            documentId = lastDocumentId.IncrementAndGet();
+            documentId = new SequenceId();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -718,13 +717,13 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             isClosing = true;
+            EventManager.GetInstance().OnEvent(new ClosePdfDocumentEvent(this));
             try {
                 if (writer != null) {
                     if (catalog.IsFlushed()) {
                         throw new PdfException(KernelExceptionMessageConstant.CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG
                             );
                     }
-                    UpdateProducerInInfoDictionary();
                     UpdateXmpMetadata();
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
@@ -1884,6 +1883,41 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
+        /// <summary>Obtains numeric document id.</summary>
+        /// <returns>document id</returns>
+        public virtual long GetDocumentId() {
+            return documentId.GetId();
+        }
+
+        /// <summary>
+        /// Obtains document id as a
+        /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>.
+        /// </summary>
+        /// <returns>document id</returns>
+        public virtual SequenceId GetDocumentIdWrapper() {
+            return documentId;
+        }
+
+        /// <summary>Updates producer line of the document.</summary>
+        /// <remarks>
+        /// Updates producer line of the document.
+        /// TODO: DEVSIX-5054 should be removed when new producer line building logic is implemented
+        /// </remarks>
+        public virtual void UpdateProducerInInfoDictionary() {
+            String producer = null;
+            if (reader == null) {
+                producer = versionInfo.GetVersion();
+            }
+            else {
+                if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
+                    PdfString producerPdfStr = info.GetPdfObject().GetAsString(PdfName.Producer);
+                    producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
+                }
+                producer = AddModifiedPostfix(producer);
+            }
+            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -1959,6 +1993,7 @@ namespace iText.Kernel.Pdf {
             this.fingerPrint = new FingerPrint();
             this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {
+                EventManager.GetInstance().OnEvent(new ITextCoreEvent(this, null, ITextCoreEvent.OPEN_DOCUMENT));
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
@@ -2015,7 +2050,6 @@ namespace iText.Kernel.Pdf {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
                     }
-                    UpdateProducerInInfoDictionary();
                     GetDocumentInfo().AddModDate();
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
@@ -2239,10 +2273,6 @@ namespace iText.Kernel.Pdf {
             return pdfPageFactory;
         }
 
-        internal virtual long GetDocumentId() {
-            return documentId;
-        }
-
         internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
             return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
         }
@@ -2255,22 +2285,6 @@ namespace iText.Kernel.Pdf {
 
         internal virtual bool HasAcroForm() {
             return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
-        }
-
-        private void UpdateProducerInInfoDictionary() {
-            String producer = null;
-            PdfDictionary documentInfoObject = GetDocumentInfo().GetPdfObject();
-            if (reader == null) {
-                producer = versionInfo.GetVersion();
-            }
-            else {
-                if (documentInfoObject.ContainsKey(PdfName.Producer)) {
-                    PdfString producerPdfStr = documentInfoObject.GetAsString(PdfName.Producer);
-                    producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
-                }
-                producer = AddModifiedPostfix(producer);
-            }
-            documentInfoObject.Put(PdfName.Producer, new PdfString(producer, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>
@@ -2462,6 +2476,7 @@ namespace iText.Kernel.Pdf {
             return writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed();
         }
 
+        // TODO: DEVSIX-5054 should be removed when new producer line building logic is implemented
         private String AddModifiedPostfix(String producer) {
             if (producer == null || !versionInfo.GetVersion().Contains(versionInfo.GetProduct())) {
                 return versionInfo.GetVersion();
