@@ -1978,6 +1978,8 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         catch (ArgumentException) {
+                            LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument)).Error(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED
+                                );
                         }
                     }
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);

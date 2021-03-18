@@ -438,10 +438,14 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
+            .ERROR)]
         public virtual void OpenDocumentWithInvalidCatalogVersionTest() {
-            PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf");
-            PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.IsNotNull(pdfDocument);
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf")) {
+                using (PdfDocument pdfDocument = new PdfDocument(reader)) {
+                    NUnit.Framework.Assert.IsNotNull(pdfDocument);
+                }
+            }
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {
