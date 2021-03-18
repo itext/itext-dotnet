@@ -76,15 +76,22 @@ namespace iText.Layout.Renderer {
             lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
             IList<UnitValue> previousWidths = new List<UnitValue>();
             IList<UnitValue> previousHeights = new List<UnitValue>();
+            IList<UnitValue> previousMinHeights = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     Rectangle rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo
                         .GetRectangle().Clone(), false);
                     previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
                     previousHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.HEIGHT));
+                    previousMinHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
+                        .GetHeight()));
+                    // TODO DEVSIX-1895 Once the ticket is closed, there will be no need in setting min-height
+                    // In case element takes less vertical space than expected, we need to make sure
+                    // it is extended to the height predicted by the algo
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetHeight()));
                 }
             }
@@ -97,6 +104,7 @@ namespace iText.Layout.Renderer {
                 foreach (FlexItemInfo itemInfo in line) {
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, previousHeights[counter]);
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, previousMinHeights[counter]);
                     ++counter;
                 }
             }
