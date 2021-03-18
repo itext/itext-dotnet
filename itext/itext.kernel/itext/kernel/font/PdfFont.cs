@@ -579,7 +579,7 @@ namespace iText.Kernel.Font {
         /// , if there is an error reading the font.
         /// </returns>
         protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
-            if (fontStreamBytes == null) {
+            if (fontStreamBytes == null || fontStreamLengths == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE);
             }
             PdfStream fontStream = new PdfStream(fontStreamBytes);

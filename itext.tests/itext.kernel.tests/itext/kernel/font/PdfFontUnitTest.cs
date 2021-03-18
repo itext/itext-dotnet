@@ -581,5 +581,25 @@ namespace iText.Kernel.Font {
             , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
 ;
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetFontStreamForNullLengthsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfFont pdfFont = PdfFontFactory.CreateFont();
+                pdfFont.GetPdfFontStream(new byte[] { 1 }, null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetFontStreamForNullBytesAndLengthsTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfFont pdfFont = PdfFontFactory.CreateFont();
+                pdfFont.GetPdfFontStream(null, null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(KernelExceptionMessageConstant.FONT_EMBEDDING_ISSUE))
+;
+        }
     }
 }
