@@ -437,6 +437,13 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OpenDocumentWithInvalidCatalogVersionTest() {
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf");
+            PdfDocument pdfDocument = new PdfDocument(reader);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument);
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {

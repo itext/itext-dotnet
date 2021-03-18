@@ -1971,9 +1971,13 @@ namespace iText.Kernel.Pdf {
                     if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
                         // The version of the PDF specification to which the document conforms (for example, 1.4)
                         // if later than the version specified in the file's header
-                        PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
-                        if (catalogVersion.CompareTo(pdfVersion) > 0) {
-                            pdfVersion = catalogVersion;
+                        try {
+                            PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
+                            if (catalogVersion.CompareTo(pdfVersion) > 0) {
+                                pdfVersion = catalogVersion;
+                            }
+                        }
+                        catch (ArgumentException) {
                         }
                     }
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
