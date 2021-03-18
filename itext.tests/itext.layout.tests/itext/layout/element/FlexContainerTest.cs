@@ -720,6 +720,55 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FlexItemsMinHeightShouldBeOverriddenTest() {
+            String outFileName = destinationFolder + "flexItemsMinHeightShouldBeOverriddenTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexItemsMinHeightShouldBeOverriddenTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.Add(new Div().SetWidth(100).SetBackgroundColor(ColorConstants.BLUE).SetHeight(100));
+            flexContainer.Add(new Div().SetWidth(100).SetBackgroundColor(ColorConstants.YELLOW).SetMinHeight(20));
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinesMinHeightShouldBeRespectedTest() {
+            String outFileName = destinationFolder + "linesMinHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_linesMinHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.SetMinHeight(100);
+            Div child = new Div().SetWidth(100).SetBackgroundColor(ColorConstants.BLUE);
+            child.Add(new Paragraph().SetWidth(100).SetBackgroundColor(ColorConstants.YELLOW));
+            flexContainer.Add(child);
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinesMaxHeightShouldBeRespectedTest() {
+            String outFileName = destinationFolder + "linesMaxHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_linesMaxHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.SetMaxHeight(100);
+            Div child = new Div().SetWidth(100).SetBackgroundColor(ColorConstants.BLUE).SetHeight(150);
+            child.Add(new Paragraph().SetWidth(100).SetBackgroundColor(ColorConstants.YELLOW));
+            flexContainer.Add(child);
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private Div GetFlexContainer(OverflowPropertyValue? overflowX, Style style) {
             FlexContainer flexContainer = CreateFlexContainer();
             flexContainer.SetBackgroundColor(ColorConstants.GREEN).SetBorderRight(new SolidBorder(60));

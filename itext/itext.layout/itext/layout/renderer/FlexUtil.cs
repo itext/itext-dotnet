@@ -87,8 +87,9 @@ namespace iText.Layout.Renderer {
                 mainSize = layoutBox.GetWidth();
             }
             // We need to have crossSize only if its value is definite.
-            // The calculation differs from width calculation because if width isn't definite, parent's width shall be taken
-            float? crossSize = flexContainerRenderer.RetrieveMinHeight();
+            float? crossSize = flexContainerRenderer.RetrieveHeight();
+            float? minCrossSize = flexContainerRenderer.RetrieveMinHeight();
+            float? maxCrossSize = flexContainerRenderer.RetrieveMaxHeight();
             DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(flexItemCalculationInfos, (float)mainSize);
             // 9.3. Main Size Determination
             // 5. Collect flex items into flex lines:
@@ -105,7 +106,8 @@ namespace iText.Layout.Renderer {
             // performing layout with the used main size and the available space, treating auto as fit-content.
             DetermineHypotheticalCrossSizeForFlexItems(lines);
             // 8. Calculate the cross size of each flex line.
-            IList<float> lineCrossSizes = CalculateCrossSizeOfEachFlexLine(lines, isSingleLine, crossSize);
+            IList<float> lineCrossSizes = CalculateCrossSizeOfEachFlexLine(lines, isSingleLine, minCrossSize, crossSize
+                , maxCrossSize);
             // TODO DEVSIX-5003 min/max height calculations are not supported
             // If the flex container is single-line, then clamp the line’s cross-size to be within
             // the container’s computed min and max cross sizes. Note that if CSS 2.1’s definition of min/max-width/height
@@ -353,7 +355,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal static IList<float> CalculateCrossSizeOfEachFlexLine(IList<IList<FlexUtil.FlexItemCalculationInfo
-            >> lines, bool isSingleLine, float? crossSize) {
+            >> lines, bool isSingleLine, float? minCrossSize, float? crossSize, float? maxCrossSize) {
             IList<float> lineCrossSizes = new List<float>();
             if (isSingleLine && crossSize != null && !lines.IsEmpty()) {
                 lineCrossSizes.Add((float)crossSize);
@@ -377,6 +379,16 @@ namespace iText.Layout.Renderer {
                             largestHypotheticalCrossSize = info.GetOuterCrossSize(info.hypotheticalCrossSize);
                         }
                         flexLinesCrossSize = Math.Max(0, largestHypotheticalCrossSize);
+                    }
+                    // 3. If the flex container is single-line, then clamp the line’s cross-size to be
+                    // within the container’s computed min and max cross sizes
+                    if (isSingleLine && !lines.IsEmpty()) {
+                        if (null != minCrossSize) {
+                            flexLinesCrossSize = Math.Max((float)minCrossSize, flexLinesCrossSize);
+                        }
+                        if (null != maxCrossSize) {
+                            flexLinesCrossSize = Math.Min((float)maxCrossSize, flexLinesCrossSize);
+                        }
                     }
                     lineCrossSizes.Add(flexLinesCrossSize);
                 }
