@@ -769,6 +769,32 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CollapsingMarginsFlexContainerTest() {
+            String outFileName = destinationFolder + "collapsingMarginsFlexContainerTest" + testNumber + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_collapsingMarginsFlexContainerTest" + testNumber + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            document.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
+            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
+            Div child1 = CreateNewDiv();
+            child1.SetBackgroundColor(ColorConstants.CYAN);
+            child1.SetMargin(50);
+            Div child2 = CreateNewDiv();
+            child2.SetBackgroundColor(ColorConstants.CYAN);
+            child2.SetMargin(50);
+            flexContainer.Add(child1).Add(child2);
+            Div flexContainersSibling = CreateNewDiv();
+            flexContainersSibling.SetMarginBottom(40);
+            document.Add(flexContainersSibling).Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private Div GetFlexContainer(OverflowPropertyValue? overflowX, Style style) {
             FlexContainer flexContainer = CreateFlexContainer();
             flexContainer.SetBackgroundColor(ColorConstants.GREEN).SetBorderRight(new SolidBorder(60));

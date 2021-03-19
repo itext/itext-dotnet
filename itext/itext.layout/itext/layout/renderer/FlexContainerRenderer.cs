@@ -47,6 +47,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -225,6 +226,11 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - ((float)blockMaxHeight));
                 occupiedArea.GetBBox().SetHeight((float)blockMaxHeight);
             }
+        }
+
+        internal override MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
+            , MarginsCollapseHandler marginsCollapseHandler) {
+            return marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
         }
 
         internal override void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
