@@ -457,6 +457,8 @@ namespace iText.Layout.Renderer {
                         >(Property.ALIGN_SELF, itemsAlignment);
                     float freeSpace = lineCrossSize - itemInfo.GetOuterCrossSize(itemInfo.crossSize);
                     switch (selfAlignment) {
+                        case AlignmentPropertyValue.SELF_END:
+                        case AlignmentPropertyValue.END:
                         case AlignmentPropertyValue.FLEX_END: {
                             itemInfo.yShift = freeSpace;
                             break;
@@ -467,11 +469,9 @@ namespace iText.Layout.Renderer {
                             break;
                         }
 
-                        case AlignmentPropertyValue.END:
                         case AlignmentPropertyValue.START:
                         case AlignmentPropertyValue.BASELINE:
                         case AlignmentPropertyValue.SELF_START:
-                        case AlignmentPropertyValue.SELF_END:
                         case AlignmentPropertyValue.STRETCH:
                         case AlignmentPropertyValue.NORMAL:
                         case AlignmentPropertyValue.FLEX_START:
@@ -495,6 +495,9 @@ namespace iText.Layout.Renderer {
                 }
                 float freeSpace = mainSize - childrenWidth;
                 switch (justifyContent) {
+                    case JustifyContent.RIGHT:
+                    case JustifyContent.END:
+                    case JustifyContent.SELF_END:
                     case JustifyContent.FLEX_END: {
                         line[0].xShift = freeSpace;
                         break;
@@ -506,10 +509,10 @@ namespace iText.Layout.Renderer {
                     }
 
                     case JustifyContent.NORMAL:
+                    case JustifyContent.STRETCH:
                     case JustifyContent.START:
-                    case JustifyContent.END:
-                    case JustifyContent.RIGHT:
                     case JustifyContent.LEFT:
+                    case JustifyContent.SELF_START:
                     case JustifyContent.FLEX_START:
                     default: {
                         break;

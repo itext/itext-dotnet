@@ -35,6 +35,7 @@ namespace iText.Layout.Properties {
         FLEX_END,
         LEFT,
         RIGHT,
-        NORMAL
+        NORMAL,
+        STRETCH
     }
 }

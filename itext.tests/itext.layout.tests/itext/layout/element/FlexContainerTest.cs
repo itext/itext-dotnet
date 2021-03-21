@@ -47,17 +47,17 @@ namespace iText.Layout.Element {
 
         private JustifyContent justifyContentValue;
 
-        private int? testNumber;
+        private int? comparisonPdfId;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
-        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object testNumber) {
+        public FlexContainerTest(Object alignItemsValue, Object justifyContentValue, Object comparisonPdfId) {
             this.alignItemsValue = (AlignmentPropertyValue)alignItemsValue;
             this.justifyContentValue = (JustifyContent)justifyContentValue;
-            this.testNumber = (int?)testNumber;
+            this.comparisonPdfId = (int?)comparisonPdfId;
         }
 
         public FlexContainerTest(Object[] array)
@@ -66,9 +66,12 @@ namespace iText.Layout.Element {
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, 1 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END, 2 }, new Object
-                [] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, 3 }, new Object[] { AlignmentPropertyValue.
-                STRETCH, JustifyContent.CENTER, 4 } });
+                .FLEX_START, 1 }, new Object[] { AlignmentPropertyValue.START, JustifyContent.START, 2 }, new Object[]
+                 { AlignmentPropertyValue.SELF_START, JustifyContent.SELF_START, 3 }, new Object[] { AlignmentPropertyValue
+                .BASELINE, JustifyContent.LEFT, 4 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END
+                , 5 }, new Object[] { AlignmentPropertyValue.END, JustifyContent.END, 6 }, new Object[] { AlignmentPropertyValue
+                .SELF_END, JustifyContent.RIGHT, 7 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER
+                , 8 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER, 9 } });
         }
 
         public static ICollection<NUnit.Framework.TestFixtureData> AlignItemsAndJustifyContentPropertiesTestFixtureData
@@ -78,8 +81,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void DefaultFlexContainerTest() {
-            String outFileName = destinationFolder + "defaultFlexContainerTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_defaultFlexContainerTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "defaultFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_defaultFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -100,8 +103,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerFixedHeightWidthTest() {
-            String outFileName = destinationFolder + "flexContainerFixedHeightWidthTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerFixedHeightWidthTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -124,8 +127,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenTest() {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -154,8 +157,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerHeightClippedTest() {
-            String outFileName = destinationFolder + "flexContainerHeightClippedTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerHeightClippedTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -185,9 +188,9 @@ namespace iText.Layout.Element {
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Ignore = true)]
         public virtual void FlexContainerDifferentChildrenDontFitHorizontallyTest() {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyTest" + testNumber
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyTest" + testNumber
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -216,9 +219,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest() {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
             String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -244,9 +247,9 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenDontFitVerticallyTest() {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitVerticallyTest" + testNumber
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitVerticallyTest" + testNumber
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -279,9 +282,9 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest() {
             String outFileName = destinationFolder + "flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -311,8 +314,9 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenWithGrowTest() {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithGrowTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithGrowTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId + 
+                ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -344,9 +348,10 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenWithFlexBasisTest() {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexBasisTest" + testNumber + 
-                ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexBasisTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
+                 + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
+                 + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -374,10 +379,10 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerDifferentChildrenWithFlexShrinkTest() {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexShrinkTest" + testNumber +
-                 ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexShrinkTest" + testNumber + 
-                ".pdf";
+            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
+                 + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
+                 + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -407,8 +412,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerInsideFlexContainerTest() {
-            String outFileName = destinationFolder + "flexContainerInsideFlexContainerTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -430,9 +435,9 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerInsideFlexContainerWithHugeBordersTest() {
-            String outFileName = destinationFolder + "flexContainerInsideFlexContainerWithHugeBordersTest" + testNumber
+            String outFileName = destinationFolder + "flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerWithHugeBordersTest" + testNumber
+            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -457,8 +462,10 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void MultipleFlexContainersInsideFlexContainerTest() {
-            String outFileName = destinationFolder + "multipleFlexContainersInsideFlexContainerTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersInsideFlexContainerTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId
+                 + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId 
+                + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -488,9 +495,9 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void MultipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest() {
             String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -522,9 +529,9 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void MultipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest() {
             String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -557,9 +564,9 @@ namespace iText.Layout.Element {
         public virtual void MultipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest() {
             // TODO DEVSIX-5087 Content should not overflow container by default
             String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -591,9 +598,9 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void MultipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest() {
             String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
-                 + testNumber + ".pdf";
+                 + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -624,8 +631,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerFillAvailableAreaTest() {
-            String outFileName = destinationFolder + "flexContainerFillAvailableAreaTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerFillAvailableAreaTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -652,8 +659,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexContainerRotationAngleTest() {
-            String outFileName = destinationFolder + "flexContainerRotationAngleTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerRotationAngleTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -679,8 +686,8 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void RespectFlexContainersHeightTest() {
             // TODO DEVSIX-5174 content should overflow bottom
-            String outFileName = destinationFolder + "respectFlexContainersHeightTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_respectFlexContainersHeightTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Style containerStyle = new Style().SetWidth(60).SetHeight(50);
@@ -698,8 +705,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void RespectFlexContainersWidthTest() {
-            String outFileName = destinationFolder + "respectFlexContainersWidthTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_respectFlexContainersWidthTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             // default (overflow fit)
@@ -722,8 +729,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void FlexItemsMinHeightShouldBeOverriddenTest() {
-            String outFileName = destinationFolder + "flexItemsMinHeightShouldBeOverriddenTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexItemsMinHeightShouldBeOverriddenTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -737,8 +744,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void LinesMinHeightShouldBeRespectedTest() {
-            String outFileName = destinationFolder + "linesMinHeightShouldBeRespectedTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_linesMinHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -754,8 +761,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void LinesMaxHeightShouldBeRespectedTest() {
-            String outFileName = destinationFolder + "linesMaxHeightShouldBeRespectedTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_linesMaxHeightShouldBeRespectedTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer();
@@ -771,8 +778,8 @@ namespace iText.Layout.Element {
 
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsFlexContainerTest() {
-            String outFileName = destinationFolder + "collapsingMarginsFlexContainerTest" + testNumber + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_collapsingMarginsFlexContainerTest" + testNumber + ".pdf";
+            String outFileName = destinationFolder + "collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetProperty(Property.COLLAPSING_MARGINS, true);
