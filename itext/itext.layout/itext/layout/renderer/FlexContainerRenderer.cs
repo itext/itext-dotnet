@@ -80,8 +80,15 @@ namespace iText.Layout.Renderer {
             IList<UnitValue> previousMinHeights = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
-                    Rectangle rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo
-                        .GetRectangle().Clone(), false);
+                    Rectangle rectangleWithoutBordersMarginsPaddings;
+                    if (AbstractRenderer.IsBorderBoxSizing(itemInfo.GetRenderer())) {
+                        rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMargins(itemInfo.GetRectangle().Clone
+                            (), false);
+                    }
+                    else {
+                        rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo.GetRectangle
+                            ().Clone(), false);
+                    }
                     previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
                     previousHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.HEIGHT));
                     previousMinHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT));

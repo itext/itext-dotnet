@@ -802,6 +802,76 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FlexItemBoxSizingTest() {
+            String outFileName = destinationFolder + "flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLUE, 30));
+            flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
+            flexContainer.SetWidth(450);
+            flexContainer.SetHeight(200);
+            Div innerDiv = new Div();
+            innerDiv.SetWidth(120);
+            innerDiv.SetHeight(120);
+            innerDiv.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
+            innerDiv.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            innerDiv.SetProperty(Property.FLEX_GROW, 0.3F);
+            Div innerDiv2 = new Div();
+            innerDiv2.SetProperty(Property.FLEX_BASIS, UnitValue.CreatePointValue(120));
+            innerDiv2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            innerDiv2.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
+            innerDiv2.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            innerDiv2.SetProperty(Property.FLEX_GROW, 0.3F);
+            Div innerDiv3 = new Div();
+            innerDiv3.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            innerDiv3.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
+            innerDiv3.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            Div innerDivChild = new Div().SetBorder(new SolidBorder(ColorConstants.ORANGE, 10)).SetBackgroundColor(ColorConstants
+                .PINK).SetWidth(50).SetHeight(50);
+            innerDivChild.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            innerDiv.Add(innerDivChild);
+            innerDiv2.Add(innerDivChild);
+            innerDiv3.Add(innerDivChild);
+            Div divToCompare = new Div().SetWidth(450).SetHeight(100).SetBackgroundColor(ColorConstants.MAGENTA).SetMarginTop
+                (50);
+            flexContainer.Add(innerDiv).Add(innerDiv2).Add(innerDiv3);
+            document.Add(flexContainer).Add(divToCompare);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlexContainerBoxSizingTest() {
+            String outFileName = destinationFolder + "flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = CreateFlexContainer();
+            flexContainer.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLUE, 30));
+            flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
+            flexContainer.SetWidth(450);
+            flexContainer.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+            Div innerDiv = new Div();
+            innerDiv.SetWidth(120);
+            Div innerDivChild = new Div().SetBorder(new SolidBorder(ColorConstants.ORANGE, 10)).SetBackgroundColor(ColorConstants
+                .PINK).SetWidth(100).SetHeight(100);
+            innerDiv.Add(innerDivChild);
+            innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));
+            innerDiv.SetBorder(new SolidBorder(ColorConstants.RED, 20));
+            Div divToCompare = new Div().SetWidth(450).SetHeight(100).SetBackgroundColor(ColorConstants.MAGENTA).SetMarginTop
+                (50);
+            flexContainer.Add(innerDiv).Add(CreateNewDiv());
+            document.Add(flexContainer).Add(divToCompare);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private Div GetFlexContainer(OverflowPropertyValue? overflowX, Style style) {
             FlexContainer flexContainer = CreateFlexContainer();
             flexContainer.SetBackgroundColor(ColorConstants.GREEN).SetBorderRight(new SolidBorder(60));

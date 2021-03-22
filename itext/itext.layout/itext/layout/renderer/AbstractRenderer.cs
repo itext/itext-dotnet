@@ -2564,14 +2564,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
 
-        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);

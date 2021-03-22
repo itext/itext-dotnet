@@ -75,8 +75,6 @@ namespace iText.Layout.Renderer {
              flexContainerRenderer) {
             Rectangle layoutBox = flexContainerBBox.Clone();
             flexContainerRenderer.ApplyMarginsBordersPaddings(layoutBox, false);
-            IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = CreateFlexItemCalculationInfos(flexContainerRenderer
-                , layoutBox);
             // 9.2. Line Length Determination
             // 2. Determine the available main and cross space for the flex items.
             // TODO DEVSIX-5001 min-content and max-content as width are not supported
@@ -90,7 +88,9 @@ namespace iText.Layout.Renderer {
             float? crossSize = flexContainerRenderer.RetrieveHeight();
             float? minCrossSize = flexContainerRenderer.RetrieveMinHeight();
             float? maxCrossSize = flexContainerRenderer.RetrieveMaxHeight();
-            DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(flexItemCalculationInfos, (float)mainSize);
+            IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = CreateFlexItemCalculationInfos(flexContainerRenderer
+                , (float)mainSize);
+            DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(flexItemCalculationInfos);
             // 9.3. Main Size Determination
             // 5. Collect flex items into flex lines:
             bool isSingleLine = !flexContainerRenderer.HasProperty(Property.FLEX_WRAP) || FlexWrapPropertyValue.NOWRAP
@@ -144,14 +144,11 @@ namespace iText.Layout.Renderer {
         }
 
         internal static void DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(IList<FlexUtil.FlexItemCalculationInfo
-            > flexItemCalculationInfos, float mainSize) {
+            > flexItemCalculationInfos) {
             foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
                 // 3. Determine the flex base size and hypothetical main size of each item:
-                // Note: We assume that flex-basis: auto was resolved (set to either width or height) on some upper level
-                System.Diagnostics.Debug.Assert(null != info.flexBasis);
                 // A. If the item has a definite used flex basis, that’s the flex base size.
-                info.flexBaseSize = info.flexBasis.IsPercentValue() ? (info.flexBasis.GetValue() * mainSize / 100) : info.
-                    flexBasis.GetValue();
+                info.flexBaseSize = info.flexBasis;
                 // TODO DEVSIX-5001 content as width are not supported
                 // TODO DEVSIX-5004 Implement method to check whether an element has an intrinsic aspect ratio
                 // B. If the flex item has ...
@@ -550,30 +547,62 @@ namespace iText.Layout.Renderer {
         }
 
         private static IList<FlexUtil.FlexItemCalculationInfo> CreateFlexItemCalculationInfos(FlexContainerRenderer
-             flexContainerRenderer, Rectangle flexContainerBBox) {
+             flexContainerRenderer, float flexContainerWidth) {
             IList<IRenderer> childRenderers = flexContainerRenderer.GetChildRenderers();
             IList<FlexUtil.FlexItemCalculationInfo> flexItems = new List<FlexUtil.FlexItemCalculationInfo>();
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is AbstractRenderer) {
                     AbstractRenderer abstractRenderer = (AbstractRenderer)renderer;
+                    // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
+                    float maxWidth = CalculateMaxWidth(abstractRenderer, flexContainerWidth);
+                    float flexBasis;
+                    if (renderer.GetProperty<UnitValue>(Property.FLEX_BASIS) == null) {
+                        flexBasis = maxWidth;
+                    }
+                    else {
+                        flexBasis = (float)abstractRenderer.RetrieveUnitValue(flexContainerWidth, Property.FLEX_BASIS);
+                        if (AbstractRenderer.IsBorderBoxSizing(abstractRenderer)) {
+                            flexBasis -= AbstractRenderer.CalculatePaddingBorderWidth(abstractRenderer);
+                        }
+                    }
+                    flexBasis = Math.Max(flexBasis, 0);
                     float flexGrow = (float)renderer.GetProperty<float?>(Property.FLEX_GROW, FLEX_GROW_INITIAL_VALUE);
                     float flexShrink = (float)renderer.GetProperty<float?>(Property.FLEX_SHRINK, FLEX_SHRINK_INITIAL_VALUE);
-                    // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
-                    float maxWidth = abstractRenderer.GetMinMaxWidth().GetMaxWidth();
-                    maxWidth = abstractRenderer.ApplyMarginsBordersPaddings(new Rectangle(maxWidth, 0), false).GetWidth();
-                    UnitValue flexBasis = renderer.GetProperty(Property.FLEX_BASIS, UnitValue.CreatePointValue(maxWidth));
                     FlexUtil.FlexItemCalculationInfo flexItemInfo = new FlexUtil.FlexItemCalculationInfo((AbstractRenderer)renderer
-                        , flexBasis, flexGrow, flexShrink, flexContainerBBox.GetWidth());
+                        , flexBasis, flexGrow, flexShrink, flexContainerWidth);
                     flexItems.Add(flexItemInfo);
                 }
             }
             return flexItems;
         }
 
+        private static float CalculateMaxWidth(AbstractRenderer flexItemRenderer, float flexContainerWidth) {
+            float? maxWidth;
+            if (flexItemRenderer is TableRenderer) {
+                // TODO DEVSIX-5214 we can't call TableRenderer#retrieveWidth method as far as it can throw NPE
+                maxWidth = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
+                maxWidth = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxWidth, 0), false).GetWidth
+                    ();
+            }
+            else {
+                // We need to retrieve width and max-width manually because this methods take into account box-sizing
+                maxWidth = flexItemRenderer.RetrieveWidth(flexContainerWidth);
+                if (maxWidth == null) {
+                    maxWidth = flexItemRenderer.RetrieveMaxWidth(flexContainerWidth);
+                }
+                if (maxWidth == null) {
+                    maxWidth = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
+                    maxWidth = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxWidth, 0), false).GetWidth
+                        ();
+                }
+            }
+            return (float)maxWidth;
+        }
+
         internal class FlexItemCalculationInfo {
             internal AbstractRenderer renderer;
 
-            internal UnitValue flexBasis;
+            internal float flexBasis;
 
             internal float flexShrink;
 
@@ -606,12 +635,9 @@ namespace iText.Layout.Renderer {
 
             internal float hypotheticalCrossSize;
 
-            public FlexItemCalculationInfo(AbstractRenderer renderer, UnitValue flexBasis, float flexGrow, float flexShrink
+            public FlexItemCalculationInfo(AbstractRenderer renderer, float flexBasis, float flexGrow, float flexShrink
                 , float areaWidth) {
                 this.renderer = renderer;
-                if (null == flexBasis) {
-                    throw new ArgumentException(LayoutExceptionMessageConstant.FLEX_BASIS_CANNOT_BE_NULL);
-                }
                 this.flexBasis = flexBasis;
                 if (flexShrink < 0) {
                     throw new ArgumentException(LayoutExceptionMessageConstant.FLEX_SHRINK_CANNOT_BE_NEGATIVE);
