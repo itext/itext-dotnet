@@ -379,7 +379,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.That(() =>  {
                 pdfDoc2.CheckAndAddPage(1, pdfDoc1.GetPage(1));
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1.GetPage(1), pdfDoc2, pdfDoc1)))
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
 ;
         }
 
@@ -391,7 +391,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.That(() =>  {
                 pdfDoc2.CheckAndAddPage(pdfDoc1.GetPage(1));
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1.GetPage(1), pdfDoc2, pdfDoc1)))
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT, pdfDoc1, 1, pdfDoc2)))
 ;
         }
 

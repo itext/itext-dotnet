@@ -329,8 +329,8 @@ namespace iText.Kernel.Exceptions {
         public const String OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA = "Operator EI not found after the end "
              + "of image data.";
 
-        public const String PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT = "Page {0} " 
-            + "cannot be added to document {1}, because it belongs to document {2}.";
+        public const String PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT = "The passed page belongs to document {0} (page {1} of the document) and therefore cannot be added "
+             + "to this document ({2}).";
 
         public const String PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE = "Page is not set for the pdf tag structure.";
 

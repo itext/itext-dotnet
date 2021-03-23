@@ -2199,7 +2199,7 @@ namespace iText.Kernel.Pdf {
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
                 throw new PdfException(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
-                    ).SetMessageParams(page, this, page.GetDocument());
+                    ).SetMessageParams(page.GetDocument(), page.GetDocument().GetPageNumber(page), this);
             }
             catalog.GetPageTree().AddPage(index, page);
         }
@@ -2216,7 +2216,7 @@ namespace iText.Kernel.Pdf {
             }
             if (page.GetDocument() != null && this != page.GetDocument()) {
                 throw new PdfException(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
-                    ).SetMessageParams(page, this, page.GetDocument());
+                    ).SetMessageParams(page.GetDocument(), page.GetDocument().GetPageNumber(page), this);
             }
             catalog.GetPageTree().AddPage(page);
         }
