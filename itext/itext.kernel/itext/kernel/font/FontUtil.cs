@@ -51,9 +51,18 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
-    internal class FontUtil {
+    public class FontUtil {
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
+
+        public static String AddRandomSubsetPrefixForFontName(String fontName) {
+            StringBuilder newFontName = new StringBuilder(fontName.Length + 7);
+            for (int k = 0; k < 6; ++k) {
+                newFontName.Append((char)(JavaUtil.Random() * 26 + 'A'));
+            }
+            newFontName.Append('+').Append(fontName);
+            return newFontName.ToString();
+        }
 
         internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode) {
             CMapToUnicode cMapToUnicode = null;

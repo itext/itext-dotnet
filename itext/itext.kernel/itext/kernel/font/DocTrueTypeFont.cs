@@ -50,7 +50,7 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
-    internal class DocTrueTypeFont : TrueTypeFont, IDocFontProgram {
+    public class DocTrueTypeFont : TrueTypeFont, IDocFontProgram {
         private PdfStream fontFile;
 
         private PdfName fontFileName;
