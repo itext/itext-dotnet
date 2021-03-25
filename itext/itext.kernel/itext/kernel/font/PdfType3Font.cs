@@ -388,9 +388,9 @@ namespace iText.Kernel.Font {
                 return;
             }
             IDictionary<int, int?> unicodeToCode = null;
-            if (toUnicode != null) {
+            if (GetToUnicode() != null) {
                 try {
-                    unicodeToCode = toUnicode.CreateReverseMapping();
+                    unicodeToCode = GetToUnicode().CreateReverseMapping();
                 }
                 catch (Exception) {
                 }

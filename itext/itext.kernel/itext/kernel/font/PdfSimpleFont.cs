@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Constants;
@@ -171,6 +172,17 @@ namespace iText.Kernel.Font {
             return fontEncoding;
         }
 
+        /// <summary>Get the mapping of character codes to unicode values based on /ToUnicode entry of font dictionary.
+        ///     </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Font.Cmap.CMapToUnicode"/>
+        /// built based on /ToUnicode, or null if /ToUnicode is not available
+        /// </returns>
+        public virtual CMapToUnicode GetToUnicode() {
+            return toUnicode;
+        }
+
         public override byte[] ConvertToBytes(String text) {
             byte[] bytes = fontEncoding.ConvertToBytes(text);
             foreach (byte b in bytes) {
@@ -256,35 +268,51 @@ namespace iText.Kernel.Font {
 
         /// <summary><inheritDoc/></summary>
         public override GlyphLine DecodeIntoGlyphLine(PdfString content) {
-            byte[] contentBytes = content.GetValueBytes();
-            IList<Glyph> glyphs = new List<Glyph>(contentBytes.Length);
+            IList<Glyph> glyphs = new List<Glyph>(content.GetValue().Length);
+            AppendDecodedCodesToGlyphsList(glyphs, content);
+            return new GlyphLine(glyphs);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override bool AppendDecodedCodesToGlyphsList(IList<Glyph> list, PdfString characterCodes) {
+            bool allCodesDecoded = true;
+            FontEncoding enc = GetFontEncoding();
+            byte[] contentBytes = characterCodes.GetValueBytes();
             foreach (byte b in contentBytes) {
                 int code = b & 0xff;
                 Glyph glyph = null;
-                if (toUnicode != null && toUnicode.Lookup(code) != null && (glyph = fontProgram.GetGlyphByCode(code)) != null
-                    ) {
-                    if (!JavaUtil.ArraysEquals(toUnicode.Lookup(code), glyph.GetChars())) {
+                CMapToUnicode toUnicodeCMap = GetToUnicode();
+                if (toUnicodeCMap != null && toUnicodeCMap.Lookup(code) != null && (glyph = GetFontProgram().GetGlyphByCode
+                    (code)) != null) {
+                    if (!JavaUtil.ArraysEquals(toUnicodeCMap.Lookup(code), glyph.GetChars())) {
                         // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
                         glyph = new Glyph(glyph);
-                        glyph.SetChars(toUnicode.Lookup(code));
+                        glyph.SetChars(toUnicodeCMap.Lookup(code));
                     }
                 }
                 else {
-                    int uni = fontEncoding.GetUnicode(code);
+                    int uni = enc.GetUnicode(code);
                     if (uni > -1) {
                         glyph = GetGlyph(uni);
                     }
                     else {
-                        if (fontEncoding.GetBaseEncoding() == null) {
-                            glyph = fontProgram.GetGlyphByCode(code);
+                        if (enc.GetBaseEncoding() == null) {
+                            glyph = GetFontProgram().GetGlyphByCode(code);
                         }
                     }
                 }
                 if (glyph != null) {
-                    glyphs.Add(glyph);
+                    list.Add(glyph);
+                }
+                else {
+                    ILog logger = LogManager.GetLogger(this.GetType());
+                    if (logger.IsWarnEnabled) {
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, code));
+                    }
+                    allCodesDecoded = false;
                 }
             }
-            return new GlyphLine(glyphs);
+            return allCodesDecoded;
         }
 
         public override float GetContentWidth(PdfString content) {
