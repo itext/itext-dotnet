@@ -20,8 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Test;
 
@@ -150,6 +152,15 @@ namespace iText.Layout.Renderer {
             flexRenderer.AddChild(divRenderer4);
             NUnit.Framework.Assert.AreEqual(71F, flexRenderer.GetMinMaxWidth().GetMinWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(125F, flexRenderer.GetMinMaxWidth().GetMaxWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecreaseLayoutBoxAfterChildPlacementResultsOccupiedAreaNull() {
+            FlexContainerRenderer splitRenderer = new FlexContainerRenderer(new Div());
+            splitRenderer.occupiedArea = new LayoutArea(0, new Rectangle(0, 0));
+            LayoutResult nothing = new LayoutResult(LayoutResult.NOTHING, null, splitRenderer, null);
+            NUnit.Framework.Assert.IsNotNull(new FlexContainerRenderer(new Div()).GetOccupiedAreaInCaseNothingWasWrappedWithFull
+                (nothing, splitRenderer));
         }
 
         [NUnit.Framework.Test]

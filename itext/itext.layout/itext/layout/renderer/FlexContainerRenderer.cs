@@ -198,7 +198,8 @@ namespace iText.Layout.Renderer {
                 if (splitRenderer != null) {
                     splitRenderer.SetChildRenderers(GetChildRenderers());
                 }
-                return new LayoutResult(LayoutResult.FULL, result.GetOccupiedArea(), splitRenderer, null, null);
+                return new LayoutResult(LayoutResult.FULL, GetOccupiedAreaInCaseNothingWasWrappedWithFull(result, splitRenderer
+                    ), splitRenderer, null, null);
             }
             else {
                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
@@ -213,6 +214,12 @@ namespace iText.Layout.Renderer {
                         ).SetAreaBreak(result.GetAreaBreak());
                 }
             }
+        }
+
+        // TODO DEVSIX-5238 Consider this fix (perhaps it should be improved or unified) while working on the ticket
+        internal virtual LayoutArea GetOccupiedAreaInCaseNothingWasWrappedWithFull(LayoutResult result, IRenderer 
+            splitRenderer) {
+            return null != result.GetOccupiedArea() ? result.GetOccupiedArea() : splitRenderer.GetOccupiedArea();
         }
 
         internal override bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {
