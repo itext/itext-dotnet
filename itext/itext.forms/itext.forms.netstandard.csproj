@@ -6,7 +6,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <OutputType>library</OutputType>
@@ -19,7 +19,7 @@
     <AssemblyName>itext.forms</AssemblyName>
     <RootNamespace />
   </PropertyGroup>
-<ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />

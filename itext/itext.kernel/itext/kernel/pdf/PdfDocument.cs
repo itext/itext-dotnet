@@ -1956,26 +1956,9 @@ namespace iText.Kernel.Pdf {
                     }
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
-                    PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
-                    if (id != null) {
-                        if (id.Size() == 2) {
-                            originalDocumentId = id.GetAsString(0);
-                            modifiedDocumentId = id.GetAsString(1);
-                        }
-                        if (originalDocumentId == null || modifiedDocumentId == null) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                            logger.Error(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED);
-                        }
-                    }
+                    ReadDocumentIds();
                     catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
-                    if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
-                        // The version of the PDF specification to which the document conforms (for example, 1.4)
-                        // if later than the version specified in the file's header
-                        PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
-                        if (catalogVersion.CompareTo(pdfVersion) > 0) {
-                            pdfVersion = catalogVersion;
-                        }
-                    }
+                    UpdatePdfVersionFromCatalog();
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     if (xmpMetadataStream != null) {
                         xmpMetadata = xmpMetadataStream.GetBytes();
@@ -2483,6 +2466,45 @@ namespace iText.Kernel.Pdf {
                 buf.Append("; modified using ");
                 buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
+            }
+        }
+
+        private void UpdatePdfVersionFromCatalog() {
+            if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
+                // The version of the PDF specification to which the document conforms (for example, 1.4)
+                // if later than the version specified in the file's header
+                try {
+                    PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
+                    if (catalogVersion.CompareTo(pdfVersion) > 0) {
+                        pdfVersion = catalogVersion;
+                    }
+                }
+                catch (ArgumentException) {
+                    ProcessReadingError(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED);
+                }
+            }
+        }
+
+        private void ReadDocumentIds() {
+            PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
+            if (id != null) {
+                if (id.Size() == 2) {
+                    originalDocumentId = id.GetAsString(0);
+                    modifiedDocumentId = id.GetAsString(1);
+                }
+                if (originalDocumentId == null || modifiedDocumentId == null) {
+                    ProcessReadingError(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED);
+                }
+            }
+        }
+
+        private void ProcessReadingError(String errorMessage) {
+            if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel())) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.Error(errorMessage);
+            }
+            else {
+                throw new PdfException(errorMessage);
             }
         }
 

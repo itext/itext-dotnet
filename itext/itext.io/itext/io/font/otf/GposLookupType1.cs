@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
@@ -45,8 +46,8 @@ namespace iText.IO.Font.Otf {
             GposValueRecord valueRecord = valueRecordMap.Get(glyphCode);
             if (valueRecord != null) {
                 Glyph newGlyph = new Glyph(line.Get(line.idx));
-                newGlyph.xAdvance += (short)valueRecord.XAdvance;
-                newGlyph.yAdvance += (short)valueRecord.YAdvance;
+                newGlyph.SetXAdvance((short)(newGlyph.GetXAdvance() + valueRecord.XAdvance));
+                newGlyph.SetYAdvance((short)(newGlyph.GetYAdvance() + valueRecord.YAdvance));
                 line.Set(line.idx, newGlyph);
                 positionApplied = true;
             }
@@ -56,13 +57,32 @@ namespace iText.IO.Font.Otf {
 
         protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
-            openReader.rf.ReadShort();
-            int coverage = openReader.rf.ReadUnsignedShort();
+            int subTableFormat = openReader.rf.ReadShort();
+            int coverageOffset = openReader.rf.ReadUnsignedShort();
             int valueFormat = openReader.rf.ReadUnsignedShort();
-            GposValueRecord valueRecord = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat);
-            IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
-            foreach (int? glyphId in coverageGlyphIds) {
-                valueRecordMap.Put((int)glyphId, valueRecord);
+            if (subTableFormat == 1) {
+                GposValueRecord valueRecord = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat);
+                IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverageOffset);
+                foreach (int? glyphId in coverageGlyphIds) {
+                    valueRecordMap.Put((int)glyphId, valueRecord);
+                }
+            }
+            else {
+                if (subTableFormat == 2) {
+                    int valueCount = openReader.rf.ReadUnsignedShort();
+                    IList<GposValueRecord> valueRecords = new List<GposValueRecord>();
+                    for (int i = 0; i < valueCount; i++) {
+                        GposValueRecord valueRecord = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat);
+                        valueRecords.Add(valueRecord);
+                    }
+                    IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverageOffset);
+                    for (int i = 0; i < coverageGlyphIds.Count; i++) {
+                        valueRecordMap.Put((int)coverageGlyphIds[i], valueRecords[i]);
+                    }
+                }
+                else {
+                    throw new ArgumentException("Bad subtable format identifier: " + subTableFormat);
+                }
             }
         }
     }

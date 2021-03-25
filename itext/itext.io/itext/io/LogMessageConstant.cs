@@ -116,6 +116,8 @@ namespace iText.IO {
 
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
+        public const String DOCUMENT_VERSION_IN_CATALOG_CORRUPTED = "The document version specified in catalog is corrupted";
+
         public const String DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED = "During the construction of the ICC profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the image.";
 
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
@@ -252,6 +254,8 @@ namespace iText.IO {
 
         public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
 
+        public const String PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED = "Page was flushed. {0} will not be performed.";
+
         public const String PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED = "The page passed to Canvas#enableAutoTagging(PdfPage) method shall be the one on which this canvas will be rendered. However the actual passed PdfPage instance sets not such page. This might lead to creation of malformed PDF document.";
 
         public const String PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED = "Path key is present. Vertices will be ignored";
@@ -319,13 +323,17 @@ namespace iText.IO {
 
         public const String TYPOGRAPHY_NOT_FOUND = "Cannot find pdfCalligraph module, which was implicitly " + "required by one of the layout properties";
 
-        public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, ignoring it";
-
         public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
+
+        public const String UNABLE_TO_INTERRUPT_THREAD = "Unable to interrupt a thread";
+
+        public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, ignoring it";
 
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 
         public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in unexpected way";
+
+        public const String UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to unregister event data handler shutdown hook because of security permissions";
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
 

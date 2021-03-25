@@ -63,8 +63,14 @@ namespace iText.StyledXmlParser.Css {
         }
 
         // properties
+        /// <summary>The Constant ALIGN_CONTENT.</summary>
+        public const String ALIGN_CONTENT = "align-content";
+
         /// <summary>The Constant ALIGN_ITEMS.</summary>
         public const String ALIGN_ITEMS = "align-items";
+
+        /// <summary>The Constant ALIGN_SELF.</summary>
+        public const String ALIGN_SELF = "align-self";
 
         /// <summary>The Constant BACKGROUND.</summary>
         public const String BACKGROUND = "background";
@@ -321,6 +327,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant INLINE-BLOCK</summary>
         public const String INLINE_BLOCK = "inline-block";
 
+        /// <summary>The Constant JUSTIFY_CONTENT.</summary>
+        public const String JUSTIFY_CONTENT = "justify-content";
+
         /// <summary>The Constant JUSTIFY_ITEMS.</summary>
         public const String JUSTIFY_ITEMS = "justify-items";
 
@@ -368,6 +377,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant OPACITY.</summary>
         public const String OPACITY = "opacity";
+
+        /// <summary>The Constant ORDER.</summary>
+        public const String ORDER = "order";
 
         /// <summary>The Constant OPRPHANS.</summary>
         public const String ORPHANS = "orphans";
@@ -812,10 +824,10 @@ namespace iText.StyledXmlParser.Css {
         public const String SCROLL = "scroll";
 
         /// <summary>The Constant value SELF_END.</summary>
-        public const String SELF_END = "self end";
+        public const String SELF_END = "self-end";
 
         /// <summary>The Constant SELF_START.</summary>
-        public const String SELF_START = "self start";
+        public const String SELF_START = "self-start";
 
         /// <summary>The Constant SKEW.</summary>
         public const String SKEW = "skew";
@@ -846,6 +858,15 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant SPACE.</summary>
         public const String SPACE = "space";
+
+        /// <summary>The Constant SPACE_AROUND.</summary>
+        public const String SPACE_AROUND = "space-around";
+
+        /// <summary>The Constant SPACE_BETWEEN.</summary>
+        public const String SPACE_BETWEEN = "space-between";
+
+        /// <summary>The Constant SPACE_EVENLY.</summary>
+        public const String SPACE_EVENLY = "space-evenly";
 
         /// <summary>The Constant SQUARE.</summary>
         public const String SQUARE = "square";

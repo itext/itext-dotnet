@@ -479,8 +479,8 @@ namespace iText.Signatures {
 
         /// <summary>Constructs appearance (top-level) for a signature.</summary>
         /// <returns>a top-level signature appearance</returns>
-        /// <seealso><a href="https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/ppkappearances.pdf">
-        /// *      Adobe Pdf Digital Signature Appearances</a> for further details</seealso>
+        /// <seealso><a href="https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/ppkappearances.pdf">Adobe Pdf Digital
+        /// * Signature Appearances</a></seealso>
         protected internal virtual PdfFormXObject GetAppearance() {
             PdfCanvas canvas;
             if (IsInvisible()) {

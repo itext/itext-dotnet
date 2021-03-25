@@ -131,6 +131,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.WIDTH, CommonCssConstants.AUTO);
             defaultValues.Put(CommonCssConstants.ORPHANS, "2");
             defaultValues.Put(CommonCssConstants.WIDOWS, "2");
+            defaultValues.Put(CommonCssConstants.JUSTIFY_CONTENT, CommonCssConstants.FLEX_START);
+            defaultValues.Put(CommonCssConstants.ALIGN_ITEMS, CommonCssConstants.STRETCH);
         }
 
         // Other css properties default values will be added as needed

@@ -844,6 +844,21 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HeightShouldBeIncreasedUpToSetHeightTest01() {
+            // TODO DEVSIX-1895 if height bigger than min-height is set,
+            // then the element's height should be increased up to height
+            String outFileName = destinationFolder + "heightShouldBeIncreasedUpToSetHeightTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_heightShouldBeIncreasedUpToSetHeightTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div().SetWidth(100).SetMinHeight(100).SetHeight(200).SetBackgroundColor(ColorConstants.BLUE);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1897")]
         public virtual void ParagraphVerticalAlignmentTest01() {
             String outFileName = destinationFolder + "paragraphVerticalAlignmentTest01.pdf";

@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using System.Text;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
@@ -98,6 +99,20 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
                 "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SkipKeepTogetherInCaseOfAreaBreak() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Document doc = new Document(pdfDoc);
+            Div keptTogetherDiv = new Div();
+            keptTogetherDiv.SetKeepTogether(true);
+            AreaBreak areaBreak = new AreaBreak();
+            keptTogetherDiv.Add(areaBreak);
+            doc.Add(keptTogetherDiv);
+            // If this line is not triggered, then an NPE occurred
+            NUnit.Framework.Assert.IsTrue(true);
+            doc.Close();
         }
 
         [NUnit.Framework.Test]
@@ -780,9 +795,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
-        public virtual void ContentOverlappingInDivWithKeepTogetherTest() {
-            String filename = "contentOverlappingInDivWithKeepTogether.pdf";
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherTreeWithParentNotFitOnDocumentTest() {
+            String filename = "keepTogetherTreeWithParentNotFitOnDocument.pdf";
             String outFile = destinationFolder + filename;
             String cmpFileName = sourceFolder + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
@@ -803,9 +818,9 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
-        public virtual void MissContentAndOverlappingInDivNoKeepTogetherTest() {
-            String filename = "missContentAndOverlappingInDivNoKeepTogether.pdf";
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherSubTreeWithParentNotFitOnDocumentTest() {
+            String filename = "keepTogetherSubTreeWithParentNotFitOnDocument.pdf";
             String outFile = destinationFolder + filename;
             String cmpFileName = sourceFolder + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
@@ -827,9 +842,33 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
-        public virtual void ContentOverlappingDivKeepTogetherInRectTest() {
-            String filename = "contentOverlappingDivKeepTogetherInRect.pdf";
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherSubTreeWithChildKeepTogetherFalseAndParentNotFitOnDocumentTest() {
+            String filename = "keepTogetherSubTreeWithChildKeepTogetherFalseAndParentNotFitOnDocument.pdf";
+            String outFile = destinationFolder + filename;
+            String cmpFileName = sourceFolder + "cmp_" + filename;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+                doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
+                Div main = new Div();
+                Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
+                CreateChildDivWithText(child1, BIG_TEXT);
+                Div div1_2 = CreateChildDivWithText(child1, null).SetKeepTogether(false);
+                CreateChildDivWithText(div1_2, "Section A");
+                CreateChildDivWithText(div1_2, null).Add(new Paragraph(MEDIUM_TEXT).SetFirstLineIndent(20));
+                // KEEP_TOGETHER is not set here
+                Div child2 = CreateChildDivWithText(main, null);
+                CreateChildDivWithText(child2, "Section B");
+                CreateChildDivWithText(child2, null);
+                CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
+                doc.Add(main);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void KeepTogetherTreeWithParentNotFitOnPageCanvasTest() {
+            String filename = "keepTogetherTreeWithParentNotFitOnPageCanvas.pdf";
             String outFile = destinationFolder + filename;
             String cmpFileName = sourceFolder + "cmp_" + filename;
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile))) {

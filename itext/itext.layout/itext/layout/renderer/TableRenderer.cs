@@ -545,6 +545,12 @@ namespace iText.Layout.Renderer {
                     }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea, null, childFloatRendererAreas
                         , wasHeightClipped || wasParentsHeightClipped));
+                    if (cellWidthProperty != null && cellWidthProperty.IsPercentValue()) {
+                        cell.SetProperty(Property.WIDTH, cellWidthProperty);
+                        if (null != cellResult.GetOverflowRenderer()) {
+                            cellResult.GetOverflowRenderer().SetProperty(Property.WIDTH, cellWidthProperty);
+                        }
+                    }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -881,8 +887,8 @@ namespace iText.Layout.Renderer {
                             overflowRows.SetCell(row - splitResult[0].rows.Count, entry.Key, null);
                         }
                     }
-                    if ((IsKeepTogether() && 0 == lastFlushedRowBottomBorder.Count) && !true.Equals(GetPropertyAsBoolean(Property
-                        .FORCED_PLACEMENT))) {
+                    if (IsKeepTogether(firstCauseOfNothing) && 0 == lastFlushedRowBottomBorder.Count && !true.Equals(GetPropertyAsBoolean
+                        (Property.FORCED_PLACEMENT))) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == firstCauseOfNothing ? this : firstCauseOfNothing
                             );
                     }

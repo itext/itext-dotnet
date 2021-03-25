@@ -233,8 +233,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     .FLEX_SHRINK)));
             }
             if (!resolvedProperties.Any((property) => property.GetProperty().Equals(CommonCssConstants.FLEX_BASIS))) {
-                resolvedProperties.Add(new CssDeclaration(CommonCssConstants.FLEX_BASIS, CssDefaults.GetDefaultValue(CommonCssConstants
-                    .FLEX_BASIS)));
+                // When flex-basis is omitted from the flex shorthand, its specified value is 0.
+                resolvedProperties.Add(new CssDeclaration(CommonCssConstants.FLEX_BASIS, "0"));
             }
         }
 

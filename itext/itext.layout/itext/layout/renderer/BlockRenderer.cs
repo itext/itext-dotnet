@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -155,7 +156,7 @@ namespace iText.Layout.Renderer {
                     FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     result = new LayoutResult(LayoutResult.NOTHING, null, null, childRenderer);
-                    bool isKeepTogether = IsKeepTogether();
+                    bool isKeepTogether = IsKeepTogether(childRenderer);
                     int layoutResult = anythingPlaced && !isKeepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
@@ -190,9 +191,11 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (marginsCollapsingEnabled) {
-                    childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
+                    childMarginsInfo = StartChildMarginsHandling(childRenderer, layoutBox, marginsCollapseHandler);
                 }
-                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
+                Rectangle changedLayoutBox = RecalculateLayoutBoxBeforeChildLayout(layoutBox, childRenderer, areas[0].Clone
+                    ());
+                while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, changedLayoutBox
                     ), childMarginsInfo, floatRendererAreas, wasHeightClipped || wasParentsHeightClipped))).GetStatus() !=
                      LayoutResult.FULL) {
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
@@ -201,8 +204,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
-                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                                ()));
+                            RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                             FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                         }
                     }
@@ -279,8 +281,7 @@ namespace iText.Layout.Renderer {
                 // The second condition check (after &&) is needed only if margins collapsing is enabled
                 if (result.GetOccupiedArea() != null && (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea
                     )) {
-                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                        ()));
+                    RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                 }
                 if (marginsCollapsingEnabled) {
@@ -410,8 +411,8 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;
@@ -453,7 +454,17 @@ namespace iText.Layout.Renderer {
                     clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
                 }
                 else {
-                    clippedArea = drawContext.GetDocument().GetPage(pageNumber).GetPageSize();
+                    PdfPage page = drawContext.GetDocument().GetPage(pageNumber);
+                    // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+                    //  a renderer from the different page that was already flushed
+                    if (page.IsFlushed()) {
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                            , "area clipping"));
+                        clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
+                    }
+                    else {
+                        clippedArea = page.GetPageSize();
+                    }
                 }
                 Rectangle area = GetBorderAreaBBox();
                 if (overflowXHidden) {
@@ -517,6 +528,20 @@ namespace iText.Layout.Renderer {
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
             return overflowRenderer;
+        }
+
+        internal virtual void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight) {
+            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
+        }
+
+        internal virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
+            , MarginsCollapseHandler marginsCollapseHandler) {
+            return marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
+        }
+
+        internal virtual Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
+            , Rectangle initialLayoutBox) {
+            return layoutBox;
         }
 
         internal virtual AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, int layoutStatus, LayoutResult
@@ -736,7 +761,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (result.GetStatus() == LayoutResult.NOTHING) {
-                    bool keepTogether = IsKeepTogether();
+                    bool keepTogether = IsKeepTogether(causeOfNothing);
                     int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                     AbstractRenderer[] splitAndOverflowRenderers = CreateSplitAndOverflowRenderers(childPos, layoutResult, result
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);

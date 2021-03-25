@@ -43,13 +43,20 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized enum containing potential property values for
+    /// <see cref="Property.ALIGN_ITEMS"/>
+    /// and
     /// <see cref="Property.ALIGN_SELF"/>.
     /// </summary>
     public enum AlignmentPropertyValue {
+        CENTER,
+        START,
+        END,
+        SELF_START,
+        SELF_END,
         FLEX_START,
         FLEX_END,
-        CENTER,
         BASELINE,
-        STRETCH
+        STRETCH,
+        NORMAL
     }
 }

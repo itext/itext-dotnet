@@ -163,53 +163,19 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && result.GetAreaBreak() == null) {
-                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(Property.KEEP_TOGETHER))
-                                        ) {
-                                        result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
-                                        ILog logger = LogManager.GetLogger(typeof(RootRenderer));
-                                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
-                                            ));
-                                        if (!rendererIsFloat) {
-                                            rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
-                                        }
+                                    bool keepTogetherChanged = TryDisableKeepTogether(result, rendererIsFloat, rootRendererStateHandler);
+                                    bool areKeepTogetherAndForcedPlacementBothNotChanged = !keepTogetherChanged;
+                                    if (areKeepTogetherAndForcedPlacementBothNotChanged) {
+                                        areKeepTogetherAndForcedPlacementBothNotChanged = !UpdateForcedPlacement(renderer, result.GetOverflowRenderer
+                                            ());
                                     }
-                                    else {
-                                        if (null != result.GetCauseOfNothing() && true.Equals(result.GetCauseOfNothing().GetProperty<bool?>(Property
-                                            .KEEP_TOGETHER))) {
-                                            // set KEEP_TOGETHER false on the deepest parent (maybe the element itself) to have KEEP_TOGETHER == true
-                                            IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
-                                            IRenderer parent;
-                                            while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
-                                                ).GetOwnProperty<bool?>(Property.KEEP_TOGETHER)) {
-                                                parent = ((AbstractRenderer)theDeepestKeptTogether).parent;
-                                                if (parent == null) {
-                                                    break;
-                                                }
-                                                theDeepestKeptTogether = parent;
-                                            }
-                                            theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
-                                            ILog logger = LogManager.GetLogger(typeof(RootRenderer));
-                                            logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
-                                                ));
-                                            if (!rendererIsFloat) {
-                                                rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
-                                            }
-                                        }
-                                        else {
-                                            if (!true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                                                result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                                ILog logger = LogManager.GetLogger(typeof(RootRenderer));
-                                                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
-                                            }
-                                            else {
-                                                // FORCED_PLACEMENT was already set to the renderer and
-                                                // LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA message was logged.
-                                                // This else-clause should never be hit, otherwise there is a bug in FORCED_PLACEMENT implementation.
-                                                System.Diagnostics.Debug.Assert(false);
-                                                // Still handling this case in order to avoid nasty infinite loops.
-                                                break;
-                                            }
-                                        }
+                                    if (areKeepTogetherAndForcedPlacementBothNotChanged) {
+                                        // FORCED_PLACEMENT was already set to the renderer and
+                                        // LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA message was logged.
+                                        // This else-clause should never be hit, otherwise there is a bug in FORCED_PLACEMENT implementation.
+                                        System.Diagnostics.Debug.Assert(false);
+                                        // Still handling this case in order to avoid nasty infinite loops.
+                                        break;
                                     }
                                 }
                                 else {
@@ -519,6 +485,50 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer renderer in waitingFloatRenderers) {
                 AddChild(renderer);
             }
+        }
+
+        private bool UpdateForcedPlacement(IRenderer currentRenderer, IRenderer overflowRenderer) {
+            if (true.Equals(currentRenderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                return false;
+            }
+            else {
+                overflowRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
+                ILog logger = LogManager.GetLogger(typeof(RootRenderer));
+                if (logger.IsWarnEnabled) {
+                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                }
+                return true;
+            }
+        }
+
+        private bool TryDisableKeepTogether(LayoutResult result, bool rendererIsFloat, RootRendererAreaStateHandler
+             rootRendererStateHandler) {
+            IRenderer toDisableKeepTogether = null;
+            // looking for the most outer keep together element
+            IRenderer current = result.GetCauseOfNothing();
+            while (current != null) {
+                if (true.Equals(current.GetProperty<bool?>(Property.KEEP_TOGETHER))) {
+                    toDisableKeepTogether = current;
+                }
+                current = current.GetParent();
+            }
+            if (toDisableKeepTogether == null) {
+                return false;
+            }
+            // Ideally the disabling of keep together property should be done on the renderers layer,
+            // but due to the problem with renderers tree (parent links from causeOfNothing
+            // may not lead to overflowRenderer) such approach does not work now. So we
+            // disabling keep together on the models layer.
+            toDisableKeepTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
+            ILog logger = LogManager.GetLogger(typeof(RootRenderer));
+            if (logger.IsWarnEnabled) {
+                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
+                    ));
+            }
+            if (!rendererIsFloat) {
+                rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
+            }
+            return true;
         }
     }
 }

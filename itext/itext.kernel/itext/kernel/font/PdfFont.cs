@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -533,11 +531,7 @@ namespace iText.Kernel.Font {
         /// </returns>
         protected internal static String UpdateSubsetPrefix(String fontName, bool isSubset, bool isEmbedded) {
             if (isSubset && isEmbedded) {
-                StringBuilder s = new StringBuilder(fontName.Length + 7);
-                for (int k = 0; k < 6; ++k) {
-                    s.Append((char)(JavaUtil.Random() * 26 + 'A'));
-                }
-                return s.Append('+').Append(fontName).ToString();
+                return FontUtil.AddRandomSubsetPrefixForFontName(fontName);
             }
             return fontName;
         }

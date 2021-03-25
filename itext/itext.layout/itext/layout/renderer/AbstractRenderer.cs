@@ -1887,11 +1887,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
                 int pageNumber = occupiedArea.GetPageNumber();
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
                         , logMessageArg));
@@ -1905,7 +1905,15 @@ namespace iText.Layout.Renderer {
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(pageNumber);
-                page.AddAnnotation(linkAnnotation);
+                // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+                //  a renderer from the different page that was already flushed
+                if (page.IsFlushed()) {
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        , "link annotation applying"));
+                }
+                else {
+                    page.AddAnnotation(linkAnnotation);
+                }
             }
         }
 
@@ -2099,7 +2107,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool IsKeepTogether() {
-            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
+            return IsKeepTogether(null);
+        }
+
+        internal virtual bool IsKeepTogether(IRenderer causeOfNothing) {
+            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER)) && !(causeOfNothing is AreaBreakRenderer);
         }
 
         // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
@@ -2552,14 +2564,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
 
-        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
@@ -2769,7 +2781,13 @@ namespace iText.Layout.Renderer {
             return removedElement;
         }
 
-        private void SetThisAsParent(ICollection<IRenderer> children) {
+        /// <summary>
+        /// Sets current
+        /// <see cref="AbstractRenderer"/>
+        /// as parent to renderers in specified collection.
+        /// </summary>
+        /// <param name="children">the collection of renderers to set the parent renderer on</param>
+        internal virtual void SetThisAsParent(ICollection<IRenderer> children) {
             foreach (IRenderer child in children) {
                 child.SetParent(this);
             }

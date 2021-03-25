@@ -63,6 +63,8 @@ namespace iText.Layout.Properties {
 
         public const int ALIGN_CONTENT = 130;
 
+        public const int ALIGN_ITEMS = 134;
+
         public const int ALIGN_SELF = 129;
 
         public const int APPEARANCE_STREAM_LAYOUT = 82;
@@ -203,6 +205,8 @@ namespace iText.Layout.Properties {
         public const int IGNORE_HEADER = 97;
 
         public const int ITALIC_SIMULATION = 31;
+
+        public const int JUSTIFY_CONTENT = 135;
 
         public const int KEEP_TOGETHER = 32;
 

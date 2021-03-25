@@ -142,6 +142,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets the /Contents entry value.</summary>
+        /// <remarks>
+        /// Gets the /Contents entry value.
+        /// See ISO 32000-1 12.8.1, Table 252 – Entries in a signature dictionary.
+        /// </remarks>
+        /// <returns>the signature content</returns>
         public virtual PdfString GetContents() {
             return GetPdfObject().GetAsString(PdfName.Contents);
         }
@@ -153,6 +158,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>Gets the /Cert entry value of this signature.</summary>
+        /// <remarks>
+        /// Gets the /Cert entry value of this signature.
+        /// See ISO 32000-1 12.8.1, Table 252 – Entries in a signature dictionary.
+        /// </remarks>
+        /// <returns>the signature cert</returns>
         public virtual PdfString GetCert() {
             return GetPdfObject().GetAsString(PdfName.Cert);
         }
