@@ -152,7 +152,8 @@ namespace iText.Forms.Fields {
         /// <summary>Index of color value in default appearance element</summary>
         internal const int DA_COLOR = 2;
 
-        protected internal static String[] typeChars = new String[] { "4", "l", "8", "u", "n", "H" };
+        private static readonly String[] CHECKBOX_TYPE_ZAPFDINGBATS_CODE = new String[] { "4", "l", "8", "u", "n", 
+            "H" };
 
         protected internal String text;
 
@@ -2525,7 +2526,7 @@ namespace iText.Forms.Fields {
                 checkType = TYPE_CROSS;
             }
             this.checkType = checkType;
-            text = typeChars[checkType - 1];
+            text = CHECKBOX_TYPE_ZAPFDINGBATS_CODE[checkType - 1];
             if (pdfAConformanceLevel != null) {
                 return this;
             }
