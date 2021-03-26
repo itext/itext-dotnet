@@ -159,18 +159,37 @@ namespace iText.Kernel.Font {
         public abstract String Decode(PdfString content);
 
         /// <summary>
-        /// Decodes a given
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// containing encoded string (e.g. from content stream) into a
+        /// Decodes sequence of character codes (e.g. from content stream) into a
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// </summary>
-        /// <param name="content">the encoded string</param>
+        /// <param name="characterCodes">
+        /// the string which is interpreted as a sequence of character codes. Note, that
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// acts as a storage for char code values specific to given font, therefore
+        /// individual character codes must not be interpreted as code units of the UTF-16 encoding
+        /// </param>
         /// <returns>
         /// the
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
         /// containing the glyphs encoded by the passed string
         /// </returns>
-        public abstract GlyphLine DecodeIntoGlyphLine(PdfString content);
+        public abstract GlyphLine DecodeIntoGlyphLine(PdfString characterCodes);
+
+        /// <summary>
+        /// Decodes sequence of character codes (e.g. from content stream) to sequence of glyphs
+        /// and appends them to the passed list.
+        /// </summary>
+        /// <param name="list">the list to the end of which decoded glyphs are to be added</param>
+        /// <param name="characterCodes">
+        /// the string which is interpreted as a sequence of character codes. Note, that
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// acts as a storage for char code values specific to given font, therefore
+        /// individual character codes must not be interpreted as code units of the UTF-16 encoding
+        /// </param>
+        /// <returns>true if all codes where successfully decoded, false otherwise</returns>
+        public virtual bool AppendDecodedCodesToGlyphsList(IList<Glyph> list, PdfString characterCodes) {
+            return false;
+        }
 
         public abstract float GetContentWidth(PdfString content);
 
