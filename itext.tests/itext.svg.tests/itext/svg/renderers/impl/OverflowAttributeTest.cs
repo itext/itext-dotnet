@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,13 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Svg;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
-    public class OverflowAttributeTest : ExtendedITextTest {
+    public class OverflowAttributeTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/OverflowAttributeTest/";
 
@@ -49,71 +49,61 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void OverflowVisibleInMarkerElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInMarkerElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInMarkerElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowHiddenInMarkerElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInMarkerElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInMarkerElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowAutoInMarkerElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowAutoInMarkerElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowAutoInMarkerElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowScrollInMarkerElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInMarkerElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInMarkerElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowInitialInMarkerElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInMarkerElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInMarkerElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowVisibleInSymbolElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInSymbol"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowVisibleInSymbol");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowHiddenInSymbolElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInSymbol"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowHiddenInSymbol");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowInitialInSymbolElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInSymbol"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInitialInSymbol");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowScrollInSymbolElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInSymbol"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowScrollInSymbol");
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowInSvgElementTest() {
             //TODO: update when DEVSIX-3482 fixed
-            SvgNodeRendererIntegrationTestUtil.ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInSvgElement"
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "overflowInSvgElement");
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,8 @@ namespace iText.Pdfa {
                             stringBuilder.Append(stringBuilder.ToString());
                         }
                         PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
+                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                            );
                         Paragraph p = new Paragraph(stringBuilder.ToString());
                         p.SetMinWidth(1e6f);
                         p.SetFont(font);

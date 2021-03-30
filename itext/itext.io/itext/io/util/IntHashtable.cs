@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -62,11 +62,11 @@ namespace iText.IO.Util {
  : ICloneable
 #endif
  {
+        /// <summary>The total number of entries in the hash table.</summary>
+        internal int count;
+
         /// <summary>The hash table data.</summary>
         private IntHashtable.Entry[] table;
-
-        /// <summary>The total number of entries in the hash table.</summary>
-        private int count;
 
         /// <summary>The table is rehashed when its size exceeds this threshold.</summary>
         /// <remarks>
@@ -434,6 +434,7 @@ namespace iText.IO.Util {
             for (int i = table.Length; i-- > 0; ) {
                 t.table[i] = table[i] != null ? (IntHashtable.Entry)table[i].Clone() : null;
             }
+            t.count = count;
             return t;
         }
         // this shouldn't happen, since we are Cloneable

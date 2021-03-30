@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+    Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -38,37 +38,39 @@ serving PDFs on the fly in a web application, shipping iText with a closed
 source product.
 
 For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com */
+address: sales@itextpdf.com
+*/
 using System;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Internal class not for public use.</summary>
     /// <remarks>Internal class not for public use. Its API may change.</remarks>
     internal class CssSelectorParserMatch {
-        private Regex pattern;
+        private bool success;
 
-        private Match matcher;
+        private Matcher matcher;
 
         private String source;
 
-        private int offset;
-
+        /// <summary>Construct a new CssSelectorParserMatch</summary>
+        /// <param name="source">the text being matched</param>
+        /// <param name="pattern">the pattern against which the text is being matched</param>
         public CssSelectorParserMatch(String source, Regex pattern) {
             this.source = source;
-            this.matcher = iText.IO.Util.StringUtil.Match(pattern, source);
-            this.pattern = pattern;
-            this.offset = 0;
+            this.matcher = iText.IO.Util.Matcher.Match(pattern, source);
+            Next();
         }
 
         /// <summary>Get the index at which the last match started</summary>
         public virtual int GetIndex() {
-            return offset + matcher.Index;
+            return matcher.Start();
         }
 
         /// <summary>Get the text of the last match</summary>
         public virtual String GetValue() {
-            return iText.IO.Util.StringUtil.Group(matcher, 0);
+            return matcher.Group(0);
         }
 
         /// <summary>Get the source text being matched</summary>
@@ -78,19 +80,18 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>Return whether or not the match was successful</summary>
         public virtual bool Success() {
-            return matcher.Success;
+            return success;
         }
 
         /// <summary>Attempt to match the pattern against the next piece of the source text</summary>
         public virtual void Next() {
-            this.matcher = matcher.NextMatch();
+            success = matcher.Find();
         }
 
         /// <summary>Get the index at which the next match of the pattern takes place</summary>
         /// <param name="startIndex">the index at which to start matching the pattern</param>
         public virtual void Next(int startIndex) {
-            offset = startIndex;
-            this.matcher = iText.IO.Util.StringUtil.Match(pattern, source.Substring(startIndex));
+            success = matcher.Find(startIndex);
         }
     }
 }

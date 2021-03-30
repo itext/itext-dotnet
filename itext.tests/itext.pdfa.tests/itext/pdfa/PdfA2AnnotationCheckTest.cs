@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -344,7 +344,8 @@ namespace iText.Pdfa {
         private PdfStream CreateAppearance(PdfADocument doc, Rectangle formRect) {
             PdfFormXObject form = new PdfFormXObject(formRect);
             PdfCanvas canvas = new PdfCanvas(form, doc);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             canvas.SetFontAndSize(font, 12);
             canvas.BeginText().SetTextMatrix(200, 50).ShowText("Hello World").EndText();
             return form.GetPdfObject();

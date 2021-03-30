@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -178,7 +178,7 @@ namespace iText.Layout.Renderer {
             GetMatrix(t, imageItselfWidth, imageItselfHeight);
             // indicates whether the placement is forced
             bool isPlacingForced = false;
-            if (width > layoutBox.GetWidth() || height > layoutBox.GetHeight()) {
+            if (width > layoutBox.GetWidth() + EPS || height > layoutBox.GetHeight() + EPS) {
                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || (width > layoutBox.GetWidth() && processOverflowX
                     ) || (height > layoutBox.GetHeight() && processOverflowY)) {
                     isPlacingForced = true;

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -74,7 +74,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_ATTACHMENT, shorthandExpression));
             }
             if (String.IsNullOrEmpty(shorthandExpression.Trim())) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                     , CommonCssConstants.BACKGROUND));
                 return new List<CssDeclaration>();
             }
@@ -118,7 +118,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             foreach (KeyValuePair<CssBackgroundUtils.BackgroundPropertyType, String> property in resolvedProps) {
                 if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CssBackgroundUtils.GetBackgroundPropertyNameFromType
                     (property.Key), property.Value))) {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , property.Value));
                     return false;
                 }
@@ -176,12 +176,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         private static bool ProcessProperties(IList<String> props, IDictionary<CssBackgroundUtils.BackgroundPropertyType
             , String> resolvedProps) {
             if (props.IsEmpty()) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                     , CommonCssConstants.BACKGROUND));
                 return false;
             }
             if (resolvedProps.Get(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_COLOR) != null) {
-                LOGGER.Error(iText.StyledXmlParser.LogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
+                LOGGER.Warn(iText.StyledXmlParser.LogMessageConstant.ONLY_THE_LAST_BACKGROUND_CAN_INCLUDE_BACKGROUND_COLOR
                     );
                 return false;
             }
@@ -252,7 +252,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 (value1), false);
             if (typeBeforeSlash != CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION && typeBeforeSlash !=
                  CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_POSITION_OR_SIZE) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
                     .BACKGROUND_POSITION, value1));
                 return false;
             }
@@ -261,7 +261,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 (value2), true);
             if (typeAfterSlash != CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_SIZE && typeAfterSlash != CssBackgroundUtils.BackgroundPropertyType
                 .BACKGROUND_POSITION_OR_SIZE) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.UNKNOWN_PROPERTY, CommonCssConstants
                     .BACKGROUND_SIZE, value2));
                 return false;
             }
@@ -315,7 +315,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             <CssBackgroundUtils.BackgroundPropertyType, String> resolvedProps, ICollection<CssBackgroundUtils.BackgroundPropertyType
             > usedTypes) {
             if (type == CssBackgroundUtils.BackgroundPropertyType.UNDEFINED) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
                     , value));
                 return false;
             }

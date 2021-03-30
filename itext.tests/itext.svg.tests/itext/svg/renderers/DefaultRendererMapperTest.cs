@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@ namespace iText.Svg.Renderers {
             foreach (Type rendererClazz in mapper.GetMapping().Values) {
                 // the test is that this method does not throw an exception on any class here
                 // meaning that every (non-abstract) implementation must have a public no-args constructor
-                System.Activator.CreateInstance(rendererClazz);
+                NUnit.Framework.Assert.DoesNotThrow(() => System.Activator.CreateInstance(rendererClazz));
             }
         }
     }

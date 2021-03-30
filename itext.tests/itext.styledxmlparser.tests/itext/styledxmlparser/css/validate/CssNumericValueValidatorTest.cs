@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,10 +20,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Validate {
+    [Obsolete]
     public class CssNumericValueValidatorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullValueTest() {

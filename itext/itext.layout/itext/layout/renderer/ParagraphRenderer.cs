@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -95,7 +95,10 @@ namespace iText.Layout.Renderer {
                 return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
                     );
             }
-            return DirectLayout(layoutContext);
+            LayoutResult layoutResult = DirectLayout(layoutContext);
+            UpdateParentLines(this);
+            UpdateParentLines((iText.Layout.Renderer.ParagraphRenderer)layoutResult.GetSplitRenderer());
+            return layoutResult;
         }
 
         protected internal virtual LayoutResult DirectLayout(LayoutContext layoutContext) {
@@ -225,14 +228,9 @@ namespace iText.Layout.Renderer {
                 }
                 widthHandler.UpdateMinChildWidth(minChildWidth);
                 widthHandler.UpdateMaxChildWidth(maxChildWidth);
-                LineRenderer processedRenderer = null;
-                if (result.GetStatus() == LayoutResult.FULL) {
+                LineRenderer processedRenderer = (LineRenderer)result.GetSplitRenderer();
+                if (processedRenderer == null && result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;
-                }
-                else {
-                    if (result.GetStatus() == LayoutResult.PARTIAL) {
-                        processedRenderer = (LineRenderer)result.GetSplitRenderer();
-                    }
                 }
                 if (onlyOverflowedFloatsLeft) {
                     // This is done to trick ParagraphRenderer to break rendering and to overflow to the next page.
@@ -281,7 +279,7 @@ namespace iText.Layout.Renderer {
                         firstLineInBox = true;
                     }
                     else {
-                        bool keepTogether = IsKeepTogether();
+                        bool keepTogether = IsKeepTogether(result.GetCauseOfNothing());
                         if (keepTogether) {
                             floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing
@@ -357,6 +355,10 @@ namespace iText.Layout.Renderer {
                                             IRenderer childNotRendered = result.GetCauseOfNothing();
                                             int firstNotRendered = currentRenderer.childRenderers.IndexOf(childNotRendered);
                                             currentRenderer.childRenderers.RetainAll(currentRenderer.childRenderers.SubList(0, firstNotRendered));
+                                            // as we ignore split result here and use current line - we should update parents
+                                            foreach (IRenderer child in currentRenderer.GetChildRenderers()) {
+                                                child.SetParent(currentRenderer);
+                                            }
                                             split[1].childRenderers.RemoveAll(split[1].childRenderers.SubList(0, firstNotRendered));
                                             return new MinMaxWidthLayoutResult(LayoutResult.PARTIAL, editedArea, this, split[1], null).SetMinMaxWidth(
                                                 minMaxWidth);
@@ -671,6 +673,21 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                     }
+                }
+            }
+        }
+
+        private static void UpdateParentLines(iText.Layout.Renderer.ParagraphRenderer re) {
+            if (re == null) {
+                return;
+            }
+            foreach (LineRenderer lineRenderer in re.lines) {
+                lineRenderer.SetParent(re);
+            }
+            foreach (IRenderer childRenderer in re.GetChildRenderers()) {
+                IRenderer line = childRenderer.GetParent();
+                if (!(line is LineRenderer && re.lines.Contains((LineRenderer)line))) {
+                    childRenderer.SetParent(null);
                 }
             }
         }

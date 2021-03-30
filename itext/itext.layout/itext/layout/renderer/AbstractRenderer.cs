@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -493,7 +493,6 @@ namespace iText.Layout.Renderer {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             Object uncastedBackgroundImage = this.GetProperty<Object>(Property.BACKGROUND_IMAGE);
             IList<BackgroundImage> backgroundImagesList;
-            // TODO DEVSIX-3814 support only List<BackgroundImage>.
             if (uncastedBackgroundImage is BackgroundImage) {
                 backgroundImagesList = JavaCollectionsUtil.SingletonList((BackgroundImage)uncastedBackgroundImage);
             }
@@ -1125,6 +1124,24 @@ namespace iText.Layout.Renderer {
             ApplyMargins(rect, false);
             ApplyBorderBox(rect, false);
             ApplyPaddings(rect, false);
+            return rect;
+        }
+
+        /// <summary>Applies margins, borders and paddings of the renderer on the given rectangle.</summary>
+        /// <param name="rect">a rectangle margins, borders and paddings will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether margins, borders and paddings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        internal virtual Rectangle ApplyMarginsBordersPaddings(Rectangle rect, bool reverse) {
+            ApplyMargins(rect, reverse);
+            ApplyBorderBox(rect, reverse);
+            ApplyPaddings(rect, reverse);
             return rect;
         }
 
@@ -1870,11 +1887,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
                 int pageNumber = occupiedArea.GetPageNumber();
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
                         , logMessageArg));
@@ -1888,7 +1905,15 @@ namespace iText.Layout.Renderer {
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(pageNumber);
-                page.AddAnnotation(linkAnnotation);
+                // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+                //  a renderer from the different page that was already flushed
+                if (page.IsFlushed()) {
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        , "link annotation applying"));
+                }
+                else {
+                    page.AddAnnotation(linkAnnotation);
+                }
             }
         }
 
@@ -2012,6 +2037,11 @@ namespace iText.Layout.Renderer {
         }
 
         // If parent has no resolved height, relative height declarations can be ignored
+        /// <summary>Calculates min and max width values for current renderer.</summary>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Minmaxwidth.MinMaxWidth"/>
+        /// </returns>
         public virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
@@ -2077,7 +2107,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool IsKeepTogether() {
-            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
+            return IsKeepTogether(null);
+        }
+
+        internal virtual bool IsKeepTogether(IRenderer causeOfNothing) {
+            return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER)) && !(causeOfNothing is AreaBreakRenderer);
         }
 
         // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
@@ -2396,7 +2430,6 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String || font is String[]) {
                     if (font is String) {
-                        // TODO DEVSIX-3814 remove this if-clause before 7.2
                         ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.FONT_PROPERTY_OF_STRING_TYPE_IS_DEPRECATED_USE_STRINGS_ARRAY_INSTEAD
                             );
@@ -2531,14 +2564,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
 
-        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
@@ -2581,6 +2614,197 @@ namespace iText.Layout.Renderer {
         protected internal virtual void EndTransformationIfApplied(PdfCanvas canvas) {
             if (this.GetProperty<Transform>(Property.TRANSFORM) != null) {
                 canvas.RestoreState();
+            }
+        }
+
+        /// <summary>
+        /// Add the specified
+        /// <see cref="IRenderer">renderer</see>
+        /// to the end of children list and update its
+        /// parent link to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="child">
+        /// the
+        /// <see cref="IRenderer">child renderer</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddChildRenderer(IRenderer child) {
+            child.SetParent(this);
+            this.childRenderers.Add(child);
+        }
+
+        /// <summary>
+        /// Add the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// to the end of children list and
+        /// update their parent links to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="children">
+        /// the collection of
+        /// <see cref="IRenderer">child renderers</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddAllChildRenderers(IList<IRenderer> children) {
+            if (children == null) {
+                return;
+            }
+            SetThisAsParent(children);
+            this.childRenderers.AddAll(children);
+        }
+
+        /// <summary>
+        /// Inserts the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// at the specified space of
+        /// children list and update their parent links to
+        /// <c>this</c>.
+        /// </summary>
+        /// <param name="index">index at which to insert the first element from the specified collection</param>
+        /// <param name="children">
+        /// the collection of
+        /// <see cref="IRenderer">child renderers</see>
+        /// to be add
+        /// </param>
+        internal virtual void AddAllChildRenderers(int index, IList<IRenderer> children) {
+            SetThisAsParent(children);
+            this.childRenderers.AddAll(index, children);
+        }
+
+        /// <summary>
+        /// Set the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// as the children for
+        /// <c>this</c>
+        /// element.
+        /// </summary>
+        /// <remarks>
+        /// Set the specified collection of
+        /// <see cref="IRenderer">renderers</see>
+        /// as the children for
+        /// <c>this</c>
+        /// element. That meant that the old collection would be cleaned, all parent links in old
+        /// children to
+        /// <c>this</c>
+        /// would be erased (i.e. set to
+        /// <see langword="null"/>
+        /// ) and then the specified
+        /// list of children would be added similar to
+        /// <see cref="AddAllChildRenderers(System.Collections.Generic.IList{E})"/>.
+        /// </remarks>
+        /// <param name="children">
+        /// the collection of children
+        /// <see cref="IRenderer">renderers</see>
+        /// to be set
+        /// </param>
+        internal virtual void SetChildRenderers(IList<IRenderer> children) {
+            RemoveThisFromParents(this.childRenderers);
+            this.childRenderers.Clear();
+            AddAllChildRenderers(children);
+        }
+
+        /// <summary>
+        /// Remove the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place.
+        /// </summary>
+        /// <remarks>
+        /// Remove the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place. If the removed renderer has
+        /// the parent link set to
+        /// <c>this</c>
+        /// and it would not present in the children list after
+        /// removal, then the parent link of the removed renderer would be erased (i.e. set to
+        /// <see langword="null"/>.
+        /// </remarks>
+        /// <param name="index">the index of the renderer to be removed</param>
+        /// <returns>the removed renderer</returns>
+        internal virtual IRenderer RemoveChildRenderer(int index) {
+            IRenderer removed = this.childRenderers.JRemoveAt(index);
+            RemoveThisFromParent(removed);
+            return removed;
+        }
+
+        /// <summary>
+        /// Remove the children
+        /// <see cref="IRenderer">renderers</see>
+        /// which are contains in the specified collection.
+        /// </summary>
+        /// <remarks>
+        /// Remove the children
+        /// <see cref="IRenderer">renderers</see>
+        /// which are contains in the specified collection.
+        /// If some of the removed renderers has the parent link set to
+        /// <c>this</c>
+        /// , then
+        /// the parent link of the removed renderer would be erased (i.e. set to
+        /// <see langword="null"/>.
+        /// </remarks>
+        /// <param name="children">the collections of renderers to be removed from children list</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the children list has been changed
+        /// </returns>
+        internal virtual bool RemoveAllChildRenderers(ICollection<IRenderer> children) {
+            RemoveThisFromParents(children);
+            return this.childRenderers.RemoveAll(children);
+        }
+
+        /// <summary>
+        /// Update the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place with the specified one.
+        /// </summary>
+        /// <remarks>
+        /// Update the child
+        /// <see cref="IRenderer">renderer</see>
+        /// at the specified place with the specified one.
+        /// If the removed renderer has the parent link set to
+        /// <c>this</c>
+        /// , then it would be erased
+        /// (i.e. set to
+        /// <see langword="null"/>
+        /// ).
+        /// </remarks>
+        /// <param name="index">the index of the renderer to be updated</param>
+        /// <param name="child">the renderer to be set</param>
+        /// <returns>the removed renderer</returns>
+        internal virtual IRenderer SetChildRenderer(int index, IRenderer child) {
+            if (child != null) {
+                child.SetParent(this);
+            }
+            IRenderer removedElement = this.childRenderers[index] = child;
+            RemoveThisFromParent(removedElement);
+            return removedElement;
+        }
+
+        /// <summary>
+        /// Sets current
+        /// <see cref="AbstractRenderer"/>
+        /// as parent to renderers in specified collection.
+        /// </summary>
+        /// <param name="children">the collection of renderers to set the parent renderer on</param>
+        internal virtual void SetThisAsParent(ICollection<IRenderer> children) {
+            foreach (IRenderer child in children) {
+                child.SetParent(this);
+            }
+        }
+
+        private void RemoveThisFromParent(IRenderer toRemove) {
+            // we need to be sure that the removed element has no other entries in child renderers list
+            if (toRemove != null && this == toRemove.GetParent() && !this.childRenderers.Contains(toRemove)) {
+                toRemove.SetParent(null);
+            }
+        }
+
+        private void RemoveThisFromParents(ICollection<IRenderer> children) {
+            foreach (IRenderer child in children) {
+                if (child != null && this == child.GetParent()) {
+                    child.SetParent(null);
+                }
             }
         }
 

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -165,6 +165,20 @@ namespace iText.IO.Font {
 
         public virtual String GetDifference(int index) {
             return differences != null ? differences[index] : null;
+        }
+
+        /// <summary>Sets a new value in the differences array.</summary>
+        /// <remarks>
+        /// Sets a new value in the differences array.
+        /// See
+        /// <see cref="differences"/>.
+        /// </remarks>
+        /// <param name="index">position to replace</param>
+        /// <param name="difference">new difference value</param>
+        public virtual void SetDifference(int index, String difference) {
+            if (index >= 0 && differences != null && index < differences.Length) {
+                differences[index] = difference;
+            }
         }
 
         /// <summary>

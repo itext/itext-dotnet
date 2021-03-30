@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -112,7 +113,8 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "83pv-RKSJ-H", true);
+            PdfFont type0Font = PdfFontFactory.CreateFont("KozMinPro-Regular", "83pv-RKSJ-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "Type0Font expected");
             NUnit.Framework.Assert.IsTrue(type0Font.GetFontProgram() is CidFont, "CidFont expected");
             PdfPage page = pdfDoc.AddNewPage();
@@ -270,6 +272,19 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NotReplaceToUnicodeMappingTest() {
+            //TODO DEVSIX-4995 This test should be updated when DEVSIX-4995 is resolved
+            String filename = sourceFolder + "toUnicodeAndDifferenceFor32.pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(filename))) {
+                PdfDictionary pdfType3FontDict = (PdfDictionary)pdf.GetPdfObject(112);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
+                //should be another glyph defined in ToUnicode mapping
+                Glyph glyph = pdfType3Font.GetGlyph(32);
+                NUnit.Framework.Assert.AreEqual(0, glyph.GetWidth());
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateTaggedDocumentWithType3Font() {
             String filename = destinationFolder + "createTaggedDocumentWithType3Font.pdf";
             String cmpFilename = sourceFolder + "cmp_createTaggedDocumentWithType3Font.pdf";
@@ -424,7 +439,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.afm"
-                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, true);
+                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected");
             new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 
                 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill
@@ -434,7 +450,7 @@ namespace iText.Kernel.Pdf {
             byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
                 ));
             pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, pfb), FontEncoding.FONT_SPECIFIC
-                , true);
+                , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfType1Font is PdfType1Font, "PdfType1Font expected");
             new PdfCanvas(pdfDoc.AddNewPage()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 
                 72).ShowText("\u0000\u0001\u007cHello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill
@@ -454,7 +470,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfFont pdfType1Font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfm"
-                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, true);
+                , fontsFolder + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("Hello world").
@@ -477,7 +494,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "abserif4_5.ttf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, true);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -485,7 +502,7 @@ namespace iText.Kernel.Pdf {
                 ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -506,7 +523,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "abserif4_5.ttf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, false);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED
+                );
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -514,7 +532,7 @@ namespace iText.Kernel.Pdf {
                 ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, false);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -535,7 +553,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "Puritan2.otf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, true);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -546,7 +564,7 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, true);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -630,25 +648,25 @@ namespace iText.Kernel.Pdf {
             String outputFileName = destinationFolder + "type3Font_update.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_update.pdf";
             String title = "Type3 font iText 7 Document";
-            PdfReader reader = new PdfReader(inputFileName);
-            PdfWriter writer = new PdfWriter(outputFileName);
-            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
-            pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
-            Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
-            newGlyph.SetLineWidth(100);
-            newGlyph.MoveTo(540, 5);
-            newGlyph.LineTo(5, 840);
-            newGlyph.Stroke();
-            PdfPage page = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                        // A A A A A A E E E E ~ é ö
-                        .ShowText("A A A A A A E E E E ~ \u00E9 \u00F6").EndText().RestoreState();
-            page.Flush();
-            pdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
+            int numberOfGlyphs = 0;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outputFileName).SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION))) {
+                pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
+                Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                newGlyph.SetLineWidth(100);
+                newGlyph.MoveTo(540, 5);
+                newGlyph.LineTo(5, 840);
+                newGlyph.Stroke();
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                // A A A A A A E E E E ~ é ö
+                                .ShowText("A A A A A A E E E E ~ \u00E9 \u00F6").EndText().RestoreState();
+                page.Flush();
+                numberOfGlyphs = pdfType3Font.GetNumberOfGlyphs();
+            }
+            NUnit.Framework.Assert.AreEqual(6, numberOfGlyphs);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
         }
@@ -659,30 +677,57 @@ namespace iText.Kernel.Pdf {
             String outputFileName = destinationFolder + "type3Font_new.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
             String title = "Type3 font iText 7 Document";
-            PdfReader reader = new PdfReader(inputFileName);
-            PdfWriter pdfWriter = new PdfWriter(outputFileName);
-            pdfWriter.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            PdfDocument inputPdfDoc = new PdfDocument(reader);
-            PdfDocument outputPdfDoc = new PdfDocument(pdfWriter);
-            outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(5);
-            PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
-                (outputPdfDoc));
-            Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
-            newGlyph.SetLineWidth(100);
-            newGlyph.MoveTo(540, 5);
-            newGlyph.LineTo(5, 840);
-            newGlyph.Stroke();
-            PdfPage page = outputPdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
-                        // AAAAAA EEEE ~ é ö
-                        .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
-            page.Flush();
-            outputPdfDoc.Close();
-            NUnit.Framework.Assert.AreEqual(6, pdfType3Font.GetNumberOfGlyphs());
+            int numberOfGlyphs = 0;
+            using (PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName))) {
+                using (PdfDocument outputPdfDoc = new PdfDocument(new PdfWriter(outputFileName).SetCompressionLevel(CompressionConstants
+                    .NO_COMPRESSION))) {
+                    outputPdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+                    PdfDictionary pdfType3FontDict = (PdfDictionary)inputPdfDoc.GetPdfObject(5);
+                    PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfType3FontDict.CopyTo
+                        (outputPdfDoc));
+                    Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                    newGlyph.SetLineWidth(100);
+                    newGlyph.MoveTo(540, 5);
+                    newGlyph.LineTo(5, 840);
+                    newGlyph.Stroke();
+                    PdfPage page = outputPdfDoc.AddNewPage();
+                    PdfCanvas canvas = new PdfCanvas(page);
+                    canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                        // AAAAAA EEEE ~ é ö
+                                        .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+                    page.Flush();
+                    numberOfGlyphs = pdfType3Font.GetNumberOfGlyphs();
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(6, numberOfGlyphs);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpOutputFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAddGlyphToType3FontWithCustomNames() {
+            String inputFile = sourceFolder + "type3FontWithCustomNames.pdf";
+            int initialGlyphsNumber = 0;
+            int finalGlyphsNumber = 0;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new ByteArrayOutputStream
+                ()))) {
+                PdfDictionary pdfType3FontDict = (PdfDictionary)pdfDoc.GetPdfObject(6);
+                PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont(pdfType3FontDict);
+                initialGlyphsNumber = pdfType3Font.GetNumberOfGlyphs();
+                Type3Glyph newGlyph = pdfType3Font.AddGlyph('\u00F6', 600, 0, 0, 600, 700);
+                newGlyph.SetLineWidth(100);
+                newGlyph.MoveTo(540, 5);
+                newGlyph.LineTo(5, 840);
+                newGlyph.Stroke();
+                PdfPage page = pdfDoc.GetPage(1);
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SaveState().BeginText().SetFontAndSize(pdfType3Font, 12).MoveText(50, 800)
+                                // AAAAAA EEEE ~ é ö
+                                .ShowText("AAAAAA EEEE ~ \u00E9 \u00F6").EndText();
+                page.Flush();
+                finalGlyphsNumber = pdfType3Font.GetNumberOfGlyphs();
+            }
+            NUnit.Framework.Assert.AreEqual(initialGlyphsNumber + 1, finalGlyphsNumber);
         }
 
         [NUnit.Framework.Test]
@@ -1067,7 +1112,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "uming.ttc";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, true, false);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -1077,7 +1123,8 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, true, false);
+            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);
@@ -1100,7 +1147,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "uming.ttc";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, false, false);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -1110,7 +1158,8 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             byte[] ttc = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, false, false);
+            pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(ttc, 1, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
             canvas = new PdfCanvas(page);
@@ -1130,7 +1179,8 @@ namespace iText.Kernel.Pdf {
             String japanese = "\u713C";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(japanese).EndText().RestoreState
                 ();
@@ -1146,7 +1196,8 @@ namespace iText.Kernel.Pdf {
             String helloWorld = "Hello world";
             PdfDocument doc = new PdfDocument(new PdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "Amaranth-Regular.woff", "Identity-H", true);
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "Amaranth-Regular.woff", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(helloWorld).EndText().RestoreState
                 ();
@@ -1289,15 +1340,16 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + "testFontStyleProcessing.pdf";
             String cmpFilename = sourceFolder + "cmp_testFontStyleProcessing.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
-            PdfFont romanDefault = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false);
-            PdfFont romanNormal = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
-                .NORMAL);
-            PdfFont romanBold = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
-                .BOLD);
-            PdfFont romanItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, FontStyles
-                .ITALIC);
-            PdfFont romanBoldItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, false, 
-                FontStyles.BOLDITALIC);
+            PdfFont romanDefault = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED);
+            PdfFont romanNormal = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, FontStyles.NORMAL);
+            PdfFont romanBold = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, FontStyles.BOLD);
+            PdfFont romanItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, FontStyles.ITALIC);
+            PdfFont romanBoldItalic = PdfFontFactory.CreateRegisteredFont("Times-Roman", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, FontStyles.BOLDITALIC);
             PdfPage page = pdfDoc.AddNewPage(PageSize.A4.Rotate());
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 400).SetFontAndSize(romanDefault, 72).ShowText("Times-Roman default"

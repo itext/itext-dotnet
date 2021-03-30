@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -308,7 +308,6 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverTest() {
-            //TODO DEVSIX-3814: remove in version 7.2
             DummySvgConverterProperties properties = new DummySvgConverterProperties();
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
                 (this);
@@ -318,14 +317,12 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ResourceResolverInstanceCustomResolverNullPropsTest() {
-            //TODO DEVSIX-3814: remove in version 7.2
             SvgConverterUnitTest.TestSvgProcessorResult testSvgProcessorResult = new SvgConverterUnitTest.TestSvgProcessorResult
                 (this);
             ResourceResolver currentResolver = SvgConverter.GetResourceResolver(testSvgProcessorResult, null);
             NUnit.Framework.Assert.IsNotNull(currentResolver);
         }
 
-        //TODO DEVSIX-3814: remove in version 7.2
         internal class TestSvgProcessorResult : ISvgProcessorResult {
             public TestSvgProcessorResult(SvgConverterUnitTest _enclosing) {
                 this._enclosing = _enclosing;

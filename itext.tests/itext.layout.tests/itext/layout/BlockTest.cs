@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -837,6 +837,21 @@ namespace iText.Layout {
             div.SetBorderBottom(new RoundDotsBorder(ColorConstants.RED, 30)).SetBorderLeft(new RoundDotsBorder(ColorConstants
                 .BLUE, 15)).SetBorderTop(new RoundDotsBorder(ColorConstants.GREEN, 60)).SetBorderRight(new RoundDotsBorder
                 (ColorConstants.YELLOW, 150));
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightShouldBeIncreasedUpToSetHeightTest01() {
+            // TODO DEVSIX-1895 if height bigger than min-height is set,
+            // then the element's height should be increased up to height
+            String outFileName = destinationFolder + "heightShouldBeIncreasedUpToSetHeightTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_heightShouldBeIncreasedUpToSetHeightTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div().SetWidth(100).SetMinHeight(100).SetHeight(200).SetBackgroundColor(ColorConstants.BLUE);
             doc.Add(div);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

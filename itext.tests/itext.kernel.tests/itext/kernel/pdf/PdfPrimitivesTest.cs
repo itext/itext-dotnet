@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -253,16 +253,33 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER)]
         public virtual void EqualNumbers() {
-            PdfNumber num1 = (PdfNumber)new PdfNumber(1).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
-                ())));
-            PdfNumber num2 = new PdfNumber(2);
-            NUnit.Framework.Assert.IsFalse(num1.Equals(num2));
-            int hashCode = num1.GetHashCode();
-            num1.Increment();
-            NUnit.Framework.Assert.IsTrue(num1.Equals(num2));
-            NUnit.Framework.Assert.AreNotEqual(hashCode, num1.GetHashCode());
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                // add a page to avoid exception throwing on close
+                document.AddNewPage();
+                PdfNumber num1 = (PdfNumber)new PdfNumber(1).MakeIndirect(document);
+                PdfNumber num2 = new PdfNumber(2);
+                NUnit.Framework.Assert.IsFalse(num1.Equals(num2));
+                int hashCode = num1.GetHashCode();
+                num1.Increment();
+                NUnit.Framework.Assert.IsTrue(num1.Equals(num2));
+                NUnit.Framework.Assert.AreNotEqual(hashCode, num1.GetHashCode());
+            }
+            PdfNumber a = new PdfNumber(1);
+            PdfNumber aContent = new PdfNumber(a.GetInternalContent());
+            PdfNumber b = new PdfNumber(2);
+            PdfNumber bContent = new PdfNumber(b.GetInternalContent());
+            NUnit.Framework.Assert.IsTrue(a.Equals(aContent));
+            NUnit.Framework.Assert.AreEqual(a.GetHashCode(), aContent.GetHashCode());
+            NUnit.Framework.Assert.IsTrue(b.Equals(bContent));
+            NUnit.Framework.Assert.AreEqual(b.GetHashCode(), bContent.GetHashCode());
+            NUnit.Framework.Assert.IsFalse(aContent.Equals(bContent));
+            NUnit.Framework.Assert.AreNotEqual(aContent.GetHashCode(), bContent.GetHashCode());
+            aContent.Increment();
+            NUnit.Framework.Assert.IsFalse(a.Equals(aContent));
+            NUnit.Framework.Assert.AreNotEqual(a.GetHashCode(), aContent.GetHashCode());
+            NUnit.Framework.Assert.IsTrue(aContent.Equals(bContent));
+            NUnit.Framework.Assert.AreEqual(aContent.GetHashCode(), bContent.GetHashCode());
         }
 
         [NUnit.Framework.Test]

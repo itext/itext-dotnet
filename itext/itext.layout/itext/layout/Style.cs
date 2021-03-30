@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,14 @@ namespace iText.Layout {
     /// For example, if the same property is set directly and added via Style, then,
     /// no matter in which order they are set, the one set directly will be chosen.
     /// </remarks>
-    public class Style : ElementPropertyContainer<Style> {
+    public class Style : ElementPropertyContainer<iText.Layout.Style> {
+        public Style() {
+        }
+
+        public Style(iText.Layout.Style style) {
+            properties.AddAll(style.properties);
+        }
+
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>
         /// the left margin width, as a
@@ -69,10 +76,10 @@ namespace iText.Layout {
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMarginLeft(float value) {
+        public virtual iText.Layout.Style SetMarginLeft(float value) {
             UnitValue marginUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.MARGIN_LEFT, marginUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
@@ -88,10 +95,10 @@ namespace iText.Layout {
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMarginRight(float value) {
+        public virtual iText.Layout.Style SetMarginRight(float value) {
             UnitValue marginUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.MARGIN_RIGHT, marginUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
@@ -107,10 +114,10 @@ namespace iText.Layout {
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMarginTop(float value) {
+        public virtual iText.Layout.Style SetMarginTop(float value) {
             UnitValue marginUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.MARGIN_TOP, marginUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
@@ -126,16 +133,16 @@ namespace iText.Layout {
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMarginBottom(float value) {
+        public virtual iText.Layout.Style SetMarginBottom(float value) {
             UnitValue marginUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.MARGIN_BOTTOM, marginUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets all margins around the element to the same width.</summary>
         /// <param name="commonMargin">the new margin width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMargin(float commonMargin) {
+        public virtual iText.Layout.Style SetMargin(float commonMargin) {
             return SetMargins(commonMargin, commonMargin, commonMargin, commonMargin);
         }
 
@@ -145,12 +152,13 @@ namespace iText.Layout {
         /// <param name="marginBottom">the new margin bottom width</param>
         /// <param name="marginLeft">the new margin left width</param>
         /// <returns>this element</returns>
-        public virtual Style SetMargins(float marginTop, float marginRight, float marginBottom, float marginLeft) {
+        public virtual iText.Layout.Style SetMargins(float marginTop, float marginRight, float marginBottom, float
+             marginLeft) {
             SetMarginTop(marginTop);
             SetMarginRight(marginRight);
             SetMarginBottom(marginBottom);
             SetMarginLeft(marginLeft);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current left padding width of the element.</summary>
@@ -166,10 +174,10 @@ namespace iText.Layout {
         /// <summary>Sets the left padding width of the element.</summary>
         /// <param name="value">the new left padding width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddingLeft(float value) {
+        public virtual iText.Layout.Style SetPaddingLeft(float value) {
             UnitValue paddingUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.PADDING_LEFT, paddingUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current right padding width of the element.</summary>
@@ -185,10 +193,10 @@ namespace iText.Layout {
         /// <summary>Sets the right padding width of the element.</summary>
         /// <param name="value">the new right padding width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddingRight(float value) {
+        public virtual iText.Layout.Style SetPaddingRight(float value) {
             UnitValue paddingUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.PADDING_RIGHT, paddingUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current top padding width of the element.</summary>
@@ -204,10 +212,10 @@ namespace iText.Layout {
         /// <summary>Sets the top padding width of the element.</summary>
         /// <param name="value">the new top padding width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddingTop(float value) {
+        public virtual iText.Layout.Style SetPaddingTop(float value) {
             UnitValue paddingUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.PADDING_TOP, paddingUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the current bottom padding width of the element.</summary>
@@ -223,17 +231,17 @@ namespace iText.Layout {
         /// <summary>Sets the bottom padding width of the element.</summary>
         /// <param name="value">the new bottom padding width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddingBottom(float value) {
+        public virtual iText.Layout.Style SetPaddingBottom(float value) {
             UnitValue paddingUV = UnitValue.CreatePointValue(value);
             SetProperty(Property.PADDING_BOTTOM, paddingUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets all paddings around the element to the same width.</summary>
         /// <param name="commonPadding">the new padding width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPadding(float commonPadding) {
-            return (Style)(Object)SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding);
+        public virtual iText.Layout.Style SetPadding(float commonPadding) {
+            return (iText.Layout.Style)(Object)SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding);
         }
 
         /// <summary>Sets the paddings around the element to a series of new widths.</summary>
@@ -242,21 +250,21 @@ namespace iText.Layout {
         /// <param name="paddingBottom">the new padding bottom width</param>
         /// <param name="paddingLeft">the new padding left width</param>
         /// <returns>this element</returns>
-        public virtual Style SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float paddingLeft
-            ) {
+        public virtual iText.Layout.Style SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float
+             paddingLeft) {
             SetPaddingTop(paddingTop);
             SetPaddingRight(paddingRight);
             SetPaddingBottom(paddingBottom);
             SetPaddingLeft(paddingLeft);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the vertical alignment of the element.</summary>
         /// <param name="verticalAlignment">the vertical alignment setting</param>
         /// <returns>this element</returns>
-        public virtual Style SetVerticalAlignment(VerticalAlignment? verticalAlignment) {
+        public virtual iText.Layout.Style SetVerticalAlignment(VerticalAlignment? verticalAlignment) {
             SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -272,9 +280,9 @@ namespace iText.Layout {
         /// If <strong>ratio</strong> is 0, additional word spacing will not be applied.
         /// </param>
         /// <returns>this element</returns>
-        public virtual Style SetSpacingRatio(float ratio) {
+        public virtual iText.Layout.Style SetSpacingRatio(float ratio) {
             SetProperty(Property.SPACING_RATIO, ratio);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -304,33 +312,33 @@ namespace iText.Layout {
         /// property
         /// </param>
         /// <returns>this element</returns>
-        public virtual Style SetKeepTogether(bool keepTogether) {
+        public virtual iText.Layout.Style SetKeepTogether(bool keepTogether) {
             SetProperty(Property.KEEP_TOGETHER, keepTogether);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the rotation radAngle.</summary>
         /// <param name="radAngle">the new rotation radAngle, as a <c>float</c></param>
         /// <returns>this element</returns>
-        public virtual Style SetRotationAngle(float radAngle) {
+        public virtual iText.Layout.Style SetRotationAngle(float radAngle) {
             SetProperty(Property.ROTATION_ANGLE, radAngle);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the rotation angle.</summary>
         /// <param name="angle">the new rotation angle, as a <c>double</c></param>
         /// <returns>this element</returns>
-        public virtual Style SetRotationAngle(double angle) {
+        public virtual iText.Layout.Style SetRotationAngle(double angle) {
             SetProperty(Property.ROTATION_ANGLE, (float)angle);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the width property of the element, measured in points.</summary>
         /// <param name="width">a value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual Style SetWidth(float width) {
+        public virtual iText.Layout.Style SetWidth(float width) {
             SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -343,9 +351,9 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual Style SetWidth(UnitValue width) {
+        public virtual iText.Layout.Style SetWidth(UnitValue width) {
             SetProperty(Property.WIDTH, width);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the width property of the element.</summary>
@@ -365,18 +373,18 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual Style SetHeight(UnitValue height) {
+        public virtual iText.Layout.Style SetHeight(UnitValue height) {
             SetProperty(Property.HEIGHT, height);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the height property the element as a point-value.</summary>
         /// <param name="height">a floating point value for the new height</param>
         /// <returns>the block element itself.</returns>
-        public virtual Style SetHeight(float height) {
+        public virtual iText.Layout.Style SetHeight(float height) {
             UnitValue heightAsUV = UnitValue.CreatePointValue(height);
             SetProperty(Property.HEIGHT, heightAsUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Gets the height property of the element.</summary>
@@ -388,10 +396,10 @@ namespace iText.Layout {
         /// <summary>Sets the max-height of the element as point-unit value.</summary>
         /// <param name="maxHeight">a floating point value for the new max-height</param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMaxHeight(float maxHeight) {
+        public virtual iText.Layout.Style SetMaxHeight(float maxHeight) {
             UnitValue maxHeightAsUV = UnitValue.CreatePointValue(maxHeight);
             SetProperty(Property.MAX_HEIGHT, maxHeightAsUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -404,9 +412,9 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMaxHeight(UnitValue maxHeight) {
+        public virtual iText.Layout.Style SetMaxHeight(UnitValue maxHeight) {
             SetProperty(Property.MAX_HEIGHT, maxHeight);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -419,18 +427,18 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMinHeight(UnitValue minHeight) {
+        public virtual iText.Layout.Style SetMinHeight(UnitValue minHeight) {
             SetProperty(Property.MIN_HEIGHT, minHeight);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the min-height of the element as point-unit value.</summary>
         /// <param name="minHeight">a floating point value for the new min-height</param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMinHeight(float minHeight) {
+        public virtual iText.Layout.Style SetMinHeight(float minHeight) {
             UnitValue minHeightAsUV = UnitValue.CreatePointValue(minHeight);
             SetProperty(Property.MIN_HEIGHT, minHeightAsUV);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -443,17 +451,17 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMaxWidth(UnitValue maxWidth) {
+        public virtual iText.Layout.Style SetMaxWidth(UnitValue maxWidth) {
             SetProperty(Property.MAX_WIDTH, maxWidth);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the max-width of the element as point-unit value.</summary>
         /// <param name="maxWidth">a floating point value for the new max-width</param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMaxWidth(float maxWidth) {
+        public virtual iText.Layout.Style SetMaxWidth(float maxWidth) {
             SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(maxWidth));
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>
@@ -466,17 +474,17 @@ namespace iText.Layout {
         /// object
         /// </param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMinWidth(UnitValue minWidth) {
+        public virtual iText.Layout.Style SetMinWidth(UnitValue minWidth) {
             SetProperty(Property.MIN_WIDTH, minWidth);
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
 
         /// <summary>Sets the min-width of the element as point-unit value.</summary>
         /// <param name="minWidth">a floating point value for the new min-width</param>
         /// <returns>the block element itself</returns>
-        public virtual Style SetMinWidth(float minWidth) {
+        public virtual iText.Layout.Style SetMinWidth(float minWidth) {
             SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(minWidth));
-            return (Style)(Object)this;
+            return (iText.Layout.Style)(Object)this;
         }
     }
 }

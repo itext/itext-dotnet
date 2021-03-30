@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -178,13 +178,16 @@ namespace iText.Kernel.Pdf.Canvas {
             public const int BEVEL = 2;
         }
 
+        /// <summary>Rule for determining which points lie inside a path.</summary>
         public class FillingRule {
             private FillingRule() {
             }
 
             // This private constructor will prevent the instantiation of this class
+            /// <summary>The nonzero winding number rule.</summary>
             public const int NONZERO_WINDING = 1;
 
+            /// <summary>The even-odd winding number rule.</summary>
             public const int EVEN_ODD = 2;
         }
     }

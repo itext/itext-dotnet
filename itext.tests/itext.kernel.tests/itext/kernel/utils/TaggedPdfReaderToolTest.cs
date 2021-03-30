@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -64,13 +64,13 @@ namespace iText.Kernel.Utils {
             String outXmlPath = destinationFolder + "outXml01.xml";
             String cmpXmlPath = sourceFolder + "cmpXml01.xml";
             PdfReader reader = new PdfReader(sourceFolder + filename);
-            PdfDocument document = new PdfDocument(reader);
-            FileStream outXml = new FileStream(outXmlPath, FileMode.Create);
-            TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
-            tool.SetRootTag("root");
-            tool.ConvertToXml(outXml);
-            outXml.Dispose();
-            document.Close();
+            using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+                using (PdfDocument document = new PdfDocument(reader)) {
+                    TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
+                    tool.SetRootTag("root");
+                    tool.ConvertToXml(outXml);
+                }
+            }
             CompareTool compareTool = new CompareTool();
             if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {
                 NUnit.Framework.Assert.Fail("Resultant xml is different.");

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -132,21 +132,25 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets the annots element, a child of the xfdf element and is the container for annot elements.</summary>
+        /// <returns>the annots element</returns>
         public virtual AnnotsObject GetAnnots() {
             return annots;
         }
 
         /// <summary>Sets the annots element, a child of the xfdf element and is the container for annot elements.</summary>
+        /// <param name="annots">element</param>
         public virtual void SetAnnots(AnnotsObject annots) {
             this.annots = annots;
         }
 
         /// <summary>Gets the list of attributes of xfdf object.</summary>
+        /// <returns>the list of attributes</returns>
         public virtual IList<AttributeObject> GetAttributes() {
             return attributes;
         }
 
         /// <summary>Sets the list of attributes of xfdf object.</summary>
+        /// <param name="attributes">list of attributes objects</param>
         public virtual void SetAttributes(IList<AttributeObject> attributes) {
             this.attributes = attributes;
         }

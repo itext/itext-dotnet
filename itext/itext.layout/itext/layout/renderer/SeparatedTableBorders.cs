@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -173,14 +173,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override float[] GetCellBorderIndents(int row, int col, int rowspan, int colspan) {
-            float[] indents = new float[4];
-            Border[] borders = rows[row + startRow - largeTableIndexOffset][col].GetBorders();
-            for (int i = 0; i < 4; i++) {
-                if (null != borders[i]) {
-                    indents[i] = borders[i].GetWidth();
-                }
-            }
-            return indents;
+            return new float[] { 0, 0, 0, 0 };
         }
 
         protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -372,25 +372,21 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MultiplePairsAfterMoveToRelativeTest() {
-            //TODO: update cmp-file after DEVSIX-4701 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToRelative");
         }
 
         [NUnit.Framework.Test]
         public virtual void MultiplePairsAfterMoveToAbsoluteTest() {
-            //TODO: update cmp-file after DEVSIX-4701 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToAbsolute");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHOperatorAbsoluteAfterMultiplePairsTest() {
-            //TODO: update cmp-file after DEVSIX-4701 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorAbsoluteAfterMultiplePairs");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHOperatorRelativeAfterMultiplePairsTest() {
-            //TODO: update cmp-file after DEVSIX-4701 will be fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorRelativeAfterMultiplePairs");
         }
     }

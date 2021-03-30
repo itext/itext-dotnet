@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -2381,8 +2381,20 @@ namespace iText.Kernel.Utils {
             }
 
             public override int GetHashCode() {
-                int hashCode = (baseCmpObject != null ? baseCmpObject.GetHashCode() : 0) * 31 + (baseOutObject != null ? baseOutObject
-                    .GetHashCode() : 0);
+                // TODO: DEVSIX-4756 indirect reference hashCode should use hashCode method of indirect
+                //  reference. For now we need to write custom logic as some tests rely on sequential
+                //  reopening of the same document which affects with not equal indirect reference
+                //  hashCodes (after the update which starts counting the document in indirect reference
+                //  hashCode)
+                int baseCmpObjectHashCode = 0;
+                if (baseCmpObject != null) {
+                    baseCmpObjectHashCode = baseCmpObject.GetObjNumber() * 31 + baseCmpObject.GetGenNumber();
+                }
+                int baseOutObjectHashCode = 0;
+                if (baseOutObject != null) {
+                    baseOutObjectHashCode = baseOutObject.GetObjNumber() * 31 + baseOutObject.GetGenNumber();
+                }
+                int hashCode = baseCmpObjectHashCode * 31 + baseOutObjectHashCode;
                 foreach (CompareTool.ObjectPath.LocalPathItem pathItem in path) {
                     hashCode *= 31;
                     hashCode += pathItem.GetHashCode();
@@ -2391,9 +2403,47 @@ namespace iText.Kernel.Utils {
             }
 
             public override bool Equals(Object obj) {
-                return obj.GetType() == GetType() && baseCmpObject.Equals(((CompareTool.ObjectPath)obj).baseCmpObject) && 
-                    baseOutObject.Equals(((CompareTool.ObjectPath)obj).baseOutObject) && Enumerable.SequenceEqual(path, ((
-                    CompareTool.ObjectPath)obj).path);
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null || GetType() != obj.GetType()) {
+                    return false;
+                }
+                CompareTool.ObjectPath that = (CompareTool.ObjectPath)obj;
+                // TODO: DEVSIX-4756 indirect reference comparing should use equals method of indirect
+                //  reference. For now we need to write custom logic as some tests rely on sequential
+                //  reopening of the same document which affects with not equal indirect references
+                //  (after the update which starts counting the document in indirect reference equality)
+                bool isBaseCmpObjectEqual;
+                if (baseCmpObject == that.baseCmpObject) {
+                    isBaseCmpObjectEqual = true;
+                }
+                else {
+                    if (baseCmpObject == null || that.baseCmpObject == null || baseCmpObject.GetType() != that.baseCmpObject.GetType
+                        ()) {
+                        isBaseCmpObjectEqual = false;
+                    }
+                    else {
+                        isBaseCmpObjectEqual = baseCmpObject.GetObjNumber() == that.baseCmpObject.GetObjNumber() && baseCmpObject.
+                            GetGenNumber() == that.baseCmpObject.GetGenNumber();
+                    }
+                }
+                bool isBaseOutObjectEqual;
+                if (baseOutObject == that.baseOutObject) {
+                    isBaseOutObjectEqual = true;
+                }
+                else {
+                    if (baseOutObject == null || that.baseOutObject == null || baseOutObject.GetType() != that.baseOutObject.GetType
+                        ()) {
+                        isBaseOutObjectEqual = false;
+                    }
+                    else {
+                        isBaseOutObjectEqual = baseOutObject.GetObjNumber() == that.baseOutObject.GetObjNumber() && baseOutObject.
+                            GetGenNumber() == that.baseOutObject.GetGenNumber();
+                    }
+                }
+                return isBaseCmpObjectEqual && isBaseOutObjectEqual && Enumerable.SequenceEqual(path, ((CompareTool.ObjectPath
+                    )obj).path);
             }
 
             protected internal virtual Object Clone() {

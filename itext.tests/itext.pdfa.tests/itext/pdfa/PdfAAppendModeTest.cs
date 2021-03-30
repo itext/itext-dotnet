@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -76,7 +76,8 @@ namespace iText.Pdfa {
                 ().UseAppendMode());
             PdfCanvas canvas = new PdfCanvas(pdfADocument.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
-                , true), 16).ShowText("This page 2").EndText().RestoreState();
+                , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED), 16).ShowText("This page 2").EndText().RestoreState
+                ();
             canvas.Release();
             pdfADocument.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(inputFile));
@@ -94,7 +95,8 @@ namespace iText.Pdfa {
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
-                , true), 16).ShowText("This page 1").EndText().RestoreState();
+                , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED), 16).ShowText("This page 1").EndText().RestoreState
+                ();
             canvas.Release();
             pdfDoc.Close();
         }

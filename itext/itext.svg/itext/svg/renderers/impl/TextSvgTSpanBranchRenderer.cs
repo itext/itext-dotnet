@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         protected internal override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            // TODO DEVSIX-3814 change to getParent().getObjectBoundingBox(context) in 7.2 update
             if (GetParent() is AbstractSvgNodeRenderer) {
                 return ((AbstractSvgNodeRenderer)GetParent()).GetObjectBoundingBox(context);
             }

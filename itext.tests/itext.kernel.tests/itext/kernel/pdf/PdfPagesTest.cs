@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -111,8 +111,8 @@ namespace iText.Kernel.Pdf {
                 pdfDoc.MovePage(i, n + 1);
             }
             pdfDoc.Close();
-            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff");
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff"));
         }
 
         [NUnit.Framework.Test]
@@ -378,8 +378,8 @@ namespace iText.Kernel.Pdf {
                  + imageSrc)));
             new PdfCanvas(page).SetFillColor(ColorConstants.RED).Rectangle(100, 100, 400, 400).Fill();
             pdfDoc.Close();
-            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff");
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff"));
         }
 
         [NUnit.Framework.Test]

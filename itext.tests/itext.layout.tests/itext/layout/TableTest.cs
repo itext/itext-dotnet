@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -626,6 +626,26 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4"
                 ))).Flush();
             table.Complete();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthInPercentShouldBeResetAfterOverflow() {
+            String testName = "widthInPercentShouldBeResetAfterOverflow.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Div().SetHeight(730).SetWidth(523));
+            Table table = new Table(2).UseAllAvailableWidth().SetFixedLayout().AddCell(new Cell().Add(new Paragraph("Hello"
+                )).SetWidth(UnitValue.CreatePercentValue(20))).AddCell(new Cell().Add(new Paragraph("World")).SetWidth
+                (UnitValue.CreatePercentValue(80)));
+            // will be added on the first page
+            doc.Add(table);
+            // will be added on the second page
+            doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));

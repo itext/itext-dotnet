@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+    Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,9 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Net;
-#if NETSTANDARD2_0
-using System.Net.Http;
-#endif
 using iText.IO.Util;
 
 namespace iText.IO.Source

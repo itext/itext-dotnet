@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,12 +48,10 @@ namespace iText.IO.Font.Otf {
         }
 
         public override ContextualSubstRule GetMatchingContextRule(GlyphLine line) {
-            // TODO DEVSIX-3814 Remove this dummy override. It's left only for binary backwards compatibility
             return base.GetMatchingContextRule(line);
         }
 
         protected internal override int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
-            // TODO DEVSIX-3814 Remove this dummy override. It's left only for binary backwards compatibility
             return base.CheckIfContextMatch(line, rule);
         }
     }

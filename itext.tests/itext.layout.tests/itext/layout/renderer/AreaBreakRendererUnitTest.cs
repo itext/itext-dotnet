@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -128,8 +128,7 @@ namespace iText.Layout.Renderer {
             //The BORDER property is chosen without any specific intention. It could be replaced with any other property.
             //Here we just check that no exception has been thrown.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            areaBreakRenderer.DeleteOwnProperty(Property.BORDER);
-            NUnit.Framework.Assert.IsTrue(true);
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.DeleteOwnProperty(Property.BORDER));
         }
 
         [NUnit.Framework.Test]

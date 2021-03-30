@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+    Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -93,6 +93,11 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         public virtual byte[] MakeOcspResponse(byte[] requestBytes) {
+            BasicOcspResp ocspResponse = MakeOcspResponseObject(requestBytes);
+            return ocspResponse.GetEncoded();
+        }
+        
+        public virtual BasicOcspResp MakeOcspResponseObject(byte[] requestBytes) {
             OcspReq ocspRequest = new OcspReq(requestBytes);
             Req[] requestList = ocspRequest.GetRequestList();
 
@@ -107,9 +112,7 @@ namespace iText.Signatures.Testutils.Builder {
                 responseBuilder.AddResponse(req.GetCertID(), certificateStatus, thisUpdate.ToUniversalTime(), nextUpdate.ToUniversalTime(), null);
             }
             DateTime time = DateTimeUtil.GetCurrentUtcTime();
-            BasicOcspResp ocspResponse = responseBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter)issuerPrivateKey), new X509Certificate[] { issuerCert }, time);
-            // return new OCSPRespBuilder().build(ocspResult, ocspResponse).getEncoded();
-            return ocspResponse.GetEncoded();
+            return responseBuilder.Generate(new Asn1SignatureFactory(SIGN_ALG, (AsymmetricKeyParameter)issuerPrivateKey), new X509Certificate[] { issuerCert }, time);
         }
     }
 }

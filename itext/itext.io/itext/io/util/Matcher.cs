@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+    Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,12 +52,16 @@ namespace iText.IO.Util {
 
         private readonly Regex pattern;
         private readonly String input;
+        private int startRegion;
+        private int endRegion;
         
         private System.Text.RegularExpressions.Match matcher;
 
         private Matcher(Regex pattern, String input) {
             this.pattern = pattern;
             this.input = input;
+            this.startRegion = 0;
+            this.endRegion = input.Length;
         }
 
         public static Matcher Match(Regex pattern, String input) {
@@ -66,12 +70,12 @@ namespace iText.IO.Util {
         
         public int Start() {
             CheckMatchFound();
-            return matcher.Index;
+            return startRegion + matcher.Index;
         }
         
         public int End() {
             CheckMatchFound();
-            return matcher.Index + matcher.Length;
+            return startRegion + matcher.Index + matcher.Length;
         }
         
         public String Group() {
@@ -97,11 +101,13 @@ namespace iText.IO.Util {
             //    matches fails (i.e. the check on matches result is required).
             // 2. The matches result can differ if reluctant (lazy) or possessive quantifiers are used in regex.
             //    It is not expected to use such quantifiers with matches call.
-            return Find() && Start() == 0 && End() == input.Length;
+            return Find() && Start() == startRegion && End() == endRegion;
         }
         
         public bool Find() {
-            matcher = matcher == null ? pattern.Match(input) : matcher.NextMatch();
+            matcher = matcher == null ? 
+                pattern.Match(input.Substring(startRegion, endRegion - startRegion)) : 
+                matcher.NextMatch();
             return matcher.Success;
         }
         
@@ -109,8 +115,24 @@ namespace iText.IO.Util {
             if (start < 0 || start > input.Length) {
                 throw new IndexOutOfRangeException("Illegal start index");
             }
+            startRegion = 0;
+            endRegion = input.Length;
             matcher = pattern.Match(input, start);
             return matcher.Success;
+        }
+
+        public Matcher Region(int start, int end)
+        {
+            if ((start < 0) || (start > input.Length))
+                throw new IndexOutOfRangeException("start");
+            if ((end < 0) || (end > input.Length))
+                throw new IndexOutOfRangeException("end");
+            if (start > end)
+                throw new IndexOutOfRangeException("start > end");
+            startRegion = start;
+            endRegion = end;
+            matcher = null;
+            return this;
         }
 
         private void CheckMatchFound() {

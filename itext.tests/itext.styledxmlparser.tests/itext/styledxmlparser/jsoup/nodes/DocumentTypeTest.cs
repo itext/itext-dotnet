@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,12 +48,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     public class DocumentTypeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankName() {
-            DocumentType fail = new DocumentType("", "", "", "");
+            NUnit.Framework.Assert.DoesNotThrow(() => new DocumentType("", "", "", ""));
         }
 
         [NUnit.Framework.Test]
         public virtual void ConstructorValidationOkWithBlankPublicAndSystemIds() {
-            DocumentType fail = new DocumentType("html", "", "", "");
+            NUnit.Framework.Assert.DoesNotThrow(() => new DocumentType("html", "", "", ""));
         }
 
         [NUnit.Framework.Test]

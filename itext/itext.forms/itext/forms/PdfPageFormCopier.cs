@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,6 @@ namespace iText.Forms {
     /// <remarks>
     /// A sample implementation of the {#link IPdfPageExtraCopier} interface which
     /// copies only AcroForm fields to a new page.
-    /// <para />
     /// <para />
     /// NOTE: While it's absolutely not necessary to use the same PdfPageFormCopier instance for copying operations,
     /// it is still worth to know that PdfPageFormCopier uses some caching logic which can potentially improve performance

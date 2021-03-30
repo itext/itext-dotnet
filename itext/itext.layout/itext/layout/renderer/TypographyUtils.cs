@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -100,8 +100,6 @@ namespace iText.Layout.Renderer {
         private static IDictionary<TypographyUtils.TypographyMethodSignature, MemberInfo> cachedMethods = new Dictionary
             <TypographyUtils.TypographyMethodSignature, MemberInfo>();
 
-        private const String typographyNotFoundException = "Cannot find pdfCalligraph module, which was implicitly required by one of the layout properties";
-
         static TypographyUtils() {
             bool moduleFound = false;
             try {
@@ -144,7 +142,7 @@ namespace iText.Layout.Renderer {
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
              typographyConfig) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
@@ -154,7 +152,7 @@ namespace iText.Layout.Renderer {
 
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
@@ -165,7 +163,7 @@ namespace iText.Layout.Renderer {
         //            Shaper.applyKerning(fontProgram, text);
         internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 byte direction;
@@ -209,7 +207,7 @@ namespace iText.Layout.Renderer {
         internal static int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 if (levels == null) {
@@ -238,16 +236,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                // fix anchorDelta
-                for (int i = 0; i < reorderedLine.Count; i++) {
-                    Glyph glyph = reorderedLine[i].glyph;
-                    if (glyph.HasPlacement()) {
-                        int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
-                        int newPos = inverseReorder[oldAnchor];
-                        int newAnchorDelta = newPos - i;
-                        glyph.SetAnchorDelta((short)newAnchorDelta);
-                    }
-                }
+                UpdateAnchorDeltaForReorderedLineGlyphs(reorder, inverseReorder, reorderedLine);
                 line.Clear();
                 line.AddAll(reorderedLine);
                 return reorder;
@@ -257,7 +246,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts() {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
                 return null;
             }
             else {
@@ -267,7 +256,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts(Object typographyConfig) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn(typographyNotFoundException);
+                logger.Warn(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
                 return null;
             }
             else {
@@ -279,6 +268,23 @@ namespace iText.Layout.Renderer {
         internal static IList<int> GetPossibleBreaks(String str) {
             return (IList<int>)CallMethod(TYPOGRAPHY_PACKAGE + WORD_WRAPPER, GET_POSSIBLE_BREAKS, new Type[] { typeof(
                 String) }, str);
+        }
+
+        internal static void UpdateAnchorDeltaForReorderedLineGlyphs(int[] reorder, int[] inverseReorder, IList<LineRenderer.RendererGlyph
+            > reorderedLine) {
+            for (int i = 0; i < reorderedLine.Count; i++) {
+                Glyph glyph = reorderedLine[i].glyph;
+                if (glyph.HasPlacement()) {
+                    int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
+                    int newPos = inverseReorder[oldAnchor];
+                    int newAnchorDelta = newPos - i;
+                    if (glyph.GetAnchorDelta() != newAnchorDelta) {
+                        glyph = new Glyph(glyph);
+                        reorderedLine[i].glyph = glyph;
+                        glyph.SetAnchorDelta((short)newAnchorDelta);
+                    }
+                }
+            }
         }
 
         private static Object CallMethod(String className, String methodName, Type[] parameterTypes, params Object

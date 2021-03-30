@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -78,6 +78,7 @@ namespace iText.Signatures {
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
         /// <param name="url">to get the verification</param>
+        /// <returns>OCSP response</returns>
         public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String 
             url) {
             try {
@@ -150,7 +151,15 @@ namespace iText.Signatures {
             return SignUtils.GenerateOcspRequestWithNonce(id);
         }
 
-        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
+        /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
+        /// <param name="checkCert">to certificate to check</param>
+        /// <param name="rootCert">the parent certificate</param>
+        /// <param name="url">
+        /// to get the verification. It it's null it will be taken
+        /// from the check cert or from other implementation specific source
+        /// </param>
+        /// <returns>an OCSP response</returns>
+        internal virtual OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
             if (checkCert == null || rootCert == null) {
                 return null;
             }

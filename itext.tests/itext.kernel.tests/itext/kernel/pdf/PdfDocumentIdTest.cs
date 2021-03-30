@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -318,6 +318,18 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(modifiedId);
             NUnit.Framework.Assert.AreEqual(0, reader.GetOriginalFileId().Length);
             NUnit.Framework.Assert.AreEqual(0, reader.GetModifiedFileId().Length);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadPdfWithNoIdAndConservativeReadingTest() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "pdfWithNoId.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
+                .CONSERVATIVE)) {
+                NUnit.Framework.Assert.That(() =>  {
+                    new PdfDocument(reader);
+                }
+                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED))
+;
+            }
         }
         //    @Test
         //    public void appendModeTest() {

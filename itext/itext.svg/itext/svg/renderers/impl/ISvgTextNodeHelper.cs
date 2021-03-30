@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -45,6 +45,5 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Svg.Utils.TextRectangle"/>
         /// </returns>
         TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint);
-        // TODO DEVSIX-3814 This method should be moved to ISvgTextNodeRenderer in 7.2 and this class should be removed
     }
 }

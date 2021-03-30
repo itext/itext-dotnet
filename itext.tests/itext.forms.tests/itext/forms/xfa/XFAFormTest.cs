@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+    Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using NUnit.Framework;
 
 namespace iText.Forms.Xfa {
     public class XFAFormTest : ExtendedITextTest {
@@ -107,8 +108,7 @@ namespace iText.Forms.Xfa {
         public virtual void ReadXFAFormTest() {
             String inFileName = sourceFolder + "formTemplate.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            // Test that exception is not thrown
-            PdfAcroForm.GetAcroForm(pdfDocument, true);
+            Assert.DoesNotThrow(() => PdfAcroForm.GetAcroForm(pdfDocument, true));
         }
 
         [NUnit.Framework.Test]

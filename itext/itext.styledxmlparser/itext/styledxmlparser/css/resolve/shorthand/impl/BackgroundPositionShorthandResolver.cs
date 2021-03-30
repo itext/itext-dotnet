@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -46,7 +46,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     ), new CssDeclaration(CommonCssConstants.BACKGROUND_POSITION_Y, shorthandExpression));
             }
             if (String.IsNullOrEmpty(shorthandExpression.Trim())) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                     , CommonCssConstants.BACKGROUND_POSITION));
                 return new List<CssDeclaration>();
             }
@@ -55,12 +55,12 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             IDictionary<String, String> values = new Dictionary<String, String>();
             foreach (IList<String> props in propsList) {
                 if (props.IsEmpty()) {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                    LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                         , CommonCssConstants.BACKGROUND_POSITION));
                     return new List<CssDeclaration>();
                 }
                 if (!ParsePositionShorthand(props, values)) {
-                    LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , shorthandExpression));
                     return new List<CssDeclaration>();
                 }
@@ -79,7 +79,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static bool CheckProperty(IDictionary<String, String> resolvedProps, String key) {
             if (!CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(key, resolvedProps.Get(key)))) {
-                LOGGER.Error(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                LOGGER.Warn(MessageFormatUtil.Format(iText.StyledXmlParser.LogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , resolvedProps.Get(key)));
                 return false;
             }

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("iText Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2020 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2021 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.barcodes.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -21,6 +21,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("8694665a-5749-40c6-9e9c-53c686a77ad1")]
 
-[assembly: AssemblyVersion("7.1.14.0")]
-[assembly: AssemblyFileVersion("7.1.14.0")]
-[assembly: AssemblyInformationalVersion("7.1.14")]
+[assembly: AssemblyVersion("7.1.15.0")]
+[assembly: AssemblyFileVersion("7.1.15.0")]
+[assembly: AssemblyInformationalVersion("7.1.15")]

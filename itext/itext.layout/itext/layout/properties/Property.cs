@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -60,6 +60,12 @@ namespace iText.Layout.Properties {
     /// </remarks>
     public sealed class Property {
         public const int ACTION = 1;
+
+        public const int ALIGN_CONTENT = 130;
+
+        public const int ALIGN_ITEMS = 134;
+
+        public const int ALIGN_SELF = 129;
 
         public const int APPEARANCE_STREAM_LAYOUT = 82;
 
@@ -122,6 +128,14 @@ namespace iText.Layout.Properties {
         public const int FILL_AVAILABLE_AREA_ON_SPLIT = 87;
 
         public const int FIRST_LINE_INDENT = 18;
+
+        public const int FLEX_BASIS = 131;
+
+        public const int FLEX_GROW = 132;
+
+        public const int FLEX_SHRINK = 133;
+
+        public const int FLEX_WRAP = 128;
 
         public const int FLOAT = 99;
 
@@ -191,6 +205,8 @@ namespace iText.Layout.Properties {
         public const int IGNORE_HEADER = 97;
 
         public const int ITALIC_SIMULATION = 31;
+
+        public const int JUSTIFY_CONTENT = 135;
 
         public const int KEEP_TOGETHER = 32;
 

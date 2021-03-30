@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -397,6 +397,31 @@ namespace iText.Layout {
             doc.Add(CreateTable(80));
             doc.Add(new AreaBreak());
             doc.Add(CreateTable(100));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellRotationParagraphIsGone() {
+            // TODO DEVSIX-5029 Content of the first cell is missing
+            String testName = "cellRotationParagraphIsGone.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + cmpPrefix + testName;
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdf);
+            Table table = new Table(2);
+            table.SetFixedLayout();
+            Cell cell = new Cell().Add(new Paragraph().Add("Hello World"));
+            cell.SetRotationAngle(MathUtil.ToRadians(90));
+            cell.SetBackgroundColor(ColorConstants.RED);
+            table.AddCell(cell);
+            cell = new Cell().Add(new Paragraph().Add("AAAAAAAAAAAAAAAAA aaaaaaaaaaaaaaaaaaaaaaaa " + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                ));
+            cell.SetRotationAngle(MathUtil.ToRadians(90));
+            cell.SetBackgroundColor(ColorConstants.BLUE);
+            table.AddCell(cell);
+            doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

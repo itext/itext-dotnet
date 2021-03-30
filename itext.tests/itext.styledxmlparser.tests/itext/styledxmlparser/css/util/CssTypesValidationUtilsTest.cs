@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -90,6 +90,28 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue("12f"));
             NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue("f1.2"));
             NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsNumericValue(".12f"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSpacesBeforeUnitTypes() {
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsAngleValue("10 deg"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsEmValue("10 em"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsExValue("10 ex"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsRelativeValue("10 %"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsRemValue("10 rem"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsMetricValue("10 px"));
+            NUnit.Framework.Assert.IsFalse(CssTypesValidationUtils.IsPercentageValue("10 %"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSpacesAfterUnitTypes() {
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsAngleValue("10deg "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsEmValue("10em "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsExValue("10ex "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsRelativeValue("10% "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsRemValue("10rem "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsMetricValue("10px "));
+            NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsPercentageValue("10% "));
         }
     }
 }

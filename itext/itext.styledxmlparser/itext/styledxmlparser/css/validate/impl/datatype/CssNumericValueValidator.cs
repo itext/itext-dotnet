@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,6 +30,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// <see cref="iText.StyledXmlParser.Css.Validate.ICssDataTypeValidator"/>
     /// implementation for numeric elements.
     /// </summary>
+    [System.ObsoleteAttribute(@"Use CssLengthValueValidator , CssPercentageValueValidator or CssNumberValueValidator instead"
+        )]
     public class CssNumericValueValidator : ICssDataTypeValidator {
         private readonly bool allowedPercent;
 

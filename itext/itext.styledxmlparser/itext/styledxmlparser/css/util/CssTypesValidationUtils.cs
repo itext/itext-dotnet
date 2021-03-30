@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -37,16 +37,28 @@ namespace iText.StyledXmlParser.Css.Util {
         private static readonly String[] RELATIVE_MEASUREMENTS_VALUES = new String[] { CommonCssConstants.PERCENTAGE
             , CommonCssConstants.EM, CommonCssConstants.EX, CommonCssConstants.REM };
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssTypesValidationUtils"/>
+        /// instance.
+        /// </summary>
+        private CssTypesValidationUtils() {
+        }
+
+        // Empty constructor
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; rad, deg and grad.</summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed angle value</returns>
-        public static bool IsAngleValue(String value) {
+        public static bool IsAngleValue(String valueArgument) {
+            String value = valueArgument;
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
             foreach (String metricPostfix in ANGLE_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -69,32 +81,47 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to parent value.</summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a em value</returns>
-        public static bool IsEmValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EM.Length).Trim());
+        public static bool IsEmValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
+            return value.EndsWith(CommonCssConstants.EM) && IsNumericValue(value.JSubstring(0, value.Length - CommonCssConstants
+                .EM.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to element font height.</summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a ex value</returns>
-        public static bool IsExValue(String value) {
+        public static bool IsExValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
             return value != null && value.EndsWith(CommonCssConstants.EX) && IsNumericValue(value.JSubstring(0, value.
-                Length - CommonCssConstants.EX.Length).Trim());
+                Length - CommonCssConstants.EX.Length));
         }
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; px, in, cm, mm, pc, Q or pt.
         ///     </summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed metric value</returns>
-        public static bool IsMetricValue(String value) {
+        public static bool IsMetricValue(String valueArgument) {
+            String value = valueArgument;
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
             foreach (String metricPostfix in CommonCssConstants.METRIC_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(metricPostfix) && IsNumericValue(value.JSubstring(0, value.Length - metricPostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -112,7 +139,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value == null) {
                 return false;
             }
-            if (IsNumericValue(value) || IsRelativeValue(value)) {
+            if (IsNumericValue(value) || IsRelativeValue(value) || IsMetricValue(value)) {
                 return value.StartsWith("-");
             }
             return false;
@@ -131,23 +158,32 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains a percentage value</summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed percentage value</returns>
-        public static bool IsPercentageValue(String value) {
-            return value != null && value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0
-                , value.Length - CommonCssConstants.PERCENTAGE.Length).Trim());
-        }
-
-        /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
-        /// <param name="value">the string that needs to be checked</param>
-        /// <returns>boolean true if value contains an allowed metric value</returns>
-        public static bool IsRelativeValue(String value) {
+        public static bool IsPercentageValue(String valueArgument) {
+            String value = valueArgument;
             if (value == null) {
                 return false;
             }
+            else {
+                value = value.Trim();
+            }
+            return value.EndsWith(CommonCssConstants.PERCENTAGE) && IsNumericValue(value.JSubstring(0, value.Length - 
+                CommonCssConstants.PERCENTAGE.Length));
+        }
+
+        /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
+        /// <returns>boolean true if value contains an allowed metric value</returns>
+        public static bool IsRelativeValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
             foreach (String relativePostfix in RELATIVE_MEASUREMENTS_VALUES) {
                 if (value.EndsWith(relativePostfix) && IsNumericValue(value.JSubstring(0, value.Length - relativePostfix.Length
-                    ).Trim())) {
+                    ))) {
                     return true;
                 }
             }
@@ -155,11 +191,17 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set root value.</summary>
-        /// <param name="value">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a rem value</returns>
-        public static bool IsRemValue(String value) {
+        public static bool IsRemValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
             return value != null && value.EndsWith(CommonCssConstants.REM) && IsNumericValue(value.JSubstring(0, value
-                .Length - CommonCssConstants.REM.Length).Trim());
+                .Length - CommonCssConstants.REM.Length));
         }
 
         /// <summary>Checks if a string is in a valid format.</summary>
@@ -180,13 +222,60 @@ namespace iText.StyledXmlParser.Css.Util {
                 .UNSET.Equals(value);
         }
 
-        /// <summary>
-        /// Creates a new
-        /// <see cref="CssTypesValidationUtils"/>
-        /// instance.
-        /// </summary>
-        private CssTypesValidationUtils() {
+        /// <summary>Checks if value contains initial, inherit or unset.</summary>
+        /// <param name="value">value to check</param>
+        /// <returns>true if value contains initial, inherit or unset. False otherwise</returns>
+        public static bool ContainsInitialOrInheritOrUnset(String value) {
+            if (value == null) {
+                return false;
+            }
+            return value.Contains(CommonCssConstants.INITIAL) || value.Contains(CommonCssConstants.INHERIT) || value.Contains
+                (CommonCssConstants.UNSET);
         }
-        // Empty constructor
+
+        /// <summary>Checks whether a string contains a zero.</summary>
+        /// <param name="value">the string that needs to be checked</param>
+        /// <returns>boolean true if value contains a zero</returns>
+        public static bool IsZero(String value) {
+            return IsNumericZeroValue(value) || IsMetricZeroValue(value) || IsRelativeZeroValue(value);
+        }
+
+        internal static bool IsMetricZeroValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
+            foreach (String metricPostfix in CommonCssConstants.METRIC_MEASUREMENTS_VALUES) {
+                if (value.EndsWith(metricPostfix) && IsNumericZeroValue(value.JSubstring(0, value.Length - metricPostfix.Length
+                    ))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal static bool IsNumericZeroValue(String value) {
+            return value != null && (value.Matches("^[-+]?0$") || value.Matches("^[-+]?\\.0$"));
+        }
+
+        internal static bool IsRelativeZeroValue(String valueArgument) {
+            String value = valueArgument;
+            if (value == null) {
+                return false;
+            }
+            else {
+                value = value.Trim();
+            }
+            foreach (String relativePostfix in RELATIVE_MEASUREMENTS_VALUES) {
+                if (value.EndsWith(relativePostfix) && IsNumericZeroValue(value.JSubstring(0, value.Length - relativePostfix
+                    .Length))) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

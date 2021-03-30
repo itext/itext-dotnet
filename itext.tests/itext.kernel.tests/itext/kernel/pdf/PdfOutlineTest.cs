@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,21 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfOutlineTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfOutlineTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfOutlineTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleDocWithOutlines() {
             String filename = "simpleDocWithOutlines.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
             PdfPage firstPage = pdfDoc.AddNewPage();
             PdfPage secondPage = pdfDoc.AddNewPage();
@@ -74,13 +74,13 @@ namespace iText.Kernel.Pdf {
             firstOutline.AddDestination(PdfExplicitDestination.CreateFit(firstPage));
             secondOutline.AddDestination(PdfExplicitDestination.CreateFit(secondPage));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void OutlinesTest() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf"));
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             IList<PdfOutline> children = outlines.GetAllChildren()[0].GetAllChildren();
             NUnit.Framework.Assert.AreEqual(outlines.GetTitle(), "Outlines");
@@ -90,7 +90,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void OutlinesWithPagesTest() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf"));
             PdfPage page = pdfDoc.GetPage(52);
             IList<PdfOutline> pageOutlines = page.GetOutlines(true);
             try {
@@ -105,9 +105,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AddOutlinesToDocumentTest() {
-            PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
             String filename = "addOutlinesToDocumentTest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.SetTagged();
             PdfOutline outlines = pdfDoc.GetOutlines(false);
@@ -122,13 +122,13 @@ namespace iText.Kernel.Pdf {
             outlines.GetAllChildren()[0].GetAllChildren()[1].AddOutline("testOutline", 1).AddDestination(PdfExplicitDestination
                 .CreateFit(pdfDoc.GetPage(102)));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ReadOutlinesFromDocumentTest() {
-            String filename = sourceFolder + "addOutlinesResult.pdf";
+            String filename = SOURCE_FOLDER + "addOutlinesResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             try {
@@ -146,16 +146,16 @@ namespace iText.Kernel.Pdf {
         public virtual void RemovePageWithOutlinesTest() {
             // TODO DEVSIX-1643: destinations are not removed along with page
             String filename = "removePageWithOutlinesTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), new PdfWriter(
-                destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf"), new PdfWriter
+                (DESTINATION_FOLDER + filename));
             // TODO DEVSIX-1643 (this causes log message errors. It's because of destinations pointing to removed page (freed reference, replaced by PdfNull))
             pdfDoc.RemovePage(102);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String diffContent = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
-            String diffTags = compareTool.CompareTagStructures(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                );
+            String diffContent = compareTool.CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" + 
+                filename, DESTINATION_FOLDER, "diff_");
+            String diffTags = compareTool.CompareTagStructures(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename);
             if (diffContent != null || diffTags != null) {
                 diffContent = diffContent != null ? diffContent : "";
                 diffTags = diffTags != null ? diffTags : "";
@@ -166,7 +166,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ReadRemovedPageWithOutlinesTest() {
             // TODO DEVSIX-1643: src document is taken from the previous removePageWithOutlinesTest test, however it contains numerous destination objects which contain PdfNull instead of page reference
-            String filename = sourceFolder + "removePagesWithOutlinesResult.pdf";
+            String filename = SOURCE_FOLDER + "removePagesWithOutlinesResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfPage page = pdfDoc.GetPage(102);
             IList<PdfOutline> pageOutlines = page.GetOutlines(false);
@@ -180,23 +180,23 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void UpdateOutlineTitle() {
-            PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
             String filename = "updateOutlineTitle.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             outlines.GetAllChildren()[0].GetAllChildren()[1].SetTitle("New Title");
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetOutlinesInvalidParentLink() {
             NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "outlinesInvalidParentLink.pdf");
+                PdfReader reader = new PdfReader(SOURCE_FOLDER + "outlinesInvalidParentLink.pdf");
                 String filename = "updateOutlineTitleInvalidParentLink.pdf";
-                PdfWriter writer = new PdfWriter(destinationFolder + filename);
+                PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
                 PdfDocument pdfDoc = new PdfDocument(reader, writer);
                 PdfOutline outlines = pdfDoc.GetOutlines(false);
             }
@@ -206,7 +206,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ReadOutlineTitle() {
-            String filename = sourceFolder + "updateOutlineTitleResult.pdf";
+            String filename = SOURCE_FOLDER + "updateOutlineTitleResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             PdfOutline outline = outlines.GetAllChildren()[0].GetAllChildren()[1];
@@ -221,8 +221,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddOutlineInNotOutlineMode() {
             String filename = "addOutlineInNotOutlineMode.pdf";
-            PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfOutline outlines = new PdfOutline(pdfDoc);
             PdfOutline firstPage = outlines.AddOutline("firstPage");
@@ -234,13 +234,13 @@ namespace iText.Kernel.Pdf {
             secondPage.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
             secondPageChild.AddDestination(PdfExplicitDestination.CreateFit(pdfDoc.GetPage(2)));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ReadOutlineAddedInNotOutlineMode() {
-            String filename = sourceFolder + "addOutlinesWithoutOutlineModeResult.pdf";
+            String filename = SOURCE_FOLDER + "addOutlinesWithoutOutlineModeResult.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             IList<PdfOutline> pageOutlines = pdfDoc.GetPage(102).GetOutlines(true);
             try {
@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CreateDocWithOutlines() {
-            String filename = sourceFolder + "documentWithOutlines.pdf";
+            String filename = SOURCE_FOLDER + "documentWithOutlines.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfOutline outlines = pdfDoc.GetOutlines(false);
             try {
@@ -268,8 +268,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines() {
-            PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "copyPagesWithOutlines01.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "copyPagesWithOutlines01.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfDocument pdfDoc1 = new PdfDocument(writer);
             IList<int> pages = new List<int>();
@@ -289,8 +289,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01() {
-            String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
-            PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
+            String filename = DESTINATION_FOLDER + "outlinesWithNamedDestinations01.pdf";
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "iphone_user_guide.pdf");
             PdfWriter writer = new PdfWriter(filename);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             PdfArray array1 = new PdfArray();
@@ -322,13 +322,13 @@ namespace iText.Kernel.Pdf {
             PdfOutline thirdOutline = root.AddOutline("Test3");
             thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("test3")));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations01.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, SOURCE_FOLDER + "cmp_outlinesWithNamedDestinations01.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations02() {
-            String filename = destinationFolder + "outlinesWithNamedDestinations02.pdf";
+            String filename = DESTINATION_FOLDER + "outlinesWithNamedDestinations02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfArray array1 = new PdfArray();
             array1.Add(pdfDoc.AddNewPage().GetPdfObject());
@@ -359,13 +359,13 @@ namespace iText.Kernel.Pdf {
             PdfOutline thirdOutline = root.AddOutline("Test3");
             thirdOutline.AddDestination(PdfDestination.MakeDestination(new PdfString("page3")));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_outlinesWithNamedDestinations02.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, SOURCE_FOLDER + "cmp_outlinesWithNamedDestinations02.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void OutlineStackOverflowTest01() {
-            PdfReader reader = new PdfReader(sourceFolder + "outlineStackOverflowTest01.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "outlineStackOverflowTest01.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
             try {
                 pdfDoc.GetOutlines(true);
@@ -378,36 +378,37 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OutlineTypeNull() {
             String filename = "outlineTypeNull";
-            String outputFile = destinationFolder + filename + ".pdf";
-            PdfReader reader = new PdfReader(sourceFolder + filename + ".pdf");
+            String outputFile = DESTINATION_FOLDER + filename + ".pdf";
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + filename + ".pdf");
             PdfWriter writer = new PdfWriter(new FileStream(outputFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.RemovePage(3);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, sourceFolder + "cmp_" + filename
-                 + ".pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, SOURCE_FOLDER + "cmp_" + filename
+                 + ".pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RemoveAllOutlinesTest() {
             String filename = "iphone_user_guide_removeAllOutlinesTest.pdf";
-            String input = sourceFolder + "iphone_user_guide.pdf";
-            String output = destinationFolder + "cmp_" + filename;
-            String cmp = sourceFolder + "cmp_" + filename;
+            String input = SOURCE_FOLDER + "iphone_user_guide.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = new PdfWriter(output);
             PdfDocument pdfDocument = new PdfDocument(reader, writer);
             pdfDocument.GetOutlines(true).RemoveOutline();
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void RemoveOneOutlineTest() {
             String filename = "removeOneOutline.pdf";
-            String input = sourceFolder + "outlineTree.pdf";
-            String output = destinationFolder + "cmp_" + filename;
-            String cmp = sourceFolder + "cmp_" + filename;
+            String input = SOURCE_FOLDER + "outlineTree.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = new PdfWriter(output);
             PdfDocument pdfDocument = new PdfDocument(reader, writer);
@@ -415,12 +416,13 @@ namespace iText.Kernel.Pdf {
             PdfOutline toRemove = root.GetAllChildren()[2];
             toRemove.RemoveOutline();
             pdfDocument.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void TestReinitializingOutlines() {
-            String input = sourceFolder + "outlineTree.pdf";
+            String input = SOURCE_FOLDER + "outlineTree.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(input));
             PdfOutline root = pdfDocument.GetOutlines(false);
             NUnit.Framework.Assert.AreEqual(4, root.GetAllChildren().Count);
@@ -432,32 +434,28 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RemovePageInDocWithSimpleOutlineTreeStructTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO: remove expected exception when DEVSIX-4464 will be fixed
-                String input = sourceFolder + "simpleOutlineTreeStructure.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithSimpleOutlineTreeStruct.pdf"
-                    ));
-                pdfDocument.RemovePage(2);
-                pdfDocument.Close();
-                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            String input = SOURCE_FOLDER + "simpleOutlineTreeStructure.pdf";
+            String output = DESTINATION_FOLDER + "simpleOutlineTreeStructure.pdf";
+            String cmp = SOURCE_FOLDER + "cmp_simpleOutlineTreeStructure.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+            pdfDocument.RemovePage(2);
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void RemovePageInDocWithComplexOutlineTreeStructTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO: remove expected exception when DEVSIX-4464 will be fixed
-                String input = sourceFolder + "complexOutlineTreeStructure.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(destinationFolder + "removePageInDocWithComplexOutlineTreeStruct.pdf"
-                    ));
-                pdfDocument.RemovePage(2);
-                pdfDocument.Close();
-                NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            String input = SOURCE_FOLDER + "complexOutlineTreeStructure.pdf";
+            String output = DESTINATION_FOLDER + "complexOutlineTreeStructure.pdf";
+            String cmp = SOURCE_FOLDER + "cmp_complexOutlineTreeStructure.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+            pdfDocument.RemovePage(2);
+            NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetNumberOfPages());
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
         }
     }
 }

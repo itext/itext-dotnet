@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -117,10 +117,11 @@ namespace iText.Signatures {
         /// size is not likely to change (as long as we call the same TSA using
         /// the same imprint length).
         /// </remarks>
-        /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
-        /// <param name="username">String - user(account) name</param>
-        /// <param name="password">String - password</param>
-        /// <param name="tokSzEstimate">int - estimated size of received time stamp token (DER encoded)</param>
+        /// <param name="url">Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
+        /// <param name="username">user(account) name</param>
+        /// <param name="password">password</param>
+        /// <param name="tokSzEstimate">estimated size of received time stamp token (DER encoded)</param>
+        /// <param name="digestAlgorithm">is a hash algorithm</param>
         public TSAClientBouncyCastle(String url, String username, String password, int tokSzEstimate, String digestAlgorithm
             ) {
             this.tsaURL = url;
@@ -216,6 +217,7 @@ namespace iText.Signatures {
         }
 
         /// <summary>Get timestamp token - communications layer</summary>
+        /// <param name="requestBytes">is a byte representation of TSA request</param>
         /// <returns>- byte[] - TSA response, raw bytes (RFC 3161 encoded)</returns>
         protected internal virtual byte[] GetTSAResponse(byte[] requestBytes) {
             // Setup the TSA connection

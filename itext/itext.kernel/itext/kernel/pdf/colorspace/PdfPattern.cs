@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,6 +57,15 @@ namespace iText.Kernel.Pdf.Colorspace {
     /// For mor information see paragraph 8.7 in ISO-32000-1.
     /// </remarks>
     public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>
+        /// Wraps the passed
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// that represent Pattern
+        /// </param>
         protected internal PdfPattern(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -206,34 +215,86 @@ namespace iText.Kernel.Pdf.Colorspace {
                 : base(pdfObject) {
             }
 
+            /// <summary>Creates a new Tiling Pattern instance.</summary>
+            /// <remarks>
+            /// Creates a new Tiling Pattern instance.
+            /// <para />
+            /// By default the pattern will be colored.
+            /// </remarks>
+            /// <param name="width">the width of the pattern cell's bounding box</param>
+            /// <param name="height">the height of the pattern cell's bounding box</param>
             public Tiling(float width, float height)
                 : this(width, height, true) {
             }
 
+            /// <summary>Creates a new Tiling Pattern instance.</summary>
+            /// <param name="width">the width of the pattern cell's bounding box</param>
+            /// <param name="height">the height of the pattern cell's bounding box</param>
+            /// <param name="colored">defines whether the Tiling Pattern will be colored or not</param>
             public Tiling(float width, float height, bool colored)
                 : this(new Rectangle(width, height), colored) {
             }
 
+            /// <summary>Creates a new Tiling instance.</summary>
+            /// <remarks>
+            /// Creates a new Tiling instance.
+            /// <para />
+            /// By default the pattern will be colored.
+            /// </remarks>
+            /// <param name="bbox">the pattern cell's bounding box</param>
             public Tiling(Rectangle bbox)
                 : this(bbox, true) {
             }
 
+            /// <summary>Creates a new Tiling instance.</summary>
+            /// <param name="bbox">the pattern cell's bounding box</param>
+            /// <param name="colored">defines whether the Tiling Pattern will be colored or not</param>
             public Tiling(Rectangle bbox, bool colored)
                 : this(bbox, bbox.GetWidth(), bbox.GetHeight(), colored) {
             }
 
+            /// <summary>Creates a new Tiling Pattern instance.</summary>
+            /// <remarks>
+            /// Creates a new Tiling Pattern instance.
+            /// <para />
+            /// By default the pattern will be colored.
+            /// </remarks>
+            /// <param name="width">the width of the pattern cell's bounding box</param>
+            /// <param name="height">the height of the pattern cell's bounding box</param>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
             public Tiling(float width, float height, float xStep, float yStep)
                 : this(width, height, xStep, yStep, true) {
             }
 
+            /// <summary>Creates a new Tiling Pattern instance.</summary>
+            /// <param name="width">the width of the pattern cell's bounding box</param>
+            /// <param name="height">the height of the pattern cell's bounding box</param>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
+            /// <param name="colored">defines whether the Tiling Pattern will be colored or not</param>
             public Tiling(float width, float height, float xStep, float yStep, bool colored)
                 : this(new Rectangle(width, height), xStep, yStep, colored) {
             }
 
+            /// <summary>Creates a new Tiling instance.</summary>
+            /// <remarks>
+            /// Creates a new Tiling instance.
+            /// <para />
+            /// By default the pattern will be colored.
+            /// </remarks>
+            /// <param name="bbox">the pattern cell's bounding box</param>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
             public Tiling(Rectangle bbox, float xStep, float yStep)
                 : this(bbox, xStep, yStep, true) {
             }
 
+            /// <summary>Creates a new Tiling instance.</summary>
+            /// <param name="bbox">the pattern cell's bounding box</param>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
+            /// <param name="colored">defines whether the Tiling Pattern will be colored or not</param>
             public Tiling(Rectangle bbox, float xStep, float yStep, bool colored)
                 : base(new PdfStream()) {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
@@ -318,24 +379,34 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetModified();
             }
 
+            /// <summary>Gets the desired horizontal space between pattern cells.</summary>
+            /// <returns>the desired horizontal space between pattern cells</returns>
             public virtual float GetXStep() {
                 return GetPdfObject().GetAsNumber(PdfName.XStep).FloatValue();
             }
 
+            /// <summary>Sets the desired horizontal space between pattern cells.</summary>
+            /// <param name="xStep">the desired horizontal space between pattern cells</param>
             public virtual void SetXStep(float xStep) {
                 GetPdfObject().Put(PdfName.XStep, new PdfNumber(xStep));
                 SetModified();
             }
 
+            /// <summary>Gets the desired vertical space between pattern cells.</summary>
+            /// <returns>the desired vertical space between pattern cells</returns>
             public virtual float GetYStep() {
                 return GetPdfObject().GetAsNumber(PdfName.YStep).FloatValue();
             }
 
+            /// <summary>Sets the desired vertical space between pattern cells.</summary>
+            /// <param name="yStep">the desired vertical space between pattern cells</param>
             public virtual void SetYStep(float yStep) {
                 GetPdfObject().Put(PdfName.YStep, new PdfNumber(yStep));
                 SetModified();
             }
 
+            /// <summary>Gets the Tiling Pattern's resources.</summary>
+            /// <returns>the Tiling Pattern's resources</returns>
             public virtual PdfResources GetResources() {
                 if (this.resources == null) {
                     PdfDictionary resourcesDict = GetPdfObject().GetAsDictionary(PdfName.Resources);
@@ -355,11 +426,45 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
         }
 
+        /// <summary>
+        /// Shading pattern provides a smooth transition between colors across an area to be painted,
+        /// independent of the resolution of any particular output device and without specifying
+        /// the number of steps in the color transition.
+        /// </summary>
+        /// <remarks>
+        /// Shading pattern provides a smooth transition between colors across an area to be painted,
+        /// independent of the resolution of any particular output device and without specifying
+        /// the number of steps in the color transition. Patterns of this type are described
+        /// by pattern dictionaries with a pattern type of 2.
+        /// </remarks>
         public class Shading : PdfPattern {
+            /// <summary>
+            /// Creates new instance from the
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+            /// object.
+            /// </summary>
+            /// <remarks>
+            /// Creates new instance from the
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+            /// object.
+            /// This stream should have PatternType equals to 2.
+            /// </remarks>
+            /// <param name="pdfObject">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+            /// that represents Shading Pattern.
+            /// </param>
             public Shading(PdfDictionary pdfObject)
                 : base(pdfObject) {
             }
 
+            /// <summary>Creates a new instance of Shading Pattern.</summary>
+            /// <param name="shading">
+            /// the
+            /// <see cref="PdfShading"/>
+            /// that specifies the details of a particular
+            /// gradient fill
+            /// </param>
             public Shading(PdfShading shading)
                 : base(new PdfDictionary()) {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
@@ -367,15 +472,38 @@ namespace iText.Kernel.Pdf.Colorspace {
                 GetPdfObject().Put(PdfName.Shading, shading.GetPdfObject());
             }
 
+            /// <summary>
+            /// Gets the dictionary of the pattern's
+            /// <see cref="PdfShading"/>.
+            /// </summary>
+            /// <returns>
+            /// the dictionary of the pattern's
+            /// <see cref="PdfShading"/>
+            /// </returns>
             public virtual PdfDictionary GetShading() {
                 return (PdfDictionary)GetPdfObject().Get(PdfName.Shading);
             }
 
+            /// <summary>
+            /// Sets the
+            /// <see cref="PdfShading"/>
+            /// that specifies the details of a particular gradient fill.
+            /// </summary>
+            /// <param name="shading">
+            /// the
+            /// <see cref="PdfShading"/>
+            /// that specifies the details of a particular gradient fill
+            /// </param>
             public virtual void SetShading(PdfShading shading) {
                 GetPdfObject().Put(PdfName.Shading, shading.GetPdfObject());
                 SetModified();
             }
 
+            /// <summary>Sets the dictionary which specifies the details of a particular gradient fill.</summary>
+            /// <param name="shading">
+            /// the dictionary of the pattern's
+            /// <see cref="PdfShading"/>
+            /// </param>
             public virtual void SetShading(PdfDictionary shading) {
                 GetPdfObject().Put(PdfName.Shading, shading);
                 SetModified();

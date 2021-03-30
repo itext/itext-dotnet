@@ -8,7 +8,7 @@ using Versions.Attributes;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("iText Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2020 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2021 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.kernel.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -22,8 +22,8 @@ using Versions.Attributes;
 
 [assembly: Guid("be4c62cc-6495-47e1-ab00-05b1bfe331f6")]
 
-[assembly: KeyVersion("3.1.3.0")]
+[assembly: KeyVersion("3.1.4.0")]
 
-[assembly: AssemblyVersion("7.1.14.0")]
-[assembly: AssemblyFileVersion("7.1.14.0")]
-[assembly: AssemblyInformationalVersion("7.1.14")]
+[assembly: AssemblyVersion("7.1.15.0")]
+[assembly: AssemblyFileVersion("7.1.15.0")]
+[assembly: AssemblyInformationalVersion("7.1.15")]

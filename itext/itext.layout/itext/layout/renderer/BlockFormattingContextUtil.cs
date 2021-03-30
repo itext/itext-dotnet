@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -77,10 +77,11 @@ namespace iText.Layout.Renderer {
         /// <returns>true if given renderer creates a new "Block formatting context" in terms of CSS, false otherwise.
         ///     </returns>
         public static bool IsRendererCreateBfc(IRenderer renderer) {
-            return (renderer is RootRenderer) || (renderer is CellRenderer) || IsInlineBlock(renderer) || FloatingHelper
-                .IsRendererFloating(renderer) || IsAbsolutePosition(renderer) || IsFixedPosition(renderer) || IsCaption
-                (renderer) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_X
-                ) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue.HIDDEN, renderer, Property.OVERFLOW_Y);
+            return (renderer is RootRenderer) || (renderer is CellRenderer) || IsInlineBlock(renderer) || renderer.GetParent
+                () is FlexContainerRenderer || FloatingHelper.IsRendererFloating(renderer) || IsAbsolutePosition(renderer
+                ) || IsFixedPosition(renderer) || IsCaption(renderer) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue
+                .HIDDEN, renderer, Property.OVERFLOW_X) || AbstractRenderer.IsOverflowProperty(OverflowPropertyValue.HIDDEN
+                , renderer, Property.OVERFLOW_Y);
         }
 
         private static bool IsInlineBlock(IRenderer renderer) {

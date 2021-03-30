@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -407,8 +407,6 @@ namespace iText.Signatures {
                 }
                 catch (System.IO.IOException) {
                 }
-                // TODO DEVSIX-3458: remove this catch since RandomAccessFileOrArray#length will not throw
-                //  IOException anymore and therefore PdfReader#getFileLength will not do so either
                 for (int k = 0; k < sorter.Count; ++k) {
                     Object[] objs = sorter[k];
                     String name = (String)objs[0];

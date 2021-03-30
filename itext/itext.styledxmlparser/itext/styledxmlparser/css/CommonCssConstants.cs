@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -63,6 +63,15 @@ namespace iText.StyledXmlParser.Css {
         }
 
         // properties
+        /// <summary>The Constant ALIGN_CONTENT.</summary>
+        public const String ALIGN_CONTENT = "align-content";
+
+        /// <summary>The Constant ALIGN_ITEMS.</summary>
+        public const String ALIGN_ITEMS = "align-items";
+
+        /// <summary>The Constant ALIGN_SELF.</summary>
+        public const String ALIGN_SELF = "align-self";
+
         /// <summary>The Constant BACKGROUND.</summary>
         public const String BACKGROUND = "background";
 
@@ -201,6 +210,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant COLOR_BURN.</summary>
         public const String COLOR_BURN = "color-burn";
 
+        /// <summary>The Constant COLUMN_GAP.</summary>
+        public const String COLUMN_GAP = "column-gap";
+
         /// <summary>The Constant DARKEN.</summary>
         public const String DARKEN = "darken";
 
@@ -218,6 +230,27 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant EXCLUSION.</summary>
         public const String EXCLUSION = "exclusion";
+
+        /// <summary>The Constant FLEX.</summary>
+        public const String FLEX = "flex";
+
+        /// <summary>The Constant FLEX_BASIS.</summary>
+        public const String FLEX_BASIS = "flex-basis";
+
+        /// <summary>The Constant FLEX_DIRECTION.</summary>
+        public const String FLEX_DIRECTION = "flex-direction";
+
+        /// <summary>The Constant FLEX_GROW.</summary>
+        public const String FLEX_GROW = "flex-grow";
+
+        /// <summary>The Constant FLEX_FLOW.</summary>
+        public const String FLEX_FLOW = "flex-flow";
+
+        /// <summary>The Constant FLEX_SHRINK.</summary>
+        public const String FLEX_SHRINK = "flex-shrink";
+
+        /// <summary>The Constant FLEX_WRAP.</summary>
+        public const String FLEX_WRAP = "flex-wrap";
 
         /// <summary>The Constant FLOAT.</summary>
         public const String FLOAT = "float";
@@ -276,6 +309,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant FONT_WEIGHT.</summary>
         public const String FONT_WEIGHT = "font-weight";
 
+        /// <summary>The Constant GAP.</summary>
+        public const String GAP = "gap";
+
         /// <summary>The Constant HANGING_PUNCTUATION.</summary>
         public const String HANGING_PUNCTUATION = "hanging-punctuation";
 
@@ -290,6 +326,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant INLINE-BLOCK</summary>
         public const String INLINE_BLOCK = "inline-block";
+
+        /// <summary>The Constant JUSTIFY_CONTENT.</summary>
+        public const String JUSTIFY_CONTENT = "justify-content";
+
+        /// <summary>The Constant JUSTIFY_ITEMS.</summary>
+        public const String JUSTIFY_ITEMS = "justify-items";
 
         /// <summary>The Constant KEEP_ALL.</summary>
         public const String KEEP_ALL = "keep-all";
@@ -336,6 +378,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant OPACITY.</summary>
         public const String OPACITY = "opacity";
 
+        /// <summary>The Constant ORDER.</summary>
+        public const String ORDER = "order";
+
         /// <summary>The Constant OPRPHANS.</summary>
         public const String ORPHANS = "orphans";
 
@@ -380,6 +425,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant PAGE_BREAK_INSIDE.</summary>
         public const String PAGE_BREAK_INSIDE = "page-break-inside";
+
+        /// <summary>The Constant PLACE_ITEMS.</summary>
+        public const String PLACE_ITEMS = "place-items";
 
         /// <summary>The Constant POSITION.</summary>
         public const String POSITION = "position";
@@ -478,6 +526,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant AUTO.</summary>
         public const String AUTO = "auto";
 
+        /// <summary>The Constant BASELINE.</summary>
+        public const String BASELINE = "baseline";
+
         /// <summary>The Constant BLINK.</summary>
         public const String BLINK = "blink";
 
@@ -511,8 +562,17 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant CLOSE_QUOTE.</summary>
         public const String CLOSE_QUOTE = "close-quote";
 
+        /// <summary>The Constant COLUMN.</summary>
+        public const String COLUMN = "column";
+
+        /// <summary>The Constant COLUMN_REVERSE.</summary>
+        public const String COLUMN_REVERSE = "column-reverse";
+
         /// <summary>The Constant CONTAIN.</summary>
         public const String CONTAIN = "contain";
+
+        /// <summary>The Constant CONTENT.</summary>
+        public const String CONTENT = "content";
 
         /// <summary>The Constant CONTENT_BOX.</summary>
         public const String CONTENT_BOX = "content-box";
@@ -544,8 +604,26 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant DOUBLE.</summary>
         public const String DOUBLE = "double";
 
+        /// <summary>The Constant EACH_LINE.</summary>
+        public const String EACH_LINE = "each-line";
+
+        /// <summary>The Constant END.</summary>
+        public const String END = "end";
+
+        /// <summary>The Constant FIRST.</summary>
+        public const String FIRST = "first";
+
+        /// <summary>The Constant FIT_CONTENT.</summary>
+        public const String FIT_CONTENT = "fit-content";
+
         /// <summary>The Constant FIXED.</summary>
         public const String FIXED = "fixed";
+
+        /// <summary>The Constant FLEX_END.</summary>
+        public const String FLEX_END = "flex-end";
+
+        /// <summary>The Constant FLEX_START.</summary>
+        public const String FLEX_START = "flex-start";
 
         /// <summary>The Constant GEORGIAN.</summary>
         public const String GEORGIAN = "georgian";
@@ -555,6 +633,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant GROOVE.</summary>
         public const String GROOVE = "groove";
+
+        /// <summary>The Constant HANGING.</summary>
+        public const String HANGING = "hanging";
 
         /// <summary>The Constant HEBREW.</summary>
         public const String HEBREW = "hebrew";
@@ -591,6 +672,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant LARGER.</summary>
         public const String LARGER = "larger";
+
+        /// <summary>The Constant LAST.</summary>
+        public const String LAST = "last";
+
+        /// <summary>The Constant value LEGACY.</summary>
+        public const String LEGACY = "legacy";
 
         /// <summary>The Constant LEFT.</summary>
         public const String LEFT = "left";
@@ -634,8 +721,17 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant MENU.</summary>
         public const String MENU = "menu";
 
+        /// <summary>The Constant MAX_CONTENT.</summary>
+        public const String MAX_CONTENT = "max-content";
+
+        /// <summary>The Constant MIN_CONTENT.</summary>
+        public const String MIN_CONTENT = "min-content";
+
         /// <summary>The Constant MESSAGE_BOX.</summary>
         public const String MESSAGE_BOX = "message-box";
+
+        /// <summary>The Constant NOWRAP.</summary>
+        public const String NOWRAP = "nowrap";
 
         /// <summary>The Constant NO_OPEN_QUOTE.</summary>
         public const String NO_OPEN_QUOTE = "no-open-quote";
@@ -697,6 +793,18 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ROUND.</summary>
         public const String ROUND = "round";
 
+        /// <summary>The Constant ROW.</summary>
+        public const String ROW = "row";
+
+        /// <summary>The Constant ROW_GAP.</summary>
+        public const String ROW_GAP = "row-gap";
+
+        /// <summary>The Constant ROW_REVERSE.</summary>
+        public const String ROW_REVERSE = "row-reverse";
+
+        /// <summary>The Constant SAFE.</summary>
+        public const String SAFE = "safe";
+
         /// <summary>The Constant SATURATION.</summary>
         public const String SATURATION = "saturation";
 
@@ -714,6 +822,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant SCROLL.</summary>
         public const String SCROLL = "scroll";
+
+        /// <summary>The Constant value SELF_END.</summary>
+        public const String SELF_END = "self-end";
+
+        /// <summary>The Constant SELF_START.</summary>
+        public const String SELF_START = "self-start";
 
         /// <summary>The Constant SKEW.</summary>
         public const String SKEW = "skew";
@@ -745,6 +859,15 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant SPACE.</summary>
         public const String SPACE = "space";
 
+        /// <summary>The Constant SPACE_AROUND.</summary>
+        public const String SPACE_AROUND = "space-around";
+
+        /// <summary>The Constant SPACE_BETWEEN.</summary>
+        public const String SPACE_BETWEEN = "space-between";
+
+        /// <summary>The Constant SPACE_EVENLY.</summary>
+        public const String SPACE_EVENLY = "space-evenly";
+
         /// <summary>The Constant SQUARE.</summary>
         public const String SQUARE = "square";
 
@@ -756,6 +879,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant STATUS_BAR.</summary>
         public const String STATUS_BAR = "status-bar";
+
+        /// <summary>The Constant STRETCH.</summary>
+        public const String STRETCH = "stretch";
 
         /// <summary>The Constant THICK.</summary>
         public const String THICK = "thick";
@@ -784,6 +910,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant value UNDERLINE</summary>
         public const String UNDERLINE = "underline";
 
+        /// <summary>The Constant UNSAFE.</summary>
+        public const String UNSAFE = "unsafe";
+
         /// <summary>The Constant value UNSET.</summary>
         public const String UNSET = "unset";
 
@@ -801,6 +930,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant value WAVY.</summary>
         public const String WAVY = "wavy";
+
+        /// <summary>The Constant WRAP.</summary>
+        public const String WRAP = "wrap";
+
+        /// <summary>The Constant WRAP_REVERSE.</summary>
+        public const String WRAP_REVERSE = "wrap-reverse";
 
         /// <summary>The Constant X_LARGE.</summary>
         public const String X_LARGE = "x-large";

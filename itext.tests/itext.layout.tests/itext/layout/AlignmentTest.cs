@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -179,7 +179,8 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             PdfFont type0 = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
                 );
-            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", true);
+            PdfFont simpleFont = PdfFontFactory.CreateFont(sourceFolder + "/../fonts/NotoSans-Regular.ttf", PdfFontFactory.EmbeddingStrategy
+                .PREFER_EMBEDDED);
             Paragraph paragraph = new Paragraph().SetSpacingRatio(1).SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
             paragraph.Add("If you need to stop reading before you reach the end");
             document.Add(paragraph.SetFont(type0));

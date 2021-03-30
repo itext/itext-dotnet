@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
     /// </summary>
     public class CssEnumValidator : ICssDataTypeValidator {
         /// <summary>The allowed values.</summary>
-        private IList<String> allowedValues;
+        private ICollection<String> allowedValues;
 
         /// <summary>
         /// Creates a new
@@ -61,7 +61,44 @@ namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
         /// </summary>
         /// <param name="allowedValues">the allowed values</param>
         public CssEnumValidator(params String[] allowedValues) {
-            this.allowedValues = new List<String>(JavaUtil.ArraysAsList(allowedValues));
+            this.allowedValues = new HashSet<String>(JavaUtil.ArraysAsList(allowedValues));
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssEnumValidator"/>
+        /// instance.
+        /// </summary>
+        /// <param name="allowedValues">the allowed values</param>
+        public CssEnumValidator(ICollection<String> allowedValues)
+            : this(allowedValues, null) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssEnumValidator"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="CssEnumValidator"/>
+        /// instance.
+        /// <para />
+        /// Each allowed value will be added with all the modificators.
+        /// Each allowed value will be added as well.
+        /// </remarks>
+        /// <param name="allowedValues">the allowed values</param>
+        /// <param name="allowedModificators">the allowed prefixes</param>
+        public CssEnumValidator(ICollection<String> allowedValues, ICollection<String> allowedModificators) {
+            this.allowedValues = new HashSet<String>();
+            this.allowedValues.AddAll(allowedValues);
+            if (null != allowedModificators) {
+                foreach (String prefix in allowedModificators) {
+                    foreach (String value in allowedValues) {
+                        this.allowedValues.Add(prefix + " " + value);
+                    }
+                }
+            }
         }
 
         /// <summary>Adds new allowed values to the allowedValues.</summary>

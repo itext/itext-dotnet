@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -91,7 +91,6 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <param name="lastPoint">start point for this shape</param>
         /// <returns>calculated rectangle</returns>
         public virtual Rectangle GetPathShapeRectangle(Point lastPoint) {
-            // TODO DEVSIX-3814 - add method declaration into IPathShape and remove here in iText 7.2
             return new Rectangle((float)CssUtils.ConvertPxToPts(GetEndingPoint().GetX()), (float)CssUtils.ConvertPxToPts
                 (GetEndingPoint().GetY()), 0, 0);
         }

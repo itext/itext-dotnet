@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -82,7 +82,8 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
                 .PDF_A_1B);
             form.AddField(button);
@@ -107,7 +108,8 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
                 .PDF_A_1B);
             button.RegenerateField();
@@ -133,7 +135,8 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             PdfFormField button = PdfFormField.CreatePushButton(doc, rect, "push button", "push", font, 12, PdfAConformanceLevel
                 .PDF_A_1B);
             button.SetValue("button");

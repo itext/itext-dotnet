@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -401,9 +401,6 @@ namespace iText.Kernel.Pdf.Xobject {
             if (image.GetFilter() != null) {
                 stream.Put(PdfName.Filter, new PdfName(image.GetFilter()));
             }
-            //TODO: return to this later
-            //        if (image.getLayer() != null)
-            //            put(PdfName.OC, image.getLayer().getRef());
             if (image.GetColorSpace() == -1) {
                 stream.Remove(PdfName.ColorSpace);
             }
@@ -563,7 +560,6 @@ namespace iText.Kernel.Pdf.Xobject {
                             }
                             else {
                                 if (value is byte[]) {
-                                    //TODO Check inline images
                                     PdfStream globalsStream = new PdfStream();
                                     globalsStream.GetOutputStream().WriteBytes((byte[])value);
                                     dictionary.Put(PdfName.JBIG2Globals, globalsStream);
@@ -622,7 +618,6 @@ namespace iText.Kernel.Pdf.Xobject {
                                 array.Add(CreateArray(stream, (Object[])obj));
                             }
                             else {
-                                //TODO instance of was removed due to autoport
                                 array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
                             }
                         }

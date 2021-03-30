@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -89,32 +89,29 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </returns>
         public static IList<ICssSelectorItem> ParseSelectorItems(String selector) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
-            CssSelectorParserMatch match = new CssSelectorParserMatch(selector, selectorPattern);
+            Matcher match = iText.IO.Util.Matcher.Match(selectorPattern, selector);
             bool tagSelectorDescription = false;
-            while (match.Success()) {
-                String selectorItem = match.GetValue();
+            while (match.Find()) {
+                String selectorItem = match.Group(0);
                 char firstChar = selectorItem[0];
                 switch (firstChar) {
                     case '#': {
-                        match.Next();
                         selectorItems.Add(new CssIdSelectorItem(selectorItem.Substring(1)));
                         break;
                     }
 
                     case '.': {
-                        match.Next();
                         selectorItems.Add(new CssClassSelectorItem(selectorItem.Substring(1)));
                         break;
                     }
 
                     case '[': {
-                        match.Next();
                         selectorItems.Add(new CssAttributeSelectorItem(selectorItem));
                         break;
                     }
 
                     case ':': {
-                        AppendPseudoSelector(selectorItems, selectorItem, match);
+                        AppendPseudoSelector(selectorItems, selectorItem, match, selector);
                         break;
                     }
 
@@ -122,7 +119,6 @@ namespace iText.StyledXmlParser.Css.Parse {
                     case '+':
                     case '>':
                     case '~': {
-                        match.Next();
                         if (selectorItems.Count == 0) {
                             throw new ArgumentException(MessageFormatUtil.Format("Invalid token detected in the start of the selector string: {0}"
                                 , firstChar));
@@ -152,7 +148,6 @@ namespace iText.StyledXmlParser.Css.Parse {
 
                     default: {
                         //and case '*':
-                        match.Next();
                         if (tagSelectorDescription) {
                             throw new InvalidOperationException("Invalid selector string");
                         }
@@ -168,53 +163,18 @@ namespace iText.StyledXmlParser.Css.Parse {
             return selectorItems;
         }
 
-        /// <summary>
-        /// Resolves a pseudo selector, appends it to list and updates
-        /// <see cref="CssSelectorParserMatch"/>
-        /// in process.
-        /// </summary>
+        /// <summary>Resolves a pseudo selector and appends it to list.</summary>
         /// <param name="selectorItems">list of items to which new selector will be added to</param>
         /// <param name="pseudoSelector">the pseudo selector</param>
         /// <param name="match">
         /// the corresponding
-        /// <see cref="CssSelectorParserMatch"/>
-        /// that will be updated.
+        /// <see cref="iText.IO.Util.Matcher"/>.
         /// </param>
-        private static void AppendPseudoSelector(IList<ICssSelectorItem> selectorItems, String pseudoSelector, CssSelectorParserMatch
-             match) {
+        /// <param name="source">is the original source</param>
+        private static void AppendPseudoSelector(IList<ICssSelectorItem> selectorItems, String pseudoSelector, Matcher
+             match, String source) {
             pseudoSelector = pseudoSelector.ToLowerInvariant();
-            int start = match.GetIndex() + pseudoSelector.Length;
-            String source = match.GetSource();
-            if (start < source.Length && source[start] == '(') {
-                int bracketDepth = 1;
-                int curr = start + 1;
-                while (bracketDepth > 0 && curr < source.Length) {
-                    if (source[curr] == '(') {
-                        ++bracketDepth;
-                    }
-                    else {
-                        if (source[curr] == ')') {
-                            --bracketDepth;
-                        }
-                        else {
-                            if (source[curr] == '"' || source[curr] == '\'') {
-                                curr = CssUtils.FindNextUnescapedChar(source, source[curr], curr + 1);
-                            }
-                        }
-                    }
-                    ++curr;
-                }
-                if (bracketDepth == 0) {
-                    match.Next(curr);
-                    pseudoSelector += source.JSubstring(start, curr);
-                }
-                else {
-                    match.Next();
-                }
-            }
-            else {
-                match.Next();
-            }
+            pseudoSelector = HandleBracketsOfPseudoSelector(pseudoSelector, match, source);
             /*
             This :: notation is introduced by the current document in order to establish a discrimination between
             pseudo-classes and pseudo-elements.
@@ -238,6 +198,47 @@ namespace iText.StyledXmlParser.Css.Parse {
                     selectorItems.Add(pseudoClassSelectorItem);
                 }
             }
+        }
+
+        /// <summary>Resolves a pseudo selector if it contains brackets.</summary>
+        /// <remarks>
+        /// Resolves a pseudo selector if it contains brackets. Updates internal state of
+        /// <see cref="iText.IO.Util.Matcher"/>
+        /// if necessary.
+        /// </remarks>
+        /// <param name="pseudoSelector">the pseudo selector</param>
+        /// <param name="match">
+        /// the corresponding
+        /// <see cref="iText.IO.Util.Matcher"/>.
+        /// </param>
+        /// <param name="source">is the original source</param>
+        private static String HandleBracketsOfPseudoSelector(String pseudoSelector, Matcher match, String source) {
+            int start = match.Start() + pseudoSelector.Length;
+            if (start < source.Length && source[start] == '(') {
+                int bracketDepth = 1;
+                int curr = start + 1;
+                while (bracketDepth > 0 && curr < source.Length) {
+                    if (source[curr] == '(') {
+                        ++bracketDepth;
+                    }
+                    else {
+                        if (source[curr] == ')') {
+                            --bracketDepth;
+                        }
+                        else {
+                            if (source[curr] == '"' || source[curr] == '\'') {
+                                curr = CssUtils.FindNextUnescapedChar(source, source[curr], curr + 1);
+                            }
+                        }
+                    }
+                    ++curr;
+                }
+                if (bracketDepth == 0) {
+                    match.Region(curr, source.Length);
+                    pseudoSelector += source.JSubstring(start, curr);
+                }
+            }
+            return pseudoSelector;
         }
     }
 }

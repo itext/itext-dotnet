@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2020 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -74,9 +74,9 @@ namespace iText.Signatures {
             this.ocsps = ocsps;
         }
 
-        /// <summary>Verifies if a a valid OCSP response is found for the certificate.</summary>
+        /// <summary>Verifies if a valid OCSP response is found for the certificate.</summary>
         /// <remarks>
-        /// Verifies if a a valid OCSP response is found for the certificate.
+        /// Verifies if a valid OCSP response is found for the certificate.
         /// If this method returns false, it doesn't mean the certificate isn't valid.
         /// It means we couldn't verify it against any OCSP response that was available.
         /// </remarks>
@@ -253,8 +253,8 @@ namespace iText.Signatures {
                     if (responderCert.GetExtensionValue(OcspObjectIdentifiers.PkixOcspNocheck.Id) == null) {
                         X509Crl crl;
                         try {
-                            // TODO should also check for Authority Information Access according to RFC6960 4.2.2.2.1. "Revocation Checking of an Authorized Responder"
-                            // TODO should also respect onlineCheckingAllowed property?
+                            // TODO DEVSIX-5210 Implement a check heck for Authority Information Access according to
+                            // RFC6960 4.2.2.2.1. "Revocation Checking of an Authorized Responder"
                             crl = CertificateUtil.GetCRL(responderCert);
                         }
                         catch (Exception) {
@@ -275,8 +275,8 @@ namespace iText.Signatures {
                     }
                 }
                 else {
-                    // TODO throw exception starting from iText version 7.2, but only after OCSPVerifier would allow explicit setting revocation check end points/provide revocation data
-                    // throw new VerificationException(issuerCert, "Authorized OCSP responder certificate revocation status cannot be checked.");
+                    // TODO DEVSIX-5207 throw exception starting from iText version 7.2, but only after OCSPVerifier
+                    // would allow explicit setting revocation check end points/provide revocation data
                     // certificate chain is not present in response received
                     // try to verify using rootStore according to RFC 6960 2.2. Response:
                     // "The key used to sign the response MUST belong to one of the following:
