@@ -206,6 +206,8 @@ namespace iText.IO {
 
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
 
+        public const String INVALID_DISTRIBUTION_POINT = "Skipped CRL: {0}";
+
         public const String INVALID_DESTINATION_TYPE = "When destination's not associated with a Remote or Embedded Go-To action, it shall specify page dictionary instead of page number. Otherwise destination might be considered invalid";
 
         public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R";

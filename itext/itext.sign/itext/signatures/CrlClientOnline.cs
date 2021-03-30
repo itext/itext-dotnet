@@ -47,6 +47,7 @@ using System.IO;
 using Common.Logging;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
+using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>
@@ -152,7 +153,7 @@ namespace iText.Signatures {
                     LOGGER.Info("Added CRL found at: " + urlt);
                 }
                 catch (Exception e) {
-                    LOGGER.Info("Skipped CRL: " + e.Message + " for " + urlt);
+                    LOGGER.Info(MessageFormatUtil.Format(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, e.Message));
                 }
             }
             return ar;
@@ -164,7 +165,7 @@ namespace iText.Signatures {
             try {
                 AddUrl(new Uri(url));
             }
-            catch (System.IO.IOException) {
+            catch (UriFormatException) {
                 LOGGER.Info("Skipped CRL url (malformed): " + url);
             }
         }
