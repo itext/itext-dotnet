@@ -2557,6 +2557,76 @@ namespace iText.Layout {
                  + "cmp_" + filename, destinationFolder, "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void BigRowSpanTooFarFullTest() {
+            // TODO DEVSIX-5250 The first column should be fully red
+            String filename = "bigRowSpanTooFarFullTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            Document document = new Document(pdf);
+            Table table = new Table(2);
+            int bigRowSpan = 5;
+            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetBackgroundColor(ColorConstants
+                .RED));
+            for (int i = 0; i < bigRowSpan; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
+                    (ColorConstants.BLUE));
+            }
+            document.Add(table);
+            document.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BigRowSpanTooFarPartialTest() {
+            // TODO DEVSIX-5250 The first column should be fully red, but on page 2 it is not
+            String filename = "bigRowSpanTooFarPartialTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            Document document = new Document(pdf);
+            Table table = new Table(2);
+            int bigRowSpan = 5;
+            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetHeight(800).SetBackgroundColor
+                (ColorConstants.RED));
+            for (int i = 0; i < bigRowSpan; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
+                    (ColorConstants.BLUE));
+            }
+            document.Add(table);
+            document.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void BigRowSpanTooFarNothingTest() {
+            // TODO DEVSIX-5250 The first column should be fully red
+            String filename = "bigRowSpanTooFarNothingTest.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            Document document = new Document(pdf);
+            Table table = new Table(2);
+            int bigRowSpan = 5;
+            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetHeight(800).SetKeepTogether
+                (true).SetBackgroundColor(ColorConstants.RED));
+            for (int i = 0; i < bigRowSpan; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
+                    (ColorConstants.BLUE));
+            }
+            document.Add(table);
+            document.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder));
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 
