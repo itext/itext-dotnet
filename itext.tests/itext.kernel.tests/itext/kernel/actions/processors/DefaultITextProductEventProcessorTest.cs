@@ -22,11 +22,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel;
 using iText.Kernel.Actions.Session;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Processors {
     public class DefaultITextProductEventProcessorTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void ConstructorWithNullProductNameTest() {
+            NUnit.Framework.Assert.That(() =>  {
+                new DefaultITextProductEventProcessor(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.ProductNameCannotBeNull))
+;
+        }
+
         [NUnit.Framework.Test]
         public virtual void BuildFirstLineOfProducerTest() {
             DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor("test-product");

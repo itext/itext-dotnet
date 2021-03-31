@@ -56,9 +56,25 @@ namespace iText.Kernel.Actions {
                 NUnit.Framework.Assert.AreEqual("ThrowArithmeticExpHandler", aggregatedExceptions[0].Message);
                 NUnit.Framework.Assert.AreEqual("ThrowIllegalArgumentExpHandler", aggregatedExceptions[1].Message);
             }
+            eventManager.Unregister(handler1);
+            eventManager.Unregister(handler2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ThrowOneUncheckedExceptionsTest() {
+            EventManager eventManager = EventManager.GetInstance();
+            IBaseEventHandler handler1 = new EventManagerTest.ThrowArithmeticExpHandler();
+            eventManager.Register(handler1);
+            try {
+                SequenceId sequenceId = new SequenceId();
+                NUnit.Framework.Assert.That(() =>  {
+                    eventManager.OnEvent(new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE));
+                }
+                , NUnit.Framework.Throws.InstanceOf<ArithmeticException>().With.Message.EqualTo("ThrowArithmeticExpHandler"))
+;
+            }
             finally {
                 eventManager.Unregister(handler1);
-                eventManager.Unregister(handler2);
             }
         }
 

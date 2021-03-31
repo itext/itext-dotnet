@@ -49,12 +49,10 @@ namespace iText.Kernel.Actions {
         /// <see cref="iText.Kernel.Actions.Processors.ITextProductEventProcessor"/>
         /// for a product.
         /// </summary>
-        /// <param name="productName">is a name of the product for which the new processor is defined</param>
         /// <param name="processor">is a new processor</param>
         /// <returns>a replaced processor for the product</returns>
-        protected internal virtual ITextProductEventProcessor AddProcessor(String productName, ITextProductEventProcessor
-             processor) {
-            return ProductEventHandler.INSTANCE.AddProcessor(productName, processor);
+        protected internal virtual ITextProductEventProcessor AddProcessor(ITextProductEventProcessor processor) {
+            return ProductEventHandler.INSTANCE.AddProcessor(processor);
         }
 
         /// <summary>Removes a processor registered for a product.</summary>
@@ -69,6 +67,12 @@ namespace iText.Kernel.Actions {
         /// <returns>processor for the product</returns>
         protected internal virtual ITextProductEventProcessor GetProcessor(String productName) {
             return ProductEventHandler.INSTANCE.GetProcessor(productName);
+        }
+
+        /// <summary>Gets an unmodifiable map of registered processors.</summary>
+        /// <returns>all processors</returns>
+        protected internal virtual IDictionary<String, ITextProductEventProcessor> GetProcessors() {
+            return ProductEventHandler.INSTANCE.GetProcessors();
         }
 
         /// <summary>Gets events registered for provided identifier.</summary>

@@ -72,8 +72,8 @@ namespace iText.Kernel.Actions {
             }
         }
 
-        internal ITextProductEventProcessor AddProcessor(String productName, ITextProductEventProcessor processor) {
-            return processors.Put(productName, processor);
+        internal ITextProductEventProcessor AddProcessor(ITextProductEventProcessor processor) {
+            return processors.Put(processor.GetProductName(), processor);
         }
 
         internal ITextProductEventProcessor RemoveProcessor(String productName) {
@@ -82,6 +82,10 @@ namespace iText.Kernel.Actions {
 
         internal ITextProductEventProcessor GetProcessor(String productName) {
             return processors.Get(productName);
+        }
+
+        internal IDictionary<String, ITextProductEventProcessor> GetProcessors() {
+            return JavaCollectionsUtil.UnmodifiableMap(new Dictionary<String, ITextProductEventProcessor>(processors));
         }
 
         internal IList<AbstractITextProductEvent> GetEvents(SequenceId id) {

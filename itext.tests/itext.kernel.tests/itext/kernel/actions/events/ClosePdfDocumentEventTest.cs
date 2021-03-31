@@ -50,10 +50,10 @@ namespace iText.Kernel.Actions.Events {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     IList<String> forMessages = new List<String>();
-                    access.AddProcessor("test-product-1", new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-1"
-                        , forMessages));
-                    access.AddProcessor("test-product-2", new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-2"
-                        , forMessages));
+                    access.AddProcessor(new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-1", forMessages)
+                        );
+                    access.AddProcessor(new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-2", forMessages)
+                        );
                     access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-1"
                         ));
                     access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-1"
@@ -109,6 +109,10 @@ namespace iText.Kernel.Actions.Events {
             }
 
             // do nothing here
+            public virtual String GetProductName() {
+                return processorId;
+            }
+
             public virtual void AggregationOnClose(ClosingSession session) {
                 aggregatedMessages.Add("aggregation message from " + processorId);
             }

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Session;
 using iText.Kernel.Pdf;
@@ -37,6 +38,9 @@ namespace iText.Kernel.Actions.Processors {
         /// <summary>Creates an instance of product event processor.</summary>
         /// <param name="productName">is a product name</param>
         public DefaultITextProductEventProcessor(String productName) {
+            if (productName == null) {
+                throw new ArgumentException(PdfException.ProductNameCannotBeNull);
+            }
             this.productName = productName;
         }
 
@@ -46,6 +50,15 @@ namespace iText.Kernel.Actions.Processors {
         }
 
         // TODO: DEVSIX-4964 provide appropriate logic if any
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual String GetProductName() {
+            return productName;
+        }
+
         /// <summary>Collects info about products involved into document processing.</summary>
         /// <param name="closingSession">is a closing session</param>
         public virtual void AggregationOnClose(ClosingSession closingSession) {

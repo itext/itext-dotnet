@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Session;
 
@@ -32,6 +33,10 @@ namespace iText.Kernel.Actions.Processors {
         /// </summary>
         /// <param name="event">to handle</param>
         void OnEvent(AbstractITextProductEvent @event);
+
+        /// <summary>Gets the name of the product to which this processor corresponds.</summary>
+        /// <returns>the product name</returns>
+        String GetProductName();
 
         /// <summary>
         /// When document is closing it will search for every

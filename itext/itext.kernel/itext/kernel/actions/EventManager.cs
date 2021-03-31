@@ -29,7 +29,7 @@ namespace iText.Kernel.Actions {
     /// <remarks>
     /// Entry point for event handling mechanism. Class is a singleton,
     /// see
-    /// <see cref="GetInstance()"/>
+    /// <see cref="GetInstance()"/>.
     /// </remarks>
     public sealed class EventManager {
         private static readonly iText.Kernel.Actions.EventManager INSTANCE = new iText.Kernel.Actions.EventManager
@@ -68,8 +68,13 @@ namespace iText.Kernel.Actions {
                     caughtExceptions.Add(ex);
                 }
             }
-            if (!caughtExceptions.IsEmpty()) {
-                throw new AggregatedException(AggregatedException.ERROR_DURING_EVENT_PROCESSING, caughtExceptions);
+            if (caughtExceptions.Count == 1) {
+                throw caughtExceptions[0];
+            }
+            else {
+                if (!caughtExceptions.IsEmpty()) {
+                    throw new AggregatedException(AggregatedException.ERROR_DURING_EVENT_PROCESSING, caughtExceptions);
+                }
             }
         }
 
