@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
+using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -2259,7 +2260,7 @@ namespace iText.Kernel.Pdf {
                 }
                 producer = AddModifiedPostfix(producer);
             }
-            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>
