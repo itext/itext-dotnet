@@ -28,6 +28,7 @@ using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -1689,6 +1690,134 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(120f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(160f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(200f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentWithMinWidthTest() {
+            DivRenderer divRenderer = new DivRenderer(new Div());
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            divRenderer.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(30));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(30f, info.minContent, EPS);
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(30));
+            divRenderer.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(100f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthTest() {
+            DivRenderer divRenderer = new DivRenderer(new Div());
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(0.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthAndContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+            div = new Div();
+            div.Add(new Div().SetWidth(150));
+            divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(100.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthMaxWidthAndContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            div.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(45));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(45.0f, info.minContent, EPS);
+            div = new Div();
+            div.Add(new Div().SetWidth(150));
+            div.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(120));
+            divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(100.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(300);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(100);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(40.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightAndMinMaxHeightsTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(300);
+            image.SetMinHeight(20);
+            image.SetMaxHeight(100);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(40.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(100);
+            image.SetMinHeight(20);
+            image.SetMaxHeight(75);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(30.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightAndWidthTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(50);
+            image.SetWidth(100);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(50);
+            image.SetWidth(50);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+        }
+
+        private static FlexUtil.FlexItemCalculationInfo CreateFlexItemCalculationInfo(AbstractRenderer renderer) {
+            return new FlexUtil.FlexItemCalculationInfo(renderer, 0, 0, 0, 0, false);
         }
 
         private static IList<IList<FlexItemInfo>> TestFlex(IList<UnitValue> flexBasisValues, IList<float> flexGrowValues

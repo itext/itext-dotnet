@@ -66,12 +66,9 @@ namespace iText.Layout.Element {
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent
-                .FLEX_START, 1 }, new Object[] { AlignmentPropertyValue.START, JustifyContent.START, 2 }, new Object[]
-                 { AlignmentPropertyValue.SELF_START, JustifyContent.SELF_START, 3 }, new Object[] { AlignmentPropertyValue
-                .BASELINE, JustifyContent.LEFT, 4 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END
-                , 5 }, new Object[] { AlignmentPropertyValue.END, JustifyContent.END, 6 }, new Object[] { AlignmentPropertyValue
-                .SELF_END, JustifyContent.RIGHT, 7 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER
-                , 8 }, new Object[] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER, 9 } });
+                .FLEX_START, 1 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END, 2 }, new Object
+                [] { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, 3 }, new Object[] { AlignmentPropertyValue.
+                STRETCH, JustifyContent.CENTER, 4 } });
         }
 
         public static ICollection<NUnit.Framework.TestFixtureData> AlignItemsAndJustifyContentPropertiesTestFixtureData

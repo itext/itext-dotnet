@@ -148,6 +148,8 @@ namespace iText.IO {
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
 
+        public const String FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL = "Flex item layout result isn't full, but it must be. The cross size of the flex item will be 0.";
+
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
 
         public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object. Null object will be written instead.";

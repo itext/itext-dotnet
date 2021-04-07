@@ -97,6 +97,8 @@ namespace iText.Layout.Renderer {
         /// </param>
         public ImageRenderer(Image image)
             : base(image) {
+            imageWidth = image.GetImageWidth();
+            imageHeight = image.GetImageHeight();
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
@@ -105,8 +107,6 @@ namespace iText.Layout.Renderer {
             AffineTransform t = new AffineTransform();
             Image modelElement = (Image)(GetModelElement());
             PdfXObject xObject = modelElement.GetXObject();
-            imageWidth = modelElement.GetImageWidth();
-            imageHeight = modelElement.GetImageHeight();
             CalculateImageDimensions(layoutBox, t, xObject);
             OverflowPropertyValue? overflowX = null != parent ? parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X
                 ) : OverflowPropertyValue.FIT;
@@ -350,6 +350,36 @@ namespace iText.Layout.Renderer {
             ApplyMargins(initialOccupiedAreaBBox, true);
             ApplyBorderBox(initialOccupiedAreaBBox, true);
             return initialOccupiedAreaBBox;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        internal override bool HasAspectRatio() {
+            return true;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        internal override float? GetAspectRatio() {
+            return imageWidth / imageHeight;
+        }
+
+        /// <summary>
+        /// Gets original width of the image, not the width set by
+        /// <see cref="iText.Layout.Element.Image.SetWidth(float)"/>
+        /// method.
+        /// </summary>
+        /// <returns>original image width</returns>
+        public virtual float GetImageWidth() {
+            return imageWidth;
+        }
+
+        /// <summary>
+        /// Gets original height of the image, not the height set by
+        /// <see cref="iText.Layout.Element.Image.SetHeight(float)"/>
+        /// method.
+        /// </summary>
+        /// <returns>original image height</returns>
+        public virtual float GetImageHeight() {
+            return imageHeight;
         }
 
         protected internal override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {

@@ -1231,6 +1231,44 @@ namespace iText.Layout.Renderer {
             return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
         }
 
+        /// <summary>Replaces given property own value with the given value.</summary>
+        /// <param name="property">the property to be replaced</param>
+        /// <param name="replacementValue">the value with which property will be replaced</param>
+        /// <typeparam name="T">the type associated with the property</typeparam>
+        /// <returns>previous property value</returns>
+        internal virtual T ReplaceOwnProperty<T>(int property, T replacementValue) {
+            T ownProperty = this.GetOwnProperty<T>(property);
+            SetProperty(property, replacementValue);
+            return ownProperty;
+        }
+
+        /// <summary>Returns back own value of the given property.</summary>
+        /// <param name="property">the property to be returned back</param>
+        /// <param name="prevValue">the value which will be returned back</param>
+        /// <typeparam name="T">the type associated with the property</typeparam>
+        internal virtual void ReturnBackOwnProperty<T>(int property, T prevValue) {
+            if (prevValue == null) {
+                DeleteOwnProperty(property);
+            }
+            else {
+                SetProperty(property, prevValue);
+            }
+        }
+
+        /// <summary>Checks if this renderer has intrinsic aspect ratio.</summary>
+        /// <returns>true, if aspect ratio is defined for this renderer, false otherwise</returns>
+        internal virtual bool HasAspectRatio() {
+            // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
+            return false;
+        }
+
+        /// <summary>Gets intrinsic aspect ratio for this renderer.</summary>
+        /// <returns>aspect ratio, if it is defined for this renderer, null otherwise</returns>
+        internal virtual float? GetAspectRatio() {
+            // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
+            return null;
+        }
+
         internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, IList<IRenderer> waitingDrawing
             ) {
             if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
