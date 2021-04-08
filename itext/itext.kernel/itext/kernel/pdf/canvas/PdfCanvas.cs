@@ -1917,7 +1917,6 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float width, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                // TODO add matrix parameters
                 PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddImageWithTransformationMatrix(xObject, width, 0, 0, width, x, y);
                 return xObject;
