@@ -612,7 +612,7 @@ namespace iText.Forms.Xfa
 					    name += ((XText) n2).Value;
 					}
 				}
-			    n2 = ((XElement) n2).NextNode;
+			    n2 = n2.NextNode;
 			}
 			return name;
 		}

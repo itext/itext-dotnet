@@ -141,5 +141,15 @@ namespace iText.Forms.Xfa {
             NUnit.Framework.Assert.IsNotNull(node);
             NUnit.Framework.Assert.AreEqual("Number1", node.Name.LocalName);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetXfaFieldValue() {
+            String inFileName = sourceFolder + "TextField1.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            XfaForm xfaForm = acroForm.GetXfaForm();
+            string value = xfaForm.GetXfaFieldValue("TextField1");
+            NUnit.Framework.Assert.AreEqual("Test", value);
+        }
     }
 }
