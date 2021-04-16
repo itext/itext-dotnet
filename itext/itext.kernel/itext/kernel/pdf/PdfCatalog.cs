@@ -604,6 +604,7 @@ namespace iText.Kernel.Pdf {
 
         internal virtual PdfDestination CopyDestination(PdfObject dest, IDictionary<PdfPage, PdfPage> page2page, PdfDocument
              toDocument) {
+            if (dest == null) return null;
             PdfDestination d = null;
             if (dest.IsArray()) {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
