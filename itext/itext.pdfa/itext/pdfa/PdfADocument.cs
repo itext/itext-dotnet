@@ -144,20 +144,7 @@ namespace iText.Pdfa {
         /// <param name="properties">properties of the stamping process</param>
         public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
             : base(reader, writer, properties) {
-            byte[] existingXmpMetadata = GetXmpMetadata();
-            if (existingXmpMetadata == null) {
-                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
-                    );
-            }
-            XMPMeta meta;
-            try {
-                meta = XMPMetaFactory.ParseFromBuffer(existingXmpMetadata);
-            }
-            catch (XMPException) {
-                throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
-                    );
-            }
-            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.GetConformanceLevel(meta);
+            PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
             if (conformanceLevel == null) {
                 throw new PdfAConformanceException(PdfAConformanceException.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
                     );
