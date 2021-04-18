@@ -83,7 +83,7 @@ namespace iText.Kernel.Exceptions {
         public const String CANNOT_EMBED_STANDARD_FONT = "Standard fonts cannot be embedded.";
 
         public const String CANNOT_EMBED_TYPE_0_FONT_WITH_CID_FONT_PROGRAM = "Cannot embed Type0 font with CID font program based on non-generic predefined CMap.";
-    
+
         public const String CANNOT_GET_CONTENT_BYTES = "Cannot get content bytes.";
 
         public const String CANNOT_GET_PDF_STREAM_BYTES = "Cannot get PdfStream bytes.";

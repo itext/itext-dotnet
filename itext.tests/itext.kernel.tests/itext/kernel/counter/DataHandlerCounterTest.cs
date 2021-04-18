@@ -23,9 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Threading;
 using iText.IO.Util;
-using iText.Kernel.Exceptions;
+using iText.Kernel;
 using iText.Kernel.Counter.Data;
 using iText.Kernel.Counter.Event;
+using iText.Kernel.Exceptions;
 using iText.Test;
 using iText.Test.Attributes;
 
