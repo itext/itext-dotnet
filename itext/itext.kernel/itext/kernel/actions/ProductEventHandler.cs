@@ -48,7 +48,7 @@ namespace iText.Kernel.Actions {
             <SequenceId, IList<AbstractITextProductEvent>>();
 
         private ProductEventHandler()
-            : base(UnknownContext.RESTRICTIVE) {
+            : base(UnknownContext.PERMISSIVE) {
         }
 
         /// <summary>

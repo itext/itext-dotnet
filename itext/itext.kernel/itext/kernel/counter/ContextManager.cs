@@ -79,7 +79,7 @@ namespace iText.Kernel.Counter {
                 .EmptyList<String>(), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_OCR));
         }
 
-        /// <summary>Gets the singelton instance of this class</summary>
+        /// <summary>Gets the singleton instance of this class</summary>
         /// <returns>
         /// the
         /// <see cref="ContextManager"/>
@@ -145,8 +145,8 @@ namespace iText.Kernel.Counter {
             return null;
         }
 
-        private void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> eventIds) {
-            RegisterGenericContextForProducts(namespaces, eventIds, JavaCollectionsUtil.EmptyList<String>());
+        internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> products) {
+            RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
         }
 
         private void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String> eventIds
