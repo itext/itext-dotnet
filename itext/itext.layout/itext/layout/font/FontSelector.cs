@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
@@ -52,6 +53,10 @@ namespace iText.Layout.Font {
         private const int EXPECTED_FONT_IS_BOLD_AWARD = 5;
 
         private const int EXPECTED_FONT_IS_NOT_BOLD_AWARD = 3;
+
+        private const int EXPECTED_FONT_WEIGHT_IS_EQUALS_AWARD = 1;
+
+        private const int EXPECTED_FONT_WEIGHT_IS_FAR_AWARD = 1;
 
         private const int EXPECTED_FONT_IS_ITALIC_AWARD = 5;
 
@@ -175,9 +180,10 @@ namespace iText.Layout.Font {
             private static int CharacteristicsSimilarity(String fontFamily, FontCharacteristics fc, FontInfo fontInfo, 
                 bool isLastFontFamilyToBeProcessed) {
                 // TODO DEVSIX-2120 Update javadoc if necessary
-                bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
-                bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
-                bool isFontMonospace = fontInfo.GetDescriptor().IsMonospace();
+                FontProgramDescriptor fontDescriptor = fontInfo.GetDescriptor();
+                bool isFontBold = fontDescriptor.IsBold() || fontDescriptor.GetFontWeight() > 500;
+                bool isFontItalic = fontDescriptor.IsItalic() || fontDescriptor.GetItalicAngle() < 0;
+                bool isFontMonospace = fontDescriptor.IsMonospace();
                 int score = 0;
                 // if font-family is monospace, serif or sans-serif, actual font's name shouldn't be checked
                 bool fontFamilySetByCharacteristics = false;
@@ -198,9 +204,9 @@ namespace iText.Layout.Font {
                 }
                 if (!fontFamilySetByCharacteristics) {
                     // if alias is set, fontInfo's descriptor should not be checked
-                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && null != fontInfo.GetDescriptor().GetFamilyNameLowerCase
-                        () && fontInfo.GetDescriptor().GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias
-                        () && fontInfo.GetAlias().ToLowerInvariant().Equals(fontFamily)))) {
+                    if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && null != fontDescriptor.GetFamilyNameLowerCase
+                        () && fontDescriptor.GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias() && fontInfo
+                        .GetAlias().ToLowerInvariant().Equals(fontFamily)))) {
                         score += FONT_FAMILY_EQUALS_AWARD;
                     }
                     else {
@@ -210,6 +216,16 @@ namespace iText.Layout.Font {
                     }
                 }
                 // calculate style characteristics
+                int maxWeight = Math.Max(fontDescriptor.GetFontWeight(), fc.GetFontWeight());
+                int minWeight = Math.Min(fontDescriptor.GetFontWeight(), fc.GetFontWeight());
+                if (maxWeight == minWeight) {
+                    score += EXPECTED_FONT_WEIGHT_IS_EQUALS_AWARD;
+                }
+                else {
+                    if (maxWeight - minWeight >= 300) {
+                        score -= EXPECTED_FONT_WEIGHT_IS_FAR_AWARD;
+                    }
+                }
                 if (fc.IsBold()) {
                     if (isFontBold) {
                         score += EXPECTED_FONT_IS_BOLD_AWARD;
