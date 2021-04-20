@@ -50,10 +50,18 @@ using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Pdf.Filters;
+using iText.Kernel.XMP;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Reads a PDF document.</summary>
     public class PdfReader : IDisposable {
+        /// <summary>
+        /// The default
+        /// <see cref="StrictnessLevel"/>
+        /// to be used.
+        /// </summary>
+        public static readonly PdfReader.StrictnessLevel DEFAULT_STRICTNESS_LEVEL = PdfReader.StrictnessLevel.LENIENT;
+
         private const String endstream1 = "endstream";
 
         private const String endstream2 = "\nendstream";
@@ -71,6 +79,8 @@ namespace iText.Kernel.Pdf {
         private bool unethicalReading;
 
         private bool memorySavingMode;
+
+        private PdfReader.StrictnessLevel strictnessLevel = DEFAULT_STRICTNESS_LEVEL;
 
         //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
@@ -207,6 +217,49 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfReader SetMemorySavingMode(bool memorySavingMode) {
             this.memorySavingMode = memorySavingMode;
+            return this;
+        }
+
+        /// <summary>
+        /// Get the current
+        /// <see cref="StrictnessLevel"/>
+        /// of the reader.
+        /// </summary>
+        /// <returns>
+        /// the current
+        /// <see cref="StrictnessLevel"/>
+        /// </returns>
+        public virtual PdfReader.StrictnessLevel GetStrictnessLevel() {
+            return strictnessLevel;
+        }
+
+        /// <summary>
+        /// Set the
+        /// <see cref="StrictnessLevel"/>
+        /// for the reader.
+        /// </summary>
+        /// <remarks>
+        /// Set the
+        /// <see cref="StrictnessLevel"/>
+        /// for the reader. If the argument is
+        /// <see langword="null"/>
+        /// , then
+        /// the
+        /// <see cref="DEFAULT_STRICTNESS_LEVEL"/>
+        /// will be used.
+        /// </remarks>
+        /// <param name="strictnessLevel">
+        /// the
+        /// <see cref="StrictnessLevel"/>
+        /// to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfReader"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfReader SetStrictnessLevel(PdfReader.StrictnessLevel strictnessLevel) {
+            this.strictnessLevel = strictnessLevel == null ? DEFAULT_STRICTNESS_LEVEL : strictnessLevel;
             return this;
         }
 
@@ -587,18 +640,31 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Gets the declared Pdf/A conformance level of the source document that is being read.</summary>
+        /// <summary>Gets the declared PDF/A conformance level of the source document that is being read.</summary>
         /// <remarks>
-        /// Gets the declared Pdf/A conformance level of the source document that is being read.
+        /// Gets the declared PDF/A conformance level of the source document that is being read.
         /// Note that this information is provided via XMP metadata and is not verified by iText.
+        /// <see cref="pdfAConformanceLevel"/>
+        /// is lazy initialized.
+        /// It will be initialized during the first call of this method.
         /// </remarks>
         /// <returns>
         /// conformance level of the source document, or
         /// <see langword="null"/>
-        /// if no Pdf/A
+        /// if no PDF/A
         /// conformance level information is specified.
         /// </returns>
         public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
+            if (pdfAConformanceLevel == null) {
+                if (pdfDocument != null && pdfDocument.GetXmpMetadata() != null) {
+                    try {
+                        pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(pdfDocument
+                            .GetXmpMetadata()));
+                    }
+                    catch (XMPException) {
+                    }
+                }
+            }
             return pdfAConformanceLevel;
         }
 
@@ -1549,6 +1615,52 @@ namespace iText.Kernel.Pdf {
 
             public virtual void Close() {
                 buffer = null;
+            }
+        }
+
+        /// <summary>Enumeration representing the strictness level for reading.</summary>
+        public sealed class StrictnessLevel {
+            /// <summary>
+            /// The reading strictness level at which iText fails (throws an exception) in case of
+            /// contradiction with PDF specification, but still recovers from mild parsing errors
+            /// and ambiguities.
+            /// </summary>
+            public static readonly PdfReader.StrictnessLevel CONSERVATIVE = new PdfReader.StrictnessLevel(5000);
+
+            /// <summary>
+            /// The reading strictness level at which iText tries to recover from parsing
+            /// errors if possible.
+            /// </summary>
+            public static readonly PdfReader.StrictnessLevel LENIENT = new PdfReader.StrictnessLevel(3000);
+
+            private readonly int levelValue;
+
+            internal StrictnessLevel(int levelValue) {
+                this.levelValue = levelValue;
+            }
+
+            /// <summary>
+            /// Checks whether the current instance represents more strict reading level than
+            /// the provided one.
+            /// </summary>
+            /// <remarks>
+            /// Checks whether the current instance represents more strict reading level than
+            /// the provided one. Note that the
+            /// <see langword="null"/>
+            /// is less strict than any other value.
+            /// </remarks>
+            /// <param name="compareWith">
+            /// the
+            /// <see cref="StrictnessLevel"/>
+            /// to compare with
+            /// </param>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if the current level is stricter than the provided one
+            /// </returns>
+            public bool IsStricter(PdfReader.StrictnessLevel compareWith) {
+                return compareWith == null || this.levelValue > compareWith.levelValue;
             }
         }
 

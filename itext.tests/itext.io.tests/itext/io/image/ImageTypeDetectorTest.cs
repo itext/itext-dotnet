@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.IO.Util;
 using iText.Test;
 
@@ -32,32 +33,126 @@ namespace iText.IO.Image {
         private const String IMAGE_NAME = "image";
 
         [NUnit.Framework.Test]
-        public virtual void TestUnknown() {
-            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".txt"), ImageType.NONE);
+        public virtual void TestUrlUnknown() {
+            TestURL(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".txt"), ImageType.NONE);
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestGif() {
-            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".gif"), ImageType.GIF);
+        public virtual void TestUrlGif() {
+            TestURL(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".gif"), ImageType.GIF);
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestJpeg() {
-            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".jpg"), ImageType.JPEG);
+        public virtual void TestUrlJpeg() {
+            TestURL(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".jpg"), ImageType.JPEG);
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestTiff() {
-            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".tiff"), ImageType.TIFF);
+        public virtual void TestUrlTiff() {
+            TestURL(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".tiff"), ImageType.TIFF);
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestWmf() {
-            Test(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".wmf"), ImageType.WMF);
+        public virtual void TestUrlWmf() {
+            TestURL(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".wmf"), ImageType.WMF);
         }
 
-        private void Test(Uri location, ImageType expectedType) {
+        [NUnit.Framework.Test]
+        public virtual void TestNullUrl() {
+            NUnit.Framework.Assert.That(() =>  {
+                ImageTypeDetector.DetectImageType(UrlUtil.ToURL("not existing path"));
+                NUnit.Framework.Assert.Fail("This line is not expected to be triggered: " + "an exception should have been thrown"
+                    );
+            }
+            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamUnknown() {
+            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".txt", FileMode.Open, FileAccess.Read), ImageType.
+                NONE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamGif() {
+            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".gif", FileMode.Open, FileAccess.Read), ImageType.
+                GIF);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamJpeg() {
+            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".jpg", FileMode.Open, FileAccess.Read), ImageType.
+                JPEG);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamTiff() {
+            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".tiff", FileMode.Open, FileAccess.Read), ImageType
+                .TIFF);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamWmf() {
+            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read), ImageType.
+                WMF);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStreamClosed() {
+            NUnit.Framework.Assert.That(() =>  {
+                // A common exception is expected instead of com.itextpdf.io.IOException, because in .NET
+                // the thrown exception is different
+                Stream stream = new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read);
+                stream.Dispose();
+                ImageTypeDetector.DetectImageType(stream);
+                NUnit.Framework.Assert.Fail("This line is not expected to be triggered: " + "an exception should have been thrown"
+                    );
+            }
+            , NUnit.Framework.Throws.InstanceOf<Exception>())
+;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestBytesUnknown() {
+            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".txt", FileMode.Open, 
+                FileAccess.Read)), ImageType.NONE);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestBytesGif() {
+            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".gif", FileMode.Open, 
+                FileAccess.Read)), ImageType.GIF);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestBytesJpeg() {
+            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".jpg", FileMode.Open, 
+                FileAccess.Read)), ImageType.JPEG);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestBytesTiff() {
+            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".tiff", FileMode.Open
+                , FileAccess.Read)), ImageType.TIFF);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestBytesWmf() {
+            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, 
+                FileAccess.Read)), ImageType.WMF);
+        }
+
+        private static void TestURL(Uri location, ImageType expectedType) {
             NUnit.Framework.Assert.AreEqual(expectedType, ImageTypeDetector.DetectImageType(location));
+        }
+
+        private static void TestStream(Stream stream, ImageType expectedType) {
+            NUnit.Framework.Assert.AreEqual(expectedType, ImageTypeDetector.DetectImageType(stream));
+        }
+
+        private static void TestBytes(byte[] bytes, ImageType expectedType) {
+            NUnit.Framework.Assert.AreEqual(expectedType, ImageTypeDetector.DetectImageType(bytes));
         }
     }
 }

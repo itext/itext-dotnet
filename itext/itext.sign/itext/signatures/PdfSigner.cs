@@ -751,7 +751,6 @@ namespace iText.Signatures {
             if (preClosed) {
                 throw new PdfException(PdfException.DocumentAlreadyPreClosed);
             }
-            // TODO: add mergeVerification functionality
             preClosed = true;
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, true);
             SignatureUtil sgnUtil = new SignatureUtil(document);

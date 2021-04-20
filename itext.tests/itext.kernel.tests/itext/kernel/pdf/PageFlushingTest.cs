@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf {
             int total = 817;
             int flushedExpected = 0;
             // link annots, line annots, actions and images: one hundred of each
-            int notReadExpected = 401;
+            int notReadExpected = 402;
             Test("baseReading01.pdf", PageFlushingTest.DocMode.READING, PageFlushingTest.FlushMode.NONE, PageFlushingTest.PagesOp
                 .READ, total, flushedExpected, notReadExpected);
         }
@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ReleaseDeepReading01() {
             int total = 817;
             int flushedExpected = 0;
-            int notReadExpected = 803;
+            int notReadExpected = 804;
             Test("releaseDeepReading01.pdf", PageFlushingTest.DocMode.READING, PageFlushingTest.FlushMode.RELEASE_DEEP
                 , PageFlushingTest.PagesOp.READ, total, flushedExpected, notReadExpected);
         }

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
@@ -190,7 +191,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (marginsCollapsingEnabled) {
-                    childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
+                    childMarginsInfo = StartChildMarginsHandling(childRenderer, layoutBox, marginsCollapseHandler);
                 }
                 Rectangle changedLayoutBox = RecalculateLayoutBoxBeforeChildLayout(layoutBox, childRenderer, areas[0].Clone
                     ());
@@ -203,8 +204,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
-                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                                ()));
+                            RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                             FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                         }
                     }
@@ -281,7 +281,7 @@ namespace iText.Layout.Renderer {
                 // The second condition check (after &&) is needed only if margins collapsing is enabled
                 if (result.GetOccupiedArea() != null && (!FloatingHelper.IsRendererFloating(childRenderer) || includeFloatsInOccupiedArea
                     )) {
-                    RecalculateOccupiedAreaAfterChildLayout(result);
+                    RecalculateOccupiedAreaAfterChildLayout(result.GetOccupiedArea().GetBBox(), blockMaxHeight);
                     FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                 }
                 if (marginsCollapsingEnabled) {
@@ -411,8 +411,8 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
             if (occupiedArea == null) {
-                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                 logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, 
                     "Drawing won't be performed."));
                 return;
@@ -454,7 +454,17 @@ namespace iText.Layout.Renderer {
                     clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
                 }
                 else {
-                    clippedArea = drawContext.GetDocument().GetPage(pageNumber).GetPageSize();
+                    PdfPage page = drawContext.GetDocument().GetPage(pageNumber);
+                    // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+                    //  a renderer from the different page that was already flushed
+                    if (page.IsFlushed()) {
+                        logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                            , "area clipping"));
+                        clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
+                    }
+                    else {
+                        clippedArea = page.GetPageSize();
+                    }
                 }
                 Rectangle area = GetBorderAreaBBox();
                 if (overflowXHidden) {
@@ -520,9 +530,13 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
-        internal virtual void RecalculateOccupiedAreaAfterChildLayout(LayoutResult result) {
-            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                ()));
+        internal virtual void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight) {
+            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
+        }
+
+        internal virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
+            , MarginsCollapseHandler marginsCollapseHandler) {
+            return marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
         }
 
         internal virtual Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
@@ -894,6 +908,15 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>Decreases parentBBox to the size of borders, paddings and margins.</summary>
+        /// <param name="parentBBox">
+        /// 
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// to be decreased
+        /// </param>
+        /// <param name="borders">the border values to decrease parentBBox</param>
+        /// <param name="paddings">the padding values to decrease parentBBox</param>
+        /// <returns>the difference between previous and current parentBBox's</returns>
         [System.ObsoleteAttribute(@"Need to be removed in next major release.")]
         protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, UnitValue
             [] paddings) {

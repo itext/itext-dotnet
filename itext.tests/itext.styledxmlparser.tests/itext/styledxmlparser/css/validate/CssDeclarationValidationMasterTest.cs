@@ -345,5 +345,45 @@ namespace iText.StyledXmlParser.Css.Validate {
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .WORD_BREAK, "norm")));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void JustifyContentTest() {
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "inherit")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "right")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "normal")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "space-between")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "self-end")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "unsafe self-end")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "stretch")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "space-evenly")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "flex-start")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "baseline")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "safe right")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "unsafe normal")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "unsafe space-between")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "self-center")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "self-end unsafe")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "safe stretch")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "space_evenly")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .JUSTIFY_CONTENT, "flex-start left")));
+        }
     }
 }

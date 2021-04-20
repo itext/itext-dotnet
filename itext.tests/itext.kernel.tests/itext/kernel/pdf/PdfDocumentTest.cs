@@ -44,6 +44,7 @@ using System;
 using System.IO;
 using iText.IO.Image;
 using iText.IO.Source;
+using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -435,6 +436,29 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destination, cmp, DESTINATION_FOLDER, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, LogLevel = LogLevelConstants
+            .ERROR)]
+        public virtual void OpenDocumentWithInvalidCatalogVersionTest() {
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf")) {
+                using (PdfDocument pdfDocument = new PdfDocument(reader)) {
+                    NUnit.Framework.Assert.IsNotNull(pdfDocument);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpenDocumentWithInvalidCatalogVersionAndConservativeStrictnessReadingTest() {
+            using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf").SetStrictnessLevel
+                (PdfReader.StrictnessLevel.CONSERVATIVE)) {
+                NUnit.Framework.Assert.That(() =>  {
+                    new PdfDocument(reader);
+                }
+                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED))
+;
+            }
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {

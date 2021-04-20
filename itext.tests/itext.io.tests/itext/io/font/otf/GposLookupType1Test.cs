@@ -32,7 +32,7 @@ namespace iText.IO.Font.Otf {
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType1Test/";
 
         [NUnit.Framework.Test]
-        public virtual void VerifyXAdvanceIsApplied() {
+        public virtual void VerifyXAdvanceIsAppliedSubFormat1() {
             TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
@@ -47,7 +47,7 @@ namespace iText.IO.Font.Otf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void VerifyPositionIsNotAppliedForIrrelevantGlyph() {
+        public virtual void VerifyPositionIsNotAppliedForIrrelevantGlyphSubFormat1() {
             TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
@@ -59,6 +59,27 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
             NUnit.Framework.Assert.IsFalse(lookup.TransformOne(gl));
             NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyDifferentXAdvanceIsAppliedSubFormat2() {
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
+                );
+            GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
+            GposLookupType1 lookup = (GposLookupType1)gposTableReader.GetLookupTable(16);
+            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(401)), new Glyph(fontProgram
+                .GetGlyphByCode(5)));
+            GlyphLine gl = new GlyphLine(glyphs);
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
+            NUnit.Framework.Assert.IsTrue(lookup.TransformOne(gl));
+            NUnit.Framework.Assert.AreEqual(109, gl.Get(0).GetXAdvance());
+            // Subtable type 2 defines different GposValueRecords for different coverage glyphs
+            glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(508)), new Glyph(fontProgram.GetGlyphByCode
+                (5)));
+            gl = new GlyphLine(glyphs);
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
+            NUnit.Framework.Assert.IsTrue(lookup.TransformOne(gl));
+            NUnit.Framework.Assert.AreEqual(158, gl.Get(0).GetXAdvance());
         }
     }
 }

@@ -47,6 +47,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
@@ -76,15 +77,29 @@ namespace iText.Layout.Renderer {
             lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
             IList<UnitValue> previousWidths = new List<UnitValue>();
             IList<UnitValue> previousHeights = new List<UnitValue>();
+            IList<UnitValue> previousMinHeights = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
-                    Rectangle rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo
-                        .GetRectangle().Clone(), false);
+                    Rectangle rectangleWithoutBordersMarginsPaddings;
+                    if (AbstractRenderer.IsBorderBoxSizing(itemInfo.GetRenderer())) {
+                        rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMargins(itemInfo.GetRectangle().Clone
+                            (), false);
+                    }
+                    else {
+                        rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo.GetRectangle
+                            ().Clone(), false);
+                    }
                     previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
                     previousHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.HEIGHT));
+                    previousMinHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
+                        .GetHeight()));
+                    // TODO DEVSIX-1895 Once the ticket is closed, there will be no need in setting min-height
+                    // In case element takes less vertical space than expected, we need to make sure
+                    // it is extended to the height predicted by the algo
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetHeight()));
                 }
             }
@@ -97,6 +112,7 @@ namespace iText.Layout.Renderer {
                 foreach (FlexItemInfo itemInfo in line) {
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, previousHeights[counter]);
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, previousMinHeights[counter]);
                     ++counter;
                 }
             }
@@ -182,7 +198,8 @@ namespace iText.Layout.Renderer {
                 if (splitRenderer != null) {
                     splitRenderer.SetChildRenderers(GetChildRenderers());
                 }
-                return new LayoutResult(LayoutResult.FULL, result.GetOccupiedArea(), splitRenderer, null, null);
+                return new LayoutResult(LayoutResult.FULL, GetOccupiedAreaInCaseNothingWasWrappedWithFull(result, splitRenderer
+                    ), splitRenderer, null, null);
             }
             else {
                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
@@ -199,16 +216,35 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        // TODO DEVSIX-5238 Consider this fix (perhaps it should be improved or unified) while working on the ticket
+        internal virtual LayoutArea GetOccupiedAreaInCaseNothingWasWrappedWithFull(LayoutResult result, IRenderer 
+            splitRenderer) {
+            return null != result.GetOccupiedArea() ? result.GetOccupiedArea() : splitRenderer.GetOccupiedArea();
+        }
+
         internal override bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {
             return returnResult.GetStatus() != LayoutResult.FULL;
         }
 
-        internal override void RecalculateOccupiedAreaAfterChildLayout(LayoutResult result) {
-            // TODO DEVSIX-5098 Occupied area shall not be bigger than width or max-width
-            Rectangle recalculatedRectangle = Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea
-                ().GetBBox());
+        /// <summary><inheritDoc/></summary>
+        internal override void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight
+            ) {
+            Rectangle oldBBox = occupiedArea.GetBBox().Clone();
+            Rectangle recalculatedRectangle = Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox);
             occupiedArea.GetBBox().SetY(recalculatedRectangle.GetY());
             occupiedArea.GetBBox().SetHeight(recalculatedRectangle.GetHeight());
+            if (oldBBox.GetTop() < occupiedArea.GetBBox().GetTop()) {
+                occupiedArea.GetBBox().DecreaseHeight(occupiedArea.GetBBox().GetTop() - oldBBox.GetTop());
+            }
+            if (null != blockMaxHeight && occupiedArea.GetBBox().GetHeight() > ((float)blockMaxHeight)) {
+                occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - ((float)blockMaxHeight));
+                occupiedArea.GetBBox().SetHeight((float)blockMaxHeight);
+            }
+        }
+
+        internal override MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
+            , MarginsCollapseHandler marginsCollapseHandler) {
+            return marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
         }
 
         internal override void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
@@ -242,6 +278,20 @@ namespace iText.Layout.Renderer {
                 }
             }
             return null;
+        }
+
+        internal override void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
+            // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
+            return;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void AddChild(IRenderer renderer) {
+            // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
+            // for html/css objects, such as flex. As for now we will set VISIBLE by default, however, while working
+            // on the ticket one may come to some more satifactory approach
+            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            base.AddChild(renderer);
         }
 
         private void FindMinMaxWidthIfCorrespondingPropertiesAreNotSet(MinMaxWidth minMaxWidth, AbstractWidthHandler

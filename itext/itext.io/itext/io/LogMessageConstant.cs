@@ -116,6 +116,8 @@ namespace iText.IO {
 
         public const String DOCUMENT_SERIALIZATION_EXCEPTION_RAISED = "Unhandled exception while serialization";
 
+        public const String DOCUMENT_VERSION_IN_CATALOG_CORRUPTED = "The document version specified in catalog is corrupted";
+
         public const String DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED = "During the construction of the ICC profile, the {0} error with message \"{1}\" occurred, the ICC profile will not be installed in the image.";
 
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
@@ -145,6 +147,8 @@ namespace iText.IO {
         public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
+
+        public const String FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL = "Flex item layout result isn't full, but it must be. The cross size of the flex item will be 0.";
 
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
 
@@ -204,6 +208,8 @@ namespace iText.IO {
 
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
 
+        public const String INVALID_DISTRIBUTION_POINT = "Skipped CRL: {0}";
+
         public const String INVALID_DESTINATION_TYPE = "When destination's not associated with a Remote or Embedded Go-To action, it shall specify page dictionary instead of page number. Otherwise destination might be considered invalid";
 
         public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R";
@@ -251,6 +257,8 @@ namespace iText.IO {
         public const String OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS = "Outline destination page number {0} is out of bounds";
 
         public const String PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE = "Page tree is broken. Failed to retrieve page number {0}. Null will be returned.";
+
+        public const String PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED = "Page was flushed. {0} will not be performed.";
 
         public const String PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED = "The page passed to Canvas#enableAutoTagging(PdfPage) method shall be the one on which this canvas will be rendered. However the actual passed PdfPage instance sets not such page. This might lead to creation of malformed PDF document.";
 
@@ -319,13 +327,17 @@ namespace iText.IO {
 
         public const String TYPOGRAPHY_NOT_FOUND = "Cannot find pdfCalligraph module, which was implicitly " + "required by one of the layout properties";
 
-        public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, ignoring it";
-
         public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually this means that element was added to the Canvas instance that was created not with constructor taking PdfPage as argument. Not processed property: {0}";
+
+        public const String UNABLE_TO_INTERRUPT_THREAD = "Unable to interrupt a thread";
+
+        public const String UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION = "Unable to invert gradient transformation, ignoring it";
 
         public const String UNABLE_TO_REGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to register event data handler shutdown hook because of security reasons.";
 
         public const String UNABLE_TO_SEARCH_FOR_EVENT_CONTEXT = "It is impossible to retrieve event context because of the security reasons. Event counting may behave in unexpected way";
+
+        public const String UNABLE_TO_UNREGISTER_EVENT_DATA_HANDLER_SHUTDOWN_HOOK = "Unable to unregister event data handler shutdown hook because of security permissions";
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
 

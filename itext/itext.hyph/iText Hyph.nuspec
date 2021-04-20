@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.hyph</id>
-    <version>7.1.15-SNAPSHOT</version>
+    <version>7.1.16-SNAPSHOT</version>
     <title>iText 7 Hyph</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -18,8 +18,8 @@
     <tags>itext itext7 itextsharp c# .net csharp pdf hyphenation hyph</tags>
   </metadata>
   <files>
-    <file src="bin\Release\net40\itext.hyph.dll" target="lib\net40" />
-    <file src="bin\Release\net40\itext.hyph.xml" target="lib\net40" />
+    <file src="bin\Release\net45\itext.hyph.dll" target="lib\net45" />
+    <file src="bin\Release\net45\itext.hyph.xml" target="lib\net45" />
     <file src="bin\Release\netstandard2.0\itext.hyph.dll" target="lib\netstandard2.0" />
     <file src="bin\Release\netstandard2.0\itext.hyph.xml" target="lib\netstandard2.0" />
     <file src="..\..\gnu-agpl-v3.0.md" target="" />

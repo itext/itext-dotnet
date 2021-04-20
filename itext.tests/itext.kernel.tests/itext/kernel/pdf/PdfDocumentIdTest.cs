@@ -319,6 +319,18 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(0, reader.GetOriginalFileId().Length);
             NUnit.Framework.Assert.AreEqual(0, reader.GetModifiedFileId().Length);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadPdfWithNoIdAndConservativeReadingTest() {
+            using (PdfReader reader = new PdfReader(sourceFolder + "pdfWithNoId.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
+                .CONSERVATIVE)) {
+                NUnit.Framework.Assert.That(() =>  {
+                    new PdfDocument(reader);
+                }
+                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED))
+;
+            }
+        }
         //    @Test
         //    public void appendModeTest() {
         //        String originalId;

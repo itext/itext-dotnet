@@ -28,6 +28,7 @@ using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -428,8 +429,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentCenterAlignItemsCenterTest01
-            () {
+        public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentCenterTest() {
             Rectangle bBox = new Rectangle(575, 842);
             IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
                 (50f), UnitValue.CreatePointValue(50f));
@@ -472,57 +472,12 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentFlexEndAlignItemsFlexEndTest01
-            () {
-            Rectangle bBox = new Rectangle(575, 842);
-            IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
-                (50f), UnitValue.CreatePointValue(50f));
-            Div div = new Div().SetWidth(200).SetHeight(300);
-            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
-                ()))));
-            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
-            flexContainerRenderer.SetParent(documentRenderer);
-            flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
-            flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.FLEX_END);
-            flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.FLEX_END);
-            div.SetNextRenderer(flexContainerRenderer);
-            for (int i = 0; i < flexBasisValues.Count; i++) {
-                Div flexItem = new Div().Add(new Paragraph("x"));
-                if (1 == i) {
-                    flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
-                    flexItem.SetHeight(50);
-                }
-                AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
-                    );
-                flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
-                flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
-                flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
-                flexContainerRenderer.AddChild(flexItemRenderer);
-            }
-            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
-                )div.GetRenderer());
-            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
-            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
-            NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
-            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
-            NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
-            NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
-            NUnit.Framework.Assert.AreEqual(40.0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
-            NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
-            NUnit.Framework.Assert.AreEqual(150.0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
-            NUnit.Framework.Assert.AreEqual(166.09375f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
-            NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
-            NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30JustifyContentFlexStartAndNotValidAlignItemsFlexStartAndNotValidTest01
-            () {
+        public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentFlexStartTest() {
             JustifyContent[] justifyContentValues = new JustifyContent[] { JustifyContent.NORMAL, JustifyContent.START
-                , JustifyContent.END, JustifyContent.LEFT, JustifyContent.RIGHT, JustifyContent.FLEX_START };
+                , JustifyContent.STRETCH, JustifyContent.LEFT, JustifyContent.SELF_START, JustifyContent.FLEX_START };
             AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.START, AlignmentPropertyValue
-                .END, AlignmentPropertyValue.SELF_START, AlignmentPropertyValue.SELF_END, AlignmentPropertyValue.BASELINE
-                , AlignmentPropertyValue.FLEX_START };
+                .SELF_START, AlignmentPropertyValue.BASELINE, AlignmentPropertyValue.SELF_START, AlignmentPropertyValue
+                .FLEX_START, AlignmentPropertyValue.FLEX_START };
             for (int j = 0; j < justifyContentValues.Length; ++j) {
                 Rectangle bBox = new Rectangle(575, 842);
                 IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
@@ -567,7 +522,56 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LtWidthGrow0Shrink1Item2MarginBorderPadding30AlignItemsStretchAndNormalTest01() {
+        public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentFlexEndTest() {
+            JustifyContent[] justifyContentValues = new JustifyContent[] { JustifyContent.END, JustifyContent.RIGHT, JustifyContent
+                .SELF_END, JustifyContent.FLEX_END };
+            AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.END, AlignmentPropertyValue
+                .SELF_END, AlignmentPropertyValue.FLEX_END, AlignmentPropertyValue.FLEX_END };
+            for (int j = 0; j < justifyContentValues.Length; ++j) {
+                Rectangle bBox = new Rectangle(575, 842);
+                IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(50f), UnitValue.CreatePointValue
+                    (50f), UnitValue.CreatePointValue(50f));
+                Div div = new Div().SetWidth(200).SetHeight(300);
+                DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                    ()))));
+                FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+                flexContainerRenderer.SetParent(documentRenderer);
+                flexContainerRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
+                flexContainerRenderer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValues[j]);
+                flexContainerRenderer.SetProperty(Property.ALIGN_ITEMS, alignItemsValues[j]);
+                div.SetNextRenderer(flexContainerRenderer);
+                for (int i = 0; i < flexBasisValues.Count; i++) {
+                    Div flexItem = new Div().Add(new Paragraph("x"));
+                    if (1 == i) {
+                        flexItem.SetMargin(10).SetBorder(new SolidBorder(15)).SetPadding(5);
+                        flexItem.SetHeight(50);
+                    }
+                    AbstractRenderer flexItemRenderer = (AbstractRenderer)flexItem.CreateRendererSubTree().SetParent(documentRenderer
+                        );
+                    flexItemRenderer.SetProperty(Property.FLEX_GROW, 0f);
+                    flexItemRenderer.SetProperty(Property.FLEX_SHRINK, 1f);
+                    flexItemRenderer.SetProperty(Property.FLEX_BASIS, flexBasisValues[i]);
+                    flexContainerRenderer.AddChild(flexItemRenderer);
+                }
+                IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                    )div.GetRenderer());
+                NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[0][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(25.9375f, rectangleTable[1][0].GetRectangle().GetHeight(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(110.0f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(50.0f, rectangleTable[1][0].GetRectangle().GetWidth(), EPS);
+                NUnit.Framework.Assert.AreEqual(40.0f, rectangleTable[0][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(0f, rectangleTable[0][1].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(150.0f, rectangleTable[1][0].GetRectangle().GetX(), EPS);
+                NUnit.Framework.Assert.AreEqual(166.09375f, rectangleTable[0][0].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[0][1].GetRectangle().GetY(), EPS);
+                NUnit.Framework.Assert.AreEqual(82.03125f, rectangleTable[1][0].GetRectangle().GetY(), EPS);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LtWidthGrow0Shrink1Item2MBP30AlignItemsStretchTest() {
             AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.STRETCH, 
                 AlignmentPropertyValue.NORMAL };
             foreach (AlignmentPropertyValue alignItemsValue in alignItemsValues) {
@@ -613,8 +617,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LtWidthGrow0Shrink0Item2MarginBorderPadding30JustifyContentCenterAlignItemsCenterDontFitTest01
-            () {
+        public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentCenterDontFitTest() {
             Rectangle bBox = new Rectangle(575, 842);
             IList<UnitValue> flexBasisValues = JavaUtil.ArraysAsList(UnitValue.CreatePointValue(100f), UnitValue.CreatePointValue
                 (100f), UnitValue.CreatePointValue(100f));
@@ -1687,6 +1690,134 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(120f, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(160f, rectangleTable[0][1].GetRectangle().GetWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(200f, rectangleTable[0][2].GetRectangle().GetWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentWithMinWidthTest() {
+            DivRenderer divRenderer = new DivRenderer(new Div());
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            divRenderer.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(30));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(30f, info.minContent, EPS);
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(30));
+            divRenderer.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(100f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthTest() {
+            DivRenderer divRenderer = new DivRenderer(new Div());
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo(divRenderer);
+            NUnit.Framework.Assert.AreEqual(0.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthAndContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+            div = new Div();
+            div.Add(new Div().SetWidth(150));
+            divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(100.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForDivWithWidthMaxWidthAndContentTest() {
+            Div div = new Div();
+            div.Add(new Div().SetWidth(50));
+            div.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(45));
+            IRenderer divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(45.0f, info.minContent, EPS);
+            div = new Div();
+            div.Add(new Div().SetWidth(150));
+            div.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(120));
+            divRenderer = div.CreateRendererSubTree();
+            divRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)divRenderer);
+            NUnit.Framework.Assert.AreEqual(100.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(300);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(100);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(40.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightAndMinMaxHeightsTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(300);
+            image.SetMinHeight(20);
+            image.SetMaxHeight(100);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(40.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(100);
+            image.SetMinHeight(20);
+            image.SetMaxHeight(75);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(30.0f, info.minContent, EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateMinContentForImageWithHeightAndWidthTest() {
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150
+                )));
+            image.SetHeight(50);
+            image.SetWidth(100);
+            IRenderer imageRenderer = image.CreateRendererSubTree();
+            FlexUtil.FlexItemCalculationInfo info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(60.0f, info.minContent, EPS);
+            image = new iText.Layout.Element.Image(new PdfFormXObject(new Rectangle(60, 150)));
+            image.SetHeight(50);
+            image.SetWidth(50);
+            imageRenderer = image.CreateRendererSubTree();
+            info = CreateFlexItemCalculationInfo((AbstractRenderer)imageRenderer);
+            NUnit.Framework.Assert.AreEqual(50.0f, info.minContent, EPS);
+        }
+
+        private static FlexUtil.FlexItemCalculationInfo CreateFlexItemCalculationInfo(AbstractRenderer renderer) {
+            return new FlexUtil.FlexItemCalculationInfo(renderer, 0, 0, 0, 0, false);
         }
 
         private static IList<IList<FlexItemInfo>> TestFlex(IList<UnitValue> flexBasisValues, IList<float> flexGrowValues

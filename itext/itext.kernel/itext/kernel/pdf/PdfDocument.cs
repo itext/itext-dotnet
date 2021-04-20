@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
+using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -552,9 +553,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets document information dictionary.</summary>
+        /// <remarks>
+        /// Gets document information dictionary.
+        /// <see cref="info"/>
+        /// is lazy initialized. It will be initialized during the first call of this method.
+        /// </remarks>
         /// <returns>document information dictionary.</returns>
         public virtual PdfDocumentInfo GetDocumentInfo() {
             CheckClosingStatus();
+            if (info == null) {
+                PdfObject infoDict = trailer.Get(PdfName.Info);
+                info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
+                    );
+                XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
+            }
             return info;
         }
 
@@ -699,7 +711,7 @@ namespace iText.Kernel.Pdf {
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
                         foreach (PdfName deprecatedKey in PdfDocumentInfo.PDF20_DEPRECATED_KEYS) {
-                            info.GetPdfObject().Remove(deprecatedKey);
+                            GetDocumentInfo().GetPdfObject().Remove(deprecatedKey);
                         }
                     }
                     if (GetXmpMetadata() != null) {
@@ -748,8 +760,8 @@ namespace iText.Kernel.Pdf {
                             catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
                         }
-                        if (info.GetPdfObject().IsModified()) {
-                            info.GetPdfObject().Flush(false);
+                        if (GetDocumentInfo().GetPdfObject().IsModified()) {
+                            GetDocumentInfo().GetPdfObject().Flush(false);
                         }
                         FlushFonts();
                         if (writer.crypto != null) {
@@ -793,7 +805,7 @@ namespace iText.Kernel.Pdf {
                             TryFlushTagStructure(false);
                         }
                         catalog.GetPdfObject().Flush(false);
-                        info.GetPdfObject().Flush(false);
+                        GetDocumentInfo().GetPdfObject().Flush(false);
                         FlushFonts();
                         if (writer.crypto != null) {
                             crypto = writer.crypto.GetPdfObject();
@@ -827,7 +839,7 @@ namespace iText.Kernel.Pdf {
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
-                    trailer.Put(PdfName.Info, info.GetPdfObject());
+                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject());
                     //By this time original and modified document ids should always be not null due to initializing in
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
@@ -1956,40 +1968,19 @@ namespace iText.Kernel.Pdf {
                     }
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
-                    PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
-                    if (id != null) {
-                        if (id.Size() == 2) {
-                            originalDocumentId = id.GetAsString(0);
-                            modifiedDocumentId = id.GetAsString(1);
-                        }
-                        if (originalDocumentId == null || modifiedDocumentId == null) {
-                            ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                            logger.Error(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED);
-                        }
-                    }
+                    ReadDocumentIds();
                     catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
-                    if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
-                        // The version of the PDF specification to which the document conforms (for example, 1.4)
-                        // if later than the version specified in the file's header
-                        PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
-                        if (catalogVersion.CompareTo(pdfVersion) > 0) {
-                            pdfVersion = catalogVersion;
-                        }
-                    }
+                    UpdatePdfVersionFromCatalog();
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     if (xmpMetadataStream != null) {
                         xmpMetadata = xmpMetadataStream.GetBytes();
-                        try {
-                            reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(xmpMetadata
-                                ));
-                        }
-                        catch (XMPException) {
+                        if (!this.GetType().Equals(typeof(iText.Kernel.Pdf.PdfDocument))) {
+                            // TODO DEVSIX-5292 If somebody extends PdfDocument we have to initialize document info
+                            //  and conformance level to provide compatibility. This code block shall be removed
+                            reader.GetPdfAConformanceLevel();
+                            GetDocumentInfo();
                         }
                     }
-                    PdfObject infoDict = trailer.Get(PdfName.Info);
-                    info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
-                        );
-                    XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
                     if (str != null) {
                         TryInitTagStructure(str);
@@ -2015,10 +2006,10 @@ namespace iText.Kernel.Pdf {
                         info = new PdfDocumentInfo(this).AddCreationDate();
                     }
                     UpdateProducerInInfoDictionary();
-                    info.AddModDate();
+                    GetDocumentInfo().AddModDate();
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
-                    trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
+                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
@@ -2148,7 +2139,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>the XMPMetadata</returns>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
-            XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);
+            XmpMetaInfoConverter.AppendDocumentInfoToMetadata(GetDocumentInfo(), xmpMeta);
             if (IsTagged() && writer.properties.addUAXmpMetadata && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID
                 , XMPConst.PART)) {
                 xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
@@ -2266,17 +2257,18 @@ namespace iText.Kernel.Pdf {
 
         private void UpdateProducerInInfoDictionary() {
             String producer = null;
+            PdfDictionary documentInfoObject = GetDocumentInfo().GetPdfObject();
             if (reader == null) {
                 producer = versionInfo.GetVersion();
             }
             else {
-                if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                    PdfString producerPdfStr = info.GetPdfObject().GetAsString(PdfName.Producer);
+                if (documentInfoObject.ContainsKey(PdfName.Producer)) {
+                    PdfString producerPdfStr = documentInfoObject.GetAsString(PdfName.Producer);
                     producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
                 }
                 producer = AddModifiedPostfix(producer);
             }
-            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+            documentInfoObject.Put(PdfName.Producer, new PdfString(producer, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>
@@ -2483,6 +2475,45 @@ namespace iText.Kernel.Pdf {
                 buf.Append("; modified using ");
                 buf.Append(versionInfo.GetVersion());
                 return buf.ToString();
+            }
+        }
+
+        private void UpdatePdfVersionFromCatalog() {
+            if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
+                // The version of the PDF specification to which the document conforms (for example, 1.4)
+                // if later than the version specified in the file's header
+                try {
+                    PdfVersion catalogVersion = PdfVersion.FromPdfName(catalog.GetPdfObject().GetAsName(PdfName.Version));
+                    if (catalogVersion.CompareTo(pdfVersion) > 0) {
+                        pdfVersion = catalogVersion;
+                    }
+                }
+                catch (ArgumentException) {
+                    ProcessReadingError(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED);
+                }
+            }
+        }
+
+        private void ReadDocumentIds() {
+            PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
+            if (id != null) {
+                if (id.Size() == 2) {
+                    originalDocumentId = id.GetAsString(0);
+                    modifiedDocumentId = id.GetAsString(1);
+                }
+                if (originalDocumentId == null || modifiedDocumentId == null) {
+                    ProcessReadingError(iText.IO.LogMessageConstant.DOCUMENT_IDS_ARE_CORRUPTED);
+                }
+            }
+        }
+
+        private void ProcessReadingError(String errorMessage) {
+            if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel())) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.Error(errorMessage);
+            }
+            else {
+                throw new PdfException(errorMessage);
             }
         }
 

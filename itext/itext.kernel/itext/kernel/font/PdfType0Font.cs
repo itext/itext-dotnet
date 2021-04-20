@@ -55,6 +55,9 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
     public class PdfType0Font : PdfFont {
+        /// <summary>The code length shall not be greater than 4.</summary>
+        private const int MAX_CID_CODE_LENGTH = 4;
+
         private static readonly byte[] rotbits = new byte[] { (byte)0x80, (byte)0x40, (byte)0x20, (byte)0x10, (byte
             )0x08, (byte)0x04, (byte)0x02, (byte)0x01 };
 
@@ -533,52 +536,63 @@ namespace iText.Kernel.Font {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override GlyphLine DecodeIntoGlyphLine(PdfString content) {
-            //A sequence of one or more bytes shall be extracted from the string and matched against the codespace
-            //ranges in the CMap. That is, the first byte shall be matched against 1-byte codespace ranges; if no match is
-            //found, a second byte shall be extracted, and the 2-byte code shall be matched against 2-byte codespace
-            //ranges. This process continues for successively longer codes until a match is found or all codespace ranges
-            //have been tested. There will be at most one match because codespace ranges shall not overlap.
-            String cids = content.GetValue();
+        public override GlyphLine DecodeIntoGlyphLine(PdfString characterCodes) {
             IList<Glyph> glyphs = new List<Glyph>();
-            for (int i = 0; i < cids.Length; i++) {
-                //The code length shall not be greater than 4.
+            AppendDecodedCodesToGlyphsList(glyphs, characterCodes);
+            return new GlyphLine(glyphs);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override bool AppendDecodedCodesToGlyphsList(IList<Glyph> list, PdfString characterCodes) {
+            bool allCodesDecoded = true;
+            String charCodesSequence = characterCodes.GetValue();
+            // A sequence of one or more bytes shall be extracted from the string and matched against the codespace
+            // ranges in the CMap. That is, the first byte shall be matched against 1-byte codespace ranges; if no match is
+            // found, a second byte shall be extracted, and the 2-byte code shall be matched against 2-byte codespace
+            // ranges. This process continues for successively longer codes until a match is found or all codespace ranges
+            // have been tested. There will be at most one match because codespace ranges shall not overlap.
+            for (int i = 0; i < charCodesSequence.Length; i++) {
                 int code = 0;
                 Glyph glyph = null;
                 int codeSpaceMatchedLength = 1;
-                for (int codeLength = 1; codeLength <= 4 && i + codeLength <= cids.Length; codeLength++) {
-                    code = (code << 8) + cids[i + codeLength - 1];
-                    if (!cmapEncoding.ContainsCodeInCodeSpaceRange(code, codeLength)) {
+                for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && i + codeLength <= charCodesSequence.Length; 
+                    codeLength++) {
+                    code = (code << 8) + charCodesSequence[i + codeLength - 1];
+                    if (!GetCmap().ContainsCodeInCodeSpaceRange(code, codeLength)) {
                         continue;
                     }
                     else {
                         codeSpaceMatchedLength = codeLength;
                     }
-                    int glyphCode = cmapEncoding.GetCidCode(code);
-                    glyph = fontProgram.GetGlyphByCode(glyphCode);
+                    int glyphCode = GetCmap().GetCidCode(code);
+                    glyph = GetFontProgram().GetGlyphByCode(glyphCode);
                     if (glyph != null) {
                         i += codeLength - 1;
                         break;
                     }
                 }
                 if (glyph == null) {
-                    StringBuilder failedCodes = new StringBuilder();
-                    for (int codeLength = 1; codeLength <= 4 && i + codeLength <= cids.Length; codeLength++) {
-                        failedCodes.Append((int)cids[i + codeLength - 1]).Append(" ");
-                    }
                     ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                    logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
-                        .ToString()));
+                    if (logger.IsWarnEnabled) {
+                        StringBuilder failedCodes = new StringBuilder();
+                        for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && i + codeLength <= charCodesSequence.Length; 
+                            codeLength++) {
+                            failedCodes.Append((int)charCodesSequence[i + codeLength - 1]).Append(" ");
+                        }
+                        logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
+                            .ToString()));
+                    }
                     i += codeSpaceMatchedLength - 1;
                 }
                 if (glyph != null && glyph.GetChars() != null) {
-                    glyphs.Add(glyph);
+                    list.Add(glyph);
                 }
                 else {
-                    glyphs.Add(new Glyph(0, fontProgram.GetGlyphByCode(0).GetWidth(), -1));
+                    list.Add(new Glyph(0, GetFontProgram().GetGlyphByCode(0).GetWidth(), -1));
+                    allCodesDecoded = false;
                 }
             }
-            return new GlyphLine(glyphs);
+            return allCodesDecoded;
         }
 
         public override float GetContentWidth(PdfString content) {
@@ -839,7 +853,7 @@ namespace iText.Kernel.Font {
                 }
             }
             else {
-                //The implementation should be realized in DEVSIX-2730
+                // TODO DEVSIX-31
                 ILog logger = LogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                 logger.Warn("Vertical writing has not been implemented yet.");
             }

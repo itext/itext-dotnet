@@ -51,7 +51,7 @@ namespace iText.IO.Image {
         private ImageTypeDetector() {
         }
 
-        /// <summary>Detect image type by magic bytes given the byte array source</summary>
+        /// <summary>Detect image type by magic bytes given the byte array source.</summary>
         /// <param name="source">image bytes</param>
         /// <returns>
         /// detected image type, see
@@ -65,7 +65,7 @@ namespace iText.IO.Image {
             return DetectImageTypeByHeader(header);
         }
 
-        /// <summary>Detect image type by magic bytes given the source URL</summary>
+        /// <summary>Detect image type by magic bytes given the source URL.</summary>
         /// <param name="source">image URL</param>
         /// <returns>
         /// detected image type, see
@@ -76,6 +76,20 @@ namespace iText.IO.Image {
         /// </returns>
         public static ImageType DetectImageType(Uri source) {
             byte[] header = ReadImageType(source);
+            return DetectImageTypeByHeader(header);
+        }
+
+        /// <summary>Detect image type by magic bytes given the input stream.</summary>
+        /// <param name="stream">image stream</param>
+        /// <returns>
+        /// detected image type, see
+        /// <see cref="ImageType"/>
+        /// . Returns
+        /// <see cref="ImageType.NONE"/>
+        /// if image type is unknown
+        /// </returns>
+        public static ImageType DetectImageType(Stream stream) {
+            byte[] header = ReadImageType(stream);
             return DetectImageTypeByHeader(header);
         }
 
@@ -133,10 +147,19 @@ namespace iText.IO.Image {
         private static byte[] ReadImageType(Uri source) {
             try {
                 using (Stream stream = UrlUtil.OpenStream(source)) {
-                    byte[] bytes = new byte[8];
-                    stream.Read(bytes);
-                    return bytes;
+                    return ReadImageType(stream);
                 }
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
+            }
+        }
+
+        private static byte[] ReadImageType(Stream stream) {
+            try {
+                byte[] bytes = new byte[8];
+                stream.Read(bytes);
+                return bytes;
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.IOException(iText.IO.IOException.IoException, e);

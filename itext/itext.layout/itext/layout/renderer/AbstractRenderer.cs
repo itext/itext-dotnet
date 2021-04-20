@@ -114,6 +114,16 @@ namespace iText.Layout.Renderer {
         /// </summary>
         internal const int LEFT_SIDE = 3;
 
+        private const int ARC_RIGHT_DEGREE = 0;
+
+        private const int ARC_TOP_DEGREE = 90;
+
+        private const int ARC_LEFT_DEGREE = 180;
+
+        private const int ARC_BOTTOM_DEGREE = 270;
+
+        private const int ARC_QUARTER_CLOCKWISE_EXTENT = -90;
+
         // TODO linkedList?
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
@@ -725,7 +735,6 @@ namespace iText.Layout.Renderer {
             // border widths should be considered only once
             System.Diagnostics.Debug.Assert(false == considerBordersBeforeOuterClipping || false == considerBordersBeforeInnerClipping
                 );
-            double curv = 0.4477f;
             // border widths
             float[] borderWidths = new float[] { 0, 0, 0, 0 };
             // outer box
@@ -757,7 +766,7 @@ namespace iText.Layout.Renderer {
                 }
                 // clip border area outside
                 if (clipOuter) {
-                    ClipOuterArea(canvas, curv, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY);
+                    ClipOuterArea(canvas, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY);
                 }
                 if (considerBordersBeforeInnerClipping) {
                     borderWidths = DecreaseBorderRadiiWithBorders(horizontalRadii, verticalRadii, outerBox, cornersX, cornersY
@@ -765,85 +774,85 @@ namespace iText.Layout.Renderer {
                 }
                 // clip border area inside
                 if (clipInner) {
-                    ClipInnerArea(canvas, curv, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY, borderWidths);
+                    ClipInnerArea(canvas, horizontalRadii, verticalRadii, outerBox, cornersX, cornersY, borderWidths);
                 }
             }
             return hasNotNullRadius;
         }
 
-        private void ClipOuterArea(PdfCanvas canvas, double curv, float[] horizontalRadii, float[] verticalRadii, 
-            float[] outerBox, float[] cornersX, float[] cornersY) {
-            float top = outerBox[0];
-            float right = outerBox[1];
-            float bottom = outerBox[2];
-            float left = outerBox[3];
-            float x1 = cornersX[0];
-            float y1 = cornersY[0];
-            float x2 = cornersX[1];
-            float y2 = cornersY[1];
-            float x3 = cornersX[2];
-            float y3 = cornersY[2];
-            float x4 = cornersX[3];
-            float y4 = cornersY[3];
+        private void ClipOuterArea(PdfCanvas canvas, float[] horizontalRadii, float[] verticalRadii, float[] outerBox
+            , float[] cornersX, float[] cornersY) {
+            double top = outerBox[TOP_SIDE];
+            double right = outerBox[RIGHT_SIDE];
+            double bottom = outerBox[BOTTOM_SIDE];
+            double left = outerBox[LEFT_SIDE];
             // left top corner
             if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
-                canvas.MoveTo(left, bottom).LineTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii
-                    [0] * curv, top, x1, top).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
+                double arcBottom = ((double)cornersY[TOP_SIDE]) - verticalRadii[TOP_SIDE];
+                double arcRight = ((double)cornersX[TOP_SIDE]) + horizontalRadii[TOP_SIDE];
+                canvas.MoveTo(left, bottom).ArcContinuous(left, arcBottom, arcRight, top, ARC_LEFT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(right, top).LineTo(right, bottom).LineTo(left, bottom);
                 canvas.Clip().EndPath();
             }
             // right top corner
             if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
-                canvas.MoveTo(left, top).LineTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii
-                    [1] * curv, right, y2).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
+                double arcLeft = ((double)cornersX[RIGHT_SIDE]) - horizontalRadii[RIGHT_SIDE];
+                double arcBottom = ((double)cornersY[RIGHT_SIDE]) - verticalRadii[RIGHT_SIDE];
+                canvas.MoveTo(left, top).ArcContinuous(arcLeft, top, right, arcBottom, ARC_TOP_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(right, bottom).LineTo(left, bottom).LineTo(left, top);
                 canvas.Clip().EndPath();
             }
             // right bottom corner
             if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
-                canvas.MoveTo(right, top).LineTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii
-                    [2] * curv, bottom, x3, bottom).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
+                double arcTop = ((double)cornersY[BOTTOM_SIDE]) + verticalRadii[BOTTOM_SIDE];
+                double arcLeft = ((double)cornersX[BOTTOM_SIDE]) - horizontalRadii[BOTTOM_SIDE];
+                canvas.MoveTo(right, top).ArcContinuous(right, arcTop, arcLeft, bottom, ARC_RIGHT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(left, bottom).LineTo(left, top).LineTo(right, top);
                 canvas.Clip().EndPath();
             }
             // left bottom corner
             if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
-                canvas.MoveTo(right, bottom).LineTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 -
-                     verticalRadii[3] * curv, left, y4).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
+                double arcRight = ((double)cornersX[LEFT_SIDE]) + horizontalRadii[LEFT_SIDE];
+                double arcTop = ((double)cornersY[LEFT_SIDE]) + verticalRadii[LEFT_SIDE];
+                canvas.MoveTo(right, bottom).ArcContinuous(arcRight, bottom, left, arcTop, ARC_BOTTOM_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(left, top).LineTo(right, top).LineTo(right, bottom);
                 canvas.Clip().EndPath();
             }
         }
 
-        private void ClipInnerArea(PdfCanvas canvas, double curv, float[] horizontalRadii, float[] verticalRadii, 
-            float[] outerBox, float[] cornersX, float[] cornersY, float[] borderWidths) {
-            float top = outerBox[0];
-            float right = outerBox[1];
-            float bottom = outerBox[2];
-            float left = outerBox[3];
-            float x1 = cornersX[0];
-            float y1 = cornersY[0];
-            float x2 = cornersX[1];
-            float y2 = cornersY[1];
-            float x3 = cornersX[2];
-            float y3 = cornersY[2];
-            float x4 = cornersX[3];
-            float y4 = cornersY[3];
-            float topBorderWidth = borderWidths[0];
-            float rightBorderWidth = borderWidths[1];
-            float bottomBorderWidth = borderWidths[2];
-            float leftBorderWidth = borderWidths[3];
+        private void ClipInnerArea(PdfCanvas canvas, float[] horizontalRadii, float[] verticalRadii, float[] outerBox
+            , float[] cornersX, float[] cornersY, float[] borderWidths) {
+            double top = outerBox[TOP_SIDE];
+            double right = outerBox[RIGHT_SIDE];
+            double bottom = outerBox[BOTTOM_SIDE];
+            double left = outerBox[LEFT_SIDE];
+            double x1 = cornersX[TOP_SIDE];
+            double y1 = cornersY[TOP_SIDE];
+            double x2 = cornersX[RIGHT_SIDE];
+            double y2 = cornersY[RIGHT_SIDE];
+            double x3 = cornersX[BOTTOM_SIDE];
+            double y3 = cornersY[BOTTOM_SIDE];
+            double x4 = cornersX[LEFT_SIDE];
+            double y4 = cornersY[LEFT_SIDE];
+            double topBorderWidth = borderWidths[TOP_SIDE];
+            double rightBorderWidth = borderWidths[RIGHT_SIDE];
+            double bottomBorderWidth = borderWidths[BOTTOM_SIDE];
+            double leftBorderWidth = borderWidths[LEFT_SIDE];
             // left top corner
             if (0 != horizontalRadii[0] || 0 != verticalRadii[0]) {
-                canvas.MoveTo(left, y1).CurveTo(left, y1 + verticalRadii[0] * curv, x1 - horizontalRadii[0] * curv, top, x1
-                    , top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo
-                    (left, y4).LineTo(left, y1).LineTo(left - leftBorderWidth, y1).LineTo(left - leftBorderWidth, bottom -
-                     bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
-                    , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
-                    , y1);
+                canvas.Arc(left, y1 - verticalRadii[TOP_SIDE], x1 + horizontalRadii[TOP_SIDE], top, ARC_LEFT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left
+                    , y4).LineTo(left, y1).LineTo(left - leftBorderWidth, y1).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth
+                    ).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + 
+                    topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, y1
+                    );
                 canvas.Clip().EndPath();
             }
             // right top corner
             if (0 != horizontalRadii[1] || 0 != verticalRadii[1]) {
-                canvas.MoveTo(x2, top).CurveTo(x2 + horizontalRadii[1] * curv, top, right, y2 + verticalRadii[1] * curv, right
-                    , y2).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo
-                    (x1, top).LineTo(x2, top).LineTo(x2, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
+                canvas.Arc(x2 - horizontalRadii[RIGHT_SIDE], top, right, y2 - verticalRadii[RIGHT_SIDE], ARC_TOP_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                    ).LineTo(right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, 
+                    top).LineTo(x2, top).LineTo(x2, top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth
                     ).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom -
                      bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(x2, top + topBorderWidth
                     );
@@ -851,22 +860,22 @@ namespace iText.Layout.Renderer {
             }
             // right bottom corner
             if (0 != horizontalRadii[2] || 0 != verticalRadii[2]) {
-                canvas.MoveTo(right, y3).CurveTo(right, y3 - verticalRadii[2] * curv, x3 + horizontalRadii[2] * curv, bottom
-                    , x3, bottom).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo
-                    (right, y2).LineTo(right, y3).LineTo(right + rightBorderWidth, y3).LineTo(right + rightBorderWidth, top
-                     + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, 
-                    bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right 
-                    + rightBorderWidth, y3);
+                canvas.Arc(right, y3 + verticalRadii[BOTTOM_SIDE], x3 - horizontalRadii[BOTTOM_SIDE], bottom, ARC_RIGHT_DEGREE
+                    , ARC_QUARTER_CLOCKWISE_EXTENT).LineTo(x4, bottom).LineTo(left, y4).LineTo(left, y1).LineTo(x1, top).LineTo
+                    (x2, top).LineTo(right, y2).LineTo(right, y3).LineTo(right + rightBorderWidth, y3).LineTo(right + rightBorderWidth
+                    , top + topBorderWidth).LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
+                    , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right
+                     + rightBorderWidth, y3);
                 canvas.Clip().EndPath();
             }
             // left bottom corner
             if (0 != horizontalRadii[3] || 0 != verticalRadii[3]) {
-                canvas.MoveTo(x4, bottom).CurveTo(x4 - horizontalRadii[3] * curv, bottom, left, y4 - verticalRadii[3] * curv
-                    , left, y4).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo(right, y2).LineTo(right, y3).LineTo
-                    (x3, bottom).LineTo(x4, bottom).LineTo(x4, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth
-                    , bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth
-                    , top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth).LineTo(x4, bottom -
-                     bottomBorderWidth);
+                canvas.Arc(x4 + horizontalRadii[LEFT_SIDE], bottom, left, y4 + verticalRadii[LEFT_SIDE], ARC_BOTTOM_DEGREE
+                    , ARC_QUARTER_CLOCKWISE_EXTENT).LineTo(left, y1).LineTo(x1, top).LineTo(x2, top).LineTo(right, y2).LineTo
+                    (right, y3).LineTo(x3, bottom).LineTo(x4, bottom).LineTo(x4, bottom - bottomBorderWidth).LineTo(right 
+                    + rightBorderWidth, bottom - bottomBorderWidth).LineTo(right + rightBorderWidth, top + topBorderWidth)
+                    .LineTo(left - leftBorderWidth, top + topBorderWidth).LineTo(left - leftBorderWidth, bottom - bottomBorderWidth
+                    ).LineTo(x4, bottom - bottomBorderWidth);
                 canvas.Clip().EndPath();
             }
         }
@@ -1229,6 +1238,44 @@ namespace iText.Layout.Renderer {
 
         protected internal static bool IsOverflowFit(OverflowPropertyValue? rendererOverflowProperty) {
             return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
+        }
+
+        /// <summary>Replaces given property own value with the given value.</summary>
+        /// <param name="property">the property to be replaced</param>
+        /// <param name="replacementValue">the value with which property will be replaced</param>
+        /// <typeparam name="T">the type associated with the property</typeparam>
+        /// <returns>previous property value</returns>
+        internal virtual T ReplaceOwnProperty<T>(int property, T replacementValue) {
+            T ownProperty = this.GetOwnProperty<T>(property);
+            SetProperty(property, replacementValue);
+            return ownProperty;
+        }
+
+        /// <summary>Returns back own value of the given property.</summary>
+        /// <param name="property">the property to be returned back</param>
+        /// <param name="prevValue">the value which will be returned back</param>
+        /// <typeparam name="T">the type associated with the property</typeparam>
+        internal virtual void ReturnBackOwnProperty<T>(int property, T prevValue) {
+            if (prevValue == null) {
+                DeleteOwnProperty(property);
+            }
+            else {
+                SetProperty(property, prevValue);
+            }
+        }
+
+        /// <summary>Checks if this renderer has intrinsic aspect ratio.</summary>
+        /// <returns>true, if aspect ratio is defined for this renderer, false otherwise</returns>
+        internal virtual bool HasAspectRatio() {
+            // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
+            return false;
+        }
+
+        /// <summary>Gets intrinsic aspect ratio for this renderer.</summary>
+        /// <returns>aspect ratio, if it is defined for this renderer, null otherwise</returns>
+        internal virtual float? GetAspectRatio() {
+            // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
+            return null;
         }
 
         internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, IList<IRenderer> waitingDrawing
@@ -1887,11 +1934,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
+            ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
             if (linkAnnotation != null) {
                 int pageNumber = occupiedArea.GetPageNumber();
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
-                    ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
                     String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
                     logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
                         , logMessageArg));
@@ -1905,7 +1952,15 @@ namespace iText.Layout.Renderer {
                 Rectangle pdfBBox = CalculateAbsolutePdfBBox();
                 linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
                 PdfPage page = document.GetPage(pageNumber);
-                page.AddAnnotation(linkAnnotation);
+                // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+                //  a renderer from the different page that was already flushed
+                if (page.IsFlushed()) {
+                    logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        , "link annotation applying"));
+                }
+                else {
+                    page.AddAnnotation(linkAnnotation);
+                }
             }
         }
 
@@ -2556,14 +2611,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
 
-        private static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
+        internal static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);

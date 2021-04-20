@@ -236,16 +236,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                // fix anchorDelta
-                for (int i = 0; i < reorderedLine.Count; i++) {
-                    Glyph glyph = reorderedLine[i].glyph;
-                    if (glyph.HasPlacement()) {
-                        int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
-                        int newPos = inverseReorder[oldAnchor];
-                        int newAnchorDelta = newPos - i;
-                        glyph.SetAnchorDelta((short)newAnchorDelta);
-                    }
-                }
+                UpdateAnchorDeltaForReorderedLineGlyphs(reorder, inverseReorder, reorderedLine);
                 line.Clear();
                 line.AddAll(reorderedLine);
                 return reorder;
@@ -277,6 +268,23 @@ namespace iText.Layout.Renderer {
         internal static IList<int> GetPossibleBreaks(String str) {
             return (IList<int>)CallMethod(TYPOGRAPHY_PACKAGE + WORD_WRAPPER, GET_POSSIBLE_BREAKS, new Type[] { typeof(
                 String) }, str);
+        }
+
+        internal static void UpdateAnchorDeltaForReorderedLineGlyphs(int[] reorder, int[] inverseReorder, IList<LineRenderer.RendererGlyph
+            > reorderedLine) {
+            for (int i = 0; i < reorderedLine.Count; i++) {
+                Glyph glyph = reorderedLine[i].glyph;
+                if (glyph.HasPlacement()) {
+                    int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
+                    int newPos = inverseReorder[oldAnchor];
+                    int newAnchorDelta = newPos - i;
+                    if (glyph.GetAnchorDelta() != newAnchorDelta) {
+                        glyph = new Glyph(glyph);
+                        reorderedLine[i].glyph = glyph;
+                        glyph.SetAnchorDelta((short)newAnchorDelta);
+                    }
+                }
+            }
         }
 
         private static Object CallMethod(String className, String methodName, Type[] parameterTypes, params Object
