@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Globalization;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -71,6 +72,11 @@ namespace iText.IO.Util {
 
         public static DateTime ParseSimpleFormat(String date, String format) {
             return DateTime.ParseExact(date, format, null);
+        }
+
+        public static String FormatDate(DateTime date, String pattern)
+        {
+            return date.ToString(pattern, CultureInfo.InvariantCulture);
         }
     }
 }
