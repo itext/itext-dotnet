@@ -148,6 +148,10 @@ namespace iText.Pdfa {
                 //appearance stream was set, while AS has kept as is, i.e. in Off state.
                 chk.SetAppearance(PdfName.N, "v1".Equals(_value) ? _value : "Off", appearance.GetPdfObject());
             }
+
+            public override IRenderer GetNextRenderer() {
+                return new PdfAFormFieldTest.PdfAButtonFieldTestRenderer((Paragraph)modelElement, _group, _value);
+            }
         }
 
         [NUnit.Framework.Test]

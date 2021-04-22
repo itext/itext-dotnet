@@ -2840,6 +2840,17 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal virtual bool LogWarningIfGetNextRendererNotOverridden(Type baseClass, Type rendererClass) {
+            if (baseClass != rendererClass) {
+                ILog logger = LogManager.GetLogger(baseClass);
+                logger.Warn(MessageFormatUtil.Format(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN));
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
         private void RemoveThisFromParent(IRenderer toRemove) {
             // we need to be sure that the removed element has no other entries in child renderers list
             if (toRemove != null && this == toRemove.GetParent() && !this.childRenderers.Contains(toRemove)) {

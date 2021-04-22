@@ -89,7 +89,26 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
+        /// <summary>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// </summary>
+        /// <remarks>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// <para />
+        /// If a renderer overflows to the next area, iText uses this method to create a renderer
+        /// for the overflow part. So if one wants to extend
+        /// <see cref="ListRenderer"/>
+        /// , one should override
+        /// this method: otherwise the default method will be used and thus the default rather than the custom
+        /// renderer will be created.
+        /// </remarks>
+        /// <returns>new renderer instance</returns>
         public override IRenderer GetNextRenderer() {
+            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.ListRenderer), this.GetType());
             return new iText.Layout.Renderer.ListRenderer((List)modelElement);
         }
 
@@ -219,7 +238,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? StandardFonts.SYMBOL : StandardFonts.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_210(constantFont, textElement);
+                            textRenderer = new _TextRenderer_222(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -249,8 +268,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_210 : TextRenderer {
-            public _TextRenderer_210(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_222 : TextRenderer {
+            public _TextRenderer_222(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }

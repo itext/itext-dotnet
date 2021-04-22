@@ -170,6 +170,9 @@ namespace iText.IO {
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
 
+        public const String GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN = "If a renderer overflows, " + "iText uses this method to create another renderer for the overflow part. So if one wants "
+             + "to extend the renderer, one should override this method: otherwise the default method " + "will be used and thus the default rather than the custom renderer will be created.";
+
         public const String GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED = "Subtable format {0} of GPOS Lookup Type {1} is not supported yet";
 
         public const String GRAPHICS_STATE_WAS_DELETED = "Graphics state is always deleted after event dispatching. If you want to preserve it in renderer info, use preserveGraphicsState method after receiving renderer info.";
