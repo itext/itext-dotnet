@@ -76,6 +76,20 @@ namespace iText.Kernel.Logs {
         public const String UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE = "Unable to parse color {0} within {1} " + "color space";
 
         /// <summary>
+        /// Message notifies that unknown placeholder was ignored during parsing of the producer line
+        /// format.
+        /// </summary>
+        /// <remarks>
+        /// Message notifies that unknown placeholder was ignored during parsing of the producer line
+        /// format. List of params:
+        /// <list type="bullet">
+        /// <item><description>0th is a name of ignored placeholder;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String UNKNOWN_PLACEHOLDER_WAS_IGNORED = "Unknown placeholder {0} was ignored";
+
+        /// <summary>
         /// Message warns about unexpected product name which was mentioned as involved into PDF
         /// processing.
         /// </summary>

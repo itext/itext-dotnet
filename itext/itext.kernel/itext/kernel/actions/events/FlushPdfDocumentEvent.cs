@@ -27,6 +27,7 @@ using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Processors;
+using iText.Kernel.Actions.Producer;
 using iText.Kernel.Actions.Session;
 using iText.Kernel.Pdf;
 
@@ -34,19 +35,19 @@ namespace iText.Kernel.Actions.Events {
     /// <summary>
     /// Class represents events notifying that
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-    /// was closed.
+    /// was flushed.
     /// </summary>
-    public sealed class ClosePdfDocumentEvent : AbstractITextConfigurationEvent {
-        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.Events.ClosePdfDocumentEvent
+    public sealed class FlushPdfDocumentEvent : AbstractITextConfigurationEvent {
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
             ));
 
-        private const String CLOSE_TYPE = "close-document-event";
+        private const String FLUSH_DOCUMENT_TYPE = "flush-document-event";
 
         private readonly WeakReference document;
 
-        /// <summary>Creates a new instance of the closing event.</summary>
-        /// <param name="document">is a document to be close</param>
-        public ClosePdfDocumentEvent(PdfDocument document)
+        /// <summary>Creates a new instance of the flushing event.</summary>
+        /// <param name="document">is a document to be flushed</param>
+        public FlushPdfDocumentEvent(PdfDocument document)
             : base() {
             this.document = new WeakReference(document);
         }
@@ -60,27 +61,28 @@ namespace iText.Kernel.Actions.Events {
             return ProductNameConstant.ITEXT_CORE;
         }
 
-        /// <summary>Returns a type of closing event.</summary>
+        /// <summary>Returns a type of flushing event.</summary>
         /// <returns>
         /// 
         /// <inheritDoc/>
         /// </returns>
         public override String GetEventType() {
-            return CLOSE_TYPE;
+            return FLUSH_DOCUMENT_TYPE;
         }
 
-        /// <summary>Prepares document for closing.</summary>
+        /// <summary>Prepares document for flushing.</summary>
         protected internal override void DoAction() {
             PdfDocument pdfDocument = (PdfDocument)document.Target;
             if (pdfDocument == null) {
                 return;
             }
-            IList<AbstractITextProductEvent> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
+            IList<ITextProductEventWrapper> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
             ICollection<String> products = new HashSet<String>();
-            if (events != null) {
-                foreach (AbstractITextProductEvent @event in events) {
-                    products.Add(@event.GetProductName());
-                }
+            if (events == null || events.IsEmpty()) {
+                return;
+            }
+            foreach (ITextProductEventWrapper @event in events) {
+                products.Add(@event.GetEvent().GetProductName());
             }
             IDictionary<String, ITextProductEventProcessor> knownProducts = new Dictionary<String, ITextProductEventProcessor
                 >();
@@ -94,6 +96,12 @@ namespace iText.Kernel.Actions.Events {
                 else {
                     knownProducts.Put(product, processor);
                 }
+            }
+            //TODO DEVSIX-5323 remove the toggle when all tests are ready
+            if (Toggle.NEW_PRODUCER_LINE) {
+                String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
+                String newProducer = ProducerBuilder.ModifyProducer(events, oldProducer);
+                pdfDocument.GetDocumentInfo().SetProducer(newProducer);
             }
             ClosingSession session = new ClosingSession((PdfDocument)document.Target);
             foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {

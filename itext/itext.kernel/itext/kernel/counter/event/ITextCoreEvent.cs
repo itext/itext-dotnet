@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Actions;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
-using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>
@@ -33,19 +33,11 @@ namespace iText.Kernel.Counter.Event {
 
         private readonly String eventType;
 
-        /// <summary>Creates an event associated with the provided Pdf Document and additional meta data.</summary>
-        /// <param name="document">is a document associated with the event</param>
-        /// <param name="metaInfo">is an additional meta info</param>
-        public ITextCoreEvent(PdfDocument document, IMetaInfo metaInfo, String eventType)
-            : base(document, metaInfo) {
-            this.eventType = eventType;
-        }
-
         /// <summary>Creates an event associated with a general identifier and additional meta data.</summary>
         /// <param name="sequenceId">is an identifier associated with the event</param>
         /// <param name="metaInfo">is an additional meta info</param>
         public ITextCoreEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType)
-            : base(sequenceId, metaInfo) {
+            : base(sequenceId, ITextCoreProductData.GetInstance(), metaInfo) {
             this.eventType = eventType;
         }
 

@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Actions;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
-using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>Class is recommended for internal usage.</summary>
@@ -40,20 +40,7 @@ namespace iText.Kernel.Actions.Events {
     public abstract class AbstractITextProductEvent : AbstractContextBasedITextEvent {
         private readonly WeakReference sequenceId;
 
-        /// <summary>
-        /// Creates an event associated with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
-        /// </summary>
-        /// <remarks>
-        /// Creates an event associated with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// . It may contain auxiliary meta data.
-        /// </remarks>
-        /// <param name="document">is a document associated with the event</param>
-        /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractITextProductEvent(PdfDocument document, IMetaInfo metaInfo)
-            : this(document.GetDocumentIdWrapper(), metaInfo) {
-        }
+        private readonly ProductData productData;
 
         /// <summary>
         /// Creates an event associated with
@@ -65,24 +52,32 @@ namespace iText.Kernel.Actions.Events {
         /// . It may contain auxiliary meta data.
         /// </remarks>
         /// <param name="sequenceId">is a general identifier for the event</param>
+        /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractITextProductEvent(SequenceId sequenceId, IMetaInfo metaInfo)
+        public AbstractITextProductEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo)
             : base(metaInfo) {
             this.sequenceId = new WeakReference(sequenceId);
+            this.productData = productData;
         }
 
         /// <summary>Creates an event which is not associated with any object.</summary>
         /// <remarks>Creates an event which is not associated with any object. It may contain auxiliary meta data.</remarks>
+        /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractITextProductEvent(IMetaInfo metaInfo)
-            : base(metaInfo) {
-            this.sequenceId = new WeakReference(null);
+        public AbstractITextProductEvent(ProductData productData, IMetaInfo metaInfo)
+            : this(null, productData, metaInfo) {
         }
 
         /// <summary>Retrieves an identifier of event source.</summary>
         /// <returns>an identifier of event source</returns>
         public virtual SequenceId GetSequenceId() {
             return (SequenceId)sequenceId.Target;
+        }
+
+        /// <summary>Retrieves a product data.</summary>
+        /// <returns>information about the product which triggered the event</returns>
+        public virtual ProductData GetProductData() {
+            return productData;
         }
     }
 }

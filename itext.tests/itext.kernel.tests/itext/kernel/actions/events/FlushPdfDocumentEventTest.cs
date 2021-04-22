@@ -24,23 +24,37 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel;
 using iText.Kernel.Actions;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Processors;
+using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Actions.Session;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Kernel.Actions.Events {
-    public class ClosePdfDocumentEventTest : ExtendedITextTest {
+    public class FlushPdfDocumentEventTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
+
+        [NUnit.Framework.SetUp]
+        public virtual void Before() {
+            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
+            Toggle.NEW_PRODUCER_LINE = true;
+        }
+
+        [NUnit.Framework.TearDown]
+        public virtual void After() {
+            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
+            Toggle.NEW_PRODUCER_LINE = false;
+        }
 
         [NUnit.Framework.Test]
         public virtual void FieldsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                ClosePdfDocumentEvent @event = new ClosePdfDocumentEvent(document);
-                NUnit.Framework.Assert.AreEqual("close-document-event", @event.GetEventType());
+                FlushPdfDocumentEvent @event = new FlushPdfDocumentEvent(document);
+                NUnit.Framework.Assert.AreEqual("flush-document-event", @event.GetEventType());
                 NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
             }
         }
@@ -50,19 +64,19 @@ namespace iText.Kernel.Actions.Events {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     IList<String> forMessages = new List<String>();
-                    access.AddProcessor(new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-1", forMessages)
+                    access.AddProcessor(new FlushPdfDocumentEventTest.TestProductEventProcessor("test-product-1", forMessages)
                         );
-                    access.AddProcessor(new ClosePdfDocumentEventTest.TestProductEventProcessor("test-product-2", forMessages)
+                    access.AddProcessor(new FlushPdfDocumentEventTest.TestProductEventProcessor("test-product-2", forMessages)
                         );
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-1"
-                        ));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-1"
-                        ));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-2"
-                        ));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "test-product-2"
-                        ));
-                    new ClosePdfDocumentEvent(document).DoAction();
+                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-1", document.GetDocumentIdWrapper(
+                        )));
+                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-1", document.GetDocumentIdWrapper(
+                        )));
+                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-2", document.GetDocumentIdWrapper(
+                        )));
+                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("test-product-2", document.GetDocumentIdWrapper(
+                        )));
+                    new FlushPdfDocumentEvent(document).DoAction();
                     NUnit.Framework.Assert.AreEqual(4, forMessages.Count);
                     NUnit.Framework.Assert.IsTrue(forMessages.Contains("aggregation message from test-product-1"));
                     NUnit.Framework.Assert.IsTrue(forMessages.Contains("aggregation message from test-product-2"));
@@ -78,20 +92,20 @@ namespace iText.Kernel.Actions.Events {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, Count = 2)]
+        [LogMessage(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED)]
         public virtual void UnknownProductTest() {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "testing", "unknown product"
-                        ));
-                    NUnit.Framework.Assert.DoesNotThrow(() => new ClosePdfDocumentEvent(document).DoAction());
+                    access.AddEvent(document.GetDocumentIdWrapper(), GetEvent("unknown product", document.GetDocumentIdWrapper
+                        ()));
+                    NUnit.Framework.Assert.DoesNotThrow(() => new FlushPdfDocumentEvent(document).DoAction());
                 }
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void DoActionNullDocumentTest() {
-            ClosePdfDocumentEvent closeEvent = new ClosePdfDocumentEvent(null);
+            FlushPdfDocumentEvent closeEvent = new FlushPdfDocumentEvent(null);
             NUnit.Framework.Assert.DoesNotThrow(() => closeEvent.DoAction());
         }
 
@@ -113,6 +127,14 @@ namespace iText.Kernel.Actions.Events {
                 return processorId;
             }
 
+            public virtual String GetUsageType() {
+                return "AGPL Version";
+            }
+
+            public virtual String GetProducer() {
+                return "iText";
+            }
+
             public virtual void AggregationOnClose(ClosingSession session) {
                 aggregatedMessages.Add("aggregation message from " + processorId);
             }
@@ -120,6 +142,12 @@ namespace iText.Kernel.Actions.Events {
             public virtual void CompletionOnClose(ClosingSession session) {
                 aggregatedMessages.Add("completion message from " + processorId);
             }
+        }
+
+        private static ITextProductEventWrapper GetEvent(String productName, SequenceId sequenceId) {
+            ProductData productData = new ProductData(productName, productName, "2.0", 1999, 2020);
+            return new ITextProductEventWrapper(new ITextTestEvent(sequenceId, productData, null, "testing"), "AGPL Version"
+                , "iText");
         }
     }
 }

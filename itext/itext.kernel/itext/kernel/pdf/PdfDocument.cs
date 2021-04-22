@@ -717,13 +717,14 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             isClosing = true;
-            EventManager.GetInstance().OnEvent(new ClosePdfDocumentEvent(this));
             try {
                 if (writer != null) {
                     if (catalog.IsFlushed()) {
                         throw new PdfException(KernelExceptionMessageConstant.CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG
                             );
                     }
+                    // The event will prepare document for flushing, i.e. will set an appropriate producer line
+                    EventManager.GetInstance().OnEvent(new FlushPdfDocumentEvent(this));
                     UpdateXmpMetadata();
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
@@ -1901,7 +1902,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Updates producer line of the document.</summary>
         /// <remarks>
         /// Updates producer line of the document.
-        /// TODO: DEVSIX-5054 should be removed when new producer line building logic is implemented
+        /// TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
         /// </remarks>
         public virtual void UpdateProducerInInfoDictionary() {
             String producer = null;
@@ -1993,7 +1994,8 @@ namespace iText.Kernel.Pdf {
             this.fingerPrint = new FingerPrint();
             this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {
-                EventManager.GetInstance().OnEvent(new ITextCoreEvent(this, null, ITextCoreEvent.OPEN_DOCUMENT));
+                EventManager.GetInstance().OnEvent(new ITextCoreEvent(this.GetDocumentIdWrapper(), null, ITextCoreEvent.OPEN_DOCUMENT
+                    ));
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
@@ -2476,7 +2478,7 @@ namespace iText.Kernel.Pdf {
             return writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed();
         }
 
-        // TODO: DEVSIX-5054 should be removed when new producer line building logic is implemented
+        // TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
         private String AddModifiedPostfix(String producer) {
             if (producer == null || !versionInfo.GetVersion().Contains(versionInfo.GetProduct())) {
                 return versionInfo.GetVersion();

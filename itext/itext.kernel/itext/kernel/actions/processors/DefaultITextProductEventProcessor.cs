@@ -21,16 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Session;
-using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
     public class DefaultITextProductEventProcessor : ITextProductEventProcessor {
-        // TODO: DEVSIX-5054 should be removed when new producer line building logic is implemented
+        // TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
         private const String OLD_MECHANISM_PRODUCER_LINE_WAS_SET = "old-mechanism-producer-line-was-set";
 
         private readonly String productName;
@@ -59,41 +57,41 @@ namespace iText.Kernel.Actions.Processors {
             return productName;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual String GetUsageType() {
+            return "AGPL";
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual String GetProducer() {
+            return "iText\u00ae ${usedProducts:P V (T 'version')} \u00a9${copyrightSince}-${copyrightTo} iText Group NV";
+        }
+
         /// <summary>Collects info about products involved into document processing.</summary>
         /// <param name="closingSession">is a closing session</param>
         public virtual void AggregationOnClose(ClosingSession closingSession) {
-            if (closingSession.GetProducer() == null) {
-                closingSession.SetProducer(new List<String>());
-            }
-            closingSession.GetProducer().Add(GetProducer());
         }
 
         /// <summary>Updates meta info of the document.</summary>
         /// <param name="closingSession">is a closing session</param>
         public virtual void CompletionOnClose(ClosingSession closingSession) {
-            if (closingSession.GetProducer() != null) {
-                IList<String> lines = closingSession.GetProducer();
-                UpdateProducerLine(closingSession.GetDocument(), lines);
-                closingSession.SetProducer(null);
-            }
-            //TODO: DEVSIX-5054 code below should be removed when new producer line building logic is implemented
-            if (closingSession.GetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET) == null) {
-                if (closingSession.GetDocument() != null) {
-                    closingSession.GetDocument().UpdateProducerInInfoDictionary();
+            // TODO DEVSIX-5323 remove the logic when all tests are ready
+            if (!Toggle.NEW_PRODUCER_LINE) {
+                if (closingSession.GetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET) == null) {
+                    if (closingSession.GetDocument() != null) {
+                        closingSession.GetDocument().UpdateProducerInInfoDictionary();
+                    }
+                    closingSession.SetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET, true);
                 }
-                closingSession.SetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET, true);
             }
         }
-
-        /// <summary>Gets a label which defines a product.</summary>
-        /// <returns>a product label</returns>
-        protected internal virtual String GetProducer() {
-            // TODO: DEVSIX-5054: probably productName + "(AGPL)"
-            return productName;
-        }
-
-        private static void UpdateProducerLine(PdfDocument document, IList<String> elements) {
-        }
-        // TODO: DEVSIX-5054
     }
 }

@@ -20,18 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Actions.Ecosystem;
 using iText.Test;
 
-namespace iText.Kernel.Actions.Events {
-    public class InitiateEventTest : ExtendedITextTest {
+namespace iText.Kernel.Actions.Data {
+    public class ProductDataTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void InstantiationTest() {
-            InitiateEvent @event = new InitiateEvent("test-product", new TestMetaInfo("test-meta-data"));
-            NUnit.Framework.Assert.AreEqual("initiate-product-session-event", @event.GetEventType());
-            NUnit.Framework.Assert.AreEqual("test-product", @event.GetProductName());
-            NUnit.Framework.Assert.AreEqual("test-meta-data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
-            NUnit.Framework.Assert.IsNull(@event.GetSequenceId());
+        public virtual void ProductDataCreationTest() {
+            ProductData productData = new ProductData("productName", "moduleName", "1.2", 1900, 2100);
+            NUnit.Framework.Assert.AreEqual("productName", productData.GetPublicProductName());
+            NUnit.Framework.Assert.AreEqual("moduleName", productData.GetModuleName());
+            NUnit.Framework.Assert.AreEqual("1.2", productData.GetVersion());
+            NUnit.Framework.Assert.AreEqual(1900, productData.GetSinceCopyrightYear());
+            NUnit.Framework.Assert.AreEqual(2100, productData.GetToCopyrightYear());
         }
     }
 }

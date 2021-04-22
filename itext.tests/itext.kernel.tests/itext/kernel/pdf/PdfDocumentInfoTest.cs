@@ -82,8 +82,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
-            // TODO DEVSIX-5054 update test with a new producer line
-            // Assert.assertNull(ct.compareDocumentInfo(outFile, cmpFile));
+            // TODO DEVSIX-5323 update test with a new producer line
+            NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
         }
 
@@ -98,8 +98,8 @@ namespace iText.Kernel.Pdf {
             document.Close();
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
-            // TODO DEVSIX-5054 update test with a new producer line
-            // Assert.assertNull(ct.compareDocumentInfo(outFile, cmpFile));
+            // TODO DEVSIX-5323 update test with a new producer line
+            NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
         }
 

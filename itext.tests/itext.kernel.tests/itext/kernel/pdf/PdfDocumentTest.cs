@@ -70,17 +70,30 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.SetUp]
+        public virtual void Before() {
+            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
+            Toggle.NEW_PRODUCER_LINE = true;
+        }
+
+        [NUnit.Framework.TearDown]
+        public virtual void After() {
+            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
+            Toggle.NEW_PRODUCER_LINE = false;
+        }
+
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-5054: update the test with a new format of producer line")]
         public virtual void MissingProducerTest() {
             String inputFile = SOURCE_FOLDER + "missingProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
@@ -88,16 +101,17 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-5054: update the test with a new format of producer line")]
         public virtual void NullProducerTest() {
             String inputFile = SOURCE_FOLDER + "nullProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());
@@ -105,17 +119,18 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-5054: update the test with a new format of producer line")]
         public virtual void NameProducerTest() {
             String inputFile = SOURCE_FOLDER + "nameProducer.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile))) {
+            MemoryStream outputStream = new MemoryStream();
+            using (PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputStream))) {
                 PdfDocumentInfo documentInfo = document.GetDocumentInfo();
                 NUnit.Framework.Assert.AreEqual(new PdfName("producerAsName"), documentInfo.GetPdfObject().Get(PdfName.Producer
                     ));
                 NUnit.Framework.Assert.IsNull(documentInfo.GetProducer());
             }
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputFile), new PdfWriter(new MemoryStream()
-                ))) {
+            MemoryStream inputStream = new MemoryStream(outputStream.ToArray());
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(inputStream), new PdfWriter(new MemoryStream
+                ()))) {
                 PdfDocumentInfo documentInfo = document_1.GetDocumentInfo();
                 NUnit.Framework.Assert.IsNotNull(documentInfo.GetPdfObject().Get(PdfName.Producer));
                 NUnit.Framework.Assert.IsNotNull(document_1.GetDocumentInfo().GetProducer());

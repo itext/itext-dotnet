@@ -75,17 +75,25 @@ namespace iText.Kernel.Actions {
             return ProductEventHandler.INSTANCE.GetProcessors();
         }
 
-        /// <summary>Gets events registered for provided identifier.</summary>
+        /// <summary>
+        /// Gets events wrapped with
+        /// <see cref="iText.Kernel.Actions.Events.ITextProductEventWrapper"/>
+        /// registered for provided identifier.
+        /// </summary>
         /// <param name="id">is the identifier</param>
-        /// <returns>the list of event for identifier</returns>
-        protected internal virtual IList<AbstractITextProductEvent> GetEvents(SequenceId id) {
+        /// <returns>the list of wrapped event for identifier</returns>
+        protected internal virtual IList<ITextProductEventWrapper> GetEvents(SequenceId id) {
             return ProductEventHandler.INSTANCE.GetEvents(id);
         }
 
-        /// <summary>Registers a new event for provided identifier.</summary>
+        /// <summary>
+        /// Registers a new event wrapped with
+        /// <see cref="iText.Kernel.Actions.Events.ITextProductEventWrapper"/>
+        /// for provided identifier.
+        /// </summary>
         /// <param name="id">is the identifier</param>
-        /// <param name="event">is the event to register</param>
-        protected internal virtual void AddEvent(SequenceId id, AbstractITextProductEvent @event) {
+        /// <param name="event">is the wrapped event to register</param>
+        protected internal virtual void AddEvent(SequenceId id, ITextProductEventWrapper @event) {
             ProductEventHandler.INSTANCE.AddEvent(id, @event);
         }
 

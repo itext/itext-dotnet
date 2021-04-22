@@ -76,10 +76,10 @@ namespace iText.Kernel.Actions.Events {
             if (storedSequenceId == null || storedPdfDocument == null) {
                 return;
             }
-            IList<AbstractITextProductEvent> anonymousEvents = GetEvents(storedSequenceId);
+            IList<ITextProductEventWrapper> anonymousEvents = GetEvents(storedSequenceId);
             if (anonymousEvents != null) {
                 SequenceId documentId = storedPdfDocument.GetDocumentIdWrapper();
-                foreach (AbstractITextProductEvent @event in anonymousEvents) {
+                foreach (ITextProductEventWrapper @event in anonymousEvents) {
                     AddEvent(documentId, @event);
                 }
             }

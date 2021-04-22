@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel;
 using iText.Kernel.Actions.Session;
 using iText.Test;
@@ -38,31 +37,11 @@ namespace iText.Kernel.Actions.Processors {
         }
 
         [NUnit.Framework.Test]
-        public virtual void BuildFirstLineOfProducerTest() {
+        public virtual void OldMechanismSetProducerTest() {
             DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor("test-product");
             ClosingSession session = new ClosingSession(null);
-            processor.AggregationOnClose(session);
-            NUnit.Framework.Assert.IsNotNull(session.GetProducer());
-            NUnit.Framework.Assert.AreEqual(1, session.GetProducer().Count);
-            NUnit.Framework.Assert.AreEqual("test-product", session.GetProducer()[0]);
             processor.CompletionOnClose(session);
-            NUnit.Framework.Assert.IsNull(session.GetProducer());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void BuildSecondLineOfProducerTest() {
-            DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor("test-product");
-            ClosingSession session = new ClosingSession(null);
-            IList<String> producer = new List<String>();
-            producer.Add("some producer");
-            session.SetProducer(producer);
-            processor.AggregationOnClose(session);
-            NUnit.Framework.Assert.IsNotNull(session.GetProducer());
-            NUnit.Framework.Assert.AreEqual(2, session.GetProducer().Count);
-            NUnit.Framework.Assert.AreEqual("some producer", session.GetProducer()[0]);
-            NUnit.Framework.Assert.AreEqual("test-product", session.GetProducer()[1]);
-            processor.CompletionOnClose(session);
-            NUnit.Framework.Assert.IsNull(session.GetProducer());
+            NUnit.Framework.Assert.AreEqual(true, session.GetProperty("old-mechanism-producer-line-was-set"));
         }
     }
 }

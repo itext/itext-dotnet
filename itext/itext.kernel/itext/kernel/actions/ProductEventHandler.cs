@@ -44,8 +44,8 @@ namespace iText.Kernel.Actions {
         private readonly ConcurrentDictionary<String, ITextProductEventProcessor> processors = new ConcurrentDictionary
             <String, ITextProductEventProcessor>();
 
-        private readonly ConditionalWeakTable<SequenceId, IList<AbstractITextProductEvent>> events = new ConditionalWeakTable
-            <SequenceId, IList<AbstractITextProductEvent>>();
+        private readonly ConditionalWeakTable<SequenceId, IList<ITextProductEventWrapper>> events = new ConditionalWeakTable
+            <SequenceId, IList<ITextProductEventWrapper>>();
 
         private ProductEventHandler()
             : base(UnknownContext.PERMISSIVE) {
@@ -59,16 +59,20 @@ namespace iText.Kernel.Actions {
         protected internal override void OnAcceptedEvent(ITextEvent @event) {
             if (@event is AbstractITextProductEvent) {
                 AbstractITextProductEvent iTextEvent = (AbstractITextProductEvent)@event;
+                ITextProductEventProcessor productEventProcessor = FindProcessorForProduct(iTextEvent.GetProductName());
                 if (iTextEvent.GetSequenceId() != null) {
                     lock (events) {
                         SequenceId id = iTextEvent.GetSequenceId();
                         if (!events.ContainsKey(id)) {
-                            events.Put(id, new List<AbstractITextProductEvent>());
+                            events.Put(id, new List<ITextProductEventWrapper>());
                         }
-                        events.Get(id).Add(iTextEvent);
+                        // TODO DEVSIX-5053 if event reporting will be done on document closing then
+                        //  event wrapping should be done there
+                        events.Get(id).Add(new ITextProductEventWrapper(iTextEvent, productEventProcessor.GetUsageType(), productEventProcessor
+                            .GetProducer()));
                     }
                 }
-                FindProcessorForProduct(iTextEvent.GetProductName()).OnEvent(iTextEvent);
+                productEventProcessor.OnEvent(iTextEvent);
             }
         }
 
@@ -88,22 +92,22 @@ namespace iText.Kernel.Actions {
             return JavaCollectionsUtil.UnmodifiableMap(new Dictionary<String, ITextProductEventProcessor>(processors));
         }
 
-        internal IList<AbstractITextProductEvent> GetEvents(SequenceId id) {
+        internal IList<ITextProductEventWrapper> GetEvents(SequenceId id) {
             lock (events) {
-                IList<AbstractITextProductEvent> listOfEvents = events.Get(id);
+                IList<ITextProductEventWrapper> listOfEvents = events.Get(id);
                 if (listOfEvents == null) {
-                    return JavaCollectionsUtil.EmptyList<AbstractITextProductEvent>();
+                    return JavaCollectionsUtil.EmptyList<ITextProductEventWrapper>();
                 }
-                return JavaCollectionsUtil.UnmodifiableList<AbstractITextProductEvent>(new List<AbstractITextProductEvent>
-                    (listOfEvents));
+                return JavaCollectionsUtil.UnmodifiableList<ITextProductEventWrapper>(new List<ITextProductEventWrapper>(listOfEvents
+                    ));
             }
         }
 
-        internal void AddEvent(SequenceId id, AbstractITextProductEvent @event) {
+        internal void AddEvent(SequenceId id, ITextProductEventWrapper @event) {
             lock (events) {
-                IList<AbstractITextProductEvent> listOfEvents = events.Get(id);
+                IList<ITextProductEventWrapper> listOfEvents = events.Get(id);
                 if (listOfEvents == null) {
-                    listOfEvents = new List<AbstractITextProductEvent>();
+                    listOfEvents = new List<ITextProductEventWrapper>();
                     events.Put(id, listOfEvents);
                 }
                 listOfEvents.Add(@event);

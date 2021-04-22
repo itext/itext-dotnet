@@ -38,6 +38,14 @@ namespace iText.Kernel.Actions.Processors {
         /// <returns>the product name</returns>
         String GetProductName();
 
+        /// <summary>Gets the usage type of the product to which this processor corresponds.</summary>
+        /// <returns>the usage type</returns>
+        String GetUsageType();
+
+        /// <summary>Gets the producer line for the product.</summary>
+        /// <returns>the producer line</returns>
+        String GetProducer();
+
         /// <summary>
         /// When document is closing it will search for every
         /// <see cref="ITextProductEventProcessor"/>

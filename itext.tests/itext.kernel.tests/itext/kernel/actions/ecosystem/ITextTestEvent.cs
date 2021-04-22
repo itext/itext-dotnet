@@ -21,10 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
-using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class ITextTestEvent : AbstractITextProductEvent {
@@ -32,16 +32,17 @@ namespace iText.Kernel.Actions.Ecosystem {
 
         private readonly String productName;
 
-        public ITextTestEvent(PdfDocument document, IMetaInfo metaInfo, String eventType, String productName)
-            : base(document, metaInfo) {
+        public ITextTestEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, String productName)
+            : base(sequenceId, null, metaInfo) {
             this.eventType = eventType;
             this.productName = productName;
         }
 
-        public ITextTestEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, String productName)
-            : base(sequenceId, metaInfo) {
+        public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType
+            )
+            : base(sequenceId, productData, metaInfo) {
             this.eventType = eventType;
-            this.productName = productName;
+            this.productName = productData.GetModuleName();
         }
 
         public override String GetEventType() {

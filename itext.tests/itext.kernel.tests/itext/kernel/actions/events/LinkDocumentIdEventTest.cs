@@ -22,13 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Pdf;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Kernel.Actions.Events {
     public class LinkDocumentIdEventTest : ExtendedITextTest {
@@ -46,26 +44,28 @@ namespace iText.Kernel.Actions.Events {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, Count = 5)]
         public virtual void DoActionLinkModifiedDocumentTest() {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                     SequenceId sequenceId = new SequenceId();
-                    access.AddEvent(sequenceId, new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"));
-                    access.AddEvent(sequenceId, new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"));
-                    access.AddEvent(sequenceId, new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "document-testing", "test-product-3"
-                        ));
-                    access.AddEvent(document.GetDocumentIdWrapper(), new ITextTestEvent(document, null, "document-testing", "test-product-4"
-                        ));
+                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-0"
+                        )));
+                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-1"
+                        )));
+                    access.AddEvent(sequenceId, WrapEvent(new ITextTestEvent(sequenceId, null, "sequenceId-testing", "test-product-2"
+                        )));
+                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                        (), null, "document-testing", "test-product-3")));
+                    access.AddEvent(document.GetDocumentIdWrapper(), WrapEvent(new ITextTestEvent(document.GetDocumentIdWrapper
+                        (), null, "document-testing", "test-product-4")));
                     int initialSequenceEventsNumber = access.GetEvents(sequenceId).Count;
                     int initialDocumentEventsNumber = access.GetEvents(document.GetDocumentIdWrapper()).Count;
                     new LinkDocumentIdEvent(document, sequenceId, ProductNameConstant.ITEXT_CORE).DoAction();
                     NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.GetEvents(sequenceId).Count);
-                    IList<AbstractITextProductEvent> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper());
+                    IList<ITextProductEventWrapper> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper());
                     NUnit.Framework.Assert.AreEqual(initialDocumentEventsNumber + 3, actualDocumentEvents.Count);
                     for (int i = initialDocumentEventsNumber; i < initialDocumentEventsNumber + 3; i++) {
-                        AbstractITextProductEvent sequenceEvent = actualDocumentEvents[i];
+                        AbstractITextProductEvent sequenceEvent = actualDocumentEvents[i].GetEvent();
                         NUnit.Framework.Assert.AreEqual("sequenceId-testing", sequenceEvent.GetEventType());
                         NUnit.Framework.Assert.AreEqual("test-product-" + (i - initialDocumentEventsNumber), sequenceEvent.GetProductName
                             ());
@@ -86,6 +86,10 @@ namespace iText.Kernel.Actions.Events {
                 NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(document, null, ProductNameConstant.ITEXT_CORE
                     ));
             }
+        }
+
+        private static ITextProductEventWrapper WrapEvent(AbstractITextProductEvent @event) {
+            return new ITextProductEventWrapper(@event, "AGPL Version", "iText");
         }
     }
 }

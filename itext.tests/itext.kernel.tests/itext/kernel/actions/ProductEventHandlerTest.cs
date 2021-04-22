@@ -25,6 +25,7 @@ using iText.IO.Util;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Exceptions;
+using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -52,7 +53,12 @@ namespace iText.Kernel.Actions {
             handler.OnAcceptedEvent(new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE)
                 );
             NUnit.Framework.Assert.AreEqual(1, handler.GetEvents(sequenceId).Count);
-            AbstractITextProductEvent @event = handler.GetEvents(sequenceId)[0];
+            ITextProductEventWrapper wrapper = handler.GetEvents(sequenceId)[0];
+            DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor(ProductNameConstant.ITEXT_CORE
+                );
+            NUnit.Framework.Assert.AreEqual(processor.GetUsageType(), wrapper.GetProductUsageType());
+            NUnit.Framework.Assert.AreEqual(processor.GetProducer(), wrapper.GetProducerLine());
+            AbstractITextProductEvent @event = handler.GetEvents(sequenceId)[0].GetEvent();
             NUnit.Framework.Assert.AreEqual(sequenceId.GetId(), @event.GetSequenceId().GetId());
             NUnit.Framework.Assert.IsNull(@event.GetMetaInfo());
             NUnit.Framework.Assert.AreEqual("test-event", @event.GetEventType());
@@ -64,15 +70,22 @@ namespace iText.Kernel.Actions {
             ProductEventHandler handler = ProductEventHandler.INSTANCE;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
                 int alreadyRegisteredEvents = handler.GetEvents(document.GetDocumentIdWrapper()).Count;
-                handler.OnAcceptedEvent(new ITextTestEvent(document, null, "test-event", ProductNameConstant.ITEXT_CORE));
+                handler.OnAcceptedEvent(new ITextTestEvent(document.GetDocumentIdWrapper(), null, "test-event", ProductNameConstant
+                    .ITEXT_CORE));
                 NUnit.Framework.Assert.AreEqual(alreadyRegisteredEvents + 1, handler.GetEvents(document.GetDocumentIdWrapper
                     ()).Count);
-                AbstractITextProductEvent @event = handler.GetEvents(document.GetDocumentIdWrapper())[alreadyRegisteredEvents
+                DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor(ProductNameConstant.ITEXT_CORE
+                    );
+                ITextProductEventWrapper wrapper = handler.GetEvents(document.GetDocumentIdWrapper())[alreadyRegisteredEvents
                     ];
+                NUnit.Framework.Assert.AreEqual(processor.GetProducer(), wrapper.GetProducerLine());
+                NUnit.Framework.Assert.AreEqual(processor.GetUsageType(), wrapper.GetProductUsageType());
+                AbstractITextProductEvent @event = wrapper.GetEvent();
                 NUnit.Framework.Assert.AreEqual(document.GetDocumentIdWrapper(), @event.GetSequenceId());
                 NUnit.Framework.Assert.IsNull(@event.GetMetaInfo());
                 NUnit.Framework.Assert.AreEqual("test-event", @event.GetEventType());
                 NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
+                NUnit.Framework.Assert.IsNull(@event.GetProductData());
             }
         }
     }
