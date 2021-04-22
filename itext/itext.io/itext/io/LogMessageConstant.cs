@@ -102,6 +102,10 @@ namespace iText.IO {
 
         public const String CREATED_ROOT_TAG_HAS_MAPPING = "Created root tag has role mapping: \"/Document\" role{0} is mapped{1}. Resulting tag structure might have invalid root tag.";
 
+        public const String CREATE_COPY_SHOULD_BE_OVERRIDDEN = "While processing an instance of TextRenderer, " + 
+            "iText uses createCopy() to create glyph lines of specific fonts, which represent its parts. " + "So if one extends TextRenderer, one should override createCopy, otherwise if FontSelector "
+             + "related logic is triggered, copies of this TextRenderer will have the default behavior " + "rather than the custom one.";
+
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
