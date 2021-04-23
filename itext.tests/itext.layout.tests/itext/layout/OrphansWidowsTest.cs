@@ -527,6 +527,10 @@ namespace iText.Layout {
             public CustomParagraphRenderer(OrphansWidowsTest.CustomParagraph modelElement)
                 : base(modelElement) {
             }
+
+            public override IRenderer GetNextRenderer() {
+                return new OrphansWidowsTest.CustomParagraphRenderer((OrphansWidowsTest.CustomParagraph)this.modelElement);
+            }
         }
 
         private class CustomParagraph : Paragraph {

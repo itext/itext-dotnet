@@ -102,6 +102,10 @@ namespace iText.IO {
 
         public const String CREATED_ROOT_TAG_HAS_MAPPING = "Created root tag has role mapping: \"/Document\" role{0} is mapped{1}. Resulting tag structure might have invalid root tag.";
 
+        public const String CREATE_COPY_SHOULD_BE_OVERRIDDEN = "While processing an instance of TextRenderer, " + 
+            "iText uses createCopy() to create glyph lines of specific fonts, which represent its parts. " + "So if one extends TextRenderer, one should override createCopy, otherwise if FontSelector "
+             + "related logic is triggered, copies of this TextRenderer will have the default behavior " + "rather than the custom one.";
+
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
@@ -169,6 +173,9 @@ namespace iText.IO {
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
+
+        public const String GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN = "If a renderer overflows, " + "iText uses this method to create another renderer for the overflow part. So if one wants "
+             + "to extend the renderer, one should override this method: otherwise the default method " + "will be used and thus the default rather than the custom renderer will be created.";
 
         public const String GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED = "Subtable format {0} of GPOS Lookup Type {1} is not supported yet";
 

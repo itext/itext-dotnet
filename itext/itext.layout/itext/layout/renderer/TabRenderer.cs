@@ -95,7 +95,26 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// </summary>
+        /// <remarks>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// <para />
+        /// If a renderer overflows to the next area, iText uses this method to create a renderer
+        /// for the overflow part. So if one wants to extend
+        /// <see cref="TabRenderer"/>
+        /// , one should override
+        /// this method: otherwise the default method will be used and thus the default rather than the custom
+        /// renderer will be created.
+        /// </remarks>
+        /// <returns>new renderer instance</returns>
         public override IRenderer GetNextRenderer() {
+            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.TabRenderer), this.GetType());
             return new iText.Layout.Renderer.TabRenderer((Tab)modelElement);
         }
     }

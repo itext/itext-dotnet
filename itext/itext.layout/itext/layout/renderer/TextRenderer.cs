@@ -1133,7 +1133,35 @@ namespace iText.Layout.Renderer {
             return tabAnchorCharacterPosition;
         }
 
+        /// <summary>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// </summary>
+        /// <remarks>
+        /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// is called more than once.
+        /// <para />
+        /// If
+        /// <see cref="TextRenderer"/>
+        /// overflows to the next line, iText uses this method to create a renderer
+        /// for the overflow part. So if one wants to extend
+        /// <see cref="TextRenderer"/>
+        /// , one should override
+        /// this method: otherwise the default method will be used and thus the default rather than the custom
+        /// renderer will be created. Another method that should be overridden in case of
+        /// <TextRenderer/>
+        /// 's extension is
+        /// <see cref="CreateCopy(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont)"/>
+        /// . This method is responsible
+        /// for creation of
+        /// <TextRenderer/>
+        /// 's copies, which represent its parts of specific font.
+        /// </remarks>
+        /// <returns>new renderer instance</returns>
         public override IRenderer GetNextRenderer() {
+            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.TextRenderer), this.GetType());
             return new iText.Layout.Renderer.TextRenderer((Text)modelElement);
         }
 
@@ -1544,7 +1572,66 @@ namespace iText.Layout.Renderer {
             SetProperty(Property.FONT, font);
         }
 
+        /// <summary>
+        /// Creates a copy of this
+        /// <see cref="TextRenderer"/>
+        /// , which corresponds to the passed
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// with
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a copy of this
+        /// <see cref="TextRenderer"/>
+        /// , which corresponds to the passed
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// with
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// <para />
+        /// While processing
+        /// <see cref="TextRenderer"/>
+        /// , iText uses this method to create
+        /// <see cref="iText.IO.Font.Otf.GlyphLine">glyph lines</see>
+        /// of specific
+        /// <see cref="iText.Kernel.Font.PdfFont">fonts</see>
+        /// , which represent the
+        /// <see cref="TextRenderer"/>
+        /// 's parts. If one extends
+        /// <see cref="TextRenderer"/>
+        /// , one should override this method, otherwise if
+        /// <see cref="iText.Layout.Font.FontSelector"/>
+        /// related logic is triggered, copies of this
+        /// <see cref="TextRenderer"/>
+        /// will have the default behavior rather than
+        /// the custom one.
+        /// </remarks>
+        /// <param name="gl">
+        /// a
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// which represents some of this
+        /// <see cref="TextRenderer"/>
+        /// 's content
+        /// </param>
+        /// <param name="font">
+        /// a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// for this part of the
+        /// <see cref="TextRenderer"/>
+        /// 's content
+        /// </param>
+        /// <returns>
+        /// copy of this
+        /// <see cref="TextRenderer"/>
+        /// , which correspond to the passed
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// with
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// </returns>
         protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+            if (typeof(iText.Layout.Renderer.TextRenderer) != this.GetType()) {
+                ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
+                logger.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN));
+            }
             iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
             copy.SetProcessedGlyphLineAndFont(gl, font);
             return copy;
