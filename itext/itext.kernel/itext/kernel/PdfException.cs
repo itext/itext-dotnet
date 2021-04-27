@@ -260,6 +260,8 @@ namespace iText.Kernel {
 
         public const String EncryptedPayloadShallHaveSubtype = "Encrypted payload shall have 'Subtype' field specifying crypto filter";
 
+        public const String ExternalEntityElementFoundInXml = "External entity element found in XML. This entity will not be parsed to prevent XML attacks.";
+
         public const String FailedToGetTsaResponseFrom1 = "Failed to get TSA response from {0}.";
 
         public const String FieldFlatteningIsNotSupportedInAppendMode = "Field flattening is not supported in append mode.";

@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using iText.IO.Util;
+using iText.Kernel.Utils;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
@@ -74,8 +75,7 @@ namespace iText.Layout.Hyphenation {
         /// <param name="stream">the InputStream for the file</param>
         /// <param name="name">unique key representing country-language combination</param>
         public virtual void Parse(Stream stream, String name) {
-            XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Ignore};
-            XmlReader reader = XmlReader.Create(stream, settings);
+            XmlReader reader = XmlProcessorCreator.CreateSafeXmlReader(stream);
             while (reader.Read()) {
                 switch (reader.NodeType) {
                     case XmlNodeType.Element: {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2021 iText Group NV
+Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,51 +40,41 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-
 using System;
 using System.IO;
-using System.Xml;
 using iText.Kernel;
 using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iText.Forms.Xfdf
-{
-    internal sealed class XfdfFileUtils
-    {
-        private XfdfFileUtils()
-        {
-        }
+namespace iText.Forms.Xfdf {
+    public class XfdfSecurityTest : ExtendedITextTest {
+        private const String XFDF_WITH_XXE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" + "<!DOCTYPE foo [ <!ENTITY xxe SYSTEM \"xxe-data.txt\" > ]>\n"
+             + "<xfdf xmlns=\"http://ns.adobe.com/xfdf/\" xml:space=\"preserve\">\n" + "<f href=\"something.pdf\"/>\n"
+             + "<fields\n" + "><field name=\"Input field\"\n" + "><value\n" + ">ABCDEFGH&xxe;</value\n" + "></field\n"
+             + "></fields\n" + ">\n" + "<ids/>\n" + "</xfdf>";
 
-        /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
-        /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
-        internal static XmlDocument CreateNewXfdfDocument()
-        {
-            return new XmlDocument();
-        }
-
-        /// <summary>Creates a new xfdf document based on given input stream.</summary>
-        /// <param name="inputStream"> the stream containing xfdf info.</param>
-        internal static XmlDocument CreateXfdfDocumentFromStream(Stream inputStream)
-        {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream));
-                return doc;
-            }
-            catch (Exception e)
-            {
-                throw new PdfException(e.Message, e);
+        [NUnit.Framework.Test]
+        public virtual void XxeVulnerabilityXfdfTest() {
+            XmlProcessorCreator.SetXmlParserFactory(new DefaultSafeXmlParserFactory());
+            using (Stream inputStream = new MemoryStream(XFDF_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
+                NUnit.Framework.Assert.That(() =>  {
+                    XfdfFileUtils.CreateXfdfDocumentFromStream(inputStream);
+                }
+                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()))
+;
             }
         }
 
-        /// <summary>Saves the info from output stream to xml-styled document.</summary>
-        /// <param name="document"> the document to save info to.</param>
-        /// <param name=" outputStream"> the stream containing xfdf info.</param>
-        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream)
-        {
-            document.Save(outputStream);
-            outputStream.Dispose();
+        [NUnit.Framework.Test]
+        public virtual void XxeVulnerabilityXfdfCustomXmlParserTest() {
+            XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
+            using (Stream inputStream = new MemoryStream(XFDF_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
+                NUnit.Framework.Assert.That(() =>  {
+                    XfdfFileUtils.CreateXfdfDocumentFromStream(inputStream);
+                }
+                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Test message"))
+;
+            }
         }
     }
 }
