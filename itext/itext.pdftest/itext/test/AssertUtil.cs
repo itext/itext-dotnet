@@ -48,6 +48,11 @@ namespace iText.Test {
 
     public class AssertUtil {
 
+        public static void AssertThrows(Type expectedThrowable, TestDelegate runnable)
+        {
+            Assert.That(runnable, Throws.InstanceOf(expectedThrowable));
+        }
+        
         public static void AssertThrows(string message, Type expectedThrowable, TestDelegate runnable)
         {
             Assert.That(runnable, Throws.InstanceOf(expectedThrowable).With.Message.EqualTo(message));
