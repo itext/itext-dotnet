@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
     Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
@@ -41,50 +41,38 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 
-using System;
 using System.IO;
 using System.Xml;
-using iText.Kernel;
-using iText.Kernel.Utils;
 
-namespace iText.Forms.Xfdf
+namespace iText.Kernel.Utils
 {
-    internal sealed class XfdfFileUtils
+    /// <summary>
+    /// Implementation of
+    /// <see cref="IXmlParserFactory"/>
+    /// for creating safe xml parser objects.
+    /// </summary>
+    /// <remarks>
+    /// Implementation of
+    /// <see cref="IXmlParserFactory"/>
+    /// for creating safe xml parser objects.
+    /// Creates parsers with configuration to prevent xml bombs and xxe attacks.
+    /// </remarks>
+    public class DefaultSafeXmlParserFactory : IXmlParserFactory
     {
-        private XfdfFileUtils()
+        public XmlReader CreateXmlReaderInstance(Stream stream, XmlParserContext inputContext)
         {
+            return XmlReader.Create(stream, CreateSafeXmlReaderSettings(), inputContext);
         }
 
-        /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
-        /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
-        internal static XmlDocument CreateNewXfdfDocument()
+        public XmlReader CreateXmlReaderInstance(TextReader textReader)
         {
-            return new XmlDocument();
+            return XmlReader.Create(textReader, CreateSafeXmlReaderSettings());
         }
 
-        /// <summary>Creates a new xfdf document based on given input stream.</summary>
-        /// <param name="inputStream"> the stream containing xfdf info.</param>
-        internal static XmlDocument CreateXfdfDocumentFromStream(Stream inputStream)
+        private static XmlReaderSettings CreateSafeXmlReaderSettings()
         {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream));
-                return doc;
-            }
-            catch (Exception e)
-            {
-                throw new PdfException(e.Message, e);
-            }
-        }
-
-        /// <summary>Saves the info from output stream to xml-styled document.</summary>
-        /// <param name="document"> the document to save info to.</param>
-        /// <param name=" outputStream"> the stream containing xfdf info.</param>
-        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream)
-        {
-            document.Save(outputStream);
-            outputStream.Dispose();
+            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Prohibit};
+            return xmlReaderSettings;
         }
     }
 }

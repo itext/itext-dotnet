@@ -41,17 +41,17 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using iText.Kernel;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Layout;
 
 namespace iText.Forms.Xfa
@@ -96,7 +96,7 @@ namespace iText.Forms.Xfa
 			}
 			catch (Exception e)
 			{
-				throw new PdfException(e);
+				throw new PdfException(e.Message, e);
 			}
 		}
 
@@ -129,7 +129,14 @@ namespace iText.Forms.Xfa
 			PdfObject xfa = acroFormDictionary.Get(PdfName.XFA);
 			if (xfa != null)
 			{
-			    InitXfaForm(xfa);
+				try
+				{
+					InitXfaForm(xfa);
+				}
+				catch (Exception e)
+				{
+					throw new PdfException(e.Message, e);
+				}
 			}
 		}
 
@@ -144,7 +151,14 @@ namespace iText.Forms.Xfa
 			PdfObject xfa = GetXfaObject(pdfDocument);
 			if (xfa != null)
 			{
-			    InitXfaForm(xfa);
+				try
+				{
+					InitXfaForm(xfa);
+				}
+				catch (Exception e)
+				{
+					throw new PdfException(e.Message, e);
+				}
 			}
 		}
 
@@ -152,7 +166,7 @@ namespace iText.Forms.Xfa
 	    /// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
 	    /// <param name="form">the data</param>
 	    /// <param name="pdfDocument">pdfDocument</param>
-	    public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfDocument pdfDocument) {
+	    public static void SetXfaForm(XfaForm form, PdfDocument pdfDocument) {
 	        PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
 	        SetXfaForm(form, acroForm);
 	    }
@@ -161,7 +175,7 @@ namespace iText.Forms.Xfa
 		/// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
 		/// <param name="form">the data</param>
 		/// <param name="acroForm">an AcroForm instance</param>
-		public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfAcroForm acroForm)
+		public static void SetXfaForm(XfaForm form, PdfAcroForm acroForm)
 		{
 		    if (form == null || acroForm == null || acroForm.GetPdfDocument() == null) {
 		        throw new ArgumentException("XfaForm, PdfAcroForm and PdfAcroForm's document shall not be null");
@@ -297,7 +311,7 @@ namespace iText.Forms.Xfa
 				if (name != null)
 				{
 					name = Xml2Som.GetShortName(name);
-					return iText.Forms.Xfa.XfaForm.GetNodeText(FindDatasetsNode(name));
+					return GetNodeText(FindDatasetsNode(name));
 				}
 			}
 			return null;
@@ -489,22 +503,21 @@ namespace iText.Forms.Xfa
 		/// <see cref="System.IO.Stream"/>
 		/// </param>
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
-		public virtual void FillXfaForm(Stream @is, bool readOnly) {
-            XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
-            XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
-            xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
-			XmlReaderSettings readerSettings = new XmlReaderSettings();
-			readerSettings.DtdProcessing = DtdProcessing.Ignore;
-			XmlReader reader = XmlReader.Create(@is, readerSettings, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
-			try {
-				// Prevents Exception "Reference to undeclared entity 'question'"
-				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
-					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-				propertyInfo.SetValue(reader, true, null);
-			} catch (Exception exc) {
+		public virtual void FillXfaForm(Stream @is, bool readOnly)
+		{
+			XmlReaderSettings settings = new XmlReaderSettings {NameTable = new NameTable()};
+			XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
+			xmlns.AddNamespace("xfa", "http://www.xfa.org/schema/xci/1.0/");
+			XmlReader reader =
+				XmlProcessorCreator.CreateSafeXmlReader(@is, new XmlParserContext(null, xmlns, "", XmlSpace.Default));
+			try
+			{
+				FillXfaForm(reader, readOnly);
 			}
-            
-            FillXfaForm(reader, readOnly);
+			catch (Exception e)
+			{
+				throw new PdfException(e.Message, e);
+			}
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>
@@ -696,16 +709,7 @@ namespace iText.Forms.Xfa
 
 		private void InitXfaForm(Stream inputStream)
 		{
-			XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-			xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
-			XmlReader reader = XmlReader.Create(inputStream, xmlReaderSettings);
-			try {
-				// Prevents Exception "Reference to undeclared entity 'question'"
-				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
-					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-				propertyInfo.SetValue(reader, true, null);
-			} catch (Exception exc) {
-			}
+			XmlReader reader = XmlProcessorCreator.CreateSafeXmlReader(inputStream);
 			SetDomDocument(XDocument.Load(reader, LoadOptions.PreserveWhitespace));
 			xfaPresent = true;
 		}

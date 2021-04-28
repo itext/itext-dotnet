@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
     Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
@@ -47,44 +47,35 @@ using System.Xml;
 using iText.Kernel;
 using iText.Kernel.Utils;
 
-namespace iText.Forms.Xfdf
+namespace iText.Forms.Xfa
 {
-    internal sealed class XfdfFileUtils
+    public class SecurityTestXmlParserFactory : IXmlParserFactory
     {
-        private XfdfFileUtils()
+        private XmlReaderSettings xmlReaderSettings;
+
+        public SecurityTestXmlParserFactory()
         {
+            xmlReaderSettings = new XmlReaderSettings();
+            xmlReaderSettings.DtdProcessing = DtdProcessing.Parse;
+            xmlReaderSettings.XmlResolver = new TestXmlResolver();
         }
 
-        /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
-        /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
-        internal static XmlDocument CreateNewXfdfDocument()
+        public XmlReader CreateXmlReaderInstance(Stream stream, XmlParserContext inputContext)
         {
-            return new XmlDocument();
+            return XmlReader.Create(stream, xmlReaderSettings);
         }
 
-        /// <summary>Creates a new xfdf document based on given input stream.</summary>
-        /// <param name="inputStream"> the stream containing xfdf info.</param>
-        internal static XmlDocument CreateXfdfDocumentFromStream(Stream inputStream)
+        public XmlReader CreateXmlReaderInstance(TextReader textReader)
         {
-            try
+            return XmlReader.Create(textReader, xmlReaderSettings);
+        }
+
+        private class TestXmlResolver : XmlResolver
+        {
+            public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream));
-                return doc;
+                throw new PdfException("Test message");
             }
-            catch (Exception e)
-            {
-                throw new PdfException(e.Message, e);
-            }
-        }
-
-        /// <summary>Saves the info from output stream to xml-styled document.</summary>
-        /// <param name="document"> the document to save info to.</param>
-        /// <param name=" outputStream"> the stream containing xfdf info.</param>
-        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream)
-        {
-            document.Save(outputStream);
-            outputStream.Dispose();
         }
     }
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
     Copyright (c) 1998-2021 iText Group NV
 Authors: iText Software.
@@ -41,50 +41,36 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 
-using System;
-using System.IO;
-using System.Xml;
-using iText.Kernel;
-using iText.Kernel.Utils;
-
-namespace iText.Forms.Xfdf
+namespace iText.Test
 {
-    internal sealed class XfdfFileUtils
+    /// <summary>
+    /// Class containing the exception messages.
+    /// </summary>
+    public static class ExceptionTestUtil
     {
-        private XfdfFileUtils()
+        private const string DOCTYPE_IS_DISALLOWED =
+            "For security reasons DTD is prohibited in this XML document. " +
+            "To enable DTD processing set the DtdProcessing property on XmlReaderSettings " +
+            "to Parse and pass the settings into XmlReader.Create method.";
+
+        private const string XXE_TEST_MESSAGE = "An error has occurred while opening external entity 'file:///D:/abc.txt': Test message";
+
+        /// <summary>
+        /// Returns message about disallowed DOCTYPE.
+        /// </summary>
+        /// <returns>Message for case when DOCTYPE is disallowed in XML</returns>
+        public static string GetDoctypeIsDisallowedExceptionMessage()
         {
+            return DOCTYPE_IS_DISALLOWED;
         }
 
-        /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
-        /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
-        internal static XmlDocument CreateNewXfdfDocument()
+        /// <summary>
+        /// Returns test message for case with XXE.
+        /// </summary>
+        /// <returns>Message with text for testing</returns>
+        public static string GetXxeTestMessage()
         {
-            return new XmlDocument();
-        }
-
-        /// <summary>Creates a new xfdf document based on given input stream.</summary>
-        /// <param name="inputStream"> the stream containing xfdf info.</param>
-        internal static XmlDocument CreateXfdfDocumentFromStream(Stream inputStream)
-        {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream));
-                return doc;
-            }
-            catch (Exception e)
-            {
-                throw new PdfException(e.Message, e);
-            }
-        }
-
-        /// <summary>Saves the info from output stream to xml-styled document.</summary>
-        /// <param name="document"> the document to save info to.</param>
-        /// <param name=" outputStream"> the stream containing xfdf info.</param>
-        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream)
-        {
-            document.Save(outputStream);
-            outputStream.Dispose();
+            return XXE_TEST_MESSAGE;
         }
     }
 }
