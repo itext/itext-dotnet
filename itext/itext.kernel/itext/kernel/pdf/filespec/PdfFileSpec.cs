@@ -528,6 +528,7 @@ namespace iText.Kernel.Pdf.Filespec {
             ef.Put(PdfName.F, stream);
             ef.Put(PdfName.UF, stream);
             dict.Put(PdfName.EF, ef);
+            doc.MarkStreamAsEmbeddedFile(stream);
             return (iText.Kernel.Pdf.Filespec.PdfFileSpec)new iText.Kernel.Pdf.Filespec.PdfFileSpec(dict).MakeIndirect
                 (doc);
         }

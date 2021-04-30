@@ -400,7 +400,8 @@ namespace iText.Kernel.Pdf {
                 file.Seek(stream.GetOffset());
                 bytes = new byte[length];
                 file.ReadFully(bytes);
-                if (decrypt != null && !decrypt.IsEmbeddedFilesOnly()) {
+                bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
+                if (decrypt != null && (!decrypt.IsEmbeddedFilesOnly() || embeddedStream)) {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
