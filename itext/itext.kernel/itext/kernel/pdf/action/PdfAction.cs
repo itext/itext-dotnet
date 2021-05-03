@@ -729,6 +729,17 @@ namespace iText.Kernel.Pdf.Action {
             }
         }
 
+        /// <summary>Validates not remote destination against the PDF specification and in case of invalidity logs a warning.
+        ///     </summary>
+        /// <remarks>
+        /// Validates not remote destination against the PDF specification and in case of invalidity logs a warning.
+        /// See section 12.3.2.2 of ISO 32000-1.
+        /// </remarks>
+        /// <param name="destination">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfDestination">destination</see>
+        /// to be validated
+        /// </param>
         public static void ValidateNotRemoteDestination(PdfDestination destination) {
             if (destination is PdfExplicitRemoteGoToDestination) {
                 LogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.INVALID_DESTINATION_TYPE
