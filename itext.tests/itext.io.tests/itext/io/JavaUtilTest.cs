@@ -40,19 +40,17 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using iText.IO.Util;
 using NUnit.Framework;
 
-namespace iText.IO
-{
-    public class JavaUtilTest
-    {
+namespace iText.IO {
+    public class JavaUtilTest {
         [Test]
-        public virtual void LinkedHashSetTest()
-        {
+        public virtual void LinkedHashSetTest() {
             LinkedHashSet<int> set1 = new LinkedHashSet<int>();
             set1.Add(5);
             set1.Add(2);
@@ -82,8 +80,7 @@ namespace iText.IO
         }
 
         [Test]
-        public virtual void JavaCollectionsUtilTest()
-        {
+        public virtual void JavaCollectionsUtilTest() {
             IList<int> emptyList = JavaCollectionsUtil.EmptyList<int>();
             Assert.IsEmpty(emptyList);
             Assert.Throws<NotSupportedException>(() => emptyList.Add(10));
@@ -95,7 +92,8 @@ namespace iText.IO
             IEnumerator<int> emptyIterator = JavaCollectionsUtil.EmptyIterator<int>();
             Assert.False(emptyIterator.MoveNext());
 
-            IList<int> unmodifiableList = JavaCollectionsUtil.UnmodifiableList<int>(new int[] { 10, 20, 30, 20 }.ToList());
+            IList<int> unmodifiableList =
+                JavaCollectionsUtil.UnmodifiableList<int>(new int[] {10, 20, 30, 20}.ToList());
             Assert.Throws<NotSupportedException>(() => unmodifiableList.Insert(0, 20));
             Assert.Throws<NotSupportedException>(() => { unmodifiableList[2] = 50; });
             int test = unmodifiableList[3];
@@ -107,22 +105,114 @@ namespace iText.IO
                 {70, 80},
             });
             test = unodifiableMap[2];
-            Assert.Throws<KeyNotFoundException>(() => { int temp = unodifiableMap[3]; });
+            Assert.Throws<KeyNotFoundException>(() => {
+                int temp = unodifiableMap[3];
+            });
             Assert.Throws<NotSupportedException>(() => { unodifiableMap[11] = 11; });
 
             IList<int> singletonList = JavaCollectionsUtil.SingletonList(4);
             Assert.AreEqual(4, singletonList[0]);
             Assert.Throws<NotSupportedException>(() => singletonList.Add(9));
 
-            List<int> x = new int[] { 60, 50, 20 }.ToList();
+            List<int> x = new int[] {60, 50, 20}.ToList();
             JavaCollectionsUtil.Sort(x);
             Assert.AreEqual(20, x[0]);
             Assert.AreEqual(60, x[2]);
 
-            x = new int[] { -1, 0, 1 }.ToList();
+            x = new int[] {-1, 0, 1}.ToList();
             JavaCollectionsUtil.Reverse(x);
             Assert.AreEqual(1, x[0]);
             Assert.AreEqual(0, x[1]);
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillBytesTest() {
+            byte[] bytes = new byte[5];
+            byte fillVal = 1;
+            JavaUtil.Fill(bytes, fillVal);
+            foreach (byte b in bytes) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillCharsTest() {
+            char[] chars = new char[5];
+            char fillVal = 'a';
+            JavaUtil.Fill(chars, fillVal);
+            foreach (char c in chars) {
+                Assert.AreEqual(fillVal, c);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillBoolTest() {
+            bool[] bools = new bool[5];
+            bool fillVal = true;
+            JavaUtil.Fill(bools, fillVal);
+            foreach (bool b in bools) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillShortTest() {
+            short[] shorts = new short[5];
+            short fillVal = 1;
+            JavaUtil.Fill(shorts, fillVal);
+            foreach (short b in shorts) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillIntTest() {
+            int[] ints = new int[5];
+            int fillVal = 1;
+            JavaUtil.Fill(ints, fillVal);
+            foreach (int b in ints) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillLongTest() {
+            long[] longs = new long[5];
+            long fillVal = 1;
+            JavaUtil.Fill(longs, fillVal);
+            foreach (long b in longs) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillFloatTest() {
+            float[] floats = new float[5];
+            float fillVal = 1;
+            JavaUtil.Fill(floats, fillVal);
+            foreach (float b in floats) {
+                Assert.AreEqual(fillVal, b);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillDoubleTest() {
+            double[] doubles = new double[5];
+            double fillVal = 1;
+            JavaUtil.Fill(doubles, fillVal);
+            foreach (double d in doubles) {
+                Assert.AreEqual(fillVal, d);
+            }
+        }
+        
+        [Test]
+        public virtual void JavaUtilFillObjectTest() {
+            string[] strings = new string[5];
+            string fillVal = "hello";
+            JavaUtil.Fill(strings, fillVal);
+            foreach (string s in strings) {
+                Assert.AreEqual(fillVal, s);
+            }
         }
     }
 }
