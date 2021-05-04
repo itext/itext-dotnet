@@ -196,14 +196,32 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Sets typo ascender.</summary>
+        /// <remarks>
+        /// Sets typo ascender. See also
+        /// <see cref="FontMetrics.SetTypoAscender(int)"/>.
+        /// </remarks>
+        /// <param name="ascender">typo ascender value in 1000-units</param>
         protected internal virtual void SetTypoAscender(int ascender) {
             fontMetrics.SetTypoAscender(ascender);
         }
 
+        /// <summary>Sets typo descender.</summary>
+        /// <remarks>
+        /// Sets typo descender. See also
+        /// <see cref="FontMetrics.SetTypoDescender(int)"/>.
+        /// </remarks>
+        /// <param name="descender">typo descender value in 1000-units</param>
         protected internal virtual void SetTypoDescender(int descender) {
             fontMetrics.SetTypoDescender(descender);
         }
 
+        /// <summary>Sets the capital letters height.</summary>
+        /// <remarks>
+        /// Sets the capital letters height. See also
+        /// <see cref="FontMetrics.SetCapHeight(int)"/>.
+        /// </remarks>
+        /// <param name="capHeight">cap height in 1000-units</param>
         protected internal virtual void SetCapHeight(int capHeight) {
             fontMetrics.SetCapHeight(capHeight);
         }
@@ -212,9 +230,9 @@ namespace iText.IO.Font {
             fontMetrics.SetXHeight(xHeight);
         }
 
-        /// <summary>Sets the PostScript italic angel.</summary>
+        /// <summary>Sets the PostScript italic angle.</summary>
         /// <remarks>
-        /// Sets the PostScript italic angel.
+        /// Sets the PostScript italic angle.
         /// <para />
         /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
         /// </remarks>

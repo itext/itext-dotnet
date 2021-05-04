@@ -61,6 +61,7 @@ namespace iText.Kernel.Font {
 
         protected internal static readonly byte[] EMPTY_BYTES = new byte[0];
 
+        [Obsolete]
         protected internal static readonly double[] DEFAULT_FONT_MATRIX = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
         protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph>();
@@ -199,6 +200,7 @@ namespace iText.Kernel.Font {
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
+        [Obsolete]
         public virtual double[] GetFontMatrix() {
             return DEFAULT_FONT_MATRIX;
         }

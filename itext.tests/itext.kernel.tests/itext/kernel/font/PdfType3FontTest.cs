@@ -243,7 +243,6 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void MissingFontMatrixTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.Widths, new PdfArray());
@@ -257,7 +256,6 @@ namespace iText.Kernel.Font {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void MissingWidthsTest() {
             PdfDictionary dictionary = new PdfDictionary();
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
