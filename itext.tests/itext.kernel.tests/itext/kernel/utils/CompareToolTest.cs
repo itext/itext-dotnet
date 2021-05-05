@@ -43,7 +43,14 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using iText.IO;
+using iText.IO.Font.Constants;
 using iText.IO.Util;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Navigation;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -195,6 +202,62 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_1.png").Exists);
             NUnit.Framework.Assert.IsTrue(new FileInfo(destinationFolder + "diff_2.png").Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareDiffFilesWithSameLinkAnnotationTest() {
+            String firstPdf = destinationFolder + "firstPdf.pdf";
+            String secondPdf = destinationFolder + "secondPdf.pdf";
+            PdfDocument firstDocument = new PdfDocument(new PdfWriter(firstPdf));
+            PdfPage page1FirstDocument = firstDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1FirstDocument);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER_BOLD), 14);
+            canvas.MoveText(100, 600);
+            canvas.ShowText("Page 1");
+            canvas.MoveText(0, -30);
+            canvas.ShowText("Link to page 1. Click here!");
+            canvas.EndText();
+            canvas.Release();
+            page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1FirstDocument.Flush();
+            firstDocument.Close();
+            PdfDocument secondDocument = new PdfDocument(new PdfWriter(secondPdf));
+            PdfPage page1secondDocument = secondDocument.AddNewPage();
+            canvas = new PdfCanvas(page1secondDocument);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER_BOLD), 14);
+            canvas.MoveText(100, 600);
+            canvas.ShowText("Page 1 wit different Text");
+            canvas.MoveText(0, -30);
+            canvas.ShowText("Link to page 1. Click here!");
+            canvas.EndText();
+            canvas.Release();
+            page1secondDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1secondDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1secondDocument.Flush();
+            secondDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareLinkAnnotations(firstPdf, secondPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareFilesWithDiffLinkAnnotationTest() {
+            String firstPdf = destinationFolder + "outPdf.pdf";
+            String secondPdf = destinationFolder + "secondPdf.pdf";
+            PdfDocument firstDocument = new PdfDocument(new PdfWriter(firstPdf));
+            PdfDocument secondDocument = new PdfDocument(new PdfWriter(secondPdf));
+            PdfPage page1FirstDocument = firstDocument.AddNewPage();
+            page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1FirstDocument.Flush();
+            firstDocument.Close();
+            PdfPage page1SecondDocument = secondDocument.AddNewPage();
+            page1SecondDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 260, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1SecondDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1SecondDocument.Flush();
+            secondDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareLinkAnnotations(firstPdf, secondPdf));
         }
     }
 }
