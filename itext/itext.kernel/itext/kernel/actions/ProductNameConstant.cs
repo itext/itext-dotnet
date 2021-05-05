@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.Kernel.Actions {
     public sealed class ProductNameConstant {
@@ -33,6 +35,11 @@ namespace iText.Kernel.Actions {
         public const String PDF_OCR = ITEXT_CORE + "pdfOcr";
 
         public const String PDF_OCR_TESSERACT4 = "pdfOcr-tesseract4";
+
+        public static readonly ICollection<String> PRODUCT_NAMES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
+            <String>(JavaUtil.ArraysAsList(iText.Kernel.Actions.ProductNameConstant.ITEXT_CORE, iText.Kernel.Actions.ProductNameConstant
+            .PDF_HTML, iText.Kernel.Actions.ProductNameConstant.PDF_SWEEP, iText.Kernel.Actions.ProductNameConstant
+            .PDF_OCR, iText.Kernel.Actions.ProductNameConstant.PDF_OCR_TESSERACT4)));
 
         private ProductNameConstant() {
         }

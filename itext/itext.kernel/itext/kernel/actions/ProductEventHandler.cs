@@ -37,10 +37,6 @@ namespace iText.Kernel.Actions {
         internal static readonly iText.Kernel.Actions.ProductEventHandler INSTANCE = new iText.Kernel.Actions.ProductEventHandler
             ();
 
-        private static readonly ICollection<String> PRODUCTS_NAMESPACES = JavaCollectionsUtil.UnmodifiableSet(new 
-            HashSet<String>(JavaUtil.ArraysAsList(ProductNameConstant.ITEXT_CORE, ProductNameConstant.PDF_HTML, ProductNameConstant
-            .PDF_SWEEP, ProductNameConstant.PDF_OCR, ProductNameConstant.PDF_OCR_TESSERACT4)));
-
         private readonly ConcurrentDictionary<String, ITextProductEventProcessor> processors = new ConcurrentDictionary
             <String, ITextProductEventProcessor>();
 
@@ -119,7 +115,7 @@ namespace iText.Kernel.Actions {
             if (processor != null) {
                 return processor;
             }
-            if (PRODUCTS_NAMESPACES.Contains(productName)) {
+            if (ProductNameConstant.PRODUCT_NAMES.Contains(productName)) {
                 processor = new DefaultITextProductEventProcessor(productName);
                 processors.Put(productName, processor);
                 return processor;
