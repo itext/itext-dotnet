@@ -35,7 +35,7 @@ namespace iText.Kernel.Counter {
 
         protected internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String>
              products) {
-            ContextManager.GetInstance().RegisterGenericContext(namespaces, products);
+            ContextManager.GetInstance().RegisterGenericContextForProducts(namespaces, products);
         }
     }
 }

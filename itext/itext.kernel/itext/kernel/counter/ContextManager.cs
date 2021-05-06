@@ -138,6 +138,13 @@ namespace iText.Kernel.Counter {
             return null;
         }
 
+        // TODO DEVSIX-5311 rename into registerGenericContext (currently we cann't rename it as
+        //  the old method with the same arguments but different logic is used for old mechanism)
+        internal virtual void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String
+            > products) {
+            RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
+        }
+
         private IContext GetNamespaceMapping(String @namespace) {
             if (@namespace != null) {
                 return contextMappings.Get(@namespace);
@@ -145,10 +152,13 @@ namespace iText.Kernel.Counter {
             return null;
         }
 
-        internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> products) {
-            RegisterGenericContextForProducts(namespaces, JavaCollectionsUtil.EmptyList<String>(), products);
+        // TODO DEVSIX-5311 This method is used for old logic of license mechanism, will be removed
+        private void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> eventIds) {
+            RegisterGenericContextForProducts(namespaces, eventIds, JavaCollectionsUtil.EmptyList<String>());
         }
 
+        // TODO DEVSIX-5311 This method is needed for similar working of new and old license mechanism,
+        //  should be moved to single properly method
         private void RegisterGenericContextForProducts(ICollection<String> namespaces, ICollection<String> eventIds
             , ICollection<String> products) {
             GenericContext context = new GenericContext(eventIds, products);
