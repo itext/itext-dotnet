@@ -57,7 +57,7 @@ namespace iText.Layout.Element {
     /// share.
     /// </summary>
     /// <typeparam name="T">the type of the implementation</typeparam>
-    public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
+    public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IAbstractElement
         where T : IElement {
         protected internal IRenderer nextRenderer;
 

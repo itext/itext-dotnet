@@ -36,6 +36,7 @@ namespace iText.Kernel.Counter.Event {
         /// <summary>Creates an event associated with a general identifier and additional meta data.</summary>
         /// <param name="sequenceId">is an identifier associated with the event</param>
         /// <param name="metaInfo">is an additional meta info</param>
+        /// <param name="eventType">is a string description of the event</param>
         public ITextCoreEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType)
             : base(sequenceId, ITextCoreProductData.GetInstance(), metaInfo) {
             this.eventType = eventType;

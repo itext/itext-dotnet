@@ -47,19 +47,6 @@ namespace iText.Kernel.Logs {
     public sealed class KernelLogMessageConstant {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";
 
-        /// <summary>Message warns about overriding of the identifier of identifiable element.</summary>
-        /// <remarks>
-        /// Message warns about overriding of the identifier of identifiable element. List of params:
-        /// <list type="bullet">
-        /// <item><description>0th is an original element identifier;
-        /// </description></item>
-        /// <item><description>1st is a new element identifier;
-        /// </description></item>
-        /// </list>
-        /// </remarks>
-        public const String ELEMENT_ALREADY_HAS_AN_IDENTIFIER = "Element already has sequence id: {0}, new id {1} "
-             + "will be ignored";
-
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "

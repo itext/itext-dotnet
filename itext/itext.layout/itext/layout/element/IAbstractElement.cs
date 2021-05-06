@@ -20,24 +20,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Kernel.Actions.Sequence {
-    /// <summary>
-    /// The class allows to make any element identifiable so that it is possible to store some metadata
-    /// for it.
-    /// </summary>
-    public abstract class AbstractIdentifiableElement {
-        private SequenceId sequenceId;
+using System.Collections.Generic;
 
-        /// <summary>Obtains an identifier if it was set.</summary>
-        /// <returns>identifier</returns>
-        internal virtual SequenceId GetSequenceId() {
-            return sequenceId;
-        }
-
-        /// <summary>Sets an identifier.</summary>
-        /// <param name="sequenceId">is a new identifier for the element</param>
-        internal virtual void SetSequenceId(SequenceId sequenceId) {
-            this.sequenceId = sequenceId;
-        }
+namespace iText.Layout.Element {
+    /// <summary>The interface represents abstract layout element and provides an access to its children.</summary>
+    public interface IAbstractElement : IElement {
+        /// <summary>Gets the child elements of this elements</summary>
+        /// <returns>a list of children</returns>
+        IList<IElement> GetChildren();
     }
 }
