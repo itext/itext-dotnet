@@ -192,6 +192,77 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.AreEqual("", assertionResults.ToString());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SignatureFieldNotMergedWithWidgetTest() {
+            using (PdfDocument outputDoc = new PdfDocument(new PdfReader(sourceFolder + "signatureFieldNotMergedWithWidget.pdf"
+                ))) {
+                SignatureUtil sigUtil = new SignatureUtil(outputDoc);
+                PdfPKCS7 signatureData = sigUtil.ReadSignatureData("Signature1");
+                NUnit.Framework.Assert.IsTrue(signatureData.VerifySignatureIntegrityAndAuthenticity());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignExistingNotMergedFieldNotReusedAPTest() {
+            // TODO: DEVSIX-5162 (the signature is expected to have auto-generated appearance, but now it's empty)
+            // Field is not merged with widget and has /P key
+            String src = sourceFolder + "emptyFieldNotMerged.pdf";
+            String fileName = "signExistingNotMergedFieldNotReusedAP.pdf";
+            String dest = destinationFolder + fileName;
+            PdfReader reader = new PdfReader(src);
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
+                ("TestCity").SetReuseAppearance(false);
+            signer.SetFieldName("Signature1");
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignExistingNotMergedFieldReusedAPTest() {
+            // TODO: DEVSIX-5162 (signature appearance expected to be updated (reused appearance will be used as a background))
+            // Field is not merged with widget and has /P key
+            String src = sourceFolder + "emptyFieldNotMerged.pdf";
+            String fileName = "signExistingNotMergedFieldReusedAP.pdf";
+            String dest = destinationFolder + fileName;
+            PdfReader reader = new PdfReader(src);
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
+                ("TestCity").SetReuseAppearance(true);
+            signer.SetFieldName("Signature1");
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignExistingNotMergedFieldReusedAPEntryNDicTest() {
+            // TODO: DEVSIX-5162 (remove expected exception after fix)
+            // Field is not merged with widget and has /P key
+            String src = sourceFolder + "emptyFieldNotMergedEntryNDict.pdf";
+            String fileName = "signExistingNotMergedFieldReusedAPEntryNDic.pdf";
+            String dest = destinationFolder + fileName;
+            PdfReader reader = new PdfReader(src);
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            NUnit.Framework.Assert.That(() =>  {
+                signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
+                    ("TestCity").SetReuseAppearance(true);
+                signer.SetFieldName("Signature1");
+                IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+                signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                    , "diff_"));
+            }
+            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
+;
+        }
+
         private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder
              assertionResults) {
             String fileName = "signaturesOnRotatedPages" + pageNum + "_mode_" + renderingMode.ToString() + ".pdf";
