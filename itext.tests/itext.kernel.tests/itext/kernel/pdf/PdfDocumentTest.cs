@@ -70,18 +70,6 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
-            Toggle.NEW_PRODUCER_LINE = true;
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void After() {
-            // TODO DEVSIX-5323 remove toggle set up when the old mechanism deleted
-            Toggle.NEW_PRODUCER_LINE = false;
-        }
-
         [NUnit.Framework.Test]
         public virtual void MissingProducerTest() {
             String inputFile = SOURCE_FOLDER + "missingProducer.pdf";

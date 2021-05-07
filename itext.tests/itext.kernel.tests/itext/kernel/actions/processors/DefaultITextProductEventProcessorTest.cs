@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel;
-using iText.Kernel.Actions.Session;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Processors {
@@ -34,14 +33,6 @@ namespace iText.Kernel.Actions.Processors {
             }
             , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.ProductNameCannotBeNull))
 ;
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void OldMechanismSetProducerTest() {
-            DefaultITextProductEventProcessor processor = new DefaultITextProductEventProcessor("test-product");
-            ClosingSession session = new ClosingSession(null);
-            processor.CompletionOnClose(session);
-            NUnit.Framework.Assert.AreEqual(true, session.GetProperty("old-mechanism-producer-line-was-set"));
         }
     }
 }

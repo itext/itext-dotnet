@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -1899,26 +1898,6 @@ namespace iText.Kernel.Pdf {
             return documentId;
         }
 
-        /// <summary>Updates producer line of the document.</summary>
-        /// <remarks>
-        /// Updates producer line of the document.
-        /// TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
-        /// </remarks>
-        public virtual void UpdateProducerInInfoDictionary() {
-            String producer = null;
-            if (reader == null) {
-                producer = versionInfo.GetVersion();
-            }
-            else {
-                if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                    PdfString producerPdfStr = info.GetPdfObject().GetAsString(PdfName.Producer);
-                    producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
-                }
-                producer = AddModifiedPostfix(producer);
-            }
-            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
-        }
-
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -2476,26 +2455,6 @@ namespace iText.Kernel.Pdf {
 
         private bool WriterHasEncryption() {
             return writer.properties.IsStandardEncryptionUsed() || writer.properties.IsPublicKeyEncryptionUsed();
-        }
-
-        // TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
-        private String AddModifiedPostfix(String producer) {
-            if (producer == null || !versionInfo.GetVersion().Contains(versionInfo.GetProduct())) {
-                return versionInfo.GetVersion();
-            }
-            else {
-                int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
-                StringBuilder buf;
-                if (idx == -1) {
-                    buf = new StringBuilder(producer);
-                }
-                else {
-                    buf = new StringBuilder(producer.JSubstring(0, idx));
-                }
-                buf.Append("; modified using ");
-                buf.Append(versionInfo.GetVersion());
-                return buf.ToString();
-            }
         }
 
         private void UpdatePdfVersionFromCatalog() {

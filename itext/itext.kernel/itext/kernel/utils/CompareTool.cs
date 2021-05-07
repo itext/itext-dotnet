@@ -92,9 +92,9 @@ namespace iText.Kernel.Utils {
 
         private const String IGNORED_AREAS_PREFIX = "ignored_areas_";
 
-        private const String VERSION_REGEXP = "(iText\u00ae( pdfX(FA|fa)| DITO)?|iTextSharp\u2122) (\\d+\\.)+\\d+(-SNAPSHOT)?";
+        private const String VERSION_REGEXP = "(\\d+\\.)+\\d+(-SNAPSHOT)?";
 
-        private const String VERSION_REPLACEMENT = "iText\u00ae <version>";
+        private const String VERSION_REPLACEMENT = "<version>";
 
         private const String COPYRIGHT_REGEXP = "\u00a9\\d+-\\d+ iText Group NV";
 

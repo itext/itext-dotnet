@@ -97,12 +97,9 @@ namespace iText.Kernel.Actions.Events {
                     knownProducts.Put(product, processor);
                 }
             }
-            //TODO DEVSIX-5323 remove the toggle when all tests are ready
-            if (Toggle.NEW_PRODUCER_LINE) {
-                String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
-                String newProducer = ProducerBuilder.ModifyProducer(events, oldProducer);
-                pdfDocument.GetDocumentInfo().SetProducer(newProducer);
-            }
+            String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
+            String newProducer = ProducerBuilder.ModifyProducer(events, oldProducer);
+            pdfDocument.GetDocumentInfo().SetProducer(newProducer);
             ClosingSession session = new ClosingSession((PdfDocument)document.Target);
             foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {
                 product.Value.AggregationOnClose(session);

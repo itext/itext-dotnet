@@ -82,7 +82,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
-            // TODO DEVSIX-5323 update test with a new producer line
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
         }
@@ -98,7 +97,6 @@ namespace iText.Kernel.Pdf {
             document.Close();
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
-            // TODO DEVSIX-5323 update test with a new producer line
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
         }
@@ -135,7 +133,7 @@ namespace iText.Kernel.Pdf {
         public virtual void SimpleStampingMetadataLeaveUnchanged() {
             String inputFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
             String outFile = destinationFolder + "metadata_pdf_20_unchanged_stamper.pdf";
-            String cmpFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
+            String cmpFile = sourceFolder + "cmp_metadata_pdf_20_unchanged_append.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile), new StampingProperties
                 ());
             String author = document.GetDocumentInfo().GetAuthor();

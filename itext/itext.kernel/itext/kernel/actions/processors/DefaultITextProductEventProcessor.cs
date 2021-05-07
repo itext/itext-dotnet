@@ -28,9 +28,6 @@ using iText.Kernel.Actions.Session;
 namespace iText.Kernel.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
     public class DefaultITextProductEventProcessor : ITextProductEventProcessor {
-        // TODO: DEVSIX-5323 should be removed when new producer line building logic is implemented
-        private const String OLD_MECHANISM_PRODUCER_LINE_WAS_SET = "old-mechanism-producer-line-was-set";
-
         private readonly String productName;
 
         /// <summary>Creates an instance of product event processor.</summary>
@@ -83,15 +80,6 @@ namespace iText.Kernel.Actions.Processors {
         /// <summary>Updates meta info of the document.</summary>
         /// <param name="closingSession">is a closing session</param>
         public virtual void CompletionOnClose(ClosingSession closingSession) {
-            // TODO DEVSIX-5323 remove the logic when all tests are ready
-            if (!Toggle.NEW_PRODUCER_LINE) {
-                if (closingSession.GetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET) == null) {
-                    if (closingSession.GetDocument() != null) {
-                        closingSession.GetDocument().UpdateProducerInInfoDictionary();
-                    }
-                    closingSession.SetProperty(OLD_MECHANISM_PRODUCER_LINE_WAS_SET, true);
-                }
-            }
         }
     }
 }
