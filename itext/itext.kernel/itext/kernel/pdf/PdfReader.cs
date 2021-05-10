@@ -400,7 +400,8 @@ namespace iText.Kernel.Pdf {
                 file.Seek(stream.GetOffset());
                 bytes = new byte[length];
                 file.ReadFully(bytes);
-                if (decrypt != null && !decrypt.IsEmbeddedFilesOnly()) {
+                bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
+                if (decrypt != null && (!decrypt.IsEmbeddedFilesOnly() || embeddedStream)) {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
@@ -1443,8 +1444,21 @@ namespace iText.Kernel.Pdf {
         /// <param name="byteSource">the source to check</param>
         /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
         private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource) {
+            iText.IO.IOException possibleException = null;
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
-            int offset = tok.GetHeaderOffset();
+            int offset;
+            try {
+                offset = tok.GetHeaderOffset();
+            }
+            catch (iText.IO.IOException ex) {
+                possibleException = ex;
+                throw possibleException;
+            }
+            finally {
+                if (possibleException != null) {
+                    tok.Close();
+                }
+            }
             if (offset != 0) {
                 IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset);
                 tok = new PdfTokenizer(new RandomAccessFileOrArray(offsetSource));

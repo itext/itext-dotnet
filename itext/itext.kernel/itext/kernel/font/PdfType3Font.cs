@@ -59,7 +59,26 @@ namespace iText.Kernel.Font {
     /// These streams are associated with character names. A separate encoding entry
     /// maps character codes to the appropriate character names for the glyphs.
     /// <para />
-    /// <br /><br />
+    /// Note, that this class operates in a special way with glyph space units.
+    /// In the code when working with fonts, iText expects that 1000 units of glyph-space correspond
+    /// to 1 unit of text space. For Type3 fonts this is not always the case and depends on FontMatrix.
+    /// That's why in
+    /// <see cref="PdfType3Font"/>
+    /// the font matrix and all font metrics in glyph space units
+    /// are "normalized" in such way, that 1 to 1000 relation is preserved. This is done on
+    /// Type3 font initialization, and is reverted back on font flushing, because the actual content
+    /// streams of type3 font glyphs are left with original coordinates based on original font matrix.
+    /// See also ISO-32000-2, 9.2.4 "Glyph positioning and metrics":
+    /// <para />
+    /// "The glyph coordinate system is the space in which an individual character’s glyph is defined. All path
+    /// coordinates and metrics shall be interpreted in glyph space. For all font types except Type 3, the units
+    /// of glyph space are one-thousandth of a unit of text space; for a Type 3 font, the transformation from
+    /// glyph space to text space shall be defined by a font matrix specified in an explicit FontMatrix entry in
+    /// the font."
+    /// <para />
+    /// Note, that because of this when processing Type3 glyphs content streams either process them completely independent
+    /// from this class or take this normalization into account.
+    /// <para />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
@@ -67,19 +86,23 @@ namespace iText.Kernel.Font {
     /// must be indirect.
     /// </remarks>
     public class PdfType3Font : PdfSimpleFont<Type3Font> {
+        private const int FONT_BBOX_LLX = 0;
+
+        private const int FONT_BBOX_LLY = 1;
+
+        private const int FONT_BBOX_URX = 2;
+
+        private const int FONT_BBOX_URY = 3;
+
+        [Obsolete]
         private double[] fontMatrix = DEFAULT_FONT_MATRIX;
 
-        /// <summary>Used to normalize the values of glyphs widths and bBox measurements.</summary>
+        /// <summary>Used to normalize font metrics expressed in glyph space units.</summary>
         /// <remarks>
-        /// Used to normalize the values of glyphs widths and bBox measurements.
-        /// iText process glyph width and bBox width and height in integer values from 0 to 1000.
-        /// Such behaviour is based on the assumption that this is the most common way to store such values. It also implies
-        /// that the fontMatrix contains the following values: [0.001, 0, 0, 0.001, 0, 0].
-        /// However for the other cases of font matrix the values stored inside pdfWidth and bBox arrays need to be normalized
-        /// by multiplying them by fontMatrix[0] * 1000 to be processed correctly. The opposite procedure, division by
-        /// dimensionsMultiplier is performed on font flush in order to maintain correct pdfObject for underlysing font.
+        /// Used to normalize font metrics expressed in glyph space units. See
+        /// <see cref="PdfType3Font"/>.
         /// </remarks>
-        private double dimensionsMultiplier;
+        private double glyphSpaceNormalizationFactor;
 
         /// <summary>Creates a Type 3 font.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
@@ -91,7 +114,7 @@ namespace iText.Kernel.Font {
             embedded = true;
             fontProgram = new Type3Font(colorized);
             fontEncoding = FontEncoding.CreateEmptyFontEncoding();
-            dimensionsMultiplier = 1.0f;
+            SetGlyphSpaceNormalizationFactor(1.0f);
         }
 
         /// <summary>Creates a Type 3 font.</summary>
@@ -103,7 +126,7 @@ namespace iText.Kernel.Font {
             : this(document, colorized) {
             ((Type3Font)fontProgram).SetFontName(fontName);
             ((Type3Font)fontProgram).SetFontFamily(fontFamily);
-            dimensionsMultiplier = 1.0f;
+            SetGlyphSpaceNormalizationFactor(1.0f);
         }
 
         /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
@@ -114,19 +137,30 @@ namespace iText.Kernel.Font {
             embedded = true;
             fontProgram = new Type3Font(false);
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
+            double[] fontMatrixArray = ReadFontMatrix();
+            double[] fontBBoxRect = ReadFontBBox();
+            double[] widthsArray = ReadWidths(fontDictionary);
+            SetGlyphSpaceNormalizationFactor(fontMatrixArray[0] * FontProgram.UNITS_NORMALIZATION);
             PdfDictionary charProcsDic = fontDictionary.GetAsDictionary(PdfName.CharProcs);
             PdfDictionary encoding = fontDictionary.GetAsDictionary(PdfName.Encoding);
             PdfArray differences = encoding != null ? encoding.GetAsArray(PdfName.Differences) : null;
             if (charProcsDic == null || differences == null) {
                 LogManager.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE);
             }
-            CalculateAndSetFontMatrix();
-            CalculateAndSetBBox();
-            int firstChar = CalculateShortTag(fontDictionary);
-            int[] widths = CalculateWidth(fontDictionary, firstChar);
+            FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
+            Normalize1000UnitsToGlyphSpaceUnits(fontMatrixArray);
+            NormalizeGlyphSpaceUnitsTo1000Units(fontBBoxRect);
+            NormalizeGlyphSpaceUnitsTo1000Units(widthsArray);
+            int firstChar = InitializeShortTag(fontDictionary);
+            fontMatrix = fontMatrixArray;
+            InitializeFontBBox(fontBBoxRect);
+            InitializeTypoAscenderDescender(fontBBoxRect);
+            int[] widths = new int[256];
+            for (int i = 0; i < widthsArray.Length && firstChar + i < 256; i++) {
+                widths[firstChar + i] = (int)(widthsArray[i]);
+            }
             AddGlyphsFromDifferences(differences, charProcsDic, widths);
             AddGlyphsFromCharProcs(charProcsDic, widths);
-            FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
         }
 
         /// <summary>Sets the PostScript name of the font.</summary>
@@ -148,6 +182,12 @@ namespace iText.Kernel.Font {
         /// </param>
         public virtual void SetFontWeight(int fontWeight) {
             ((Type3Font)fontProgram).SetFontWeight(fontWeight);
+        }
+
+        /// <summary>Sets cap height.</summary>
+        /// <param name="capHeight">integer in glyph-space 1000-units</param>
+        public virtual void SetCapHeight(int capHeight) {
+            ((Type3Font)fontProgram).SetCapHeight(capHeight);
         }
 
         /// <summary>Sets the PostScript italic angle.</summary>
@@ -206,6 +246,13 @@ namespace iText.Kernel.Font {
             return this.fontMatrix;
         }
 
+        /// <summary>Sets font matrix, mapping glyph space to text space.</summary>
+        /// <remarks>Sets font matrix, mapping glyph space to text space. Must be identity matrix divided by 1000.</remarks>
+        /// <param name="fontMatrix">
+        /// an array of six numbers specifying the font matrix,
+        /// mapping glyph space to text space.
+        /// </param>
+        [System.ObsoleteAttribute(@"will be made internal in next major release")]
         public virtual void SetFontMatrix(double[] fontMatrix) {
             this.fontMatrix = fontMatrix;
         }
@@ -296,7 +343,8 @@ namespace iText.Kernel.Font {
                 MakeObjectIndirect(fontDescriptor);
                 fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
                 FontMetrics fontMetrics = fontProgram.GetFontMetrics();
-                fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(fontMetrics.GetCapHeight()));
+                int capHeight = fontMetrics.GetCapHeight();
+                fontDescriptor.Put(PdfName.CapHeight, new PdfNumber(Normalize1000UnitsToGlyphSpaceUnits(capHeight)));
                 fontDescriptor.Put(PdfName.ItalicAngle, new PdfNumber(fontMetrics.GetItalicAngle()));
                 FontNames fontNames = fontProgram.GetFontNames();
                 fontDescriptor.Put(PdfName.FontWeight, new PdfNumber(fontNames.GetFontWeight()));
@@ -323,6 +371,23 @@ namespace iText.Kernel.Font {
             return null;
         }
 
+        protected internal override PdfArray BuildWidthsArray(int firstChar, int lastChar) {
+            double[] widths = new double[lastChar - firstChar + 1];
+            for (int k = firstChar; k <= lastChar; ++k) {
+                int i = k - firstChar;
+                if (shortTag[k] == 0) {
+                    widths[i] = 0;
+                }
+                else {
+                    int uni = GetFontEncoding().GetUnicode(k);
+                    Glyph glyph = uni > -1 ? GetGlyph(uni) : GetFontProgram().GetGlyphByCode(k);
+                    widths[i] = glyph != null ? glyph.GetWidth() : 0;
+                }
+            }
+            Normalize1000UnitsToGlyphSpaceUnits(widths);
+            return new PdfArray(widths);
+        }
+
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
         }
 
@@ -331,17 +396,15 @@ namespace iText.Kernel.Font {
         }
 
         protected internal override double GetGlyphWidth(Glyph glyph) {
-            return glyph != null ? glyph.GetWidth() / this.GetDimensionsMultiplier() : 0;
+            return glyph != null ? glyph.GetWidth() / this.GetGlyphSpaceNormalizationFactor() : 0;
         }
 
-        /// <summary>Gets dimensionsMultiplier for normalizing glyph width, fontMatrix values and bBox dimensions.</summary>
-        /// <returns>dimensionsMultiplier double value</returns>
-        internal virtual double GetDimensionsMultiplier() {
-            return dimensionsMultiplier;
+        internal double GetGlyphSpaceNormalizationFactor() {
+            return glyphSpaceNormalizationFactor;
         }
 
-        internal virtual void SetDimensionsMultiplier(double dimensionsMultiplier) {
-            this.dimensionsMultiplier = dimensionsMultiplier;
+        internal void SetGlyphSpaceNormalizationFactor(double glyphSpaceNormalizationFactor) {
+            this.glyphSpaceNormalizationFactor = glyphSpaceNormalizationFactor;
         }
 
         private void AddGlyphsFromDifferences(PdfArray differences, PdfDictionary charProcsDic, int[] widths) {
@@ -432,11 +495,14 @@ namespace iText.Kernel.Font {
                 }
             }
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
-            for (int i = 0; i < fontMatrix.Length; i++) {
-                fontMatrix[i] *= GetDimensionsMultiplier();
-            }
-            GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(GetFontMatrix()));
-            GetPdfObject().Put(PdfName.FontBBox, NormalizeBBox(fontProgram.GetFontMetrics().GetBbox()));
+            double[] fontMatrixDouble = GetFontMatrix();
+            int[] fontBBoxInt = GetFontProgram().GetFontMetrics().GetBbox();
+            double[] fontBBoxDouble = new double[] { fontBBoxInt[FONT_BBOX_LLX], fontBBoxInt[FONT_BBOX_LLY], fontBBoxInt
+                [FONT_BBOX_URX], fontBBoxInt[FONT_BBOX_URY] };
+            NormalizeGlyphSpaceUnitsTo1000Units(fontMatrixDouble);
+            Normalize1000UnitsToGlyphSpaceUnits(fontBBoxDouble);
+            GetPdfObject().Put(PdfName.FontMatrix, new PdfArray(fontMatrixDouble));
+            GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontBBoxDouble));
             String fontName = fontProgram.GetFontNames().GetFontName();
             base.FlushFontData(fontName, PdfName.Type3);
             MakeObjectIndirect(GetPdfObject().Get(PdfName.Widths));
@@ -444,20 +510,20 @@ namespace iText.Kernel.Font {
             GetPdfObject().Remove(PdfName.BaseFont);
         }
 
-        private int[] CalculateWidth(PdfDictionary fontDictionary, int firstChar) {
+        private double[] ReadWidths(PdfDictionary fontDictionary) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);
             if (pdfWidths == null) {
                 throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.Widths);
             }
-            double[] multipliedWidths = new double[pdfWidths.Size()];
+            double[] widths = new double[pdfWidths.Size()];
             for (int i = 0; i < pdfWidths.Size(); i++) {
-                multipliedWidths[i] = pdfWidths.GetAsNumber(i).DoubleValue() * GetDimensionsMultiplier();
+                PdfNumber n = pdfWidths.GetAsNumber(i);
+                widths[i] = n != null ? n.DoubleValue() : 0;
             }
-            PdfArray multipliedPdfWidths = new PdfArray(multipliedWidths);
-            return FontUtil.ConvertSimpleWidthsArray(multipliedPdfWidths, firstChar, 0);
+            return widths;
         }
 
-        private int CalculateShortTag(PdfDictionary fontDictionary) {
+        private int InitializeShortTag(PdfDictionary fontDictionary) {
             int firstChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.FirstChar), 0);
             int lastChar = NormalizeFirstLastChar(fontDictionary.GetAsNumber(PdfName.LastChar), PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE
                 );
@@ -467,20 +533,19 @@ namespace iText.Kernel.Font {
             return firstChar;
         }
 
-        private void CalculateAndSetBBox() {
-            if (GetPdfObject().ContainsKey(PdfName.FontBBox)) {
-                PdfArray fontBBox = GetPdfObject().GetAsArray(PdfName.FontBBox);
-                fontProgram.GetFontMetrics().SetBbox((int)(fontBBox.GetAsNumber(0).DoubleValue() * GetDimensionsMultiplier
-                    ()), (int)(fontBBox.GetAsNumber(1).DoubleValue() * GetDimensionsMultiplier()), (int)(fontBBox.GetAsNumber
-                    (2).DoubleValue() * GetDimensionsMultiplier()), (int)(fontBBox.GetAsNumber(3).DoubleValue() * GetDimensionsMultiplier
-                    ()));
+        private double[] ReadFontBBox() {
+            PdfArray fontBBox = GetPdfObject().GetAsArray(PdfName.FontBBox);
+            if (fontBBox != null) {
+                double llx = fontBBox.GetAsNumber(FONT_BBOX_LLX).DoubleValue();
+                double lly = fontBBox.GetAsNumber(FONT_BBOX_LLY).DoubleValue();
+                double urx = fontBBox.GetAsNumber(FONT_BBOX_URX).DoubleValue();
+                double ury = fontBBox.GetAsNumber(FONT_BBOX_URY).DoubleValue();
+                return new double[] { llx, lly, urx, ury };
             }
-            else {
-                fontProgram.GetFontMetrics().SetBbox(0, 0, 0, 0);
-            }
+            return new double[] { 0, 0, 0, 0 };
         }
 
-        private void CalculateAndSetFontMatrix() {
+        private double[] ReadFontMatrix() {
             PdfArray fontMatrixArray = GetPdfObject().GetAsArray(PdfName.FontMatrix);
             if (fontMatrixArray == null) {
                 throw new PdfException(PdfException.MissingRequiredFieldInFontDictionary).SetMessageParams(PdfName.FontMatrix
@@ -490,18 +555,51 @@ namespace iText.Kernel.Font {
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
                 fontMatrix[i] = ((PdfNumber)fontMatrixArray.Get(i)).GetValue();
             }
-            SetDimensionsMultiplier(fontMatrix[0] * 1000);
-            for (int i = 0; i < 6; i++) {
-                fontMatrix[i] /= GetDimensionsMultiplier();
+            return fontMatrix;
+        }
+
+        private void InitializeTypoAscenderDescender(double[] fontBBoxRect) {
+            // iText uses typo ascender/descender for text extraction, that's why we need to set
+            // them here to values relative to actual glyph metrics values.
+            ((Type3Font)fontProgram).SetTypoAscender((int)fontBBoxRect[FONT_BBOX_URY]);
+            ((Type3Font)fontProgram).SetTypoDescender((int)fontBBoxRect[FONT_BBOX_LLY]);
+        }
+
+        private void InitializeFontBBox(double[] fontBBoxRect) {
+            fontProgram.GetFontMetrics().SetBbox((int)fontBBoxRect[FONT_BBOX_LLX], (int)fontBBoxRect[FONT_BBOX_LLY], (
+                int)fontBBoxRect[FONT_BBOX_URX], (int)fontBBoxRect[FONT_BBOX_URY]);
+        }
+
+        private void NormalizeGlyphSpaceUnitsTo1000Units(double[] array) {
+            for (int i = 0; i < array.Length; i++) {
+                array[i] = NormalizeGlyphSpaceUnitsTo1000Units(array[i]);
             }
-            SetFontMatrix(fontMatrix);
+        }
+
+        private double NormalizeGlyphSpaceUnitsTo1000Units(double value) {
+            return value * GetGlyphSpaceNormalizationFactor();
+        }
+
+        private void Normalize1000UnitsToGlyphSpaceUnits(double[] array) {
+            for (int i = 0; i < array.Length; i++) {
+                array[i] = Normalize1000UnitsToGlyphSpaceUnits(array[i]);
+            }
+        }
+
+        private double Normalize1000UnitsToGlyphSpaceUnits(double value) {
+            return value / GetGlyphSpaceNormalizationFactor();
         }
 
         private void FillFontDescriptor(PdfDictionary fontDesc) {
             if (fontDesc == null) {
                 return;
             }
-            PdfNumber v = fontDesc.GetAsNumber(PdfName.ItalicAngle);
+            PdfNumber v = fontDesc.GetAsNumber(PdfName.CapHeight);
+            if (v != null) {
+                double capHeight = v.DoubleValue();
+                SetCapHeight((int)NormalizeGlyphSpaceUnitsTo1000Units(capHeight));
+            }
+            v = fontDesc.GetAsNumber(PdfName.ItalicAngle);
             if (v != null) {
                 SetItalicAngle(v.IntValue());
             }
@@ -529,14 +627,6 @@ namespace iText.Kernel.Font {
             }
             int result = firstLast.IntValue();
             return result < 0 || result > PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE ? defaultValue : result;
-        }
-
-        private PdfArray NormalizeBBox(int[] bBox) {
-            double[] normalizedBBox = new double[4];
-            for (int i = 0; i < 4; i++) {
-                normalizedBBox[i] = bBox[i] / GetDimensionsMultiplier();
-            }
-            return new PdfArray(normalizedBBox);
         }
     }
 }

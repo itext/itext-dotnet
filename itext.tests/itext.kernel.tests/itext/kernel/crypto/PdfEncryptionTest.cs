@@ -373,9 +373,9 @@ namespace iText.Kernel.Crypto {
                 , null, null));
             page.Flush();
             document.Close();
-            //NOTE: Specific crypto filters for EFF StmF and StrF are not supported at the moment. iText don't distinguish objects based on their semantic role
-            //      because of this we can't read streams correctly and corrupt such documents on stamping.
-            bool ERROR_IS_EXPECTED = true;
+            //TODO DEVSIX-5355 Specific crypto filters for EFF StmF and StrF are not supported at the moment.
+            // However we can read embedded files only mode.
+            bool ERROR_IS_EXPECTED = false;
             CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent, ERROR_IS_EXPECTED);
             CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, textContent, ERROR_IS_EXPECTED);
         }

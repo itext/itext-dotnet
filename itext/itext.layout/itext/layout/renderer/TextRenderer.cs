@@ -1151,12 +1151,12 @@ namespace iText.Layout.Renderer {
         /// , one should override
         /// this method: otherwise the default method will be used and thus the default rather than the custom
         /// renderer will be created. Another method that should be overridden in case of
-        /// <TextRenderer/>
+        /// <see cref="TextRenderer"/>
         /// 's extension is
         /// <see cref="CreateCopy(iText.IO.Font.Otf.GlyphLine, iText.Kernel.Font.PdfFont)"/>
         /// . This method is responsible
         /// for creation of
-        /// <TextRenderer/>
+        /// <see cref="TextRenderer"/>
         /// 's copies, which represent its parts of specific font.
         /// </remarks>
         /// <returns>new renderer instance</returns>

@@ -173,6 +173,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
 
+        private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
+
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
         public PdfDocument(PdfReader reader)
@@ -377,6 +379,27 @@ namespace iText.Kernel.Pdf {
         /// <returns>last page.</returns>
         public virtual PdfPage GetLastPage() {
             return GetPage(GetNumberOfPages());
+        }
+
+        /// <summary>
+        /// Marks
+        /// <see cref="PdfStream"/>
+        /// object as embedded file stream.
+        /// </summary>
+        /// <remarks>
+        /// Marks
+        /// <see cref="PdfStream"/>
+        /// object as embedded file stream. Note that this method is for internal usage.
+        /// To add an embedded file to the PDF document please use specialized API for file attachments.
+        /// (e.g.
+        /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
+        /// ,
+        /// <see cref="PdfPage.AddAnnotation(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>
+        /// )
+        /// </remarks>
+        /// <param name="stream">to be marked as embedded file stream</param>
+        public virtual void MarkStreamAsEmbeddedFile(PdfStream stream) {
+            encryptedEmbeddedStreamsHandler.StoreEmbeddedStream(stream);
         }
 
         /// <summary>Creates and adds new page to the end of document.</summary>
@@ -1951,8 +1974,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
+            this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
+                bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
                     if (reader.pdfDocument != null) {
                         throw new PdfException(PdfException.PdfReaderHasBeenAlreadyUtilized);
@@ -1963,6 +1988,10 @@ namespace iText.Kernel.Pdf {
                         memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(reader.tokens.GetSafeFile().Length());
                     }
                     reader.ReadPdf();
+                    if (reader.decrypt != null && reader.decrypt.IsEmbeddedFilesOnly()) {
+                        encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
+                        embeddedStreamsSavedOnReading = true;
+                    }
                     foreach (ICounter counter in GetCounters()) {
                         counter.OnDocumentRead(reader.GetFileLength());
                     }
@@ -2081,6 +2110,9 @@ namespace iText.Kernel.Pdf {
                             writer.InitCryptoIfSpecified(pdfVersion);
                         }
                         if (writer.crypto != null) {
+                            if (!embeddedStreamsSavedOnReading && writer.crypto.IsEmbeddedFilesOnly()) {
+                                encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
+                            }
                             if (writer.crypto.GetCryptoMode() < EncryptionConstants.ENCRYPTION_AES_256) {
                                 VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(this, PdfVersion.PDF_2_0, VersionConforming
                                     .DEPRECATED_ENCRYPTION_ALGORITHMS);
@@ -2243,6 +2275,10 @@ namespace iText.Kernel.Pdf {
 
         internal virtual long GetDocumentId() {
             return documentId;
+        }
+
+        internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
+            return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
         }
 
         /// <summary>Gets iText version info.</summary>

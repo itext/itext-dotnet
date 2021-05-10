@@ -564,7 +564,6 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case EncryptionConstants.STANDARD_ENCRYPTION_128: {
-                    embeddedFilesOnly = false;
                     if (length > 0) {
                         SetKeyLength(length);
                     }
@@ -602,6 +601,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.IllegalRValue);
             }
             int revision = rValue.IntValue();
+            bool embeddedFilesOnlyMode = ReadEmbeddedFilesOnlyFromEncryptDictionary(encDict);
             switch (revision) {
                 case 2: {
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -645,6 +645,9 @@ namespace iText.Kernel.Pdf {
                     if (em != null && !em.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
+                    if (embeddedFilesOnlyMode) {
+                        cryptoMode |= EncryptionConstants.EMBEDDED_FILES_ONLY;
+                    }
                     break;
                 }
 
@@ -654,6 +657,9 @@ namespace iText.Kernel.Pdf {
                     PdfBoolean em5 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
                     if (em5 != null && !em5.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
+                    }
+                    if (embeddedFilesOnlyMode) {
+                        cryptoMode |= EncryptionConstants.EMBEDDED_FILES_ONLY;
                     }
                     break;
                 }
@@ -674,6 +680,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.IllegalVValue);
             }
             int v = vValue.IntValue();
+            bool embeddedFilesOnlyMode = ReadEmbeddedFilesOnlyFromEncryptDictionary(encDict);
             switch (v) {
                 case 1: {
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
@@ -727,6 +734,9 @@ namespace iText.Kernel.Pdf {
                     if (em != null && !em.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
+                    if (embeddedFilesOnlyMode) {
+                        cryptoMode |= EncryptionConstants.EMBEDDED_FILES_ONLY;
+                    }
                     break;
                 }
 
@@ -735,6 +745,22 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return SetCryptoMode(cryptoMode, length);
+        }
+
+        internal static bool ReadEmbeddedFilesOnlyFromEncryptDictionary(PdfDictionary encDict) {
+            PdfName embeddedFilesFilter = encDict.GetAsName(PdfName.EFF);
+            bool encryptEmbeddedFiles = !PdfName.Identity.Equals(embeddedFilesFilter) && embeddedFilesFilter != null;
+            bool encryptStreams = !PdfName.Identity.Equals(encDict.GetAsName(PdfName.StmF));
+            bool encryptStrings = !PdfName.Identity.Equals(encDict.GetAsName(PdfName.StrF));
+            if (encryptStreams || encryptStrings || !encryptEmbeddedFiles) {
+                return false;
+            }
+            PdfDictionary cfDictionary = encDict.GetAsDictionary(PdfName.CF);
+            if (cfDictionary != null) {
+                // Here we check if the crypt filter for embedded files and the filter in the CF dictionary are the same
+                return cfDictionary.GetAsDictionary(embeddedFilesFilter) != null;
+            }
+            return false;
         }
 
         private int FixAccessibilityPermissionPdf20(int permissions) {

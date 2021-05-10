@@ -268,15 +268,16 @@ namespace iText.Signatures {
             IList<String> names = sgnUtil.GetSignatureNames();
             if (names.Count > 1) {
                 signatureName = names[names.Count - 2];
-                document = new PdfDocument(new PdfReader(sgnUtil.ExtractRevision(signatureName)), new DocumentProperties()
-                    .SetEventCountingMetaInfo(metaInfo));
-                this.acroForm = PdfAcroForm.GetAcroForm(document, true);
-                this.sgnUtil = new SignatureUtil(document);
-                names = sgnUtil.GetSignatureNames();
-                signatureName = names[names.Count - 1];
-                pkcs7 = CoversWholeDocument();
-                LOGGER.Info(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
-                     : "", signatureName));
+                using (PdfReader readerTmp = new PdfReader(sgnUtil.ExtractRevision(signatureName))) {
+                    document = new PdfDocument(readerTmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo));
+                    this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+                    this.sgnUtil = new SignatureUtil(document);
+                    names = sgnUtil.GetSignatureNames();
+                    signatureName = names[names.Count - 1];
+                    pkcs7 = CoversWholeDocument();
+                    LOGGER.Info(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
+                         : "", signatureName));
+                }
             }
             else {
                 LOGGER.Info("No signatures in revision");

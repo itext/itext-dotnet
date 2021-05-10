@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -79,8 +80,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private float unscaledWidth = float.NaN;
 
-        private double[] fontMatrix = null;
-
         /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
         ///     </summary>
         private readonly IList<CanvasTag> canvasTagHierarchy;
@@ -98,10 +97,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             this.textMatrix = textMatrix;
             this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List<CanvasTag>(canvasTagHierarchy
                 ));
-            this.fontMatrix = gs.GetFont().GetFontMatrix();
         }
 
-        /// <summary>Used for creating sub-TextRenderInfos for each individual character</summary>
+        /// <summary>Used for creating sub-TextRenderInfos for each individual character.</summary>
         /// <param name="parent">the parent TextRenderInfo</param>
         /// <param name="str">the content of a TextRenderInfo</param>
         /// <param name="horizontalOffset">the unscaled horizontal offset of the character that this TextRenderInfo represents
@@ -114,9 +112,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             this.textToUserSpaceTransformMatrix = offsetMatrix.Multiply(parent.textToUserSpaceTransformMatrix);
             this.textMatrix = offsetMatrix.Multiply(parent.textMatrix);
             this.canvasTagHierarchy = parent.canvasTagHierarchy;
-            this.fontMatrix = parent.gs.GetFont().GetFontMatrix();
         }
 
+        /// <summary>Gets the text to be rendered according to canvas operators.</summary>
         /// <returns>the text to render</returns>
         public virtual String GetText() {
             CheckGraphicsState();
@@ -463,7 +461,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             if (charWidth == 0) {
                 charWidth = gs.GetFont().GetFontProgram().GetAvgWidth();
             }
-            float w = (float)(charWidth * fontMatrix[0]);
+            float w = (float)((double)charWidth / FontProgram.UNITS_NORMALIZATION);
             return (w * gs.GetFontSize() + gs.GetCharSpacing() + gs.GetWordSpacing()) * gs.GetHorizontalScaling() / 100f;
         }
 
@@ -496,7 +494,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         private float[] GetWidthAndWordSpacing(PdfString @string) {
             CheckGraphicsState();
             float[] result = new float[2];
-            result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
+            result[0] = (float)((double)gs.GetFont().GetContentWidth(@string) / FontProgram.UNITS_NORMALIZATION);
             result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
             return result;
         }

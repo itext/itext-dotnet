@@ -121,9 +121,7 @@ namespace iText.Kernel.Font {
 
         internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first, int missingWidth) {
             int[] res = new int[256];
-            for (int i = 0; i < res.Length; i++) {
-                res[i] = missingWidth;
-            }
+            JavaUtil.Fill(res, missingWidth);
             if (widthsArray == null) {
                 ILog logger = LogManager.GetLogger(typeof(FontUtil));
                 logger.Warn(iText.IO.LogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);

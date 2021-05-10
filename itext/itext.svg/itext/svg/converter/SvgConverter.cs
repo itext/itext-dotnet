@@ -693,36 +693,38 @@ namespace iText.Svg.Converter {
             if (writerProps == null) {
                 writerProps = new WriterProperties();
             }
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(pdfDest, writerProps));
-            // Process
-            ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
-            ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
-                props);
-            SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
-            if (processorResult is SvgProcessorResult) {
-                drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            using (PdfWriter writer = new PdfWriter(pdfDest, writerProps)) {
+                using (PdfDocument pdfDocument = new PdfDocument(writer)) {
+                    // Process
+                    ISvgProcessorResult processorResult = Process(Parse(svgStream, props), props);
+                    ResourceResolver resourceResolver = iText.Svg.Converter.SvgConverter.GetResourceResolver(processorResult, 
+                        props);
+                    SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
+                    if (processorResult is SvgProcessorResult) {
+                        drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+                    }
+                    drawContext.AddNamedObjects(processorResult.GetNamedObjects());
+                    // Add temp fonts
+                    drawContext.SetTempFonts(processorResult.GetTempFonts());
+                    ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
+                    // Extract topmost dimensions
+                    CheckNull(topSvgRenderer);
+                    CheckNull(pdfDocument);
+                    float width;
+                    float height;
+                    float[] wh = ExtractWidthAndHeight(topSvgRenderer);
+                    width = wh[0];
+                    height = wh[1];
+                    // Adjust pagesize and create new page
+                    pdfDocument.SetDefaultPageSize(new PageSize(width, height));
+                    PdfPage page = pdfDocument.AddNewPage();
+                    PdfCanvas pageCanvas = new PdfCanvas(page);
+                    // Add to the first page
+                    PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, drawContext);
+                    // Draw
+                    Draw(xObject, pageCanvas);
+                }
             }
-            drawContext.AddNamedObjects(processorResult.GetNamedObjects());
-            // Add temp fonts
-            drawContext.SetTempFonts(processorResult.GetTempFonts());
-            ISvgNodeRenderer topSvgRenderer = processorResult.GetRootRenderer();
-            // Extract topmost dimensions
-            CheckNull(topSvgRenderer);
-            CheckNull(pdfDocument);
-            float width;
-            float height;
-            float[] wh = ExtractWidthAndHeight(topSvgRenderer);
-            width = wh[0];
-            height = wh[1];
-            // Adjust pagesize and create new page
-            pdfDocument.SetDefaultPageSize(new PageSize(width, height));
-            PdfPage page = pdfDocument.AddNewPage();
-            PdfCanvas pageCanvas = new PdfCanvas(page);
-            // Add to the first page
-            PdfFormXObject xObject = ConvertToXObject(topSvgRenderer, pdfDocument, drawContext);
-            // Draw
-            Draw(xObject, pageCanvas);
-            pdfDocument.Close();
         }
 
         /// <summary>

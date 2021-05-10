@@ -234,14 +234,21 @@ namespace iText.Kernel.Pdf {
         public void Encrypt(PdfReader reader, Stream os, IDictionary<String, String> newInfo) {
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.encryptionProperties = properties;
-            PdfWriter writer = new PdfWriter(os, writerProperties);
             StampingProperties stampingProperties = new StampingProperties();
             stampingProperties.SetEventCountingMetaInfo(metaInfo);
-            PdfDocument document = new PdfDocument(reader, writer, stampingProperties);
-            document.GetDocumentInfo().SetMoreInfo(newInfo);
-            document.Close();
+            try {
+                using (PdfWriter writer = new PdfWriter(os, writerProperties)) {
+                    using (PdfDocument document = new PdfDocument(reader, writer, stampingProperties)) {
+                        document.GetDocumentInfo().SetMoreInfo(newInfo);
+                    }
+                }
+            }
+            catch (System.IO.IOException) {
+            }
         }
 
+        //The close() method of OutputStream throws an exception, but we don't need to do anything in this case,
+        // because OutputStream#close() does nothing.
         /// <summary>Entry point to encrypt a PDF document.</summary>
         /// <param name="reader">the read PDF</param>
         /// <param name="os">the output destination</param>
