@@ -366,7 +366,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             stream = new PdfStream(image.GetData());
             String filter = image.GetFilter();
-            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorSpace() <= 0) {
+            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorEncodingComponentsNumber() <= 0) {
                 stream.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
                 image.SetBpc(0);
             }
@@ -378,7 +378,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             if (!(image is PngImageData)) {
                 PdfName colorSpace;
-                switch (image.GetColorSpace()) {
+                switch (image.GetColorEncodingComponentsNumber()) {
                     case 1: {
                         colorSpace = PdfName.DeviceGray;
                         break;
@@ -402,7 +402,7 @@ namespace iText.Kernel.Pdf.Xobject {
             if (image.GetFilter() != null) {
                 stream.Put(PdfName.Filter, new PdfName(image.GetFilter()));
             }
-            if (image.GetColorSpace() == -1) {
+            if (image.GetColorEncodingComponentsNumber() == -1) {
                 stream.Remove(PdfName.ColorSpace);
             }
             PdfDictionary additional = null;

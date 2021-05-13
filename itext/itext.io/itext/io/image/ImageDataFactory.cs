@@ -125,7 +125,7 @@ namespace iText.IO.Image {
             image.SetTypeCcitt(typeCCITT);
             image.height = height;
             image.width = width;
-            image.colorSpace = parameters;
+            image.colorEncodingComponentsNumber = parameters;
             image.transparency = transparency;
             return image;
         }
@@ -157,7 +157,7 @@ namespace iText.IO.Image {
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
                 throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
-            image.colorSpace = components;
+            image.colorEncodingComponentsNumber = components;
             image.bpc = bpc;
             image.data = data;
             image.transparency = transparency;

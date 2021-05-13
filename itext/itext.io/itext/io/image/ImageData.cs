@@ -71,8 +71,8 @@ namespace iText.IO.Image {
 
         protected internal int bpc = 1;
 
-        /// <summary>is the number of components used to encode colorspace, not actual colorspace.</summary>
-        protected internal int colorSpace = -1;
+        /// <summary>Is the number of components used to encode colorspace.</summary>
+        protected internal int colorEncodingComponentsNumber = -1;
 
         protected internal float[] decode;
 
@@ -193,14 +193,16 @@ namespace iText.IO.Image {
             return originalType;
         }
 
-        /// <summary>Gets the number of components used to encode colorspace, not actual colorspace.</summary>
+        /// <summary>Gets the number of components used to encode colorspace.</summary>
         /// <returns>the number of components used to encode colorspace</returns>
-        public virtual int GetColorSpace() {
-            return colorSpace;
+        public virtual int GetColorEncodingComponentsNumber() {
+            return colorEncodingComponentsNumber;
         }
 
-        public virtual void SetColorSpace(int colorSpace) {
-            this.colorSpace = colorSpace;
+        /// <summary>Sets the number of components used to encode colorspace.</summary>
+        /// <param name="colorEncodingComponentsNumber">the number of components used to encode colorspace</param>
+        public virtual void SetColorEncodingComponentsNumber(int colorEncodingComponentsNumber) {
+            this.colorEncodingComponentsNumber = colorEncodingComponentsNumber;
         }
 
         public virtual byte[] GetData() {
@@ -213,7 +215,7 @@ namespace iText.IO.Image {
                     return true;
                 }
             }
-            return colorSpace == 1;
+            return colorEncodingComponentsNumber == 1;
         }
 
         public virtual bool IsMask() {

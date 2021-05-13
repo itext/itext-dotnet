@@ -172,7 +172,7 @@ namespace iText.IO.Image {
                         int x0 = Cio_read(4, jpeg2000Stream);
                         int y0 = Cio_read(4, jpeg2000Stream);
                         StreamUtil.Skip(jpeg2000Stream, 16);
-                        jp2.SetColorSpace(Cio_read(2, jpeg2000Stream));
+                        jp2.SetColorEncodingComponentsNumber(Cio_read(2, jpeg2000Stream));
                         jp2.SetBpc(8);
                         jp2.SetHeight(y1 - y0);
                         jp2.SetWidth(x1 - x0);

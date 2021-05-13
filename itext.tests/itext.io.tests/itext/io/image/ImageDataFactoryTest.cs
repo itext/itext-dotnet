@@ -33,6 +33,28 @@ namespace iText.IO.Image {
         private const String IMAGE_NAME = "image";
 
         [NUnit.Framework.Test]
+        public virtual void TestGetColorEncodingComponentsNumber() {
+            byte[] data = new byte[1];
+            ImageData raw = ImageDataFactory.Create(1, 1, 1, 8, data, null);
+            NUnit.Framework.Assert.AreEqual(1, raw.GetColorEncodingComponentsNumber());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSetColorEncodingComponentsNumber() {
+            byte[] data = new byte[1];
+            ImageData raw = ImageDataFactory.Create(1, 1, 1, 8, data, null);
+            raw.SetColorEncodingComponentsNumber(3);
+            NUnit.Framework.Assert.AreEqual(3, raw.GetColorEncodingComponentsNumber());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestGetColorEncodingComponentsNumberCCITT() {
+            byte[] data = new byte[1];
+            ImageData raw = ImageDataFactory.Create(1, 1, false, 0x100, 1, data, null);
+            NUnit.Framework.Assert.AreEqual(1, raw.GetColorEncodingComponentsNumber());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestImageTypeSupportUnknownFile() {
             TestImageTypeSupport(UrlUtil.ToURL(SOURCE_FOLDER + IMAGE_NAME + ".txt"), false);
         }
