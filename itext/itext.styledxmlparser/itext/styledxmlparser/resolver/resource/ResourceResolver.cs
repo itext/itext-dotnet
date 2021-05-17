@@ -241,7 +241,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <remarks>Checks if source is under data URI scheme. (eg data:[&lt;media type&gt;][;base64],&lt;data&gt;).</remarks>
         /// <param name="src">string to test</param>
         /// <returns>true if source is under data URI scheme</returns>
-        public virtual bool IsDataSrc(String src) {
+        public static bool IsDataSrc(String src) {
             return src != null && src.ToLowerInvariant().StartsWith(DATA_SCHEMA_PREFIX) && src.Contains(",");
         }
 

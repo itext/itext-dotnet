@@ -594,11 +594,11 @@ namespace iText.Svg.Converter {
         public static void CreatePdf(FileInfo svgFile, FileInfo pdfFile, ISvgConverterProperties props, WriterProperties
              writerProps) {
             if (props == null) {
-                props = new SvgConverterProperties().SetBaseUri(FileUtil.GetParentDirectory(svgFile));
+                props = new SvgConverterProperties().SetBaseUri(FileUtil.GetParentDirectoryUri(svgFile));
             }
             else {
                 if (props.GetBaseUri() == null || String.IsNullOrEmpty(props.GetBaseUri())) {
-                    String baseUri = FileUtil.GetParentDirectory(svgFile);
+                    String baseUri = FileUtil.GetParentDirectoryUri(svgFile);
                     props = ConvertToSvgConverterProps(props, baseUri);
                 }
             }

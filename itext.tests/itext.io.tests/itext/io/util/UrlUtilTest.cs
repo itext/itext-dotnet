@@ -69,14 +69,14 @@ namespace iText.IO.Util {
             // artificial fix with subtracting the last backslash
             String expected = absolutePathRoot.Substring(0, absolutePathRoot.Length - 1) + System.IO.Path.DirectorySeparatorChar;
             FileInfo tempFile = FileUtil.CreateTempFile(destinationFolder);
-            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectoryUri(tempFile));
         }
 
         [NUnit.Framework.Test]
         public void NullBaseUriTest() {
             String expected = "";
             FileInfo tempFile = null;
-            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectory(tempFile));
+            NUnit.Framework.Assert.AreEqual(expected, FileUtil.GetParentDirectoryUri(tempFile));
         }
 
         [NUnit.Framework.Test]

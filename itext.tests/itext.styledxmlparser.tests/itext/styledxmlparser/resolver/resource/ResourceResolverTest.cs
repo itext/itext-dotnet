@@ -160,11 +160,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [Test]
         public virtual void IsDataSrcTest() {
-            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-            Assert.True(resourceResolver.IsDataSrc(bLogo));
-            Assert.True(resourceResolver.IsDataSrc(bLogoCorruptedData));
-            Assert.True(resourceResolver.IsDataSrc(bLogoIncorrect));
-            Assert.False(resourceResolver.IsDataSrc("https://data.com/data"));
+            Assert.True(ResourceResolver.IsDataSrc(bLogo));
+            Assert.True(ResourceResolver.IsDataSrc(bLogoCorruptedData));
+            Assert.True(ResourceResolver.IsDataSrc(bLogoIncorrect));
+            Assert.False(ResourceResolver.IsDataSrc("https://data.com/data"));
         }
 
         // Retrieve pdfXObject tests block

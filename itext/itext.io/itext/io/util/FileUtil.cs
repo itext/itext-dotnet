@@ -157,7 +157,7 @@ namespace iText.IO.Util {
             bool Accept(FileInfo pathname);
         }
 
-        public static String GetParentDirectory(FileInfo file) {
+        public static String GetParentDirectoryUri(FileInfo file) {
             return file != null ? new Uri(Directory.GetParent(file.FullName).FullName).AbsoluteUri + System.IO.Path.DirectorySeparatorChar : "";
         }
 
