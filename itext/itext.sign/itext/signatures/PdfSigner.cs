@@ -763,57 +763,10 @@ namespace iText.Signatures {
             }
             cryptoDictionary.GetPdfObject().MakeIndirect(document);
             if (fieldExist) {
-                PdfSignatureFormField sigField = (PdfSignatureFormField)acroForm.GetField(fieldName);
-                sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
-                fieldLock = sigField.GetSigFieldLockDictionary();
-                if (fieldLock == null && this.fieldLock != null) {
-                    this.fieldLock.GetPdfObject().MakeIndirect(document);
-                    sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
-                    fieldLock = this.fieldLock;
-                }
-                sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject());
-                sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
-                PdfObject obj = sigField.GetPdfObject().Get(PdfName.F);
-                int flags = 0;
-                if (obj != null && obj.IsNumber()) {
-                    flags = ((PdfNumber)obj).IntValue();
-                }
-                flags |= PdfAnnotation.LOCKED;
-                sigField.Put(PdfName.F, new PdfNumber(flags));
-                PdfDictionary ap = new PdfDictionary();
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-                sigField.Put(PdfName.AP, ap);
-                sigField.SetModified();
+                fieldLock = PopulateExistingSignatureFormField(acroForm);
             }
             else {
-                PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
-                widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
-                PdfSignatureFormField sigField = PdfFormField.CreateSignature(document);
-                sigField.SetFieldName(name);
-                sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
-                sigField.AddKid(widget);
-                if (this.fieldLock != null) {
-                    this.fieldLock.GetPdfObject().MakeIndirect(document);
-                    sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
-                    fieldLock = this.fieldLock;
-                }
-                int pagen = appearance.GetPageNumber();
-                widget.SetPage(document.GetPage(pagen));
-                PdfDictionary ap = widget.GetAppearanceDictionary();
-                if (ap == null) {
-                    ap = new PdfDictionary();
-                    widget.Put(PdfName.AP, ap);
-                }
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-                acroForm.AddField(sigField, document.GetPage(pagen));
-                if (acroForm.GetPdfObject().IsIndirect()) {
-                    acroForm.SetModified();
-                }
-                else {
-                    //Acroform dictionary is a Direct dictionary,
-                    //for proper flushing, catalog needs to be marked as modified
-                    document.GetCatalog().SetModified();
-                }
+                fieldLock = CreateNewSignatureFormField(acroForm, name);
             }
             exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
             PdfLiteral lit = new PdfLiteral(80);
@@ -897,6 +850,103 @@ namespace iText.Signatures {
                     throw;
                 }
             }
+        }
+
+        /// <summary>Populates already existing signature form field in the acroForm object.</summary>
+        /// <remarks>
+        /// Populates already existing signature form field in the acroForm object.
+        /// This method is called during the
+        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>
+        /// method if the signature field already exists.
+        /// </remarks>
+        /// <param name="acroForm">
+        /// 
+        /// <see cref="iText.Forms.PdfAcroForm"/>
+        /// object in which the signature field will be populated
+        /// </param>
+        /// <returns>signature field lock dictionary</returns>
+        protected internal virtual PdfSigFieldLock PopulateExistingSignatureFormField(PdfAcroForm acroForm) {
+            PdfSignatureFormField sigField = (PdfSignatureFormField)acroForm.GetField(fieldName);
+            sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
+            PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();
+            if (sigFieldLock == null && this.fieldLock != null) {
+                this.fieldLock.GetPdfObject().MakeIndirect(document);
+                sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
+                sigFieldLock = this.fieldLock;
+            }
+            sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject());
+            sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
+            PdfObject obj = sigField.GetPdfObject().Get(PdfName.F);
+            int flags = 0;
+            if (obj != null && obj.IsNumber()) {
+                flags = ((PdfNumber)obj).IntValue();
+            }
+            flags |= PdfAnnotation.LOCKED;
+            sigField.Put(PdfName.F, new PdfNumber(flags));
+            if (appearance.IsInvisible()) {
+                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
+                sigField.Remove(PdfName.AP);
+            }
+            else {
+                PdfDictionary ap = new PdfDictionary();
+                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
+                sigField.Put(PdfName.AP, ap);
+            }
+            sigField.SetModified();
+            return sigFieldLock;
+        }
+
+        /// <summary>Creates new signature form field and adds it to the acroForm object.</summary>
+        /// <remarks>
+        /// Creates new signature form field and adds it to the acroForm object.
+        /// This method is called during the
+        /// <see cref="PreClose(System.Collections.Generic.IDictionary{K, V})"/>
+        /// method if the signature field doesn't exist.
+        /// </remarks>
+        /// <param name="acroForm">
+        /// 
+        /// <see cref="iText.Forms.PdfAcroForm"/>
+        /// object in which new signature field will be added
+        /// </param>
+        /// <param name="name">the name of the field</param>
+        /// <returns>signature field lock dictionary</returns>
+        protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
+            PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
+            widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
+            PdfSignatureFormField sigField = PdfFormField.CreateSignature(document);
+            sigField.SetFieldName(name);
+            sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
+            sigField.AddKid(widget);
+            PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();
+            if (this.fieldLock != null) {
+                this.fieldLock.GetPdfObject().MakeIndirect(document);
+                sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
+                sigFieldLock = this.fieldLock;
+            }
+            int pagen = appearance.GetPageNumber();
+            widget.SetPage(document.GetPage(pagen));
+            if (appearance.IsInvisible()) {
+                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
+                widget.Remove(PdfName.AP);
+            }
+            else {
+                PdfDictionary ap = widget.GetAppearanceDictionary();
+                if (ap == null) {
+                    ap = new PdfDictionary();
+                    widget.Put(PdfName.AP, ap);
+                }
+                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
+            }
+            acroForm.AddField(sigField, document.GetPage(pagen));
+            if (acroForm.GetPdfObject().IsIndirect()) {
+                acroForm.SetModified();
+            }
+            else {
+                //Acroform dictionary is a Direct dictionary,
+                //for proper flushing, catalog needs to be marked as modified
+                document.GetCatalog().SetModified();
+            }
+            return sigFieldLock;
         }
 
         /// <summary>Gets the document bytes that are hashable when using external signatures.</summary>
