@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -49,6 +50,10 @@ namespace iText.Signatures {
     public class SignatureUtilTest : ExtendedITextTest {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/SignatureUtilTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Before() {
+        }
 
         [NUnit.Framework.Test]
         public virtual void GetSignaturesTest01() {
@@ -147,6 +152,113 @@ namespace iText.Signatures {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
             NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptySignatureReadSignatureDataTest() {
+            String inPdf = sourceFolder + "emptySignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsNull(signatureUtil.ReadSignatureData("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadSignatureDataTest() {
+            String inPdf = sourceFolder + "simpleSignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsNotNull(signatureUtil.ReadSignatureData("Signature1"));
+            NUnit.Framework.Assert.IsTrue(signatureUtil.ReadSignatureData("Signature1") is PdfPKCS7);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadSignatureDataWithSpecialSubFilterTest() {
+            String inPdf = sourceFolder + "adbe.x509.rsa_sha1_signature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsNotNull(signatureUtil.ReadSignatureData("Signature1"));
+            NUnit.Framework.Assert.IsTrue(signatureUtil.ReadSignatureData("Signature1") is PdfPKCS7);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ByteRangeAndContentsEntriesTest() {
+            String inPdf = sourceFolder + "byteRangeAndContentsEntries.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            iText.Test.AssertUtil.AssertThrows(typeof(PdfException), () => signatureUtil.ReadSignatureData("Signature1"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DoesSignatureFieldExistTest() {
+            String inPdf = sourceFolder + "simpleSignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.DoesSignatureFieldExist("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DoesSignatureFieldExistEmptySignatureTest() {
+            String inPdf = sourceFolder + "emptySignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.DoesSignatureFieldExist("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureInTextTypeFieldTest() {
+            String inPdf = sourceFolder + "signatureInTextTypeField.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.DoesSignatureFieldExist("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetTotalRevisionsTest() {
+            String inPdf = sourceFolder + "simpleSignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.AreEqual(1, signatureUtil.GetTotalRevisions());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRevisionTest() {
+            String inPdf = sourceFolder + "simpleSignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.AreEqual(1, signatureUtil.GetRevision("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRevisionEmptyFieldsTest() {
+            String inPdf = sourceFolder + "emptySignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.AreEqual(0, signatureUtil.GetRevision("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRevisionXfaFormTest() {
+            String inPdf = sourceFolder + "simpleSignatureWithXfa.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.AreEqual(1, signatureUtil.GetRevision("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractRevisionTest() {
+            String inPdf = sourceFolder + "simpleSignature.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsNotNull(signatureUtil.ExtractRevision("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractRevisionNotSignatureFieldTest() {
+            String inPdf = sourceFolder + "signatureInTextTypeField.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsNull(signatureUtil.ExtractRevision("Signature1"));
         }
     }
 }
