@@ -167,6 +167,23 @@ namespace iText.Signatures {
             return GetPdfObject().GetAsString(PdfName.Cert);
         }
 
+        /// <summary>Gets the /Cert entry value of this signature.</summary>
+        /// <remarks>
+        /// Gets the /Cert entry value of this signature.
+        /// /Cert entry required when SubFilter is adbe.x509.rsa_sha1. May be array or byte string.
+        /// </remarks>
+        /// <returns>the signature cert value</returns>
+        public virtual PdfObject GetCertObject() {
+            PdfString certAsStr = GetPdfObject().GetAsString(PdfName.Cert);
+            PdfArray certAsArray = GetPdfObject().GetAsArray(PdfName.Cert);
+            if (certAsStr != null) {
+                return certAsStr;
+            }
+            else {
+                return certAsArray;
+            }
+        }
+
         /// <summary>Sets the /Name of the person signing the document.</summary>
         /// <param name="name">name of the person signing the document</param>
         public virtual void SetName(String name) {
