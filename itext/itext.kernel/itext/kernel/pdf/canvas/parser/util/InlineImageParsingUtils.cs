@@ -137,6 +137,45 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             return inlineImageAsStreamObject;
         }
 
+        /// <param name="colorSpaceName">the name of the color space. If null, a bi-tonal (black and white) color space is assumed.
+        ///     </param>
+        /// <returns>the components per pixel for the specified color space</returns>
+        internal static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic) {
+            if (colorSpaceName == null) {
+                return 1;
+            }
+            if (colorSpaceName.Equals(PdfName.DeviceGray)) {
+                return 1;
+            }
+            if (colorSpaceName.Equals(PdfName.DeviceRGB)) {
+                return 3;
+            }
+            if (colorSpaceName.Equals(PdfName.DeviceCMYK)) {
+                return 4;
+            }
+            if (colorSpaceDic != null) {
+                PdfArray colorSpace = colorSpaceDic.GetAsArray(colorSpaceName);
+                if (colorSpace != null) {
+                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
+                        return 1;
+                    }
+                    else {
+                        if (PdfName.ICCBased.Equals(colorSpace.GetAsName(0))) {
+                            return colorSpace.GetAsStream(1).GetAsNumber(PdfName.N).IntValue();
+                        }
+                    }
+                }
+                else {
+                    PdfName tempName = colorSpaceDic.GetAsName(colorSpaceName);
+                    if (tempName != null) {
+                        return GetComponentsPerPixel(tempName, colorSpaceDic);
+                    }
+                }
+            }
+            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedColorSpace1).SetMessageParams
+                (colorSpaceName);
+        }
+
         /// <summary>Parses the next inline image dictionary from the parser.</summary>
         /// <remarks>
         /// Parses the next inline image dictionary from the parser.  The parser must be positioned immediately following the BI operator.
@@ -198,40 +237,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
             }
             return value;
-        }
-
-        /// <param name="colorSpaceName">the name of the color space. If null, a bi-tonal (black and white) color space is assumed.
-        ///     </param>
-        /// <returns>the components per pixel for the specified color space</returns>
-        private static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic) {
-            if (colorSpaceName == null) {
-                return 1;
-            }
-            if (colorSpaceName.Equals(PdfName.DeviceGray)) {
-                return 1;
-            }
-            if (colorSpaceName.Equals(PdfName.DeviceRGB)) {
-                return 3;
-            }
-            if (colorSpaceName.Equals(PdfName.DeviceCMYK)) {
-                return 4;
-            }
-            if (colorSpaceDic != null) {
-                PdfArray colorSpace = colorSpaceDic.GetAsArray(colorSpaceName);
-                if (colorSpace != null) {
-                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
-                        return 1;
-                    }
-                }
-                else {
-                    PdfName tempName = colorSpaceDic.GetAsName(colorSpaceName);
-                    if (tempName != null) {
-                        return GetComponentsPerPixel(tempName, colorSpaceDic);
-                    }
-                }
-            }
-            throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedColorSpace1).SetMessageParams
-                (colorSpaceName);
         }
 
         /// <summary>Computes the number of unfiltered bytes that each row of the image will contain.</summary>

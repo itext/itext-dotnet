@@ -56,12 +56,20 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class PdfCanvasProcessorIntegrationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
+
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/kernel/parser/PdfCanvasProcessorTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void SetUp() {
+            CreateDestinationFolder(DESTINATION_FOLDER);
+        }
 
         [NUnit.Framework.Test]
         public virtual void ContentStreamProcessorTest() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "tableWithImageAndText.pdf"), new PdfWriter
+            PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "tableWithImageAndText.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             StringBuilder pageEventsLog = new StringBuilder();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
@@ -70,7 +78,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     (pageEventsLog));
                 processor.ProcessPageContent(page);
             }
-            byte[] logBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder + "contentStreamProcessorTest_events_log.dat"
+            byte[] logBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "contentStreamProcessorTest_events_log.dat"
                 ));
             String expectedPageEventsLog = iText.IO.Util.JavaUtil.GetStringForBytes(logBytes, System.Text.Encoding.UTF8
                 );
@@ -79,7 +87,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         [NUnit.Framework.Test]
         public virtual void ProcessGraphicsStateResourceOperatorFillOpacityTest() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "transparentText.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "transparentText.pdf"));
             float? expOpacity = 0.5f;
             IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
@@ -94,7 +102,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         [NUnit.Framework.Test]
         public virtual void ProcessGraphicsStateResourceOperatorStrokeOpacityTest() {
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "hiddenText.pdf"));
+            PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hiddenText.pdf"));
             float? expOpacity = 0.0f;
             IDictionary<String, Object> textRenderInfo = new Dictionary<String, Object>();
             for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
@@ -110,7 +118,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [NUnit.Framework.Test]
         public virtual void TestClosingEmptyPath() {
             String fileName = "closingEmptyPath.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
+            PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));
             PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
                 ());
             // Assert than no exception is thrown when an empty path is handled
@@ -121,7 +129,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [LogMessage(iText.IO.LogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
         public virtual void TestNoninvertibleMatrix() {
             String fileName = "noninvertibleMatrix.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));
             LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(strategy);
             PdfPage page = pdfDocument.GetFirstPage();
@@ -138,7 +146,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual void ParseCircularReferencesInResourcesTest() {
             NUnit.Framework.Assert.That(() =>  {
                 String fileName = "circularReferencesInResources.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + fileName));
+                PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));
                 PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
                     ());
                 PdfPage page = pdfDocument.GetFirstPage();
@@ -152,7 +160,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE)]
         public virtual void PatternColorParsingNotValidPdfTest() {
-            String inputFile = sourceFolder + "patternColorParsingNotValidPdfTest.pdf";
+            String inputFile = SOURCE_FOLDER + "patternColorParsingNotValidPdfTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
                 PdfPage page = pdfDocument.GetPage(i);
@@ -167,7 +175,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         [NUnit.Framework.Test]
         public virtual void PatternColorParsingValidPdfTest() {
-            String inputFile = sourceFolder + "patternColorParsingValidPdfTest.pdf";
+            String inputFile = SOURCE_FOLDER + "patternColorParsingValidPdfTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
                 PdfPage page = pdfDocument.GetPage(i);
