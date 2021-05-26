@@ -48,12 +48,10 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void UnsupportedCmapTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                TrueTypeFont ttf = new TrueTypeFont(sourceFolder + "NotoSerif-Regular_v1.7.ttf");
-                PdfType0Font type0Font = new PdfType0Font(ttf, PdfEncodings.WINANSI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.OnlyIdentityCMapsSupportsWithTrueType))
-;
+            TrueTypeFont ttf = new TrueTypeFont(sourceFolder + "NotoSerif-Regular_v1.7.ttf");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType0Font(ttf, PdfEncodings.
+                WINANSI));
+            NUnit.Framework.Assert.AreEqual(PdfException.OnlyIdentityCMapsSupportsWithTrueType, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -65,11 +65,10 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void ParseResolutionInvalidUnit() {
-            NUnit.Framework.Assert.That(() =>  {
-                CssDimensionParsingUtils.ParseResolution("10incorrectUnit");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
+                .ParseResolution("10incorrectUnit"));
+            NUnit.Framework.Assert.AreEqual(iText.StyledXmlParser.LogMessageConstant.INCORRECT_RESOLUTION_UNIT_VALUE, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -141,22 +140,19 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFromNAN() {
-            NUnit.Framework.Assert.That(() =>  {
-                String value = "Definitely not a number";
-                CssDimensionParsingUtils.ParseAbsoluteLength(value);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "Definitely not a number")))
-;
+            String value = "Definitely not a number";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
+                .ParseAbsoluteLength(value));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "Definitely not a number"
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseAbsoluteLengthFromNull() {
-            NUnit.Framework.Assert.That(() =>  {
-                String value = null;
-                CssDimensionParsingUtils.ParseAbsoluteLength(value);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "null")))
-;
+            String value = null;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
+                .ParseAbsoluteLength(value));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "null"), e.Message);
         }
 
         [NUnit.Framework.Test]

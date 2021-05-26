@@ -44,11 +44,9 @@ namespace iText.Kernel.Pdf.Filters {
         [NUnit.Framework.Test]
         public virtual void DecodingIllegalaCharacterTest() {
             byte[] bytes = "4c6f72656d20697073756d2eg>".GetBytes();
-            NUnit.Framework.Assert.That(() =>  {
-                ASCIIHexDecodeFilter.ASCIIHexDecode(bytes);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.IllegalCharacterInAsciihexdecode))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => ASCIIHexDecodeFilter.ASCIIHexDecode
+                (bytes));
+            NUnit.Framework.Assert.AreEqual(PdfException.IllegalCharacterInAsciihexdecode, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -159,14 +159,12 @@ namespace iText.Kernel.Pdf.Collection {
         public virtual void GetUnsupportedTypeValueTest() {
             String stringValue = "string value";
             String fieldName = "fieldName";
-            NUnit.Framework.Assert.That(() =>  {
-                PdfCollectionField field = new PdfCollectionField(fieldName, PdfCollectionField.FILENAME);
-                // this line will throw an exception as getValue() method is not
-                // supported for subType which differs from S, N and D.
-                field.GetValue(stringValue);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException._1IsNotAnAcceptableValueForTheField2, stringValue, fieldName)))
-;
+            PdfCollectionField field = new PdfCollectionField(fieldName, PdfCollectionField.FILENAME);
+            // this line will throw an exception as getValue() method is not
+            // supported for subType which differs from S, N and D.
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => field.GetValue(stringValue));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException._1IsNotAnAcceptableValueForTheField2
+                , stringValue, fieldName), e.Message);
         }
 
         [NUnit.Framework.Test]

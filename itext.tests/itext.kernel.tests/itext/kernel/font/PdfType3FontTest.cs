@@ -44,7 +44,7 @@ namespace iText.Kernel.Font {
             dictionary.Put(PdfName.Widths, new PdfArray());
             dictionary.Put(PdfName.ToUnicode, PdfName.IdentityH);
             dictionary.Put(PdfName.Encoding, new PdfName("zapfdingbatsencoding"));
-            PdfType3Font type3Font = new _PdfType3Font_65(dictionary);
+            PdfType3Font type3Font = new _PdfType3Font_61(dictionary);
             NUnit.Framework.Assert.IsNotNull(type3Font.GetFontProgram());
             int spaceGlyphCode = 32;
             Glyph glyph = type3Font.GetFontProgram().GetGlyph(spaceGlyphCode);
@@ -54,8 +54,8 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual(new Glyph(AGlyphCode, 0, new char[] { 'A' }), glyph);
         }
 
-        private sealed class _PdfType3Font_65 : PdfType3Font {
-            public _PdfType3Font_65(PdfDictionary baseArg1)
+        private sealed class _PdfType3Font_61 : PdfType3Font {
+            public _PdfType3Font_61(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 
@@ -73,7 +73,7 @@ namespace iText.Kernel.Font {
             charProcs.Put(new PdfName("A"), new PdfStream());
             dictionary.Put(PdfName.CharProcs, charProcs);
             dictionary.Put(PdfName.Widths, new PdfArray());
-            PdfType3Font type3Font = new _PdfType3Font_90(dictionary);
+            PdfType3Font type3Font = new _PdfType3Font_86(dictionary);
             Type3Glyph type3Glyph = type3Font.AddGlyph('A', 1, 2, 3, 5, 8);
             NUnit.Framework.Assert.AreEqual(0, type3Glyph.GetWx(), EPS);
             NUnit.Framework.Assert.AreEqual(0, type3Glyph.GetLlx(), EPS);
@@ -82,8 +82,8 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.AreEqual(0, type3Glyph.GetUry(), EPS);
         }
 
-        private sealed class _PdfType3Font_90 : PdfType3Font {
-            public _PdfType3Font_90(PdfDictionary baseArg1)
+        private sealed class _PdfType3Font_86 : PdfType3Font {
+            public _PdfType3Font_86(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 
@@ -144,7 +144,7 @@ namespace iText.Kernel.Font {
             PdfDictionary charProcs = new PdfDictionary();
             dictionary.Put(PdfName.CharProcs, charProcs);
             dictionary.Put(PdfName.Widths, new PdfArray());
-            PdfType3Font type3Font = new _PdfType3Font_160(dictionary);
+            PdfType3Font type3Font = new _PdfType3Font_156(dictionary);
             NUnit.Framework.Assert.IsFalse(type3Font.ContainsGlyph(333));
             NUnit.Framework.Assert.IsFalse(type3Font.ContainsGlyph(-5));
             NUnit.Framework.Assert.IsFalse(type3Font.ContainsGlyph(32));
@@ -154,8 +154,8 @@ namespace iText.Kernel.Font {
             NUnit.Framework.Assert.IsTrue(type3Font.ContainsGlyph(65));
         }
 
-        private sealed class _PdfType3Font_160 : PdfType3Font {
-            public _PdfType3Font_160(PdfDictionary baseArg1)
+        private sealed class _PdfType3Font_156 : PdfType3Font {
+            public _PdfType3Font_156(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 
@@ -167,18 +167,15 @@ namespace iText.Kernel.Font {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void FlushExceptionTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary dictionary = new PdfDictionary();
-                dictionary.Put(PdfName.FontMatrix, new PdfArray());
-                PdfDictionary charProcs = new PdfDictionary();
-                dictionary.Put(PdfName.CharProcs, charProcs);
-                dictionary.Put(PdfName.Widths, new PdfArray());
-                PdfType3Font type3Font = new PdfType3FontTest.DisableEnsureUnderlyingObjectHasIndirectReference(this, dictionary
-                    );
-                type3Font.Flush();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.NoGlyphsDefinedForType3Font))
-;
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.FontMatrix, new PdfArray());
+            PdfDictionary charProcs = new PdfDictionary();
+            dictionary.Put(PdfName.CharProcs, charProcs);
+            dictionary.Put(PdfName.Widths, new PdfArray());
+            PdfType3Font type3Font = new PdfType3FontTest.DisableEnsureUnderlyingObjectHasIndirectReference(this, dictionary
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => type3Font.Flush());
+            NUnit.Framework.Assert.AreEqual(PdfException.NoGlyphsDefinedForType3Font, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -193,14 +190,14 @@ namespace iText.Kernel.Font {
             String fontStretch = "test";
             fontDescriptor.Put(PdfName.FontStretch, new PdfName(fontStretch));
             dictionary.Put(PdfName.FontDescriptor, fontDescriptor);
-            PdfType3Font type3Font = new _PdfType3Font_203(dictionary);
+            PdfType3Font type3Font = new _PdfType3Font_200(dictionary);
             NUnit.Framework.Assert.IsNotNull(type3Font.fontProgram);
             NUnit.Framework.Assert.IsNotNull(type3Font.fontProgram.GetFontNames());
             NUnit.Framework.Assert.AreEqual(fontStretch, type3Font.fontProgram.GetFontNames().GetFontStretch());
         }
 
-        private sealed class _PdfType3Font_203 : PdfType3Font {
-            public _PdfType3Font_203(PdfDictionary baseArg1)
+        private sealed class _PdfType3Font_200 : PdfType3Font {
+            public _PdfType3Font_200(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 
@@ -248,11 +245,9 @@ namespace iText.Kernel.Font {
             dictionary.Put(PdfName.Widths, new PdfArray());
             dictionary.Put(PdfName.ToUnicode, PdfName.IdentityH);
             dictionary.Put(PdfName.Encoding, new PdfName("zapfdingbatsencoding"));
-            NUnit.Framework.Assert.That(() =>  {
-                new PdfType3Font(dictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary, PdfName.FontMatrix)))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType3Font(dictionary));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary
+                , PdfName.FontMatrix), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -261,11 +256,9 @@ namespace iText.Kernel.Font {
             dictionary.Put(PdfName.FontMatrix, new PdfArray());
             dictionary.Put(PdfName.ToUnicode, PdfName.IdentityH);
             dictionary.Put(PdfName.Encoding, new PdfName("zapfdingbatsencoding"));
-            NUnit.Framework.Assert.That(() =>  {
-                new PdfType3Font(dictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary, PdfName.Widths)))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfType3Font(dictionary));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.MissingRequiredFieldInFontDictionary
+                , PdfName.Widths), e.Message);
         }
 
         [NUnit.Framework.Test]

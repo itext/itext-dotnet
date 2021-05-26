@@ -144,17 +144,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         [NUnit.Framework.Ignore("DEVSIX-3608: this test currently throws StackOverflowError, which cannot be caught in .NET"
             )]
         public virtual void ParseCircularReferencesInResourcesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String fileName = "circularReferencesInResources.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));
+            String fileName = "circularReferencesInResources.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName))) {
                 PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
                     ());
                 PdfPage page = pdfDocument.GetFirstPage();
-                processor.ProcessPageContent(page);
-                pdfDocument.Close();
+                NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => processor.ProcessPageContent(page));
             }
-            , NUnit.Framework.Throws.InstanceOf<OutOfMemoryException>())
-;
         }
 
         [NUnit.Framework.Test]

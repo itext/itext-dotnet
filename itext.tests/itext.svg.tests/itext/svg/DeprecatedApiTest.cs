@@ -33,11 +33,7 @@ namespace iText.Svg {
         //This test class can safely be removed in 7.2
         [NUnit.Framework.Test]
         public virtual void ProcessNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgConverter.Process(null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => SvgConverter.Process(null));
         }
 
         [NUnit.Framework.Test]

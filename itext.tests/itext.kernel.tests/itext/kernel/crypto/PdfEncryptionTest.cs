@@ -222,86 +222,68 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithoutPassword() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf"));
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf")) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(BadPasswordException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(BadPasswordException.BadUserPassword, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongPassword() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new ReaderProperties
-                    ().SetPassword("wrong_password".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1)));
-                PdfDocument doc = new PdfDocument(reader);
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new ReaderProperties
+                ().SetPassword("wrong_password".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1)))) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(BadPasswordException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(BadPasswordException.BadUserPassword, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithoutCertificate() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf"));
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf")) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate
+                    , e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithoutPrivateKey() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), null));
-                PdfDocument doc = new PdfDocument(reader);
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), null))) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(PdfException.BadCertificateAndKey, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongCertificate() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), GetPrivateKey()));
-                PdfDocument doc = new PdfDocument(reader);
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), GetPrivateKey()))) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(PdfException.BadCertificateAndKey, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongPrivateKey() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(
-                    new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
-                    ())));
-                PdfDocument doc = new PdfDocument(reader);
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore(
+                new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
+                ())))) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(PdfException.PdfDecryption, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.PdfDecryption))
-;
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
-                    (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
-                    ())));
-                PdfDocument doc = new PdfDocument(reader);
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
+                (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
+                ())))) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(PdfException.BadCertificateAndKey, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey))
-;
         }
 
         [NUnit.Framework.Test]
@@ -344,14 +326,14 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         public virtual void StampDocNoUserPassword() {
-            NUnit.Framework.Assert.That(() =>  {
-                String fileName = "stampedNoPassword.pdf";
-                PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "noUserPassword.pdf"), new PdfWriter(destinationFolder
-                     + fileName));
-                document.Close();
+            String fileName = "stampedNoPassword.pdf";
+            using (PdfReader reader = new PdfReader(sourceFolder + "noUserPassword.pdf")) {
+                using (PdfWriter writer = new PdfWriter(destinationFolder + fileName)) {
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(BadPasswordException), () => new PdfDocument(reader, writer
+                        ));
+                    NUnit.Framework.Assert.AreEqual(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword, e.Message);
+                }
             }
-            , NUnit.Framework.Throws.InstanceOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.PdfReaderNotOpenedWithOwnerPassword))
-;
         }
 
         [NUnit.Framework.Test]

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.IO;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -76,11 +77,10 @@ namespace iText.Pdfa.Checker {
                         differences.Add(new PdfNumber(82));
                         differences.Add(PdfName.B);
                         PdfFont font = CreateFontWithCharProcsAndEncodingDifferences(document, charProcs, differences);
-                        NUnit.Framework.Assert.That(() =>  {
-                            pdfA2Checker.CheckFontGlyphs(font, null);
-                        }
-                        , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_SUBTYPE2_KEY_WITH_A_VALUE_OF_PS))
-;
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckFontGlyphs
+                            (font, null));
+                        NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_FORM_XOBJECT_DICTIONARY_SHALL_NOT_CONTAIN_SUBTYPE2_KEY_WITH_A_VALUE_OF_PS
+                            , e.Message);
                     }
                 }
             }

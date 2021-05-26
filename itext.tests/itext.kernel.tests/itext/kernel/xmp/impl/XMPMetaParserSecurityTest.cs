@@ -45,41 +45,33 @@ namespace iText.Kernel.XMP.Impl {
 
         [NUnit.Framework.Test]
         public virtual void XxeTestFromString() {
-            NUnit.Framework.Assert.That(() =>  {
-                XMPMetaParser.Parse(XMP_WITH_XXE, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<XMPException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(XMPException), () => XMPMetaParser.Parse(XMP_WITH_XXE, null
+                ));
+            NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void XxeTestFromByteBuffer() {
-            NUnit.Framework.Assert.That(() =>  {
-                XMPMetaParser.Parse(XMP_WITH_XXE.GetBytes(System.Text.Encoding.UTF8), null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<XMPException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(XMPException), () => XMPMetaParser.Parse(XMP_WITH_XXE.GetBytes
+                (System.Text.Encoding.UTF8), null));
+            NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void XxeTestFromInputStream() {
             using (Stream inputStream = new MemoryStream(XMP_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    XMPMetaParser.Parse(inputStream, null);
-                }
-                , NUnit.Framework.Throws.InstanceOf<XMPException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(XMPException), () => XMPMetaParser.Parse(inputStream, null
+                    ));
+                NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void XxeTestFromStringCustomXmlParser() {
             XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
-            NUnit.Framework.Assert.That(() =>  {
-                XMPMetaParser.Parse(XMP_WITH_XXE, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Test message"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => XMPMetaParser.Parse(XMP_WITH_XXE, null
+                ));
+            NUnit.Framework.Assert.AreEqual("Test message", e.Message);
         }
     }
 }

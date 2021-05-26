@@ -88,11 +88,8 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void ImageMagickEnvVarIsIncorrect() {
-            NUnit.Framework.Assert.That(() =>  {
-                ImageMagickHelper imageMagickHelper = new ImageMagickHelper("-");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new ImageMagickHelper("-"));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY, e.Message);
         }
 
         [NUnit.Framework.Test]

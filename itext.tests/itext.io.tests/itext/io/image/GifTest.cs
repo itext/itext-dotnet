@@ -64,11 +64,10 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void GifImageFrameOutOfBoundsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ImageDataFactory.CreateGifFrame(UrlUtil.ToURL(sourceFolder + "image-2frames.gif"), 3);
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException.CannotFind1Frame, 2)))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => ImageDataFactory.CreateGifFrame
+                (UrlUtil.ToURL(sourceFolder + "image-2frames.gif"), 3));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.CannotFind1Frame, 2), e.Message
+                );
         }
 
         [NUnit.Framework.Test]

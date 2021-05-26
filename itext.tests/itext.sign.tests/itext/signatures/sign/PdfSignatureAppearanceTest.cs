@@ -250,17 +250,12 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            NUnit.Framework.Assert.That(() =>  {
-                signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
-                    ("TestCity").SetReuseAppearance(true);
-                signer.SetFieldName("Signature1");
-                IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-                signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
-                    , "diff_"));
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
+                ("TestCity").SetReuseAppearance(true);
+            signer.SetFieldName("Signature1");
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => signer.SignDetached(pks, chain, null, null
+                , null, 0, PdfSigner.CryptoStandard.CADES));
         }
 
         private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder

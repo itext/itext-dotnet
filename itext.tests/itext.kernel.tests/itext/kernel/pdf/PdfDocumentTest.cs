@@ -453,11 +453,9 @@ namespace iText.Kernel.Pdf {
         public virtual void OpenDocumentWithInvalidCatalogVersionAndConservativeStrictnessReadingTest() {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + "sample-with-invalid-catalog-version.pdf").SetStrictnessLevel
                 (PdfReader.StrictnessLevel.CONSERVATIVE)) {
-                NUnit.Framework.Assert.That(() =>  {
-                    new PdfDocument(reader);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                NUnit.Framework.Assert.AreEqual(iText.IO.LogMessageConstant.DOCUMENT_VERSION_IN_CATALOG_CORRUPTED, e.Message
+                    );
             }
         }
 

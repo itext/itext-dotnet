@@ -47,20 +47,12 @@ namespace iText.Layout.Font {
     public class RangeTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestWrongRange() {
-            NUnit.Framework.Assert.That(() =>  {
-                new RangeBuilder().AddRange(11, 10);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new RangeBuilder().AddRange(11, 10));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestWrongRangeSize() {
-            NUnit.Framework.Assert.That(() =>  {
-                new RangeBuilder().Create();
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new RangeBuilder().Create());
         }
 
         [NUnit.Framework.Test]

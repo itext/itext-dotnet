@@ -533,12 +533,8 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseAndProcessIOExceptionTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                Stream fis = new ExceptionInputStream();
-                ISvgProcessorResult result = SvgConverter.ParseAndProcess(fis);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            Stream fis = new ExceptionInputStream();
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => SvgConverter.ParseAndProcess(fis));
         }
 
         [NUnit.Framework.Test]

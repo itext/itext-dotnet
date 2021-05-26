@@ -54,165 +54,159 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckNameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigs() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            d.Put(PdfName.Name, new PdfString("CustomName"));
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName"));
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckNameEntryShouldBeUniqueBetweenAdditionalConfigs() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            d.Put(PdfName.Name, new PdfString("CustomName"));
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            configs.Add(config);
+            config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.VALUE_OF_NAME_ENTRY_SHALL_BE_UNIQUE_AMONG_ALL_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARIES
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckOCCDContainName() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName2"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            configs.Add(config);
+            config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName2"));
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckOrderArrayDoesNotContainRedundantReferences() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                order.Add(orderItem1);
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            d.Put(PdfName.Name, new PdfString("CustomName"));
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            PdfArray order = new PdfArray();
+            PdfDictionary orderItem = new PdfDictionary();
+            orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
+            order.Add(orderItem);
+            PdfDictionary orderItem1 = new PdfDictionary();
+            orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
+            order.Add(orderItem1);
+            config.Put(PdfName.Order, order);
+            PdfArray ocgs = new PdfArray();
+            ocgs.Add(orderItem);
+            ocProperties.Put(PdfName.OCGs, ocgs);
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckOrderArrayContainsReferencesToAllOCGs() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                ocgs.Add(orderItem);
-                ocgs.Add(orderItem1);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            d.Put(PdfName.Name, new PdfString("CustomName"));
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            PdfArray order = new PdfArray();
+            PdfDictionary orderItem = new PdfDictionary();
+            orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
+            order.Add(orderItem);
+            PdfDictionary orderItem1 = new PdfDictionary();
+            orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
+            config.Put(PdfName.Order, order);
+            PdfArray ocgs = new PdfArray();
+            ocgs.Add(orderItem);
+            ocgs.Add(orderItem1);
+            ocProperties.Put(PdfName.OCGs, ocgs);
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckOrderArrayAndOCGsMatch() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                d.Put(PdfName.Name, new PdfString("CustomName"));
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                PdfArray order = new PdfArray();
-                PdfDictionary orderItem = new PdfDictionary();
-                orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
-                order.Add(orderItem);
-                PdfDictionary orderItem1 = new PdfDictionary();
-                orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
-                order.Add(orderItem1);
-                config.Put(PdfName.Order, order);
-                PdfArray ocgs = new PdfArray();
-                PdfDictionary orderItem2 = new PdfDictionary();
-                orderItem2.Put(PdfName.Name, new PdfString("CustomName4"));
-                ocgs.Add(orderItem2);
-                PdfDictionary orderItem3 = new PdfDictionary();
-                orderItem3.Put(PdfName.Name, new PdfString("CustomName5"));
-                ocgs.Add(orderItem3);
-                ocProperties.Put(PdfName.OCGs, ocgs);
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, ocProperties);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS))
-;
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            d.Put(PdfName.Name, new PdfString("CustomName"));
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            PdfArray order = new PdfArray();
+            PdfDictionary orderItem = new PdfDictionary();
+            orderItem.Put(PdfName.Name, new PdfString("CustomName2"));
+            order.Add(orderItem);
+            PdfDictionary orderItem1 = new PdfDictionary();
+            orderItem1.Put(PdfName.Name, new PdfString("CustomName3"));
+            order.Add(orderItem1);
+            config.Put(PdfName.Order, order);
+            PdfArray ocgs = new PdfArray();
+            PdfDictionary orderItem2 = new PdfDictionary();
+            orderItem2.Put(PdfName.Name, new PdfString("CustomName4"));
+            ocgs.Add(orderItem2);
+            PdfDictionary orderItem3 = new PdfDictionary();
+            orderItem3.Put(PdfName.Name, new PdfString("CustomName5"));
+            ocgs.Add(orderItem3);
+            ocProperties.Put(PdfName.OCGs, ocgs);
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ORDER_ARRAY_SHALL_CONTAIN_REFERENCES_TO_ALL_OCGS, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -262,50 +256,44 @@ namespace iText.Pdfa.Checker {
         // no assertion is provided
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutAlternatePresentations() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary names = new PdfDictionary();
-                names.Put(PdfName.AlternatePresentations, new PdfDictionary());
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.Names, names);
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY))
-;
+            PdfDictionary names = new PdfDictionary();
+            names.Put(PdfName.AlternatePresentations, new PdfDictionary());
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Names, names);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_ALTERNATEPRESENTATIONS_NAMES_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutRequirements() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.Requirements, new PdfDictionary());
-                pdfA2Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY))
-;
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Requirements, new PdfDictionary());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_REQUIREMENTS_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceNoAttributesDictionary() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO DEVSIX-4203 should not cause an IndexOutOfBoundException.
-                // Should throw PdfAConformanceException as Colorants dictionary always must be present
-                // for Pdf/A-2
-                int numberOfComponents = 2;
-                IList<String> tmpArray = new List<String>(numberOfComponents);
-                float[] transformArray = new float[numberOfComponents * 2];
-                for (int i = 0; i < numberOfComponents; i++) {
-                    tmpArray.Add("MyColor" + i + 1);
-                    transformArray[i * 2] = 0;
-                    transformArray[i * 2 + 1] = 1;
-                }
-                PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
-                    { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
-                PdfDictionary currentColorSpaces = new PdfDictionary();
-                pdfA2Checker.CheckColorSpace(new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function), currentColorSpaces
-                    , true, false);
+            int numberOfComponents = 2;
+            IList<String> tmpArray = new List<String>(numberOfComponents);
+            float[] transformArray = new float[numberOfComponents * 2];
+            for (int i = 0; i < numberOfComponents; i++) {
+                tmpArray.Add("MyColor" + i + 1);
+                transformArray[i * 2] = 0;
+                transformArray[i * 2 + 1] = 1;
             }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            PdfFunction.Type4 function = new PdfFunction.Type4(new PdfArray(transformArray), new PdfArray(new float[] 
+                { 0, 1, 0, 1, 0, 1 }), "{0}".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            //TODO DEVSIX-4203 should not cause an IndexOutOfBoundException.
+            // Should throw PdfAConformanceException as Colorants dictionary always must be present
+            // for Pdf/A-2
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => pdfA2Checker.CheckColorSpace(new PdfSpecialCs.DeviceN
+                (tmpArray, new PdfDeviceCs.Rgb(), function), currentColorSpaces, true, false));
         }
     }
 }

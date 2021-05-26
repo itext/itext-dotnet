@@ -113,19 +113,17 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck04() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary acroForm = new PdfDictionary();
-                acroForm.Put(PdfName.XFA, new PdfArray());
-                doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            doc.AddNewPage();
+            PdfDictionary acroForm = new PdfDictionary();
+            acroForm.Put(PdfName.XFA, new PdfArray());
+            doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY
+                , e.Message);
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {

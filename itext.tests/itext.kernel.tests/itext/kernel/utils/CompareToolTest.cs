@@ -157,13 +157,11 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void GsEnvironmentVariableSpecifiedIncorrectlyTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String outPdf = sourceFolder + "simple_pdf.pdf";
-                String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-                new CompareTool("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_");
-            }
-            , NUnit.Framework.Throws.InstanceOf<CompareTool.CompareToolExecutionException>().With.Message.EqualTo(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
-;
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(CompareTool.CompareToolExecutionException), () => new CompareTool
+                ("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -141,21 +141,19 @@ namespace iText.Kernel.Pdf.Collection {
 
         [NUnit.Framework.Test]
         public virtual void AddPrefixToEmptyFieldTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String fieldName = "fieldName";
-                String fieldPrefix = "fieldPrefix";
-                PdfDictionary pdfObject = new PdfDictionary();
-                pdfObject.Put(PdfName.Subtype, PdfName.S);
-                PdfCollectionField field = new PdfCollectionField(pdfObject);
-                PdfCollectionSchema schema = new PdfCollectionSchema();
-                schema.AddField(fieldName, field);
-                PdfCollectionItem item = new PdfCollectionItem(schema);
-                // this line will throw an exception as setPrefix() method may be called
-                // only if value was set previously
-                item.SetPrefix(fieldName, fieldPrefix);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.YouMustSetAValueBeforeAddingAPrefix))
-;
+            String fieldName = "fieldName";
+            String fieldPrefix = "fieldPrefix";
+            PdfDictionary pdfObject = new PdfDictionary();
+            pdfObject.Put(PdfName.Subtype, PdfName.S);
+            PdfCollectionField field = new PdfCollectionField(pdfObject);
+            PdfCollectionSchema schema = new PdfCollectionSchema();
+            schema.AddField(fieldName, field);
+            PdfCollectionItem item = new PdfCollectionItem(schema);
+            // this line will throw an exception as setPrefix() method may be called
+            // only if value was set previously
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => item.SetPrefix(fieldName, fieldPrefix
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfException.YouMustSetAValueBeforeAddingAPrefix, e.Message);
         }
 
         [NUnit.Framework.Test]

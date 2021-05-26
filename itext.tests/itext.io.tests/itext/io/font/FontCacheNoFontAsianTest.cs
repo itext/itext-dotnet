@@ -125,46 +125,32 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void GetCid2UniCMapNoFontAsian() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Without font-asian module in the class path
-                // no CMap can be found.
-                FontCache.GetCid2UniCmap("UniJIS-UTF16-H");
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
-;
+            // Without font-asian module in the class path
+            // no CMap can be found.
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => FontCache.GetCid2UniCmap("UniJIS-UTF16-H"
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetUni2CidCMapNoFontAsian() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Without font-asian module in the class path
-                // no CMap can be found.
-                FontCache.GetUni2CidCmap("UniJIS-UTF16-H");
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
-;
+            // Without font-asian module in the class path
+            // no CMap can be found.
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => FontCache.GetUni2CidCmap("UniJIS-UTF16-H"
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetByte2CidCMapNoFontAsian() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Without font-asian module in the class path
-                // no CMap can be found.
-                FontCache.GetByte2CidCmap("78ms-RKSJ-H");
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
-;
+            // Without font-asian module in the class path
+            // no CMap can be found.
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => FontCache.GetByte2CidCmap("78ms-RKSJ-H"));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetCid2ByteCMapNoFontAsian() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Without font-asian module in the class path
-                // no CMap can be found.
-                FontCache.GetCid2Byte("78ms-RKSJ-H");
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
-;
+            // Without font-asian module in the class path
+            // no CMap can be found.
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => FontCache.GetCid2Byte("78ms-RKSJ-H"));
         }
 
         private class FontProgramMock : FontProgram {

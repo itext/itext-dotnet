@@ -77,11 +77,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             for (int i = 0; i < 88; i++) {
                 NUnit.Framework.Assert.AreNotEqual(-1, stream.Read());
             }
-            NUnit.Framework.Assert.That(() =>  {
-                stream.Read();
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
         }
 
         [NUnit.Framework.Test]
@@ -95,11 +91,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.AreEqual(88, numOfReadBytes);
             NUnit.Framework.Assert.AreEqual(10, bytes[87]);
             NUnit.Framework.Assert.AreEqual(0, bytes[88]);
-            NUnit.Framework.Assert.That(() =>  {
-                stream.Read(new byte[1]);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read(new byte[1]));
         }
 
         [NUnit.Framework.Test]
@@ -113,11 +105,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             NUnit.Framework.Assert.AreEqual(88, numOfReadBytes);
             NUnit.Framework.Assert.AreEqual(10, bytes[87]);
             NUnit.Framework.Assert.AreEqual(0, bytes[88]);
-            NUnit.Framework.Assert.That(() =>  {
-                stream.JRead(bytes, 88, 1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.JRead(bytes, 88, 1));
         }
 
         [NUnit.Framework.Test]
@@ -184,33 +172,21 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [NUnit.Framework.Test]
         public virtual void ReadingByteWithZeroLimitTest() {
             LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0);
-            NUnit.Framework.Assert.That(() =>  {
-                stream.Read();
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
         }
 
         [NUnit.Framework.Test]
         public virtual void ReadingByteArrayWithZeroLimitTest() {
             LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0);
             byte[] bytes = new byte[100];
-            NUnit.Framework.Assert.That(() =>  {
-                stream.Read(bytes);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read(bytes));
         }
 
         [NUnit.Framework.Test]
         public virtual void ReadingByteArrayWithOffsetAndZeroLimitTest() {
             LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0);
             byte[] bytes = new byte[100];
-            NUnit.Framework.Assert.That(() =>  {
-                stream.JRead(bytes, 0, 100);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.JRead(bytes, 0, 100));
         }
 
         [NUnit.Framework.Test]
@@ -235,11 +211,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [NUnit.Framework.Test]
         public virtual void IllegalReadingByteLimitValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new LimitedInputStream(new MemoryStream(new byte[0]), -1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(StyledXmlParserExceptionMessage.READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new LimitedInputStream(new MemoryStream
+                (new byte[0]), -1));
+            NUnit.Framework.Assert.AreEqual(StyledXmlParserExceptionMessage.READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO, 
+                e.Message);
         }
     }
 }

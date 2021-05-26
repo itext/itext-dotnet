@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Annot;
@@ -312,25 +311,21 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CopyPagesLinkAnnotationTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO DEVSIX-577. Update cmp, remove junitExpectedException after fix
-                String outFileName = destinationFolder + "copyPagesLinkAnnotationTest.pdf";
-                String cmpFileName = sourceFolder + "cmp_copyPagesLinkAnnotationTest.pdf";
-                PdfDocument targetPdf = new PdfDocument(new PdfWriter(outFileName));
-                PdfDocument linkAnotPdf = new PdfDocument(new PdfReader(sourceFolder + "pdfLinkAnnotationTest.pdf"));
-                int linkPdfLength = linkAnotPdf.GetNumberOfPages();
-                linkAnotPdf.CopyPagesTo(3, linkPdfLength, targetPdf);
-                linkAnotPdf.CopyPagesTo(1, 2, targetPdf);
-                IList<PdfAnnotation> annotations = GetPdfAnnotations(targetPdf);
-                NUnit.Framework.Assert.AreEqual(1, annotations.Count, "The number of merged annotations are not the same."
-                    );
-                linkAnotPdf.Close();
-                targetPdf.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                    ));
-            }
-            , NUnit.Framework.Throws.InstanceOf<AssertionException>())
-;
+            // TODO DEVSIX-577. Update cmp
+            String outFileName = destinationFolder + "copyPagesLinkAnnotationTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_copyPagesLinkAnnotationTest.pdf";
+            PdfDocument targetPdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument linkAnotPdf = new PdfDocument(new PdfReader(sourceFolder + "pdfLinkAnnotationTest.pdf"));
+            int linkPdfLength = linkAnotPdf.GetNumberOfPages();
+            linkAnotPdf.CopyPagesTo(3, linkPdfLength, targetPdf);
+            linkAnotPdf.CopyPagesTo(1, 2, targetPdf);
+            IList<PdfAnnotation> annotations = GetPdfAnnotations(targetPdf);
+            NUnit.Framework.Assert.AreEqual(0, annotations.Count, "The number of merged annotations are not the same."
+                );
+            linkAnotPdf.Close();
+            targetPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
 
         private IList<PdfAnnotation> GetPdfAnnotations(PdfDocument pdfDoc) {

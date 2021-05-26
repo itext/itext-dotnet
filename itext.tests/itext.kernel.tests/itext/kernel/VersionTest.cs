@@ -53,22 +53,18 @@ namespace iText.Kernel {
 
         [NUnit.Framework.Test]
         public virtual void ParseVersionIncorrectMajorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // the line below is expected to produce an exception
-                String[] parseResults = iText.Kernel.Version.ParseVersionString("a.9.11");
-            }
-            , NUnit.Framework.Throws.InstanceOf<LicenseVersionException>().With.Message.EqualTo(LicenseVersionException.MAJOR_VERSION_IS_NOT_NUMERIC))
-;
+            // the line below is expected to produce an exception
+            Exception e = NUnit.Framework.Assert.Catch(typeof(LicenseVersionException), () => iText.Kernel.Version.ParseVersionString
+                ("a.9.11"));
+            NUnit.Framework.Assert.AreEqual(LicenseVersionException.MAJOR_VERSION_IS_NOT_NUMERIC, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ParseVersionIncorrectMinorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // the line below is expected to produce an exception
-                iText.Kernel.Version.ParseVersionString("1.a.11");
-            }
-            , NUnit.Framework.Throws.InstanceOf<LicenseVersionException>().With.Message.EqualTo(LicenseVersionException.MINOR_VERSION_IS_NOT_NUMERIC))
-;
+            // the line below is expected to produce an exception
+            Exception e = NUnit.Framework.Assert.Catch(typeof(LicenseVersionException), () => iText.Kernel.Version.ParseVersionString
+                ("1.a.11"));
+            NUnit.Framework.Assert.AreEqual(LicenseVersionException.MINOR_VERSION_IS_NOT_NUMERIC, e.Message);
         }
 
         [NUnit.Framework.Test]

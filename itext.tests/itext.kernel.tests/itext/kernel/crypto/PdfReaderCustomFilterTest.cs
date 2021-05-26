@@ -33,12 +33,12 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentCustomFilterStandartTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "customSecurityHandler.pdf"));
-                doc.Close();
+            using (PdfReader reader = new PdfReader(sourceFolder + "customSecurityHandler.pdf")) {
+                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedSecurityHandlerException), () => new PdfDocument
+                    (reader));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(UnsupportedSecurityHandlerException.UnsupportedSecurityHandler
+                    , "/Standart"), e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<UnsupportedSecurityHandlerException>().With.Message.EqualTo(MessageFormatUtil.Format(UnsupportedSecurityHandlerException.UnsupportedSecurityHandler, "/Standart")))
-;
         }
     }
 }

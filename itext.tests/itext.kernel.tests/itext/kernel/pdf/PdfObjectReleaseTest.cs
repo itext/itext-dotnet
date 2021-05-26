@@ -124,11 +124,9 @@ namespace iText.Kernel.Pdf {
                 doc.GetCatalog().Put(PdfName.Outlines, releasedObj);
             }
             finally {
-                NUnit.Framework.Assert.That(() =>  {
-                    doc.Close();
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Cannot write object after it was released." + " In normal situation the object must be read once again before being written."))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => doc.Close());
+                NUnit.Framework.Assert.AreEqual("Cannot write object after it was released." + " In normal situation the object must be read once again before being written."
+                    , e.Message);
             }
         }
 

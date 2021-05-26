@@ -74,19 +74,15 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void InvalidRevokedCrl01() {
-            NUnit.Framework.Assert.That(() =>  {
-                X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "rootRsa.p12", password
-                    )[0];
-                TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-1));
-                String checkCertFileName = certsSrc + "signCertRsa01.p12";
-                X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password)[
-                    0];
-                crlBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-40), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise
-                    );
-                VerifyTest(crlBuilder);
-            }
-            , NUnit.Framework.Throws.InstanceOf<VerificationException>())
-;
+            X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(certsSrc + "rootRsa.p12", password
+                )[0];
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-1));
+            String checkCertFileName = certsSrc + "signCertRsa01.p12";
+            X509Certificate checkCert = (X509Certificate)Pkcs12FileHelper.ReadFirstChain(checkCertFileName, password)[
+                0];
+            crlBuilder.AddCrlEntry(checkCert, DateTimeUtil.GetCurrentUtcTime().AddDays(-40), Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise
+                );
+            NUnit.Framework.Assert.Catch(typeof(VerificationException), () => VerifyTest(crlBuilder));
         }
 
         [NUnit.Framework.Test]

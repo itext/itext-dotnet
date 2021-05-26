@@ -45,15 +45,14 @@ using Org.BouncyCastle.Utilities.Collections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using iText.Test;
+using NUnit.Framework;
 
 namespace iText.Signatures
 {
     class CertificateSupportedCriticalExtensionsTest : ExtendedITextTest
     {
-        [NUnit.Framework.Test]
+        [Test]
         public void SupportedCriticalOIDsTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -67,10 +66,10 @@ namespace iText.Signatures
 
             cert.KeyUsage = new bool[] { true, true };
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void BasicConstraintsSupportedTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -81,10 +80,10 @@ namespace iText.Signatures
 
             cert.SetCriticalExtensions(criticalExtensions);
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void ExtendedKeyUsageWithIdKpTimestampingTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -100,10 +99,10 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void ExtendedKeyUsageWithoutIdKpTimestampingTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -119,10 +118,10 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void IdKpTimestampingWithoutExtendedKeyUsageTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -132,10 +131,10 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void NotSupportedOIDTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
@@ -146,25 +145,23 @@ namespace iText.Signatures
 
             cert.SetCriticalExtensions(criticalExtensions);
 
-            NUnit.Framework.Assert.True(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.True(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void CertificateIsNullTest()
         {
-            NUnit.Framework.Assert.That(() => {
-                SignUtils.HasUnsupportedCriticalExtension(null);
-            }, NUnit.Framework.Throws.TypeOf<ArgumentException>());;
+            Assert.Catch(typeof(ArgumentException), () => SignUtils.HasUnsupportedCriticalExtension(null));
         }
         
-        [NUnit.Framework.Test]
+        [Test]
         public void CertificateHasNoExtensionsTest()
         {
             X509MockCertificate cert = new X509MockCertificate();
             
             cert.SetCriticalExtensions(null);
 
-            NUnit.Framework.Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
         }
     }
 }

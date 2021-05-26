@@ -107,23 +107,21 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAttributeTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-                doc.AddNewPage();
-                ISvgNodeRenderer root = new LineSvgNodeRenderer();
-                IDictionary<String, String> lineProperties = new Dictionary<String, String>();
-                lineProperties.Put("x1", "1");
-                lineProperties.Put("y1", "800");
-                lineProperties.Put("x2", "notAnum");
-                lineProperties.Put("y2", "alsoNotANum");
-                root.SetAttributesAndStyles(lineProperties);
-                SvgDrawContext context = new SvgDrawContext(null, null);
-                PdfCanvas cv = new PdfCanvas(doc, 1);
-                context.PushCanvas(cv);
-                root.Draw(context);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "notAnum")))
-;
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.AddNewPage();
+            ISvgNodeRenderer root = new LineSvgNodeRenderer();
+            IDictionary<String, String> lineProperties = new Dictionary<String, String>();
+            lineProperties.Put("x1", "1");
+            lineProperties.Put("y1", "800");
+            lineProperties.Put("x2", "notAnum");
+            lineProperties.Put("y2", "alsoNotANum");
+            root.SetAttributesAndStyles(lineProperties);
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            PdfCanvas cv = new PdfCanvas(doc, 1);
+            context.PushCanvas(cv);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => root.Draw(context));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "notAnum"), e.Message
+                );
         }
 
         [NUnit.Framework.Test]

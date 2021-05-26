@@ -197,18 +197,17 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void SignPdf2CertificationAfterApproval() {
-            NUnit.Framework.Assert.That(() =>  {
-                String srcFile = "approvalSignedDocPdf2.pdf";
-                String file = "signedPdf2CertificationAfterApproval.pdf";
-                String src = sourceFolder + srcFile;
-                String dest = destinationFolder + file;
-                Rectangle rect = new Rectangle(30, 50, 200, 100);
-                String fieldName = "Signature2";
-                Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1"
-                    , "TestCity", rect, false, true, PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs))
-;
+            String srcFile = "approvalSignedDocPdf2.pdf";
+            String file = "signedPdf2CertificationAfterApproval.pdf";
+            String src = sourceFolder + srcFile;
+            String dest = destinationFolder + file;
+            Rectangle rect = new Rectangle(30, 50, 200, 100);
+            String fieldName = "Signature2";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Sign(src, fieldName, dest, chain, pk
+                , DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", rect, false, true, 
+                PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED, null));
+            NUnit.Framework.Assert.AreEqual(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs, e
+                .Message);
         }
 
         [NUnit.Framework.Test]
