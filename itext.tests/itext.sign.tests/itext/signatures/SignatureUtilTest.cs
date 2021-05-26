@@ -185,8 +185,7 @@ namespace iText.Signatures {
             String inPdf = sourceFolder + "byteRangeAndContentsEntries.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
-            iText.Test.AssertUtil.AssertThrows(typeof(PdfException), () => signatureUtil.ReadSignatureData("Signature1"
-                ));
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => signatureUtil.ReadSignatureData("Signature1"));
         }
 
         [NUnit.Framework.Test]
