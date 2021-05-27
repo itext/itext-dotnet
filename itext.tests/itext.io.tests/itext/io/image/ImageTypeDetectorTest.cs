@@ -59,13 +59,8 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void TestNullUrl() {
-            NUnit.Framework.Assert.That(() =>  {
-                ImageTypeDetector.DetectImageType(UrlUtil.ToURL("not existing path"));
-                NUnit.Framework.Assert.Fail("This line is not expected to be triggered: " + "an exception should have been thrown"
-                    );
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>())
-;
+            Uri url = UrlUtil.ToURL("not existing path");
+            NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => ImageTypeDetector.DetectImageType(url));
         }
 
         [NUnit.Framework.Test]
@@ -100,17 +95,11 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void TestStreamClosed() {
-            NUnit.Framework.Assert.That(() =>  {
-                // A common exception is expected instead of com.itextpdf.io.IOException, because in .NET
-                // the thrown exception is different
-                Stream stream = new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read);
-                stream.Dispose();
-                ImageTypeDetector.DetectImageType(stream);
-                NUnit.Framework.Assert.Fail("This line is not expected to be triggered: " + "an exception should have been thrown"
-                    );
-            }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            Stream stream = new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read);
+            stream.Dispose();
+            // A common exception is expected instead of com.itextpdf.io.IOException, because in .NET
+            // the thrown exception is different
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => ImageTypeDetector.DetectImageType(stream));
         }
 
         [NUnit.Framework.Test]

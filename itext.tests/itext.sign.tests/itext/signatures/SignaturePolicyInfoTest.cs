@@ -82,56 +82,44 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void NullIdentifierIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(null, POLICY_HASH, POLICY_DIGEST_ALGORITHM, POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy identifier cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo(null, 
+                POLICY_HASH, POLICY_DIGEST_ALGORITHM, POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy identifier cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyIdentifierIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo("", POLICY_HASH, POLICY_DIGEST_ALGORITHM, POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy identifier cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo("", POLICY_HASH
+                , POLICY_DIGEST_ALGORITHM, POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy identifier cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NullPolicyHashIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(POLICY_IDENTIFIER, (byte[])null, POLICY_DIGEST_ALGORITHM, POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy hash cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo(POLICY_IDENTIFIER
+                , (byte[])null, POLICY_DIGEST_ALGORITHM, POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy hash cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NullEncodedPolicyHashIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(POLICY_IDENTIFIER, (String)null, POLICY_DIGEST_ALGORITHM, POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy hash cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo(POLICY_IDENTIFIER
+                , (String)null, POLICY_DIGEST_ALGORITHM, POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy hash cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NullDigestAlgorithmIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, null, POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy digest algorithm cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo(POLICY_IDENTIFIER
+                , POLICY_HASH, null, POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy digest algorithm cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyDigestAlgorithmIsNotAllowedTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, "", POLICY_URI);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Policy digest algorithm cannot be null"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SignaturePolicyInfo(POLICY_IDENTIFIER
+                , POLICY_HASH, "", POLICY_URI));
+            NUnit.Framework.Assert.AreEqual("Policy digest algorithm cannot be null", e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -156,12 +144,11 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void ToSignaturePolicyIdentifierUnexpectedAlgorithmTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, "SHA-12345", POLICY_URI).ToSignaturePolicyIdentifier
-                    ();
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("Invalid policy hash algorithm"))
-;
+            SignaturePolicyInfo info = new SignaturePolicyInfo(POLICY_IDENTIFIER, POLICY_HASH, "SHA-12345", POLICY_URI
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => info.ToSignaturePolicyIdentifier
+                ());
+            NUnit.Framework.Assert.AreEqual("Invalid policy hash algorithm", e.Message);
         }
     }
 }

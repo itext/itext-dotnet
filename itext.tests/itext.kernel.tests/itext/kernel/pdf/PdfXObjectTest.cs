@@ -255,12 +255,10 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CalculateProportionallyFitRectangleWithWidthForCustomXObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
-                PdfXObject.CalculateProportionallyFitRectangleWithWidth(pdfXObject, 0, 0, 20);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
-;
+            PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => PdfXObject.CalculateProportionallyFitRectangleWithWidth
+                (pdfXObject, 0, 0, 20));
+            NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -290,12 +288,10 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CalculateProportionallyFitRectangleWithHeightForCustomXObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
-                PdfXObject.CalculateProportionallyFitRectangleWithHeight(pdfXObject, 0, 0, 20);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
-;
+            PdfXObject pdfXObject = new PdfXObjectTest.CustomPdfXObject(new PdfStream());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => PdfXObject.CalculateProportionallyFitRectangleWithHeight
+                (pdfXObject, 0, 0, 20));
+            NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
         private class CustomPdfXObject : PdfXObject {

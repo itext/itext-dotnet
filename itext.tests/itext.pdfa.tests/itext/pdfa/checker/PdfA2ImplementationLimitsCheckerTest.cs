@@ -59,36 +59,32 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongStringTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
-                int testLength = maxAllowedLength + 1;
-                NUnit.Framework.Assert.AreEqual(testLength, 32768);
-                PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
-                // An exception should be thrown as provided String is longer then
-                // it is allowed per specification
-                pdfA2Checker.CheckPdfObject(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
+            int testLength = maxAllowedLength + 1;
+            NUnit.Framework.Assert.AreEqual(testLength, 32768);
+            PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
+            // An exception should be thrown as provided String is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
+                (longString));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                pdfA2Checker.SetFullCheckMode(true);
-                int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
-                int testLength = maxAllowedLength + 1;
-                NUnit.Framework.Assert.AreEqual(testLength, 32768);
-                PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
-                String newContentString = PdfACheckerTestUtils.GetStreamWithValue(longString);
-                byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
-                PdfStream stream = new PdfStream(newContent);
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                pdfA2Checker.CheckContentStream(stream);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            pdfA2Checker.SetFullCheckMode(true);
+            int maxAllowedLength = pdfA2Checker.GetMaxStringLength();
+            int testLength = maxAllowedLength + 1;
+            NUnit.Framework.Assert.AreEqual(testLength, 32768);
+            PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
+            String newContentString = PdfACheckerTestUtils.GetStreamWithValue(longString);
+            byte[] newContent = newContentString.GetBytes(System.Text.Encoding.UTF8);
+            PdfStream stream = new PdfStream(newContent);
+            // An exception should be thrown as content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckContentStream
+                (stream));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -113,23 +109,20 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLargeRealTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfNumber largeNumber = new PdfNumber(pdfA2Checker.GetMaxRealValue());
-                // TODO DEVSIX-4182
-                // An exception is thrown as any number greater then 32767 is considered as Integer
-                pdfA2Checker.CheckPdfObject(largeNumber);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
-;
+            PdfNumber largeNumber = new PdfNumber(pdfA2Checker.GetMaxRealValue());
+            // TODO DEVSIX-4182
+            // An exception is thrown as any number greater then 32767 is considered as Integer
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckPdfObject
+                (largeNumber));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceWithMoreThan32Components() {
-            NUnit.Framework.Assert.That(() =>  {
-                CheckColorspace(BuildDeviceNColorspace(34));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckColorspace(BuildDeviceNColorspace
+                (34)));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

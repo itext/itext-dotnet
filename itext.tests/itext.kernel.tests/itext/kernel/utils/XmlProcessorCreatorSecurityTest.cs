@@ -107,8 +107,8 @@ namespace iText.Kernel.Utils
             XmlDocument document = new XmlDocument();
             using (Stream inputStream = new MemoryStream(XML_WITH_DTD.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() => { document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)); }
-                    , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()));
+                Exception e = Assert.Catch(typeof(XmlException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)));
+                Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -118,11 +118,8 @@ namespace iText.Kernel.Utils
             XmlDocument document = new XmlDocument();
             using (Stream inputStream = new MemoryStream(XML_WITH_DTD.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() =>
-                    {
-                        document.Load(XmlProcessorCreator.CreateSafeXmlReader(new StreamReader(inputStream)));
-                    }
-                    , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()));
+                Exception e = Assert.Catch(typeof(XmlException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(new StreamReader(inputStream))));
+                Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -132,8 +129,8 @@ namespace iText.Kernel.Utils
             XmlDocument document = new XmlDocument();
             using (Stream inputStream = new MemoryStream(XML_WITH_EMPTY_DTD.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() => { document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)); }
-                    , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()));
+                Exception e = Assert.Catch(typeof(XmlException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)));
+                Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -143,8 +140,8 @@ namespace iText.Kernel.Utils
             XmlDocument document = new XmlDocument();
             using (Stream inputStream = new MemoryStream(XML_WITH_INTERNAL_ENTITY.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() => { document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)); }
-                    , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()));
+                Exception e = Assert.Catch(typeof(XmlException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)));
+                Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -154,8 +151,8 @@ namespace iText.Kernel.Utils
             XmlDocument document = new XmlDocument();
             using (Stream inputStream = new MemoryStream(XML_WITH_XXE.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() => { document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)); }
-                    , NUnit.Framework.Throws.InstanceOf<XmlException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()));
+                Exception e = Assert.Catch(typeof(XmlException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)));
+                Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -166,8 +163,8 @@ namespace iText.Kernel.Utils
             XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
             using (Stream inputStream = new MemoryStream(XML_WITH_XXE.GetBytes(Encoding.UTF8)))
             {
-                NUnit.Framework.Assert.That(() => { document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)); }
-                    , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Test message"));
+                Exception e = Assert.Catch(typeof(PdfException), () => document.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream)));
+                Assert.AreEqual("Test message", e.Message);
             }
         }
     }

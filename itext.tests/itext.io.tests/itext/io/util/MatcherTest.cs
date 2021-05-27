@@ -82,11 +82,7 @@ namespace iText.IO.Util {
         [NUnit.Framework.Test]
         public virtual void StartBeforeSearchTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Start();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Start());
         }
 
         [NUnit.Framework.Test]
@@ -94,21 +90,13 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             while (matcher.Find()) {
             }
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Start();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Start());
         }
 
         [NUnit.Framework.Test]
         public virtual void EndBeforeSearchTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.End();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.End());
         }
 
         [NUnit.Framework.Test]
@@ -116,21 +104,13 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             while (matcher.Find()) {
             }
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.End();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.End());
         }
 
         [NUnit.Framework.Test]
         public virtual void GroupBeforeSearchTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group());
         }
 
         [NUnit.Framework.Test]
@@ -138,21 +118,13 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             while (matcher.Find()) {
             }
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group());
         }
 
         [NUnit.Framework.Test]
         public virtual void GroupWithIndexBeforeSearchTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group(0));
         }
 
         [NUnit.Framework.Test]
@@ -160,54 +132,34 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             while (matcher.Find()) {
             }
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group(0));
         }
 
         [NUnit.Framework.Test]
         public virtual void GroupNegativeIndexTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             NUnit.Framework.Assert.IsTrue(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(-1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Group(-1));
         }
 
         [NUnit.Framework.Test]
         public virtual void GroupIndexGraterThanGroupCountTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
             NUnit.Framework.Assert.IsTrue(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(3);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Group(3));
         }
 
         [NUnit.Framework.Test]
         public virtual void FindNegativeIndexTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "aabb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(-1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(-1));
         }
 
         [NUnit.Framework.Test]
         public virtual void FindIndexGraterThanInputLengthTest() {
             String input = "aabb";
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, input);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(input.Length + 1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(input.Length + 1));
         }
 
         [NUnit.Framework.Test]
@@ -273,11 +225,7 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.IsTrue(matcher.Find());
             NUnit.Framework.Assert.AreEqual("123", matcher.Group(0));
             NUnit.Framework.Assert.AreEqual("123", matcher.Group(1));
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(2);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Group(2));
         }
 
         [NUnit.Framework.Test]
@@ -286,11 +234,7 @@ namespace iText.IO.Util {
             String input = "abc";
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
             NUnit.Framework.Assert.IsFalse(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group(0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group(0));
         }
 
         [NUnit.Framework.Test]
@@ -323,11 +267,7 @@ namespace iText.IO.Util {
             String input = "abcde";
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
             NUnit.Framework.Assert.IsFalse(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Start();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Start());
         }
 
         [NUnit.Framework.Test]
@@ -336,11 +276,7 @@ namespace iText.IO.Util {
             String input = "abcde";
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
             NUnit.Framework.Assert.IsFalse(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.End();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.End());
         }
 
         [NUnit.Framework.Test]
@@ -395,11 +331,7 @@ namespace iText.IO.Util {
             String input = "cab";
             int startIndex = 4;
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(startIndex);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(startIndex));
         }
 
         [NUnit.Framework.Test]
@@ -409,11 +341,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
             NUnit.Framework.Assert.IsTrue(matcher.Find());
             int startIndex = 4;
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(startIndex);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(startIndex));
         }
 
         [NUnit.Framework.Test]
@@ -422,11 +350,7 @@ namespace iText.IO.Util {
             String input = "cab";
             int startIndex = -1;
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(startIndex);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(startIndex));
         }
 
         [NUnit.Framework.Test]
@@ -436,11 +360,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(iText.IO.Util.StringUtil.RegexCompile(testPattern), input);
             NUnit.Framework.Assert.IsTrue(matcher.Find());
             int startIndex = -1;
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Find(startIndex);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Find(startIndex));
         }
 
         [NUnit.Framework.Test]
@@ -568,51 +488,31 @@ namespace iText.IO.Util {
         [NUnit.Framework.Test]
         public virtual void NegativeStartOfRegionTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Region(-1, 10);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Region(-1, 10));
         }
 
         [NUnit.Framework.Test]
         public virtual void TooLargeStartOfRegionTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Region(24, 24);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Region(24, 24));
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeEndOfRegionTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Region(1, -1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Region(1, -1));
         }
 
         [NUnit.Framework.Test]
         public virtual void TooLargeEndOfRegionTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Region(1, 24);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Region(1, 24));
         }
 
         [NUnit.Framework.Test]
         public virtual void EndGreaterThenStartRegionTest() {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Region(10, 9);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => matcher.Region(10, 9));
         }
 
         [NUnit.Framework.Test]
@@ -674,11 +574,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
             matcher.Region(6, 13);
             NUnit.Framework.Assert.IsFalse(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Start();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Start());
         }
 
         [NUnit.Framework.Test]
@@ -686,11 +582,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
             matcher.Region(6, 13);
             NUnit.Framework.Assert.IsFalse(matcher.Find());
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.End();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.End());
         }
 
         [NUnit.Framework.Test]
@@ -740,11 +632,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
             matcher.Find();
             matcher.Region(6, 13);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Start();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Start());
         }
 
         [NUnit.Framework.Test]
@@ -752,11 +640,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
             matcher.Find();
             matcher.Region(6, 13);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.End();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.End());
         }
 
         [NUnit.Framework.Test]
@@ -764,11 +648,7 @@ namespace iText.IO.Util {
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, "abbbbbbbbbbbbbbbbbbbbb");
             matcher.Find();
             matcher.Region(6, 13);
-            NUnit.Framework.Assert.That(() =>  {
-                matcher.Group();
-            }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => matcher.Group());
         }
     }
 }

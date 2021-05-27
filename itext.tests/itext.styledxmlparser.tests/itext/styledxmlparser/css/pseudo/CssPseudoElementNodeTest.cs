@@ -60,16 +60,12 @@ namespace iText.StyledXmlParser.Css.Pseudo {
 
         [NUnit.Framework.Test]
         public virtual void AddAdditionalHtmlStylesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                CssPseudoElementNode pseudoElementNode = new CssPseudoElementNode(null, "after");
-                IDictionary<String, String> styles = new Dictionary<String, String>();
-                styles.Put("font-size", "12px");
-                styles.Put("color", "red");
-                pseudoElementNode.AddAdditionalHtmlStyles(styles);
-                NUnit.Framework.Assert.Fail();
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>())
-;
+            CssPseudoElementNode pseudoElementNode = new CssPseudoElementNode(null, "after");
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            styles.Put("font-size", "12px");
+            styles.Put("color", "red");
+            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => pseudoElementNode.AddAdditionalHtmlStyles
+                (styles));
         }
 
         [NUnit.Framework.Test]
@@ -80,13 +76,10 @@ namespace iText.StyledXmlParser.Css.Pseudo {
 
         [NUnit.Framework.Test]
         public virtual void AttributesStubSetAttributeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                CssPseudoElementNode pseudoElementNode = new CssPseudoElementNode(null, "after");
-                pseudoElementNode.GetAttributes().SetAttribute("content", "iText");
-                NUnit.Framework.Assert.Fail();
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>())
-;
+            CssPseudoElementNode pseudoElementNode = new CssPseudoElementNode(null, "after");
+            IAttributes attributes = pseudoElementNode.GetAttributes();
+            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => attributes.SetAttribute("content", "iText"
+                ));
         }
 
         [NUnit.Framework.Test]

@@ -512,11 +512,8 @@ namespace iText.Kernel.Font {
         [NUnit.Framework.Test]
         public virtual void GetEmptyPdfStreamTest() {
             PdfFontUnitTest.TestFont font = new PdfFontUnitTest.TestFont();
-            NUnit.Framework.Assert.That(() =>  {
-                font.GetPdfFontStream(null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.FontEmbeddingIssue))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => font.GetPdfFontStream(null, null));
+            NUnit.Framework.Assert.AreEqual(PdfException.FontEmbeddingIssue, e.Message);
         }
 
         [NUnit.Framework.Test]

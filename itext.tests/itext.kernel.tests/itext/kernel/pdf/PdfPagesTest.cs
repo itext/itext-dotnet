@@ -192,11 +192,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.RemovePage(page);
-            NUnit.Framework.Assert.That(() =>  {
-                pdfDoc.AddPage(1, page);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.FlushedPageCannotBeAddedOrInserted))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(1, page));
+            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -207,11 +204,8 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.RemovePage(page);
-            NUnit.Framework.Assert.That(() =>  {
-                pdfDoc.AddPage(page);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.FlushedPageCannotBeAddedOrInserted))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.AddPage(page));
+            NUnit.Framework.Assert.AreEqual(PdfException.FlushedPageCannotBeAddedOrInserted, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -242,11 +236,8 @@ namespace iText.Kernel.Pdf {
                 pdfDocument.SetTagged();
                 pdfDocument.AddNewPage();
                 pdfDocument.GetPage(1).Flush();
-                NUnit.Framework.Assert.That(() =>  {
-                    pdfDocument.RemovePage(1);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.RemovePage(1));
+                NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
             }
         }
 
@@ -256,11 +247,8 @@ namespace iText.Kernel.Pdf {
                 pdfDocument.GetCatalog().Put(PdfName.AcroForm, new PdfDictionary());
                 pdfDocument.AddNewPage();
                 pdfDocument.GetPage(1).Flush();
-                NUnit.Framework.Assert.That(() =>  {
-                    pdfDocument.RemovePage(1);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.RemovePage(1));
+                NUnit.Framework.Assert.AreEqual(PdfException.FLUSHED_PAGE_CANNOT_BE_REMOVED, e.Message);
             }
         }
 
@@ -476,11 +464,9 @@ namespace iText.Kernel.Pdf {
             PdfReader reader = new PdfReader(sourceFolder + "helloWorldMediaboxNotEnoughArguments.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfPage pageOne = pdfDoc.GetPage(1);
-            NUnit.Framework.Assert.That(() =>  {
-                pageOne.GetPageSize();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pageOne.GetPageSize());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.WRONGMEDIABOXSIZETOOFEWARGUMENTS, 3)
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

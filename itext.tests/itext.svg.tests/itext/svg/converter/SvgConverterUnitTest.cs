@@ -288,11 +288,9 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void CheckNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgConverter.DrawOnDocument("test", null, 1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => SvgConverter.DrawOnDocument
+                ("test", null, 1));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.PARAMETER_CANNOT_BE_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]

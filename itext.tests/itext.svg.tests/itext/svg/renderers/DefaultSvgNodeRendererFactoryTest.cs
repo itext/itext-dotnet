@@ -71,60 +71,40 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void ProtectedConstructorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                    (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
-                IElementNode tag = new JsoupElementNode(protectedElement);
-                fact.CreateSvgNodeRendererForTag(tag, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
+            IElementNode tag = new JsoupElementNode(protectedElement);
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag(tag, null
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void ProtectedConstructorInnerTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                    (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
-                IElementNode tag = new JsoupElementNode(protectedElement);
-                try {
-                    fact.CreateSvgNodeRendererForTag(tag, null);
-                }
-                catch (SvgProcessingException spe) {
-                    throw (MissingMethodException)spe.InnerException;
-                }
-            }
-            , NUnit.Framework.Throws.InstanceOf<MissingMethodException>())
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("protected"), "");
+            IElementNode tag = new JsoupElementNode(protectedElement);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag
+                (tag, null));
+            NUnit.Framework.Assert.IsTrue(e.InnerException is MissingMethodException);
         }
 
         [NUnit.Framework.Test]
         public virtual void ArgumentedConstructorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                    (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
-                IElementNode tag = new JsoupElementNode(protectedElement);
-                NUnit.Framework.Assert.IsNull(fact.CreateSvgNodeRendererForTag(tag, null));
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
+            IElementNode tag = new JsoupElementNode(protectedElement);
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => NUnit.Framework.Assert.IsNull(fact.CreateSvgNodeRendererForTag
+                (tag, null)));
         }
 
         [NUnit.Framework.Test]
         public virtual void ArgumentedConstructorInnerTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
-                    (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
-                IElementNode tag = new JsoupElementNode(protectedElement);
-                try {
-                    fact.CreateSvgNodeRendererForTag(tag, null);
-                }
-                catch (SvgProcessingException spe) {
-                    throw (MissingMethodException)spe.InnerException;
-                }
-            }
-            , NUnit.Framework.Throws.InstanceOf<MissingMethodException>())
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element protectedElement = new iText.StyledXmlParser.Jsoup.Nodes.Element
+                (iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("argumented"), "");
+            IElementNode tag = new JsoupElementNode(protectedElement);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => fact.CreateSvgNodeRendererForTag
+                (tag, null));
+            NUnit.Framework.Assert.IsTrue(e.InnerException is MissingMethodException);
         }
 
         [NUnit.Framework.Test]
@@ -184,11 +164,8 @@ namespace iText.Svg.Renderers {
         /// <summary>Tests that exception is already thrown in constructor</summary>
         [NUnit.Framework.Test]
         public virtual void FaultyMapperTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                fact = new DefaultSvgNodeRendererFactory(new DefaultSvgNodeRendererFactoryTest.FaultyTestMapper());
-            }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => new DefaultSvgNodeRendererFactory(new DefaultSvgNodeRendererFactoryTest.FaultyTestMapper
+                ()));
         }
     }
 }

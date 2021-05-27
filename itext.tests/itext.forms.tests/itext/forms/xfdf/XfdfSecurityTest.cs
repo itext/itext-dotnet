@@ -57,11 +57,9 @@ namespace iText.Forms.Xfdf {
         public virtual void XxeVulnerabilityXfdfTest() {
             XmlProcessorCreator.SetXmlParserFactory(new DefaultSafeXmlParserFactory());
             using (Stream inputStream = new MemoryStream(XFDF_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    XfdfFileUtils.CreateXfdfDocumentFromStream(inputStream);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage()))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => XfdfFileUtils.CreateXfdfDocumentFromStream
+                    (inputStream));
+                NUnit.Framework.Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
             }
         }
 
@@ -69,11 +67,9 @@ namespace iText.Forms.Xfdf {
         public virtual void XxeVulnerabilityXfdfCustomXmlParserTest() {
             XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
             using (Stream inputStream = new MemoryStream(XFDF_WITH_XXE.GetBytes(System.Text.Encoding.UTF8))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    XfdfFileUtils.CreateXfdfDocumentFromStream(inputStream);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Test message"))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => XfdfFileUtils.CreateXfdfDocumentFromStream
+                    (inputStream));
+                NUnit.Framework.Assert.AreEqual("Test message", e.Message);
             }
         }
     }

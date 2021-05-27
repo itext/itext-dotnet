@@ -97,28 +97,18 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestNotEnoughParameterSet() {
-            NUnit.Framework.Assert.That(() =>  {
-                EllipticalCurveTo absoluteElliptic = new EllipticalCurveTo();
-                // String array length = 6
-                absoluteElliptic.SetCoordinates(new String[] { "40", "0", "0", "0", "20", "20" }, new Point());
-                String[] result = absoluteElliptic.GetCoordinates();
-                NUnit.Framework.Assert.AreEqual(0, result.Length);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            EllipticalCurveTo absoluteElliptic = new EllipticalCurveTo();
+            // String array length = 6
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => absoluteElliptic.SetCoordinates(new String[]
+                 { "40", "0", "0", "0", "20", "20" }, new Point()));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestNoParameterSet() {
-            NUnit.Framework.Assert.That(() =>  {
-                EllipticalCurveTo absoluteElliptic = new EllipticalCurveTo();
-                // String array length = 0
-                absoluteElliptic.SetCoordinates(new String[] {  }, new Point());
-                String[] result = absoluteElliptic.GetCoordinates();
-                NUnit.Framework.Assert.AreEqual(0, result.Length);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            EllipticalCurveTo absoluteElliptic = new EllipticalCurveTo();
+            // String array length = 0
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => absoluteElliptic.SetCoordinates(new String[]
+                 {  }, new Point()));
         }
 
         // rotate tests

@@ -113,50 +113,42 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongStringTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as provided String is longer then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as provided String is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (longString));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongNameTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfName longName = BuildLongName();
-                // An exception should be thrown as provided name is longer then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(longName);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
-;
+            PdfName longName = BuildLongName();
+            // An exception should be thrown as provided name is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (longName));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void IndependentLargeIntegerTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
-                // An exception should be thrown as provided integer is larger then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(largeNumber);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
-;
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
+            // An exception should be thrown as provided integer is larger then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (largeNumber));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void IndependentLargeNegativeIntegerTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
-                // An exception should be thrown as provided integer is smaller then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(largeNumber);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
-;
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
+            // An exception should be thrown as provided integer is smaller then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (largeNumber));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -169,126 +161,108 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray longArray = BuildLongArray();
-                // An exception should be thrown as provided array has more elements then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(longArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED))
-;
+            PdfArray longArray = BuildLongArray();
+            // An exception should be thrown as provided array has more elements then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (longArray));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongDictionaryTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary longDictionary = BuildLongDictionary();
-                // An exception should be thrown as provided dictionary has more entries
-                // then it is allowed per specification
-                pdfA1Checker.CheckPdfObject(longDictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED))
-;
+            PdfDictionary longDictionary = BuildLongDictionary();
+            // An exception should be thrown as provided dictionary has more entries
+            // then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (longDictionary));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void IndependentStreamWithLongDictionaryTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfStream longStream = BuildStreamWithLongDictionary();
-                // An exception should be thrown as dictionary of the stream has more entries
-                // then it is allowed per specification
-                pdfA1Checker.CheckPdfObject(longStream);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED))
-;
+            PdfStream longStream = BuildStreamWithLongDictionary();
+            // An exception should be thrown as dictionary of the stream has more entries
+            // then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (longStream));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInDictionaryTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as dictionary contains value which is longer then
-                // it is allowed per specification
-                CheckInDictionary(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as dictionary contains value which is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInDictionary(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongNameAsKeyInDictionaryTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfName longName = BuildLongName();
-                PdfDictionary dict = new PdfDictionary();
-                dict.Put(new PdfName("Key1"), new PdfString("value1"));
-                dict.Put(new PdfName("Key2"), new PdfString("value2"));
-                dict.Put(longName, new PdfString("value3"));
-                // An exception should be thrown as dictionary contains key which is longer then
-                // it is allowed per specification
-                pdfA1Checker.CheckPdfObject(dict);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
-;
+            PdfName longName = BuildLongName();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("Key1"), new PdfString("value1"));
+            dict.Put(new PdfName("Key2"), new PdfString("value2"));
+            dict.Put(longName, new PdfString("value3"));
+            // An exception should be thrown as dictionary contains key which is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfObject
+                (dict));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInArrayTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as one element is longer then
-                // it is allowed per specification
-                CheckInArray(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as one element is longer then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInArray(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInContentStream(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongNameInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfName longName = BuildLongName();
-                // An exception should be thrown as content stream has a name which
-                // is longer then it is allowed per specification
-                CheckInContentStream(longName);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
-;
+            PdfName longName = BuildLongName();
+            // An exception should be thrown as content stream has a name which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longName
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LargeIntegerInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
-                // An exception should be thrown as provided integer is larger then
-                // it is allowed per specification
-                CheckInContentStream(largeNumber);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
-;
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMaxIntegerValue() + 1L);
+            // An exception should be thrown as provided integer is larger then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(largeNumber
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LargeNegativeIntegerInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
-                // An exception should be thrown as provided integer is smaller then
-                // it is allowed per specification
-                CheckInContentStream(largeNumber);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE))
-;
+            PdfNumber largeNumber = new PdfNumber(pdfA1Checker.GetMinIntegerValue() - 1L);
+            // An exception should be thrown as provided integer is smaller then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(largeNumber
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.INTEGER_NUMBER_IS_OUT_OF_RANGE, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -301,26 +275,23 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void LongArrayInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray longArray = BuildLongArray();
-                // An exception should be thrown as provided array has more elements then
-                // it is allowed per specification
-                CheckInContentStream(longArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED))
-;
+            PdfArray longArray = BuildLongArray();
+            // An exception should be thrown as provided array has more elements then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longArray
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongDictionaryInContentStream() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary longDictionary = BuildLongDictionary();
-                // An exception should be thrown as provided dictionary has more entries
-                // then it is allowed per specification
-                CheckInContentStream(longDictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED))
-;
+            PdfDictionary longDictionary = BuildLongDictionary();
+            // An exception should be thrown as provided dictionary has more entries
+            // then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(longDictionary
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -348,102 +319,87 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void LongStringInArrayInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInArrayInContentStream(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInArrayInContentStream
+                (longString));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInDictionaryInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInDictionaryInContentStream(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInDictionaryInContentStream
+                (longString));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongNameAsKeyInDictionaryInContentStreamTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfName longName = BuildLongName();
-                PdfDictionary dict = new PdfDictionary();
-                dict.Put(new PdfName("Key1"), new PdfString("value1"));
-                dict.Put(new PdfName("Key2"), new PdfString("value2"));
-                dict.Put(longName, new PdfString("value3"));
-                // An exception should be thrown as content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInContentStream(dict);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_NAME_IS_TOO_LONG))
-;
+            PdfName longName = BuildLongName();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(new PdfName("Key1"), new PdfString("value1"));
+            dict.Put(new PdfName("Key2"), new PdfString("value2"));
+            dict.Put(longName, new PdfString("value3"));
+            // An exception should be thrown as content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInContentStream(dict
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_NAME_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInComplexStructureTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as there is a string element which
-                // doesn't match the limitations provided in specification
-                CheckInComplexStructure(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as there is a string element which
+            // doesn't match the limitations provided in specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
+                (longString));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongArrayInComplexStructureTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfArray longArray = BuildLongArray();
-                // An exception should be thrown as provided array has more elements then
-                // it is allowed per specification
-                CheckInComplexStructure(longArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED))
-;
+            PdfArray longArray = BuildLongArray();
+            // An exception should be thrown as provided array has more elements then
+            // it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
+                (longArray));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_ARRAY_CAPACITY_IS_EXCEEDED, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongDictionaryInComplexStructureTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary longDictionary = BuildLongDictionary();
-                // An exception should be thrown as provided dictionary has more entries
-                // then it is allowed per specification
-                CheckInComplexStructure(longDictionary);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED))
-;
+            PdfDictionary longDictionary = BuildLongDictionary();
+            // An exception should be thrown as provided dictionary has more entries
+            // then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInComplexStructure
+                (longDictionary));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_DICTIONARY_CAPACITY_IS_EXCEEDED, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInPdfFormXObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as form xobject content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInFormXObject(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as form xobject content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInFormXObject(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongStringInTilingPatternTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as tiling pattern's content stream has a string which
-                // is longer then it is allowed per specification
-                CheckInTilingPattern(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as tiling pattern's content stream has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInTilingPattern(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -456,23 +412,20 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void LongStringInType3FontTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfString longString = BuildLongString();
-                // An exception should be thrown as content stream of type3 font has a string which
-                // is longer then it is allowed per specification
-                CheckInType3Font(longString);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
+            PdfString longString = BuildLongString();
+            // An exception should be thrown as content stream of type3 font has a string which
+            // is longer then it is allowed per specification
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckInType3Font(longString
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceNColorspaceWithMoreThan8Components() {
-            NUnit.Framework.Assert.That(() =>  {
-                CheckColorspace(BuildDeviceNColorspace(10));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CheckColorspace(BuildDeviceNColorspace
+                (10)));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -85,11 +85,9 @@ namespace iText.Forms.Xfa {
             String inFileName = SOURCE_FOLDER + "xfaExternalFile.pdf";
             XmlProcessorCreator.SetXmlParserFactory(new SecurityTestXmlParserFactory());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFileName), new PdfWriter(new MemoryStream()))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    PdfAcroForm.GetAcroForm(pdfDoc, true);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(ExceptionTestUtil.GetXxeTestMessage()))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfAcroForm.GetAcroForm(pdfDoc, true
+                    ));
+                NUnit.Framework.Assert.AreEqual(ExceptionTestUtil.GetXxeTestMessage(), e.Message);
             }
         }
 
@@ -97,22 +95,16 @@ namespace iText.Forms.Xfa {
         public virtual void XfaExternalFileXfaFormTest() {
             String inFileName = SOURCE_FOLDER + "xfaExternalFile.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFileName))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    new XfaForm(pdfDoc);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new XfaForm(pdfDoc));
+                NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void XfaWithDtdXfaFormTest() {
             using (Stream inputStream = new MemoryStream(XFA_WITH_DTD_XML.GetBytes(System.Text.Encoding.UTF8))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    new XfaForm(inputStream);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new XfaForm(inputStream));
+                NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }
 
@@ -120,22 +112,18 @@ namespace iText.Forms.Xfa {
         public virtual void FillXfaFormTest() {
             using (Stream inputStream = new MemoryStream(XFA_WITH_DTD_XML.GetBytes(System.Text.Encoding.UTF8))) {
                 XfaForm form = new XfaForm();
-                NUnit.Framework.Assert.That(() =>  {
-                    form.FillXfaForm(inputStream, true);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => form.FillXfaForm(inputStream, true)
+                    );
+                NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }
 
         private void XfaSecurityExceptionTest(String inputFileName) {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(new MemoryStream()
                 ))) {
-                NUnit.Framework.Assert.That(() =>  {
-                    PdfAcroForm.GetAcroForm(pdfDoc, true);
-                }
-                , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(DTD_EXCEPTION_MESSAGE))
-;
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfAcroForm.GetAcroForm(pdfDoc, true
+                    ));
+                NUnit.Framework.Assert.AreEqual(DTD_EXCEPTION_MESSAGE, e.Message);
             }
         }
     }

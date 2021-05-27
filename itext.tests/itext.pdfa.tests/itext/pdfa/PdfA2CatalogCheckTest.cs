@@ -92,28 +92,26 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void CatalogCheck04() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.AddNewPage();
-                PdfDictionary ocProperties = new PdfDictionary();
-                PdfDictionary d = new PdfDictionary();
-                PdfArray configs = new PdfArray();
-                PdfDictionary config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName1"));
-                configs.Add(config);
-                config = new PdfDictionary();
-                config.Put(PdfName.Name, new PdfString("CustomName2"));
-                configs.Add(config);
-                ocProperties.Put(PdfName.D, d);
-                ocProperties.Put(PdfName.Configs, configs);
-                doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            doc.AddNewPage();
+            PdfDictionary ocProperties = new PdfDictionary();
+            PdfDictionary d = new PdfDictionary();
+            PdfArray configs = new PdfArray();
+            PdfDictionary config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName1"));
+            configs.Add(config);
+            config = new PdfDictionary();
+            config.Put(PdfName.Name, new PdfString("CustomName2"));
+            configs.Add(config);
+            ocProperties.Put(PdfName.D, d);
+            ocProperties.Put(PdfName.Configs, configs);
+            doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -53,67 +53,61 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
-                PdfDictionary fileNames = new PdfDictionary();
-                pdfDocument.GetCatalog().Put(PdfName.Names, fileNames);
-                PdfDictionary embeddedFiles = new PdfDictionary();
-                fileNames.Put(PdfName.EmbeddedFiles, embeddedFiles);
-                PdfArray names = new PdfArray();
-                fileNames.Put(PdfName.Names, names);
-                names.Add(new PdfString("some/file/path"));
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null);
-                names.Add(spec.GetPdfObject());
-                pdfDocument.AddNewPage();
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfDictionary fileNames = new PdfDictionary();
+            pdfDocument.GetCatalog().Put(PdfName.Names, fileNames);
+            PdfDictionary embeddedFiles = new PdfDictionary();
+            fileNames.Put(PdfName.EmbeddedFiles, embeddedFiles);
+            PdfArray names = new PdfArray();
+            fileNames.Put(PdfName.Names, names);
+            names.Add(new PdfString("some/file/path"));
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                , "sample", null, null);
+            names.Add(spec.GetPdfObject());
+            pdfDocument.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
-                PdfStream stream = new PdfStream();
-                pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null);
-                stream.Put(PdfName.F, spec.GetPdfObject());
-                pdfDocument.AddNewPage();
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfStream stream = new PdfStream();
+            pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                , "sample", null, null);
+            stream.Put(PdfName.F, spec.GetPdfObject());
+            pdfDocument.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest03() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
-                PdfStream stream = new PdfStream();
-                pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                    , "sample", null, null);
-                stream.Put(new PdfName("fileData"), spec.GetPdfObject());
-                pdfDocument.AddNewPage();
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfStream stream = new PdfStream();
+            pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
+                , "sample", null, null);
+            stream.Put(new PdfName("fileData"), spec.GetPdfObject());
+            pdfDocument.AddNewPage();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
+                , e.Message);
         }
     }
 }

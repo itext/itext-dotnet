@@ -91,20 +91,14 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(sourceFolder, destinationFolder, "invalidOperator");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+                , "invalidOperator"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorCSensTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(sourceFolder, destinationFolder, "invalidOperatorCSens");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+                , "invalidOperatorCSens"));
         }
 
         [NUnit.Framework.Test]

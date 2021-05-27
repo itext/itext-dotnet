@@ -82,35 +82,29 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void GhostScriptEnvVarIsIncorrect() {
-            NUnit.Framework.Assert.That(() =>  {
-                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper("-");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new GhostscriptHelper("-"));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptIncorrectOutputDirectory() {
             String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
             String exceptionMessage = "Cannot open output directory for " + inputPdf;
-            NUnit.Framework.Assert.That(() =>  {
-                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, "-", "outputPageImage.png", "1");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(exceptionMessage))
-;
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ghostscriptHelper.RunGhostScriptImageGeneration
+                (inputPdf, "-", "outputPageImage.png", "1"));
+            NUnit.Framework.Assert.AreEqual(exceptionMessage, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptIncorrectParams() {
             String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
             String exceptionMessage = "GhostScript failed for " + inputPdf;
-            NUnit.Framework.Assert.That(() =>  {
-                GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "outputPageImage.png", "q@W");
-            }
-            , NUnit.Framework.Throws.InstanceOf<GhostscriptHelper.GhostscriptExecutionException>().With.Message.EqualTo(exceptionMessage))
-;
+            GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(GhostscriptHelper.GhostscriptExecutionException), () => 
+                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "outputPageImage.png", "q@W"
+                ));
+            NUnit.Framework.Assert.AreEqual(exceptionMessage, e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -56,7 +56,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ValidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_79(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_75(PdfAConformanceLevel.PDF_A_1B);
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -70,8 +70,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_79 : PdfA1Checker {
-            public _PdfA1Checker_79(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_75 : PdfA1Checker {
+            public _PdfA1Checker_75(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -84,26 +84,27 @@ namespace iText.Pdfa {
         // limit per "mock specification" conformance exception shouldn't be thrown
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfA1Checker testChecker = new _PdfA1Checker_108(PdfAConformanceLevel.PDF_A_1B);
-                using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                    )) {
-                    using (Stream fos = new MemoryStream()) {
-                        using (Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B
-                            , GetOutputIntent(icm)))) {
-                            PdfADocument pdfa = (PdfADocument)document.GetPdfDocument();
-                            pdfa.checker = testChecker;
-                            document.Add(BuildContent());
-                        }
-                    }
+            PdfA1Checker testChecker = new _PdfA1Checker_100(PdfAConformanceLevel.PDF_A_1B);
+            using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                )) {
+                using (Stream fos = new MemoryStream()) {
+                    Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_1B, GetOutputIntent
+                        (icm)));
+                    PdfADocument pdfa = (PdfADocument)document.GetPdfDocument();
+                    pdfa.checker = testChecker;
+                    document.Add(BuildContent());
+                    // generated document contains exactly 10 indirect objects. Given 9 is the allowed
+                    // limit per "mock specification" conformance exception should be thrown as the limit
+                    // is exceeded
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Close());
+                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, e.Message
+                        );
                 }
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED))
-;
         }
 
-        private sealed class _PdfA1Checker_108 : PdfA1Checker {
-            public _PdfA1Checker_108(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_100 : PdfA1Checker {
+            public _PdfA1Checker_100(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -112,30 +113,27 @@ namespace iText.Pdfa {
             }
         }
 
-        // generated document contains exactly 10 indirect objects. Given 9 is the allowed
-        // limit per "mock specification" conformance exception should be thrown as the limit
-        // is exceeded
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsAppendModeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfA1Checker testChecker = new _PdfA1Checker_138(PdfAConformanceLevel.PDF_A_1B);
-                using (Stream fis = new FileStream(sourceFolder + "pdfs/pdfa10IndirectObjects.pdf", FileMode.Open, FileAccess.Read
-                    )) {
-                    using (Stream fos = new MemoryStream()) {
-                        using (PdfADocument pdfa = new PdfADocument(new PdfReader(fis), new PdfWriter(fos), new StampingProperties
-                            ().UseAppendMode())) {
-                            pdfa.checker = testChecker;
-                            pdfa.AddNewPage();
-                        }
-                    }
+            PdfA1Checker testChecker = new _PdfA1Checker_128(PdfAConformanceLevel.PDF_A_1B);
+            using (Stream fis = new FileStream(sourceFolder + "pdfs/pdfa10IndirectObjects.pdf", FileMode.Open, FileAccess.Read
+                )) {
+                using (Stream fos = new MemoryStream()) {
+                    PdfADocument pdfa = new PdfADocument(new PdfReader(fis), new PdfWriter(fos), new StampingProperties().UseAppendMode
+                        ());
+                    pdfa.checker = testChecker;
+                    pdfa.AddNewPage();
+                    // during closing of pdfa object exception will be thrown as new document will contain
+                    // 12 indirect objects and limit per "mock specification" conformance will be exceeded
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfa.Close());
+                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED, e.Message
+                        );
                 }
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.MAXIMUM_NUMBER_OF_INDIRECT_OBJECTS_EXCEEDED))
-;
         }
 
-        private sealed class _PdfA1Checker_138 : PdfA1Checker {
-            public _PdfA1Checker_138(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_128 : PdfA1Checker {
+            public _PdfA1Checker_128(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -144,8 +142,6 @@ namespace iText.Pdfa {
             }
         }
 
-        // during closing of pdfa object exception will be thrown as new document will contain
-        // 12 indirect objects and limit per "mock specification" conformance will be exceeded
         private Paragraph BuildContent() {
             PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED

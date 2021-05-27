@@ -110,20 +110,17 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void NoBoundingBoxOnXObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
-                    (0)));
-                document.AddNewPage();
-                ISvgNodeRenderer processed = SvgConverter.Process(SvgConverter.Parse("<svg />"), null).GetRootRenderer();
-                PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(processed);
-                PdfFormXObject pdfForm = new PdfFormXObject(new PdfStream());
-                PdfCanvas canvas = new PdfCanvas(pdfForm, document);
-                SvgDrawContext context = new SvgDrawContext(null, null);
-                context.PushCanvas(canvas);
-                root.Draw(context);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.ROOT_SVG_NO_BBOX))
-;
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetCompressionLevel
+                (0)));
+            document.AddNewPage();
+            ISvgNodeRenderer processed = SvgConverter.Process(SvgConverter.Parse("<svg />"), null).GetRootRenderer();
+            PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(processed);
+            PdfFormXObject pdfForm = new PdfFormXObject(new PdfStream());
+            PdfCanvas canvas = new PdfCanvas(pdfForm, document);
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            context.PushCanvas(canvas);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => root.Draw(context));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.ROOT_SVG_NO_BBOX, e.Message);
         }
 
         [NUnit.Framework.Test]

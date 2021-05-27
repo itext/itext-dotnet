@@ -164,16 +164,14 @@ namespace iText.Kernel.Pdf.Action {
 
         [NUnit.Framework.Test]
         public virtual void SetAnnotationWithoutPageTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
-                    document.AddNewPage();
-                    PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(new Rectangle(0, 0, 20, 20));
-                    PdfTarget target = PdfTarget.Create(new PdfDictionary());
-                    target.SetAnnotation(annotation, document);
-                }
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                document.AddNewPage();
+                PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(new Rectangle(0, 0, 20, 20));
+                PdfTarget target = PdfTarget.Create(new PdfDictionary());
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => target.SetAnnotation(annotation, document
+                    ));
+                NUnit.Framework.Assert.AreEqual(PdfException.AnnotationShallHaveReferenceToPage, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.AnnotationShallHaveReferenceToPage))
-;
         }
 
         [NUnit.Framework.Test]

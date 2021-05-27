@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Svg.Exceptions;
 using iText.Test;
 
@@ -47,12 +48,10 @@ namespace iText.Svg.Renderers.Factories {
     public class DefaultSvgNodeRendererFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void CreateSvgNodeRenderer() {
-            NUnit.Framework.Assert.That(() =>  {
-                ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory(null);
-                nodeRendererFactory.CreateSvgNodeRendererForTag(null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TAGPARAMETERNULL))
-;
+            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory(null);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => nodeRendererFactory.CreateSvgNodeRendererForTag
+                (null, null));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TAGPARAMETERNULL, e.Message);
         }
     }
 }

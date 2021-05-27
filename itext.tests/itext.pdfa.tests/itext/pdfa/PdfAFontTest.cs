@@ -83,20 +83,18 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi");
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
-                    ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0, "FreeSans")))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi");
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "FreeSans"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -120,21 +118,19 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FontCheckPdfA1_04() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-                    );
-                PdfCanvas canvas = new PdfCanvas(page);
-                canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
-                    ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0, "Helvetica")))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("Hello World! Pdf/A-1B").EndText().RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Helvetica"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -266,13 +262,12 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test03() {
-            NUnit.Framework.Assert.That(() =>  {
-                // if you specify encoding, symbolic font is treated as non-symbolic
-                CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test03.pdf", "Symbols1.ttf", "ISO-8859-1", PdfAConformanceLevel
-                    .PDF_A_1B);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY))
-;
+            // if you specify encoding, symbolic font is treated as non-symbolic
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "symbolicTtfCharEncodingsPdfA1Test03.pdf", "Symbols1.ttf", "ISO-8859-1", PdfAConformanceLevel.PDF_A_1B
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING_AS_THE_ENCODING_ENTRY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -284,13 +279,12 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void NonSymbolicTtfCharEncodingsPdfA1Test02() {
-            NUnit.Framework.Assert.That(() =>  {
-                // encoding must be either winansi or macroman, by default winansi is used
-                CreateDocumentWithFont("nonSymbolicTtfCharEncodingsPdfA1Test02.pdf", "FreeSans.ttf", "ISO-8859-1", PdfAConformanceLevel
-                    .PDF_A_2B);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING))
-;
+            // encoding must be either winansi or macroman, by default winansi is used
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
+                "nonSymbolicTtfCharEncodingsPdfA1Test02.pdf", "FreeSans.ttf", "ISO-8859-1", PdfAConformanceLevel.PDF_A_2B
+                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
+                , e.Message);
         }
 
         private void CreateDocumentWithFont(String outFileName, String fontFileName, String encoding, PdfAConformanceLevel

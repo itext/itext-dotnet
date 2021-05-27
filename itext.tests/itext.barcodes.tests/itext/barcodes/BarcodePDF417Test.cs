@@ -315,19 +315,16 @@ namespace iText.Barcodes {
 
         [NUnit.Framework.Test]
         public virtual void Barcode417OptionsWithBarcodeGenerationInvalidSizeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                MemoryStream baos = new MemoryStream();
-                PdfWriter writer = new PdfWriter(baos);
-                PdfDocument document = new PdfDocument(writer);
-                PdfPage page = document.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                BarcodePDF417 barcode = new BarcodePDF417();
-                barcode.SetOptions(64);
-                barcode.PlaceBarcode(canvas, null);
-                NUnit.Framework.Assert.AreEqual(64, barcode.GetOptions());
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Invalid codeword size."))
-;
+            MemoryStream baos = new MemoryStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument document = new PdfDocument(writer);
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            BarcodePDF417 barcode = new BarcodePDF417();
+            barcode.SetOptions(64);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcode.PlaceBarcode(canvas, null));
+            NUnit.Framework.Assert.AreEqual("Invalid codeword size.", e.Message);
+            NUnit.Framework.Assert.AreEqual(64, barcode.GetOptions());
         }
 
         private PdfFormXObject CreateMacroBarcodePart(PdfDocument document, String text, float mh, float mw, int segmentId

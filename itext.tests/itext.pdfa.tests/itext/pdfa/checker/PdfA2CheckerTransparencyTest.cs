@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -113,11 +114,10 @@ namespace iText.Pdfa.Checker {
                         PdfResources pageResources = pageToCheck.GetResources();
                         pageResources.AddPattern(new PdfPattern.Shading(new PdfDictionary()));
                         pageResources.AddPattern(tillingPattern);
-                        NUnit.Framework.Assert.That(() =>  {
-                            pdfA2Checker.CheckSinglePage(pageToCheck);
-                        }
-                        , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE))
-;
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckSinglePage
+                            (pageToCheck));
+                        NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                            , e.Message);
                     }
                 }
             }
@@ -155,11 +155,10 @@ namespace iText.Pdfa.Checker {
                         PdfPage pageToCheck = document.AddNewPage();
                         pageToCheck.AddAnnotation(new PdfPopupAnnotation(new Rectangle(0f, 0f)));
                         pageToCheck.AddAnnotation(annotation);
-                        NUnit.Framework.Assert.That(() =>  {
-                            pdfA2Checker.CheckSinglePage(pageToCheck);
-                        }
-                        , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE))
-;
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckSinglePage
+                            (pageToCheck));
+                        NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                            , e.Message);
                     }
                 }
             }
@@ -179,11 +178,10 @@ namespace iText.Pdfa.Checker {
                         PdfPage pageToCheck = document.AddNewPage();
                         pageToCheck.AddAnnotation(new PdfPopupAnnotation(new Rectangle(0f, 0f)));
                         pageToCheck.AddAnnotation(annotation);
-                        NUnit.Framework.Assert.That(() =>  {
-                            pdfA2Checker.CheckSinglePage(pageToCheck);
-                        }
-                        , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE))
-;
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckSinglePage
+                            (pageToCheck));
+                        NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                            , e.Message);
                     }
                 }
             }

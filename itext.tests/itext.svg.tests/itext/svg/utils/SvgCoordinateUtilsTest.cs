@@ -166,65 +166,51 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxViewBoxIsNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(null, new Rectangle(10F, 10F), null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (null, new Rectangle(10F, 10F), null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxViewBoxWidthIsZeroTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(new Rectangle(0F, 10F), new Rectangle(10F, 10F), null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (new Rectangle(0F, 10F), new Rectangle(10F, 10F), null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxViewBoxHeightIsZeroTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(new Rectangle(10F, 0F), new Rectangle(10F, 10F), null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (new Rectangle(10F, 0F), new Rectangle(10F, 10F), null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxViewBoxWidthIsNegativeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(new Rectangle(-10F, 10F), new Rectangle(10F, 10F), null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (new Rectangle(-10F, 10F), new Rectangle(10F, 10F), null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxViewBoxHeightIsNegativeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(new Rectangle(10F, -10F), new Rectangle(10F, 10F), null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (new Rectangle(10F, -10F), new Rectangle(10F, 10F), null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.VIEWBOX_IS_INCORRECT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxCurrentViewPortIsNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(new Rectangle(10F, 10F), null, null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.CURRENT_VIEWPORT_IS_NULL))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (new Rectangle(10F, 10F), null, null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.CURRENT_VIEWPORT_IS_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ApplyViewBoxAllNullTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                SvgCoordinateUtils.ApplyViewBox(null, null, null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(SvgExceptionMessageConstant.CURRENT_VIEWPORT_IS_NULL))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SvgCoordinateUtils.ApplyViewBox
+                (null, null, null, null));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.CURRENT_VIEWPORT_IS_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]

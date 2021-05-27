@@ -111,11 +111,8 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void EmptyStylesFallbackTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                new SvgStyleResolver(new ExceptionInputStream(), new SvgProcessorContext(new SvgConverterProperties()));
-            }
-            , NUnit.Framework.Throws.InstanceOf<System.IO.IOException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => new SvgStyleResolver(new ExceptionInputStream
+                (), new SvgProcessorContext(new SvgConverterProperties())));
         }
     }
 }

@@ -296,23 +296,21 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedOnFlushedPageTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                String outFileName = destinationFolder + "showTextAlignedOnFlushedPageTest01.pdf";
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-                Document doc = new Document(pdfDoc);
-                Paragraph p = new Paragraph();
-                for (int i = 0; i < 1000; ++i) {
-                    p.Add("abcdefghijklkmnopqrstuvwxyz");
+            String outFileName = destinationFolder + "showTextAlignedOnFlushedPageTest01.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    Paragraph p = new Paragraph();
+                    for (int i = 0; i < 1000; ++i) {
+                        p.Add("abcdefghijklkmnopqrstuvwxyz");
+                    }
+                    doc.Add(p);
+                    // First page will be flushed by now, because immediateFlush is set to false by default.
+                    int pageNumberToDrawTextOn = 1;
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => doc.ShowTextAligned(new Paragraph("Hello Bruno on page 1!"
+                        ), 36, 36, pageNumberToDrawTextOn, TextAlignment.LEFT, VerticalAlignment.TOP, 0));
+                    NUnit.Framework.Assert.AreEqual(PdfException.CannotDrawElementsOnAlreadyFlushedPages, e.Message);
                 }
-                doc.Add(p);
-                // First page will be flushed by now, because immediateFlush is set to false by default.
-                int pageNumberToDrawTextOn = 1;
-                doc.ShowTextAligned(new Paragraph("Hello Bruno on page 1!"), 36, 36, pageNumberToDrawTextOn, TextAlignment
-                    .LEFT, VerticalAlignment.TOP, 0);
-                doc.Close();
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.CannotDrawElementsOnAlreadyFlushedPages))
-;
         }
 
         private void DrawCross(PdfCanvas canvas, float x, float y) {

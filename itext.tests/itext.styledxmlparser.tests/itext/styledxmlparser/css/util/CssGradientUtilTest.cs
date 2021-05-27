@@ -147,167 +147,152 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void EmptyParsedArguments1Test() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient()";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST, "linear-gradient()")))
-;
+            String gradientValue = "linear-gradient()";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST
+                , "linear-gradient()"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyParsedArguments2Test() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient( , )";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST, "linear-gradient( , )")))
-;
+            String gradientValue = "linear-gradient( , )";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_FUNCTION_ARGUMENTS_LIST
+                , "linear-gradient( , )"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidFirstArgumentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(not-angle-or-color, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "not-angle-or-color")))
-;
+            String gradientValue = "linear-gradient(not-angle-or-color, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "not-angle-or-color"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest0() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to , orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "to")))
-;
+            String gradientValue = "linear-gradient(to , orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "to"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest1() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "to")))
-;
+            String gradientValue = "linear-gradient(to, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "to"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest2() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to left left, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING, "to left left")))
-;
+            String gradientValue = "linear-gradient(to left left, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING
+                , "to left left"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest3() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to bottom top, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING, "to bottom top")))
-;
+            String gradientValue = "linear-gradient(to bottom top, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING
+                , "to bottom top"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest4() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to left right, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING, "to left right")))
-;
+            String gradientValue = "linear-gradient(to left right, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING
+                , "to left right"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidToSideTest5() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(to top right right, orange 100pt, red 150pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING, "to top right right")))
-;
+            String gradientValue = "linear-gradient(to top right right, orange 100pt, red 150pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_TO_SIDE_OR_CORNER_STRING
+                , "to top right right"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidColorWithThreeOffsetsValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(red, orange 20pt 30pt 100pt, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 20pt 30pt 100pt")))
-;
+            String gradientValue = "linear-gradient(red, orange 20pt 30pt 100pt, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 20pt 30pt 100pt"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidColorOffsetValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(red, orange 20, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 20")))
-;
+            String gradientValue = "linear-gradient(red, orange 20, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 20"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidMultipleHintsInARowValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(red, orange, 20%, 30%, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "30%")))
-;
+            String gradientValue = "linear-gradient(red, orange, 20%, 30%, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "30%"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidMultipleHintsInARowWithoutCommaValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(red, orange, 20% 30%, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "20% 30%")))
-;
+            String gradientValue = "linear-gradient(red, orange, 20% 30%, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "20% 30%"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidFirstElementIsAHintValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(5%, red, orange, 30%, green 200pt, blue 250pt)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "5%")))
-;
+            String gradientValue = "linear-gradient(5%, red, orange, 30%, green 200pt, blue 250pt)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "5%"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidLastElementIsAHintValueTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String gradientValue = "linear-gradient(red, orange, 30%, green 200pt, blue 250pt, 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "120%")))
-;
+            String gradientValue = "linear-gradient(red, orange, 30%, green 200pt, blue 250pt, 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "120%"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -766,38 +751,35 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDifferentTurnPositiveTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "0.17turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "0.17turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDifferentTurnNegativeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(-0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "-0.17turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(-0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "-0.17turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDifferentTurnZeroTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(0turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "0turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(0turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "0turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1256,38 +1238,35 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void RepeatingLinearGradDifferentTurnPositiveTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "0.17turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "0.17turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatingLinearGradDifferentTurnNegativeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(-0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "-0.17turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(-0.17turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "-0.17turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatingLinearGradDifferentTurnZeroTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3595. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(0turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 24, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "0turn")))
-;
+            // TODO: DEVSIX-3595. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(0turn, orange -20pt, red 0%, green, blue 100%, orange 120%)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "0turn"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -1748,62 +1727,57 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDiffMetricsFontRelatedChTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(to right, orange 3ch, red 3ch, green 9ch, blue 9ch)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3ch")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(to right, orange 3ch, red 3ch, green 9ch, blue 9ch)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 24, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3ch"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDiffMetricsFontRelatedVhTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(to right, orange 3vh, red 3vh, green 9vh, blue 9vh)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vh")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(to right, orange 3vh, red 3vh, green 9vh, blue 9vh)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vh"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDiffMetricsViewPortVwTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(to right, orange 3vw, red 3vw, green 9vw, blue 9vw)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vw")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(to right, orange 3vw, red 3vw, green 9vw, blue 9vw)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vw"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDiffMetricsViewPortVminTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(to right, orange 3vmin, red 3vmin, green 9vmin, blue 9vmin)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vmin")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(to right, orange 3vmin, red 3vmin, green 9vmin, blue 9vmin)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vmin"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradDiffMetricsViewPortVmaxTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "linear-gradient(to right, orange 3vmax, red 3vmax, green 9vmax, blue 9vmax)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vmax")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "linear-gradient(to right, orange 3vmax, red 3vmax, green 9vmax, blue 9vmax)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vmax"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -2008,62 +1982,57 @@ namespace iText.StyledXmlParser.Css.Util {
 
         [NUnit.Framework.Test]
         public virtual void RepeatLinearGradDiffMetricsFontRelatedChTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(to right, orange 3ch, red 3ch, green 9ch, blue 9ch)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3ch")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(to right, orange 3ch, red 3ch, green 9ch, blue 9ch)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3ch"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatLinearGradDiffMetricsFontRelatedVhTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(to right, orange 3vh, red 3vh, green 9vh, blue 9vh)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vh")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(to right, orange 3vh, red 3vh, green 9vh, blue 9vh)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vh"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatLinearGradDiffMetricsViewPortVwTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(to right, orange 3vw, red 3vw, green 9vw, blue 9vw)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vw")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(to right, orange 3vw, red 3vw, green 9vw, blue 9vw)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vw"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatLinearGradDiffMetricsViewPortVminTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(to right, orange 3vmin, red 3vmin, green 9vmin, blue 9vmin)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vmin")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(to right, orange 3vmin, red 3vmin, green 9vmin, blue 9vmin)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vmin"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RepeatLinearGradDiffMetricsViewPortVmaxTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // TODO: DEVSIX-3596. Remove junitExpectedException expectation after fix and update the logic of the test similar to the already existed tests logic
-                String gradientValue = "repeating-linear-gradient(to right, orange 3vmax, red 3vmax, green 9vmax, blue 9vmax)";
-                NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
-                CssGradientUtil.ParseCssLinearGradient(gradientValue, 12, 12);
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE, "orange 3vmax")))
-;
+            // TODO: DEVSIX-3596. Remove Exception expectation after fix and update the logic of the test similar to the already existed tests logic
+            String gradientValue = "repeating-linear-gradient(to right, orange 3vmax, red 3vmax, green 9vmax, blue 9vmax)";
+            NUnit.Framework.Assert.IsTrue(CssGradientUtil.IsCssLinearGradientValue(gradientValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssGradientUtil.ParseCssLinearGradient
+                (gradientValue, 12, 12));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.INVALID_GRADIENT_COLOR_STOP_VALUE
+                , "orange 3vmax"), e.Message);
         }
 
         [NUnit.Framework.Test]

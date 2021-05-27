@@ -45,6 +45,7 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     public class PolyNodeTest : ExtendedITextTest {
+
         [NUnit.Framework.Test]
         public virtual void AddAndGetChildTest() {
             PolyNode node = new PolyNode();

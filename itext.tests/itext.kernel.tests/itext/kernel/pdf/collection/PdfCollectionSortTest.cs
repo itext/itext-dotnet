@@ -76,18 +76,15 @@ namespace iText.Kernel.Pdf.Collection {
 
         [NUnit.Framework.Test]
         public virtual void IncorrectSortOrderForOneKeyTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String key = "testKey";
-                bool[] testAscendings = new bool[] { true, false };
-                PdfCollectionSort sort = new PdfCollectionSort(key);
-                sort.SetSortOrder(testAscendings);
-                // this line will throw an exception as number of parameters of setSortOrder()
-                // method should be exactly the same as number of keys of PdfCollectionSort
-                // here we have one key but two params
-                NUnit.Framework.Assert.IsTrue(sort.GetPdfObject().GetAsBool(PdfName.A));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary))
-;
+            String key = "testKey";
+            bool[] testAscendings = new bool[] { true, false };
+            PdfCollectionSort sort = new PdfCollectionSort(key);
+            // this line will throw an exception as number of parameters of setSortOrder()
+            // method should be exactly the same as number of keys of PdfCollectionSort
+            // here we have one key but two params
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscendings));
+            NUnit.Framework.Assert.AreEqual(PdfException.YouNeedASingleBooleanForThisCollectionSortDictionary, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -104,32 +101,28 @@ namespace iText.Kernel.Pdf.Collection {
 
         [NUnit.Framework.Test]
         public virtual void SingleSortOrderForMultipleKeysTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String[] keys = new String[] { "testKey1", "testKey2", "testKey3" };
-                bool testAscending = true;
-                PdfCollectionSort sort = new PdfCollectionSort(keys);
-                // this line will throw an exception as number of parameters of setSortOrder()
-                // method should be exactly the same as number of keys of PdfCollectionSort
-                // here we have three keys but one param
-                sort.SetSortOrder(testAscending);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary))
-;
+            String[] keys = new String[] { "testKey1", "testKey2", "testKey3" };
+            bool testAscending = true;
+            PdfCollectionSort sort = new PdfCollectionSort(keys);
+            // this line will throw an exception as number of parameters of setSortOrder()
+            // method should be exactly the same as number of keys of PdfCollectionSort
+            // here we have three keys but one param
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscending));
+            NUnit.Framework.Assert.AreEqual(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void IncorrectMultipleSortOrderForMultipleKeysTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String[] keys = new String[] { "testKey1", "testKey2", "testKey3" };
-                bool[] testAscendings = new bool[] { true, false };
-                PdfCollectionSort sort = new PdfCollectionSort(keys);
-                // this line will throw an exception as number of parameters of setSortOrder()
-                // method should be exactly the same as number of keys of PdfCollectionSort
-                // here we have three keys but two params
-                sort.SetSortOrder(testAscendings);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields))
-;
+            String[] keys = new String[] { "testKey1", "testKey2", "testKey3" };
+            bool[] testAscendings = new bool[] { true, false };
+            PdfCollectionSort sort = new PdfCollectionSort(keys);
+            // this line will throw an exception as number of parameters of setSortOrder()
+            // method should be exactly the same as number of keys of PdfCollectionSort
+            // here we have three keys but two params
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => sort.SetSortOrder(testAscendings));
+            NUnit.Framework.Assert.AreEqual(PdfException.NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

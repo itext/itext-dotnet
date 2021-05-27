@@ -115,20 +115,16 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void IndirectFilterInCatalogTest() {
-            // TODO DEVSIX-1193 remove junitExpectedException and expected NullPointerException after fix
+            // TODO DEVSIX-1193 remove NullPointerException after fix
             String inFile = sourceFolder + "indFilterInCatalog.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(inFile), new PdfWriter(destinationFolder + "indFilterInCatalog.pdf"
                 ));
-            NUnit.Framework.Assert.That(() =>  {
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => doc.Close());
         }
 
         [NUnit.Framework.Test]
         public virtual void IndirectFilterFlushedBeforeStreamTest() {
-            // TODO DEVSIX-1193 remove junitExpectedException after fix
+            // TODO DEVSIX-1193 remove NullPointerException after fix
             String inFile = sourceFolder + "indFilterInCatalog.pdf";
             String @out = destinationFolder + "indirectFilterFlushedBeforeStreamTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(inFile), new PdfWriter(@out));
@@ -136,16 +132,12 @@ namespace iText.Kernel.Pdf {
             // Either directly by user or because of any other reason.
             PdfObject filterObject = pdfDoc.GetPdfObject(6);
             filterObject.Flush();
-            NUnit.Framework.Assert.That(() =>  {
-                pdfDoc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.Close());
         }
 
         [NUnit.Framework.Test]
         public virtual void IndirectFilterMarkedToBeFlushedBeforeStreamTest() {
-            // TODO DEVSIX-1193 remove junitExpectedException after fix
+            // TODO DEVSIX-1193 remove NullPointerException after fix
             String inFile = sourceFolder + "indFilterInCatalog.pdf";
             String @out = destinationFolder + "indirectFilterMarkedToBeFlushedBeforeStreamTest.pdf";
             PdfWriter writer = new PdfWriter(@out);
@@ -155,12 +147,9 @@ namespace iText.Kernel.Pdf {
             filterObject.GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
             // The image stream will be marked as MUST_BE_FLUSHED after page is flushed.
             pdfDoc.GetFirstPage().GetPdfObject().GetIndirectReference().SetState(PdfObject.MUST_BE_FLUSHED);
-            NUnit.Framework.Assert.That(() =>  {
-                writer.FlushWaitingObjects(JavaCollectionsUtil.EmptySet<PdfIndirectReference>());
-                pdfDoc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => writer.FlushWaitingObjects(JavaCollectionsUtil
+                .EmptySet<PdfIndirectReference>()));
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.Close());
         }
     }
 }

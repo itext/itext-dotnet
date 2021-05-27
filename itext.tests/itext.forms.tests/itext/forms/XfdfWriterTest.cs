@@ -955,21 +955,21 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfEmptyAttributeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                XfdfObject xfdfObject = new XfdfObject();
-                AnnotsObject annots = new AnnotsObject();
-                xfdfObject.SetAnnots(annots);
-                AnnotObject annot = new AnnotObject();
-                annots.AddAnnot(annot);
-                String namePresent = "name1";
-                String nameAbsent = null;
-                String valuePresent = "value";
-                String valueAbsent = null;
-                annot.AddAttribute(new AttributeObject(nameAbsent, valuePresent));
-                annot.AddAttribute(new AttributeObject(namePresent, valueAbsent));
-            }
-            , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING))
-;
+            XfdfObject xfdfObject = new XfdfObject();
+            AnnotsObject annots = new AnnotsObject();
+            xfdfObject.SetAnnots(annots);
+            AnnotObject annot = new AnnotObject();
+            annots.AddAnnot(annot);
+            String namePresent = "name1";
+            String nameAbsent = null;
+            String valuePresent = "value";
+            String valueAbsent = null;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(XfdfException), () => annot.AddAttribute(new AttributeObject
+                (nameAbsent, valuePresent)));
+            NUnit.Framework.Assert.AreEqual(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING, e.Message);
+            Exception e2 = NUnit.Framework.Assert.Catch(typeof(XfdfException), () => annot.AddAttribute(new AttributeObject
+                (namePresent, valueAbsent)));
+            NUnit.Framework.Assert.AreEqual(XfdfException.ATTRIBUTE_NAME_OR_VALUE_MISSING, e2.Message);
         }
     }
 }

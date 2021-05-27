@@ -63,24 +63,22 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest1() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent)) {
                 pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
-                for (int i = 0; i < 29; i++) {
-                    canvas.SaveState();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                    for (int i = 0; i < 29; i++) {
+                        canvas.SaveState();
+                    }
                 }
-                for (int i = 0; i < 28; i++) {
-                    canvas.RestoreState();
-                }
-                pdfDocument.Close();
+                );
+                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.GRAPHICS_STATE_STACK_DEPTH_IS_GREATER_THAN_28, e.
+                    Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.GRAPHICS_STATE_STACK_DEPTH_IS_GREATER_THAN_28))
-;
         }
 
         [NUnit.Framework.Test]
@@ -91,16 +89,16 @@ namespace iText.Pdfa {
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
-            pdfDocument.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
-            for (int i = 0; i < 28; i++) {
-                canvas.SaveState();
+            using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent)) {
+                pdfDocument.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
+                for (int i = 0; i < 28; i++) {
+                    canvas.SaveState();
+                }
+                for (int i = 0; i < 28; i++) {
+                    canvas.RestoreState();
+                }
             }
-            for (int i = 0; i < 28; i++) {
-                canvas.RestoreState();
-            }
-            pdfDocument.Close();
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
@@ -109,19 +107,18 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest3() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                    , @is);
-                PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , @is);
+            using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent)) {
                 pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
-                canvas.SetRenderingIntent(new PdfName("Test"));
-                pdfDocument.Close();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetRenderingIntent
+                    (new PdfName("Test")));
+                NUnit.Framework.Assert.AreEqual(PdfAConformanceException.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
+                    , e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION))
-;
         }
     }
 }

@@ -47,6 +47,7 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     public class UriResolverTest : ExtendedITextTest {
+
         [NUnit.Framework.Test]
         public virtual void UriResolverTest01() {
             String absolutePathRoot = new Uri(new Uri("file://"), Path.GetPathRoot(Directory.GetCurrentDirectory())).ToExternalForm();

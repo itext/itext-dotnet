@@ -166,17 +166,14 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FontProviderNotSetExceptionTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String fileName = "fontProviderNotSetExceptionTest.pdf";
-                String outFileName = destinationFolder + fileName + ".pdf";
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            String fileName = "fontProviderNotSetExceptionTest.pdf";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)))) {
                 Document doc = new Document(pdfDoc);
                 Paragraph paragraph = new Paragraph("Hello world!").SetFontFamily("ABRACADABRA_NO_FONT_PROVIDER_ANYWAY");
-                doc.Add(paragraph);
-                doc.Close();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => doc.Add(paragraph));
+                NUnit.Framework.Assert.AreEqual(PdfException.FontProviderNotSetFontFamilyNotResolved, e.Message);
             }
-            , NUnit.Framework.Throws.InstanceOf<InvalidOperationException>().With.Message.EqualTo(PdfException.FontProviderNotSetFontFamilyNotResolved))
-;
         }
     }
 }

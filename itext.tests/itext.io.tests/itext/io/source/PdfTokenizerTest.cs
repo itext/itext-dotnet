@@ -216,14 +216,13 @@ namespace iText.IO.Source {
 
         [NUnit.Framework.Test]
         public virtual void ThrowErrorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
-                PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
-                    ))));
-                tok.ThrowError(iText.IO.IOException.ErrorAtFilePointer1, 0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException.ErrorAtFilePointer1, 0)))
-;
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource("/Name1".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                ))));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => tok.ThrowError(iText.IO.IOException
+                .ErrorAtFilePointer1, 0));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.ErrorAtFilePointer1, 0), e.Message
+                );
         }
 
         [NUnit.Framework.Test]
