@@ -44,28 +44,28 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void PlainTextNewProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Plain Text", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void PlainTextEmptyOldProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, "");
             NUnit.Framework.Assert.AreEqual("Plain Text", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void PlainTextExistingOldProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Plain Text", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, "Old producer");
             NUnit.Framework.Assert.AreEqual("Old producer; modified using Plain Text", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void PlainTextExistingOldProducerWithModifiedPartLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("New Author", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("New Author", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, "Old producer; modified using Plain Text");
             NUnit.Framework.Assert.AreEqual("Old producer; modified using Plain Text; modified using New Author", newProducerLine
                 );
@@ -73,21 +73,21 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void CopyrightSinceProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Prod. since ${copyrightSince}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Prod. since ${copyrightSince}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Prod. since 1901", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void CopyrightToProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("All rights reserved, ${copyrightTo}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("All rights reserved, ${copyrightTo}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("All rights reserved, 2103", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void CurrentDateProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Created at ${currentDate:yyyy}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:yyyy}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Created at " + DateTimeUtil.FormatDate(DateTimeUtil.GetCurrentUtcTime(), 
                 "yyyy"), newProducerLine);
@@ -95,8 +95,8 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void CurrentDateComplexFormatProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Created at ${currentDate:yyyy, '{\\'yes::yes\\'', yyyy}"
-                , 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:yyyy, '{\\'yes::yes\\'', yyyy}", 
+                1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             String currentYear = DateTimeUtil.FormatDate(DateTimeUtil.GetCurrentUtcTime(), "yyyy");
             NUnit.Framework.Assert.AreEqual("Created at " + currentYear + ", {'yes::yes', " + currentYear, newProducerLine
@@ -105,14 +105,14 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void CurrentDatePlaceholderFormatProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Created at ${currentDate:'${currentDate'}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:'${currentDate'}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Created at ${currentDate", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void CurrentDateNoFormatProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Created at ${currentDate}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate}", 1, 2, 3);
             NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer(events, null);
             }
@@ -122,15 +122,15 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void CurrentDateEmptyFormatProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Created at ${currentDate:}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Created at ${currentDate:}", 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Created at ", newProducerLine);
         }
 
         [NUnit.Framework.Test]
         public virtual void UsedProductsProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Used products: ${usedProducts:P #V (T 'version')}", 1, 
-                2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Used products: ${usedProducts:P #V (T 'version')}", 1, 2, 
+                3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("Used products: product1 #1.0 (type1 version), product2 #2.0 (type2 version), product3 #3.0 (type3 version)"
                 , newProducerLine);
@@ -138,7 +138,7 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void UsedProductsEmptyFormatProducerLineTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("Used products: ${usedProducts}", 1, 2, 3);
+            IList<ConfirmedEventWrapper> events = GetEvents("Used products: ${usedProducts}", 1, 2, 3);
             NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer(events, null);
             }
@@ -150,19 +150,19 @@ namespace iText.Kernel.Actions.Producer {
         [LogMessage(KernelLogMessageConstant.UNKNOWN_PLACEHOLDER_WAS_IGNORED, Count = 3, LogLevel = LogLevelConstants
             .INFO)]
         public virtual void UnknownPlaceHoldersTest() {
-            IList<ITextProductEventWrapper> events = GetEvents("${plchldr}|${plchldrWithParam:param}|${plchldrWithWeirdParam::$$:'''\\''}"
+            IList<ConfirmedEventWrapper> events = GetEvents("${plchldr}|${plchldrWithParam:param}|${plchldrWithWeirdParam::$$:'''\\''}"
                 , 1, 2, 3);
             String newProducerLine = ProducerBuilder.ModifyProducer(events, null);
             NUnit.Framework.Assert.AreEqual("||", newProducerLine);
         }
 
-        private IList<ITextProductEventWrapper> GetEvents(String initialProducerLine, params int[] indexes) {
-            IList<ITextProductEventWrapper> events = new List<ITextProductEventWrapper>();
+        private IList<ConfirmedEventWrapper> GetEvents(String initialProducerLine, params int[] indexes) {
+            IList<ConfirmedEventWrapper> events = new List<ConfirmedEventWrapper>();
             for (int ind = 0; ind < indexes.Length; ind++) {
                 int i = indexes[ind];
                 ProductData productData = new ProductData("product" + i, "module" + i, i + ".0", 1900 + i, 2100 + i);
-                events.Add(new ITextProductEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing" 
-                    + i), "type" + i, ind == 0 ? initialProducerLine : "iText product " + i));
+                events.Add(new ConfirmedEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing" + i
+                    ), "type" + i, ind == 0 ? initialProducerLine : "iText product " + i));
             }
             return events;
         }

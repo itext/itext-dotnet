@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Actions {
@@ -28,13 +29,16 @@ namespace iText.Kernel.Actions {
     /// <remarks>
     /// Represents a context-based event. See also
     /// <see cref="AbstractContextBasedEventHandler"/>.
+    /// Only for internal usage.
     /// </remarks>
-    public abstract class AbstractContextBasedITextEvent : ITextEvent {
+    public abstract class AbstractContextBasedITextEvent : AbstractProductITextEvent {
         private readonly IMetaInfo metaInfo;
 
         /// <summary>Creates an event containing auxiliary meta data.</summary>
+        /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractContextBasedITextEvent(IMetaInfo metaInfo) {
+        public AbstractContextBasedITextEvent(ProductData productData, IMetaInfo metaInfo)
+            : base(productData) {
             this.metaInfo = metaInfo;
         }
 
@@ -44,8 +48,10 @@ namespace iText.Kernel.Actions {
             return metaInfo;
         }
 
-        public abstract String GetEventType();
-
-        public abstract String GetProductName();
+        /// <summary>Obtains a current event context class.</summary>
+        /// <returns>context class</returns>
+        public virtual Type GetClassFromContext() {
+            return this.GetType();
+        }
     }
 }

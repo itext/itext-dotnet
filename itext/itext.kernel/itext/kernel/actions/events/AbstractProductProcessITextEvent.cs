@@ -27,20 +27,12 @@ using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Actions.Events {
-    /// <summary>Class is recommended for internal usage.</summary>
-    /// <remarks>
-    /// Class is recommended for internal usage. Please see
-    /// <see cref="iText.Kernel.Actions.AbstractContextBasedITextEvent"/>
-    /// for customizable
-    /// event associated with
-    /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-    /// or
-    /// <see cref="iText.Kernel.Actions.Sequence.SequenceId"/>.
-    /// </remarks>
-    public abstract class AbstractITextProductEvent : AbstractContextBasedITextEvent {
+    /// <summary>Abstract class which defines product process event.</summary>
+    /// <remarks>Abstract class which defines product process event. Only for internal usage.</remarks>
+    public abstract class AbstractProductProcessITextEvent : AbstractContextBasedITextEvent {
         private readonly WeakReference sequenceId;
 
-        private readonly ProductData productData;
+        private readonly EventConfirmationType confirmationType;
 
         /// <summary>
         /// Creates an event associated with
@@ -54,18 +46,28 @@ namespace iText.Kernel.Actions.Events {
         /// <param name="sequenceId">is a general identifier for the event</param>
         /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractITextProductEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo)
-            : base(metaInfo) {
+        /// <param name="confirmationType">
+        /// defines when the event should be confirmed to notify that the
+        /// associated process has finished successfully
+        /// </param>
+        public AbstractProductProcessITextEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo
+            , EventConfirmationType confirmationType)
+            : base(productData, metaInfo) {
             this.sequenceId = new WeakReference(sequenceId);
-            this.productData = productData;
+            this.confirmationType = confirmationType;
         }
 
         /// <summary>Creates an event which is not associated with any object.</summary>
         /// <remarks>Creates an event which is not associated with any object. It may contain auxiliary meta data.</remarks>
         /// <param name="productData">is a description of the product which has generated an event</param>
         /// <param name="metaInfo">is an auxiliary meta info</param>
-        public AbstractITextProductEvent(ProductData productData, IMetaInfo metaInfo)
-            : this(null, productData, metaInfo) {
+        /// <param name="confirmationType">
+        /// defines when the event should be confirmed to notify that the
+        /// associated process has finished successfully
+        /// </param>
+        public AbstractProductProcessITextEvent(ProductData productData, IMetaInfo metaInfo, EventConfirmationType
+             confirmationType)
+            : this(null, productData, metaInfo, confirmationType) {
         }
 
         /// <summary>Retrieves an identifier of event source.</summary>
@@ -74,10 +76,20 @@ namespace iText.Kernel.Actions.Events {
             return (SequenceId)sequenceId.Target;
         }
 
-        /// <summary>Retrieves a product data.</summary>
-        /// <returns>information about the product which triggered the event</returns>
-        public virtual ProductData GetProductData() {
-            return productData;
+        /// <summary>Returns an event type.</summary>
+        /// <returns>event type</returns>
+        public abstract String GetEventType();
+
+        /// <summary>
+        /// Retrieves an
+        /// <see cref="EventConfirmationType">event confirmation type</see>.
+        /// </summary>
+        /// <returns>
+        /// value of event confirmation type which defines when the event should be confirmed
+        /// to notify that the associated process has finished successfully
+        /// </returns>
+        public virtual EventConfirmationType GetConfirmationType() {
+            return confirmationType;
         }
     }
 }

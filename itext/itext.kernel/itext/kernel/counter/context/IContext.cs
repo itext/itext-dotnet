@@ -62,6 +62,6 @@ namespace iText.Kernel.Counter.Context {
         /// <summary>Determines weather event should be processed or not.</summary>
         /// <param name="event">is an event to test</param>
         /// <returns>true if event is allowed by the actual context and false otherwise</returns>
-        bool IsAllowed(ITextEvent @event);
+        bool IsAllowed(AbstractContextBasedITextEvent @event);
     }
 }

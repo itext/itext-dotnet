@@ -27,22 +27,27 @@ using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
 
 namespace iText.Kernel.Actions.Ecosystem {
-    public class ITextTestEvent : AbstractITextProductEvent {
+    public class ITextTestEvent : AbstractProductProcessITextEvent {
         private readonly String eventType;
 
         private readonly String productName;
 
         public ITextTestEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, String productName)
-            : base(sequenceId, null, metaInfo) {
+            : base(sequenceId, new ProductData("", "", "", 2000, 2100), metaInfo, EventConfirmationType.ON_CLOSE) {
             this.eventType = eventType;
             this.productName = productName;
         }
 
         public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType
-            )
-            : base(sequenceId, productData, metaInfo) {
+            , EventConfirmationType confirmationType)
+            : base(sequenceId, productData, metaInfo, confirmationType) {
             this.eventType = eventType;
             this.productName = productData.GetModuleName();
+        }
+
+        public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType
+            )
+            : this(sequenceId, productData, metaInfo, eventType, EventConfirmationType.ON_CLOSE) {
         }
 
         public override String GetEventType() {

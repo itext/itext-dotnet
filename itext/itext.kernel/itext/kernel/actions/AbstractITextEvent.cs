@@ -21,20 +21,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using iText.Kernel.Actions.Events;
 
-namespace iText.Kernel.Actions.Producer {
-    /// <summary>Interface for placeholder population.</summary>
-    internal interface IPlaceholderPopulator {
-        /// <summary>
-        /// Populates a placeholder based on the list of
-        /// <see cref="iText.Kernel.Actions.Events.ConfirmedEventWrapper"/>
-        /// and the array of parts of placeholder.
-        /// </summary>
-        /// <param name="events">is a list of event involved into document processing</param>
-        /// <param name="parameter">is a parameter passed to a placeholder and separated via delimiter <c>:</c></param>
-        /// <returns>value for placeholder replacement</returns>
-        String Populate(IList<ConfirmedEventWrapper> events, String parameter);
+namespace iText.Kernel.Actions {
+    /// <summary>Abstract class which defines events only for internal usage.</summary>
+    public abstract class AbstractITextEvent : IBaseEvent {
+        private const String INTERNAL_PACKAGE = "iText";
+
+        private const String ONLY_FOR_INTERNAL_USE = "AbstractITextEvent is only for internal usage.";
+
+        /// <summary>Creates an instance of abstract iText event.</summary>
+        /// <remarks>Creates an instance of abstract iText event. Only for internal usage.</remarks>
+        public AbstractITextEvent() {
+            if (!this.GetType().FullName.StartsWith(INTERNAL_PACKAGE)) {
+                throw new NotSupportedException(ONLY_FOR_INTERNAL_USE);
+            }
+        }
     }
 }

@@ -30,14 +30,6 @@ namespace iText.Kernel.Actions.Ecosystem {
 
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(TestConfigurationEvent));
 
-        public override String GetEventType() {
-            return "test-configuration";
-        }
-
-        public override String GetProductName() {
-            return ProductNameConstant.ITEXT_CORE;
-        }
-
         protected internal override void DoAction() {
             LOGGER.Warn(MESSAGE);
         }

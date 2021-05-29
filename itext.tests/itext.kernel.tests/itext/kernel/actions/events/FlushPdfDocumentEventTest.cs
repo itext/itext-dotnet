@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
@@ -37,15 +39,6 @@ namespace iText.Kernel.Actions.Events {
     public class FlushPdfDocumentEventTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
-
-        [NUnit.Framework.Test]
-        public virtual void FieldsTest() {
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                FlushPdfDocumentEvent @event = new FlushPdfDocumentEvent(document);
-                NUnit.Framework.Assert.AreEqual("flush-document-event", @event.GetEventType());
-                NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
-            }
-        }
 
         [NUnit.Framework.Test]
         public virtual void DoActionTest() {
@@ -80,6 +73,64 @@ namespace iText.Kernel.Actions.Events {
         }
 
         [NUnit.Framework.Test]
+        public virtual void OnCloseReportingTest() {
+            using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
+                using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
+                    ITextTestEvent @event = new ITextTestEvent(document.GetDocumentIdWrapper(), ITextCoreProductData.GetInstance
+                        (), null, "test-event", EventConfirmationType.ON_CLOSE);
+                    int initialLength = access.GetEvents(document.GetDocumentIdWrapper()).Count;
+                    EventManager.GetInstance().OnEvent(@event);
+                    new FlushPdfDocumentEvent(document).DoAction();
+                    AbstractProductProcessITextEvent reportedEvent = access.GetEvents(document.GetDocumentIdWrapper())[initialLength
+                        ];
+                    NUnit.Framework.Assert.IsTrue(reportedEvent is ConfirmedEventWrapper);
+                    ConfirmedEventWrapper wrappedEvent = (ConfirmedEventWrapper)reportedEvent;
+                    NUnit.Framework.Assert.AreEqual(@event, wrappedEvent.GetEvent());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNCONFIRMED_EVENT)]
+        public virtual void OnDemandReportingIgnoredTest() {
+            using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
+                using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
+                    ITextTestEvent @event = new ITextTestEvent(document.GetDocumentIdWrapper(), ITextCoreProductData.GetInstance
+                        (), null, "test-event", EventConfirmationType.ON_DEMAND);
+                    int initialLength = access.GetEvents(document.GetDocumentIdWrapper()).Count;
+                    EventManager.GetInstance().OnEvent(@event);
+                    new FlushPdfDocumentEvent(document).DoAction();
+                    AbstractProductProcessITextEvent reportedEvent = access.GetEvents(document.GetDocumentIdWrapper())[initialLength
+                        ];
+                    NUnit.Framework.Assert.IsFalse(reportedEvent is ConfirmedEventWrapper);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OnDemandReportingConfirmedTest() {
+            using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
+                using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
+                    ITextTestEvent @event = new ITextTestEvent(document.GetDocumentIdWrapper(), ITextCoreProductData.GetInstance
+                        (), null, "test-event", EventConfirmationType.ON_DEMAND);
+                    int initialLength = access.GetEvents(document.GetDocumentIdWrapper()).Count;
+                    EventManager.GetInstance().OnEvent(@event);
+                    AbstractProductProcessITextEvent reportedEvent = access.GetEvents(document.GetDocumentIdWrapper())[initialLength
+                        ];
+                    NUnit.Framework.Assert.IsFalse(reportedEvent is ConfirmedEventWrapper);
+                    NUnit.Framework.Assert.AreEqual(@event, reportedEvent);
+                    EventManager.GetInstance().OnEvent(new ConfirmEvent(document.GetDocumentIdWrapper(), @event));
+                    new FlushPdfDocumentEvent(document).DoAction();
+                    AbstractProductProcessITextEvent confirmedEvent = access.GetEvents(document.GetDocumentIdWrapper())[initialLength
+                        ];
+                    NUnit.Framework.Assert.IsTrue(confirmedEvent is ConfirmedEventWrapper);
+                    ConfirmedEventWrapper wrappedEvent = (ConfirmedEventWrapper)confirmedEvent;
+                    NUnit.Framework.Assert.AreEqual(@event, wrappedEvent.GetEvent());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED)]
         public virtual void UnknownProductTest() {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
@@ -97,6 +148,22 @@ namespace iText.Kernel.Actions.Events {
             NUnit.Framework.Assert.DoesNotThrow(() => closeEvent.DoAction());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FlushEventAfterEachEventTest() {
+            String resourceInit = SOURCE_FOLDER + "hello.pdf";
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(resourceInit), new PdfWriter(baos))) {
+                pdf.AddNewPage();
+                EventManager.GetInstance().OnEvent(new FlushPdfDocumentEvent(pdf));
+            }
+            using (PdfDocument pdf_1 = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String producerLine = pdf_1.GetDocumentInfo().GetProducer();
+                String modifiedByItext = "modified using iText\u00ae Core";
+                NUnit.Framework.Assert.AreNotEqual(producerLine.IndexOf(modifiedByItext, StringComparison.Ordinal), producerLine
+                    .LastIndexOf(modifiedByItext));
+            }
+        }
+
         private class TestProductEventProcessor : ITextProductEventProcessor {
             public readonly IList<String> aggregatedMessages;
 
@@ -107,7 +174,7 @@ namespace iText.Kernel.Actions.Events {
                 this.aggregatedMessages = aggregatedMessages;
             }
 
-            public virtual void OnEvent(AbstractITextProductEvent @event) {
+            public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
             }
 
             // do nothing here
@@ -132,9 +199,9 @@ namespace iText.Kernel.Actions.Events {
             }
         }
 
-        private static ITextProductEventWrapper GetEvent(String productName, SequenceId sequenceId) {
+        private static ConfirmedEventWrapper GetEvent(String productName, SequenceId sequenceId) {
             ProductData productData = new ProductData(productName, productName, "2.0", 1999, 2020);
-            return new ITextProductEventWrapper(new ITextTestEvent(sequenceId, productData, null, "testing"), "AGPL Version"
+            return new ConfirmedEventWrapper(new ITextTestEvent(sequenceId, productData, null, "testing"), "AGPL Version"
                 , "iText");
         }
     }

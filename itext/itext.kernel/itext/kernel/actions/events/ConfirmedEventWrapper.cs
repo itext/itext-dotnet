@@ -25,26 +25,26 @@ using System;
 namespace iText.Kernel.Actions.Events {
     /// <summary>
     /// A wrapper for a
-    /// <see cref="AbstractITextProductEvent"/>
-    /// storing additional meta data about the event.
+    /// <see cref="AbstractProductProcessITextEvent"/>
+    /// storing additional data about the event.
     /// </summary>
     /// <remarks>
     /// A wrapper for a
-    /// <see cref="AbstractITextProductEvent"/>
-    /// storing additional meta data about the event.
+    /// <see cref="AbstractProductProcessITextEvent"/>
+    /// storing additional data about the event.
     /// If wrapped event is immutable then the instance of the wrapper is immutable too.
     /// </remarks>
-    public class ITextProductEventWrapper {
-        private readonly AbstractITextProductEvent @event;
+    public class ConfirmedEventWrapper : AbstractProductProcessITextEvent {
+        private readonly AbstractProductProcessITextEvent @event;
 
         private readonly String productUsageType;
 
         private readonly String producerLine;
 
-        /// <summary>Creates a wrapper for the event.</summary>
+        /// <summary>Creates a wrapper for the event with additional data about the event.</summary>
         /// <param name="event">
         /// is a
-        /// <see cref="AbstractITextProductEvent"/>
+        /// <see cref="AbstractProductProcessITextEvent"/>
         /// to wrap
         /// </param>
         /// <param name="productUsageType">is a product usage marker</param>
@@ -53,8 +53,10 @@ namespace iText.Kernel.Actions.Events {
         /// <see cref="iText.Kernel.Actions.Processors.ITextProductEventProcessor"/>
         /// which registered the event
         /// </param>
-        public ITextProductEventWrapper(AbstractITextProductEvent @event, String productUsageType, String producerLine
-            ) {
+        public ConfirmedEventWrapper(AbstractProductProcessITextEvent @event, String productUsageType, String producerLine
+            )
+            : base(@event.GetSequenceId(), @event.GetProductData(), @event.GetMetaInfo(), EventConfirmationType.UNCONFIRMABLE
+                ) {
             this.@event = @event;
             this.productUsageType = productUsageType;
             this.producerLine = producerLine;
@@ -62,7 +64,7 @@ namespace iText.Kernel.Actions.Events {
 
         /// <summary>Obtains the wrapped event.</summary>
         /// <returns>wrapped event</returns>
-        public virtual AbstractITextProductEvent GetEvent() {
+        public virtual AbstractProductProcessITextEvent GetEvent() {
             return @event;
         }
 
@@ -81,6 +83,14 @@ namespace iText.Kernel.Actions.Events {
         /// <returns>producer line</returns>
         public virtual String GetProducerLine() {
             return producerLine;
+        }
+
+        public override String GetEventType() {
+            return @event.GetEventType();
+        }
+
+        public override String GetProductName() {
+            return @event.GetProductName();
         }
     }
 }

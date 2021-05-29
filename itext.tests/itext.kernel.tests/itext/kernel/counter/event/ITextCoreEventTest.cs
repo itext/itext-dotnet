@@ -40,26 +40,24 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
-using iText.Kernel.Pdf;
 using iText.Test;
 
 namespace iText.Kernel.Counter.Event {
     public class ITextCoreEventTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
-
         [NUnit.Framework.Test]
-        public virtual void SequenceIdEventCreationTest() {
+        public virtual void OpenDocumentEventTest() {
             SequenceId sequenceId = new SequenceId();
-            ITextCoreEvent @event = new ITextCoreEvent(sequenceId, new TestMetaInfo("meta data"), "test event");
-            NUnit.Framework.Assert.AreEqual("test event", @event.GetEventType());
+            ITextCoreEvent @event = ITextCoreEvent.CreateProcessPdfEvent(sequenceId, new TestMetaInfo("meta data"), EventConfirmationType
+                .ON_CLOSE);
+            NUnit.Framework.Assert.AreEqual(ITextCoreEvent.PROCESS_PDF, @event.GetEventType());
             NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
             NUnit.Framework.Assert.AreEqual("meta data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
+            NUnit.Framework.Assert.AreEqual(EventConfirmationType.ON_CLOSE, @event.GetConfirmationType());
             NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetPublicProductName(), @event.GetProductData
                 ().GetPublicProductName());
@@ -71,28 +69,6 @@ namespace iText.Kernel.Counter.Event {
                 ().GetSinceCopyrightYear());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetToCopyrightYear(), @event.GetProductData
                 ().GetToCopyrightYear());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DocumentEventCreationTest() {
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                ITextCoreEvent @event = new ITextCoreEvent(document.GetDocumentIdWrapper(), new TestMetaInfo("meta data"), 
-                    "test event");
-                NUnit.Framework.Assert.AreEqual("test event", @event.GetEventType());
-                NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
-                NUnit.Framework.Assert.AreEqual("meta data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
-                NUnit.Framework.Assert.AreEqual(document.GetDocumentIdWrapper(), @event.GetSequenceId());
-                NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetPublicProductName(), @event.GetProductData
-                    ().GetPublicProductName());
-                NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetModuleName(), @event.GetProductData(
-                    ).GetModuleName());
-                NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetVersion(), @event.GetProductData().GetVersion
-                    ());
-                NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetSinceCopyrightYear(), @event.GetProductData
-                    ().GetSinceCopyrightYear());
-                NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetToCopyrightYear(), @event.GetProductData
-                    ().GetToCopyrightYear());
-            }
         }
     }
 }

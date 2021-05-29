@@ -67,7 +67,7 @@ namespace iText.Kernel.Actions {
                 : base(onUnknownContext) {
             }
 
-            protected internal override void OnAcceptedEvent(ITextEvent @event) {
+            protected internal override void OnAcceptedEvent(AbstractContextBasedITextEvent @event) {
                 invoked = true;
             }
 

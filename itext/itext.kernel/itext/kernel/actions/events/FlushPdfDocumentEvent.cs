@@ -28,6 +28,7 @@ using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Producer;
+using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Actions.Session;
 using iText.Kernel.Pdf;
 
@@ -41,8 +42,6 @@ namespace iText.Kernel.Actions.Events {
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
             ));
 
-        private const String FLUSH_DOCUMENT_TYPE = "flush-document-event";
-
         private readonly WeakReference document;
 
         /// <summary>Creates a new instance of the flushing event.</summary>
@@ -52,37 +51,22 @@ namespace iText.Kernel.Actions.Events {
             this.document = new WeakReference(document);
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public override String GetProductName() {
-            return ProductNameConstant.ITEXT_CORE;
-        }
-
-        /// <summary>Returns a type of flushing event.</summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public override String GetEventType() {
-            return FLUSH_DOCUMENT_TYPE;
-        }
-
         /// <summary>Prepares document for flushing.</summary>
         protected internal override void DoAction() {
             PdfDocument pdfDocument = (PdfDocument)document.Target;
             if (pdfDocument == null) {
                 return;
             }
-            IList<ITextProductEventWrapper> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
+            IList<AbstractProductProcessITextEvent> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
             ICollection<String> products = new HashSet<String>();
             if (events == null || events.IsEmpty()) {
                 return;
             }
-            foreach (ITextProductEventWrapper @event in events) {
-                products.Add(@event.GetEvent().GetProductName());
+            foreach (AbstractProductProcessITextEvent @event in events) {
+                if (@event.GetConfirmationType() == EventConfirmationType.ON_CLOSE) {
+                    EventManager.GetInstance().OnEvent(new ConfirmEvent(pdfDocument.GetDocumentIdWrapper(), @event));
+                }
+                products.Add(@event.GetProductName());
             }
             IDictionary<String, ITextProductEventProcessor> knownProducts = new Dictionary<String, ITextProductEventProcessor
                 >();
@@ -98,7 +82,8 @@ namespace iText.Kernel.Actions.Events {
                 }
             }
             String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
-            String newProducer = ProducerBuilder.ModifyProducer(events, oldProducer);
+            String newProducer = ProducerBuilder.ModifyProducer(GetConfirmedEvents(pdfDocument.GetDocumentIdWrapper())
+                , oldProducer);
             pdfDocument.GetDocumentInfo().SetProducer(newProducer);
             ClosingSession session = new ClosingSession((PdfDocument)document.Target);
             foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {
@@ -108,6 +93,21 @@ namespace iText.Kernel.Actions.Events {
             foreach (KeyValuePair<String, ITextProductEventProcessor> product in knownProducts) {
                 product.Value.CompletionOnClose(session);
             }
+        }
+
+        private IList<ConfirmedEventWrapper> GetConfirmedEvents(SequenceId sequenceId) {
+            IList<AbstractProductProcessITextEvent> events = GetEvents(sequenceId);
+            IList<ConfirmedEventWrapper> confirmedEvents = new List<ConfirmedEventWrapper>();
+            foreach (AbstractProductProcessITextEvent @event in events) {
+                if (@event is ConfirmedEventWrapper) {
+                    confirmedEvents.Add((ConfirmedEventWrapper)@event);
+                }
+                else {
+                    LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNCONFIRMED_EVENT, @event.GetProductName(), 
+                        @event.GetEventType()));
+                }
+            }
+            return confirmedEvents;
         }
     }
 }

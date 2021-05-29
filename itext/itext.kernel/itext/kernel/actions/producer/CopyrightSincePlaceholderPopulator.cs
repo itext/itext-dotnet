@@ -51,14 +51,14 @@ namespace iText.Kernel.Actions.Producer {
         /// <c>copyrightSince</c> as the placeholder is not configurable
         /// </param>
         /// <returns>the earliest copyright year</returns>
-        public virtual String Populate(IList<ITextProductEventWrapper> events, String parameter) {
+        public virtual String Populate(IList<ConfirmedEventWrapper> events, String parameter) {
             if (parameter != null) {
                 throw new ArgumentException(MessageFormatUtil.Format(PdfException.InvalidUsageConfigurationForbidden, "copyrightSince"
                     ));
             }
             // initial value, will be overwritten with product value
             int earliestYear = int.MaxValue;
-            foreach (ITextProductEventWrapper @event in events) {
+            foreach (ConfirmedEventWrapper @event in events) {
                 int currentYear = @event.GetEvent().GetProductData().GetSinceCopyrightYear();
                 if (currentYear < earliestYear) {
                     earliestYear = currentYear;

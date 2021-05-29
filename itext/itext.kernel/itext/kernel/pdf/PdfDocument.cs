@@ -1973,8 +1973,9 @@ namespace iText.Kernel.Pdf {
             this.fingerPrint = new FingerPrint();
             this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {
-                EventManager.GetInstance().OnEvent(new ITextCoreEvent(this.GetDocumentIdWrapper(), null, ITextCoreEvent.OPEN_DOCUMENT
-                    ));
+                ITextCoreEvent @event = ITextCoreEvent.CreateProcessPdfEvent(this.GetDocumentIdWrapper(), properties.metaInfo
+                    , writer == null ? EventConfirmationType.ON_DEMAND : EventConfirmationType.ON_CLOSE);
+                EventManager.GetInstance().OnEvent(@event);
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
                 bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
@@ -2124,6 +2125,10 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                     }
+                }
+                if (EventConfirmationType.ON_DEMAND == @event.GetConfirmationType()) {
+                    // Event confirmation: opening has passed successfully
+                    EventManager.GetInstance().OnEvent(new ConfirmEvent(@event));
                 }
             }
             catch (System.IO.IOException e) {

@@ -29,10 +29,10 @@ namespace iText.Kernel.Actions.Processors {
     public interface ITextProductEventProcessor {
         /// <summary>
         /// Handles the
-        /// <see cref="iText.Kernel.Actions.Events.AbstractITextProductEvent"/>.
+        /// <see cref="iText.Kernel.Actions.Events.AbstractProductProcessITextEvent"/>.
         /// </summary>
         /// <param name="event">to handle</param>
-        void OnEvent(AbstractITextProductEvent @event);
+        void OnEvent(AbstractProductProcessITextEvent @event);
 
         /// <summary>Gets the name of the product to which this processor corresponds.</summary>
         /// <returns>the product name</returns>

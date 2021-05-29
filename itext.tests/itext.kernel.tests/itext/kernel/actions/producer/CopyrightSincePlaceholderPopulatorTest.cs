@@ -34,31 +34,31 @@ namespace iText.Kernel.Actions.Producer {
 
         [NUnit.Framework.Test]
         public virtual void OneEventTest() {
-            IList<ITextProductEventWrapper> events = GetEvents(1994);
+            IList<ConfirmedEventWrapper> events = GetEvents(1994);
             String result = populator.Populate(events, null);
             NUnit.Framework.Assert.AreEqual("1994", result);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeveralEventsTest() {
-            IList<ITextProductEventWrapper> events = GetEvents(2012, 1994, 1998);
+            IList<ConfirmedEventWrapper> events = GetEvents(2012, 1994, 1998);
             String result = populator.Populate(events, null);
             NUnit.Framework.Assert.AreEqual("1994", result);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeveralEventsWithSameYearTest() {
-            IList<ITextProductEventWrapper> events = GetEvents(1992, 1998, 1992, 1998);
+            IList<ConfirmedEventWrapper> events = GetEvents(1992, 1998, 1992, 1998);
             String result = populator.Populate(events, null);
             NUnit.Framework.Assert.AreEqual("1992", result);
         }
 
-        private IList<ITextProductEventWrapper> GetEvents(params int[] years) {
-            IList<ITextProductEventWrapper> events = new List<ITextProductEventWrapper>();
+        private IList<ConfirmedEventWrapper> GetEvents(params int[] years) {
+            IList<ConfirmedEventWrapper> events = new List<ConfirmedEventWrapper>();
             foreach (int year in years) {
                 ProductData productData = new ProductData("iText Test", "itext-test", "25.3", year, 2021);
-                events.Add(new ITextProductEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing")
-                    , "AGPL", "iText test product line"));
+                events.Add(new ConfirmedEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing"), "AGPL"
+                    , "iText test product line"));
             }
             return events;
         }

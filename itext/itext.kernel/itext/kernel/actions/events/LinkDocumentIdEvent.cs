@@ -34,13 +34,9 @@ namespace iText.Kernel.Actions.Events {
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
     /// </summary>
     public sealed class LinkDocumentIdEvent : AbstractITextConfigurationEvent {
-        private const String LINK_DOCUMENT_ID_EVENT_TYPE = "link-document-id-event";
-
         private readonly WeakReference document;
 
         private readonly WeakReference sequenceId;
-
-        private readonly String productName;
 
         /// <summary>
         /// Creates a new instance of the event associating provided
@@ -51,17 +47,10 @@ namespace iText.Kernel.Actions.Events {
         /// </summary>
         /// <param name="document">is a document</param>
         /// <param name="sequenceId">is a general identifier to be associated with the document</param>
-        public LinkDocumentIdEvent(PdfDocument document, SequenceId sequenceId, String productName)
+        public LinkDocumentIdEvent(PdfDocument document, SequenceId sequenceId)
             : base() {
             this.document = new WeakReference(document);
             this.sequenceId = new WeakReference(sequenceId);
-            this.productName = productName;
-        }
-
-        /// <summary>Returns iText core product identifier.</summary>
-        /// <returns>iText core product identifier</returns>
-        public override String GetProductName() {
-            return productName;
         }
 
         /// <summary>
@@ -76,17 +65,13 @@ namespace iText.Kernel.Actions.Events {
             if (storedSequenceId == null || storedPdfDocument == null) {
                 return;
             }
-            IList<ITextProductEventWrapper> anonymousEvents = GetEvents(storedSequenceId);
+            IList<AbstractProductProcessITextEvent> anonymousEvents = GetEvents(storedSequenceId);
             if (anonymousEvents != null) {
                 SequenceId documentId = storedPdfDocument.GetDocumentIdWrapper();
-                foreach (ITextProductEventWrapper @event in anonymousEvents) {
+                foreach (AbstractProductProcessITextEvent @event in anonymousEvents) {
                     AddEvent(documentId, @event);
                 }
             }
-        }
-
-        public override String GetEventType() {
-            return LINK_DOCUMENT_ID_EVENT_TYPE;
         }
     }
 }

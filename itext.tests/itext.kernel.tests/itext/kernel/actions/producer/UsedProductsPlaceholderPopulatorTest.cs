@@ -125,12 +125,12 @@ namespace iText.Kernel.Actions.Producer {
 ;
         }
 
-        private IList<ITextProductEventWrapper> GetEvents(params int[] indexes) {
-            IList<ITextProductEventWrapper> events = new List<ITextProductEventWrapper>();
+        private IList<ConfirmedEventWrapper> GetEvents(params int[] indexes) {
+            IList<ConfirmedEventWrapper> events = new List<ConfirmedEventWrapper>();
             foreach (int i in indexes) {
                 ProductData productData = new ProductData("product" + i, "module" + i, i + ".0", 1900, 2100);
-                events.Add(new ITextProductEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing" 
-                    + i), "type" + i, "iText product " + i));
+                events.Add(new ConfirmedEventWrapper(new ITextTestEvent(new SequenceId(), productData, null, "testing" + i
+                    ), "type" + i, "iText product " + i));
             }
             return events;
         }

@@ -56,11 +56,11 @@ namespace iText.Kernel.Actions {
             return ProductEventHandler.INSTANCE.GetProcessors();
         }
 
-        public virtual IList<ITextProductEventWrapper> GetEvents(SequenceId id) {
+        public virtual IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
             return ProductEventHandler.INSTANCE.GetEvents(id);
         }
 
-        public virtual void AddEvent(SequenceId id, ITextProductEventWrapper @event) {
+        public virtual void AddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
             ProductEventHandler.INSTANCE.AddEvent(id, @event);
         }
 

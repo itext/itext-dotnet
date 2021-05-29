@@ -34,16 +34,6 @@ namespace iText.Kernel.Actions.Events {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/actions/";
 
         [NUnit.Framework.Test]
-        public virtual void PropertiesTest() {
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                SequenceId sequenceId = new SequenceId();
-                LinkDocumentIdEvent @event = new LinkDocumentIdEvent(document, sequenceId, ProductNameConstant.ITEXT_CORE);
-                NUnit.Framework.Assert.AreEqual("link-document-id-event", @event.GetEventType());
-                NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
-            }
-        }
-
-        [NUnit.Framework.Test]
         public virtual void DoActionLinkModifiedDocumentTest() {
             using (ProductEventHandlerAccess access = new ProductEventHandlerAccess()) {
                 using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
@@ -60,12 +50,13 @@ namespace iText.Kernel.Actions.Events {
                         (), null, "document-testing", "test-product-4")));
                     int initialSequenceEventsNumber = access.GetEvents(sequenceId).Count;
                     int initialDocumentEventsNumber = access.GetEvents(document.GetDocumentIdWrapper()).Count;
-                    new LinkDocumentIdEvent(document, sequenceId, ProductNameConstant.ITEXT_CORE).DoAction();
+                    new LinkDocumentIdEvent(document, sequenceId).DoAction();
                     NUnit.Framework.Assert.AreEqual(initialSequenceEventsNumber, access.GetEvents(sequenceId).Count);
-                    IList<ITextProductEventWrapper> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper());
+                    IList<AbstractProductProcessITextEvent> actualDocumentEvents = access.GetEvents(document.GetDocumentIdWrapper
+                        ());
                     NUnit.Framework.Assert.AreEqual(initialDocumentEventsNumber + 3, actualDocumentEvents.Count);
                     for (int i = initialDocumentEventsNumber; i < initialDocumentEventsNumber + 3; i++) {
-                        AbstractITextProductEvent sequenceEvent = actualDocumentEvents[i].GetEvent();
+                        AbstractProductProcessITextEvent sequenceEvent = actualDocumentEvents[i];
                         NUnit.Framework.Assert.AreEqual("sequenceId-testing", sequenceEvent.GetEventType());
                         NUnit.Framework.Assert.AreEqual("test-product-" + (i - initialDocumentEventsNumber), sequenceEvent.GetProductName
                             ());
@@ -78,18 +69,15 @@ namespace iText.Kernel.Actions.Events {
 
         [NUnit.Framework.Test]
         public virtual void NullValuesAreAcceptableTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(null, null, ProductNameConstant.ITEXT_CORE
-                ));
-            NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(null, new SequenceId(), ProductNameConstant
-                .ITEXT_CORE));
+            NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(null, null));
+            NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(null, new SequenceId()));
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hello.pdf"))) {
-                NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(document, null, ProductNameConstant.ITEXT_CORE
-                    ));
+                NUnit.Framework.Assert.DoesNotThrow(() => new LinkDocumentIdEvent(document, null));
             }
         }
 
-        private static ITextProductEventWrapper WrapEvent(AbstractITextProductEvent @event) {
-            return new ITextProductEventWrapper(@event, "AGPL Version", "iText");
+        private static ConfirmedEventWrapper WrapEvent(AbstractProductProcessITextEvent @event) {
+            return new ConfirmedEventWrapper(@event, "AGPL Version", "iText");
         }
     }
 }

@@ -88,6 +88,6 @@ namespace iText.Kernel.Actions.Producer {
             return (A_LOWERCASE <= ch && Z_LOWERCASE >= ch) || (A_UPPERCASE <= ch && Z_UPPERCASE >= ch);
         }
 
-        public abstract String Populate(IList<ITextProductEventWrapper> arg1, String arg2);
+        public abstract String Populate(IList<ConfirmedEventWrapper> arg1, String arg2);
     }
 }

@@ -40,23 +40,20 @@ namespace iText.Kernel.Actions {
 
         /// <summary>
         /// Performs context validation and if event is allowed to be processed passes it to
-        /// <see cref="OnAcceptedEvent(ITextEvent)"/>.
+        /// <see cref="OnAcceptedEvent(AbstractContextBasedITextEvent)"/>.
         /// </summary>
         /// <param name="event">to handle</param>
         public void OnEvent(IBaseEvent @event) {
-            if (!(@event is ITextEvent)) {
+            if (!(@event is AbstractContextBasedITextEvent)) {
                 return;
             }
-            ITextEvent iTextEvent = (ITextEvent)@event;
             IContext context = null;
-            if (@event is AbstractContextBasedITextEvent) {
-                AbstractContextBasedITextEvent iTextProductEvent = (AbstractContextBasedITextEvent)@event;
-                if (iTextProductEvent.GetMetaInfo() != null) {
-                    context = ContextManager.GetInstance().GetContext(iTextProductEvent.GetMetaInfo().GetType());
-                }
-                if (context == null) {
-                    context = ContextManager.GetInstance().GetContext(@event.GetType());
-                }
+            AbstractContextBasedITextEvent iTextEvent = (AbstractContextBasedITextEvent)@event;
+            if (iTextEvent.GetMetaInfo() != null) {
+                context = ContextManager.GetInstance().GetContext(iTextEvent.GetMetaInfo().GetType());
+            }
+            if (context == null) {
+                context = ContextManager.GetInstance().GetContext(iTextEvent.GetClassFromContext());
             }
             if (context == null) {
                 context = this.defaultContext;
@@ -68,6 +65,6 @@ namespace iText.Kernel.Actions {
 
         /// <summary>Handles the accepted event.</summary>
         /// <param name="event">to handle</param>
-        protected internal abstract void OnAcceptedEvent(ITextEvent @event);
+        protected internal abstract void OnAcceptedEvent(AbstractContextBasedITextEvent @event);
     }
 }

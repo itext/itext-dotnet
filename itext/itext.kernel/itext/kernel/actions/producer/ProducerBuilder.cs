@@ -80,7 +80,7 @@ namespace iText.Kernel.Actions.Producer {
         /// </remarks>
         /// <param name="events">
         /// list of events wrapped with
-        /// <see cref="iText.Kernel.Actions.Events.ITextProductEventWrapper"/>
+        /// <see cref="iText.Kernel.Actions.Events.ConfirmedEventWrapper"/>
         /// registered for
         /// the document
         /// </param>
@@ -91,7 +91,7 @@ namespace iText.Kernel.Actions.Producer {
         /// <c>modified using</c> substring, it will be overriden with a new one
         /// </param>
         /// <returns>modified producer line</returns>
-        public static String ModifyProducer(IList<ITextProductEventWrapper> events, String oldProducer) {
+        public static String ModifyProducer(IList<ConfirmedEventWrapper> events, String oldProducer) {
             String newProducer = BuildProducer(events);
             if (oldProducer == null || String.IsNullOrEmpty(oldProducer)) {
                 return newProducer;
@@ -101,7 +101,7 @@ namespace iText.Kernel.Actions.Producer {
             }
         }
 
-        private static String BuildProducer(IList<ITextProductEventWrapper> events) {
+        private static String BuildProducer(IList<ConfirmedEventWrapper> events) {
             if (events == null || events.IsEmpty()) {
                 throw new ArgumentException(PdfException.NoEventsWereRegisteredForTheDocument);
             }
@@ -112,7 +112,7 @@ namespace iText.Kernel.Actions.Producer {
             return PopulatePlaceholders(producer, events);
         }
 
-        private static String PopulatePlaceholders(String producerLine, IList<ITextProductEventWrapper> events) {
+        private static String PopulatePlaceholders(String producerLine, IList<ConfirmedEventWrapper> events) {
             int lastIndex = 0;
             Matcher matcher = iText.IO.Util.Matcher.Match(PATTERN, producerLine);
             StringBuilder builder = new StringBuilder();

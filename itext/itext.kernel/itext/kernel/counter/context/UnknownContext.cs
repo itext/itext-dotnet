@@ -88,7 +88,7 @@ namespace iText.Kernel.Counter.Context {
         /// 
         /// <inheritDoc/>
         /// </returns>
-        public virtual bool IsAllowed(ITextEvent @event) {
+        public virtual bool IsAllowed(AbstractContextBasedITextEvent @event) {
             return allowEvents;
         }
     }

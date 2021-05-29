@@ -39,35 +39,18 @@ namespace iText.Kernel.Actions.Processors {
             this.productName = productName;
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <param name="event">to handle</param>
-        public virtual void OnEvent(AbstractITextProductEvent @event) {
+        public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
         }
 
         // TODO: DEVSIX-5341 provide appropriate logic if any
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
         public virtual String GetProductName() {
             return productName;
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
         public virtual String GetUsageType() {
             return "AGPL";
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
         public virtual String GetProducer() {
             return "iText\u00ae ${usedProducts:P V (T 'version')} \u00a9${copyrightSince}-${copyrightTo} iText Group NV";
         }

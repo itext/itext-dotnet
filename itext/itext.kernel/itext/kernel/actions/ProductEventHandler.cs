@@ -24,7 +24,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Common.Logging;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Exceptions;
 using iText.Kernel.Actions.Processors;
@@ -37,11 +39,14 @@ namespace iText.Kernel.Actions {
         internal static readonly iText.Kernel.Actions.ProductEventHandler INSTANCE = new iText.Kernel.Actions.ProductEventHandler
             ();
 
+        private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.ProductEventHandler
+            ));
+
         private readonly ConcurrentDictionary<String, ITextProductEventProcessor> processors = new ConcurrentDictionary
             <String, ITextProductEventProcessor>();
 
-        private readonly ConditionalWeakTable<SequenceId, IList<ITextProductEventWrapper>> events = new ConditionalWeakTable
-            <SequenceId, IList<ITextProductEventWrapper>>();
+        private readonly ConditionalWeakTable<SequenceId, IList<AbstractProductProcessITextEvent>> events = new ConditionalWeakTable
+            <SequenceId, IList<AbstractProductProcessITextEvent>>();
 
         private ProductEventHandler()
             : base(UnknownContext.PERMISSIVE) {
@@ -52,23 +57,20 @@ namespace iText.Kernel.Actions {
         /// <see cref="iText.Kernel.Actions.Processors.ITextProductEventProcessor"/>.
         /// </summary>
         /// <param name="event">to handle</param>
-        protected internal override void OnAcceptedEvent(ITextEvent @event) {
-            if (@event is AbstractITextProductEvent) {
-                AbstractITextProductEvent iTextEvent = (AbstractITextProductEvent)@event;
-                ITextProductEventProcessor productEventProcessor = FindProcessorForProduct(iTextEvent.GetProductName());
-                if (iTextEvent.GetSequenceId() != null) {
-                    lock (events) {
-                        SequenceId id = iTextEvent.GetSequenceId();
-                        if (!events.ContainsKey(id)) {
-                            events.Put(id, new List<ITextProductEventWrapper>());
-                        }
-                        // TODO DEVSIX-5053 if event reporting will be done on document closing then
-                        //  event wrapping should be done there
-                        events.Get(id).Add(new ITextProductEventWrapper(iTextEvent, productEventProcessor.GetUsageType(), productEventProcessor
-                            .GetProducer()));
-                    }
+        protected internal override void OnAcceptedEvent(AbstractContextBasedITextEvent @event) {
+            if (!(@event is AbstractProductProcessITextEvent)) {
+                return;
+            }
+            AbstractProductProcessITextEvent productEvent = (AbstractProductProcessITextEvent)@event;
+            ITextProductEventProcessor productEventProcessor = FindProcessorForProduct(productEvent.GetProductName());
+            productEventProcessor.OnEvent(productEvent);
+            if (productEvent.GetSequenceId() != null) {
+                if (productEvent is ConfirmEvent) {
+                    WrapConfirmedEvent((ConfirmEvent)productEvent, productEventProcessor);
                 }
-                productEventProcessor.OnEvent(iTextEvent);
+                else {
+                    AddEvent(productEvent.GetSequenceId(), productEvent);
+                }
             }
         }
 
@@ -88,25 +90,41 @@ namespace iText.Kernel.Actions {
             return JavaCollectionsUtil.UnmodifiableMap(new Dictionary<String, ITextProductEventProcessor>(processors));
         }
 
-        internal IList<ITextProductEventWrapper> GetEvents(SequenceId id) {
+        internal IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
             lock (events) {
-                IList<ITextProductEventWrapper> listOfEvents = events.Get(id);
+                IList<AbstractProductProcessITextEvent> listOfEvents = events.Get(id);
                 if (listOfEvents == null) {
-                    return JavaCollectionsUtil.EmptyList<ITextProductEventWrapper>();
+                    return JavaCollectionsUtil.EmptyList<AbstractProductProcessITextEvent>();
                 }
-                return JavaCollectionsUtil.UnmodifiableList<ITextProductEventWrapper>(new List<ITextProductEventWrapper>(listOfEvents
-                    ));
+                return JavaCollectionsUtil.UnmodifiableList<AbstractProductProcessITextEvent>(new List<AbstractProductProcessITextEvent
+                    >(listOfEvents));
             }
         }
 
-        internal void AddEvent(SequenceId id, ITextProductEventWrapper @event) {
+        internal void AddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
             lock (events) {
-                IList<ITextProductEventWrapper> listOfEvents = events.Get(id);
+                IList<AbstractProductProcessITextEvent> listOfEvents = events.Get(id);
                 if (listOfEvents == null) {
-                    listOfEvents = new List<ITextProductEventWrapper>();
+                    listOfEvents = new List<AbstractProductProcessITextEvent>();
                     events.Put(id, listOfEvents);
                 }
                 listOfEvents.Add(@event);
+            }
+        }
+
+        private void WrapConfirmedEvent(ConfirmEvent @event, ITextProductEventProcessor productEventProcessor) {
+            lock (events) {
+                IList<AbstractProductProcessITextEvent> eventsList = events.Get(@event.GetSequenceId());
+                AbstractProductProcessITextEvent confirmedEvent = @event.GetConfirmedEvent();
+                int indexOfReportedEvent = eventsList.IndexOf(confirmedEvent);
+                if (indexOfReportedEvent >= 0) {
+                    eventsList[indexOfReportedEvent] = new ConfirmedEventWrapper(confirmedEvent, productEventProcessor.GetUsageType
+                        (), productEventProcessor.GetProducer());
+                }
+                else {
+                    LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
+                        (), confirmedEvent.GetEventType()));
+                }
             }
         }
 

@@ -28,8 +28,11 @@ using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>
-    public class ITextCoreEvent : AbstractITextProductEvent {
-        public const String OPEN_DOCUMENT = "open-document-event";
+    public class ITextCoreEvent : AbstractProductProcessITextEvent {
+        /// <summary>Process pdf event type.</summary>
+        public const String PROCESS_PDF = 
+                // TODO DEVSIX-5466 rename constant value
+                "open-document-event";
 
         private readonly String eventType;
 
@@ -37,25 +40,34 @@ namespace iText.Kernel.Counter.Event {
         /// <param name="sequenceId">is an identifier associated with the event</param>
         /// <param name="metaInfo">is an additional meta info</param>
         /// <param name="eventType">is a string description of the event</param>
-        public ITextCoreEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType)
-            : base(sequenceId, ITextCoreProductData.GetInstance(), metaInfo) {
+        /// <param name="confirmationType">
+        /// defines when the event should be confirmed to notify that the
+        /// associated process has finished successfully
+        /// </param>
+        private ITextCoreEvent(SequenceId sequenceId, IMetaInfo metaInfo, String eventType, EventConfirmationType 
+            confirmationType)
+            : base(sequenceId, ITextCoreProductData.GetInstance(), metaInfo, confirmationType) {
             this.eventType = eventType;
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
+        /// <summary>Creates an process pdf event which associated with a general identifier and additional meta data.
+        ///     </summary>
+        /// <param name="sequenceId">is an identifier associated with the event</param>
+        /// <param name="metaInfo">is an additional meta info</param>
+        /// <param name="confirmationType">
+        /// defines when the event should be confirmed to notify that the
+        /// associated process has finished successfully
+        /// </param>
+        /// <returns>the process pdf event</returns>
+        public static iText.Kernel.Counter.Event.ITextCoreEvent CreateProcessPdfEvent(SequenceId sequenceId, IMetaInfo
+             metaInfo, EventConfirmationType confirmationType) {
+            return new iText.Kernel.Counter.Event.ITextCoreEvent(sequenceId, metaInfo, PROCESS_PDF, confirmationType);
+        }
+
         public override String GetProductName() {
             return ProductNameConstant.ITEXT_CORE;
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
         public override String GetEventType() {
             return eventType;
         }

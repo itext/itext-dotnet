@@ -27,25 +27,11 @@ using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Actions {
-    /// <summary>Class is recommended for internal usage.</summary>
-    /// <remarks>Class is recommended for internal usage. Represents system configuration events.</remarks>
-    public abstract class AbstractITextConfigurationEvent : ITextEvent {
-        private const String INTERNAL_PACKAGE = "iText";
-
-        private const String ONLY_FOR_INTERNAL_USE = "AbstractTextConfigurationEvent is only for internal usage.";
-
-        /// <summary>Creates an instance of configuration event.</summary>
-        public AbstractITextConfigurationEvent()
-            : base() {
-            // TODO: DEVSIX-4958 if needed we can create some wrapper mechanism to allow creation
-            // of ITextConfigurationEvent in Pdf2Data
-            if (!this.GetType().FullName.StartsWith(INTERNAL_PACKAGE)) {
-                throw new NotSupportedException(ONLY_FOR_INTERNAL_USE);
-            }
-        }
-
+    /// <summary>Abstract class which represents system configuration events.</summary>
+    /// <remarks>Abstract class which represents system configuration events. Only for internal usage.</remarks>
+    public abstract class AbstractITextConfigurationEvent : AbstractITextEvent {
         /// <summary>
-        /// Add a new
+        /// Adds a new
         /// <see cref="iText.Kernel.Actions.Processors.ITextProductEventProcessor"/>
         /// for a product.
         /// </summary>
@@ -75,33 +61,21 @@ namespace iText.Kernel.Actions {
             return ProductEventHandler.INSTANCE.GetProcessors();
         }
 
-        /// <summary>
-        /// Gets events wrapped with
-        /// <see cref="iText.Kernel.Actions.Events.ITextProductEventWrapper"/>
-        /// registered for provided identifier.
-        /// </summary>
+        /// <summary>Gets events registered for provided identifier.</summary>
         /// <param name="id">is the identifier</param>
-        /// <returns>the list of wrapped event for identifier</returns>
-        protected internal virtual IList<ITextProductEventWrapper> GetEvents(SequenceId id) {
+        /// <returns>the list of event for identifier</returns>
+        protected internal virtual IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
             return ProductEventHandler.INSTANCE.GetEvents(id);
         }
 
-        /// <summary>
-        /// Registers a new event wrapped with
-        /// <see cref="iText.Kernel.Actions.Events.ITextProductEventWrapper"/>
-        /// for provided identifier.
-        /// </summary>
+        /// <summary>Registers a new event for provided identifier.</summary>
         /// <param name="id">is the identifier</param>
-        /// <param name="event">is the wrapped event to register</param>
-        protected internal virtual void AddEvent(SequenceId id, ITextProductEventWrapper @event) {
+        /// <param name="event">is the event to register</param>
+        protected internal virtual void AddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
             ProductEventHandler.INSTANCE.AddEvent(id, @event);
         }
 
         /// <summary>Method defines the logic of action processing.</summary>
         protected internal abstract void DoAction();
-
-        public abstract String GetEventType();
-
-        public abstract String GetProductName();
     }
 }

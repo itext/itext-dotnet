@@ -89,7 +89,7 @@ namespace iText.Kernel.Actions.Producer {
         /// </param>
         /// <param name="parameter">defines output format in accordance with the description</param>
         /// <returns>date of producer line creation in accordance with defined format</returns>
-        public override String Populate(IList<ITextProductEventWrapper> events, String parameter) {
+        public override String Populate(IList<ConfirmedEventWrapper> events, String parameter) {
             if (parameter == null) {
                 throw new ArgumentException(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "currentDate"
                     ));
