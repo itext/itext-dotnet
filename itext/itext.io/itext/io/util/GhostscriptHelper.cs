@@ -45,6 +45,17 @@ using System;
 using iText.IO;
 
 namespace iText.IO.Util {
+    /// <summary>A utility class that is used as an interface to run 3rd-party tool Ghostscript.</summary>
+    /// <remarks>
+    /// A utility class that is used as an interface to run 3rd-party tool Ghostscript.
+    /// Ghostscript is an interpreter for the PostScript language and PDF files, it allows to render them
+    /// as images.
+    /// <para />
+    /// The Ghostscript needs to be installed independently on the system. This class provides a convenient
+    /// way to run it by passing a terminal command. The command can either be specified explicitly or by a mean
+    /// of environment variable
+    /// <see cref="GHOSTSCRIPT_ENVIRONMENT_VARIABLE"/>.
+    /// </remarks>
     public class GhostscriptHelper {
         /// <summary>The name of the environment variable with the command to execute Ghostscript operations.</summary>
         public const String GHOSTSCRIPT_ENVIRONMENT_VARIABLE = "ITEXT_GS_EXEC";
@@ -58,10 +69,18 @@ namespace iText.IO.Util {
 
         private String gsExec;
 
+        /// <summary>
+        /// Creates new instance that will rely on Ghostscript execution command defined by
+        /// <see cref="GHOSTSCRIPT_ENVIRONMENT_VARIABLE"/>
+        /// environment variable.
+        /// </summary>
         public GhostscriptHelper()
             : this(null) {
         }
 
+        /// <summary>Creates new instance that will rely on Ghostscript execution command defined as passed argument.</summary>
+        /// <param name="newGsExec">the Ghostscript execution command; if null - environment variables will be used instead
+        ///     </param>
         public GhostscriptHelper(String newGsExec) {
             gsExec = newGsExec;
             if (gsExec == null) {
