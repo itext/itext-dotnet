@@ -939,7 +939,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
-        /// in case tagged document, otherwise false.
+        /// in case document is tagged, otherwise it returns null.
         /// </returns>
         /// <seealso cref="IsTagged()"/>
         /// <seealso cref="GetNextStructParentIndex()"/>
