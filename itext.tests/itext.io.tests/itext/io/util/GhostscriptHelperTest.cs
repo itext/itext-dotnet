@@ -146,38 +146,21 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void DSaferParamInGhostScriptHelperTest() {
-            String cmpPdf = sourceFolder + "maliciousPsInvokingCalcExe.ps";
-            String maliciousPsInvokingCalcExe = destinationFolder + "maliciousPsInvokingCalcExe.png";
-            int majorVersion = 0;
-            int minorVersion = 0;
-            bool isWindows = IdentifyOsType().ToLowerInvariant().Contains("win");
-            if (isWindows) {
-                String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
-                if (gsExec == null) {
-                    gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
-                }
-                String[] pathParts = iText.IO.Util.StringUtil.Split(gsExec, "\\d\\.\\d\\d");
-                for (int i = 0; i < pathParts.Length; i++) {
-                    gsExec = gsExec.Replace(pathParts[i], "");
-                }
-                String[] version = iText.IO.Util.StringUtil.Split(gsExec, "\\.");
-                majorVersion = Convert.ToInt32(version[0], System.Globalization.CultureInfo.InvariantCulture);
-                minorVersion = Convert.ToInt32(version[1], System.Globalization.CultureInfo.InvariantCulture);
-            }
+            String input = sourceFolder + "unsafePostScript.ps";
+            String outputName = "unsafePostScript.png";
+            String maliciousResult1 = destinationFolder + "output1.txt";
+            String maliciousResult2 = destinationFolder + "output2.txt";
             try {
                 GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-                ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, destinationFolder, "maliciousPsInvokingCalcExe.png"
-                    );
-                if (isWindows) {
-                    NUnit.Framework.Assert.IsTrue((majorVersion > 9 || (majorVersion == 9 && minorVersion >= 50)));
-                }
+                ghostscriptHelper.RunGhostScriptImageGeneration(input, destinationFolder, outputName);
             }
             catch (GhostscriptHelper.GhostscriptExecutionException) {
-                if (isWindows) {
-                    NUnit.Framework.Assert.IsTrue((majorVersion < 9 || (majorVersion == 9 && minorVersion < 50)));
-                }
+                System.Console.Out.WriteLine("Error code was returned on processing of malicious script with -dSAFER option enabled. "
+                     + "This is expected for some environments and ghostscript versions. " + "We assert only the absence of malicious script result (created file).\n"
+                    );
             }
-            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousPsInvokingCalcExe));
+            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousResult1));
+            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousResult2));
         }
 
         [NUnit.Framework.Test]
@@ -193,17 +176,6 @@ namespace iText.IO.Util {
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             NUnit.Framework.Assert.IsTrue(imageMagickHelper.RunImageMagickImageCompare(resultantImage, cmpResultantImage
                 , diff));
-        }
-
-        /// <summary>Identifies type of current OS and return it (win, linux).</summary>
-        /// <returns>
-        /// type of current os as
-        /// <see cref="System.String"/>
-        /// </returns>
-        private static String IdentifyOsType() {
-            String os = Environment.GetEnvironmentVariable("os.name") == null ? Environment.GetEnvironmentVariable("OS"
-                ) : Environment.GetEnvironmentVariable("os.name");
-            return os.ToLowerInvariant();
         }
     }
 }
