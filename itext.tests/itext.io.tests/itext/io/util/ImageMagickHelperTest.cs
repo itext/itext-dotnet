@@ -142,7 +142,7 @@ namespace iText.IO.Util {
             String cmpImage = sourceFolder + "cmp_Im1_1.jpg";
             String diff = destinationFolder + "diff_differentImagesFuzzEnough.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
-            bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "1.2");
+            bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "2.1");
             NUnit.Framework.Assert.IsTrue(result);
             NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
         }
