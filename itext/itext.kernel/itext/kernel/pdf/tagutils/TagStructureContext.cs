@@ -848,7 +848,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                         RemovePageTagFromParent(structParent, parent.GetParent());
                         PdfIndirectReference indRef = parentStructDict.GetIndirectReference();
                         if (indRef != null) {
-                            // TODO how about possible references to structure element from refs or structure destination for instance?
+                            // TODO DEVSIX-5472 need to clean references to structure element from
+                            //  other structure elements /Ref entries and structure destinations
                             indRef.SetFree();
                         }
                     }
