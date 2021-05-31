@@ -47,15 +47,15 @@ using iText.Test;
 
 namespace iText.IO.Util {
     public class GhostscriptHelperTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/GhostscriptHelperTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/io/GhostscriptHelperTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -88,7 +88,7 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptIncorrectOutputDirectory() {
-            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String inputPdf = SOURCE_FOLDER + "imageHandlerUtilTest.pdf";
             String exceptionMessage = "Cannot open output directory for " + inputPdf;
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => ghostscriptHelper.RunGhostScriptImageGeneration
@@ -98,112 +98,84 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptIncorrectParams() {
-            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String inputPdf = SOURCE_FOLDER + "imageHandlerUtilTest.pdf";
             String exceptionMessage = "GhostScript failed for " + inputPdf;
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
             Exception e = NUnit.Framework.Assert.Catch(typeof(GhostscriptHelper.GhostscriptExecutionException), () => 
-                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "outputPageImage.png", "q@W"
+                ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, DESTINATION_FOLDER, "outputPageImage.png", "q@W"
                 ));
             NUnit.Framework.Assert.AreEqual(exceptionMessage, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptTestForSpecificPage() {
-            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String inputPdf = SOURCE_FOLDER + "imageHandlerUtilTest.pdf";
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, "specificPage.png", "1");
-            NUnit.Framework.Assert.AreEqual(1, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "specificPage.png"));
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, DESTINATION_FOLDER, "specificPage.png", "1");
+            NUnit.Framework.Assert.AreEqual(1, FileUtil.ListFilesInDirectory(DESTINATION_FOLDER, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "specificPage.png"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptTestForSeveralSpecificPages() {
-            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String inputPdf = SOURCE_FOLDER + "imageHandlerUtilTest.pdf";
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
             String imageFileName = new FileInfo(inputPdf).Name + "_severalSpecificPages-%03d.png";
-            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, imageFileName, "1,3");
-            NUnit.Framework.Assert.AreEqual(2, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_severalSpecificPages-001.png"
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, DESTINATION_FOLDER, imageFileName, "1,3");
+            NUnit.Framework.Assert.AreEqual(2, FileUtil.ListFilesInDirectory(DESTINATION_FOLDER, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "imageHandlerUtilTest.pdf_severalSpecificPages-001.png"
                 ));
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_severalSpecificPages-002.png"
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "imageHandlerUtilTest.pdf_severalSpecificPages-002.png"
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void RunGhostScriptTestForAllPages() {
-            String inputPdf = sourceFolder + "imageHandlerUtilTest.pdf";
+            String inputPdf = SOURCE_FOLDER + "imageHandlerUtilTest.pdf";
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
             String imageFileName = new FileInfo(inputPdf).Name + "_allPages-%03d.png";
-            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, destinationFolder, imageFileName);
-            NUnit.Framework.Assert.AreEqual(3, FileUtil.ListFilesInDirectory(destinationFolder, true).Length);
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-001.png"
+            ghostscriptHelper.RunGhostScriptImageGeneration(inputPdf, DESTINATION_FOLDER, imageFileName);
+            NUnit.Framework.Assert.AreEqual(3, FileUtil.ListFilesInDirectory(DESTINATION_FOLDER, true).Length);
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "imageHandlerUtilTest.pdf_allPages-001.png"
                 ));
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-002.png"
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "imageHandlerUtilTest.pdf_allPages-002.png"
                 ));
-            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(destinationFolder + "imageHandlerUtilTest.pdf_allPages-003.png"
+            NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(DESTINATION_FOLDER + "imageHandlerUtilTest.pdf_allPages-003.png"
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void DSaferParamInGhostScriptHelperTest() {
-            String cmpPdf = sourceFolder + "maliciousPsInvokingCalcExe.ps";
-            String maliciousPsInvokingCalcExe = destinationFolder + "maliciousPsInvokingCalcExe.png";
-            int majorVersion = 0;
-            int minorVersion = 0;
-            bool isWindows = IdentifyOsType().ToLowerInvariant().Contains("win");
-            if (isWindows) {
-                String gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
-                if (gsExec == null) {
-                    gsExec = SystemUtil.GetEnvironmentVariable(GhostscriptHelper.GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
-                }
-                String[] pathParts = iText.IO.Util.StringUtil.Split(gsExec, "\\d\\.\\d\\d");
-                for (int i = 0; i < pathParts.Length; i++) {
-                    gsExec = gsExec.Replace(pathParts[i], "");
-                }
-                String[] version = iText.IO.Util.StringUtil.Split(gsExec, "\\.");
-                majorVersion = Convert.ToInt32(version[0], System.Globalization.CultureInfo.InvariantCulture);
-                minorVersion = Convert.ToInt32(version[1], System.Globalization.CultureInfo.InvariantCulture);
-            }
+            String input = SOURCE_FOLDER + "unsafePostScript.ps";
+            String outputName = "unsafePostScript.png";
+            String maliciousResult1 = DESTINATION_FOLDER + "output1.txt";
+            String maliciousResult2 = DESTINATION_FOLDER + "output2.txt";
             try {
                 GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-                ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, destinationFolder, "maliciousPsInvokingCalcExe.png"
-                    );
-                if (isWindows) {
-                    NUnit.Framework.Assert.IsTrue((majorVersion > 9 || (majorVersion == 9 && minorVersion >= 50)));
-                }
+                ghostscriptHelper.RunGhostScriptImageGeneration(input, DESTINATION_FOLDER, outputName);
             }
             catch (GhostscriptHelper.GhostscriptExecutionException) {
-                if (isWindows) {
-                    NUnit.Framework.Assert.IsTrue((majorVersion < 9 || (majorVersion == 9 && minorVersion < 50)));
-                }
+                System.Console.Out.WriteLine("Error code was returned on processing of malicious script with -dSAFER option enabled. "
+                     + "This is expected for some environments and ghostscript versions. " + "We assert only the absence of malicious script result (created file).\n"
+                    );
             }
-            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousPsInvokingCalcExe));
+            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousResult1));
+            NUnit.Framework.Assert.IsFalse(FileUtil.FileExists(maliciousResult2));
         }
 
         [NUnit.Framework.Test]
         public virtual void GhostScriptImageGenerationTest() {
             String filename = "resultantImage.png";
-            String psFile = sourceFolder + "simple.ps";
-            String resultantImage = destinationFolder + filename;
-            String cmpResultantImage = sourceFolder + "cmp_" + filename;
-            String diff = destinationFolder + "diff_" + filename;
+            String psFile = SOURCE_FOLDER + "simple.ps";
+            String resultantImage = DESTINATION_FOLDER + filename;
+            String cmpResultantImage = SOURCE_FOLDER + "cmp_" + filename;
+            String diff = DESTINATION_FOLDER + "diff_" + filename;
             GhostscriptHelper ghostscriptHelper = new GhostscriptHelper();
-            ghostscriptHelper.RunGhostScriptImageGeneration(psFile, destinationFolder, filename);
+            ghostscriptHelper.RunGhostScriptImageGeneration(psFile, DESTINATION_FOLDER, filename);
             NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(resultantImage));
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             NUnit.Framework.Assert.IsTrue(imageMagickHelper.RunImageMagickImageCompare(resultantImage, cmpResultantImage
                 , diff));
-        }
-
-        /// <summary>Identifies type of current OS and return it (win, linux).</summary>
-        /// <returns>
-        /// type of current os as
-        /// <see cref="System.String"/>
-        /// </returns>
-        private static String IdentifyOsType() {
-            String os = Environment.GetEnvironmentVariable("os.name") == null ? Environment.GetEnvironmentVariable("OS"
-                ) : Environment.GetEnvironmentVariable("os.name");
-            return os.ToLowerInvariant();
         }
     }
 }
