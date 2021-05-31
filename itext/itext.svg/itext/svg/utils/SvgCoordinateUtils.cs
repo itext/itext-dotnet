@@ -130,7 +130,7 @@ namespace iText.Svg.Utils {
                 return CssDimensionParsingUtils.ParseRelativeValue(attributeValue, 1);
             }
             else {
-                if (CssTypesValidationUtils.IsNumericValue(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
+                if (CssTypesValidationUtils.IsNumber(attributeValue) || CssTypesValidationUtils.IsMetricValue(attributeValue
                     ) || CssTypesValidationUtils.IsRelativeValue(attributeValue)) {
                     // if there is incorrect value metric, then we do not need to parse the value
                     int unitsPosition = CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(attributeValue);

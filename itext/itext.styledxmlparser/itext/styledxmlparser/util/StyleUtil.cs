@@ -107,8 +107,8 @@ namespace iText.StyledXmlParser.Util {
             if (value == null) {
                 return false;
             }
-            return value.EndsWith(measurement) && CssTypesValidationUtils.IsNumericValue(value.JSubstring(0, value.Length
-                 - measurement.Length).Trim());
+            return value.EndsWith(measurement) && CssTypesValidationUtils.IsNumber(value.JSubstring(0, value.Length - 
+                measurement.Length).Trim());
         }
     }
 }

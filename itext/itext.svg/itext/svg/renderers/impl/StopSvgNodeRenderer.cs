@@ -43,7 +43,7 @@ namespace iText.Svg.Renderers.Impl {
                 offset = (double)CssDimensionParsingUtils.ParseRelativeValue(offsetAttribute, 1);
             }
             else {
-                if (CssTypesValidationUtils.IsNumericValue(offsetAttribute)) {
+                if (CssTypesValidationUtils.IsNumber(offsetAttribute)) {
                     offset = CssDimensionParsingUtils.ParseDouble(offsetAttribute);
                 }
             }

@@ -175,7 +175,7 @@ namespace iText.Svg.Renderers.Impl {
                         rotAngle = ((IMarkerCapable)GetParent()).GetAutoOrientAngle(this, true);
                     }
                     else {
-                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumericValue(orient)) {
+                        if (CssTypesValidationUtils.IsAngleValue(orient) || CssTypesValidationUtils.IsNumber(orient)) {
                             rotAngle = CssDimensionParsingUtils.ParseAngle(this.attributesAndStyles.Get(SvgConstants.Attributes.ORIENT
                                 ));
                         }
