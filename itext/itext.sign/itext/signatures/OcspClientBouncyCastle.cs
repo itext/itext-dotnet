@@ -101,15 +101,7 @@ namespace iText.Signatures {
             return null;
         }
 
-        /// <summary>Gets an encoded byte array with OCSP validation.</summary>
-        /// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.</remarks>
-        /// <param name="checkCert">to certificate to check</param>
-        /// <param name="rootCert">the parent certificate</param>
-        /// <param name="url">
-        /// to get the verification. It it's null it will be taken
-        /// from the check cert or from other implementation specific source
-        /// </param>
-        /// <returns>a byte array with the validation or null if the validation could not be obtained</returns>
+        /// <summary><inheritDoc/></summary>
         public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert, String url) {
             try {
                 BasicOcspResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
