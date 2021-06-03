@@ -47,15 +47,26 @@ using Org.BouncyCastle.X509;
 namespace iText.Signatures {
     /// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
     public interface IOcspClient {
-        /// <summary>Gets an encoded byte array with OCSP validation.</summary>
-        /// <remarks>Gets an encoded byte array with OCSP validation. The method should not throw an exception.</remarks>
+        /// <summary>Fetch a DER-encoded BasicOCSPResponse from an OCSP responder.</summary>
+        /// <remarks>
+        /// Fetch a DER-encoded BasicOCSPResponse from an OCSP responder. The method should not throw
+        /// an exception.
+        /// <para />
+        /// Note: do not pass in the full DER-encoded OCSPResponse object obtained from the responder,
+        /// only the DER-encoded BasicOCSPResponse value contained in the response data.
+        /// </remarks>
         /// <param name="checkCert">Certificate to check.</param>
         /// <param name="issuerCert">The parent certificate.</param>
         /// <param name="url">
-        /// The url to get the verification. It it's null it will be taken.
-        /// from the check cert or from other implementation specific source
+        /// The URL of the OCSP responder endpoint. If null, implementations can
+        /// attempt to obtain a URL from the AuthorityInformationAccess extension of
+        /// the certificate, or from another implementation-specific source.
         /// </param>
-        /// <returns>A byte array with the validation or null if the validation could not be obtained</returns>
+        /// <returns>
+        /// a byte array containing a DER-encoded BasicOCSPResponse structure or null if one
+        /// could not be obtained
+        /// </returns>
+        /// <seealso><a href="https://datatracker.ietf.org/doc/html/rfc6960#section-4.2.1">RFC 6960 § 4.2.1</a></seealso>
         byte[] GetEncoded(X509Certificate checkCert, X509Certificate issuerCert, String url);
     }
 }
