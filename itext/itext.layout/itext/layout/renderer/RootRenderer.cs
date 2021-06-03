@@ -46,7 +46,12 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.IO;
 using iText.IO.Util;
+using iText.Kernel.Actions;
+using iText.Kernel.Actions.Events;
+using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
@@ -358,6 +363,23 @@ namespace iText.Layout.Renderer {
                 }
             }
             waitingDrawingElements.RemoveAll(flushedElements);
+        }
+
+        internal void LinkRenderToDocument(IRenderer renderer, PdfDocument pdfDocument) {
+            if (renderer == null) {
+                return;
+            }
+            IPropertyContainer container = renderer.GetModelElement();
+            if (container is AbstractIdentifiableElement) {
+                EventManager.GetInstance().OnEvent(new LinkDocumentIdEvent(pdfDocument, (AbstractIdentifiableElement)container
+                    ));
+            }
+            IList<IRenderer> children = renderer.GetChildRenderers();
+            if (children != null) {
+                foreach (IRenderer child in children) {
+                    LinkRenderToDocument(child, pdfDocument);
+                }
+            }
         }
 
         private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {

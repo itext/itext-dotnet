@@ -54,6 +54,20 @@ namespace iText.Kernel.Actions.Events {
         }
 
         /// <summary>
+        /// Creates a new instance of the event associating provided
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// with the
+        /// appropriate
+        /// <see cref="iText.Kernel.Actions.Sequence.AbstractIdentifiableElement"/>.
+        /// </summary>
+        /// <param name="document">is a document</param>
+        /// <param name="identifiableElement">is an identifiable element to be associated with the document</param>
+        public LinkDocumentIdEvent(PdfDocument document, AbstractIdentifiableElement identifiableElement)
+            : this(document, identifiableElement == null ? null : SequenceIdManager.GetSequenceId(identifiableElement)
+                ) {
+        }
+
+        /// <summary>
         /// Defines an association between
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// and
@@ -69,7 +83,10 @@ namespace iText.Kernel.Actions.Events {
             if (anonymousEvents != null) {
                 SequenceId documentId = storedPdfDocument.GetDocumentIdWrapper();
                 foreach (AbstractProductProcessITextEvent @event in anonymousEvents) {
-                    AddEvent(documentId, @event);
+                    IList<AbstractProductProcessITextEvent> storedEvents = GetEvents(documentId);
+                    if (!storedEvents.Contains(@event)) {
+                        AddEvent(documentId, @event);
+                    }
                 }
             }
         }

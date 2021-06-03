@@ -20,27 +20,86 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
 using iText.IO.Source;
 using iText.Kernel;
+using iText.Kernel.Actions;
+using iText.Kernel.Actions.Events;
+using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Counter.Event;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
+using iText.Layout.Testutil;
 using iText.Layout.Exceptions;
 using iText.Test;
 
 namespace iText.Layout {
     public class DocumentTest : ExtendedITextTest {
+        private static readonly TestConfigurationEvent CONFIGURATION_ACCESS = new TestConfigurationEvent();
+
         [NUnit.Framework.Test]
         public virtual void ExecuteActionInClosedDocTest() {
             NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                Document document = new Document(pdfDoc);
-                Paragraph paragraph = new Paragraph("test");
-                document.Add(paragraph);
-                document.Close();
-                document.CheckClosingStatus();
+                        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                        Document document = new Document(pdfDoc);
+                        Paragraph paragraph = new Paragraph("test");
+                        document.Add(paragraph);
+                        document.Close();
+                        document.CheckClosingStatus();
+                    }
+                    , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
+                ;
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void AddBlockElemMethodLinkingTest() {
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {
+                SequenceId sequenceId = new SequenceId();
+                EventManager.GetInstance().OnEvent(new TestProductEvent(sequenceId));
+                IBlockElement blockElement = new Paragraph("some text");
+                SequenceIdManager.SetSequenceId((AbstractIdentifiableElement)blockElement, sequenceId);
+                doc.Add(blockElement);
+                IList<AbstractProductProcessITextEvent> events = CONFIGURATION_ACCESS.GetPublicEvents(doc.GetPdfDocument()
+                    .GetDocumentIdWrapper());
+                // Second event was linked by adding block element method
+                NUnit.Framework.Assert.AreEqual(2, events.Count);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
-;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddAreaBreakElemMethodLinkingTest() {
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {
+                SequenceId sequenceId = new SequenceId();
+                EventManager.GetInstance().OnEvent(new TestProductEvent(sequenceId));
+                AreaBreak areaBreak = new AreaBreak();
+                SequenceIdManager.SetSequenceId(areaBreak, sequenceId);
+                doc.Add(areaBreak);
+                IList<AbstractProductProcessITextEvent> events = CONFIGURATION_ACCESS.GetPublicEvents(doc.GetPdfDocument()
+                    .GetDocumentIdWrapper());
+                NUnit.Framework.Assert.AreEqual(1, events.Count);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddImageElemMethodLinkingTest() {
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {
+                SequenceId sequenceId = new SequenceId();
+                EventManager.GetInstance().OnEvent(new TestProductEvent(sequenceId));
+                Image image = new Image(new PdfFormXObject(new Rectangle(10, 10)));
+                SequenceIdManager.SetSequenceId(image, sequenceId);
+                doc.Add(image);
+                IList<AbstractProductProcessITextEvent> events = CONFIGURATION_ACCESS.GetPublicEvents(doc.GetPdfDocument()
+                    .GetDocumentIdWrapper());
+                // Second event was linked by adding block element
+                NUnit.Framework.Assert.AreEqual(2, events.Count);
+                NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreEvent);
+                NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
+            }
         }
     }
 }

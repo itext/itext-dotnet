@@ -82,12 +82,7 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         /// <seealso cref="iText.Layout.Element.BlockElement{T}"/>
         public virtual T Add(IBlockElement element) {
-            childElements.Add(element);
-            CreateAndAddRendererSubTree(element);
-            if (immediateFlush) {
-                childElements.JRemoveAt(childElements.Count - 1);
-            }
-            return (T)(Object)this;
+            return AddElement(element);
         }
 
         /// <summary>Adds an image to the root.</summary>
@@ -96,12 +91,7 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         /// <seealso cref="iText.Layout.Element.Image"/>
         public virtual T Add(Image image) {
-            childElements.Add(image);
-            CreateAndAddRendererSubTree(image);
-            if (immediateFlush) {
-                childElements.JRemoveAt(childElements.Count - 1);
-            }
-            return (T)(Object)this;
+            return AddElement(image);
         }
 
         /// <summary>
@@ -382,6 +372,15 @@ namespace iText.Layout {
         private LayoutTaggingHelper InitTaggingHelperIfNeeded() {
             return defaultLayoutTaggingHelper == null && pdfDocument.IsTagged() ? defaultLayoutTaggingHelper = new LayoutTaggingHelper
                 (pdfDocument, immediateFlush) : defaultLayoutTaggingHelper;
+        }
+
+        private T AddElement(IElement element) {
+            childElements.Add(element);
+            CreateAndAddRendererSubTree(element);
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
+            return (T)(Object)this;
         }
 
         public abstract void Close();

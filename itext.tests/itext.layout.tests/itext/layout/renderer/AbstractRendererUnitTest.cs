@@ -52,6 +52,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -142,8 +143,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_150 : PdfImageXObject {
-            public _PdfImageXObject_150(ImageData baseArg1)
+        private sealed class _PdfImageXObject_149 : PdfImageXObject {
+            public _PdfImageXObject_149(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -836,6 +837,19 @@ namespace iText.Layout.Renderer {
             abstractRenderer.ApplyLinkAnnotation(pdfDocument);
             // This test checks that there is log message and there is no NPE so assertions are not required
             NUnit.Framework.Assert.IsTrue(true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullChildTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDocument.AddNewPage();
+            using (Document doc = new Document(pdfDocument)) {
+                DocumentRenderer renderer = new DocumentRenderer(doc);
+                DivRenderer divRenderer = new DivRenderer(new Div());
+                divRenderer.childRenderers.Add(null);
+                NUnit.Framework.Assert.DoesNotThrow(() => renderer.LinkRenderToDocument(divRenderer, doc.GetPdfDocument())
+                    );
+            }
         }
     }
 }
