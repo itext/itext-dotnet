@@ -178,13 +178,14 @@ namespace iText.Layout.Renderer {
                 FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue, 
                     overflowX);
             }
+            float preMarginBorderPaddingWidth = layoutBox.GetWidth();
             UnitValue[] margins = GetMargins();
             ApplyMargins(layoutBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             UnitValue[] paddings = GetPaddings();
             ApplyPaddings(layoutBox, paddings, false);
-            MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth());
+            MinMaxWidth countedMinMaxWidth = new MinMaxWidth(preMarginBorderPaddingWidth - layoutBox.GetWidth());
             AbstractWidthHandler widthHandler;
             if (noSoftWrap) {
                 widthHandler = new SumSumWidthHandler(countedMinMaxWidth);
@@ -888,7 +889,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_953();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_954();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -950,8 +951,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_953 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_953() {
+        private sealed class _IGlyphLineFilter_954 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_954() {
             }
 
             public bool Accept(Glyph glyph) {

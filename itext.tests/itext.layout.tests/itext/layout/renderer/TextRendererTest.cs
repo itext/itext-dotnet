@@ -324,5 +324,23 @@ namespace iText.Layout.Renderer {
             float minWidthAndItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             NUnit.Framework.Assert.IsTrue(minWidthAndItalicSimulation > minWidthNoItalicSimulation);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatingRightMinMaxWidth() {
+            String longestWord = "float:right";
+            String wholeText = "text with " + longestWord;
+            TextRenderer textRenderer = new TextRenderer(new Text(wholeText));
+            textRenderer.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
+            PdfFont font = PdfFontFactory.CreateFont();
+            int fontSize = 12;
+            textRenderer.SetProperty(Property.FONT, font);
+            textRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
+            float expectedMaxWidth = font.GetWidth(wholeText, fontSize);
+            float expectedMinWidth = font.GetWidth(longestWord, fontSize);
+            MinMaxWidth minMaxWidth = textRenderer.GetMinMaxWidth();
+            NUnit.Framework.Assert.AreEqual(expectedMinWidth, minMaxWidth.GetMinWidth(), 0.01f);
+            NUnit.Framework.Assert.AreEqual(expectedMaxWidth, minMaxWidth.GetMaxWidth(), 0.01f);
+        }
     }
 }
