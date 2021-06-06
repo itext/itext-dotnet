@@ -172,7 +172,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetDescentTest() {
-            Document doc = CreateDocument();
+            Document doc = CreateDummyDocument();
             TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
             textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
             textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
@@ -181,7 +181,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetOccupiedAreaBBoxTest() {
-            Document doc = CreateDocument();
+            Document doc = CreateDummyDocument();
             TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
             textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
             textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
@@ -193,7 +193,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetInnerAreaBBoxTest() {
-            Document doc = CreateDocument();
+            Document doc = CreateDummyDocument();
             TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", doc);
             textRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(20f));
             textRenderer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(20f));
@@ -252,29 +252,22 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereProperty() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wow");
             text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             MinMaxWidth minMaxWidth = textRenderer.GetMinMaxWidth();
             NUnit.Framework.Assert.IsTrue(minMaxWidth.GetMinWidth() < minMaxWidth.GetMaxWidth());
         }
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapBreakWordProperty() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wooow");
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            RootRenderer parentRenderer = CreateDummyDocument().GetRenderer();
+            textRenderer.SetParent(parentRenderer);
             // overflow is set here to mock LineRenderer#layout behavior
-            documentRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            parentRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             float fullWordWidth = textRenderer.GetMinMaxWidth().GetMaxWidth();
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(fullWordWidth / 2, AbstractRenderer.INF));
             TextLayoutResult result = (TextLayoutResult)textRenderer.Layout(new LayoutContext(layoutArea));
@@ -286,14 +279,10 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereBoldSimulationMaxWidth() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wow");
             text.SetBold();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
             text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
             float maxWidthAndOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -302,14 +291,10 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereItalicSimulationMaxWidth() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wow");
             text.SetItalic();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
             text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
             float maxWidthAndOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -318,14 +303,10 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereBoldSimulationMinWidth() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wow");
             text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             text.SetBold();
             float minWidthAndBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
@@ -334,14 +315,10 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereItalicSimulationMinWidth() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            pdfDoc.AddNewPage();
-            Document doc = new Document(pdfDoc);
-            RootRenderer documentRenderer = doc.GetRenderer();
             Text text = new Text("wow");
             text.SetProperty(Property.OVERFLOW_WRAP, OverflowWrapPropertyValue.ANYWHERE);
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
-            textRenderer.SetParent(documentRenderer);
+            textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             text.SetItalic();
             float minWidthAndItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();

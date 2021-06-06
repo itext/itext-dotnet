@@ -41,13 +41,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using System.IO;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -62,7 +60,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void AdjustChildPositionsAfterReorderingSimpleTest01() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             IRenderer dummy1 = CreateLayoutedTextRenderer("Hello", dummyDocument);
             IRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
             IRenderer dummyImage = CreateLayoutedImageRenderer(100, 100, dummyDocument);
@@ -78,7 +76,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 4)]
         public virtual void AdjustChildPositionsAfterReorderingTestWithPercentMargins01() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             IRenderer dummy1 = CreateLayoutedTextRenderer("Hello", dummyDocument);
             dummy1.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePercentValue(10));
             dummy1.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePercentValue(10));
@@ -95,7 +93,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void AdjustChildPositionsAfterReorderingTestWithFloats01() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             IRenderer dummy1 = CreateLayoutedTextRenderer("Hello", dummyDocument);
             IRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
             IRenderer dummyImage = CreateLayoutedImageRenderer(100, 100, dummyDocument);
@@ -113,7 +111,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED)]
         public virtual void InlineBlockWithBigMinWidth01() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             LineRenderer lineRenderer = (LineRenderer)new LineRenderer().SetParent(dummyDocument.GetRenderer());
             Div div = new Div().SetMinWidth(2000).SetHeight(100);
             DivRenderer inlineBlockRenderer = (DivRenderer)div.CreateRendererSubTree();
@@ -127,7 +125,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void AdjustChildrenYLineTextChildHtmlModeTest() {
-            Document document = CreateDocument();
+            Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(100, 100, 200, 200));
@@ -145,7 +143,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void AdjustChildrenYLineImageChildHtmlModeTest() {
-            Document document = CreateDocument();
+            Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.occupiedArea = new LayoutArea(1, new Rectangle(50, 50, 200, 200));
@@ -191,7 +189,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndNoChildrenTest() {
-            Document document = CreateDocument();
+            Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
@@ -203,7 +201,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndChildrenInDefaultModeTest() {
-            Document document = CreateDocument();
+            Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
@@ -221,7 +219,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void LineRendererLayoutInHtmlModeWithLineHeightAndChildInHtmlModeTest() {
-            Document document = CreateDocument();
+            Document document = CreateDummyDocument();
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
@@ -239,7 +237,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void LineRendererLayoutInHtmlModeWithLineHeightPropertyNotSet() {
             LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.SetParent(CreateDocument().GetRenderer());
+            lineRenderer.SetParent(CreateDummyDocument().GetRenderer());
             lineRenderer.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
             // Set fonts with different ascent/descent to line and text
             lineRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
@@ -258,8 +256,6 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void MinMaxWidthEqualsActualMarginsBordersPaddings() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
-            Document document = new Document(pdfDocument);
             Text ranText = new Text("ran");
             ranText.SetProperty(Property.MARGIN_LEFT, new UnitValue(UnitValue.POINT, 8f));
             ranText.SetProperty(Property.MARGIN_RIGHT, new UnitValue(UnitValue.POINT, 10f));
@@ -274,7 +270,7 @@ namespace iText.Layout.Renderer {
             TextRenderer dom = new TextRenderer(domText);
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(AbstractRenderer.INF, AbstractRenderer.INF));
             LineRenderer lineRenderer = new LineRenderer();
-            lineRenderer.SetParent(document.GetRenderer());
+            lineRenderer.SetParent(CreateDummyDocument().GetRenderer());
             lineRenderer.AddChild(ran);
             lineRenderer.AddChild(dom);
             float countedMinWidth = lineRenderer.GetMinMaxWidth().GetMinWidth();
@@ -284,7 +280,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void SplitLineIntoGlyphsSimpleTest() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             TextRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
             TextRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
             TextRenderer dummy3 = CreateLayoutedTextRenderer("!!!", dummyDocument);
@@ -317,7 +313,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void SplitLineIntoGlyphsWithLineBreakTest() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             TextRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
             TextRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
             dummy2.line.Set(2, new Glyph('\n', 0, '\n'));
@@ -349,7 +345,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void ReorderSimpleTest() {
-            Document dummyDocument = CreateDocument();
+            Document dummyDocument = CreateDummyDocument();
             IRenderer dummy1 = CreateLayoutedTextRenderer("hello", dummyDocument);
             IRenderer dummy2 = CreateLayoutedTextRenderer("world", dummyDocument);
             IRenderer dummy3 = CreateLayoutedTextRenderer("!!!", dummyDocument);
