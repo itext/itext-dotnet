@@ -25,6 +25,9 @@ using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -33,6 +36,17 @@ using iText.Test;
 
 namespace iText.Layout.Renderer {
     public class TargetCounterHandlerTest : ExtendedITextTest {
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/renderer/TargetCounterHandlerTest/";
+
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/layout/renderer/TargetCounterHandlerTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateDestinationFolder(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BlockRendererAddByIDTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
@@ -116,6 +130,63 @@ namespace iText.Layout.Renderer {
             lineRenderer.Layout(layoutContext);
             documentRenderer.GetTargetCounterHandler().PrepareHandlerToRelayout();
             NUnit.Framework.Assert.AreEqual((int?)4, TargetCounterHandler.GetPageByID(lineRenderer, id));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TargetCounterHandlerEndToEndLayoutTest() {
+            String targetPdf = DESTINATION_FOLDER + "targetCounterHandlerEndToEndLayoutTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_targetCounterHandlerEndToEndLayoutTest.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(targetPdf)), PageSize.A4, false);
+            Text pageNumPlaceholder = new Text("x");
+            String id = "1";
+            pageNumPlaceholder.SetProperty(Property.ID, id);
+            pageNumPlaceholder.SetNextRenderer(new TargetCounterHandlerTest.TargetCounterAwareTextRenderer(pageNumPlaceholder
+                ));
+            Paragraph intro = new Paragraph("The paragraph is on page ").Add(pageNumPlaceholder);
+            document.Add(intro);
+            document.Add(new AreaBreak());
+            Paragraph text = new Paragraph("This is main text");
+            text.SetProperty(Property.ID, id);
+            text.SetNextRenderer(new TargetCounterHandlerTest.TargetCounterAwareParagraphRenderer(text));
+            document.Add(text);
+            document.Relayout();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(targetPdf, cmpPdf, DESTINATION_FOLDER, "diff"
+                ));
+        }
+
+        private class TargetCounterAwareTextRenderer : TextRenderer {
+            public TargetCounterAwareTextRenderer(Text link)
+                : base(link) {
+            }
+
+            public override LayoutResult Layout(LayoutContext layoutContext) {
+                int? targetPageNumber = TargetCounterHandler.GetPageByID(this, this.GetProperty<String>(Property.ID));
+                if (targetPageNumber != null) {
+                    SetText(targetPageNumber.ToString());
+                }
+                return base.Layout(layoutContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TargetCounterHandlerTest.TargetCounterAwareTextRenderer((Text)GetModelElement());
+            }
+        }
+
+        private class TargetCounterAwareParagraphRenderer : ParagraphRenderer {
+            public TargetCounterAwareParagraphRenderer(Paragraph modelElement)
+                : base(modelElement) {
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TargetCounterHandlerTest.TargetCounterAwareParagraphRenderer((Paragraph)modelElement);
+            }
+
+            public override LayoutResult Layout(LayoutContext layoutContext) {
+                LayoutResult result = base.Layout(layoutContext);
+                TargetCounterHandler.AddPageByID(this);
+                return result;
+            }
         }
     }
 }

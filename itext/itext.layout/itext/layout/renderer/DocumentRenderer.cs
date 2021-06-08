@@ -98,7 +98,10 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <returns>relayout renderer.</returns>
         public override IRenderer GetNextRenderer() {
-            return new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush);
+            iText.Layout.Renderer.DocumentRenderer renderer = new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush
+                );
+            renderer.targetCounterHandler = new TargetCounterHandler(targetCounterHandler);
+            return renderer;
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
@@ -171,7 +174,8 @@ namespace iText.Layout.Renderer {
         /// <summary>Adds some pages so that the overall number is at least n.</summary>
         /// <remarks>
         /// Adds some pages so that the overall number is at least n.
-        /// Returns the page size of the n'th page.
+        /// Returns the page size of the page number
+        /// <paramref name="n"/>.
         /// </remarks>
         private PageSize EnsureDocumentHasNPages(int n, PageSize customPageSize) {
             PageSize lastPageSize = null;
@@ -191,8 +195,8 @@ namespace iText.Layout.Renderer {
         }
 
         private void MoveToNextPage() {
-            // We don't flush this page immediately, but only flush previous one because of manipulations with areas in case
-            // of keepTogether property.
+            // We don't flush this page immediately, but only flush previous one because of manipulations
+            // with areas in case of keepTogether property.
             if (immediateFlush && currentPageNumber > 1) {
                 document.GetPdfDocument().GetPage(currentPageNumber - 1).Flush();
             }
