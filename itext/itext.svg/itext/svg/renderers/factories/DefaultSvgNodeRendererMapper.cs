@@ -88,6 +88,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.TEXT, typeof(TextSvgBranchRenderer));
             result.Put(SvgConstants.Tags.TSPAN, typeof(TextSvgTSpanBranchRenderer));
             result.Put(SvgConstants.Tags.USE, typeof(UseSvgNodeRenderer));
+            result.Put(SvgConstants.Tags.TEXT_LEAF, typeof(TextLeafSvgNodeRenderer));
             return result;
         }
 

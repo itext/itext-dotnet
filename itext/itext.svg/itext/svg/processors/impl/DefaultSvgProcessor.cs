@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
 using iText.Svg.Css.Impl;
 using iText.Svg.Exceptions;
@@ -234,7 +235,10 @@ namespace iText.Svg.Processors.Impl {
             if (parentRenderer is TextSvgBranchRenderer) {
                 String wholeText = textNode.WholeText();
                 if (!"".Equals(wholeText) && !SvgTextUtil.IsOnlyWhiteSpace(wholeText)) {
-                    TextLeafSvgNodeRenderer textLeaf = new TextLeafSvgNodeRenderer();
+                    IElementNode textLeafElement = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                        .ValueOf(SvgConstants.Tags.TEXT_LEAF), ""));
+                    ISvgTextNodeRenderer textLeaf = (ISvgTextNodeRenderer)this.rendererFactory.CreateSvgNodeRendererForTag(textLeafElement
+                        , parentRenderer);
                     textLeaf.SetParent(parentRenderer);
                     textLeaf.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, wholeText);
                     ((TextSvgBranchRenderer)parentRenderer).AddChild(textLeaf);
