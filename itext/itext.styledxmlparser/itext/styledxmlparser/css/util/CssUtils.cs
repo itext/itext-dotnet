@@ -65,6 +65,8 @@ namespace iText.StyledXmlParser.Css.Util {
         private static readonly ILog logger = LogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils)
             );
 
+        private const int QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE = 2;
+
         /// <summary>
         /// Creates a new
         /// <see cref="CssUtils"/>
@@ -647,6 +649,45 @@ namespace iText.StyledXmlParser.Css.Util {
             return str;
         }
 
+        /// <summary>Parses string and return attribute value.</summary>
+        /// <param name="attrStr">the string contains attr() to extract attribute value</param>
+        /// <param name="element">the parentNode from which we extract information</param>
+        /// <returns>the value of attribute</returns>
+        public static String ExtractAttributeValue(String attrStr, IElementNode element) {
+            String attrValue = null;
+            if (attrStr.StartsWith(CommonCssConstants.ATTRIBUTE + '(') && attrStr.Length > CommonCssConstants.ATTRIBUTE
+                .Length + 2 && attrStr.EndsWith(")")) {
+                String fallback = null;
+                String typeOfAttribute = null;
+                String stringToSplit = attrStr.JSubstring(5, attrStr.Length - 1);
+                IList<String> paramsWithFallback = SplitString(stringToSplit, ',', new EscapeGroup('\"'), new EscapeGroup(
+                    '\''));
+                if (paramsWithFallback.Count > QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
+                    return null;
+                }
+                if (paramsWithFallback.Count == QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
+                    fallback = ExtractFallback(paramsWithFallback[1]);
+                }
+                IList<String> @params = SplitString(paramsWithFallback[0], ' ');
+                if (@params.Count > QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
+                    return null;
+                }
+                else {
+                    if (@params.Count == QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE) {
+                        typeOfAttribute = ExtractTypeOfAttribute(@params[1]);
+                        if (typeOfAttribute == null) {
+                            return null;
+                        }
+                    }
+                }
+                String attributeName = @params[0];
+                if (IsAttributeNameValid(attributeName)) {
+                    attrValue = GetAttributeValue(attributeName, typeOfAttribute, fallback, element);
+                }
+            }
+            return attrValue;
+        }
+
         /// <summary>Checks if a data is base 64 encoded.</summary>
         /// <param name="data">the data</param>
         /// <returns>true, if the data is base 64 encoded</returns>
@@ -807,6 +848,45 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             builder.AddRange(l, r);
             return true;
+        }
+
+        private static bool IsAttributeNameValid(String attributeName) {
+            return !(attributeName.Contains("'") || attributeName.Contains("\"") || attributeName.Contains("(") || attributeName
+                .Contains(")"));
+        }
+
+        private static String ExtractFallback(String fallbackString) {
+            String tmpString;
+            if ((fallbackString.StartsWith("'") && fallbackString.EndsWith("'")) || (fallbackString.StartsWith("\"") &&
+                 fallbackString.EndsWith("\""))) {
+                tmpString = fallbackString.JSubstring(1, fallbackString.Length - 1);
+            }
+            else {
+                tmpString = fallbackString;
+            }
+            return ExtractUrl(tmpString);
+        }
+
+        private static String ExtractTypeOfAttribute(String typeString) {
+            if (typeString.Equals(CommonCssConstants.URL) || typeString.Equals(CommonCssConstants.STRING)) {
+                return typeString;
+            }
+            return null;
+        }
+
+        private static String GetAttributeValue(String attributeName, String typeOfAttribute, String fallback, IElementNode
+             elementNode) {
+            String returnString = elementNode.GetAttribute(attributeName);
+            if (CommonCssConstants.URL.Equals(typeOfAttribute)) {
+                returnString = returnString == null ? null : ExtractUrl(returnString);
+            }
+            else {
+                returnString = returnString == null ? "" : returnString;
+            }
+            if (fallback != null && (returnString == null || String.IsNullOrEmpty(returnString))) {
+                returnString = fallback;
+            }
+            return returnString;
         }
     }
 }
