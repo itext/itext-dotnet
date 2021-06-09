@@ -38,6 +38,9 @@ using iText.Test;
 
 namespace iText.Layout.Renderer {
     public class FlexUtilTest : ExtendedITextTest {
+        /* To see integration tests for flex algorithm go to FlexAlgoTest in html2pdf module.
+        The names are preserved: one can go to FlexAlgoTest and see the corresponding tests, but be aware that with
+        time they might change and we will not maintain such correspondence */
         private const float EPS = 0.001f;
 
         private static readonly Style DEFAULT_STYLE;
@@ -46,8 +49,6 @@ namespace iText.Layout.Renderer {
 
         private static readonly IList<UnitValue> NULL_FLEX_BASIS_LIST;
 
-        // Here one can find an html version for all of the tests
-        // TODO DEVSIX-5049 Make html2pdf+layout tests from these htmls
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FlexUtilTest/";
 
