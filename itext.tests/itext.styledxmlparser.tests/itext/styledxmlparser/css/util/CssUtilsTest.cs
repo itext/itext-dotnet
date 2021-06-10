@@ -46,7 +46,9 @@ using iText.IO.Util;
 using iText.Layout.Properties;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Pseudo;
 using iText.StyledXmlParser.Exceptions;
+using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 using iText.Test.Attributes;
@@ -459,6 +461,131 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-12"));
             NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-0.123"));
             NUnit.Framework.Assert.IsTrue(CssUtils.IsNegativeValue("-.34"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWrongAttrTest01() {
+            String strToParse = "attr((href))";
+            String result = CssUtils.ExtractAttributeValue(strToParse, null);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWrongAttrTest02() {
+            String strToParse = "attr('href')";
+            String result = CssUtils.ExtractAttributeValue(strToParse, null);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestWrongAttrTest03() {
+            String strToParse = "attrrname)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, null);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest01() {
+            IElementNode iNode = new CssPseudoElementNode(null, "url");
+            String strToParse = "attr(url)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest02() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(url url)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest03() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(url url,#one)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("#one", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest04() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr()";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest05() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr('\')";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest06() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str,\"hey\")";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("hey", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest07() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str string)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest08() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str string,\"value\")";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("value", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest09() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str string,\"val,ue\")";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("val,ue", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest10() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str string,'val,ue')";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.AreEqual("val,ue", result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestExtractingAttrTest11() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(name, \"value\", \"value\", \"value\")";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WrongAttributeTypeTest() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str mem)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WrongParamsInAttrFunctionTest() {
+            IElementNode iNode = new CssPseudoElementNode(null, "test");
+            String strToParse = "attr(str mem lol)";
+            String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
+            NUnit.Framework.Assert.IsNull(result);
         }
     }
 }
