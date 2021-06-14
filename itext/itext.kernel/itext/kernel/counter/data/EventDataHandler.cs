@@ -81,6 +81,8 @@ namespace iText.Kernel.Counter.Data {
     /// <typeparam name="V">data type</typeparam>
     public abstract class EventDataHandler<T, V>
         where V : EventData<T> {
+        private readonly Object createLock = new Object();
+
         private readonly Object processLock = new Object();
 
         private readonly IEventDataCache<T, V> cache;
@@ -110,8 +112,7 @@ namespace iText.Kernel.Counter.Data {
 
         public virtual void Register(IEvent @event, IMetaInfo metaInfo) {
             V data;
-            //Synchronization is left here mostly in consistency with cache and process, but factories are usually not thread safe anyway.
-            lock (factory) {
+            lock (createLock) {
                 data = factory.Create(@event, metaInfo);
             }
             if (data != null) {
