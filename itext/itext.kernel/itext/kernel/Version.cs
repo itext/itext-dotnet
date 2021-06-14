@@ -116,22 +116,24 @@ namespace iText.Kernel {
         /// <see cref="Version"/>.
         /// </returns>
         public static iText.Kernel.Version GetInstance() {
-            lock (staticLock) {
-                if (version != null) {
-                    try {
-                        LicenseScheduledCheck();
-                    }
-                    catch (Exception e) {
-                        // If any exception occurs during scheduled check of core license,
-                        // then it means that license is not valid yet, so roll back to AGPL.
-                        // The key value is null as it is similar to case
-                        // when an exception has been thrown during initial license loading
-                        AtomicSetVersion(InitAGPLVersion(e, null));
-                    }
-                    return version;
+            iText.Kernel.Version localVersion = version;
+            // It's crucial to work with 'localVersion' local variable, because 'version' field can be
+            // changed by some other thread. We also don't want to block Version class lock when calling
+            // for scheduled check in order to avoid synchronization issues with parallel loading license.
+            if (localVersion != null) {
+                try {
+                    LicenseScheduledCheck(localVersion);
+                    return localVersion;
+                }
+                catch (Exception e) {
+                    // If any exception occurs during scheduled check of core license it means that
+                    // license is not valid, in this particular case we want to reset to AGPL Version,
+                    // however "normal" initialization logic will not switch to AGPL unless license is
+                    // unloaded.
+                    // not saving this AGPL version in order to avoid race condition with loaded proper license
+                    return InitAGPLVersion(e, null);
                 }
             }
-            iText.Kernel.Version localVersion;
             String key = null;
             try {
                 String coreVersion = release;
@@ -418,8 +420,8 @@ namespace iText.Kernel {
             }
         }
 
-        private static void LicenseScheduledCheck() {
-            if (version.IsAGPL()) {
+        private static void LicenseScheduledCheck(iText.Kernel.Version localVersion) {
+            if (localVersion.IsAGPL()) {
                 return;
             }
             String licenseKeyProductFullName = "iText.License.LicenseKeyProduct, itext.licensekey";
