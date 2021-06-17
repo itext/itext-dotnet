@@ -136,14 +136,36 @@ namespace iText.IO.Font {
             return glyphWidths;
         }
 
+        /// <summary>Gets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to ascender.</summary>
+        /// <remarks>
+        /// Gets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to ascender.
+        /// <para />
+        /// Typo vertical metrics are the primary source for iText ascender/descender calculations.
+        /// </remarks>
+        /// <returns>typo ascender value in normalized 1000-units</returns>
         public virtual int GetTypoAscender() {
             return typoAscender;
         }
 
+        /// <summary>Gets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to descender.</summary>
+        /// <remarks>
+        /// Gets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to descender.
+        /// <para />
+        /// Typo vertical metrics are the primary source for iText ascender/descender calculations.
+        /// </remarks>
+        /// <returns>typo descender value in normalized 1000-units</returns>
         public virtual int GetTypoDescender() {
             return typoDescender;
         }
 
+        /// <summary>Gets the capital letters height.</summary>
+        /// <remarks>
+        /// Gets the capital letters height.
+        /// <para />
+        /// This property defines the vertical coordinate of the top of flat capital letters,
+        /// measured from the baseline.
+        /// </remarks>
+        /// <returns>cap height in 1000-units</returns>
         public virtual int GetCapHeight() {
             return capHeight;
         }
@@ -255,14 +277,36 @@ namespace iText.IO.Font {
             this.glyphWidths = glyphWidths;
         }
 
+        /// <summary>Sets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to ascender.</summary>
+        /// <remarks>
+        /// Sets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to ascender.
+        /// <para />
+        /// Typo vertical metrics are the primary source for iText ascender/descender calculations.
+        /// </remarks>
+        /// <param name="typoAscender">typo ascender value in normalized 1000-units</param>
         protected internal virtual void SetTypoAscender(int typoAscender) {
             this.typoAscender = (int)(typoAscender * normalizationCoef);
         }
 
-        protected internal virtual void SetTypoDescender(int typoDesctender) {
-            this.typoDescender = (int)(typoDesctender * normalizationCoef);
+        /// <summary>Sets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to descender.</summary>
+        /// <remarks>
+        /// Sets typo (a.k.a. sTypo or OS/2) vertical metric corresponding to descender.
+        /// <para />
+        /// Typo vertical metrics are the primary source for iText ascender/descender calculations.
+        /// </remarks>
+        /// <param name="typoDescender">typo descender value in normalized 1000-units</param>
+        protected internal virtual void SetTypoDescender(int typoDescender) {
+            this.typoDescender = (int)(typoDescender * normalizationCoef);
         }
 
+        /// <summary>Sets the capital letters height.</summary>
+        /// <remarks>
+        /// Sets the capital letters height.
+        /// <para />
+        /// This property defines the vertical coordinate of the top of flat capital letters,
+        /// measured from the baseline.
+        /// </remarks>
+        /// <param name="capHeight">cap height in 1000-units</param>
         protected internal virtual void SetCapHeight(int capHeight) {
             this.capHeight = (int)(capHeight * normalizationCoef);
         }

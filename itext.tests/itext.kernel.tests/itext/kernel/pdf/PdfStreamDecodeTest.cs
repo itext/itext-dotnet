@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Test;
@@ -58,11 +59,9 @@ namespace iText.Kernel.Pdf {
             PdfStream pdfStream = new PdfStream(FLATE_DECODED_BYTES);
             pdfStream.Put(PdfName.Filter, new PdfArray(JavaUtil.ArraysAsList((PdfObject)PdfName.FlateDecode, (PdfObject
                 )PdfName.JBIG2Decode)));
-            NUnit.Framework.Assert.That(() =>  {
-                pdfStream.GetBytes(true);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.Filter1IsNotSupported, PdfName.JBIG2Decode)))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfStream.GetBytes(true));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.Filter1IsNotSupported, PdfName.JBIG2Decode
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]

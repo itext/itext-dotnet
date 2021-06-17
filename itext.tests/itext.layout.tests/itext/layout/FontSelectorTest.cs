@@ -495,8 +495,73 @@ namespace iText.Layout {
             // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
-            CheckSelector(set.GetFonts(), "OpenSans", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic", "OpenSans-BoldItalic"
-                );
+            ICollection<FontInfo> fontInfoCollection = set.GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Open Sans");
+            // Normal
+            FontCharacteristics fc = new FontCharacteristics();
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            // Bold
+            fc = new FontCharacteristics();
+            fc.SetBoldFlag(true);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-SemiBold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBold");
+            // Italic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)500);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            // BoldItalic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBoldItalic");
         }
 
         [NUnit.Framework.Test]
@@ -505,8 +570,73 @@ namespace iText.Layout {
             // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
-            CheckSelector(set.GetFonts(), "Open Sans", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic", "OpenSans-BoldItalic"
-                );
+            ICollection<FontInfo> fontInfoCollection = set.GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Open Sans");
+            // Normal
+            FontCharacteristics fc = new FontCharacteristics();
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            // Bold
+            fc = new FontCharacteristics();
+            fc.SetBoldFlag(true);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-SemiBold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBold");
+            // Italic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)500);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            // BoldItalic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBoldItalic");
         }
 
         [NUnit.Framework.Test]
@@ -516,8 +646,73 @@ namespace iText.Layout {
             // TODO Default font shall be specified.
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
-            CheckSelector(set.GetFonts(), "Open Sans Light", "OpenSans-Light", "OpenSans-Bold", "OpenSans-LightItalic"
-                , "OpenSans-BoldItalic");
+            ICollection<FontInfo> fontInfoCollection = set.GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Open Sans");
+            // Normal
+            FontCharacteristics fc = new FontCharacteristics();
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            // Bold
+            fc = new FontCharacteristics();
+            fc.SetBoldFlag(true);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-SemiBold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBold");
+            // Italic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)500);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            // BoldItalic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBoldItalic");
         }
 
         [NUnit.Framework.Test]
@@ -528,13 +723,77 @@ namespace iText.Layout {
         public virtual void OpenSansFontSetExtraBoldTest01() {
             FontSet set = GetOpenSansFontSet();
             AddTimesFonts(set);
-            CheckSelector(set.GetFonts(), "Open Sans ExtraBold", "Times-Bold", "Times-Bold", "Times-BoldItalic", "Times-BoldItalic"
-                );
+            ICollection<FontInfo> fontInfoCollection = set.GetFonts();
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Open Sans");
+            // Normal
+            FontCharacteristics fc = new FontCharacteristics();
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)100);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Light");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Regular");
+            // Bold
+            fc = new FontCharacteristics();
+            fc.SetBoldFlag(true);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-SemiBold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Bold");
+            fc = new FontCharacteristics();
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBold");
+            // Italic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("normal");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)300);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)500);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-LightItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-Italic");
+            // BoldItalic
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("oblique");
+            fc.SetFontWeight("bold");
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)700);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-BoldItalic");
+            fc = new FontCharacteristics();
+            fc.SetFontStyle("italic");
+            fc.SetFontWeight((short)800);
+            AssertSelectedFont(fontInfoCollection, fontFamilies, fc, "OpenSans-ExtraBoldItalic");
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenSansFontWeightBoldRenderingTest() {
-            //TODO: DEVSIX-4147 (update cmp-file after the issue will be resolved)
             String outFileName = destinationFolder + "openSansFontWeightBoldRendering.pdf";
             String cmpFileName = sourceFolder + "cmp_openSansFontWeightBoldRendering.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
@@ -560,7 +819,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void OpenSansFontWeightNotBoldRenderingTest() {
-            //TODO: DEVSIX-4147 (update cmp-file after the issue will be resolved)
             String outFileName = destinationFolder + "openSansFontWeightNotBoldRendering.pdf";
             String cmpFileName = sourceFolder + "cmp_openSansFontWeightNotBoldRendering.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));

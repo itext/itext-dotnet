@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using Common.Logging;
 using iText.Kernel.Geom;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
@@ -56,6 +57,8 @@ namespace iText.Layout.Renderer {
         private const float FLEX_GROW_INITIAL_VALUE = 0F;
 
         private const float FLEX_SHRINK_INITIAL_VALUE = 1F;
+
+        private static ILog logger = LogManager.GetLogger(typeof(iText.Layout.Renderer.FlexUtil));
 
         private FlexUtil() {
         }
@@ -147,16 +150,23 @@ namespace iText.Layout.Renderer {
             > flexItemCalculationInfos) {
             foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
                 // 3. Determine the flex base size and hypothetical main size of each item:
-                // A. If the item has a definite used flex basis, that’s the flex base size.
-                info.flexBaseSize = info.flexBasis;
+                AbstractRenderer renderer = info.renderer;
                 // TODO DEVSIX-5001 content as width are not supported
-                // TODO DEVSIX-5004 Implement method to check whether an element has an intrinsic aspect ratio
                 // B. If the flex item has ...
                 // an intrinsic aspect ratio,
                 // a used flex basis of content, and
                 // a definite cross size,
                 // then the flex base size is calculated from its inner cross size
                 // and the flex item’s intrinsic aspect ratio.
+                float? rendererHeight = renderer.RetrieveHeight();
+                if (renderer.HasAspectRatio() && info.flexBasisContent && rendererHeight != null) {
+                    float aspectRatio = (float)renderer.GetAspectRatio();
+                    info.flexBaseSize = (float)rendererHeight * aspectRatio;
+                }
+                else {
+                    // A. If the item has a definite used flex basis, that’s the flex base size.
+                    info.flexBaseSize = info.flexBasis;
+                }
                 // TODO DEVSIX-5001 content as width is not supported
                 // C. If the used flex basis is content or depends on its available space,
                 // and the flex container is being sized under a min-content or max-content constraint
@@ -342,11 +352,21 @@ namespace iText.Layout.Renderer {
             >> lines) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 foreach (FlexUtil.FlexItemCalculationInfo info in line) {
-                    LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(info.GetOuterMainSize
-                        (info.mainSize), AbstractRenderer.INF))));
+                    UnitValue prevWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.WIDTH, UnitValue.CreatePointValue
+                        (info.mainSize));
+                    UnitValue prevMinWidth = info.renderer.ReplaceOwnProperty<UnitValue>(Property.MIN_WIDTH, null);
+                    LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(AbstractRenderer
+                        .INF, AbstractRenderer.INF))));
+                    info.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, prevMinWidth);
+                    info.renderer.ReturnBackOwnProperty(Property.WIDTH, prevWidth);
                     // Since main size is clamped with min-width, we do expect the result to be full
-                    System.Diagnostics.Debug.Assert(result.GetStatus() == LayoutResult.FULL);
-                    info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
+                    if (result.GetStatus() == LayoutResult.FULL) {
+                        info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
+                    }
+                    else {
+                        logger.Error(iText.IO.LogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
+                        info.hypotheticalCrossSize = 0;
+                    }
                 }
             }
         }
@@ -420,11 +440,14 @@ namespace iText.Layout.Renderer {
                     // the used outer cross size is the used cross size of its flex line,
                     // clamped according to the item’s used min and max cross sizes.
                     // Otherwise, the used cross size is the item’s hypothetical cross size.
+                    // Note that this step doesn't affect the main size of the flex item, even if it has aspect ratio.
+                    // Also note that for some reason browsers do not respect such a rule from the specification
                     AbstractRenderer infoRenderer = info.renderer;
                     AlignmentPropertyValue alignSelf = (AlignmentPropertyValue)infoRenderer.GetProperty<AlignmentPropertyValue?
                         >(Property.ALIGN_SELF, alignItems);
                     // TODO DEVSIX-5002 Stretch value shall be ignored if margin auto for cross axis is set
-                    if (alignSelf == AlignmentPropertyValue.STRETCH || alignSelf == AlignmentPropertyValue.NORMAL) {
+                    if ((alignSelf == AlignmentPropertyValue.STRETCH || alignSelf == AlignmentPropertyValue.NORMAL) && info.renderer
+                        .GetProperty<UnitValue>(Property.HEIGHT) == null) {
                         info.crossSize = info.GetInnerCrossSize(lineCrossSizes[i]);
                         float? maxHeight = infoRenderer.RetrieveMaxHeight();
                         if (maxHeight != null) {
@@ -556,8 +579,10 @@ namespace iText.Layout.Renderer {
                     // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
                     float maxWidth = CalculateMaxWidth(abstractRenderer, flexContainerWidth);
                     float flexBasis;
+                    bool flexBasisContent = false;
                     if (renderer.GetProperty<UnitValue>(Property.FLEX_BASIS) == null) {
                         flexBasis = maxWidth;
+                        flexBasisContent = true;
                     }
                     else {
                         flexBasis = (float)abstractRenderer.RetrieveUnitValue(flexContainerWidth, Property.FLEX_BASIS);
@@ -569,7 +594,7 @@ namespace iText.Layout.Renderer {
                     float flexGrow = (float)renderer.GetProperty<float?>(Property.FLEX_GROW, FLEX_GROW_INITIAL_VALUE);
                     float flexShrink = (float)renderer.GetProperty<float?>(Property.FLEX_SHRINK, FLEX_SHRINK_INITIAL_VALUE);
                     FlexUtil.FlexItemCalculationInfo flexItemInfo = new FlexUtil.FlexItemCalculationInfo((AbstractRenderer)renderer
-                        , flexBasis, flexGrow, flexShrink, flexContainerWidth);
+                        , flexBasis, flexGrow, flexShrink, flexContainerWidth, flexBasisContent);
                     flexItems.Add(flexItemInfo);
                 }
             }
@@ -591,9 +616,14 @@ namespace iText.Layout.Renderer {
                     maxWidth = flexItemRenderer.RetrieveMaxWidth(flexContainerWidth);
                 }
                 if (maxWidth == null) {
-                    maxWidth = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
-                    maxWidth = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxWidth, 0), false).GetWidth
-                        ();
+                    if (flexItemRenderer is ImageRenderer) {
+                        // TODO DEVSIX-5269 getMinMaxWidth doesn't always return the original image width
+                        maxWidth = ((ImageRenderer)flexItemRenderer).GetImageWidth();
+                    }
+                    else {
+                        maxWidth = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(flexItemRenderer.GetMinMaxWidth().GetMaxWidth
+                            (), 0), false).GetWidth();
+                    }
                 }
             }
             return (float)maxWidth;
@@ -635,8 +665,11 @@ namespace iText.Layout.Renderer {
 
             internal float hypotheticalCrossSize;
 
+            internal bool flexBasisContent;
+
             public FlexItemCalculationInfo(AbstractRenderer renderer, float flexBasis, float flexGrow, float flexShrink
-                , float areaWidth) {
+                , float areaWidth, bool flexBasisContent) {
+                this.flexBasisContent = flexBasisContent;
                 this.renderer = renderer;
                 this.flexBasis = flexBasis;
                 if (flexShrink < 0) {
@@ -647,22 +680,12 @@ namespace iText.Layout.Renderer {
                     throw new ArgumentException(LayoutExceptionMessageConstant.FLEX_GROW_CANNOT_BE_NEGATIVE);
                 }
                 this.flexGrow = flexGrow;
-                // We always need to clamp flex item's sizes with min-width, so this calculation is necessary
-                // We also need to get min-width not based on Property.WIDTH
-                UnitValue rendererWidth = renderer.GetOwnProperty<UnitValue>(Property.WIDTH);
-                bool hasOwnWidth = renderer.HasOwnProperty(Property.WIDTH);
-                renderer.SetProperty(Property.WIDTH, null);
-                MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
-                if (hasOwnWidth) {
-                    renderer.SetProperty(Property.WIDTH, rendererWidth);
-                }
-                else {
-                    renderer.DeleteOwnProperty(Property.WIDTH);
-                }
-                this.minContent = GetInnerMainSize(minMaxWidth.GetMinWidth());
-                bool isMaxWidthApplied = null != this.renderer.RetrieveMaxWidth(areaWidth);
+                float? definiteMinContent = renderer.RetrieveMinWidth(areaWidth);
+                // null means that min-width property is not set or has auto value. In both cases we should calculate it
+                this.minContent = definiteMinContent == null ? CalculateMinContentAuto(areaWidth) : (float)definiteMinContent;
+                float? maxWidth = this.renderer.RetrieveMaxWidth(areaWidth);
                 // As for now we assume that max width should be calculated so
-                this.maxContent = isMaxWidthApplied ? minMaxWidth.GetMaxWidth() : AbstractRenderer.INF;
+                this.maxContent = maxWidth == null ? AbstractRenderer.INF : (float)maxWidth;
             }
 
             public virtual Rectangle ToRectangle() {
@@ -683,6 +706,115 @@ namespace iText.Layout.Renderer {
 
             internal virtual float GetInnerCrossSize(float size) {
                 return renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), false).GetHeight();
+            }
+
+            private float CalculateMinContentAuto(float flexContainerWidth) {
+                // Automatic Minimum Size of Flex Items https://www.w3.org/TR/css-flexbox-1/#content-based-minimum-size
+                float? specifiedSizeSuggestion = CalculateSpecifiedSizeSuggestion(flexContainerWidth);
+                float contentSizeSuggestion = CalculateContentSizeSuggestion(flexContainerWidth);
+                if (renderer.HasAspectRatio() && specifiedSizeSuggestion == null) {
+                    // However, if the box has an aspect ratio and no specified size,
+                    // its content-based minimum size is the smaller of its content size suggestion
+                    // and its transferred size suggestion
+                    float? transferredSizeSuggestion = CalculateTransferredSizeSuggestion();
+                    if (transferredSizeSuggestion == null) {
+                        return contentSizeSuggestion;
+                    }
+                    else {
+                        return Math.Min(contentSizeSuggestion, (float)transferredSizeSuggestion);
+                    }
+                }
+                else {
+                    if (specifiedSizeSuggestion == null) {
+                        // If the box has neither a specified size suggestion nor an aspect ratio,
+                        // its content-based minimum size is the content size suggestion.
+                        return contentSizeSuggestion;
+                    }
+                    else {
+                        // In general, the content-based minimum size of a flex item is the smaller
+                        // of its content size suggestion and its specified size suggestion
+                        return Math.Min(contentSizeSuggestion, (float)specifiedSizeSuggestion);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// If the item has an intrinsic aspect ratio and its computed cross size property is definite,
+            /// then the transferred size suggestion is that size (clamped by its min and max cross size properties
+            /// if they are definite), converted through the aspect ratio.
+            /// </summary>
+            /// <remarks>
+            /// If the item has an intrinsic aspect ratio and its computed cross size property is definite,
+            /// then the transferred size suggestion is that size (clamped by its min and max cross size properties
+            /// if they are definite), converted through the aspect ratio. It is otherwise undefined.
+            /// </remarks>
+            /// <returns>transferred size suggestion if it can be calculated, null otherwise</returns>
+            private float? CalculateTransferredSizeSuggestion() {
+                float? transferredSizeSuggestion = null;
+                float? height = renderer.RetrieveHeight();
+                if (renderer.HasAspectRatio() && height != null) {
+                    transferredSizeSuggestion = height * renderer.GetAspectRatio();
+                    transferredSizeSuggestion = ClampValueByCrossSizesConvertedThroughAspectRatio((float)transferredSizeSuggestion
+                        );
+                }
+                return transferredSizeSuggestion;
+            }
+
+            /// <summary>
+            /// If the item’s computed main size property is definite,
+            /// then the specified size suggestion is that size (clamped by its max main size property if it’s definite).
+            /// </summary>
+            /// <remarks>
+            /// If the item’s computed main size property is definite,
+            /// then the specified size suggestion is that size (clamped by its max main size property if it’s definite).
+            /// It is otherwise undefined.
+            /// </remarks>
+            /// <param name="flexContainerWidth">the width of the flex container</param>
+            /// <returns>specified size suggestion if it's definite, null otherwise</returns>
+            private float? CalculateSpecifiedSizeSuggestion(float flexContainerWidth) {
+                if (renderer.HasProperty(Property.WIDTH)) {
+                    return renderer.RetrieveWidth(flexContainerWidth);
+                }
+                else {
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// The content size suggestion is the min-content size in the main axis, clamped, if it has an aspect ratio,
+            /// by any definite min and max cross size properties converted through the aspect ratio,
+            /// and then further clamped by the max main size property if that is definite.
+            /// </summary>
+            /// <param name="flexContainerWidth">the width of the flex container</param>
+            /// <returns>content size suggestion</returns>
+            private float CalculateContentSizeSuggestion(float flexContainerWidth) {
+                UnitValue rendererWidth = renderer.ReplaceOwnProperty<UnitValue>(Property.WIDTH, null);
+                UnitValue rendererHeight = renderer.ReplaceOwnProperty<UnitValue>(Property.HEIGHT, null);
+                MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth();
+                float minContentSize = GetInnerMainSize(minMaxWidth.GetMinWidth());
+                renderer.ReturnBackOwnProperty(Property.HEIGHT, rendererHeight);
+                renderer.ReturnBackOwnProperty(Property.WIDTH, rendererWidth);
+                if (renderer.HasAspectRatio()) {
+                    minContentSize = ClampValueByCrossSizesConvertedThroughAspectRatio(minContentSize);
+                }
+                float? maxWidth = renderer.RetrieveMaxWidth(flexContainerWidth);
+                if (maxWidth == null) {
+                    maxWidth = AbstractRenderer.INF;
+                }
+                return Math.Min(minContentSize, (float)maxWidth);
+            }
+
+            private float ClampValueByCrossSizesConvertedThroughAspectRatio(float value) {
+                float? maxHeight = renderer.RetrieveMaxHeight();
+                if (maxHeight == null || !renderer.HasProperty(Property.MAX_HEIGHT)) {
+                    maxHeight = AbstractRenderer.INF;
+                }
+                float? minHeight = renderer.RetrieveMinHeight();
+                if (minHeight == null || !renderer.HasProperty(Property.MIN_HEIGHT)) {
+                    minHeight = 0F;
+                }
+                return Math.Min(Math.Max((float)(minHeight * renderer.GetAspectRatio()), value), (float)(maxHeight * renderer
+                    .GetAspectRatio()));
             }
         }
     }

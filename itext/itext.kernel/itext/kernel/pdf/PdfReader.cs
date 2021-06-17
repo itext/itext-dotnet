@@ -50,6 +50,7 @@ using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Pdf.Filters;
+using iText.Kernel.XMP;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Reads a PDF document.</summary>
@@ -399,7 +400,8 @@ namespace iText.Kernel.Pdf {
                 file.Seek(stream.GetOffset());
                 bytes = new byte[length];
                 file.ReadFully(bytes);
-                if (decrypt != null && !decrypt.IsEmbeddedFilesOnly()) {
+                bool embeddedStream = pdfDocument.DoesStreamBelongToEmbeddedFile(stream);
+                if (decrypt != null && (!decrypt.IsEmbeddedFilesOnly() || embeddedStream)) {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
@@ -639,18 +641,31 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Gets the declared Pdf/A conformance level of the source document that is being read.</summary>
+        /// <summary>Gets the declared PDF/A conformance level of the source document that is being read.</summary>
         /// <remarks>
-        /// Gets the declared Pdf/A conformance level of the source document that is being read.
+        /// Gets the declared PDF/A conformance level of the source document that is being read.
         /// Note that this information is provided via XMP metadata and is not verified by iText.
+        /// <see cref="pdfAConformanceLevel"/>
+        /// is lazy initialized.
+        /// It will be initialized during the first call of this method.
         /// </remarks>
         /// <returns>
         /// conformance level of the source document, or
         /// <see langword="null"/>
-        /// if no Pdf/A
+        /// if no PDF/A
         /// conformance level information is specified.
         /// </returns>
         public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
+            if (pdfAConformanceLevel == null) {
+                if (pdfDocument != null && pdfDocument.GetXmpMetadata() != null) {
+                    try {
+                        pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(pdfDocument
+                            .GetXmpMetadata()));
+                    }
+                    catch (XMPException) {
+                    }
+                }
+            }
             return pdfAConformanceLevel;
         }
 
@@ -1429,8 +1444,21 @@ namespace iText.Kernel.Pdf {
         /// <param name="byteSource">the source to check</param>
         /// <returns>a tokeniser that is guaranteed to start at the PDF header</returns>
         private static PdfTokenizer GetOffsetTokeniser(IRandomAccessSource byteSource) {
+            iText.IO.IOException possibleException = null;
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(byteSource));
-            int offset = tok.GetHeaderOffset();
+            int offset;
+            try {
+                offset = tok.GetHeaderOffset();
+            }
+            catch (iText.IO.IOException ex) {
+                possibleException = ex;
+                throw possibleException;
+            }
+            finally {
+                if (possibleException != null) {
+                    tok.Close();
+                }
+            }
             if (offset != 0) {
                 IRandomAccessSource offsetSource = new WindowRandomAccessSource(byteSource, offset);
                 tok = new PdfTokenizer(new RandomAccessFileOrArray(offsetSource));

@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
@@ -65,13 +66,11 @@ namespace iText.Kernel.Colors {
 
         [NUnit.Framework.Test]
         public virtual void SetColorValueIncorrectComponentsNumberTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                float[] colorValues = new float[] { 0.0f, 0.5f, 0.1f };
-                Color color = Color.MakeColor(PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB), colorValues);
-                color.SetColorValue(new float[] { 0.1f, 0.2f });
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(PdfException.IncorrectNumberOfComponents))
-;
+            float[] colorValues = new float[] { 0.0f, 0.5f, 0.1f };
+            Color color = Color.MakeColor(PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB), colorValues);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => color.SetColorValue(new float[] { 0.1f
+                , 0.2f }));
+            NUnit.Framework.Assert.AreEqual(PdfException.IncorrectNumberOfComponents, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -132,12 +131,9 @@ namespace iText.Kernel.Colors {
 
         [NUnit.Framework.Test]
         public virtual void NullColorSpaceTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                float[] colorValues = new float[] { 0.0f, 0.5f, 0.1f };
-                Color color = Color.MakeColor(null, colorValues);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Unknown color space."))
-;
+            float[] colorValues = new float[] { 0.0f, 0.5f, 0.1f };
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Color.MakeColor(null, colorValues));
+            NUnit.Framework.Assert.AreEqual("Unknown color space.", e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -176,11 +172,9 @@ namespace iText.Kernel.Colors {
 
         [NUnit.Framework.Test]
         public virtual void UnknownDeviceCsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                Color color = Color.MakeColor(new ColorTest.CustomDeviceCs(null));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Unknown color space."))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Color.MakeColor(new ColorTest.CustomDeviceCs
+                (null)));
+            NUnit.Framework.Assert.AreEqual("Unknown color space.", e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -266,11 +260,9 @@ namespace iText.Kernel.Colors {
 
         [NUnit.Framework.Test]
         public virtual void UnknownCieBasedCsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                Color color = Color.MakeColor(new ColorTest.CustomPdfCieBasedCs(new PdfArray()));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Unknown color space."))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Color.MakeColor(new ColorTest.CustomPdfCieBasedCs
+                (new PdfArray())));
+            NUnit.Framework.Assert.AreEqual("Unknown color space.", e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -329,11 +321,9 @@ namespace iText.Kernel.Colors {
 
         [NUnit.Framework.Test]
         public virtual void UnknownSpecialCsTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                Color color = Color.MakeColor(new ColorTest.CustomPdfSpecialCs(new PdfArray()));
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Unknown color space."))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Color.MakeColor(new ColorTest.CustomPdfSpecialCs
+                (new PdfArray())));
+            NUnit.Framework.Assert.AreEqual("Unknown color space.", e.Message);
         }
 
         private class CustomDeviceCs : PdfDeviceCs {

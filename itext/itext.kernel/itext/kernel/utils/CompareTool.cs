@@ -827,43 +827,39 @@ namespace iText.Kernel.Utils {
         /// <returns>text report on the xmp differences, or null if there are no differences.</returns>
         public virtual String CompareXmp(String outPdf, String cmpPdf, bool ignoreDateAndProducerProperties) {
             Init(outPdf, cmpPdf);
-            PdfDocument cmpDocument = null;
-            PdfDocument outDocument = null;
             try {
-                cmpDocument = new PdfDocument(new PdfReader(this.cmpPdf), new DocumentProperties().SetEventCountingMetaInfo
-                    (metaInfo));
-                outDocument = new PdfDocument(new PdfReader(this.outPdf), new DocumentProperties().SetEventCountingMetaInfo
-                    (metaInfo));
-                byte[] cmpBytes = cmpDocument.GetXmpMetadata();
-                byte[] outBytes = outDocument.GetXmpMetadata();
-                if (ignoreDateAndProducerProperties) {
-                    XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes, new ParseOptions().SetOmitNormalization(true));
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
-                    cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
-                    xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes, new ParseOptions().SetOmitNormalization(true));
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
-                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
-                    outBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
-                }
-                if (!CompareXmls(cmpBytes, outBytes)) {
-                    return "The XMP packages different!";
+                using (PdfReader readerCmp = new PdfReader(this.cmpPdf)) {
+                    using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
+                        (metaInfo))) {
+                        using (PdfReader readerOut = new PdfReader(this.outPdf)) {
+                            using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
+                                (metaInfo))) {
+                                byte[] cmpBytes = cmpDocument.GetXmpMetadata();
+                                byte[] outBytes = outDocument.GetXmpMetadata();
+                                if (ignoreDateAndProducerProperties) {
+                                    XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes, new ParseOptions().SetOmitNormalization(true));
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
+                                    cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
+                                    xmpMeta = XMPMetaFactory.ParseFromBuffer(outBytes, new ParseOptions().SetOmitNormalization(true));
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.ModifyDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.MetadataDate, true, true);
+                                    XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
+                                    outBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
+                                }
+                                if (!CompareXmls(cmpBytes, outBytes)) {
+                                    return "The XMP packages different!";
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception) {
                 return "XMP parsing failure!";
-            }
-            finally {
-                if (cmpDocument != null) {
-                    cmpDocument.Close();
-                }
-                if (outDocument != null) {
-                    outDocument.Close();
-                }
             }
             return null;
         }
@@ -906,21 +902,25 @@ namespace iText.Kernel.Utils {
             System.Console.Out.Write("[itext] INFO  Comparing document info.......");
             String message = null;
             SetPassword(outPass, cmpPass);
-            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()), new DocumentProperties
-                ().SetEventCountingMetaInfo(metaInfo));
-            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()), new DocumentProperties
-                ().SetEventCountingMetaInfo(metaInfo));
-            String[] cmpInfo = ConvertInfo(cmpDocument.GetDocumentInfo());
-            String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
-            for (int i = 0; i < cmpInfo.Length; ++i) {
-                if (!cmpInfo[i].Equals(outInfo[i])) {
-                    message = MessageFormatUtil.Format("Document info fail. Expected: \"{0}\", actual: \"{1}\"", cmpInfo[i], outInfo
-                        [i]);
-                    break;
+            using (PdfReader readerOut = new PdfReader(outPdf, GetOutReaderProperties())) {
+                using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo))) {
+                    using (PdfReader readerCmp = new PdfReader(cmpPdf, GetCmpReaderProperties())) {
+                        using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            String[] cmpInfo = ConvertInfo(cmpDocument.GetDocumentInfo());
+                            String[] outInfo = ConvertInfo(outDocument.GetDocumentInfo());
+                            for (int i = 0; i < cmpInfo.Length; ++i) {
+                                if (!cmpInfo[i].Equals(outInfo[i])) {
+                                    message = MessageFormatUtil.Format("Document info fail. Expected: \"{0}\", actual: \"{1}\"", cmpInfo[i], outInfo
+                                        [i]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            outDocument.Close();
-            cmpDocument.Close();
             if (message == null) {
                 System.Console.Out.WriteLine("OK");
             }
@@ -948,27 +948,31 @@ namespace iText.Kernel.Utils {
         public virtual String CompareLinkAnnotations(String outPdf, String cmpPdf) {
             System.Console.Out.Write("[itext] INFO  Comparing link annotations....");
             String message = null;
-            PdfDocument outDocument = new PdfDocument(new PdfReader(outPdf), new DocumentProperties().SetEventCountingMetaInfo
-                (metaInfo));
-            PdfDocument cmpDocument = new PdfDocument(new PdfReader(cmpPdf), new DocumentProperties().SetEventCountingMetaInfo
-                (metaInfo));
-            for (int i = 0; i < outDocument.GetNumberOfPages() && i < cmpDocument.GetNumberOfPages(); i++) {
-                IList<PdfLinkAnnotation> outLinks = GetLinkAnnotations(i + 1, outDocument);
-                IList<PdfLinkAnnotation> cmpLinks = GetLinkAnnotations(i + 1, cmpDocument);
-                if (cmpLinks.Count != outLinks.Count) {
-                    message = MessageFormatUtil.Format("Different number of links on page {0}.", i + 1);
-                    break;
-                }
-                for (int j = 0; j < cmpLinks.Count; j++) {
-                    if (!CompareLinkAnnotations(cmpLinks[j], outLinks[j], cmpDocument, outDocument)) {
-                        message = MessageFormatUtil.Format("Different links on page {0}.\n{1}\n{2}", i + 1, cmpLinks[j].ToString()
-                            , outLinks[j].ToString());
-                        break;
+            using (PdfReader readerOut = new PdfReader(outPdf)) {
+                using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo))) {
+                    using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+                        using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            for (int i = 0; i < outDocument.GetNumberOfPages() && i < cmpDocument.GetNumberOfPages(); i++) {
+                                IList<PdfLinkAnnotation> outLinks = GetLinkAnnotations(i + 1, outDocument);
+                                IList<PdfLinkAnnotation> cmpLinks = GetLinkAnnotations(i + 1, cmpDocument);
+                                if (cmpLinks.Count != outLinks.Count) {
+                                    message = MessageFormatUtil.Format("Different number of links on page {0}.", i + 1);
+                                    break;
+                                }
+                                for (int j = 0; j < cmpLinks.Count; j++) {
+                                    if (!CompareLinkAnnotations(cmpLinks[j], outLinks[j], cmpDocument, outDocument)) {
+                                        message = MessageFormatUtil.Format("Different links on page {0}.\n{1}\n{2}", i + 1, cmpLinks[j].ToString()
+                                            , outLinks[j].ToString());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            outDocument.Close();
-            cmpDocument.Close();
             if (message == null) {
                 System.Console.Out.WriteLine("OK");
             }
@@ -996,20 +1000,22 @@ namespace iText.Kernel.Utils {
             String outXmlPath = outPdf.Replace(".pdf", ".xml");
             String cmpXmlPath = outPdf.Replace(".pdf", ".cmp.xml");
             String message = null;
-            PdfReader readerOut = new PdfReader(outPdf);
-            PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
-                ));
-            FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create);
-            new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
-            docOut.Close();
-            xmlOut.Dispose();
-            PdfReader readerCmp = new PdfReader(cmpPdf);
-            PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
-                ));
-            FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create);
-            new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
-            docCmp.Close();
-            xmlCmp.Dispose();
+            using (PdfReader readerOut = new PdfReader(outPdf)) {
+                using (PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
+                    ))) {
+                    using (FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create)) {
+                        new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
+                    }
+                }
+            }
+            using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+                using (PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
+                    ))) {
+                    using (FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create)) {
+                        new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
+                    }
+                }
+            }
             if (!CompareXmls(outXmlPath, cmpXmlPath)) {
                 message = "The tag structures are different.";
             }
@@ -1201,30 +1207,36 @@ namespace iText.Kernel.Utils {
         }
 
         private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int, IList<Rectangle>> ignoredAreas) {
-            PdfWriter outWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + outPdfName);
-            PdfWriter cmpWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + cmpPdfName);
             StampingProperties properties = new StampingProperties();
             properties.SetEventCountingMetaInfo(metaInfo);
-            PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter, properties);
-            PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter, properties);
-            foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas) {
-                int pageNumber = entry.Key;
-                IList<Rectangle> rectangles = entry.Value;
-                if (rectangles != null && !rectangles.IsEmpty()) {
-                    PdfCanvas outCanvas = new PdfCanvas(pdfOutDoc.GetPage(pageNumber));
-                    PdfCanvas cmpCanvas = new PdfCanvas(pdfCmpDoc.GetPage(pageNumber));
-                    outCanvas.SaveState();
-                    cmpCanvas.SaveState();
-                    foreach (Rectangle rect in rectangles) {
-                        outCanvas.Rectangle(rect).Fill();
-                        cmpCanvas.Rectangle(rect).Fill();
+            using (PdfWriter outWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + outPdfName)) {
+                using (PdfReader readerOut = new PdfReader(outPdf)) {
+                    using (PdfDocument pdfOutDoc = new PdfDocument(readerOut, outWriter, properties)) {
+                        using (PdfWriter cmpWriter = new PdfWriter(outPath + IGNORED_AREAS_PREFIX + cmpPdfName)) {
+                            using (PdfReader readerCmp = new PdfReader(cmpPdf)) {
+                                using (PdfDocument pdfCmpDoc = new PdfDocument(readerCmp, cmpWriter, properties)) {
+                                    foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas) {
+                                        int pageNumber = entry.Key;
+                                        IList<Rectangle> rectangles = entry.Value;
+                                        if (rectangles != null && !rectangles.IsEmpty()) {
+                                            PdfCanvas outCanvas = new PdfCanvas(pdfOutDoc.GetPage(pageNumber));
+                                            PdfCanvas cmpCanvas = new PdfCanvas(pdfCmpDoc.GetPage(pageNumber));
+                                            outCanvas.SaveState();
+                                            cmpCanvas.SaveState();
+                                            foreach (Rectangle rect in rectangles) {
+                                                outCanvas.Rectangle(rect).Fill();
+                                                cmpCanvas.Rectangle(rect).Fill();
+                                            }
+                                            outCanvas.RestoreState();
+                                            cmpCanvas.RestoreState();
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    outCanvas.RestoreState();
-                    cmpCanvas.RestoreState();
                 }
             }
-            pdfOutDoc.Close();
-            pdfCmpDoc.Close();
             Init(outPath + IGNORED_AREAS_PREFIX + outPdfName, outPath + IGNORED_AREAS_PREFIX + cmpPdfName);
         }
 
@@ -1263,73 +1275,65 @@ namespace iText.Kernel.Utils {
             >> ignoredAreas) {
             PrintOutCmpDirectories();
             System.Console.Out.Write("Comparing by content..........");
-            PdfDocument outDocument;
-            try {
-                outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()), new DocumentProperties().SetEventCountingMetaInfo
-                    (metaInfo));
-            }
-            catch (System.IO.IOException e) {
-                throw new System.IO.IOException("File \"" + outPdf + "\" not found", e);
-            }
-            IList<PdfDictionary> outPages = new List<PdfDictionary>();
-            outPagesRef = new List<PdfIndirectReference>();
-            LoadPagesFromReader(outDocument, outPages, outPagesRef);
-            PdfDocument cmpDocument;
-            try {
-                cmpDocument = new PdfDocument(new PdfReader(cmpPdf, GetCmpReaderProperties()), new DocumentProperties().SetEventCountingMetaInfo
-                    (metaInfo));
-            }
-            catch (System.IO.IOException e) {
-                throw new System.IO.IOException("File \"" + cmpPdf + "\" not found", e);
-            }
-            IList<PdfDictionary> cmpPages = new List<PdfDictionary>();
-            cmpPagesRef = new List<PdfIndirectReference>();
-            LoadPagesFromReader(cmpDocument, cmpPages, cmpPagesRef);
-            if (outPages.Count != cmpPages.Count) {
-                return CompareVisuallyAndCombineReports("Documents have different numbers of pages.", outPath, differenceImagePrefix
-                    , ignoredAreas, null);
-            }
-            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
-            IList<int> equalPages = new List<int>(cmpPages.Count);
-            for (int i = 0; i < cmpPages.Count; i++) {
-                CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpPagesRef[i], outPagesRef[i]);
-                if (CompareDictionariesExtended(outPages[i], cmpPages[i], currentPath, compareResult)) {
-                    equalPages.Add(i);
+            using (PdfReader readerOut = new PdfReader(outPdf, GetOutReaderProperties())) {
+                using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
+                    (metaInfo))) {
+                    using (PdfReader readerCmp = new PdfReader(cmpPdf, GetCmpReaderProperties())) {
+                        using (PdfDocument cmpDocument = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            IList<PdfDictionary> outPages = new List<PdfDictionary>();
+                            outPagesRef = new List<PdfIndirectReference>();
+                            LoadPagesFromReader(outDocument, outPages, outPagesRef);
+                            IList<PdfDictionary> cmpPages = new List<PdfDictionary>();
+                            cmpPagesRef = new List<PdfIndirectReference>();
+                            LoadPagesFromReader(cmpDocument, cmpPages, cmpPagesRef);
+                            if (outPages.Count != cmpPages.Count) {
+                                return CompareVisuallyAndCombineReports("Documents have different numbers of pages.", outPath, differenceImagePrefix
+                                    , ignoredAreas, null);
+                            }
+                            CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
+                            IList<int> equalPages = new List<int>(cmpPages.Count);
+                            for (int i = 0; i < cmpPages.Count; i++) {
+                                CompareTool.ObjectPath currentPath = new CompareTool.ObjectPath(cmpPagesRef[i], outPagesRef[i]);
+                                if (CompareDictionariesExtended(outPages[i], cmpPages[i], currentPath, compareResult)) {
+                                    equalPages.Add(i);
+                                }
+                            }
+                            CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference
+                                (), outDocument.GetCatalog().GetPdfObject().GetIndirectReference());
+                            ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Pages
+                                , PdfName.Metadata));
+                            CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject
+                                (), catalogPath, compareResult, ignoredCatalogEntries);
+                            if (encryptionCompareEnabled) {
+                                CompareDocumentsEncryption(outDocument, cmpDocument, compareResult);
+                            }
+                            if (generateCompareByContentXmlReport) {
+                                String outPdfName = new FileInfo(outPdf).Name;
+                                FileStream xml = new FileStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) + "report.xml"
+                                    , FileMode.Create);
+                                try {
+                                    compareResult.WriteReportToXml(xml);
+                                }
+                                catch (Exception e) {
+                                    throw new Exception(e.Message, e);
+                                }
+                                finally {
+                                    xml.Dispose();
+                                }
+                            }
+                            if (equalPages.Count == cmpPages.Count && compareResult.IsOk()) {
+                                System.Console.Out.WriteLine("OK");
+                                System.Console.Out.Flush();
+                                return null;
+                            }
+                            else {
+                                return CompareVisuallyAndCombineReports(compareResult.GetReport(), outPath, differenceImagePrefix, ignoredAreas
+                                    , equalPages);
+                            }
+                        }
+                    }
                 }
-            }
-            CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference
-                (), outDocument.GetCatalog().GetPdfObject().GetIndirectReference());
-            ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Pages
-                , PdfName.Metadata));
-            CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject
-                (), catalogPath, compareResult, ignoredCatalogEntries);
-            if (encryptionCompareEnabled) {
-                CompareDocumentsEncryption(outDocument, cmpDocument, compareResult);
-            }
-            outDocument.Close();
-            cmpDocument.Close();
-            if (generateCompareByContentXmlReport) {
-                String outPdfName = new FileInfo(outPdf).Name;
-                FileStream xml = new FileStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) + "report.xml"
-                    , FileMode.Create);
-                try {
-                    compareResult.WriteReportToXml(xml);
-                }
-                catch (Exception e) {
-                    throw new Exception(e.Message, e);
-                }
-                finally {
-                    xml.Dispose();
-                }
-            }
-            if (equalPages.Count == cmpPages.Count && compareResult.IsOk()) {
-                System.Console.Out.WriteLine("OK");
-                System.Console.Out.Flush();
-                return null;
-            }
-            else {
-                return CompareVisuallyAndCombineReports(compareResult.GetReport(), outPath, differenceImagePrefix, ignoredAreas
-                    , equalPages);
             }
         }
 

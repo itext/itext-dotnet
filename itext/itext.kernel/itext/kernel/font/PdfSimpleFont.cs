@@ -426,18 +426,7 @@ namespace iText.Kernel.Font {
             if (IsForceWidthsOutput() || !IsBuiltInFont() || fontEncoding.HasDifferences()) {
                 GetPdfObject().Put(PdfName.FirstChar, new PdfNumber(firstChar));
                 GetPdfObject().Put(PdfName.LastChar, new PdfNumber(lastChar));
-                PdfArray wd = new PdfArray();
-                for (int k = firstChar; k <= lastChar; ++k) {
-                    if (shortTag[k] == 0) {
-                        wd.Add(new PdfNumber(0));
-                    }
-                    else {
-                        //prevent lost of widths info
-                        int uni = fontEncoding.GetUnicode(k);
-                        Glyph glyph = uni > -1 ? GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
-                        wd.Add(new PdfNumber(GetGlyphWidth(glyph)));
-                    }
-                }
+                PdfArray wd = BuildWidthsArray(firstChar, lastChar);
                 GetPdfObject().Put(PdfName.Widths, wd);
             }
             PdfDictionary fontDescriptor = !IsBuiltInFont() ? GetFontDescriptor(fontName) : null;
@@ -508,12 +497,32 @@ namespace iText.Kernel.Font {
             return fontDescriptor;
         }
 
+        protected internal virtual PdfArray BuildWidthsArray(int firstChar, int lastChar) {
+            PdfArray wd = new PdfArray();
+            for (int k = firstChar; k <= lastChar; ++k) {
+                if (shortTag[k] == 0) {
+                    wd.Add(new PdfNumber(0));
+                }
+                else {
+                    int uni = fontEncoding.GetUnicode(k);
+                    Glyph glyph = uni > -1 ? GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
+                    wd.Add(new PdfNumber(glyph != null ? glyph.GetWidth() : 0));
+                }
+            }
+            return wd;
+        }
+
         protected internal abstract void AddFontStream(PdfDictionary fontDescriptor);
 
         protected internal virtual void SetFontProgram(T fontProgram) {
             this.fontProgram = fontProgram;
         }
 
+        /// <summary>Gets glyph width which us ready to be written to the output file.</summary>
+        /// <param name="glyph">the glyph which widths is required to be written to the output file</param>
+        /// <returns>glyph width in glyph-space</returns>
+        [System.ObsoleteAttribute(@"This method was introduced to allow overriding of widths array entry writing to output file. It's now replaced by more specific PdfSimpleFont{T}.BuildWidthsArray(int, int) in order to avoid confusion between this method and iText.IO.Font.Otf.Glyph.GetWidth() . This method will be removed in the next major release."
+            )]
         protected internal virtual double GetGlyphWidth(Glyph glyph) {
             return glyph != null ? glyph.GetWidth() : 0;
         }

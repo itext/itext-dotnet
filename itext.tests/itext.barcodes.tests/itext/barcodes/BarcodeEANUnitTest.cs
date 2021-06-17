@@ -187,17 +187,14 @@ namespace iText.Barcodes {
 
         [NUnit.Framework.Test]
         public virtual void GetBarcodeSizeIncorrectTypeTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
-                Barcode1D barcode = new BarcodeEAN(document);
-                barcode.SetCode("9781935182610");
-                // Set incorrect type
-                barcode.SetCodeType(1234);
-                // We do expect an exception here
-                barcode.GetBarcodeSize();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo("Invalid code type"))
-;
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            Barcode1D barcode = new BarcodeEAN(document);
+            barcode.SetCode("9781935182610");
+            // Set incorrect type
+            barcode.SetCodeType(1234);
+            // We do expect an exception here
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => barcode.GetBarcodeSize());
+            NUnit.Framework.Assert.AreEqual("Invalid code type", e.Message);
         }
     }
 }

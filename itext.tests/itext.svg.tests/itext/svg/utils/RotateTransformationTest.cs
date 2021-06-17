@@ -59,11 +59,9 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void NoRotateValuesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                TransformUtils.ParseTransform("rotate()");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("rotate()"));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -75,11 +73,9 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void TwoRotateValuesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                TransformUtils.ParseTransform("rotate(23,58)");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("rotate(23,58)"));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -92,11 +88,9 @@ namespace iText.Svg.Utils {
 
         [NUnit.Framework.Test]
         public virtual void TooManyRotateValuesTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                TransformUtils.ParseTransform("rotate(1 2 3 4)");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("rotate(1 2 3 4)"));
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES, e.Message);
         }
 
         [NUnit.Framework.Test]

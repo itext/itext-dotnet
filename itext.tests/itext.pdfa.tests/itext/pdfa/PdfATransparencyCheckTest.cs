@@ -72,28 +72,26 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void TextTransparencyNoOutputIntentTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
-                PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
-                    .FORCE_EMBEDDED);
-                PdfPage page1 = pdfDocument.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page1);
-                canvas.SaveState();
-                canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1 without transparency").EndText
-                    ().RestoreState();
-                PdfPage page2 = pdfDocument.AddNewPage();
-                canvas = new PdfCanvas(page2);
-                canvas.SaveState();
-                PdfExtGState state = new PdfExtGState();
-                state.SetFillOpacity(0.6f);
-                canvas.SetExtGState(state);
-                canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 with transparency").EndText
-                    ().RestoreState();
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfPage page1 = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            canvas.SaveState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 1 without transparency").EndText
+                ().RestoreState();
+            PdfPage page2 = pdfDocument.AddNewPage();
+            canvas = new PdfCanvas(page2);
+            canvas.SaveState();
+            PdfExtGState state = new PdfExtGState();
+            state.SetFillOpacity(0.6f);
+            canvas.SetExtGState(state);
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page 2 with transparency").EndText
+                ().RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -127,55 +125,51 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ImageTransparencyTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument pdfDoc = new PdfADocument(new PdfWriter(new MemoryStream()), PdfAConformanceLevel.PDF_A_3B, null
-                    );
-                PdfPage page = pdfDoc.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page);
-                page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
-                canvas.SaveState();
-                canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 0, 0, page.GetPageSize().GetWidth() /
-                     2, false);
-                canvas.RestoreState();
-                pdfDoc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
-;
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(new MemoryStream()), PdfAConformanceLevel.PDF_A_3B, null
+                );
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
+            canvas.SaveState();
+            canvas.AddImage(ImageDataFactory.Create(sourceFolder + "itext.png"), 0, 0, page.GetPageSize().GetWidth() /
+                 2, false);
+            canvas.RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedXObjectWithTransparencyTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new MemoryStream());
-                PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
-                PdfFormXObject form1 = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
-                PdfCanvas canvas1 = new PdfCanvas(form1, pdfDocument);
-                canvas1.SaveState();
-                PdfExtGState state = new PdfExtGState();
-                state.SetFillOpacity(0.6f);
-                canvas1.SetExtGState(state);
-                canvas1.Circle(25, 25, 10);
-                canvas1.Fill();
-                canvas1.RestoreState();
-                canvas1.Release();
-                form1.Flush();
-                //Create form XObject and flush to document.
-                PdfFormXObject form = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
-                PdfCanvas canvas = new PdfCanvas(form, pdfDocument);
-                canvas.Rectangle(10, 10, 30, 30);
-                canvas.Stroke();
-                canvas.AddXObject(form1, 0, 0);
-                canvas.Release();
-                form.Flush();
-                //Create page1 and add forms to the page.
-                PdfPage page1 = pdfDocument.AddNewPage();
-                canvas = new PdfCanvas(page1);
-                canvas.AddXObject(form, 0, 0);
-                canvas.Release();
-                pdfDocument.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE)))
-;
+            PdfWriter writer = new PdfWriter(new MemoryStream());
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+            PdfFormXObject form1 = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
+            PdfCanvas canvas1 = new PdfCanvas(form1, pdfDocument);
+            canvas1.SaveState();
+            PdfExtGState state = new PdfExtGState();
+            state.SetFillOpacity(0.6f);
+            canvas1.SetExtGState(state);
+            canvas1.Circle(25, 25, 10);
+            canvas1.Fill();
+            canvas1.RestoreState();
+            canvas1.Release();
+            form1.Flush();
+            //Create form XObject and flush to document.
+            PdfFormXObject form = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
+            PdfCanvas canvas = new PdfCanvas(form, pdfDocument);
+            canvas.Rectangle(10, 10, 30, 30);
+            canvas.Stroke();
+            canvas.AddXObject(form1, 0, 0);
+            canvas.Release();
+            form.Flush();
+            //Create page1 and add forms to the page.
+            PdfPage page1 = pdfDocument.AddNewPage();
+            canvas = new PdfCanvas(page1);
+            canvas.AddXObject(form, 0, 0);
+            canvas.Release();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
+                ), e.Message);
         }
 
         [NUnit.Framework.Test]

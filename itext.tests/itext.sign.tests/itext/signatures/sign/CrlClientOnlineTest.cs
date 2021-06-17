@@ -41,11 +41,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using System.IO;
+using Org.BouncyCastle.X509;
+using iText.Kernel.Crypto;
 using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     public class CrlClientOnlineTest : ExtendedITextTest {
+        private static readonly String certSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/CrlClientOnlineTest/";
+
+        private static readonly String certWithMalformedUrl = certSrc + "certWithMalformedUrl.crt";
+
+        private static readonly String certWithCorrectUrl = certSrc + "certWithCorrectUrl.crt";
+
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/";
 
@@ -55,7 +68,80 @@ namespace iText.Signatures.Sign {
             Uri[] urls = new Uri[] { new Uri(PROTOCOL + destinationFolder + "duplicateFolder"), new Uri(PROTOCOL + destinationFolder
                  + "duplicateFolder"), new Uri(PROTOCOL + destinationFolder + "uniqueFolder") };
             CrlClientOnline crlClientOnline = new CrlClientOnline(urls);
-            NUnit.Framework.Assert.IsTrue(crlClientOnline.GetUrlsSize() == 2);
+            NUnit.Framework.Assert.AreEqual(2, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Added CRL url: https://examples.com", LogLevel = LogLevelConstants.INFO)]
+        public virtual void AddCrlUrlTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline("https://examples.com");
+            NUnit.Framework.Assert.AreEqual(1, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Skipped CRL url (malformed):", LogLevel = LogLevelConstants.INFO)]
+        public virtual void AddEmptyCrlUrlTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline("");
+            NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Skipped CRL url (malformed):", LogLevel = LogLevelConstants.INFO)]
+        public virtual void AddWrongCrlUrlTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline("test");
+            NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Checking certificate: ", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Skipped CRL url (malformed): test", LogLevel = LogLevelConstants.INFO)]
+        public virtual void CheckCrlCertWithMalformedUrlTest() {
+            X509Certificate chain = CryptoUtil.ReadPublicCertificate(new FileStream(certWithMalformedUrl, FileMode.Open
+                , FileAccess.Read));
+            CrlClientOnline crlClientOnline = new CrlClientOnline(new X509Certificate[] { chain });
+            NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Checking certificate: ", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
+        public virtual void CheckCrlCertWithCorrectUrlTest() {
+            X509Certificate chain = CryptoUtil.ReadPublicCertificate(new FileStream(certWithCorrectUrl, FileMode.Open, 
+                FileAccess.Read));
+            CrlClientOnline crlClientOnline = new CrlClientOnline(new X509Certificate[] { chain });
+            NUnit.Framework.Assert.AreEqual(1, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CannotGetEncodedWhenCertIsNullTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline();
+            NUnit.Framework.Assert.IsNull(crlClientOnline.GetEncoded(null, ""));
+            NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Added CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        public virtual void UnreachableCrlDistributionPointTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline("http://www.example.com/crl/test.crl");
+            X509Certificate checkCert = new X509MockCertificate();
+            ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, "http://www.example.com/crl/test.crl");
+            NUnit.Framework.Assert.IsTrue(bytes.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(1, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Looking for CRL for certificate ", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Found CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        public virtual void UnreachableCrlDistributionPointFromCertChainTest() {
+            CrlClientOnline crlClientOnline = new CrlClientOnline();
+            X509Certificate checkCert = new X509MockCertificate();
+            ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, "http://www.example.com/crl/test.crl");
+            NUnit.Framework.Assert.IsTrue(bytes.IsEmpty());
+            NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
         }
     }
 }

@@ -188,26 +188,22 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void NestedElementWithAbsolutePositioningInCanvasTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                //TODO: DEVSIX-4820 (NullPointerException on processing absolutely positioned elements in small canvas area)
-                String testName = "nestedElementWithAbsolutePositioningInCanvas";
-                String @out = destinationFolder + testName + ".pdf";
-                String cmp = sourceFolder + "cmp_" + testName + ".pdf";
-                using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
-                    pdf.AddNewPage();
-                    iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
-                        650, 55, 80));
-                    Div notFittingDiv = new Div().SetWidth(100).Add(new Paragraph("Paragraph in Div with Not set position"));
-                    Div divWithPosition = new Div().SetFixedPosition(50, 20, 80);
-                    divWithPosition.Add(new Paragraph("Paragraph in Div with set position"));
-                    notFittingDiv.Add(divWithPosition);
-                    canvas.Add(notFittingDiv);
-                    canvas.Close();
-                }
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
+            //TODO: DEVSIX-4820 (NullPointerException on processing absolutely positioned elements in small canvas area)
+            String testName = "nestedElementWithAbsolutePositioningInCanvas";
+            String @out = destinationFolder + testName + ".pdf";
+            String cmp = sourceFolder + "cmp_" + testName + ".pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+                pdf.AddNewPage();
+                iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
+                    650, 55, 80));
+                Div notFittingDiv = new Div().SetWidth(100).Add(new Paragraph("Paragraph in Div with Not set position"));
+                Div divWithPosition = new Div().SetFixedPosition(50, 20, 80);
+                divWithPosition.Add(new Paragraph("Paragraph in Div with set position"));
+                notFittingDiv.Add(divWithPosition);
+                NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => canvas.Add(notFittingDiv));
+                canvas.Close();
             }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(@out, cmp, destinationFolder));
         }
     }
 }

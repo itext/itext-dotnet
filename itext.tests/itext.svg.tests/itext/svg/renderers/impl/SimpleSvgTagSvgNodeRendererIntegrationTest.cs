@@ -105,38 +105,28 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidHeight() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidHeight");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "abc")))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER
+                , DESTINATION_FOLDER, "invalidHeight"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "abc"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidWidth() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidWidth");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>().With.Message.EqualTo(MessageFormatUtil.Format(StyledXMLParserException.NAN, "abc")))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER
+                , DESTINATION_FOLDER, "invalidWidth"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "abc"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidX() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "invalidX"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidY() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "invalidY"));
         }
 
         [NUnit.Framework.Test]

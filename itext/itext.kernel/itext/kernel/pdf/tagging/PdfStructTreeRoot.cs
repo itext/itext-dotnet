@@ -51,6 +51,9 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Tagging {
+    /// <summary>Represents a wrapper-class for structure tree root dictionary.</summary>
+    /// <remarks>Represents a wrapper-class for structure tree root dictionary. See ISO-32000-1 "14.7.2 Structure hierarchy".
+    ///     </remarks>
     public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IStructureNode {
         private PdfDocument document;
 
@@ -58,21 +61,42 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private static IDictionary<String, PdfName> staticRoleNames = new ConcurrentDictionary<String, PdfName>();
 
+        /// <summary>Creates a new structure tree root instance, this initializes empty logical structure in the document.
+        ///     </summary>
+        /// <remarks>
+        /// Creates a new structure tree root instance, this initializes empty logical structure in the document.
+        /// This class also handles global state of parent tree, so it's not expected to create multiple instances
+        /// of this class. Instead, use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetStructTreeRoot()"/>.
+        /// </remarks>
+        /// <param name="document">a document to which new instance of struct tree root will be bound</param>
         public PdfStructTreeRoot(PdfDocument document)
             : this((PdfDictionary)new PdfDictionary().MakeIndirect(document), document) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructTreeRoot);
         }
 
-        public PdfStructTreeRoot(PdfDictionary pdfObject, PdfDocument document)
-            : base(pdfObject) {
+        /// <summary>Creates wrapper instance for already existing logical structure tree root in the document.</summary>
+        /// <remarks>
+        /// Creates wrapper instance for already existing logical structure tree root in the document.
+        /// This class also handles global state of parent tree, so it's not expected to create multiple instances
+        /// of this class. Instead, use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetStructTreeRoot()"/>.
+        /// </remarks>
+        /// <param name="structTreeRootDict">a dictionary that defines document structure tree root</param>
+        /// <param name="document">a document, which contains given structure tree root dictionary</param>
+        public PdfStructTreeRoot(PdfDictionary structTreeRootDict, PdfDocument document)
+            : base(structTreeRootDict) {
             this.document = document;
             if (this.document == null) {
-                EnsureObjectIsAddedToDocument(pdfObject);
-                this.document = pdfObject.GetIndirectReference().GetDocument();
+                EnsureObjectIsAddedToDocument(structTreeRootDict);
+                this.document = structTreeRootDict.GetIndirectReference().GetDocument();
             }
             SetForbidRelease();
             parentTreeHandler = new ParentTreeHandler(this);
-            // TODO may be remove?
+            // Always init role map dictionary in order to avoid inconsistency, because
+            // iText often initializes it during role mapping resolution anyway.
+            // In future, better way might be to not write it to the document needlessly
+            // and avoid possible redundant modifications in append mode.
             GetRoleMap();
         }
 

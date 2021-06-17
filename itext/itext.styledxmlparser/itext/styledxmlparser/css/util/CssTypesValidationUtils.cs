@@ -47,6 +47,7 @@ namespace iText.StyledXmlParser.Css.Util {
 
         // Empty constructor
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; rad, deg and grad.</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed angle value</returns>
         public static bool IsAngleValue(String valueArgument) {
             String value = valueArgument;
@@ -81,6 +82,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to parent value.</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a em value</returns>
         public static bool IsEmValue(String valueArgument) {
             String value = valueArgument;
@@ -95,6 +97,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to element font height.</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a ex value</returns>
         public static bool IsExValue(String valueArgument) {
             String value = valueArgument;
@@ -110,6 +113,7 @@ namespace iText.StyledXmlParser.Css.Util {
 
         /// <summary>Checks whether a string contains an allowed metric unit in HTML/CSS; px, in, cm, mm, pc, Q or pt.
         ///     </summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed metric value</returns>
         public static bool IsMetricValue(String valueArgument) {
             String value = valueArgument;
@@ -158,6 +162,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains a percentage value</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed percentage value</returns>
         public static bool IsPercentageValue(String valueArgument) {
             String value = valueArgument;
@@ -172,6 +177,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set value.</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains an allowed metric value</returns>
         public static bool IsRelativeValue(String valueArgument) {
             String value = valueArgument;
@@ -191,6 +197,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         /// <summary>Checks whether a string contains an allowed value relative to previously set root value.</summary>
+        /// <param name="valueArgument">the string that needs to be checked</param>
         /// <returns>boolean true if value contains a rem value</returns>
         public static bool IsRemValue(String valueArgument) {
             String value = valueArgument;

@@ -230,11 +230,9 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void DoDrawTest() {
             StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
-            NUnit.Framework.Assert.That(() =>  {
-                renderer.DoDraw(new SvgDrawContext(null, null));
-            }
-            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo("Can't draw current SvgNodeRenderer."))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => renderer.DoDraw(new SvgDrawContext
+                (null, null)));
+            NUnit.Framework.Assert.AreEqual("Can't draw current SvgNodeRenderer.", e.Message);
         }
     }
 }

@@ -126,13 +126,12 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void AddCustomXObjectAtTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
-                PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
-                new PdfCanvas(document.AddNewPage()).AddXObjectAt(pdfXObject, 0, 0);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
-;
+            PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => canvas.AddXObjectAt(pdfXObject
+                , 0, 0));
+            NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
         // addXObjectFittedIntoRectangle(PdfXObject, Rectangle) test block (use PdfXObject#calculateProportionallyFitRectangleWithWidth)
@@ -394,13 +393,12 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void AddCustomXObjectFittedIntoRectangleTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
-                PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
-                new PdfCanvas(document.AddNewPage()).AddXObjectFittedIntoRectangle(pdfXObject, new Rectangle(0, 0, 0, 0));
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
-;
+            PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas pdfCanvas = new PdfCanvas(document.AddNewPage());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => pdfCanvas.AddXObjectFittedIntoRectangle
+                (pdfXObject, new Rectangle(0, 0, 0, 0)));
+            NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
         // addXObject(PdfXObject) test block
@@ -506,13 +504,11 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void AddCustomXObjectTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
-                PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
-                new PdfCanvas(document.AddNewPage()).AddXObject(pdfXObject);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("PdfFormXObject or PdfImageXObject expected."))
-;
+            PdfXObject pdfXObject = new PdfCanvasXObjectTest.CustomPdfXObject(new PdfStream());
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => canvas.AddXObject(pdfXObject));
+            NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
         private class CustomPdfXObject : PdfXObject {

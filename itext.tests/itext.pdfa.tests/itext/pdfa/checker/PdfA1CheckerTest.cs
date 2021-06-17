@@ -40,6 +40,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Pdfa;
 using iText.Test;
@@ -55,37 +56,34 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutAAEntry() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.AA, new PdfDictionary());
-                pdfA1Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY))
-;
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.AA, new PdfDictionary());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY, 
+                e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutOCPropertiesEntry() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.OCProperties, new PdfDictionary());
-                pdfA1Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_OCPROPERTIES_KEY))
-;
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.OCProperties, new PdfDictionary());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_OCPROPERTIES_KEY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutEmbeddedFiles() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDictionary names = new PdfDictionary();
-                names.Put(PdfName.EmbeddedFiles, new PdfDictionary());
-                PdfDictionary catalog = new PdfDictionary();
-                catalog.Put(PdfName.Names, names);
-                pdfA1Checker.CheckCatalogValidEntries(catalog);
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY))
-;
+            PdfDictionary names = new PdfDictionary();
+            names.Put(PdfName.EmbeddedFiles, new PdfDictionary());
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Names, names);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckCatalogValidEntries
+                (catalog));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -100,6 +100,24 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 , destinationFolder, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void Type3FontCustomFontMatrixAndFontBBoxTest() {
+            String inputPdf = sourceFolder + "type3FontCustomFontMatrixAndFontBBox.pdf";
+            // Resultant rectangle is expected to be a bounding box over the text on the page.
+            Rectangle expectedRectangle = new Rectangle(10f, 97.84f, 14.400002f, 8.880005f);
+            IList<Rectangle> actualRectangles;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputPdf))) {
+                GlyphBboxCalculationTest.TextBBoxEventListener eventListener = new GlyphBboxCalculationTest.TextBBoxEventListener
+                    ();
+                PdfCanvasProcessor canvasProcessor = new PdfCanvasProcessor(eventListener);
+                PdfPage page = pdfDoc.GetPage(1);
+                canvasProcessor.ProcessPageContent(page);
+                actualRectangles = eventListener.GetRectangles();
+            }
+            NUnit.Framework.Assert.AreEqual(1, actualRectangles.Count);
+            NUnit.Framework.Assert.IsTrue(expectedRectangle.EqualsWithEpsilon(actualRectangles[0]));
+        }
+
         private class CharacterPositionEventListener : ITextExtractionStrategy {
             internal float glyphWidth;
 
@@ -126,6 +144,31 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
             public virtual ICollection<EventType> GetSupportedEvents() {
                 return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
+            }
+        }
+
+        private class TextBBoxEventListener : IEventListener {
+            private readonly IList<Rectangle> rectangles = new List<Rectangle>();
+
+            public virtual IList<Rectangle> GetRectangles() {
+                return rectangles;
+            }
+
+            public virtual void EventOccurred(IEventData data, EventType type) {
+                if (EventType.RENDER_TEXT.Equals(type)) {
+                    TextRenderInfo renderInfo = (TextRenderInfo)data;
+                    Vector startPoint = renderInfo.GetDescentLine().GetStartPoint();
+                    Vector endPoint = renderInfo.GetAscentLine().GetEndPoint();
+                    float x1 = Math.Min(startPoint.Get(0), endPoint.Get(0));
+                    float x2 = Math.Max(startPoint.Get(0), endPoint.Get(0));
+                    float y1 = Math.Min(startPoint.Get(1), endPoint.Get(1));
+                    float y2 = Math.Max(startPoint.Get(1), endPoint.Get(1));
+                    rectangles.Add(new Rectangle(x1, y1, x2 - x1, y2 - y1));
+                }
+            }
+
+            public virtual ICollection<EventType> GetSupportedEvents() {
+                return null;
             }
         }
     }

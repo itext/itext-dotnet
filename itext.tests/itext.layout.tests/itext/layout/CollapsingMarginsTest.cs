@@ -258,15 +258,14 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ColumnRendererTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                /* TODO DEVSIX-2901 the exception should not be thrown
-                if after DEVSIX-2901 the exception persists,
-                change the type of the expected exception to a more specific one to make the test stricter.
-                */
-                String outFileName = destinationFolder + "columnRendererTest.pdf";
-                String cmpFileName = sourceFolder + "cmp_columnRendererTest.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-                Document doc = new Document(pdfDocument);
+            /* TODO DEVSIX-2901 the exception should not be thrown
+            if after DEVSIX-2901 the exception persists,
+            change the type of the expected exception to a more specific one to make the test stricter.
+            */
+            String outFileName = destinationFolder + "columnRendererTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_columnRendererTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            using (Document doc = new Document(pdfDocument)) {
                 doc.SetProperty(Property.COLLAPSING_MARGINS, true);
                 Paragraph p = new Paragraph();
                 for (int i = 0; i < 10; i++) {
@@ -278,13 +277,10 @@ namespace iText.Layout {
                 areas.Add(new Rectangle(200, 30, 150, 600));
                 areas.Add(new Rectangle(370, 30, 150, 600));
                 div.SetNextRenderer(new CollapsingMarginsTest.CustomColumnDocumentRenderer(div, areas));
-                doc.Add(div);
-                doc.Close();
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                    , "diff"));
+                NUnit.Framework.Assert.Catch(typeof(Exception), () => doc.Add(div));
             }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
 
         private class CustomColumnDocumentRenderer : DivRenderer {

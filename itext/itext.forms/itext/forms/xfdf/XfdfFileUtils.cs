@@ -40,51 +40,51 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.IO;
-using System.Reflection;
 using System.Xml;
-using iText.Layout.Properties;
+using iText.Kernel;
+using iText.Kernel.Utils;
 
-namespace iText.Forms.Xfdf {
-    internal sealed class XfdfFileUtils {
-        private XfdfFileUtils() {
+namespace iText.Forms.Xfdf
+{
+    internal sealed class XfdfFileUtils
+    {
+        private XfdfFileUtils()
+        {
         }
 
         /// <summary>Creates a new xml-styled document for writing xfdf info.</summary>
         /// <remarks>Creates a new xml-styled document for writing xfdf info.</remarks>
-        internal static XmlDocument CreateNewXfdfDocument() {
+        internal static XmlDocument CreateNewXfdfDocument()
+        {
             return new XmlDocument();
         }
 
         /// <summary>Creates a new xfdf document based on given input stream.</summary>
         /// <param name="inputStream"> the stream containing xfdf info.</param>
-        internal static XmlDocument CreateXfdfDocumentFromStream(Stream  inputStream) {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(createSafeReader(inputStream));
-            return doc;
+        internal static XmlDocument CreateXfdfDocumentFromStream(Stream inputStream)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(XmlProcessorCreator.CreateSafeXmlReader(inputStream));
+                return doc;
+            }
+            catch (Exception e)
+            {
+                throw new PdfException(e.Message, e);
+            }
         }
 
         /// <summary>Saves the info from output stream to xml-styled document.</summary>
         /// <param name="document"> the document to save info to.</param>
         /// <param name=" outputStream"> the stream containing xfdf info.</param>
-        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream) {
-           document.Save(outputStream);
-           outputStream.Dispose();
-        }
-
-        private static XmlReader createSafeReader(Stream str) {
-            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
-            xmlReaderSettings.DtdProcessing = DtdProcessing.Ignore;
-            XmlReader reader = XmlReader.Create(str, xmlReaderSettings);
-            try {
-                // Prevents Exception "Reference to undeclared entity 'question'"
-                PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                propertyInfo.SetValue(reader, true, null);
-            } catch (Exception exc) {
-            }
-            return reader;
+        internal static void SaveXfdfDocumentToFile(XmlDocument document, Stream outputStream)
+        {
+            document.Save(outputStream);
+            outputStream.Dispose();
         }
     }
 }

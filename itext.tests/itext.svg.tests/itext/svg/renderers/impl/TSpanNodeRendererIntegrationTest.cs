@@ -77,11 +77,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidXTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidX");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "textspan-relativeMove-invalidX"));
         }
 
         [NUnit.Framework.Test]
@@ -101,11 +98,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidYTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidY");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "textspan-relativeMove-invalidY"));
         }
 
         [NUnit.Framework.Test]
@@ -131,11 +125,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanAbsolutePositionInvalidXTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-absolutePosition-invalidX");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "textspan-absolutePosition-invalidX"));
         }
 
         [NUnit.Framework.Test]
@@ -155,11 +146,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanAbsolutePositionInvalidYTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-absolutePosition-invalidY");
-            }
-            , NUnit.Framework.Throws.InstanceOf<StyledXMLParserException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
+                , "textspan-absolutePosition-invalidY"));
         }
 
         [NUnit.Framework.Test]

@@ -61,6 +61,7 @@ namespace iText.Kernel.Font {
 
         protected internal static readonly byte[] EMPTY_BYTES = new byte[0];
 
+        [Obsolete]
         protected internal static readonly double[] DEFAULT_FONT_MATRIX = new double[] { 0.001, 0, 0, 0.001, 0, 0 };
 
         protected internal IDictionary<int, Glyph> notdefGlyphs = new Dictionary<int, Glyph>();
@@ -199,6 +200,10 @@ namespace iText.Kernel.Font {
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
+        /// <summary>Gets the transformation matrix that defines relation between text and glyph spaces.</summary>
+        /// <returns>the font matrix</returns>
+        [System.ObsoleteAttribute(@"Use iText.IO.Font.FontProgram.UNITS_NORMALIZATION constant for conversion between text and glyph space. For now we opted to always expect that all PdfFont metrics in glyph-space are related to text space as 1 to 1000, as it is defined for the majority of fonts. For fonts which don't necessary follow this rule (see PdfType3Font ), we perform internal normalization of font metrics in order to adhere to this common expectation. This method will be removed in next major release."
+            )]
         public virtual double[] GetFontMatrix() {
             return DEFAULT_FONT_MATRIX;
         }

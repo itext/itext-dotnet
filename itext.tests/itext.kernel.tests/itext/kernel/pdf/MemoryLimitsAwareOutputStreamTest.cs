@@ -47,41 +47,31 @@ namespace iText.Kernel.Pdf {
     public class MemoryLimitsAwareOutputStreamTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestMaxSize() {
-            NUnit.Framework.Assert.That(() =>  {
-                byte[] bigArray = new byte[70];
-                byte[] smallArray = new byte[31];
-                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
-                stream.SetMaxStreamSize(100);
-                NUnit.Framework.Assert.AreEqual(100, stream.GetMaxStreamSize());
-                stream.Write(bigArray, 0, bigArray.Length);
-                NUnit.Framework.Assert.AreEqual(bigArray.Length, stream.Length);
-                stream.Write(smallArray, 0, smallArray.Length);
-            }
-            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>())
-;
+            byte[] bigArray = new byte[70];
+            byte[] smallArray = new byte[31];
+            MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+            stream.SetMaxStreamSize(100);
+            NUnit.Framework.Assert.AreEqual(100, stream.GetMaxStreamSize());
+            stream.Write(bigArray, 0, bigArray.Length);
+            NUnit.Framework.Assert.AreEqual(bigArray.Length, stream.Length);
+            NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => stream.Write(smallArray, 0, smallArray
+                .Length));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestNegativeSize() {
-            NUnit.Framework.Assert.That(() =>  {
-                byte[] zeroArray = new byte[0];
-                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
-                stream.SetMaxStreamSize(-100);
-                NUnit.Framework.Assert.AreEqual(-100, stream.GetMaxStreamSize());
-                stream.Write(zeroArray, 0, zeroArray.Length);
-            }
-            , NUnit.Framework.Throws.InstanceOf<MemoryLimitsAwareException>())
-;
+            byte[] zeroArray = new byte[0];
+            MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+            stream.SetMaxStreamSize(-100);
+            NUnit.Framework.Assert.AreEqual(-100, stream.GetMaxStreamSize());
+            NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => stream.Write(zeroArray, 0, zeroArray
+                .Length));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestIncorrectLength() {
-            NUnit.Framework.Assert.That(() =>  {
-                MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
-                stream.Write(new byte[1], 0, -1);
-            }
-            , NUnit.Framework.Throws.InstanceOf<IndexOutOfRangeException>())
-;
+            MemoryLimitsAwareOutputStream stream = new MemoryLimitsAwareOutputStream();
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => stream.Write(new byte[1], 0, -1));
         }
     }
 }

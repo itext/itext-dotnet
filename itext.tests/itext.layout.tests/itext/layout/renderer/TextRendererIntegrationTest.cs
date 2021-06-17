@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -31,6 +33,7 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -451,6 +454,124 @@ namespace iText.Layout.Renderer {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN, Count = 3)]
+        public virtual void CustomTextRendererShouldOverrideGetNextRendererTest() {
+            String outFileName = destinationFolder + "customTextRendererShouldOverrideGetNextRendererTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideGetNextRendererTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
+                );
+            text.SetNextRenderer(new _TextRenderer_738(text));
+            doc.Add(new Paragraph(text));
+            text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
+                );
+            text.SetNextRenderer(new _TextRenderer_754(text));
+            doc.Add(new Paragraph(text));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        private sealed class _TextRenderer_738 : TextRenderer {
+            public _TextRenderer_738(Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().SetFillColor(ColorConstants.RED).Rectangle(this.occupiedArea.GetBBox()
+                    ).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+        }
+
+        private sealed class _TextRenderer_754 : TextRenderer {
+            public _TextRenderer_754(Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().SetFillColor(ColorConstants.RED).Rectangle(this.occupiedArea.GetBBox()
+                    ).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((Text)this.modelElement);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN, Count = 8)]
+        public virtual void CustomTextRendererShouldOverrideCreateCopyTest() {
+            String outFileName = destinationFolder + "customTextRendererShouldOverrideCreateCopyTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideCreateCopyTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            FontProvider fontProvider = new FontProvider();
+            NUnit.Framework.Assert.IsTrue(fontProvider.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            doc.SetFontProvider(fontProvider);
+            // To trigger font selector related logic one need to apply some font on a document
+            doc.SetProperty(Property.FONT, new String[] { "SomeFont" });
+            StringBuilder longTextBuilder = new StringBuilder();
+            for (int i = 0; i < 4; i++) {
+                longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
+            }
+            iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
+            text.SetNextRenderer(new _TextRenderer_801(text));
+            doc.Add(new Paragraph(text));
+            text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
+            doc.Add(new Paragraph(text));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        private sealed class _TextRenderer_801 : TextRenderer {
+            public _TextRenderer_801(iText.Layout.Element.Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().SetFillColor(ColorConstants.RED).Rectangle(this.occupiedArea.GetBBox()
+                    ).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
+                    )this.modelElement);
+            }
+        }
+
+        private class TextRendererWithOverriddenGetNextRenderer : TextRenderer {
+            public TextRendererWithOverriddenGetNextRenderer(iText.Layout.Element.Text textElement)
+                : base(textElement) {
+            }
+
+            protected internal TextRendererWithOverriddenGetNextRenderer(TextRenderer other)
+                : base(other) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().SetFillColor(ColorConstants.RED).Rectangle(occupiedArea.GetBBox()).Fill
+                    ().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
+                    )modelElement);
+            }
+
+            protected internal override TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+                TextRenderer copy = new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(this);
+                copy.SetProcessedGlyphLineAndFont(gl, font);
+                return copy;
+            }
         }
     }
 }

@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Logging;
+using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -171,6 +172,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+
+        private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
@@ -378,6 +381,27 @@ namespace iText.Kernel.Pdf {
             return GetPage(GetNumberOfPages());
         }
 
+        /// <summary>
+        /// Marks
+        /// <see cref="PdfStream"/>
+        /// object as embedded file stream.
+        /// </summary>
+        /// <remarks>
+        /// Marks
+        /// <see cref="PdfStream"/>
+        /// object as embedded file stream. Note that this method is for internal usage.
+        /// To add an embedded file to the PDF document please use specialized API for file attachments.
+        /// (e.g.
+        /// <see cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
+        /// ,
+        /// <see cref="PdfPage.AddAnnotation(iText.Kernel.Pdf.Annot.PdfAnnotation)"/>
+        /// )
+        /// </remarks>
+        /// <param name="stream">to be marked as embedded file stream</param>
+        public virtual void MarkStreamAsEmbeddedFile(PdfStream stream) {
+            encryptedEmbeddedStreamsHandler.StoreEmbeddedStream(stream);
+        }
+
         /// <summary>Creates and adds new page to the end of document.</summary>
         /// <returns>added page</returns>
         public virtual PdfPage AddNewPage() {
@@ -552,9 +576,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets document information dictionary.</summary>
+        /// <remarks>
+        /// Gets document information dictionary.
+        /// <see cref="info"/>
+        /// is lazy initialized. It will be initialized during the first call of this method.
+        /// </remarks>
         /// <returns>document information dictionary.</returns>
         public virtual PdfDocumentInfo GetDocumentInfo() {
             CheckClosingStatus();
+            if (info == null) {
+                PdfObject infoDict = trailer.Get(PdfName.Info);
+                info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
+                    );
+                XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
+            }
             return info;
         }
 
@@ -699,7 +734,7 @@ namespace iText.Kernel.Pdf {
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
                         foreach (PdfName deprecatedKey in PdfDocumentInfo.PDF20_DEPRECATED_KEYS) {
-                            info.GetPdfObject().Remove(deprecatedKey);
+                            GetDocumentInfo().GetPdfObject().Remove(deprecatedKey);
                         }
                     }
                     if (GetXmpMetadata() != null) {
@@ -748,8 +783,8 @@ namespace iText.Kernel.Pdf {
                             catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
                         }
-                        if (info.GetPdfObject().IsModified()) {
-                            info.GetPdfObject().Flush(false);
+                        if (GetDocumentInfo().GetPdfObject().IsModified()) {
+                            GetDocumentInfo().GetPdfObject().Flush(false);
                         }
                         FlushFonts();
                         if (writer.crypto != null) {
@@ -793,7 +828,7 @@ namespace iText.Kernel.Pdf {
                             TryFlushTagStructure(false);
                         }
                         catalog.GetPdfObject().Flush(false);
-                        info.GetPdfObject().Flush(false);
+                        GetDocumentInfo().GetPdfObject().Flush(false);
                         FlushFonts();
                         if (writer.crypto != null) {
                             crypto = writer.crypto.GetPdfObject();
@@ -827,7 +862,7 @@ namespace iText.Kernel.Pdf {
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
-                    trailer.Put(PdfName.Info, info.GetPdfObject());
+                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject());
                     //By this time original and modified document ids should always be not null due to initializing in
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
@@ -904,7 +939,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
-        /// in case tagged document, otherwise false.
+        /// in case document is tagged, otherwise it returns null.
         /// </returns>
         /// <seealso cref="IsTagged()"/>
         /// <seealso cref="GetNextStructParentIndex()"/>
@@ -1939,8 +1974,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             this.fingerPrint = new FingerPrint();
+            this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {
                 EventCounterHandler.GetInstance().OnEvent(CoreEvent.PROCESS, properties.metaInfo, GetType());
+                bool embeddedStreamsSavedOnReading = false;
                 if (reader != null) {
                     if (reader.pdfDocument != null) {
                         throw new PdfException(PdfException.PdfReaderHasBeenAlreadyUtilized);
@@ -1951,6 +1988,10 @@ namespace iText.Kernel.Pdf {
                         memoryLimitsAwareHandler = new MemoryLimitsAwareHandler(reader.tokens.GetSafeFile().Length());
                     }
                     reader.ReadPdf();
+                    if (reader.decrypt != null && reader.decrypt.IsEmbeddedFilesOnly()) {
+                        encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
+                        embeddedStreamsSavedOnReading = true;
+                    }
                     foreach (ICounter counter in GetCounters()) {
                         counter.OnDocumentRead(reader.GetFileLength());
                     }
@@ -1962,17 +2003,13 @@ namespace iText.Kernel.Pdf {
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     if (xmpMetadataStream != null) {
                         xmpMetadata = xmpMetadataStream.GetBytes();
-                        try {
-                            reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(xmpMetadata
-                                ));
-                        }
-                        catch (XMPException) {
+                        if (!this.GetType().Equals(typeof(iText.Kernel.Pdf.PdfDocument))) {
+                            // TODO DEVSIX-5292 If somebody extends PdfDocument we have to initialize document info
+                            //  and conformance level to provide compatibility. This code block shall be removed
+                            reader.GetPdfAConformanceLevel();
+                            GetDocumentInfo();
                         }
                     }
-                    PdfObject infoDict = trailer.Get(PdfName.Info);
-                    info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
-                        );
-                    XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
                     if (str != null) {
                         TryInitTagStructure(str);
@@ -1998,10 +2035,10 @@ namespace iText.Kernel.Pdf {
                         info = new PdfDocumentInfo(this).AddCreationDate();
                     }
                     UpdateProducerInInfoDictionary();
-                    info.AddModDate();
+                    GetDocumentInfo().AddModDate();
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
-                    trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
+                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
@@ -2073,6 +2110,9 @@ namespace iText.Kernel.Pdf {
                             writer.InitCryptoIfSpecified(pdfVersion);
                         }
                         if (writer.crypto != null) {
+                            if (!embeddedStreamsSavedOnReading && writer.crypto.IsEmbeddedFilesOnly()) {
+                                encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
+                            }
                             if (writer.crypto.GetCryptoMode() < EncryptionConstants.ENCRYPTION_AES_256) {
                                 VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(this, PdfVersion.PDF_2_0, VersionConforming
                                     .DEPRECATED_ENCRYPTION_ALGORITHMS);
@@ -2131,7 +2171,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>the XMPMetadata</returns>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
-            XmpMetaInfoConverter.AppendDocumentInfoToMetadata(info, xmpMeta);
+            XmpMetaInfoConverter.AppendDocumentInfoToMetadata(GetDocumentInfo(), xmpMeta);
             if (IsTagged() && writer.properties.addUAXmpMetadata && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID
                 , XMPConst.PART)) {
                 xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
@@ -2237,6 +2277,10 @@ namespace iText.Kernel.Pdf {
             return documentId;
         }
 
+        internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
+            return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
+        }
+
         /// <summary>Gets iText version info.</summary>
         /// <returns>iText version info.</returns>
         internal VersionInfo GetVersionInfo() {
@@ -2249,17 +2293,18 @@ namespace iText.Kernel.Pdf {
 
         private void UpdateProducerInInfoDictionary() {
             String producer = null;
+            PdfDictionary documentInfoObject = GetDocumentInfo().GetPdfObject();
             if (reader == null) {
                 producer = versionInfo.GetVersion();
             }
             else {
-                if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
-                    PdfString producerPdfStr = info.GetPdfObject().GetAsString(PdfName.Producer);
+                if (documentInfoObject.ContainsKey(PdfName.Producer)) {
+                    PdfString producerPdfStr = documentInfoObject.GetAsString(PdfName.Producer);
                     producer = producerPdfStr == null ? null : producerPdfStr.ToUnicodeString();
                 }
                 producer = AddModifiedPostfix(producer);
             }
-            info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+            documentInfoObject.Put(PdfName.Producer, new PdfString(producer, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>

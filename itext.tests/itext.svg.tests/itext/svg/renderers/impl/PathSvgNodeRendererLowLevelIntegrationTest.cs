@@ -121,26 +121,18 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TestNonsensePathNotExistingOperator() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                String instructions = "F";
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "F";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.GetShapes());
         }
 
         [NUnit.Framework.Test]
         public virtual void TestClosePathNoPrecedingPathsOperator() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                String instructions = "z";
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                NUnit.Framework.Assert.IsTrue(path.GetShapes().IsEmpty());
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            String instructions = "z";
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.GetShapes());
         }
 
         [NUnit.Framework.Test]
@@ -195,26 +187,20 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void SmoothCurveAsFirstShapeTest1() {
-            NUnit.Framework.Assert.That(() =>  {
-                String instructions = "S 100 200 300 400";
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                path.GetShapes();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE))
-;
+            String instructions = "S 100 200 300 400";
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.GetShapes());
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCurveAsFirstShapeTest2() {
-            NUnit.Framework.Assert.That(() =>  {
-                String instructions = "T 100,200";
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                path.SetAttribute(SvgConstants.Attributes.D, instructions);
-                path.GetShapes();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE))
-;
+            String instructions = "T 100,200";
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttribute(SvgConstants.Attributes.D, instructions);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.GetShapes());
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.INVALID_SMOOTH_CURVE_USE, e.Message);
         }
     }
 }

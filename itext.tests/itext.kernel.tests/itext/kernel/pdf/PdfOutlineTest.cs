@@ -193,15 +193,11 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void GetOutlinesInvalidParentLink() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfReader reader = new PdfReader(SOURCE_FOLDER + "outlinesInvalidParentLink.pdf");
-                String filename = "updateOutlineTitleInvalidParentLink.pdf";
-                PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
-                PdfDocument pdfDoc = new PdfDocument(reader, writer);
-                PdfOutline outlines = pdfDoc.GetOutlines(false);
-            }
-            , NUnit.Framework.Throws.InstanceOf<NullReferenceException>())
-;
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "outlinesInvalidParentLink.pdf");
+            String filename = "updateOutlineTitleInvalidParentLink.pdf";
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + filename);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.GetOutlines(false));
         }
 
         [NUnit.Framework.Test]

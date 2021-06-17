@@ -46,15 +46,15 @@ using iText.Test;
 
 namespace iText.IO.Util {
     public class ImageMagickHelperTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/ImageMagickHelperTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/io/ImageMagickHelperTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -77,9 +77,9 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void ImageMagickEnvVarIsNull() {
-            String inputImage = sourceFolder + "image.png";
-            String cmpImage = sourceFolder + "cmp_image.png";
-            String diff = destinationFolder + "diff.png";
+            String inputImage = SOURCE_FOLDER + "image.png";
+            String cmpImage = SOURCE_FOLDER + "cmp_image.png";
+            String diff = DESTINATION_FOLDER + "diff.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper(null);
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff);
             NUnit.Framework.Assert.IsTrue(result);
@@ -88,18 +88,15 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void ImageMagickEnvVarIsIncorrect() {
-            NUnit.Framework.Assert.That(() =>  {
-                ImageMagickHelper imageMagickHelper = new ImageMagickHelper("-");
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new ImageMagickHelper("-"));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessage.COMPARE_COMMAND_SPECIFIED_INCORRECTLY, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RunImageMagickForEqualImages() {
-            String inputImage = sourceFolder + "image.png";
-            String cmpImage = sourceFolder + "cmp_image.png";
-            String diff = destinationFolder + "diff_equalImages.png";
+            String inputImage = SOURCE_FOLDER + "image.png";
+            String cmpImage = SOURCE_FOLDER + "cmp_image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImages.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff);
             NUnit.Framework.Assert.IsTrue(result);
@@ -108,9 +105,9 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunImageMagickForEqualImagesWithFuzzParam() {
-            String inputImage = sourceFolder + "image.png";
-            String cmpImage = sourceFolder + "cmp_image.png";
-            String diff = destinationFolder + "diff_equalImagesFuzzParam.png";
+            String inputImage = SOURCE_FOLDER + "image.png";
+            String cmpImage = SOURCE_FOLDER + "cmp_image.png";
+            String diff = DESTINATION_FOLDER + "diff_equalImagesFuzzParam.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "0.5");
             NUnit.Framework.Assert.IsTrue(result);
@@ -119,9 +116,9 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunImageMagickForDifferentImages() {
-            String inputImage = sourceFolder + "Im1_1.jpg";
-            String cmpImage = sourceFolder + "cmp_Im1_1.jpg";
-            String diff = destinationFolder + "diff_differentImages.png";
+            String inputImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_differentImages.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff);
             NUnit.Framework.Assert.IsFalse(result);
@@ -130,9 +127,9 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunImageMagickForDifferentImagesWithFuzzParamNotEqual() {
-            String inputImage = sourceFolder + "Im1_1.jpg";
-            String cmpImage = sourceFolder + "cmp_Im1_1.jpg";
-            String diff = destinationFolder + "diff_differentImagesFuzzNotEnough.png";
+            String inputImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_differentImagesFuzzNotEnough.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
             bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "0.1");
             NUnit.Framework.Assert.IsFalse(result);
@@ -141,11 +138,11 @@ namespace iText.IO.Util {
 
         [NUnit.Framework.Test]
         public virtual void RunImageMagickForDifferentImagesWithFuzzParamEqual() {
-            String inputImage = sourceFolder + "Im1_1.jpg";
-            String cmpImage = sourceFolder + "cmp_Im1_1.jpg";
-            String diff = destinationFolder + "diff_differentImagesFuzzEnough.png";
+            String inputImage = SOURCE_FOLDER + "Im1_1.jpg";
+            String cmpImage = SOURCE_FOLDER + "cmp_Im1_1.jpg";
+            String diff = DESTINATION_FOLDER + "diff_differentImagesFuzzEnough.png";
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper();
-            bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "1.2");
+            bool result = imageMagickHelper.RunImageMagickImageCompare(inputImage, cmpImage, diff, "2.1");
             NUnit.Framework.Assert.IsTrue(result);
             NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
         }

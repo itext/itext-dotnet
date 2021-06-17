@@ -300,7 +300,8 @@ namespace iText.Kernel.Pdf {
                     Stream fout = this;
                     DeflaterOutputStream def = null;
                     OutputStreamEncryption ose = null;
-                    if (crypto != null && !crypto.IsEmbeddedFilesOnly()) {
+                    if (crypto != null && (!crypto.IsEmbeddedFilesOnly() || document.DoesStreamBelongToEmbeddedFile(pdfStream)
+                        )) {
                         fout = ose = crypto.GetEncryptionStream(fout);
                     }
                     if (toCompress && (allowCompression || userDefinedCompression)) {
@@ -399,7 +400,8 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool CheckEncryption(PdfStream pdfStream) {
-            if (crypto == null || crypto.IsEmbeddedFilesOnly()) {
+            if (crypto == null || (crypto.IsEmbeddedFilesOnly() && !document.DoesStreamBelongToEmbeddedFile(pdfStream)
+                )) {
                 return false;
             }
             else {

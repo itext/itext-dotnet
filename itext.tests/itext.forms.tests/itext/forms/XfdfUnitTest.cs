@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Forms.Xfdf;
 using iText.Test;
 
@@ -27,12 +28,8 @@ namespace iText.Forms {
     public class XfdfUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FitObjectWithEmptyPageTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                FitObject fitObject = new FitObject(null);
-                NUnit.Framework.Assert.Fail();
-            }
-            , NUnit.Framework.Throws.InstanceOf<XfdfException>().With.Message.EqualTo(XfdfException.PAGE_IS_MISSING))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(XfdfException), () => new FitObject(null));
+            NUnit.Framework.Assert.AreEqual(XfdfException.PAGE_IS_MISSING, e.Message);
         }
     }
 }

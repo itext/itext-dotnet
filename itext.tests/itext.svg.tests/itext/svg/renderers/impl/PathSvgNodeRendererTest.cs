@@ -268,20 +268,14 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidZOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(sourceFolder, destinationFolder, "invalidZOperatorTest01");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+                , "invalidZOperatorTest01"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(sourceFolder, destinationFolder, "invalidOperatorTest01");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+                , "invalidOperatorTest01"));
         }
 
         //TODO DEVSIX-2242. This test should fail when the ticket is resolved
@@ -363,11 +357,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void EofillUnsuportedPathTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                ConvertAndCompare(sourceFolder, destinationFolder, "eofillUnsuportedPathTest");
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+                , "eofillUnsuportedPathTest"));
         }
 
         [NUnit.Framework.Test]

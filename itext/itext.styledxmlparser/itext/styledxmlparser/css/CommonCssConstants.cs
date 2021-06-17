@@ -72,6 +72,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ALIGN_SELF.</summary>
         public const String ALIGN_SELF = "align-self";
 
+        /// <summary>The constant ATTRIBUTE.</summary>
+        public const String ATTRIBUTE = "attr";
+
         /// <summary>The Constant BACKGROUND.</summary>
         public const String BACKGROUND = "background";
 
@@ -883,6 +886,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant STRETCH.</summary>
         public const String STRETCH = "stretch";
 
+        /// <summary>The Constant STRING.</summary>
+        public const String STRING = "string";
+
         /// <summary>The Constant THICK.</summary>
         public const String THICK = "thick";
 
@@ -1087,6 +1093,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant TARGET.</summary>
         public const String TARGET = "target";
+
+        /// <summary>The Constant URL.</summary>
+        public const String URL = "url";
 
         /// <summary>The Constant VALID.</summary>
         public const String VALID = "valid";

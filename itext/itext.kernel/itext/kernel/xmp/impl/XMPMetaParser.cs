@@ -28,13 +28,12 @@
 //        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
+
 using System;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Xml;
 using iText.IO.Util;
-using iText.Kernel.XMP;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.XMP.Impl
@@ -134,7 +133,7 @@ namespace iText.Kernel.XMP.Impl
 		private static XmlDocument ParseXmlFromInputStream(Stream stream, ParseOptions options) {
 			if (!options.GetAcceptLatin1() && !options.GetFixControlChars()) {
 				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(stream));
+				doc.Load(XmlProcessorCreator.CreateSafeXmlReader(stream));
 				return doc;
 			}
 			// load stream into bytebuffer
@@ -157,7 +156,7 @@ namespace iText.Kernel.XMP.Impl
 		private static XmlDocument ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options) {
 			try {
 				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(buffer.GetByteStream()));
+				doc.Load(XmlProcessorCreator.CreateSafeXmlReader(buffer.GetByteStream()));
 				return doc;
 			} catch (XmlException e) {
 				XmlDocument doc = new XmlDocument();
@@ -169,11 +168,11 @@ namespace iText.Kernel.XMP.Impl
 					try {
 						StreamReader streamReader = new StreamReader(buffer.GetByteStream(), EncodingUtil.GetEncoding(buffer.GetEncoding()));
                         FixASCIIControlsReader fixReader = new FixASCIIControlsReader(streamReader);
-						doc.Load(GetSecureXmlReader(fixReader));
+						doc.Load(XmlProcessorCreator.CreateSafeXmlReader(fixReader));
 						return doc;
 					} catch (Exception) {
 						// can normally not happen as the encoding is provided by a util function
-						throw new XMPException("Unsupported Encoding", XMPError.INTERNALFAILURE, e);
+						throw new XMPException(e.Message, XMPError.INTERNALFAILURE, e);
 					}
 				}
 				doc.Load(buffer.GetByteStream());
@@ -192,19 +191,26 @@ namespace iText.Kernel.XMP.Impl
 		/// <returns>Returns an XML DOM-Document.</returns>
 
 		private static XmlDocument ParseXmlFromString(string input, ParseOptions options) {
-			try {
-
+			try
+			{
 				XmlDocument doc = new XmlDocument();
-				doc.Load(GetSecureXmlReader(input));
+				doc.Load(XmlProcessorCreator.CreateSafeXmlReader(new StringReader(input)));
 				return doc;
 			}
-			catch (XMPException e) {
-				if (e.GetErrorCode() == XMPError.BADXML && options.GetFixControlChars()) {
+			catch (XMPException e)
+			{
+				if (e.GetErrorCode() == XMPError.BADXML && options.GetFixControlChars())
+				{
 					XmlDocument doc = new XmlDocument();
-					doc.Load(GetSecureXmlReader(new FixASCIIControlsReader(new StringReader(input))));
+					doc.Load(XmlProcessorCreator.CreateSafeXmlReader(new FixASCIIControlsReader(new StringReader(input))));
 					return doc;
 				}
+
 				throw e;
+			}
+			catch (XmlException e)
+			{
+				throw new XMPException(e.Message, XMPError.BADXML, e);
 			}
 		}
 
@@ -281,37 +287,6 @@ namespace iText.Kernel.XMP.Impl
 			// no appropriate node has been found
 			return null;
 			//     is extracted here in the C++ Toolkit		
-		}
-
-		//Security stuff. Protecting against XEE attacks as described here: https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing
-		private static XmlReaderSettings GetSecureReaderSettings()
-		{
-			XmlReaderSettings readerSettings = new XmlReaderSettings();
-			readerSettings.DtdProcessing = DtdProcessing.Ignore;
-			return readerSettings;
-		}
-
-		private static XmlReader PreventUndeclaredEntityException(XmlReader reader) {
-			try {
-				// Prevents Exception "Reference to undeclared entity 'question'"
-				PropertyInfo propertyInfo = reader.GetType().GetProperty("DisableUndeclaredEntityCheck",
-					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-				propertyInfo.SetValue(reader, true, null);
-			} catch (Exception exc) {
-			}
-			return reader;
-		}
-
-		private static XmlReader GetSecureXmlReader(Stream stream) {
-			return PreventUndeclaredEntityException(XmlReader.Create(stream, GetSecureReaderSettings()));
-		}
-
-		private static XmlReader GetSecureXmlReader(TextReader textReader) {
-			return PreventUndeclaredEntityException(XmlReader.Create(textReader, GetSecureReaderSettings()));
-		}
-
-		private static XmlReader GetSecureXmlReader(String str) {
-			return PreventUndeclaredEntityException(XmlReader.Create(new StringReader(str), GetSecureReaderSettings()));
 		}
 	}
 }

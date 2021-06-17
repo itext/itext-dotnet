@@ -102,18 +102,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void AddNullAsStyleTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Sharpen mappings map NPE to NullReferenceException, however in .NET in this situation
-                // ArgumentNullException is thrown. In order not to introduce any porting issues,
-                // which unfortunately couldn't be handled in a convenient way, the most basic Exception
-                // is set to be expected.
-                Style myStyle = null;
-                Paragraph p = new Paragraph("text").AddStyle(myStyle);
-                // the following line should produce a NPE
-                p.GetRenderer().GetProperty<TransparentColor>(Property.FONT_COLOR);
-            }
-            , NUnit.Framework.Throws.InstanceOf<Exception>())
-;
+            Paragraph p = new Paragraph("text");
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => p.AddStyle(null));
         }
 
         [NUnit.Framework.Test]

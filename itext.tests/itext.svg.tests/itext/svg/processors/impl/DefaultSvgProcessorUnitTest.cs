@@ -164,30 +164,24 @@ namespace iText.Svg.Processors.Impl {
 
         [NUnit.Framework.Test]
         public virtual void DummyProcessingNoSvgTagInInput() {
-            NUnit.Framework.Assert.That(() =>  {
-                iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                    .ValueOf("polygon"), "");
-                iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
-                    .ValueOf("circle"), "");
-                INode root = new JsoupElementNode(jsoupSVGRoot);
-                root.AddChild(new JsoupElementNode(jsoupSVGCircle));
-                //Run
-                DefaultSvgProcessor processor = new DefaultSvgProcessor();
-                ISvgConverterProperties props = new DummySvgConverterProperties();
-                processor.Process(root, props).GetRootRenderer();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>().With.Message.EqualTo(SvgLogMessageConstant.NOROOT))
-;
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGRoot = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("polygon"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupSVGCircle = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("circle"), "");
+            INode root = new JsoupElementNode(jsoupSVGRoot);
+            root.AddChild(new JsoupElementNode(jsoupSVGCircle));
+            //Run
+            DefaultSvgProcessor processor = new DefaultSvgProcessor();
+            ISvgConverterProperties props = new DummySvgConverterProperties();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => processor.Process(root, props
+                ).GetRootRenderer());
+            NUnit.Framework.Assert.AreEqual(SvgLogMessageConstant.NOROOT, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DummyProcessingTestNullInput() {
-            NUnit.Framework.Assert.That(() =>  {
-                DefaultSvgProcessor processor = new DefaultSvgProcessor();
-                processor.Process(null, null);
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            DefaultSvgProcessor processor = new DefaultSvgProcessor();
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => processor.Process(null, null));
         }
 
         [NUnit.Framework.Test]

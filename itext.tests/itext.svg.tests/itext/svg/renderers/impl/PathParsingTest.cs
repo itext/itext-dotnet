@@ -50,14 +50,10 @@ namespace iText.Svg.Renderers.Impl {
     public class PathParsingTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void PathParsingNoDOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                // Path objects must have a d attribute
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                path.SetAttribute(SvgConstants.Attributes.STROKE, "black");
-                path.ParsePathOperations();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            // Path objects must have a d attribute
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttribute(SvgConstants.Attributes.STROKE, "black");
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.ParsePathOperations());
         }
 
         [NUnit.Framework.Test]
@@ -78,24 +74,16 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PathParsingOperatorBadOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                path.SetAttribute(SvgConstants.Attributes.D, "b 1 1");
-                path.ParsePathOperations();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttribute(SvgConstants.Attributes.D, "b 1 1");
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.ParsePathOperations());
         }
 
         [NUnit.Framework.Test]
         public virtual void PathParsingOperatorLaterBadOperatorTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PathSvgNodeRenderer path = new PathSvgNodeRenderer();
-                path.SetAttribute(SvgConstants.Attributes.D, "m 200 100 l 50 50 x");
-                path.ParsePathOperations();
-            }
-            , NUnit.Framework.Throws.InstanceOf<SvgProcessingException>())
-;
+            PathSvgNodeRenderer path = new PathSvgNodeRenderer();
+            path.SetAttribute(SvgConstants.Attributes.D, "m 200 100 l 50 50 x");
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => path.ParsePathOperations());
         }
 
         [NUnit.Framework.Test]

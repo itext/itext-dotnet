@@ -142,19 +142,15 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredAuthorizedOCSPResponderTest_now() {
-            NUnit.Framework.Assert.That(() =>  {
-                DateTime ocspResponderCertStartDate = DateTimeUtil.ParseSimpleFormat("15/10/2005", "dd/MM/yyyy");
-                DateTime ocspResponderCertEndDate = DateTimeUtil.ParseSimpleFormat("15/10/2010", "dd/MM/yyyy");
-                DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
-                bool verifyRes = VerifyAuthorizedOCSPResponderTest(ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate
-                    );
-                // Not getting here because of exception
-                NUnit.Framework.Assert.IsFalse(verifyRes);
-            }
-            , NUnit.Framework.Throws.InstanceOf<CertificateExpiredException>())
-;
+            DateTime ocspResponderCertStartDate = DateTimeUtil.ParseSimpleFormat("15/10/2005", "dd/MM/yyyy");
+            DateTime ocspResponderCertEndDate = DateTimeUtil.ParseSimpleFormat("15/10/2010", "dd/MM/yyyy");
+            DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
+            NUnit.Framework.Assert.Catch(typeof(CertificateExpiredException), () => VerifyAuthorizedOCSPResponderTest(
+                ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));
         }
 
+        // Not getting here because of exception
+        //Assert.assertFalse(verifyRes);
         private bool VerifyTest(TestOcspResponseBuilder rootRsaOcspBuilder) {
             return VerifyTest(rootRsaOcspBuilder, certsSrc + "signCertRsa01.p12", DateTimeUtil.GetCurrentUtcTime());
         }

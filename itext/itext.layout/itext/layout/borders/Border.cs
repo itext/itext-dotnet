@@ -55,9 +55,6 @@ namespace iText.Layout.Borders {
         /// <summary>The null Border, i.e. the presence of such border is equivalent to the absence of the border</summary>
         public static readonly iText.Layout.Borders.Border NO_BORDER = null;
 
-        /// <summary>Value used by discontinuous borders during the drawing process</summary>
-        private const float CURV = 0.447f;
-
         /// <summary>The solid border.</summary>
         /// <seealso cref="SolidBorder"/>
         public const int SOLID = 0;
@@ -97,6 +94,16 @@ namespace iText.Layout.Borders {
         /// <summary>The fixed dashed border.</summary>
         /// <seealso cref="FixedDashedBorder"/>
         public const int DASHED_FIXED = 9;
+
+        private const int ARC_RIGHT_DEGREE = 0;
+
+        private const int ARC_TOP_DEGREE = 90;
+
+        private const int ARC_LEFT_DEGREE = 180;
+
+        private const int ARC_BOTTOM_DEGREE = 270;
+
+        private const int ARC_QUARTER_CLOCKWISE_EXTENT = -90;
 
         /// <summary>The color of the border.</summary>
         /// <seealso cref="iText.Layout.Properties.TransparentColor"/>
@@ -517,28 +524,28 @@ namespace iText.Layout.Borders {
         protected internal virtual void DrawDiscontinuousBorders(PdfCanvas canvas, Rectangle boundingRectangle, float
             [] horizontalRadii, float[] verticalRadii, Border.Side defaultSide, float borderWidthBefore, float borderWidthAfter
             ) {
-            float x1 = boundingRectangle.GetX();
-            float y1 = boundingRectangle.GetY();
-            float x2 = boundingRectangle.GetRight();
-            float y2 = boundingRectangle.GetTop();
-            float horizontalRadius1 = horizontalRadii[0];
-            float horizontalRadius2 = horizontalRadii[1];
-            float verticalRadius1 = verticalRadii[0];
-            float verticalRadius2 = verticalRadii[1];
+            double x1 = boundingRectangle.GetX();
+            double y1 = boundingRectangle.GetY();
+            double x2 = boundingRectangle.GetRight();
+            double y2 = boundingRectangle.GetTop();
+            double horizontalRadius1 = horizontalRadii[0];
+            double horizontalRadius2 = horizontalRadii[1];
+            double verticalRadius1 = verticalRadii[0];
+            double verticalRadius2 = verticalRadii[1];
             // Points (x0, y0) and (x3, y3) are used to produce Bezier curve
-            float x0 = boundingRectangle.GetX();
-            float y0 = boundingRectangle.GetY();
-            float x3 = boundingRectangle.GetRight();
-            float y3 = boundingRectangle.GetTop();
-            float innerRadiusBefore;
-            float innerRadiusFirst;
-            float innerRadiusSecond;
-            float innerRadiusAfter;
-            float widthHalf = width / 2;
+            double x0 = boundingRectangle.GetX();
+            double y0 = boundingRectangle.GetY();
+            double x3 = boundingRectangle.GetRight();
+            double y3 = boundingRectangle.GetTop();
+            double innerRadiusBefore;
+            double innerRadiusFirst;
+            double innerRadiusSecond;
+            double innerRadiusAfter;
+            double widthHalf = width / 2.0;
             Point clipPoint1;
             Point clipPoint2;
             Point clipPoint;
-            Border.Side borderSide = GetBorderSide(x1, y1, x2, y2, defaultSide);
+            Border.Side borderSide = GetBorderSide((float)x1, (float)y1, (float)x2, (float)y2, defaultSide);
             switch (borderSide) {
                 case Border.Side.TOP: {
                     innerRadiusBefore = Math.Max(0, horizontalRadius1 - borderWidthBefore);
@@ -568,8 +575,9 @@ namespace iText.Layout.Borders {
                     y1 += widthHalf;
                     x2 -= innerRadiusAfter;
                     y2 += widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 + innerRadiusFirst * CURV, x1 - innerRadiusBefore * CURV, y1, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2 + innerRadiusAfter * CURV, y2, x3, y3 + innerRadiusSecond * CURV, x3, y3);
+                    canvas.Arc(x0, y0 - innerRadiusFirst, x1 + innerRadiusBefore, y1, ARC_LEFT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        ).ArcContinuous(x2 - innerRadiusAfter, y2, x3, y3 - innerRadiusSecond, ARC_TOP_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        );
                     break;
                 }
 
@@ -602,8 +610,9 @@ namespace iText.Layout.Borders {
                     y1 -= innerRadiusBefore;
                     x2 += widthHalf;
                     y2 += innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 + innerRadiusFirst * CURV, y0, x1, y1 + innerRadiusBefore * CURV, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2, y2 - innerRadiusAfter * CURV, x3 + innerRadiusSecond * CURV, y3, x3, y3);
+                    canvas.Arc(x0 - innerRadiusFirst, y0, x1, y1 - innerRadiusBefore, ARC_TOP_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        ).ArcContinuous(x2, y2 + innerRadiusAfter, x3 - innerRadiusSecond, y3, ARC_RIGHT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        );
                     break;
                 }
 
@@ -635,8 +644,9 @@ namespace iText.Layout.Borders {
                     y1 -= widthHalf;
                     x2 += innerRadiusAfter;
                     y2 -= widthHalf;
-                    canvas.MoveTo(x0, y0).CurveTo(x0, y0 - innerRadiusFirst * CURV, x1 + innerRadiusBefore * CURV, y1, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2 - innerRadiusAfter * CURV, y2, x3, y3 - innerRadiusSecond * CURV, x3, y3);
+                    canvas.Arc(x0, y0 + innerRadiusFirst, x1 - innerRadiusBefore, y1, ARC_RIGHT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        ).ArcContinuous(x2 + innerRadiusAfter, y2, x3, y3 + innerRadiusSecond, ARC_BOTTOM_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        );
                     break;
                 }
 
@@ -668,8 +678,9 @@ namespace iText.Layout.Borders {
                     y1 += innerRadiusBefore;
                     x2 -= widthHalf;
                     y2 -= innerRadiusAfter;
-                    canvas.MoveTo(x0, y0).CurveTo(x0 - innerRadiusFirst * CURV, y0, x1, y1 - innerRadiusBefore * CURV, x1, y1)
-                        .LineTo(x2, y2).CurveTo(x2, y2 + innerRadiusAfter * CURV, x3 - innerRadiusSecond * CURV, y3, x3, y3);
+                    canvas.Arc(x0 + innerRadiusFirst, y0, x1, y1 + innerRadiusBefore, ARC_BOTTOM_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        ).ArcContinuous(x2, y2 - innerRadiusAfter, x3 + innerRadiusSecond, y3, ARC_LEFT_DEGREE, ARC_QUARTER_CLOCKWISE_EXTENT
+                        );
                     break;
                 }
 

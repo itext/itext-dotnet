@@ -46,6 +46,16 @@ using System.Text;
 using iText.IO;
 
 namespace iText.IO.Util {
+    /// <summary>A utility class that is used as an interface to run 3rd-party tool ImageMagick.</summary>
+    /// <remarks>
+    /// A utility class that is used as an interface to run 3rd-party tool ImageMagick.
+    /// ImageMagick among other things allows to compare images and this class provides means to utilize this feature.
+    /// <para />
+    /// The ImageMagick needs to be installed independently on the system. This class provides a convenient
+    /// way to run it by passing a terminal command. The command can either be specified explicitly or by a mean
+    /// of environment variable
+    /// <see cref="MAGICK_COMPARE_ENVIRONMENT_VARIABLE"/>.
+    /// </remarks>
     public class ImageMagickHelper {
         /// <summary>The name of the environment variable with the command to execute ImageMagic comparison operations.
         ///     </summary>
@@ -58,10 +68,18 @@ namespace iText.IO.Util {
 
         private String compareExec;
 
+        /// <summary>
+        /// Creates new instance that will rely on ImageMagick execution command defined by
+        /// <see cref="MAGICK_COMPARE_ENVIRONMENT_VARIABLE"/>
+        /// environment variable.
+        /// </summary>
         public ImageMagickHelper()
             : this(null) {
         }
 
+        /// <summary>Creates new instance that will rely on ImageMagick execution command defined as passed argument.</summary>
+        /// <param name="newCompareExec">the ImageMagick execution command; if null - environment variables will be used instead
+        ///     </param>
         public ImageMagickHelper(String newCompareExec) {
             compareExec = newCompareExec;
             if (compareExec == null) {

@@ -26,6 +26,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRendererTest : ExtendedITextTest {
@@ -221,6 +222,21 @@ namespace iText.Layout.Renderer {
             flexRenderer.AddChild(divRenderer4);
             NUnit.Framework.Assert.AreEqual(100F, flexRenderer.GetMinMaxWidth().GetMinWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(100F, flexRenderer.GetMinMaxWidth().GetMaxWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
+        public virtual void GetNextRendererShouldBeOverriddenTest() {
+            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_272(new Div());
+            // Nothing is overridden
+            NUnit.Framework.Assert.AreEqual(typeof(FlexContainerRenderer), flexContainerRenderer.GetNextRenderer().GetType
+                ());
+        }
+
+        private sealed class _FlexContainerRenderer_272 : FlexContainerRenderer {
+            public _FlexContainerRenderer_272(Div baseArg1)
+                : base(baseArg1) {
+            }
         }
     }
 }

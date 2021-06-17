@@ -67,115 +67,103 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest01() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfAnnotation annot = new PdfFileAttachmentAnnotation(rect);
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED, PdfName.FileAttachment.GetValue())))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfAnnotation annot = new PdfFileAttachmentAnnotation(rect);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_TYPE_0_IS_NOT_PERMITTED
+                , PdfName.FileAttachment.GetValue()), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest02() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
-                annot.SetFlag(PdfAnnotation.PRINT);
-                annot.SetOpacity(new PdfNumber(0.5));
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_CA_KEY_WITH_A_VALUE_OTHER_THAN_1))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetOpacity(new PdfNumber(0.5));
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_CA_KEY_WITH_A_VALUE_OTHER_THAN_1
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest03() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
-                annot.SetFlag(0);
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlag(0);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest04() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
-                annot.SetFlag(PdfAnnotation.PRINT);
-                annot.SetFlag(PdfAnnotation.INVISIBLE);
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetFlag(PdfAnnotation.INVISIBLE);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest05() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfAnnotation annot = new PdfWidgetAnnotation(rect);
-                annot.SetFlag(PdfAnnotation.PRINT);
-                PdfStream s = new PdfStream("Hello World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
-                annot.SetDownAppearance(new PdfDictionary());
-                annot.SetNormalAppearance(s);
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfAnnotation annot = new PdfWidgetAnnotation(rect);
+            annot.SetFlag(PdfAnnotation.PRINT);
+            PdfStream s = new PdfStream("Hello World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            annot.SetDownAppearance(new PdfDictionary());
+            annot.SetNormalAppearance(s);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest06() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfAnnotation annot = new PdfWidgetAnnotation(rect);
-                annot.SetFlag(PdfAnnotation.PRINT);
-                annot.SetNormalAppearance(new PdfDictionary());
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfAnnotation annot = new PdfWidgetAnnotation(rect);
+            annot.SetFlag(PdfAnnotation.PRINT);
+            annot.SetNormalAppearance(new PdfDictionary());
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.APPEARANCE_DICTIONARY_SHALL_CONTAIN_ONLY_THE_N_KEY_WITH_STREAM_VALUE
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -197,22 +185,20 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest08() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-                Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
-                PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom", ""
-                    , "http://www.color.org", "sRGB IEC61966-2.1", @is));
-                doc.SetTagged();
-                doc.GetCatalog().SetLang(new PdfString("en-US"));
-                PdfPage page = doc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 100, 100, 100);
-                PdfAnnotation annot = new PdfStampAnnotation(rect);
-                annot.SetFlag(PdfAnnotation.PRINT);
-                page.AddAnnotation(annot);
-                doc.Close();
-            }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY, PdfName.Stamp.GetValue())))
-;
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            doc.SetTagged();
+            doc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfAnnotation annot = new PdfStampAnnotation(rect);
+            annot.SetFlag(PdfAnnotation.PRINT);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                , PdfName.Stamp.GetValue()), e.Message);
         }
 
         [NUnit.Framework.Test]

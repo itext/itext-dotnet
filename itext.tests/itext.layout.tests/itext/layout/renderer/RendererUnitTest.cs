@@ -53,7 +53,7 @@ using iText.Test;
 namespace iText.Layout.Renderer {
     public abstract class RendererUnitTest : ExtendedITextTest {
         // This also can be converted to a @Rule to have it all at hand in the future
-        protected internal static Document CreateDocument() {
+        protected internal static Document CreateDummyDocument() {
             return new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())));
         }
 

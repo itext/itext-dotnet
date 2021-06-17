@@ -102,6 +102,10 @@ namespace iText.IO {
 
         public const String CREATED_ROOT_TAG_HAS_MAPPING = "Created root tag has role mapping: \"/Document\" role{0} is mapped{1}. Resulting tag structure might have invalid root tag.";
 
+        public const String CREATE_COPY_SHOULD_BE_OVERRIDDEN = "While processing an instance of TextRenderer, " + 
+            "iText uses createCopy() to create glyph lines of specific fonts, which represent its parts. " + "So if one extends TextRenderer, one should override createCopy, otherwise if FontSelector "
+             + "related logic is triggered, copies of this TextRenderer will have the default behavior " + "rather than the custom one.";
+
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
@@ -148,6 +152,8 @@ namespace iText.IO {
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
 
+        public const String FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL = "Flex item layout result isn't full, but it must be. The cross size of the flex item will be 0.";
+
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
 
         public const String FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT = "Flushed object contains indirect reference which doesn't refer to any other object. Null object will be written instead.";
@@ -167,6 +173,9 @@ namespace iText.IO {
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
 
         public const String FORM_FIELD_WAS_FLUSHED = "A form field was flushed. There's no way to create this field in the AcroForm dictionary.";
+
+        public const String GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN = "If a renderer overflows, " + "iText uses this method to create another renderer for the overflow part. So if one wants "
+             + "to extend the renderer, one should override this method: otherwise the default method " + "will be used and thus the default rather than the custom renderer will be created.";
 
         public const String GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED = "Subtable format {0} of GPOS Lookup Type {1} is not supported yet";
 
@@ -205,6 +214,8 @@ namespace iText.IO {
         public const String INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED = "Inline block element does not fit into parent element and will be clipped";
 
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
+
+        public const String INVALID_DISTRIBUTION_POINT = "Skipped CRL: {0}";
 
         public const String INVALID_DESTINATION_TYPE = "When destination's not associated with a Remote or Embedded Go-To action, it shall specify page dictionary instead of page number. Otherwise destination might be considered invalid";
 

@@ -898,17 +898,29 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Arc(double x1, double y1, double x2, double y2, double startAng
             , double extent) {
-            IList<double[]> ar = BezierArc(x1, y1, x2, y2, startAng, extent);
-            if (ar.IsEmpty()) {
-                return this;
-            }
-            double[] pt = ar[0];
-            MoveTo(pt[0], pt[1]);
-            for (int i = 0; i < ar.Count; ++i) {
-                pt = ar[i];
-                CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
-            }
-            return this;
+            return DrawArc(x1, y1, x2, y2, startAng, extent, false);
+        }
+
+        /// <summary>
+        /// Draws a partial ellipse with the preceding line to the start of the arc to prevent path
+        /// broking.
+        /// </summary>
+        /// <remarks>
+        /// Draws a partial ellipse with the preceding line to the start of the arc to prevent path
+        /// broking. The target arc is inscribed within the rectangle x1,y1,x2,y2, starting
+        /// at startAng degrees and covering extent degrees. Angles start with 0 to the right (+x)
+        /// and increase counter-clockwise.
+        /// </remarks>
+        /// <param name="x1">a corner of the enclosing rectangle</param>
+        /// <param name="y1">a corner of the enclosing rectangle</param>
+        /// <param name="x2">a corner of the enclosing rectangle</param>
+        /// <param name="y2">a corner of the enclosing rectangle</param>
+        /// <param name="startAng">starting angle in degrees</param>
+        /// <param name="extent">angle extent in degrees</param>
+        /// <returns>the current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ArcContinuous(double x1, double y1, double x2, double y2, 
+            double startAng, double extent) {
+            return DrawArc(x1, y1, x2, y2, startAng, extent, true);
         }
 
         /// <summary>Draws an ellipse inscribed within the rectangle x1,y1,x2,y2.</summary>
@@ -1917,7 +1929,6 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float width, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
-                // TODO add matrix parameters
                 PdfXObject xObject = wmf.CreateFormXObject(document);
                 AddImageWithTransformationMatrix(xObject, width, 0, 0, width, x, y);
                 return xObject;
@@ -2813,6 +2824,26 @@ namespace iText.Kernel.Pdf.Canvas {
                     break;
                 }
             }
+        }
+
+        private iText.Kernel.Pdf.Canvas.PdfCanvas DrawArc(double x1, double y1, double x2, double y2, double startAng
+            , double extent, bool continuous) {
+            IList<double[]> ar = BezierArc(x1, y1, x2, y2, startAng, extent);
+            if (ar.IsEmpty()) {
+                return this;
+            }
+            double[] pt = ar[0];
+            if (continuous) {
+                LineTo(pt[0], pt[1]);
+            }
+            else {
+                MoveTo(pt[0], pt[1]);
+            }
+            for (int index = 0; index < ar.Count; ++index) {
+                pt = ar[index];
+                CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
+            }
+            return this;
         }
 
         private static PdfStream GetPageStream(PdfPage page) {

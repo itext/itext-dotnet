@@ -68,33 +68,31 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void RunTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                String file = "pdfALongString.pdf";
-                String filename = destinationFolder + file;
-                using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                    )) {
-                    using (Document document = new Document(new PdfADocument(new PdfWriter(new FileStream(filename, FileMode.Create
-                        )), PdfAConformanceLevel.PDF_A_3U, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference"
-                        , icm)))) {
-                        StringBuilder stringBuilder = new StringBuilder(LOREM_IPSUM);
-                        while (stringBuilder.Length < STRING_LENGTH_LIMIT) {
-                            stringBuilder.Append(stringBuilder.ToString());
-                        }
-                        PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-                        PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-                            );
-                        Paragraph p = new Paragraph(stringBuilder.ToString());
-                        p.SetMinWidth(1e6f);
-                        p.SetFont(font);
-                        document.Add(p);
+            String file = "pdfALongString.pdf";
+            String filename = destinationFolder + file;
+            using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                )) {
+                using (FileStream fos = new FileStream(filename, FileMode.Create)) {
+                    Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_3U, new PdfOutputIntent
+                        ("Custom", "", "http://www.color.org", "sRGB ICC preference", icm)));
+                    StringBuilder stringBuilder = new StringBuilder(LOREM_IPSUM);
+                    while (stringBuilder.Length < STRING_LENGTH_LIMIT) {
+                        stringBuilder.Append(stringBuilder.ToString());
                     }
+                    PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
+                    PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                        );
+                    Paragraph p = new Paragraph(stringBuilder.ToString());
+                    p.SetMinWidth(1e6f);
+                    p.SetFont(font);
+                    document.Add(p);
+                    // when document is closing, ISO conformance check is performed
+                    // this document contain a string which is longer than it is allowed
+                    // per specification. That is why conformance exception should be thrown
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Close());
+                    NUnit.Framework.Assert.AreEqual(PdfAConformanceException.PDF_STRING_IS_TOO_LONG, e.Message);
                 }
             }
-            , NUnit.Framework.Throws.InstanceOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.PDF_STRING_IS_TOO_LONG))
-;
         }
-        // when document is auto-closing, ISO conformance check is performed
-        // this document contain a string which is longer than it is allowed
-        // per specification. That is why conformance exception should be thrown
     }
 }

@@ -109,12 +109,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [Test]
         public virtual void RetrieveStyleSheetByMalformedResourceNameTest() {
-            NUnit.Framework.Assert.That(() => {
-                    String fileName = "retrieveStyl eSheetTest.css";
-                    ResourceResolver resourceResolver = new ResourceResolver(baseUri);
-                    resourceResolver.RetrieveStyleSheet(fileName);
-                }
-                , NUnit.Framework.Throws.InstanceOf<IOException>());
+            Assert.Catch(typeof(IOException), () => {
+                String fileName = "retrieveStyl eSheetTest.css";
+                ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+                resourceResolver.RetrieveStyleSheet(fileName);
+            });
         }
 
         [Test]
@@ -360,17 +359,16 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         [Test]
         public virtual void AttemptToReadBytesFromLimitedInputStreamTest() {
-            NUnit.Framework.Assert.That(() => {
-                    String fileName = "retrieveStyleSheetTest.css";
-                    // retrieveStyleSheetTest.css size is 89 bytes
-                    IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(40);
-                    ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
-                    Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
-                    for (int i = 0; i < 41; i++) {
-                        stream.Read();
-                    }
-                }
-                , NUnit.Framework.Throws.InstanceOf<ReadingByteLimitException>());
+            String fileName = "retrieveStyleSheetTest.css";
+            // retrieveStyleSheetTest.css size is 89 bytes
+            IResourceRetriever retriever = new DefaultResourceRetriever().SetResourceSizeByteLimit(40);
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
+            Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
+            for (int i = 0; i < 40; i++) {
+                stream.Read();
+            } 
+            
+            Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
         }
 
         [Test]

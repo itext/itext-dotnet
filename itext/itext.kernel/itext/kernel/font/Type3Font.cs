@@ -145,14 +145,14 @@ namespace iText.Kernel.Font {
         /// </remarks>
         /// <param name="fontName">the PostScript name of the font, shall not be null or empty.</param>
         protected internal override void SetFontName(String fontName) {
-            //This dummy override allows PdfType3Font to set font name because of different modules.
+            // This dummy override allows PdfType3Font to use setter from different module.
             base.SetFontName(fontName);
         }
 
         /// <summary>Sets a preferred font family name.</summary>
         /// <param name="fontFamily">a preferred font family name.</param>
         protected internal override void SetFontFamily(String fontFamily) {
-            //This dummy override allows PdfType3Font to set font name because of different modules.
+            // This dummy override allows PdfType3Font to use setter from different module.
             base.SetFontFamily(fontFamily);
         }
 
@@ -162,7 +162,7 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.Constants.FontWeights"/>.
         /// </param>
         protected internal override void SetFontWeight(int fontWeight) {
-            //This dummy override allows PdfType3Font to set font name because of different modules.
+            // This dummy override allows PdfType3Font to use setter from different module.
             base.SetFontWeight(fontWeight);
         }
 
@@ -172,21 +172,32 @@ namespace iText.Kernel.Font {
         /// <see cref="iText.IO.Font.Constants.FontStretches"/>.
         /// </param>
         protected internal override void SetFontStretch(String fontWidth) {
-            //This dummy override allows PdfType3Font to set font name because of different modules.
+            // This dummy override allows PdfType3Font to use setter from different module.
             base.SetFontStretch(fontWidth);
         }
 
-        /// <summary>Sets the PostScript italic angel.</summary>
-        /// <remarks>
-        /// Sets the PostScript italic angel.
-        /// <para />
-        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward).
-        /// </remarks>
-        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
+        /// <summary><inheritDoc/></summary>
+        protected internal override void SetCapHeight(int capHeight) {
+            // This dummy override allows PdfType3Font to use setter from different module.
+            base.SetCapHeight(capHeight);
+        }
+
+        /// <summary><inheritDoc/></summary>
         protected internal override void SetItalicAngle(int italicAngle) {
-            //This dummy override allows PdfType3Font to set the PostScript italicAngel because of different modules.
-            //This dummy override allows PdfType3Font to set font name because of different modules.
+            // This dummy override allows PdfType3Font to use setter from different module.
             base.SetItalicAngle(italicAngle);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void SetTypoAscender(int ascender) {
+            // This dummy override allows PdfType3Font to use setter from different module.
+            base.SetTypoAscender(ascender);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void SetTypoDescender(int descender) {
+            // This dummy override allows PdfType3Font to use setter from different module.
+            base.SetTypoDescender(descender);
         }
 
         /// <summary>Sets Font descriptor flags.</summary>

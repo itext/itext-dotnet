@@ -478,27 +478,20 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredPatternCsUnitTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-                PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
-                new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
-                new PatternColor(circle, new PdfSpecialCs.Pattern(), new float[0]);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+            new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PatternColor(circle, new PdfSpecialCs.Pattern
+                (), new float[0]));
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternColorUncoloredPatternColorUnitTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-                PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
-                new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
-                PatternColor redCirclePattern = new PatternColor(circle, ColorConstants.RED);
-                new PatternColor(circle, redCirclePattern);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>())
-;
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfPattern.Tiling circle = new PdfPattern.Tiling(15, 15, 10, 20, false);
+            new PdfPatternCanvas(circle, doc).Circle(7.5f, 7.5f, 2.5f).Fill().Release();
+            PatternColor redCirclePattern = new PatternColor(circle, ColorConstants.RED);
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PatternColor(circle, redCirclePattern));
         }
 
         private static int CountSubstringOccurrences(String str, String findStr) {

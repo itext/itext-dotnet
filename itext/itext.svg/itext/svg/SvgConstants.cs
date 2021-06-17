@@ -330,6 +330,9 @@ namespace iText.Svg {
             /// <since>7.1.2</since>
             public const String TEXT = "text";
 
+            /// <summary>Phantom tag for text leaf.</summary>
+            public const String TEXT_LEAF = ":text-leaf";
+
             /// <summary>Tag defining a path on which text can be drawn.</summary>
             public const String TEXT_PATH = "textPath";
 

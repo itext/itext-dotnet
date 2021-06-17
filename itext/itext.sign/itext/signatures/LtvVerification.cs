@@ -210,9 +210,9 @@ namespace iText.Signatures {
 
         /// <summary>Adds verification to the signature.</summary>
         /// <param name="signatureName">name of the signature</param>
-        /// <param name="ocsps">collection of ocsp responses</param>
-        /// <param name="crls">collection of crls</param>
-        /// <param name="certs">collection of certificates</param>
+        /// <param name="ocsps">collection of DER-encoded BasicOCSPResponses</param>
+        /// <param name="crls">collection of DER-encoded CRLs</param>
+        /// <param name="certs">collection of DER-encoded certificates</param>
         /// <returns>boolean</returns>
         public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps, ICollection<byte[]> crls
             , ICollection<byte[]> certs) {

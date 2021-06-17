@@ -220,6 +220,9 @@ namespace iText.Layout {
             if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
             }
+            if (rootRenderer is DocumentRenderer) {
+                ((DocumentRenderer)rootRenderer).GetTargetCounterHandler().PrepareHandlerToRelayout();
+            }
             IRenderer nextRelayoutRenderer = rootRenderer != null ? rootRenderer.GetNextRenderer() : null;
             if (nextRelayoutRenderer == null || !(nextRelayoutRenderer is RootRenderer)) {
                 nextRelayoutRenderer = new DocumentRenderer(this, immediateFlush);

@@ -29,45 +29,35 @@ namespace iText.Kernel.Pdf.Colorspace {
         [NUnit.Framework.Test]
         public virtual void AxialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
-            NUnit.Framework.Assert.That(() =>  {
-                PdfShading.Axial axial = new PdfShading.Axial(new PdfDeviceCs.Rgb(), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f
-                    , 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("extend"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(new PdfDeviceCs.Rgb
+                (), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AxialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true };
-            NUnit.Framework.Assert.That(() =>  {
-                PdfShading.Axial axial = new PdfShading.Axial(new PdfDeviceCs.Rgb(), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f
-                    , 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("extend"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(new PdfDeviceCs.Rgb
+                (), 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RadialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
-            NUnit.Framework.Assert.That(() =>  {
-                new PdfShading.Radial(new PdfDeviceCs.Rgb(), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new 
-                    float[] { 0.5f, 0.5f, 0.5f }, extendArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("extend"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(new PdfDeviceCs.Rgb
+                (), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray
+                ));
+            NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void RadialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true, false, false };
-            NUnit.Framework.Assert.That(() =>  {
-                new PdfShading.Radial(new PdfDeviceCs.Rgb(), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new 
-                    float[] { 0.5f, 0.5f, 0.5f }, extendArray);
-            }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo("extend"))
-;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(new PdfDeviceCs.Rgb
+                (), 0f, 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray
+                ));
+            NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
         [NUnit.Framework.Test]

@@ -105,11 +105,10 @@ namespace iText.Kernel.Font {
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {
                 Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
-                //TODO TrueType what if font is specific?
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                     Glyph notdef = GetFontProgram().GetGlyphByCode(0);
                     if (notdef != null) {
-                        glyph = new Glyph(GetFontProgram().GetGlyphByCode(0), unicode);
+                        glyph = new Glyph(notdef, unicode);
                         notdefGlyphs.Put(unicode, glyph);
                     }
                 }
@@ -133,7 +132,6 @@ namespace iText.Kernel.Font {
                 return;
             }
             EnsureUnderlyingObjectHasIndirectReference();
-            //TODO make subtype class member and simplify this method
             if (newFont) {
                 PdfName subtype;
                 String fontName;

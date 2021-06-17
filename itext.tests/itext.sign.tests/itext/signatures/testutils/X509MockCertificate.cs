@@ -83,6 +83,11 @@ namespace iText.Signatures.Testutils
         {
             return this.KeyUsage;
         }
+        
+        public override X509Name SubjectDN
+        {
+            get { return null; }
+        }
 
         public void SetExtendedKeyUsage(IList extendedKeyUsage)
         {

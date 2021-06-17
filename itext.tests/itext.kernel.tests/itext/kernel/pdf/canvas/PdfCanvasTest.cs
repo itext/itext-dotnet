@@ -48,6 +48,7 @@ using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
@@ -95,6 +96,32 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDictionary page = pdfDocument.GetPage(1).GetPdfObject();
             NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             reader.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanvasDrawArcsTest() {
+            String fileName = "canvasDrawArcsTest.pdf";
+            String output = destinationFolder + fileName;
+            String cmp = sourceFolder + "cmp_" + fileName;
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(output))) {
+                PdfPage page = doc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                canvas.SetLineWidth(5);
+                canvas.SetStrokeColor(ColorConstants.BLUE);
+                canvas.MoveTo(10, 300);
+                canvas.LineTo(50, 300);
+                canvas.Arc(100, 550, 200, 600, 90, -135);
+                canvas.ClosePath();
+                canvas.Stroke();
+                canvas.SetStrokeColor(ColorConstants.RED);
+                canvas.MoveTo(210, 300);
+                canvas.LineTo(250, 300);
+                canvas.ArcContinuous(300, 550, 400, 600, 90, -135);
+                canvas.ClosePath();
+                canvas.Stroke();
+                canvas.Release();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]

@@ -162,16 +162,15 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void ExpectedByteAlignedTiffImageExtractionTest() {
-            NUnit.Framework.Assert.That(() =>  {
-                //Byte-aligned image is expected in pdf file, but in fact it's not
-                String inFileName = sourceFolder + "expectedByteAlignedTiffImageExtraction.pdf";
-                PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-                GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
-                processor.ProcessPageContent(pdfDocument.GetPage(1));
-            }
-            , NUnit.Framework.Throws.InstanceOf<iText.IO.IOException>().With.Message.EqualTo(MessageFormatUtil.Format(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines)))
-;
+            //Byte-aligned image is expected in pdf file, but in fact it's not
+            String inFileName = sourceFolder + "expectedByteAlignedTiffImageExtraction.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.IOException), () => processor.ProcessPageContent
+                (pdfDocument.GetPage(1)));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(iText.IO.IOException.ExpectedTrailingZeroBitsForByteAlignedLines
+                ), e.Message);
         }
 
         private class ImageExtractor : IEventListener {

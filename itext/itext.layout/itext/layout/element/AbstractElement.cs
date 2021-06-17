@@ -127,6 +127,9 @@ namespace iText.Layout.Element {
         /// <param name="style">the style to be added</param>
         /// <returns>this element</returns>
         public virtual T AddStyle(Style style) {
+            if (style == null) {
+                throw new ArgumentException("Style can not be null.");
+            }
             if (styles == null) {
                 styles = new LinkedHashSet<Style>();
             }

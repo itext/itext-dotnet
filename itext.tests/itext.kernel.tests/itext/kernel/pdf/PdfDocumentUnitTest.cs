@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Layer;
 using iText.Test;
@@ -53,6 +54,9 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentUnitTest : ExtendedITextTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDocumentUnitTest/";
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE)]
         public virtual void GetFontWithDirectFontDictionaryTest() {
@@ -196,6 +200,87 @@ namespace iText.Kernel.Pdf {
                     NUnit.Framework.Assert.IsTrue(layer.GetPdfObject().IsFlushed());
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfDocumentInstanceNoWriterInfoAndConformanceLevelInitialization() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            NUnit.Framework.Assert.IsNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfDocumentInstanceWriterInfoAndConformanceLevelInitialization() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+                (new ByteArrayOutputStream()));
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
+            PdfDocument pdfDocument = new _PdfDocument_265(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            // This class instance extends pdfDocument
+            // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
+        }
+
+        private sealed class _PdfDocument_265 : PdfDocument {
+            public _PdfDocument_265(PdfReader baseArg1)
+                : base(baseArg1) {
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
+            PdfDocument pdfDocument = new _PdfDocument_282(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+                (new ByteArrayOutputStream()));
+            // This class instance extends pdfDocument
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            // TODO DEVSIX-5292 pdfAConformanceLevel shouldn't be initialized during the document's opening
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
+        }
+
+        private sealed class _PdfDocument_282 : PdfDocument {
+            public _PdfDocument_282(PdfReader baseArg1, PdfWriter baseArg2)
+                : base(baseArg1, baseArg2) {
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetDocumentInfoAlreadyClosedTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            pdfDocument.Close();
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetDocumentInfo());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetDocumentInfoNotInitializedTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            NUnit.Framework.Assert.IsNull(pdfDocument.info);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.GetDocumentInfo());
+            pdfDocument.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetPdfAConformanceLevelNotInitializedTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            NUnit.Framework.Assert.IsNull(pdfDocument.reader.pdfAConformanceLevel);
+            NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.GetPdfAConformanceLevel());
+            pdfDocument.Close();
         }
 
         private static void AssertLayerNames(PdfDocument outDocument, IList<String> layerNames) {
