@@ -30,9 +30,7 @@ namespace iText.Kernel.Counter.Event {
     /// <summary>Class represents events registered in iText core module.</summary>
     public class ITextCoreEvent : AbstractProductProcessITextEvent {
         /// <summary>Process pdf event type.</summary>
-        public const String PROCESS_PDF = 
-                // TODO DEVSIX-5466 rename constant value
-                "open-document-event";
+        public const String PROCESS_PDF = "process-pdf";
 
         private readonly String eventType;
 

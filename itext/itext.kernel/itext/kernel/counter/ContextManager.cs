@@ -50,33 +50,36 @@ using iText.Kernel.Counter.Context;
 namespace iText.Kernel.Counter {
     /// <summary>The class that retrieves context of its invocation.</summary>
     public class ContextManager {
-        private static readonly iText.Kernel.Counter.ContextManager instance = new iText.Kernel.Counter.ContextManager
-            ();
+        private static readonly iText.Kernel.Counter.ContextManager INSTANCE;
 
         private readonly SortedDictionary<String, IContext> contextMappings = new SortedDictionary<String, IContext
             >(new ContextManager.LengthComparator());
 
-        private ContextManager() {
-            RegisterGenericContextForProducts(JavaUtil.ArraysAsList(NamespaceConstant.CORE_IO, NamespaceConstant.CORE_KERNEL
-                , NamespaceConstant.CORE_LAYOUT, NamespaceConstant.CORE_BARCODES, NamespaceConstant.CORE_PDFA, NamespaceConstant
-                .CORE_SIGN, NamespaceConstant.CORE_FORMS, NamespaceConstant.CORE_SXP, NamespaceConstant.CORE_SVG), JavaCollectionsUtil
-                .SingletonList(NamespaceConstant.ITEXT), JavaCollectionsUtil.Singleton(ProductNameConstant.ITEXT_CORE)
-                );
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil
+        static ContextManager() {
+            iText.Kernel.Counter.ContextManager local = new iText.Kernel.Counter.ContextManager();
+            local.RegisterGenericContextForProducts(JavaUtil.ArraysAsList(NamespaceConstant.CORE_IO, NamespaceConstant
+                .CORE_KERNEL, NamespaceConstant.CORE_LAYOUT, NamespaceConstant.CORE_BARCODES, NamespaceConstant.CORE_PDFA
+                , NamespaceConstant.CORE_SIGN, NamespaceConstant.CORE_FORMS, NamespaceConstant.CORE_SXP, NamespaceConstant
+                .CORE_SVG), JavaCollectionsUtil.SingletonList(NamespaceConstant.ITEXT), JavaCollectionsUtil.Singleton(
+                ProductNameConstant.ITEXT_CORE));
+            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil
                 .SingletonList(NamespaceConstant.PDF_DEBUG), JavaCollectionsUtil.EmptyList<String>());
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
+            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
                 .SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_HTML
                 ));
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), JavaCollectionsUtil
-                .SingletonList(NamespaceConstant.PDF_INVOICE), JavaCollectionsUtil.EmptyList<String>());
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
+            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), 
+                JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_INVOICE), JavaCollectionsUtil.EmptyList<String
+                >());
+            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
                 .SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_SWEEP
                 ));
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), 
-                JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil.Singleton
+            local.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4
+                ), JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil.Singleton
                 (ProductNameConstant.PDF_OCR_TESSERACT4));
-            RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR), JavaCollectionsUtil
-                .EmptyList<String>(), JavaCollectionsUtil.Singleton(ProductNameConstant.PDF_OCR));
+            INSTANCE = local;
+        }
+
+        internal ContextManager() {
         }
 
         /// <summary>Gets the singleton instance of this class</summary>
@@ -86,7 +89,7 @@ namespace iText.Kernel.Counter {
         /// instance
         /// </returns>
         public static iText.Kernel.Counter.ContextManager GetInstance() {
-            return instance;
+            return INSTANCE;
         }
 
         /// <summary>Gets the context associated with the passed class object.</summary>

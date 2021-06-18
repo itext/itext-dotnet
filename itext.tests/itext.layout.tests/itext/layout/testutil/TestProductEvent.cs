@@ -48,7 +48,7 @@ using iText.Kernel.Actions.Sequence;
 namespace iText.Layout.Testutil {
     public class TestProductEvent : AbstractProductProcessITextEvent {
         public TestProductEvent(SequenceId sequenceId)
-            : base(sequenceId, new ProductData("itext7-core", "layout", "", 1998, 2100), null, EventConfirmationType.ON_CLOSE
+            : base(sequenceId, new ProductData("itext-core", "layout", "", 1998, 2100), null, EventConfirmationType.ON_CLOSE
                 ) {
         }
 

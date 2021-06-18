@@ -41,21 +41,33 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Util;
 using iText.Test;
 
 namespace iText.Kernel.Counter {
     public class ContextManagerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetRecognisedNamespaceForSpecificNamespaceTest() {
-            String outerNamespaces = NamespaceConstant.PDF_OCR.ToLowerInvariant();
-            String innerNamespaces = NamespaceConstant.PDF_OCR_TESSERACT4.ToLowerInvariant();
-            // Since both NamespaceConstant.PDF_OCR and NamespaceConstant.PDF_OCR_TESSERACT4 are registered
-            // and the latter one begins with the former, we should check that correct namespaces are
-            // recognized for each of them
+            String outerNamespaces = NamespaceConstant.ITEXT.ToLowerInvariant();
+            String innerNamespaces = NamespaceConstant.PDF_HTML.ToLowerInvariant();
             NUnit.Framework.Assert.IsTrue(innerNamespaces.StartsWith(outerNamespaces));
-            NUnit.Framework.Assert.AreEqual(outerNamespaces, ContextManager.GetInstance().GetRecognisedNamespace(outerNamespaces
+            ContextManager managerOuterBeforeInner = new ContextManager();
+            managerOuterBeforeInner.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(outerNamespaces
+                ), JavaCollectionsUtil.EmptyList<String>());
+            managerOuterBeforeInner.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(innerNamespaces
+                ), JavaCollectionsUtil.EmptyList<String>());
+            NUnit.Framework.Assert.AreEqual(outerNamespaces, managerOuterBeforeInner.GetRecognisedNamespace(outerNamespaces
                 ));
-            NUnit.Framework.Assert.AreEqual(innerNamespaces, ContextManager.GetInstance().GetRecognisedNamespace(innerNamespaces
+            NUnit.Framework.Assert.AreEqual(innerNamespaces, managerOuterBeforeInner.GetRecognisedNamespace(innerNamespaces
+                ));
+            ContextManager managerInnerBeforeOuter = new ContextManager();
+            managerInnerBeforeOuter.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(innerNamespaces
+                ), JavaCollectionsUtil.EmptyList<String>());
+            managerInnerBeforeOuter.RegisterGenericContextForProducts(JavaCollectionsUtil.SingletonList(outerNamespaces
+                ), JavaCollectionsUtil.EmptyList<String>());
+            NUnit.Framework.Assert.AreEqual(outerNamespaces, managerInnerBeforeOuter.GetRecognisedNamespace(outerNamespaces
+                ));
+            NUnit.Framework.Assert.AreEqual(innerNamespaces, managerInnerBeforeOuter.GetRecognisedNamespace(innerNamespaces
                 ));
         }
 
@@ -64,6 +76,13 @@ namespace iText.Kernel.Counter {
             String notRegisteredNamespace = "com.hello.world";
             NUnit.Framework.Assert.AreEqual(null, ContextManager.GetInstance().GetRecognisedNamespace(notRegisteredNamespace
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RegisteredNamespaceTest() {
+            String registeredNamespace = "itext.layout.custompackage";
+            NUnit.Framework.Assert.AreEqual(NamespaceConstant.CORE_LAYOUT.ToLower(), ContextManager.GetInstance().GetRecognisedNamespace
+                (registeredNamespace));
         }
     }
 }

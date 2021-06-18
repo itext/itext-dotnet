@@ -26,20 +26,18 @@ using iText.IO.Util;
 
 namespace iText.Kernel.Actions {
     public sealed class ProductNameConstant {
-        public const String ITEXT_CORE = "itext7-core";
+        public const String ITEXT_CORE = "itext-core";
 
         public const String PDF_HTML = "pdfHtml";
 
         public const String PDF_SWEEP = "pdfSweep";
-
-        public const String PDF_OCR = ITEXT_CORE + "pdfOcr";
 
         public const String PDF_OCR_TESSERACT4 = "pdfOcr-tesseract4";
 
         public static readonly ICollection<String> PRODUCT_NAMES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(iText.Kernel.Actions.ProductNameConstant.ITEXT_CORE, iText.Kernel.Actions.ProductNameConstant
             .PDF_HTML, iText.Kernel.Actions.ProductNameConstant.PDF_SWEEP, iText.Kernel.Actions.ProductNameConstant
-            .PDF_OCR, iText.Kernel.Actions.ProductNameConstant.PDF_OCR_TESSERACT4)));
+            .PDF_OCR_TESSERACT4)));
 
         private ProductNameConstant() {
         }
