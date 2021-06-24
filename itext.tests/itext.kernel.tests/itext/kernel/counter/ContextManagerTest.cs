@@ -80,9 +80,9 @@ namespace iText.Kernel.Counter {
 
         [NUnit.Framework.Test]
         public virtual void RegisteredNamespaceTest() {
-            String registeredNamespace = "itext.layout.custompackage";
-            NUnit.Framework.Assert.AreEqual(NamespaceConstant.CORE_LAYOUT.ToLower(), ContextManager.GetInstance().GetRecognisedNamespace
-                (registeredNamespace));
+            String registeredNamespace = NamespaceConstant.CORE_LAYOUT + "custompackage";
+            NUnit.Framework.Assert.AreEqual(NamespaceConstant.CORE_LAYOUT.ToLowerInvariant(), ContextManager.GetInstance
+                ().GetRecognisedNamespace(registeredNamespace));
         }
     }
 }
