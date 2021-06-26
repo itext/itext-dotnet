@@ -465,19 +465,19 @@ namespace iText.Layout.Renderer {
             Document doc = new Document(pdfDoc);
             Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_738(text));
+            text.SetNextRenderer(new _TextRenderer_739(text));
             doc.Add(new Paragraph(text));
             text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_754(text));
+            text.SetNextRenderer(new _TextRenderer_755(text));
             doc.Add(new Paragraph(text));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
 
-        private sealed class _TextRenderer_738 : TextRenderer {
-            public _TextRenderer_738(Text baseArg1)
+        private sealed class _TextRenderer_739 : TextRenderer {
+            public _TextRenderer_739(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -488,8 +488,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_754 : TextRenderer {
-            public _TextRenderer_754(Text baseArg1)
+        private sealed class _TextRenderer_755 : TextRenderer {
+            public _TextRenderer_755(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -502,6 +502,68 @@ namespace iText.Layout.Renderer {
             public override IRenderer GetNextRenderer() {
                 return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((Text)this.modelElement);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NbspCannotBeFitAndIsTheOnlySymbolTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void NbspCannotBeFitAndMakesTheFirstChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0")).Add(new Text("SecondChunk"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void NbspCannotBeFitAndIsTheFirstSymbolOfChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for any symbol (page width is fully occupied by margins)
+            Document doc = new Document(pdfDocument, new PageSize(72, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("\u00A0First"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest() {
+            String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            // No place for the second symbol
+            Document doc = new Document(pdfDocument, new PageSize(81, 1000));
+            Paragraph paragraph = new Paragraph().Add(new Text("H\u00A0")).Add(new Text("ello"));
+            paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -521,7 +583,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_801(text));
+            text.SetNextRenderer(new _TextRenderer_890(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -530,8 +592,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_801 : TextRenderer {
-            public _TextRenderer_801(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_890 : TextRenderer {
+            public _TextRenderer_890(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
