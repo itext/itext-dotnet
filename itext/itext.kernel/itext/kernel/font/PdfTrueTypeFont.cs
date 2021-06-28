@@ -149,6 +149,12 @@ namespace iText.Kernel.Font {
             base.Flush();
         }
 
+        public override bool IsBuiltWith(String fontProgram, String encoding) {
+            // Now Identity-H is default for true type fonts. However, in case of Identity-H the method from
+            // PdfType0Font would be triggered, hence we need to return false there.
+            return null != encoding && !"".Equals(encoding) && base.IsBuiltWith(fontProgram, encoding);
+        }
+
         protected internal override void AddFontStream(PdfDictionary fontDescriptor) {
             if (embedded) {
                 PdfName fontFileName;

@@ -170,8 +170,6 @@ namespace iText.Kernel.Exceptions {
 
         public const String THIS_DICTIONARY_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
-        public const String DICTIONARY_DOES_NOT_HAVE_THIS_FONT_DATA = "Dictionary doesn't have {0} font data.";
-
         public const String DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA = "Dictionary doesn't have supported font "
              + "data.";
 

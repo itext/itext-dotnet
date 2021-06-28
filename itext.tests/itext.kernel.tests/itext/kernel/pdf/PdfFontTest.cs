@@ -494,7 +494,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "abserif4_5.ttf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -502,7 +503,8 @@ namespace iText.Kernel.Pdf {
                 ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -523,8 +525,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "abserif4_5.ttf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED
-                );
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -532,7 +534,8 @@ namespace iText.Kernel.Pdf {
                 ("Hello world").EndText().RestoreState().Rectangle(100, 500, 100, 100).Fill().Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_NOT_EMBEDDED
+                );
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -553,7 +556,8 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             String font = fontsFolder + "Puritan2.otf";
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             PdfPage page = pdfDoc.AddNewPage();
@@ -564,7 +568,8 @@ namespace iText.Kernel.Pdf {
             canvas.Release();
             page.Flush();
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(font, FileMode.Open, FileAccess.Read));
-            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            pdfTrueTypeFont = PdfFontFactory.CreateFont(ttf, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
             pdfTrueTypeFont.SetSubset(true);
             page = pdfDoc.AddNewPage();
@@ -1396,7 +1401,7 @@ namespace iText.Kernel.Pdf {
             PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont("aller");
             //clear font cache for other tests
             FontProgramFactory.ClearRegisteredFonts();
-            NUnit.Framework.Assert.IsTrue(pdfFont is PdfTrueTypeFont);
+            NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font);
             pdfDoc.AddNewPage();
             pdfDoc.Close();
         }

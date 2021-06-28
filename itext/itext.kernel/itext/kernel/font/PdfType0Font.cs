@@ -56,6 +56,9 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
     public class PdfType0Font : PdfFont {
+        /// <summary>This is the default encoding to use.</summary>
+        private const String DEFAULT_ENCODING = "";
+
         /// <summary>The code length shall not be greater than 4.</summary>
         private const int MAX_CID_CODE_LENGTH = 4;
 
@@ -603,7 +606,7 @@ namespace iText.Kernel.Font {
         }
 
         public override bool IsBuiltWith(String fontProgram, String encoding) {
-            return GetFontProgram().IsBuiltWith(fontProgram) && cmapEncoding.IsBuiltWith(encoding);
+            return GetFontProgram().IsBuiltWith(fontProgram) && cmapEncoding.IsBuiltWith(NormalizeEncoding(encoding));
         }
 
         public override void Flush() {
@@ -956,6 +959,10 @@ namespace iText.Kernel.Font {
                     return new CMapEncoding(cmapName, uniMap);
                 }
             }
+        }
+
+        private static String NormalizeEncoding(String encoding) {
+            return null == encoding || DEFAULT_ENCODING.Equals(encoding) ? PdfEncodings.IDENTITY_H : encoding;
         }
     }
 }

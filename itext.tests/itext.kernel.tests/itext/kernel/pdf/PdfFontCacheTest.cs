@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -167,13 +168,93 @@ namespace iText.Kernel.Pdf {
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.COURIER;
+            PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
             //All those encodings actually the same winansi.
-            AddPagesWithFonts(pdfDoc, font, null, TextSetWithABC);
-            AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
-            AddPagesWithFonts(pdfDoc, font, "WinAnsi", TextSetWithABC);
-            AddPagesWithFonts(pdfDoc, font, "WinAnsiEncoding", TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, null, embeddingStrategy, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "WinAnsi", embeddingStrategy, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "WinAnsiEncoding", embeddingStrategy, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithAbserifAndIdentityHEncodings() {
+            String testName = "DocumentWithAbserifAndIdentityHEncodings";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            //All those encodings actually the same Identity-H.
+            AddPagesWithFonts(pdfDoc, font, null, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, PdfEncodings.IDENTITY_H, TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings() {
+            String testName = "DocumentWithEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings() {
+            String testName = "DocumentWithEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithNotEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings() {
+            String testName = "DocumentWithNotEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
+            AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithNotEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings() {
+            String testName = "DocumentWithNotEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
+            AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
                 "diff_"));
         }
@@ -195,13 +276,30 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithTrueType() {
-            String testName = "DocumentWithTrueType";
+        public virtual void CreateDocumentWithTrueTypeAsType0DefaultEncoding() {
+            String testName = "DocumentWithTrueTypeAsType0DefaultEncoding";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = fontsFolder + "abserif4_5.ttf";
             String encoding = null;
+            AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithTrueTypeAsTrueType() {
+            String testName = "DocumentWithTrueType";
+            String filename = destinationFolder + testName + ".pdf";
+            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            PdfDocument pdfDoc = CreateDocument(filename);
+            String font = fontsFolder + "abserif4_5.ttf";
+            String encoding = PdfEncodings.WINANSI;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
@@ -422,7 +520,8 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
-            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", encoding, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", encoding, PdfFontFactory.EmbeddingStrategy
+                .FORCE_NOT_EMBEDDED, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
@@ -482,7 +581,8 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
-            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", "WinAnsi", TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                .PREFER_NOT_EMBEDDED, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
@@ -524,12 +624,18 @@ namespace iText.Kernel.Pdf {
         }
 
         private void AddPagesWithFonts(PdfDocument pdfDoc, String fontProgram, String fontEncoding, String[] text) {
+            AddPagesWithFonts(pdfDoc, fontProgram, fontEncoding, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED, text
+                );
+        }
+
+        private void AddPagesWithFonts(PdfDocument pdfDoc, String fontProgram, String fontEncoding, PdfFontFactory.EmbeddingStrategy
+             embeddingStrategy, String[] text) {
             int top = 700;
             foreach (String t in text) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, top).SetFontAndSize(PdfFontFactory.CreateFont(fontProgram, fontEncoding
-                    , pdfDoc), 72).ShowText(t).EndText().RestoreState();
+                    , embeddingStrategy, pdfDoc), 72).ShowText(t).EndText().RestoreState();
                 canvas.Release();
                 page.Flush();
             }

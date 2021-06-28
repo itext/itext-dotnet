@@ -278,25 +278,6 @@ namespace iText.Kernel.Font {
                 , e.Message);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void DeprecatedEmbeddedFlagTrueWorksAsPreferEmbeddedTest() {
-            // simply checks that embedded = true works as prefer embedded
-            // this test can be safely removed with clean up of deprecated methods in PdfFontFactory
-            PdfType1Font font = (PdfType1Font)PdfFontFactory.CreateFont(StandardFonts.HELVETICA, true);
-            NUnit.Framework.Assert.IsNotNull(font);
-            NUnit.Framework.Assert.IsFalse(font.IsEmbedded());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DeprecatedEmbeddedFlagFalseWorksAsPreferNotEmbeddedTest() {
-            // simply checks that embedded = false works as prefer not embedded
-            // this test can be safely removed with clean up of deprecated methods in PdfFontFactory
-            TrueTypeFont fontProgram = new PdfFontFactoryTest.CustomTrueTypeFontProgram(true);
-            PdfType0Font font = (PdfType0Font)PdfFontFactory.CreateFont(fontProgram, PdfEncodings.IDENTITY_H, false);
-            NUnit.Framework.Assert.IsNotNull(font);
-            NUnit.Framework.Assert.IsTrue(font.IsEmbedded());
-        }
-
         private class CustomType1FontProgram : Type1Font {
             public override bool IsBuiltInFont() {
                 return false;
