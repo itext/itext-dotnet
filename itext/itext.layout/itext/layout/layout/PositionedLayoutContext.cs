@@ -41,14 +41,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Layout.Layout {
+    /// <summary>Represents the result of positioning for layout context.</summary>
     public class PositionedLayoutContext : LayoutContext {
         private LayoutArea parentOccupiedArea;
 
+        /// <summary>Creates position for layout context.</summary>
+        /// <param name="area">for the content to be placed on</param>
+        /// <param name="parentOccupiedArea">the parent content to be placed on</param>
         public PositionedLayoutContext(LayoutArea area, LayoutArea parentOccupiedArea)
             : base(area) {
             this.parentOccupiedArea = parentOccupiedArea;
         }
 
+        /// <summary>Gets the value of the parent occupied area.</summary>
+        /// <returns>the parent occupied area</returns>
         public virtual LayoutArea GetParentOccupiedArea() {
             return parentOccupiedArea;
         }

@@ -113,6 +113,11 @@ namespace iText.Layout.Layout {
         /// </remarks>
         protected internal IRenderer overflowRenderer;
 
+        /// <summary>
+        /// The
+        /// <see cref="iText.Layout.Element.AreaBreak"/>
+        /// that will be rendered by this object.
+        /// </summary>
         protected internal AreaBreak areaBreak;
 
         /// <summary>
@@ -259,10 +264,15 @@ namespace iText.Layout.Layout {
             this.overflowRenderer = overflowRenderer;
         }
 
+        /// <summary>Gets areaBreak value.</summary>
+        /// <returns>the areaBreak value</returns>
         public virtual AreaBreak GetAreaBreak() {
             return areaBreak;
         }
 
+        /// <summary>Sets areaBreak value.</summary>
+        /// <param name="areaBreak">the areaBreak value</param>
+        /// <returns>the areaBreak value</returns>
         public virtual iText.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
             this.areaBreak = areaBreak;
             return this;

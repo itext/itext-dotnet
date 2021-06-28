@@ -44,11 +44,14 @@ address: sales@itextpdf.com
 using iText.Kernel.Geom;
 
 namespace iText.Layout.Layout {
+    /// <summary>Represents the root layout area.</summary>
     public class RootLayoutArea : LayoutArea {
         /// <summary>Indicates whether the area already has some placed content or not.</summary>
         protected internal bool emptyArea = true;
 
-        /// <summary><inheritDoc/></summary>
+        /// <summary>Creates the root layout area.</summary>
+        /// <param name="pageNumber">the value number of page</param>
+        /// <param name="bBox">the bounding box</param>
         public RootLayoutArea(int pageNumber, Rectangle bBox)
             : base(pageNumber, bBox) {
         }
