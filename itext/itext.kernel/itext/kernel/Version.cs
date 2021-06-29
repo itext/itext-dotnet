@@ -322,8 +322,7 @@ namespace iText.Kernel {
         }
 
         private static Type GetLicenseKeyClass() {
-            String licenseKeyClassFullName = "iText.License.LicenseKey, itext.licensekey";
-            return GetClassFromLicenseKey(licenseKeyClassFullName);
+            throw new TypeLoadException();
         }
 
         private static Type GetClassFromLicenseKey(String classPartialName) {
