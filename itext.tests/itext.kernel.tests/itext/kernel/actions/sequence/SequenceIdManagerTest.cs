@@ -42,7 +42,7 @@ namespace iText.Kernel.Actions.Sequence {
             SequenceId sequenceId1 = new SequenceId();
             SequenceId sequenceId2 = new SequenceId();
             SequenceIdManager.SetSequenceId(element, sequenceId1);
-            iText.Test.AssertUtil.AssertThrows(MessageFormatUtil.Format(PdfException.ElementAlreadyHasIdentifier, sequenceId1
+            NUnit.Framework.Assert.Catch(MessageFormatUtil.Format(PdfException.ElementAlreadyHasIdentifier, sequenceId1
                 .GetId(), sequenceId2.GetId()), typeof(InvalidOperationException), () => SequenceIdManager.SetSequenceId
                 (element, sequenceId2));
         }
