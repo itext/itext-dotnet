@@ -44,10 +44,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
+using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
@@ -494,6 +496,24 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CopyAnnotationWithoutSubtypeTest() {
+            using (MemoryStream baos = CreateSourceDocumentWithEmptyAnnotation(new MemoryStream())) {
+                using (PdfDocument documentToMerge = new PdfDocument(new PdfReader(new RandomAccessSourceFactory().CreateSource
+                    (baos.ToArray()), new ReaderProperties()))) {
+                    using (MemoryStream resultantBaos = new MemoryStream()) {
+                        using (PdfDocument resultantDocument = new PdfDocument(new PdfWriter(resultantBaos))) {
+                            // We do expect that the following line will not throw any NPE
+                            PdfPage copiedPage = documentToMerge.GetPage(1).CopyTo(resultantDocument);
+                            NUnit.Framework.Assert.AreEqual(1, copiedPage.GetAnnotations().Count);
+                            NUnit.Framework.Assert.IsNull(copiedPage.GetAnnotations()[0].GetSubtype());
+                            resultantDocument.AddPage(copiedPage);
+                        }
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReadPagesInBlocksTest() {
             String srcFile = sourceFolder + "docWithBalancedPageTree.pdf";
             int maxAmountOfPagesReadAtATime = 0;
@@ -620,6 +640,15 @@ namespace iText.Kernel.Pdf {
                 from = parents[i].GetFrom() + parents[i].GetCount();
             }
             return -1;
+        }
+
+        private static MemoryStream CreateSourceDocumentWithEmptyAnnotation(MemoryStream baos) {
+            using (PdfDocument sourceDocument = new PdfDocument(new PdfWriter(baos))) {
+                PdfPage page = sourceDocument.AddNewPage();
+                PdfAnnotation annotation = PdfAnnotation.MakeAnnotation(new PdfDictionary());
+                page.AddAnnotation(annotation);
+                return baos;
+            }
         }
 
         private class CustomPdfReader : PdfReader {
