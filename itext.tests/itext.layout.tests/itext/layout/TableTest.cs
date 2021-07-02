@@ -55,11 +55,10 @@ using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
-using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
-    public class TableTest : ExtendedITextTest {
+    public class TableTest : AbstractTableTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableTest/";
 
@@ -1437,22 +1436,19 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorderTop(new SolidBorder(ColorConstants
                 .ORANGE, 50)).SetBorderBottom(new SolidBorder(ColorConstants.MAGENTA, 100)));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Add(new AreaBreak());
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().SetPadding(0)
                 .SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border
                 .NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell
                 ().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().Add(new Paragraph("Hello"
                 ))));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Add(new AreaBreak());
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetMinHeight(300).SetBorderRight
                 (new SolidBorder(ColorConstants.ORANGE, 5)).SetBorderTop(new SolidBorder(100)).SetBorderBottom(new SolidBorder
                 (ColorConstants.BLUE, 50)));
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -1470,8 +1466,7 @@ namespace iText.Layout {
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
-                .ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -2444,29 +2439,76 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Ignored because the test enters an infinite loop when closing a document. Remove ignore after fixing DEVSIX-3356"
-            )]
-        public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
-            // TODO remove ignore after fixing DEVSIX-3356
-            String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
+        public virtual void FirstRowPartiallyFitWideBottomBorderTest() {
+            String testName = "firstRowPartiallyFitWideBottomBorderTest.pdf";
             String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
-            Table table = new Table(38);
-            table.UseAllAvailableWidth();
-            table.SetFixedLayout();
-            Cell cellNum1 = new Cell(1, 1);
-            table.AddCell(cellNum1);
-            Cell cellNum2 = new Cell(2, 2);
-            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
-                ));
-            cellNum2.Add(img);
-            table.AddCell(cellNum2);
-            Cell cellNum3 = new Cell(2, 36);
-            cellNum3.Add(new Paragraph("text"));
-            table.AddCell(cellNum3);
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(1);
+            table.SetBorderBottom(new SolidBorder(ColorConstants.RED, 250));
+            Cell notFitCell = new Cell();
+            notFitCell.Add(new Paragraph("Some text which should be big enough."));
+            notFitCell.SetFontSize(100);
+            table.AddCell(notFitCell);
+            table.AddCell("row 2 col 1");
+            table.AddCell("row 2 col 2");
             doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CollapseWithNextRowWiderThanWithTableBorderTest() {
+            String testName = "collapseWithNextRowWiderThanWithTableBorderTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(1);
+            Cell cell1 = new Cell();
+            cell1.Add(new Paragraph("Usual bottom border"));
+            cell1.SetHeight(300);
+            table.AddCell(cell1);
+            Cell cell2 = new Cell();
+            cell2.Add(new Paragraph("Top border: 600pt"));
+            cell2.SetBorderTop(new SolidBorder(600));
+            table.AddCell(cell2);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableBottomBorderWideTest() {
+            String testName = "tableBottomBorderWideTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1).SetBorderBottom(new SolidBorder(ColorConstants.RED, 500)).AddCell(new Cell().Add
+                (new Paragraph(TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new 
+                Paragraph("Hello World")));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+            doc.Add(table);
+            AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
