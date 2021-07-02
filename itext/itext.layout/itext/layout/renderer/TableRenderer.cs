@@ -891,7 +891,13 @@ namespace iText.Layout.Renderer {
                     }
                     // Apply borders if there is no footer
                     if (null == footerRenderer) {
-                        if (0 != this.childRenderers.Count) {
+                        // If split renderer does not have any rows, it can mean two things:
+                        // - either nothing is placed and the top border, which have been already applied,
+                        // should be reverted
+                        // - or the only placed row is placed partially.
+                        // In the latter case the number of added child renderers should equal to the number of the cells
+                        // in the current row (currChildRenderers stands for it)
+                        if (!splitResult[0].rows.IsEmpty() || currChildRenderers.Count == childRenderers.Count) {
                             bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, false);
                         }
                         else {

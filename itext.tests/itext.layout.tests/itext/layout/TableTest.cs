@@ -2576,6 +2576,58 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
+            String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Table table = new Table(38);
+            table.UseAllAvailableWidth();
+            table.SetFixedLayout();
+            Cell cellNum1 = new Cell(1, 1);
+            table.AddCell(cellNum1);
+            Cell cellNum2 = new Cell(2, 2);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
+                ));
+            cellNum2.Add(img);
+            table.AddCell(cellNum2);
+            Cell cellNum3 = new Cell(2, 36);
+            cellNum3.Add(new Paragraph("text"));
+            table.AddCell(cellNum3);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void FirstRowNotFitBigRowspanTest() {
+            String testName = "firstRowNotFitBigRowspanTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4);
+            Table table = new Table(4);
+            table.AddCell("row 1 col 1");
+            Cell notFitCell = new Cell(2, 1);
+            notFitCell.Add(new Paragraph("row 1-2 col 2"));
+            notFitCell.SetFontSize(1000);
+            table.AddCell(notFitCell);
+            Cell fitCell = new Cell(2, 2);
+            fitCell.Add(new Paragraph("row 1-2 col 3-4"));
+            table.AddCell(fitCell);
+            table.AddCell("row 2 col 1");
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarFullTest() {
             // TODO DEVSIX-5250 The first column should be fully red
             String filename = "bigRowSpanTooFarFullTest.pdf";
