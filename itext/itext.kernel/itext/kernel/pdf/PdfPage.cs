@@ -511,7 +511,7 @@ namespace iText.Kernel.Pdf {
             iText.Kernel.Pdf.PdfPage page = GetDocument().GetPageFactory().CreatePdfPage(dictionary);
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
-                if (annot.GetSubtype().Equals(PdfName.Link)) {
+                if (PdfName.Link.Equals(annot.GetSubtype())) {
                     GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
