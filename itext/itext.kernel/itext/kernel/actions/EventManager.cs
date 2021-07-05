@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Actions.Exceptions;
 
 namespace iText.Kernel.Actions {
@@ -35,7 +36,7 @@ namespace iText.Kernel.Actions {
         private static readonly iText.Kernel.Actions.EventManager INSTANCE = new iText.Kernel.Actions.EventManager
             ();
 
-        private readonly IList<IBaseEventHandler> handlers = new List<IBaseEventHandler>();
+        private readonly ICollection<IBaseEventHandler> handlers = new LinkedHashSet<IBaseEventHandler>();
 
         private EventManager() {
             handlers.Add(ProductEventHandler.INSTANCE);

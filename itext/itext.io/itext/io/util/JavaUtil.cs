@@ -174,7 +174,7 @@ namespace iText.IO.Util {
                 return 0;
             int result = 1;
             foreach (T element in a) {
-                result = 31*result + element.GetHashCode();
+                result = 31*result + (element == null ? 0 : element.GetHashCode());
             }
             return result;
         }

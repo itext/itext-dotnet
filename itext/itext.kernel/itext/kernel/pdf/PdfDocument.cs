@@ -48,6 +48,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Actions;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter;
@@ -64,6 +65,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Statistics;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.XMP;
@@ -722,8 +724,11 @@ namespace iText.Kernel.Pdf {
                         throw new PdfException(KernelExceptionMessageConstant.CANNOT_CLOSE_DOCUMENT_WITH_ALREADY_FLUSHED_PDF_CATALOG
                             );
                     }
+                    EventManager manager = EventManager.GetInstance();
+                    manager.OnEvent(new NumberOfPagesStatisticsEvent(catalog.GetPageTree().GetNumberOfPages(), ITextCoreProductData
+                        .GetInstance()));
                     // The event will prepare document for flushing, i.e. will set an appropriate producer line
-                    EventManager.GetInstance().OnEvent(new FlushPdfDocumentEvent(this));
+                    manager.OnEvent(new FlushPdfDocumentEvent(this));
                     UpdateXmpMetadata();
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
@@ -868,6 +873,13 @@ namespace iText.Kernel.Pdf {
                         .GetIsoBytes(modifiedDocumentId.GetValue()));
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
+                    if (writer.GetOutputStream() is CountOutputStream) {
+                        long amountOfBytes = ((CountOutputStream)writer.GetOutputStream()).GetAmountOfWrittenBytes();
+                        manager.OnEvent(new SizeOfPdfStatisticsEvent(amountOfBytes, ITextCoreProductData.GetInstance()));
+                    }
+                    foreach (ICounter counter in GetCounters()) {
+                        counter.OnDocumentWritten(writer.GetCurrentPos());
+                    }
                 }
                 catalog.GetPageTree().ClearPageRefs();
                 RemoveAllHandlers();

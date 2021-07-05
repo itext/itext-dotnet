@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(FileUtil.WrapWithBufferedOutputStream(os)) {
+            : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
             if (properties.debugMode) {
                 duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());

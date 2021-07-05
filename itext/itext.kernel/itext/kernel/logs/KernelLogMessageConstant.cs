@@ -47,6 +47,8 @@ namespace iText.Kernel.Logs {
     public sealed class KernelLogMessageConstant {
         public const String DCTDECODE_FILTER_DECODING = "DCTDecode filter decoding into the " + "bit map is not supported. The stream data would be left in JPEG baseline format";
 
+        public const String INVALID_STATISTICS_NAME = "Statistics name {0} is invalid. Cannot find corresponding statistics aggregator.";
+
         public const String FEATURE_IS_NOT_SUPPORTED = "Exception was thrown: {0}. The feature {1} is probably not supported by your XML processor.";
 
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY = "Full compression mode requested "
