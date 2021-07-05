@@ -559,6 +559,10 @@ namespace iText.Kernel {
 
         public const String QuadPointArrayLengthIsNotAMultipleOfEight = "The QuadPoint Array length is not a multiple of 8.";
 
+        public const String CORRUPTED_OUTLINE_NO_PARENT_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required parent entry.";
+
+        public const String CORRUPTED_OUTLINE_NO_TITLE_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required title entry.";
+
         /// <summary>Object for more details</summary>
         protected internal Object @object;
 

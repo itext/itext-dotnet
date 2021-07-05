@@ -798,25 +798,31 @@ namespace iText.Kernel.Pdf {
         /// <see cref="outlines"/>
         /// iteratively
         /// </summary>
-        private void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
+        internal virtual void ConstructOutlines(PdfDictionary outlineRoot, IDictionary<String, PdfObject> names) {
             if (outlineRoot == null) {
                 return;
             }
             PdfDictionary first = outlineRoot.GetAsDictionary(PdfName.First);
             PdfDictionary current = first;
-            PdfDictionary next;
-            PdfDictionary parent;
             Dictionary<PdfDictionary, PdfOutline> parentOutlineMap = new Dictionary<PdfDictionary, PdfOutline>();
             outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
             PdfOutline parentOutline = outlines;
             parentOutlineMap.Put(outlineRoot, parentOutline);
             while (current != null) {
                 first = current.GetAsDictionary(PdfName.First);
-                next = current.GetAsDictionary(PdfName.Next);
-                parent = current.GetAsDictionary(PdfName.Parent);
+                PdfDictionary next = current.GetAsDictionary(PdfName.Next);
+                PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
+                if (null == parent) {
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_PARENT_ENTRY, current.indirectReference
+                        ));
+                }
+                PdfString title = current.GetAsString(PdfName.Title);
+                if (null == title) {
+                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_TITLE_ENTRY, current.indirectReference
+                        ));
+                }
                 parentOutline = parentOutlineMap.Get(parent);
-                PdfOutline currentOutline = new PdfOutline(current.GetAsString(PdfName.Title).ToUnicodeString(), current, 
-                    parentOutline);
+                PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
                 AddOutlineToPage(currentOutline, current, names);
                 parentOutline.GetAllChildren().Add(currentOutline);
                 if (first != null) {
