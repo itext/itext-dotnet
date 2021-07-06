@@ -51,6 +51,8 @@ using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
+using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
 
@@ -142,28 +144,31 @@ namespace iText.Layout.Renderer {
         }
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script, Object
-             typographyConfig) {
+             typographyConfig, SequenceId sequenceId, IMetaInfo metaInfo) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
-                    ), typeof(UnicodeScript?), typeof(Object) }, fontProgram, text, script, typographyConfig);
+                    ), typeof(UnicodeScript?), typeof(Object), typeof(SequenceId), typeof(IMetaInfo) }, fontProgram, text, 
+                    script, typographyConfig, sequenceId, metaInfo);
             }
         }
 
-        internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
+        internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text, SequenceId sequenceId, IMetaInfo
+             metaInfo) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
-                     }, fontProgram, text);
+                    , typeof(SequenceId), typeof(IMetaInfo) }, fontProgram, text, sequenceId, metaInfo);
             }
         }
 
-        //            Shaper.applyKerning(fontProgram, text);
-        internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
+        //            Shaper.applyKerning(fontProgram, text,  sequenceId, metaInfo);
+        internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds, SequenceId sequenceId
+            , IMetaInfo metaInfo) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.LogWarning(iText.IO.LogMessageConstant.TYPOGRAPHY_NOT_FOUND);
             }
@@ -188,17 +193,21 @@ namespace iText.Layout.Renderer {
                 }
                 int len = unicodeIds.Length;
                 byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_CHARACTER_MAP, GET_CHARACTER_TYPES, new Type[]
-                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //            byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, len);
+                     { typeof(int[]), typeof(int), typeof(int), typeof(SequenceId), typeof(IMetaInfo) }, unicodeIds, 0, len
+                    , sequenceId, metaInfo);
+                //            byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, len, sequenceId, metaInfo);
                 byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_TYPES, new Type[]
-                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //            byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, len);
+                     { typeof(int[]), typeof(int), typeof(int), typeof(SequenceId), typeof(IMetaInfo) }, unicodeIds, 0, len
+                    , sequenceId, metaInfo);
+                //            byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, len, sequenceId, metaInfo);
                 int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_VALUES, new Type[]
-                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //            int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, len);
+                     { typeof(int[]), typeof(int), typeof(int), typeof(SequenceId), typeof(IMetaInfo) }, unicodeIds, 0, len
+                    , sequenceId, metaInfo);
+                //            int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, len, sequenceId, metaInfo);
                 Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, new Type[] { typeof(byte[]), typeof(
-                    byte[]), typeof(int[]), typeof(byte) }, types, pairTypes, pairValues, direction);
-                //            BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction);
+                    byte[]), typeof(int[]), typeof(byte), typeof(SequenceId), typeof(IMetaInfo) }, types, pairTypes, pairValues
+                    , direction, sequenceId, metaInfo);
+                //            BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction, sequenceId, metaInfo);
                 return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, GET_LEVELS, bidiReorder, new Type[] { typeof(
                     int[]) }, new int[] { len });
             }

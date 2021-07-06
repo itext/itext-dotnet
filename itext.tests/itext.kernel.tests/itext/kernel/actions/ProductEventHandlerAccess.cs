@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Sequence;
 

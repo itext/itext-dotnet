@@ -60,7 +60,6 @@ namespace iText.Kernel.Actions.Events {
                         NUnit.Framework.Assert.AreEqual("sequenceId-testing", sequenceEvent.GetEventType());
                         NUnit.Framework.Assert.AreEqual("test-product-" + (i - initialDocumentEventsNumber), sequenceEvent.GetProductName
                             ());
-                        NUnit.Framework.Assert.IsNull(sequenceEvent.GetMetaInfo());
                         NUnit.Framework.Assert.AreEqual(sequenceId, sequenceEvent.GetSequenceId());
                     }
                 }
@@ -97,7 +96,6 @@ namespace iText.Kernel.Actions.Events {
                         NUnit.Framework.Assert.AreEqual("sequenceId-testing", sequenceEvent.GetEventType());
                         NUnit.Framework.Assert.AreEqual("test-product-" + (i - initialDocumentEventsNumber), sequenceEvent.GetProductName
                             ());
-                        NUnit.Framework.Assert.IsNull(sequenceEvent.GetMetaInfo());
                         NUnit.Framework.Assert.AreEqual(sequenceId, sequenceEvent.GetSequenceId());
                     }
                 }

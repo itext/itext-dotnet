@@ -21,12 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
 
-namespace iText.Kernel.Actions.Events {
+namespace iText.Kernel.Actions {
     /// <summary>Abstract class which defines product process event.</summary>
     /// <remarks>Abstract class which defines product process event. Only for internal usage.</remarks>
     public abstract class AbstractProductProcessITextEvent : AbstractContextBasedITextEvent {
@@ -82,7 +82,7 @@ namespace iText.Kernel.Actions.Events {
 
         /// <summary>
         /// Retrieves an
-        /// <see cref="EventConfirmationType">event confirmation type</see>.
+        /// <see cref="iText.Kernel.Actions.Events.EventConfirmationType">event confirmation type</see>.
         /// </summary>
         /// <returns>
         /// value of event confirmation type which defines when the event should be confirmed

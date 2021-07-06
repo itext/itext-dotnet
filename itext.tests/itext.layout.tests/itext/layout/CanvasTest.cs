@@ -44,7 +44,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Colors;
 using iText.Kernel.Counter.Event;

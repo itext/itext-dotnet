@@ -44,7 +44,7 @@ namespace iText.Kernel.Actions {
 
         /// <summary>Obtains stored meta info associated with the event.</summary>
         /// <returns>meta info</returns>
-        public virtual IMetaInfo GetMetaInfo() {
+        internal virtual IMetaInfo GetMetaInfo() {
             return metaInfo;
         }
 

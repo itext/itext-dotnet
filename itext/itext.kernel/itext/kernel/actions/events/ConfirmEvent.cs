@@ -21,17 +21,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Actions;
 using iText.Kernel.Actions.Sequence;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>
     /// Used to confirm that process associated with some
-    /// <see cref="AbstractProductProcessITextEvent"/>
+    /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>
     /// ended successfully.
     /// </summary>
-    public class ConfirmEvent : AbstractProductProcessITextEvent {
-        private readonly AbstractProductProcessITextEvent confirmedEvent;
-
+    public class ConfirmEvent : AbstractEventWrapper {
         /// <summary>Creates an instance of confirmation event.</summary>
         /// <param name="updatedSequenceId">
         /// is a
@@ -43,9 +42,7 @@ namespace iText.Kernel.Actions.Events {
         /// </param>
         /// <param name="confirmedEvent">is an event to confirm</param>
         public ConfirmEvent(SequenceId updatedSequenceId, AbstractProductProcessITextEvent confirmedEvent)
-            : base(updatedSequenceId, confirmedEvent.GetProductData(), confirmedEvent.GetMetaInfo(), EventConfirmationType
-                .UNCONFIRMABLE) {
-            this.confirmedEvent = confirmedEvent;
+            : base(updatedSequenceId, confirmedEvent, EventConfirmationType.UNCONFIRMABLE) {
         }
 
         /// <summary>Creates an instance of confirmation event.</summary>
@@ -54,29 +51,22 @@ namespace iText.Kernel.Actions.Events {
             : this(confirmedEvent.GetSequenceId(), confirmedEvent) {
         }
 
-        public override String GetEventType() {
-            return confirmedEvent.GetEventType();
-        }
-
-        public override String GetProductName() {
-            return confirmedEvent.GetProductName();
-        }
-
         /// <summary>
         /// Returns the
-        /// <see cref="AbstractProductProcessITextEvent"/>
+        /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>
         /// associated with confirmed process.
         /// </summary>
         /// <returns>confirmed event</returns>
         public virtual AbstractProductProcessITextEvent GetConfirmedEvent() {
-            if (confirmedEvent is iText.Kernel.Actions.Events.ConfirmEvent) {
-                return ((iText.Kernel.Actions.Events.ConfirmEvent)confirmedEvent).GetConfirmedEvent();
+            AbstractProductProcessITextEvent @event = GetEvent();
+            if (@event is iText.Kernel.Actions.Events.ConfirmEvent) {
+                return ((iText.Kernel.Actions.Events.ConfirmEvent)@event).GetConfirmedEvent();
             }
-            return confirmedEvent;
+            return @event;
         }
 
         public override Type GetClassFromContext() {
-            return confirmedEvent.GetClassFromContext();
+            return GetEvent().GetClassFromContext();
         }
     }
 }

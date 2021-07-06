@@ -2363,6 +2363,24 @@ namespace iText.Layout.Renderer {
             return isFirstOnRootArea;
         }
 
+        /// <summary>Gets pdf document from root renderers.</summary>
+        /// <returns>PdfDocument, or null if there are no document</returns>
+        internal virtual PdfDocument GetPdfDocument() {
+            RootRenderer renderer = GetRootRenderer();
+            if (renderer is DocumentRenderer) {
+                Document document = ((DocumentRenderer)renderer).document;
+                return document.GetPdfDocument();
+            }
+            else {
+                if (renderer is CanvasRenderer) {
+                    return ((CanvasRenderer)renderer).canvas.GetPdfDocument();
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
         internal virtual RootRenderer GetRootRenderer() {
             IRenderer currentRenderer = this;
             while (currentRenderer is iText.Layout.Renderer.AbstractRenderer) {

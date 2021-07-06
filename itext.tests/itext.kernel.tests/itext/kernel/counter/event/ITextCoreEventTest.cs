@@ -56,7 +56,6 @@ namespace iText.Kernel.Counter.Event {
                 .ON_CLOSE);
             NUnit.Framework.Assert.AreEqual(ITextCoreEvent.PROCESS_PDF, @event.GetEventType());
             NUnit.Framework.Assert.AreEqual(ProductNameConstant.ITEXT_CORE, @event.GetProductName());
-            NUnit.Framework.Assert.AreEqual("meta data", ((TestMetaInfo)@event.GetMetaInfo()).GetMetaData());
             NUnit.Framework.Assert.AreEqual(EventConfirmationType.ON_CLOSE, @event.GetConfirmationType());
             NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetPublicProductName(), @event.GetProductData

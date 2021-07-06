@@ -48,7 +48,10 @@ using Microsoft.Extensions.Logging;
 using iText.IO;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
+using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -1535,8 +1538,16 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray
-                    (unicodeIdsReorderingList)) : null;
+                if (unicodeIdsReorderingList.Count > 0) {
+                    PdfDocument pdfDocument = GetPdfDocument();
+                    SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
+                    IMetaInfo metaInfo = pdfDocument == null ? null : pdfDocument.GetMetaInfo();
+                    levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
+                        , metaInfo);
+                }
+                else {
+                    levels = null;
+                }
             }
         }
 

@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel;
-using iText.Kernel.Actions.Events;
+using iText.Kernel.Actions;
 using iText.Kernel.Actions.Session;
 
 namespace iText.Kernel.Actions.Processors {

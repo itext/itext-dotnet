@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Actions.Events;
+using iText.Kernel.Actions;
 using iText.Kernel.Actions.Session;
 
 namespace iText.Kernel.Actions.Processors {
@@ -29,7 +29,7 @@ namespace iText.Kernel.Actions.Processors {
     public interface ITextProductEventProcessor {
         /// <summary>
         /// Handles the
-        /// <see cref="iText.Kernel.Actions.Events.AbstractProductProcessITextEvent"/>.
+        /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>.
         /// </summary>
         /// <param name="event">to handle</param>
         void OnEvent(AbstractProductProcessITextEvent @event);

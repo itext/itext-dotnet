@@ -21,22 +21,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Actions;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>
     /// A wrapper for a
-    /// <see cref="AbstractProductProcessITextEvent"/>
+    /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>
     /// storing additional data about the event.
     /// </summary>
     /// <remarks>
     /// A wrapper for a
-    /// <see cref="AbstractProductProcessITextEvent"/>
+    /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>
     /// storing additional data about the event.
     /// If wrapped event is immutable then the instance of the wrapper is immutable too.
     /// </remarks>
-    public class ConfirmedEventWrapper : AbstractProductProcessITextEvent {
-        private readonly AbstractProductProcessITextEvent @event;
-
+    public class ConfirmedEventWrapper : AbstractEventWrapper {
         private readonly String productUsageType;
 
         private readonly String producerLine;
@@ -44,7 +43,7 @@ namespace iText.Kernel.Actions.Events {
         /// <summary>Creates a wrapper for the event with additional data about the event.</summary>
         /// <param name="event">
         /// is a
-        /// <see cref="AbstractProductProcessITextEvent"/>
+        /// <see cref="iText.Kernel.Actions.AbstractProductProcessITextEvent"/>
         /// to wrap
         /// </param>
         /// <param name="productUsageType">is a product usage marker</param>
@@ -55,17 +54,9 @@ namespace iText.Kernel.Actions.Events {
         /// </param>
         public ConfirmedEventWrapper(AbstractProductProcessITextEvent @event, String productUsageType, String producerLine
             )
-            : base(@event.GetSequenceId(), @event.GetProductData(), @event.GetMetaInfo(), EventConfirmationType.UNCONFIRMABLE
-                ) {
-            this.@event = @event;
+            : base(@event, EventConfirmationType.UNCONFIRMABLE) {
             this.productUsageType = productUsageType;
             this.producerLine = producerLine;
-        }
-
-        /// <summary>Obtains the wrapped event.</summary>
-        /// <returns>wrapped event</returns>
-        public virtual AbstractProductProcessITextEvent GetEvent() {
-            return @event;
         }
 
         /// <summary>Obtains the license type for the product which generated the event.</summary>
@@ -83,14 +74,6 @@ namespace iText.Kernel.Actions.Events {
         /// <returns>producer line</returns>
         public virtual String GetProducerLine() {
             return producerLine;
-        }
-
-        public override String GetEventType() {
-            return @event.GetEventType();
-        }
-
-        public override String GetProductName() {
-            return @event.GetProductName();
         }
     }
 }

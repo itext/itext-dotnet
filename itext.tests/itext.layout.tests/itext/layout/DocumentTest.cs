@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Actions;
-using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Event;
 using iText.Kernel.Geom;
