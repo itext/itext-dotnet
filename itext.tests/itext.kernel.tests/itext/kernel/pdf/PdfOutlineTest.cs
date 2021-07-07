@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -452,6 +454,42 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConstructOutlinesNoParentTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.Put(PdfName.First, first);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
+                        (outlineDictionary, new Dictionary<String, PdfObject>()));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_PARENT_ENTRY, first
+                        .indirectReference), exception.Message);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConstructOutlinesNoTitleTest() {
+            using (MemoryStream baos = new MemoryStream()) {
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos))) {
+                    pdfDocument.AddNewPage();
+                    PdfDictionary first = new PdfDictionary();
+                    first.MakeIndirect(pdfDocument);
+                    PdfDictionary outlineDictionary = new PdfDictionary();
+                    outlineDictionary.MakeIndirect(pdfDocument);
+                    outlineDictionary.Put(PdfName.First, first);
+                    first.Put(PdfName.Parent, outlineDictionary);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
+                        (outlineDictionary, new Dictionary<String, PdfObject>()));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_TITLE_ENTRY, first
+                        .indirectReference), exception.Message);
+                }
+            }
         }
     }
 }
