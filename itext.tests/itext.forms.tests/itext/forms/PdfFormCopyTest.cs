@@ -50,10 +50,10 @@ using iText.Test.Attributes;
 namespace iText.Forms {
     public class PdfFormCopyTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldsCopyTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormCopyTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/PdfFormFieldsCopyTest/";
+             + "/test/itext/forms/PdfFormCopyTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -417,9 +417,9 @@ namespace iText.Forms {
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditTextFields() {
             //TODO: update after DEVSIX-2354
-            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
-            String cmpFileName = sourceFolder + "/cmp_copyAndEditTextFields.pdf";
+            String cmpFileName = sourceFolder + "cmp_copyAndEditTextFields.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
@@ -442,9 +442,9 @@ namespace iText.Forms {
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditCheckboxes() {
             //TODO: update after DEVSIX-2354
-            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
-            String cmpFileName = sourceFolder + "/cmp_copyAndEditCheckboxes.pdf";
+            String cmpFileName = sourceFolder + "cmp_copyAndEditCheckboxes.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
@@ -465,9 +465,9 @@ namespace iText.Forms {
         [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 51)]
         public virtual void CopyAndEditRadioButtons() {
             //TODO: update after DEVSIX-2354
-            String srcFileName = sourceFolder + "/checkPdfFormCopy_Source.pdf";
+            String srcFileName = sourceFolder + "checkPdfFormCopy_Source.pdf";
             String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
-            String cmpFileName = sourceFolder + "/cmp_copyAndEditRadioButtons.pdf";
+            String cmpFileName = sourceFolder + "cmp_copyAndEditRadioButtons.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
