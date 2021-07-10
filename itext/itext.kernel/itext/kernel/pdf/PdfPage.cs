@@ -1743,6 +1743,8 @@ namespace iText.Kernel.Pdf {
                 RebuildFormFieldParent(oldParent, newParent, toDocument);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
+                    // no kids are added here, since we do not know at this point which pages are to be copied,
+                    // hence we do not know which annotations we should copy
                     newParent.Put(PdfName.Kids, new PdfArray());
                 }
                 newField.Put(PdfName.Parent, newParent);
