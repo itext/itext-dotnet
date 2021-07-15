@@ -103,6 +103,11 @@ namespace iText.IO.Util {
             return new SingletonList<T>(o);
         }
 
+        public static IDictionary<TKey, TValue> SingletonMap<TKey, TValue>(TKey key, TValue value)
+        {
+            return new SingletonDictionary<TKey,TValue>(key, value);
+        }
+
         public static void Sort<T>(IList<T> list) {
             Sort(list, null);
         }

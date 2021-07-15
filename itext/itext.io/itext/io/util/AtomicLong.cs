@@ -60,6 +60,11 @@ namespace iText.IO.Util
         public void Set(long value) {
             System.Threading.Interlocked.Exchange(ref num, value);
         }
+        
+        public void Add(long value)
+        {
+            System.Threading.Interlocked.Add(ref num, value);
+        }
 
         public long Get() {
             return System.Threading.Interlocked.Read(ref num);

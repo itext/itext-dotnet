@@ -62,6 +62,17 @@ namespace iText.IO.Util {
             link = new LinkedList<KeyValuePair<TKey,TValue>>();
         }
 
+        public LinkedDictionary(IDictionary<TKey, TValue> dictionary) : this()
+        {
+            foreach (KeyValuePair<TKey,TValue> keyValuePair in dictionary)
+            {
+                LinkedListNode<KeyValuePair<TKey,TValue>> v =
+                    new LinkedListNode<KeyValuePair<TKey,TValue>>(new KeyValuePair<TKey,TValue>(keyValuePair.Key, keyValuePair.Value));
+                dic.Add(keyValuePair.Key, v);
+                link.AddLast(v);
+            }
+        }
+
         public virtual void Add(TKey key, TValue value) {
             LinkedListNode<KeyValuePair<TKey,TValue>> v = new LinkedListNode<KeyValuePair<TKey,TValue>>(new KeyValuePair<TKey,TValue>(key, value));
             dic.Add(key, v);
