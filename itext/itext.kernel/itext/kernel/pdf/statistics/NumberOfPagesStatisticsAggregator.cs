@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Actions;
@@ -64,7 +63,7 @@ namespace iText.Kernel.Pdf.Statistics {
 
         private readonly Object Lock = new Object();
 
-        private readonly IDictionary<String, AtomicLong> numberOfDocuments = new ConcurrentDictionary<String, AtomicLong
+        private readonly IDictionary<String, AtomicLong> numberOfDocuments = new LinkedDictionary<String, AtomicLong
             >();
 
         /// <summary>Aggregates number of pages from the provided event.</summary>
@@ -102,7 +101,27 @@ namespace iText.Kernel.Pdf.Statistics {
         /// <see cref="System.Collections.IDictionary{K, V}"/>
         /// </returns>
         public override Object RetrieveAggregation() {
-            return numberOfDocuments;
+            return JavaCollectionsUtil.UnmodifiableMap(numberOfDocuments);
+        }
+
+        /// <summary>Merges data about amounts of ranges of pages from the provided aggregator into this aggregator.</summary>
+        /// <param name="aggregator">
+        /// 
+        /// <see cref="NumberOfPagesStatisticsAggregator"/>
+        /// from which data will be taken.
+        /// </param>
+        public override void Merge(AbstractStatisticsAggregator aggregator) {
+            if (!(aggregator is NumberOfPagesStatisticsAggregator)) {
+                return;
+            }
+            IDictionary<String, AtomicLong> numberOfDocuments = ((NumberOfPagesStatisticsAggregator)aggregator).numberOfDocuments;
+            lock (Lock) {
+                MapUtil.Merge(this.numberOfDocuments, numberOfDocuments, (el1, el2) => {
+                    el1.Add(el2.Get());
+                    return el1;
+                }
+                );
+            }
         }
     }
 }

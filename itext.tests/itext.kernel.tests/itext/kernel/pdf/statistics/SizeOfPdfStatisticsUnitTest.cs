@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel;
@@ -72,7 +71,6 @@ namespace iText.Kernel.Pdf.Statistics {
             @event = new SizeOfPdfStatisticsEvent(999999999999L, ITextCoreProductData.GetInstance());
             aggregator.Aggregate(@event);
             Object aggregation = aggregator.RetrieveAggregation();
-            NUnit.Framework.Assert.IsTrue(aggregation is IDictionary);
             IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
             NUnit.Framework.Assert.AreEqual(4, castedAggregation.Count);
             long numberOfPages = castedAggregation.Get("<128kb").Get();
@@ -90,7 +88,6 @@ namespace iText.Kernel.Pdf.Statistics {
         public virtual void NothingAggregatedTest() {
             SizeOfPdfStatisticsAggregator aggregator = new SizeOfPdfStatisticsAggregator();
             Object aggregation = aggregator.RetrieveAggregation();
-            NUnit.Framework.Assert.IsTrue(aggregation is IDictionary);
             IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
             NUnit.Framework.Assert.IsTrue(castedAggregation.IsEmpty());
         }
@@ -100,9 +97,41 @@ namespace iText.Kernel.Pdf.Statistics {
             SizeOfPdfStatisticsAggregator aggregator = new SizeOfPdfStatisticsAggregator();
             aggregator.Aggregate(new NumberOfPagesStatisticsEvent(200, ITextCoreProductData.GetInstance()));
             Object aggregation = aggregator.RetrieveAggregation();
-            NUnit.Framework.Assert.IsTrue(aggregation is IDictionary);
             IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
             NUnit.Framework.Assert.IsTrue(castedAggregation.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeTest() {
+            SizeOfPdfStatisticsAggregator aggregator1 = new SizeOfPdfStatisticsAggregator();
+            SizeOfPdfStatisticsAggregator aggregator2 = new SizeOfPdfStatisticsAggregator();
+            SizeOfPdfStatisticsEvent @event = new SizeOfPdfStatisticsEvent(100, ITextCoreProductData.GetInstance());
+            aggregator1.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(128 * 1024, ITextCoreProductData.GetInstance());
+            aggregator1.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(128 * 1024 + 1, ITextCoreProductData.GetInstance());
+            aggregator1.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(100000000, ITextCoreProductData.GetInstance());
+            aggregator1.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(1024 * 1024, ITextCoreProductData.GetInstance());
+            aggregator2.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(167972160, ITextCoreProductData.GetInstance());
+            aggregator2.Aggregate(@event);
+            @event = new SizeOfPdfStatisticsEvent(999999999999L, ITextCoreProductData.GetInstance());
+            aggregator2.Aggregate(@event);
+            aggregator1.Merge(aggregator2);
+            Object aggregation = aggregator1.RetrieveAggregation();
+            IDictionary<String, AtomicLong> castedAggregation = (IDictionary<String, AtomicLong>)aggregation;
+            NUnit.Framework.Assert.AreEqual(4, castedAggregation.Count);
+            long numberOfPages = castedAggregation.Get("<128kb").Get();
+            NUnit.Framework.Assert.AreEqual(2, numberOfPages);
+            numberOfPages = castedAggregation.Get("128kb-1mb").Get();
+            NUnit.Framework.Assert.AreEqual(2, numberOfPages);
+            NUnit.Framework.Assert.IsNull(castedAggregation.Get("1mb-16mb"));
+            numberOfPages = castedAggregation.Get("16mb-128mb").Get();
+            NUnit.Framework.Assert.AreEqual(1, numberOfPages);
+            numberOfPages = castedAggregation.Get("128mb+").Get();
+            NUnit.Framework.Assert.AreEqual(2, numberOfPages);
         }
     }
 }

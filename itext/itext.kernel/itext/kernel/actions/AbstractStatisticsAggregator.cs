@@ -40,5 +40,9 @@ namespace iText.Kernel.Actions {
         /// <see cref="System.Object"/>
         /// </returns>
         public abstract Object RetrieveAggregation();
+
+        /// <summary>Merges data from the provided aggregator into this aggregator.</summary>
+        /// <param name="aggregator">from which data will be taken.</param>
+        public abstract void Merge(AbstractStatisticsAggregator aggregator);
     }
 }

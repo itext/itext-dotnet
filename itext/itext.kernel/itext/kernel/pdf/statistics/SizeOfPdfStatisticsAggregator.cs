@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Actions;
@@ -66,7 +65,7 @@ namespace iText.Kernel.Pdf.Statistics {
 
         private readonly Object Lock = new Object();
 
-        private readonly IDictionary<String, AtomicLong> numberOfDocuments = new ConcurrentDictionary<String, AtomicLong
+        private readonly IDictionary<String, AtomicLong> numberOfDocuments = new LinkedDictionary<String, AtomicLong
             >();
 
         /// <summary>Aggregates size of the PDF document from the provided event.</summary>
@@ -98,13 +97,35 @@ namespace iText.Kernel.Pdf.Statistics {
             }
         }
 
-        /// <summary>Retrieves Map where keys are ranges of pages and values are the amounts of such PDF documents.</summary>
+        /// <summary>Retrieves Map where keys are ranges of document sizes and values are the amounts of such PDF documents.
+        ///     </summary>
         /// <returns>
         /// aggregated
         /// <see cref="System.Collections.IDictionary{K, V}"/>
         /// </returns>
         public override Object RetrieveAggregation() {
-            return numberOfDocuments;
+            return JavaCollectionsUtil.UnmodifiableMap(numberOfDocuments);
+        }
+
+        /// <summary>Merges data about amounts of ranges of document sizes from the provided aggregator into this aggregator.
+        ///     </summary>
+        /// <param name="aggregator">
+        /// 
+        /// <see cref="SizeOfPdfStatisticsAggregator"/>
+        /// from which data will be taken.
+        /// </param>
+        public override void Merge(AbstractStatisticsAggregator aggregator) {
+            if (!(aggregator is SizeOfPdfStatisticsAggregator)) {
+                return;
+            }
+            IDictionary<String, AtomicLong> numberOfDocuments = ((SizeOfPdfStatisticsAggregator)aggregator).numberOfDocuments;
+            lock (Lock) {
+                MapUtil.Merge(this.numberOfDocuments, numberOfDocuments, (el1, el2) => {
+                    el1.Add(el2.Get());
+                    return el1;
+                }
+                );
+            }
         }
     }
 }

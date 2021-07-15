@@ -34,8 +34,7 @@ namespace iText.Kernel.Actions {
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.Kernel.Actions.AbstractStatisticsEvent
             ));
 
-        /// <seealso cref="AbstractProductITextEvent.AbstractProductITextEvent(iText.Kernel.Actions.Data.ProductData)"
-        ///     />
+        /// <seealso>AbstractProductITextEvent#AbstractProductITextEvent(ProductData).</seealso>
         protected internal AbstractStatisticsEvent(ProductData productData)
             : base(productData) {
         }
