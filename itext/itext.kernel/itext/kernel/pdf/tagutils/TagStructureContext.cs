@@ -49,6 +49,7 @@ using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
+using System.Linq;
 
 namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>
@@ -592,8 +593,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             IList<IStructureNode> rootKids = document.GetStructTreeRoot().GetKids();
             IRoleMappingResolver mapping = null;
             if (rootKids.Count > 0) {
-                PdfStructElem firstKid = (PdfStructElem)rootKids[0];
-                mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole().GetValue(), firstKid.GetNamespace
+                PdfStructElem firstKid = (PdfStructElem)rootKids.Where(r => r.GetRole() != null).FirstOrDefault();
+                mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole()?.GetValue(), firstKid.GetNamespace
                     ());
             }
             if (rootKids.Count == 1 && mapping != null && mapping.CurrentRoleIsStandard() && IsRoleAllowedToBeRoot(mapping
