@@ -31,11 +31,11 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NoObjectBoundingBoxTest() {
             ISvgNodeRenderer subTreeRoot = new SvgTagSvgNodeRenderer();
             PdfRootSvgNodeRenderer renderer = new PdfRootSvgNodeRenderer(subTreeRoot);
-            NUnit.Framework.Assert.That(() =>
-                {
-                    renderer.GetObjectBoundingBox(null);
-                }
-                , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX));
+            NUnit.Framework.Assert.That(() =>  {
+                renderer.GetObjectBoundingBox(null);
+            }
+            , NUnit.Framework.Throws.InstanceOf<NotSupportedException>().With.Message.EqualTo(SvgExceptionMessageConstant.RENDERER_WITHOUT_OBJECT_BOUNDING_BOX))
+;
         }
     }
 }

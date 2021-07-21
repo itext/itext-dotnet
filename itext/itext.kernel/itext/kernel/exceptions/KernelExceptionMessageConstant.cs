@@ -218,6 +218,8 @@ namespace iText.Kernel.Exceptions {
         public const String ENCRYPTED_PAYLOAD_SHALL_HAVE_SUBTYPE = "Encrypted payload shall have 'Subtype' field "
              + "specifying crypto filter";
 
+        public const String EXTERNAL_ENTITY_ELEMENT_FOUND_IN_XML = "External entity element found in XML. This entity will not be parsed to prevent XML attacks.";
+
         public const String FILE_POSITION_0_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "file position 0 cross "
              + "reference entry in this xref subsection.";
 

@@ -57,7 +57,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ValidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_80(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_76(PdfAConformanceLevel.PDF_A_1B);
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -71,8 +71,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_80 : PdfA1Checker {
-            public _PdfA1Checker_80(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_76 : PdfA1Checker {
+            public _PdfA1Checker_76(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -85,7 +85,7 @@ namespace iText.Pdfa {
         // limit per "mock specification" conformance exception shouldn't be thrown
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_100(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_101(PdfAConformanceLevel.PDF_A_1B);
             using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -104,8 +104,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_100 : PdfA1Checker {
-            public _PdfA1Checker_100(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_101 : PdfA1Checker {
+            public _PdfA1Checker_101(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 
@@ -116,7 +116,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsAppendModeTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_128(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new _PdfA1Checker_129(PdfAConformanceLevel.PDF_A_1B);
             using (Stream fis = new FileStream(sourceFolder + "pdfs/pdfa10IndirectObjects.pdf", FileMode.Open, FileAccess.Read
                 )) {
                 using (Stream fos = new MemoryStream()) {
@@ -133,8 +133,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_128 : PdfA1Checker {
-            public _PdfA1Checker_128(PdfAConformanceLevel baseArg1)
+        private sealed class _PdfA1Checker_129 : PdfA1Checker {
+            public _PdfA1Checker_129(PdfAConformanceLevel baseArg1)
                 : base(baseArg1) {
             }
 

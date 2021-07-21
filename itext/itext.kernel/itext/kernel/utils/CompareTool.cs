@@ -1299,8 +1299,8 @@ namespace iText.Kernel.Utils {
                                     equalPages.Add(i);
                                 }
                             }
-                            ObjectPath catalogPath = new ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference
-                                (), outDocument.GetCatalog().GetPdfObject().GetIndirectReference());
+                            ObjectPath catalogPath = new ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument
+                                .GetCatalog().GetPdfObject().GetIndirectReference());
                             ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Pages
                                 , PdfName.Metadata));
                             CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject

@@ -334,7 +334,7 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             return attrValue;
         }
-        
+
         /// <summary>Find the next unescaped character.</summary>
         /// <param name="source">a source</param>
         /// <param name="ch">the character to look for</param>

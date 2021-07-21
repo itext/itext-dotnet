@@ -47,7 +47,6 @@ using iText.Layout.Properties;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Pseudo;
-using iText.StyledXmlParser.Exceptions;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;

@@ -25,11 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.IO.Source;
-using iText.Kernel;
-using iText.Kernel.Font;
-using iText.Kernel.Pdf.Layer;
-using iText.Test;
-using iText.Test.Attributes;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -212,7 +207,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_265(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_251(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -222,15 +217,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_265 : PdfDocument {
-            public _PdfDocument_265(PdfReader baseArg1)
+        private sealed class _PdfDocument_251 : PdfDocument {
+            public _PdfDocument_251(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_282(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_268(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -241,8 +236,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_282 : PdfDocument {
-            public _PdfDocument_282(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_268 : PdfDocument {
+            public _PdfDocument_268(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }
