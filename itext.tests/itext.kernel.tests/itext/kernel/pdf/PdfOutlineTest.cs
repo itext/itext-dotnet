@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -467,8 +468,8 @@ namespace iText.Kernel.Pdf {
                     outlineDictionary.Put(PdfName.First, first);
                     Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
                         (outlineDictionary, new Dictionary<String, PdfObject>()));
-                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_PARENT_ENTRY, first
-                        .indirectReference), exception.Message);
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , first.indirectReference), exception.Message);
                 }
             }
         }
@@ -486,8 +487,8 @@ namespace iText.Kernel.Pdf {
                     first.Put(PdfName.Parent, outlineDictionary);
                     Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetCatalog().ConstructOutlines
                         (outlineDictionary, new Dictionary<String, PdfObject>()));
-                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_TITLE_ENTRY, first
-                        .indirectReference), exception.Message);
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , first.indirectReference), exception.Message);
                 }
             }
         }

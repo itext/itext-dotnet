@@ -49,10 +49,6 @@ using iText.Kernel.Exceptions;
 namespace iText.Kernel {
     /// <summary>Exception class for exceptions in kernel module.</summary>
     public class PdfException : Exception {
-        public const String CORRUPTED_OUTLINE_NO_PARENT_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required parent entry.";
-
-        public const String CORRUPTED_OUTLINE_NO_TITLE_ENTRY = "Document outline is corrupted: some outline (PDF object: \"{0}\") lacks the required title entry.";
-
         /// <summary>Object for more details</summary>
         protected internal Object @object;
 

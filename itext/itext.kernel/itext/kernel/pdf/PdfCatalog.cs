@@ -817,13 +817,13 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary next = current.GetAsDictionary(PdfName.Next);
                 PdfDictionary parent = current.GetAsDictionary(PdfName.Parent);
                 if (null == parent) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_PARENT_ENTRY, current.indirectReference
-                        ));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_PARENT_ENTRY
+                        , current.indirectReference));
                 }
                 PdfString title = current.GetAsString(PdfName.Title);
                 if (null == title) {
-                    throw new PdfException(MessageFormatUtil.Format(PdfException.CORRUPTED_OUTLINE_NO_TITLE_ENTRY, current.indirectReference
-                        ));
+                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_NO_TITLE_ENTRY
+                        , current.indirectReference));
                 }
                 parentOutline = parentOutlineMap.Get(parent);
                 PdfOutline currentOutline = new PdfOutline(title.ToUnicodeString(), current, parentOutline);
