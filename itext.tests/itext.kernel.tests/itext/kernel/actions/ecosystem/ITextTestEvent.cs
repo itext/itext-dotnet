@@ -43,7 +43,7 @@ namespace iText.Kernel.Actions.Ecosystem {
             , EventConfirmationType confirmationType)
             : base(sequenceId, productData, metaInfo, confirmationType) {
             this.eventType = eventType;
-            this.productName = productData.GetModuleName();
+            this.productName = productData.GetProductName();
         }
 
         public ITextTestEvent(SequenceId sequenceId, ProductData productData, IMetaInfo metaInfo, String eventType

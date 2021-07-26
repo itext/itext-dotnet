@@ -26,9 +26,9 @@ namespace iText.Kernel.Actions.Data {
     public class ProductDataTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ProductDataCreationTest() {
-            ProductData productData = new ProductData("productName", "moduleName", "1.2", 1900, 2100);
-            NUnit.Framework.Assert.AreEqual("productName", productData.GetPublicProductName());
-            NUnit.Framework.Assert.AreEqual("moduleName", productData.GetModuleName());
+            ProductData productData = new ProductData("publicProductName", "productName", "1.2", 1900, 2100);
+            NUnit.Framework.Assert.AreEqual("publicProductName", productData.GetPublicProductName());
+            NUnit.Framework.Assert.AreEqual("productName", productData.GetProductName());
             NUnit.Framework.Assert.AreEqual("1.2", productData.GetVersion());
             NUnit.Framework.Assert.AreEqual(1900, productData.GetSinceCopyrightYear());
             NUnit.Framework.Assert.AreEqual(2100, productData.GetToCopyrightYear());

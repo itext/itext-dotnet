@@ -60,8 +60,8 @@ namespace iText.Kernel.Counter.Event {
             NUnit.Framework.Assert.AreEqual(sequenceId, @event.GetSequenceId());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetPublicProductName(), @event.GetProductData
                 ().GetPublicProductName());
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetModuleName(), @event.GetProductData(
-                ).GetModuleName());
+            NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetProductName(), @event.GetProductData
+                ().GetProductName());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetVersion(), @event.GetProductData().GetVersion
                 ());
             NUnit.Framework.Assert.AreEqual(ITextCoreProductData.GetInstance().GetSinceCopyrightYear(), @event.GetProductData

@@ -27,7 +27,7 @@ namespace iText.Kernel.Actions.Data {
     public sealed class ProductData {
         private readonly String publicProductName;
 
-        private readonly String moduleName;
+        private readonly String productName;
 
         private readonly String version;
 
@@ -37,14 +37,14 @@ namespace iText.Kernel.Actions.Data {
 
         /// <summary>Creates a new instance of product data.</summary>
         /// <param name="publicProductName">is a product name</param>
-        /// <param name="moduleName">is a technical name of the addon</param>
+        /// <param name="productName">is a technical name of the product</param>
         /// <param name="version">is a version of the product</param>
         /// <param name="sinceCopyrightYear">is the first year of a product development</param>
         /// <param name="toCopyrightYear">is a last year of a product development</param>
-        public ProductData(String publicProductName, String moduleName, String version, int sinceCopyrightYear, int
+        public ProductData(String publicProductName, String productName, String version, int sinceCopyrightYear, int
              toCopyrightYear) {
             this.publicProductName = publicProductName;
-            this.moduleName = moduleName;
+            this.productName = productName;
             this.version = version;
             this.sinceCopyrightYear = sinceCopyrightYear;
             this.toCopyrightYear = toCopyrightYear;
@@ -56,10 +56,10 @@ namespace iText.Kernel.Actions.Data {
             return publicProductName;
         }
 
-        /// <summary>Getter for a technical name of the addon.</summary>
-        /// <returns>name of the module</returns>
-        public String GetModuleName() {
-            return moduleName;
+        /// <summary>Getter for a technical name of the product.</summary>
+        /// <returns>the technical name of the product</returns>
+        public String GetProductName() {
+            return productName;
         }
 
         /// <summary>Getter for a version of the product</summary>
