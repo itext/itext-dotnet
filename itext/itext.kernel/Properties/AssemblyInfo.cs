@@ -24,6 +24,6 @@ using Versions.Attributes;
 
 [assembly: KeyVersion("3.1.5.0")]
 
-[assembly: AssemblyVersion("7.1.17.0")]
-[assembly: AssemblyFileVersion("7.1.17.0")]
-[assembly: AssemblyInformationalVersion("7.1.17-SNAPSHOT")]
+[assembly: AssemblyVersion("7.2.0.0")]
+[assembly: AssemblyFileVersion("7.2.0.0")]
+[assembly: AssemblyInformationalVersion("7.2.0-SNAPSHOT")]

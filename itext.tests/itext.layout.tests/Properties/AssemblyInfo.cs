@@ -15,9 +15,9 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("9ad347a8-ea5b-462b-810c-998f04471bb7")]
 
-[assembly: AssemblyVersion("7.1.17.0")]
-[assembly: AssemblyFileVersion("7.1.17.0")]
-[assembly: AssemblyInformationalVersion("7.1.17-SNAPSHOT")]
+[assembly: AssemblyVersion("7.2.0.0")]
+[assembly: AssemblyFileVersion("7.2.0.0")]
+[assembly: AssemblyInformationalVersion("7.2.0-SNAPSHOT")]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(600000)]
