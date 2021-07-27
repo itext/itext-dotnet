@@ -62,7 +62,12 @@ namespace iText.Kernel.Actions {
                 return;
             }
             AbstractProductProcessITextEvent productEvent = (AbstractProductProcessITextEvent)@event;
-            ITextProductEventProcessor productEventProcessor = FindProcessorForProduct(productEvent.GetProductName());
+            String productName = productEvent.GetProductName();
+            ITextProductEventProcessor productEventProcessor = GetActiveProcessor(productName);
+            if (productEventProcessor == null) {
+                throw new UnknownProductException(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, productName
+                    ));
+            }
             productEventProcessor.OnEvent(productEvent);
             if (productEvent.GetSequenceId() != null) {
                 if (productEvent is ConfirmEvent) {
@@ -82,8 +87,19 @@ namespace iText.Kernel.Actions {
             return processors.JRemove(productName);
         }
 
-        internal ITextProductEventProcessor GetProcessor(String productName) {
-            return processors.Get(productName);
+        internal ITextProductEventProcessor GetActiveProcessor(String productName) {
+            ITextProductEventProcessor processor = processors.Get(productName);
+            if (processor != null) {
+                return processor;
+            }
+            if (ProductNameConstant.PRODUCT_NAMES.Contains(productName)) {
+                processor = new DefaultITextProductEventProcessor(productName);
+                processors.Put(productName, processor);
+                return processor;
+            }
+            else {
+                return null;
+            }
         }
 
         internal IDictionary<String, ITextProductEventProcessor> GetProcessors() {
@@ -125,22 +141,6 @@ namespace iText.Kernel.Actions {
                     LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
                         (), confirmedEvent.GetEventType()));
                 }
-            }
-        }
-
-        private ITextProductEventProcessor FindProcessorForProduct(String productName) {
-            ITextProductEventProcessor processor = processors.Get(productName);
-            if (processor != null) {
-                return processor;
-            }
-            if (ProductNameConstant.PRODUCT_NAMES.Contains(productName)) {
-                processor = new DefaultITextProductEventProcessor(productName);
-                processors.Put(productName, processor);
-                return processor;
-            }
-            else {
-                throw new UnknownProductException(MessageFormatUtil.Format(UnknownProductException.UNKNOWN_PRODUCT, productName
-                    ));
             }
         }
     }

@@ -71,7 +71,7 @@ namespace iText.Kernel.Actions.Events {
             IDictionary<String, ITextProductEventProcessor> knownProducts = new Dictionary<String, ITextProductEventProcessor
                 >();
             foreach (String product in products) {
-                ITextProductEventProcessor processor = GetProcessor(product);
+                ITextProductEventProcessor processor = GetActiveProcessor(product);
                 if (processor == null) {
                     if (LOGGER.IsWarnEnabled) {
                         LOGGER.Warn(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));

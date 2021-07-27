@@ -48,10 +48,17 @@ namespace iText.Kernel.Actions {
         }
 
         /// <summary>Gets a processor registered for a product.</summary>
+        /// <remarks>
+        /// Gets a processor registered for a product.
+        /// <para />
+        /// If processor isn't registered and product supports AGPL mode
+        /// <see cref="iText.Kernel.Actions.Processors.DefaultITextProductEventProcessor"/>
+        /// will be obtained otherwise null will be returned.
+        /// </remarks>
         /// <param name="productName">is a product for which processor is obtained</param>
         /// <returns>processor for the product</returns>
-        protected internal virtual ITextProductEventProcessor GetProcessor(String productName) {
-            return ProductEventHandler.INSTANCE.GetProcessor(productName);
+        protected internal virtual ITextProductEventProcessor GetActiveProcessor(String productName) {
+            return ProductEventHandler.INSTANCE.GetActiveProcessor(productName);
         }
 
         /// <summary>Gets an unmodifiable map of registered processors.</summary>
