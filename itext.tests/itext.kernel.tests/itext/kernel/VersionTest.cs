@@ -26,32 +26,6 @@ using iText.Test;
 namespace iText.Kernel {
     public class VersionTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void ParseCurrentVersionTest() {
-            iText.Kernel.Version instance = iText.Kernel.Version.GetInstance();
-            // expected values
-            String release = instance.GetRelease();
-            String major = "7";
-            String minor = iText.IO.Util.StringUtil.Split(release, "\\.")[1];
-            String[] parseResults = iText.Kernel.Version.ParseVersionString(release);
-            NUnit.Framework.Assert.AreEqual(2, parseResults.Length);
-            NUnit.Framework.Assert.AreEqual(major, parseResults[0]);
-            NUnit.Framework.Assert.AreEqual(minor, parseResults[1]);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ParseCustomCorrectVersionTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.5.1-SNAPSHOT", 
-                "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV (AGPL-version)", null), false);
-            // expected values
-            String major = "7";
-            String minor = "5";
-            String[] parseResults = iText.Kernel.Version.ParseVersionString(customVersion.GetRelease());
-            NUnit.Framework.Assert.AreEqual(2, parseResults.Length);
-            NUnit.Framework.Assert.AreEqual(major, parseResults[0]);
-            NUnit.Framework.Assert.AreEqual(minor, parseResults[1]);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void ParseVersionIncorrectMajorTest() {
             // the line below is expected to produce an exception
             Exception e = NUnit.Framework.Assert.Catch(typeof(LicenseVersionException), () => iText.Kernel.Version.ParseVersionString
@@ -99,15 +73,15 @@ namespace iText.Kernel {
 
         [NUnit.Framework.Test]
         public virtual void IsAGPLTrueTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.5.1-SNAPSHOT", 
-                "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV (AGPL-version)", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV (AGPL-version)"
+                , null), false);
             NUnit.Framework.Assert.IsTrue(customVersion.IsAGPL());
         }
 
         [NUnit.Framework.Test]
         public virtual void IsAGPLFalseTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.5.1-SNAPSHOT", 
-                "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV"
+                , null), false);
             NUnit.Framework.Assert.IsFalse(customVersion.IsAGPL());
         }
 
@@ -124,42 +98,39 @@ namespace iText.Kernel {
 
         [NUnit.Framework.Test]
         public virtual void CustomVersionCorrectTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.5.1-SNAPSHOT", 
-                "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 7.5.1-SNAPSHOT ©2000-2090 iText Group NV"
+                , null), false);
             CheckVersionInstance(customVersion);
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomVersionIncorrectMajorTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "8.5.1-SNAPSHOT", 
-                "iText® 8.5.1-SNAPSHOT ©2000-2090 iText Group NV", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 8.5.1-SNAPSHOT ©2000-2090 iText Group NV"
+                , null), false);
             NUnit.Framework.Assert.IsFalse(CheckVersion(customVersion.GetVersion()));
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomVersionIncorrectMinorTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.a.1-SNAPSHOT", 
-                "iText® 7.a.1-SNAPSHOT ©2000-2090 iText Group NV", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 7.a.1-SNAPSHOT ©2000-2090 iText Group NV"
+                , null), false);
             NUnit.Framework.Assert.IsFalse(CheckVersion(customVersion.GetVersion()));
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomVersionIncorrectPatchTest() {
-            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "7.50.a-SNAPSHOT", 
-                "iText® 7.50.a-SNAPSHOT ©2000-2090 iText Group NV", null), false);
+            iText.Kernel.Version customVersion = new iText.Kernel.Version(new VersionInfo("iText®", "iText® 7.50.a-SNAPSHOT ©2000-2090 iText Group NV"
+                , null), false);
             NUnit.Framework.Assert.IsFalse(CheckVersion(customVersion.GetVersion()));
         }
 
         private static void CheckVersionInstance(iText.Kernel.Version instance) {
             String product = instance.GetProduct();
-            String release = instance.GetRelease();
             String version = instance.GetVersion();
             String key = instance.GetKey();
             VersionInfo info = instance.GetInfo();
             NUnit.Framework.Assert.AreEqual(product, info.GetProduct());
             NUnit.Framework.Assert.AreEqual("iText®", product);
-            NUnit.Framework.Assert.AreEqual(release, info.GetRelease());
-            NUnit.Framework.Assert.IsTrue(release.Matches("[7]\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?$"));
             NUnit.Framework.Assert.AreEqual(version, info.GetVersion());
             NUnit.Framework.Assert.IsTrue(CheckVersion(version));
             NUnit.Framework.Assert.IsNull(key);

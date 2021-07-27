@@ -47,6 +47,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Versions.Attributes;
 using iText.IO;
+using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
@@ -74,13 +75,6 @@ namespace iText.Kernel {
         /// </remarks>
         private const String iTextProductName = "iText\u00ae";
 
-        /// <summary>This String contains the version number of this iText release.</summary>
-        /// <remarks>
-        /// This String contains the version number of this iText release.
-        /// For debugging purposes, we request you NOT to change this constant.
-        /// </remarks>
-        private const String release = "7.2.0-SNAPSHOT";
-
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
         /// This String contains the iText version as shown in the producer line.
@@ -88,7 +82,8 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2021 iText Group NV";
+        private static readonly String producerLine = iTextProductName + " " + ITextCoreProductData.GetInstance().
+            GetVersion() + " \u00a92000-2021 iText Group NV";
 
         /// <summary>The version info;</summary>
         private readonly VersionInfo info;
@@ -132,7 +127,7 @@ namespace iText.Kernel {
             }
             String key = null;
             try {
-                String coreVersion = release;
+                String coreVersion = ITextCoreProductData.GetInstance().GetVersion();
                 String[] info = GetLicenseeInfoFromLicenseKey(coreVersion);
                 if (info != null) {
                     if (info[3] != null && info[3].Trim().Length > 0) {
@@ -223,17 +218,6 @@ namespace iText.Kernel {
             return info.GetProduct();
         }
 
-        /// <summary>Gets the release number.</summary>
-        /// <remarks>
-        /// Gets the release number.
-        /// iText Group NV requests that you retain the iText producer line
-        /// in every PDF that is created or manipulated using iText.
-        /// </remarks>
-        /// <returns>the release number</returns>
-        public String GetRelease() {
-            return info.GetRelease();
-        }
-
         /// <summary>Returns the iText version as shown in the producer line.</summary>
         /// <remarks>
         /// Returns the iText version as shown in the producer line.
@@ -318,7 +302,7 @@ namespace iText.Kernel {
         }
 
         private static iText.Kernel.Version InitVersion(String producer, String key, bool expired) {
-            return new iText.Kernel.Version(new VersionInfo(iTextProductName, release, producer, key), expired);
+            return new iText.Kernel.Version(new VersionInfo(iTextProductName, producer, key), expired);
         }
 
         private static Type GetLicenseKeyClass() {

@@ -47,15 +47,12 @@ namespace iText.Kernel {
     public class VersionInfo {
         private readonly String productName;
 
-        private readonly String releaseNumber;
-
         private readonly String producerLine;
 
         private readonly String licenseKey;
 
-        public VersionInfo(String productName, String releaseNumber, String producerLine, String licenseKey) {
+        public VersionInfo(String productName, String producerLine, String licenseKey) {
             this.productName = productName;
-            this.releaseNumber = releaseNumber;
             this.producerLine = producerLine;
             this.licenseKey = licenseKey;
         }
@@ -69,17 +66,6 @@ namespace iText.Kernel {
         /// <returns>the product name</returns>
         public virtual String GetProduct() {
             return productName;
-        }
-
-        /// <summary>Gets the release number.</summary>
-        /// <remarks>
-        /// Gets the release number.
-        /// iText Group NV requests that you retain the iText producer line
-        /// in every PDF that is created or manipulated using iText.
-        /// </remarks>
-        /// <returns>the release number</returns>
-        public virtual String GetRelease() {
-            return releaseNumber;
         }
 
         /// <summary>Returns the iText version as shown in the producer line.</summary>

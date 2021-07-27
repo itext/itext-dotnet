@@ -49,6 +49,7 @@ using iText.IO;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
+using iText.Kernel.Actions.Data;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
@@ -479,7 +480,8 @@ namespace iText.Kernel.Pdf {
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, versionInfo.GetRelease(), platform));
+            writer.WriteString(MessageFormatUtil.Format("%{0}-{1}{2}\n", k, ITextCoreProductData.GetInstance().GetVersion
+                (), platform));
             foreach (ProductInfo productInfo in fingerPrint.GetProducts()) {
                 writer.WriteString(MessageFormatUtil.Format("%{0}\n", productInfo));
             }
