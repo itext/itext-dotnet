@@ -25,7 +25,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype7 {
-    public class PosTableLookup7Format2 : ContextualPositionTable {
+    public class PosTableLookup7Format2 : ContextualTable<ContextualPositionRule> {
         private ICollection<int> posCoverageGlyphIds;
 
         private IList<IList<ContextualPositionRule>> subClassSets;

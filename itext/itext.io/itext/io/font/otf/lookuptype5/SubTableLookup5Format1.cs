@@ -47,7 +47,7 @@ using iText.IO.Util;
 
 namespace iText.IO.Font.Otf.Lookuptype5 {
     /// <summary>Contextual Substitution Subtable: Simple context glyph substitution</summary>
-    public class SubTableLookup5Format1 : ContextualSubTable {
+    public class SubTableLookup5Format1 : ContextualTable<ContextualSubstRule> {
         private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
         public SubTableLookup5Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule

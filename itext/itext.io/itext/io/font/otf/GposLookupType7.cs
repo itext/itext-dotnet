@@ -54,11 +54,11 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType7 : OpenTableLookup {
         private static readonly ILog LOGGER = LogManager.GetLogger(typeof(iText.IO.Font.Otf.GposLookupType7));
 
-        private IList<ContextualPositionTable> subTables;
+        protected internal IList<ContextualTable<ContextualPositionRule>> subTables;
 
         public GposLookupType7(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
-            subTables = new List<ContextualPositionTable>();
+            subTables = new List<ContextualTable<ContextualPositionRule>>();
             ReadSubTables();
         }
 
@@ -67,7 +67,7 @@ namespace iText.IO.Font.Otf {
             int oldLineStart = line.start;
             int oldLineEnd = line.end;
             int initialLineIndex = line.idx;
-            foreach (ContextualPositionTable subTable in subTables) {
+            foreach (ContextualTable<ContextualPositionRule> subTable in subTables) {
                 ContextualPositionRule contextRule = subTable.GetMatchingContextRule(line);
                 if (contextRule == null) {
                     continue;
