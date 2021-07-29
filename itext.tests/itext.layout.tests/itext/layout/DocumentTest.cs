@@ -30,8 +30,8 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
-using iText.Layout.Testutil;
 using iText.Layout.Exceptions;
+using iText.Layout.Testutil;
 using iText.Test;
 
 namespace iText.Layout {
@@ -41,17 +41,17 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ExecuteActionInClosedDocTest() {
             NUnit.Framework.Assert.That(() =>  {
-                        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-                        Document document = new Document(pdfDoc);
-                        Paragraph paragraph = new Paragraph("test");
-                        document.Add(paragraph);
-                        document.Close();
-                        document.CheckClosingStatus();
-                    }
-                    , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
-                ;
+                PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+                Document document = new Document(pdfDoc);
+                Paragraph paragraph = new Paragraph("test");
+                document.Add(paragraph);
+                document.Close();
+                document.CheckClosingStatus();
+            }
+            , NUnit.Framework.Throws.InstanceOf<PdfException>().With.Message.EqualTo(LayoutExceptionMessageConstant.DOCUMENT_CLOSED_IT_IS_IMPOSSIBLE_TO_EXECUTE_ACTION))
+;
         }
-        
+
         [NUnit.Framework.Test]
         public virtual void AddBlockElemMethodLinkingTest() {
             using (Document doc = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {

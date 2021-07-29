@@ -32,7 +32,7 @@ namespace iText.Kernel.Actions.Data {
     public class ITextCoreProductData {
         private const String CORE_PUBLIC_PRODUCT_NAME = "Core";
 
-        private const String CORE_VERSION = "7.1.16-SNAPSHOT";
+        private const String CORE_VERSION = "7.2.0-SNAPSHOT";
 
         private const int CORE_COPYRIGHT_SINCE = 1998;
 

@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Sequence {
     /// <summary>
@@ -59,8 +59,8 @@ namespace iText.Kernel.Actions.Sequence {
                     element.SetSequenceId(sequenceId);
                 }
                 else {
-                    throw new InvalidOperationException(MessageFormatUtil.Format(PdfException.ElementAlreadyHasIdentifier, element
-                        .GetSequenceId().GetId(), sequenceId.GetId()));
+                    throw new InvalidOperationException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ELEMENT_ALREADY_HAS_IDENTIFIER
+                        , element.GetSequenceId().GetId(), sequenceId.GetId()));
                 }
             }
         }

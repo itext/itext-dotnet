@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
 
@@ -46,9 +45,6 @@ namespace iText.Kernel.Pdf.Statistics {
         /// <param name="productData">is a description of the product which has generated an event</param>
         public NumberOfPagesStatisticsEvent(int numberOfPages, ProductData productData)
             : base(productData) {
-            if (numberOfPages <= 0) {
-                throw new PdfException(PdfException.DocumentHasNoPages);
-            }
             this.numberOfPages = numberOfPages;
         }
 

@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Processors {
@@ -31,7 +31,7 @@ namespace iText.Kernel.Actions.Processors {
             NUnit.Framework.Assert.That(() =>  {
                 new DefaultITextProductEventProcessor(null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.ProductNameCannotBeNull))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(KernelExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL))
 ;
         }
     }

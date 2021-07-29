@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf.Statistics {
     /// <summary>Class which represents event related to size of the PDF document.</summary>
@@ -46,7 +46,7 @@ namespace iText.Kernel.Pdf.Statistics {
         public SizeOfPdfStatisticsEvent(long amountOfBytes, ProductData productData)
             : base(productData) {
             if (amountOfBytes < 0) {
-                throw new ArgumentException(PdfException.AmountOfBytesLessThanZero);
+                throw new ArgumentException(KernelExceptionMessageConstant.AMOUNT_OF_BYTES_LESS_THAN_ZERO);
             }
             this.amountOfBytes = amountOfBytes;
         }

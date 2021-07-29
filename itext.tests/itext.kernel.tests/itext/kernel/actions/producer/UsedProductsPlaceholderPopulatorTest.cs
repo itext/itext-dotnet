@@ -23,11 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Producer {
@@ -39,7 +39,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(GetEvents(1), null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "usedProducts")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "usedProducts")))
 ;
         }
 
@@ -121,7 +121,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(GetEvents(1), "PVTX");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedCharacter, "X")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_CHARACTER, "X")))
 ;
         }
 

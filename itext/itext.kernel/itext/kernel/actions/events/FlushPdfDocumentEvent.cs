@@ -24,12 +24,12 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Producer;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Actions.Session;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Events {

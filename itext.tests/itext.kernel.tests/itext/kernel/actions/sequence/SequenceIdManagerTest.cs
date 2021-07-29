@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Sequence {
@@ -44,8 +44,8 @@ namespace iText.Kernel.Actions.Sequence {
             SequenceIdManager.SetSequenceId(element, sequenceId1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => SequenceIdManager.SetSequenceId
                 (element, sequenceId2));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfException.ElementAlreadyHasIdentifier, sequenceId1
-                .GetId(), sequenceId2.GetId()), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.ELEMENT_ALREADY_HAS_IDENTIFIER
+                , sequenceId1.GetId(), sequenceId2.GetId()), e.Message);
         }
 
         private class IdentifiableElement : AbstractIdentifiableElement {

@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Producer {
     /// <summary>Class is used to populate <c>copyrightSince</c> placeholder.</summary>
@@ -53,8 +53,8 @@ namespace iText.Kernel.Actions.Producer {
         /// <returns>the earliest copyright year</returns>
         public virtual String Populate(IList<ConfirmedEventWrapper> events, String parameter) {
             if (parameter != null) {
-                throw new ArgumentException(MessageFormatUtil.Format(PdfException.InvalidUsageConfigurationForbidden, "copyrightSince"
-                    ));
+                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_CONFIGURATION_FORBIDDEN
+                    , "copyrightSince"));
             }
             // initial value, will be overwritten with product value
             int earliestYear = int.MaxValue;

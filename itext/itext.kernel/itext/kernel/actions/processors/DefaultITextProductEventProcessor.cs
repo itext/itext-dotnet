@@ -21,9 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel;
 using iText.Kernel.Actions;
 using iText.Kernel.Actions.Session;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
@@ -34,7 +34,7 @@ namespace iText.Kernel.Actions.Processors {
         /// <param name="productName">is a product name</param>
         public DefaultITextProductEventProcessor(String productName) {
             if (productName == null) {
-                throw new ArgumentException(PdfException.ProductNameCannotBeNull);
+                throw new ArgumentException(KernelExceptionMessageConstant.PRODUCT_NAME_CAN_NOT_BE_NULL);
             }
             this.productName = productName;
         }

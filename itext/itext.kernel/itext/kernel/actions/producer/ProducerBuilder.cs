@@ -26,8 +26,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Actions.Producer {
     /// <summary>Class is used for producer line building.</summary>
@@ -103,7 +104,7 @@ namespace iText.Kernel.Actions.Producer {
 
         private static String BuildProducer(IList<ConfirmedEventWrapper> events) {
             if (events == null || events.IsEmpty()) {
-                throw new ArgumentException(PdfException.NoEventsWereRegisteredForTheDocument);
+                throw new ArgumentException(KernelExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT);
             }
             // we expects here that the first event was thrown by
             // the addon which may be considered as entry point of

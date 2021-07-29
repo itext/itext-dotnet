@@ -25,6 +25,8 @@ using System;
 namespace iText.Kernel.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class KernelExceptionMessageConstant {
+        public const String AMOUNT_OF_BYTES_LESS_THAN_ZERO = "Amount of bytes in the PDF document cannot be less than zero";
+
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
 
         public const String APPEND_MODE_REQUIRES_A_DOCUMENT_WITHOUT_ERRORS_EVEN_IF_RECOVERY_IS_POSSIBLE = "Append "
@@ -200,6 +202,19 @@ namespace iText.Kernel.Exceptions {
         public const String DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_THAN_MAX_INTEGER_VALUE = "During " + 
             "decompression a single stream occupied more than a maximum integer value. Please check your pdf.";
 
+        /// <summary>Message warns about overriding of the identifier of identifiable element.</summary>
+        /// <remarks>
+        /// Message warns about overriding of the identifier of identifiable element. List of params:
+        /// <list type="bullet">
+        /// <item><description>0th is an original element identifier;
+        /// </description></item>
+        /// <item><description>1st is a new element identifier;
+        /// </description></item>
+        /// </list>
+        /// </remarks>
+        public const String ELEMENT_ALREADY_HAS_IDENTIFIER = "Element already has sequence id: {0}, new id {1} " +
+             "will be ignored";
+
         public const String END_OF_CONTENT_STREAM_REACHED_BEFORE_END_OF_IMAGE_DATA = "End of content stream " + "reached before end of image data.";
 
         public const String ERROR_WHILE_READING_OBJECT_STREAM = "Error while reading Object Stream.";
@@ -281,6 +296,11 @@ namespace iText.Kernel.Exceptions {
 
         public const String INVALID_OFFSET_FOR_THIS_OBJECT = "Invalid offset for object {0}.";
 
+        public const String INVALID_USAGE_FORMAT_REQUIRED = "Invalid usage of placeholder \"{0}\": format is required";
+
+        public const String INVALID_USAGE_CONFIGURATION_FORBIDDEN = "Invalid usage of placeholder \"{0}\": any " +
+             "configuration is forbidden";
+
         public const String INVALID_XREF_STREAM = "Invalid xref stream.";
 
         public const String INVALID_XREF_TABLE = "Invalid xref table.";
@@ -296,6 +316,8 @@ namespace iText.Kernel.Exceptions {
         public const String MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY = "Missing required field {0} in font dictionary.";
 
         public const String MUST_BE_A_TAGGED_DOCUMENT = "Must be a tagged document.";
+
+        public const String NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT = "No events were registered for the document!";
 
         public const String NOT_A_VALID_PLACEABLE_WINDOWS_METAFILE = "{0} is not a valid placeable windows " + "metafile.";
 
@@ -340,6 +362,12 @@ namespace iText.Kernel.Exceptions {
 
         public const String PAGE_ALREADY_FLUSHED = "The page has been already flushed.";
 
+        public const String PATTERN_CONTAINS_OPEN_QUOTATION = "Pattern contains open quotation!";
+
+        public const String PATTERN_CONTAINS_UNEXPECTED_CHARACTER = "Pattern contains unexpected character {0}";
+
+        public const String PATTERN_CONTAINS_UNEXPECTED_COMPONENT = "Pattern contains unexpected component {0}";
+
         public const String PDF_ENCRYPTION = "PdfEncryption exception.";
 
         public const String PDF_DECRYPTION = "Exception occurred with PDF document decryption. One of the possible "
@@ -363,6 +391,8 @@ namespace iText.Kernel.Exceptions {
             + "other PDF document. Copy object to current pdf document.";
 
         public const String PDF_VERSION_IS_NOT_VALID = "PDF version is not valid.";
+
+        public const String PRODUCT_NAME_CAN_NOT_BE_NULL = "Product name can not be null.";
 
         public const String REF_ARRAY_ITEMS_IN_STRUCTURE_ELEMENT_DICTIONARY_SHALL_BE_INDIRECT_OBJECTS = "Ref array "
              + "items in structure element dictionary shall be indirect objects.";

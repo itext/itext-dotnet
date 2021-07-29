@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Actions {
     /// <summary>Abstract class which defines statistics event.</summary>

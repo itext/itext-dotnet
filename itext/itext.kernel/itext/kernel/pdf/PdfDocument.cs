@@ -884,9 +884,6 @@ namespace iText.Kernel.Pdf {
                         long amountOfBytes = ((CountOutputStream)writer.GetOutputStream()).GetAmountOfWrittenBytes();
                         manager.OnEvent(new SizeOfPdfStatisticsEvent(amountOfBytes, ITextCoreProductData.GetInstance()));
                     }
-                    foreach (ICounter counter in GetCounters()) {
-                        counter.OnDocumentWritten(writer.GetCurrentPos());
-                    }
                 }
                 catalog.GetPageTree().ClearPageRefs();
                 RemoveAllHandlers();

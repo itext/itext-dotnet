@@ -23,8 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -43,7 +44,8 @@ namespace iText.Kernel.Pdf.Statistics {
         public virtual void InvalidArgumentEventTest() {
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new SizeOfPdfStatisticsEvent
                 (-1, ITextCoreProductData.GetInstance()));
-            NUnit.Framework.Assert.AreEqual(PdfException.AmountOfBytesLessThanZero, exception.Message);
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.AMOUNT_OF_BYTES_LESS_THAN_ZERO, exception.Message
+                );
         }
 
         [NUnit.Framework.Test]

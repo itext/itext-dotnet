@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.IO.Util;
-using iText.Kernel;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Actions.Producer {
@@ -34,7 +34,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "currentDate")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "currentDate")))
 ;
         }
 
@@ -79,7 +79,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "'plain text");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.PatternContainsOpenQuotation))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(KernelExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
 ;
         }
 
@@ -88,7 +88,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "'plain'' ''text");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.PatternContainsOpenQuotation))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(KernelExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
 ;
         }
 
@@ -97,7 +97,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "'plain text\\'");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.PatternContainsOpenQuotation))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(KernelExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION))
 ;
         }
 
@@ -121,7 +121,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "dd MM tyy yyyy HH");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedComponent, "t")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "t")))
 ;
         }
 
@@ -130,7 +130,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "dd MMMMM yy yyyy HH");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedComponent, "MMMMM")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "MMMMM")))
 ;
         }
 
@@ -139,7 +139,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 populator.Populate(null, "dd MM y yyyy HH");
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedComponent, "y")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT, "y")))
 ;
         }
     }

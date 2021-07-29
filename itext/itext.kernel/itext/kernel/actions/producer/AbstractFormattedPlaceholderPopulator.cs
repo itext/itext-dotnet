@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Producer {
     /// <summary>Abstract populator for placeholders consuming a parameter which is a pattern string.</summary>
@@ -76,7 +76,7 @@ namespace iText.Kernel.Actions.Producer {
                 index++;
             }
             if (index == formatArray.Length) {
-                throw new ArgumentException(PdfException.PatternContainsOpenQuotation);
+                throw new ArgumentException(KernelExceptionMessageConstant.PATTERN_CONTAINS_OPEN_QUOTATION);
             }
             return index;
         }

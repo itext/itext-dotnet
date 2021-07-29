@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -42,10 +42,9 @@ namespace iText.Kernel.Pdf.Statistics {
         }
 
         [NUnit.Framework.Test]
-        public virtual void InvalidArgumentEventTest() {
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new NumberOfPagesStatisticsEvent
-                (0, ITextCoreProductData.GetInstance()));
-            NUnit.Framework.Assert.AreEqual(PdfException.DocumentHasNoPages, exception.Message);
+        public virtual void ZeroNumberOfPagesTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new NumberOfPagesStatisticsEvent(0, ITextCoreProductData.GetInstance
+                ()));
         }
 
         [NUnit.Framework.Test]

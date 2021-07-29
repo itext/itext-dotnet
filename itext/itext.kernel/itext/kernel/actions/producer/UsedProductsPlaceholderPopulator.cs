@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Producer {
     /// <summary>Class is used to populate <c>usedProducts</c> placeholder.</summary>
@@ -75,8 +75,8 @@ namespace iText.Kernel.Actions.Producer {
         /// <returns>populated comma-separated list of used products in accordance with the format</returns>
         public override String Populate(IList<ConfirmedEventWrapper> events, String parameter) {
             if (parameter == null) {
-                throw new ArgumentException(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "usedProducts"
-                    ));
+                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                    , "usedProducts"));
             }
             ICollection<UsedProductsPlaceholderPopulator.ProductRepresentation> usedProducts = new LinkedHashSet<UsedProductsPlaceholderPopulator.ProductRepresentation
                 >();
@@ -130,8 +130,8 @@ namespace iText.Kernel.Actions.Producer {
                         return product.GetProductUsageType();
                     }
                     else {
-                        throw new ArgumentException(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedCharacter, letter
-                            ));
+                        throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_CHARACTER
+                            , letter));
                     }
                 }
             }

@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Actions.Producer {
     /// <summary>Class is used to populate <c>currentDate</c> placeholder.</summary>
@@ -91,8 +91,8 @@ namespace iText.Kernel.Actions.Producer {
         /// <returns>date of producer line creation in accordance with defined format</returns>
         public override String Populate(IList<ConfirmedEventWrapper> events, String parameter) {
             if (parameter == null) {
-                throw new ArgumentException(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "currentDate"
-                    ));
+                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED
+                    , "currentDate"));
             }
             DateTime now = DateTimeUtil.GetCurrentUtcTime();
             return FormatDate(now, parameter);
@@ -130,8 +130,8 @@ namespace iText.Kernel.Actions.Producer {
                 builder.Append(DateTimeUtil.FormatDate(date, piece));
             }
             else {
-                throw new ArgumentException(MessageFormatUtil.Format(PdfException.PatternContainsUnexpectedComponent, piece
-                    ));
+                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.PATTERN_CONTAINS_UNEXPECTED_COMPONENT
+                    , piece));
             }
             return index;
         }

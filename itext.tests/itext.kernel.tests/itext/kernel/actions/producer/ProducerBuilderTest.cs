@@ -23,11 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Ecosystem;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Sequence;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -38,7 +39,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer(null, null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(PdfException.NoEventsWereRegisteredForTheDocument))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(KernelExceptionMessageConstant.NO_EVENTS_WERE_REGISTERED_FOR_THE_DOCUMENT))
 ;
         }
 
@@ -116,7 +117,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer(events, null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "currentDate")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "currentDate")))
 ;
         }
 
@@ -142,7 +143,7 @@ namespace iText.Kernel.Actions.Producer {
             NUnit.Framework.Assert.That(() =>  {
                 ProducerBuilder.ModifyProducer(events, null);
             }
-            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(PdfException.InvalidUsageFormatRequired, "usedProducts")))
+            , NUnit.Framework.Throws.InstanceOf<ArgumentException>().With.Message.EqualTo(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_USAGE_FORMAT_REQUIRED, "usedProducts")))
 ;
         }
 

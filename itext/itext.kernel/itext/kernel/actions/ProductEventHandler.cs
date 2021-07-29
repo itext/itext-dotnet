@@ -26,12 +26,12 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Common.Logging;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Actions.Exceptions;
 using iText.Kernel.Actions.Processors;
 using iText.Kernel.Actions.Sequence;
 using iText.Kernel.Counter.Context;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Actions {
     /// <summary>Handles events based oh their origin.</summary>
